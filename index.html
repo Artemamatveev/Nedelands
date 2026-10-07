@@ -178,7 +178,7 @@ h2.gap{margin-top:26px}
     <div id="voicebox" hidden>
       <h2>Stem bij Luisteren</h2>
       <p class="sub">Meer stemmen: Instellingen → Toegankelijkheid → Gesproken materiaal → Stemmen → Nederlands.</p>
-      <div class="type"><select id="voice" aria-label="Stem"></select><button class="ghost" id="vtest">▶ Test</button></div>
+      <div class="type"><select id="voice" aria-label="Stem"></select></div>
     </div>
     <p class="sub" id="sync" style="margin-top:22px">Je voortgang wordt bewaard op dit apparaat.</p>
   </div>
@@ -992,10 +992,8 @@ function wall(){
 }
 $("back").onclick=home; $("sback").onclick=home; $("gen").onclick=gen;
 if(canSpeak){
-  const demo=()=>speak("Hallo! Zo klink ik bij de luisteroefeningen.");
   $("voicebox").hidden=false;
-  $("voice").onchange=()=>{S.voice=$("voice").value;save();demo()};
-  $("vtest").onclick=demo;
+  $("voice").onchange=()=>{S.voice=$("voice").value;save();speak("Hallo! Zo klink ik bij de luisteroefeningen.")};
 }
 $("mode").onclick=()=>{S.typing=!S.typing;save();if(!answered)show();else head()};
 document.addEventListener("keydown",e=>{
