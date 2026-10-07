@@ -623,7 +623,14 @@ function addGenerated(){
 }
 function errItems(){return(S.errs||[]).map(e=>({sec:"er",k:"er|"+e.r,ord:0,type:"choice",label:"Welke zin is goed?",big:"",sub:"",right:esc(e.r),opts:()=>shuffle([esc(e.r),esc(e.w)]),note:esc(e.y)}))}
 const canSpeak="speechSynthesis" in window&&typeof SpeechSynthesisUtterance!=="undefined";
-function speak(t){try{const u=new SpeechSynthesisUtterance(t);u.lang="nl-NL";u.rate=.9;const v=speechSynthesis.getVoices().find(v=>/^nl/i.test(v.lang));if(v)u.voice=v;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
+// Prefer a Netherlands voice over Flemish (nl-BE), and the best quality one installed
+function voice(){
+  const score=v=>{const n=(v.name+" "+v.voiceURI).toLowerCase();
+    return(/^nl[-_]nl/i.test(v.lang)?100:0)+(/premium/.test(n)?40:/enhanced|neural|natural|online|siri/.test(n)?30:/google/.test(n)?20:0)};
+  return speechSynthesis.getVoices().filter(v=>/^nl/i.test(v.lang)).sort((a,b)=>score(b)-score(a))[0];
+}
+if(canSpeak)try{speechSynthesis.getVoices()}catch(e){}
+function speak(t){try{const u=new SpeechSynthesisUtterance(t);u.lang="nl-NL";u.rate=.95;const v=voice();if(v)u.voice=v;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
 const hush=()=>{try{if(canSpeak)speechSynthesis.cancel()}catch(e){}};
 let tmr=null,tEnd=0;
 function tick(){const s=Math.max(0,Math.round((tEnd-Date.now())/1000));$("timer").textContent=tEnd?Math.floor(s/60)+":"+String(s%60).padStart(2,"0"):"";if(tEnd&&s<=0&&cur&&cur.exam){const q=queue[pos];if(q&&q.type==="write"&&cur.ans.length===pos)cur.ans.push(grab(q));pos=queue.length;finish()}}
