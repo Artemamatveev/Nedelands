@@ -54,7 +54,8 @@ h2{font-family:var(--brush);font-size:26px;font-weight:400;line-height:1.1;margi
 
 /* oefenen */
 .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.back{background:none;border:0;color:var(--blue);font-weight:700;padding:6px 0;text-decoration:underline}
+.back{display:inline-flex;align-items:center;gap:6px;min-height:44px;background:var(--surface);border:2px solid var(--blue);color:var(--blue);font-weight:700;font-size:17px;padding:5px 16px 6px 12px;border-radius:7px 16px 6px 18px/16px 6px 18px 7px}
+.back span{font-size:22px;line-height:1}
 #timer{font-weight:800;font-variant-numeric:tabular-nums;background:var(--yellow);color:var(--sign);padding:1px 10px;border-radius:10px 4px 9px 4px/4px 9px 4px 10px}
 #timer:empty{display:none}
 .bar{height:8px;background:var(--surface);border-radius:4px;overflow:hidden;margin-bottom:22px}
@@ -175,13 +176,13 @@ h2.gap{margin-top:26px}
     <p class="sub" id="sync" style="margin-top:22px">Je voortgang wordt bewaard op dit apparaat.</p>
   </div>
   <div id="stats" hidden>
-    <button class="back" id="sback">Alle onderdelen</button>
+    <button class="back" id="sback"><span aria-hidden="true">←</span>Alle onderdelen</button>
     <h2>Mijn zwakke punten</h2>
     <p class="sub">De onderdelen met de meeste fouten staan bovenaan.</p>
     <div id="statlist"></div>
   </div>
   <div id="play" hidden>
-    <div class="top"><button class="back" id="back">Alle onderdelen</button><span id="timer"></span></div>
+    <div class="top"><button class="back" id="back"><span aria-hidden="true">←</span>Alle onderdelen</button><span id="timer"></span></div>
     <div class="bar"><i id="bar"></i></div>
     <section class="card" id="card" aria-live="polite"></section>
     <div class="mode"><button id="mode"></button></div>
