@@ -129,7 +129,7 @@ h2.gap{margin-top:26px}
 .tlb.next b{color:var(--blue)} .tlb.past{opacity:.55}
 /* onderaan het startscherm */
 #gen{margin-top:20px} #genmsg{margin-top:8px;min-height:20px}
-#wallbox,#duo{margin-top:30px}
+#wallbox{margin-top:30px}
 .wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(28px,1fr));gap:4px}
 .tile{aspect-ratio:1;border:0;background:var(--surface);padding:0;border-radius:9px 4px 8px 3px/4px 8px 3px 9px}
 .tile:nth-child(3n){border-radius:4px 9px 3px 8px/8px 3px 9px 4px}
@@ -137,7 +137,6 @@ h2.gap{margin-top:26px}
 .tile.sel{outline:3px solid var(--blue);outline-offset:1px}
 .peek{min-height:52px;margin-top:12px;font-weight:700}
 .peek small{display:block;font-weight:400;color:var(--soft)}
-#duo a{color:var(--blue);font-weight:700}
 .stat{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:2px dashed var(--line)}
 .stat>div{flex:1;min-width:0} .stat b{display:block} .stat span{display:block;color:var(--soft);font-size:15px;margin-bottom:6px}
 .stat .bar{margin:0}
@@ -172,11 +171,6 @@ h2.gap{margin-top:26px}
       <p class="sub" id="wallsub"></p>
       <div class="wall" id="wall"></div>
       <div class="peek" id="peek"></div>
-    </div>
-    <div id="duo">
-      <h2>Officiële oefenexamens van DUO</h2>
-      <p class="sub">Maak deze ook. Ze hebben de echte examenvorm, met video en audio. Gebruik een computer.</p>
-      <a href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" target="_blank" rel="noopener">inburgeren.nl: Oefenen</a>
     </div>
     <p class="sub" id="sync" style="margin-top:22px">Je voortgang wordt bewaard op dit apparaat.</p>
   </div>
