@@ -76,10 +76,7 @@ h2{font-family:var(--brush);font-size:26px;font-weight:400;line-height:1.1;margi
 .opt:disabled{cursor:default}
 .type{display:flex;gap:8px}
 input,textarea{font:inherit;color:var(--ink);background:var(--bg);border:2px solid var(--ink);border-radius:12px 5px 11px 4px/5px 11px 4px 12px}
-input{flex:1;min-width:0;font-size:22px;font-weight:700;padding:9px 12px}
-select{flex:1;min-width:0;font:inherit;font-size:17px;color:var(--ink);background:var(--bg);border:2px solid var(--ink);border-radius:12px 5px 11px 4px/5px 11px 4px 12px;padding:9px 10px}
-#voicebox{margin-top:30px}
-textarea{display:block;width:100%;font-size:18px;line-height:1.45;padding:12px;margin-bottom:12px;resize:vertical}
+input{flex:1;min-width:0;font-size:22px;font-weight:700;padding:9px 12px}textarea{display:block;width:100%;font-size:18px;line-height:1.45;padding:12px;margin-bottom:12px;resize:vertical}
 .fld{display:block;margin-bottom:8px}
 .fld span{display:block;font-size:15px;color:var(--soft)}
 .fld input{width:100%;font-size:18px;font-weight:400;padding:7px 10px;border-width:1.5px}
@@ -174,11 +171,6 @@ h2.gap{margin-top:26px}
       <p class="sub" id="wallsub"></p>
       <div class="wall" id="wall"></div>
       <div class="peek" id="peek"></div>
-    </div>
-    <div id="voicebox" hidden>
-      <h2>Stem bij Luisteren</h2>
-      <p class="sub">Meer stemmen: Instellingen → Toegankelijkheid → Gesproken materiaal → Stemmen → Nederlands.</p>
-      <div class="type"><select id="voice" aria-label="Stem"></select></div>
     </div>
     <p class="sub" id="sync" style="margin-top:22px">Je voortgang wordt bewaard op dit apparaat.</p>
   </div>
@@ -631,22 +623,8 @@ function addGenerated(){
 }
 function errItems(){return(S.errs||[]).map(e=>({sec:"er",k:"er|"+e.r,ord:0,type:"choice",label:"Welke zin is goed?",big:"",sub:"",right:esc(e.r),opts:()=>shuffle([esc(e.r),esc(e.w)]),note:esc(e.y)}))}
 const canSpeak="speechSynthesis" in window&&typeof SpeechSynthesisUtterance!=="undefined";
-// Dutch voices, Netherlands before Flemish (nl-BE) and higher quality first
-function nlVoices(){
-  const score=v=>{const n=(v.name+" "+v.voiceURI).toLowerCase();
-    return(/^nl[-_]nl/i.test(v.lang)?100:0)+(/premium/.test(n)?40:/enhanced|neural|natural|online|siri/.test(n)?30:/google/.test(n)?20:0)};
-  try{return speechSynthesis.getVoices().filter(v=>/^nl/i.test(v.lang)).sort((a,b)=>score(b)-score(a))}catch(e){return[]}
-}
-// No choice made: leave the voice unset so the phone uses the Dutch voice picked in its settings
-const voice=()=>S.voice?nlVoices().find(v=>v.voiceURI===S.voice):null;
-function fillVoices(){
-  const sel=$("voice"); if(!sel)return;
-  const vs=nlVoices(), cur=vs.some(v=>v.voiceURI===S.voice)?S.voice:"";
-  sel.innerHTML=`<option value="">Standaard van je telefoon</option>`+vs.map(v=>`<option value="${esc(v.voiceURI)}">${esc(v.name)}${/^nl[-_]be/i.test(v.lang)?" (Vlaams)":""}</option>`).join("");
-  sel.value=cur;
-}
-if(canSpeak)try{speechSynthesis.getVoices();speechSynthesis.addEventListener("voiceschanged",fillVoices)}catch(e){}
-function speak(t){try{const u=new SpeechSynthesisUtterance(t);u.lang="nl-NL";u.rate=.95;const v=voice();if(v)u.voice=v;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
+// Voice left unset so the phone uses the Dutch (nl-NL) voice picked in its settings
+function speak(t){try{const u=new SpeechSynthesisUtterance(t);u.lang="nl-NL";u.rate=.95;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
 const hush=()=>{try{if(canSpeak)speechSynthesis.cancel()}catch(e){}};
 let tmr=null,tEnd=0;
 function tick(){const s=Math.max(0,Math.round((tEnd-Date.now())/1000));$("timer").textContent=tEnd?Math.floor(s/60)+":"+String(s%60).padStart(2,"0"):"";if(tEnd&&s<=0&&cur&&cur.exam){const q=queue[pos];if(q&&q.type==="write"&&cur.ans.length===pos)cur.ans.push(grab(q));pos=queue.length;finish()}}
@@ -662,7 +640,7 @@ function head(){
   $("mode").textContent=S.typing?"Te moeilijk? Kies uit opties":"Te makkelijk? Typ het antwoord zelf";
 }
 function home(){
-  $("play").hidden=true;$("stats").hidden=true;$("home").hidden=false;head();clock(0);hush();planId=null;drawPlan();fillVoices();
+  $("play").hidden=true;$("stats").hidden=true;$("home").hidden=false;head();clock(0);hush();planId=null;drawPlan();
   $("menu").innerHTML=SEC.map(s=>{
     const p=s.id==="mix"?null:ITEMS.filter(x=>x.sec===s.id), n=p?p.filter(x=>S.items[x.k]).length:0;
     const hd=s.id==="lz"?"<h2>Examenonderdelen</h2>":s.id==="verb"?"<h2>Grammatica en woorden</h2>":"";
@@ -990,12 +968,7 @@ function wall(){
     $("peek").innerHTML=`${v[0]} – ${v[2]}, ${v[3]} – ${v[4]} <small>perfectum met ${v[5]||"hebben / zijn"}</small>`;
   });
 }
-$("back").onclick=home; $("sback").onclick=home; $("gen").onclick=gen;
-if(canSpeak){
-  $("voicebox").hidden=false;
-  $("voice").onchange=()=>{S.voice=$("voice").value;save();speak("Hallo! Zo klink ik bij de luisteroefeningen.")};
-}
-$("mode").onclick=()=>{S.typing=!S.typing;save();if(!answered)show();else head()};
+$("back").onclick=home; $("sback").onclick=home; $("gen").onclick=gen;$("mode").onclick=()=>{S.typing=!S.typing;save();if(!answered)show();else head()};
 document.addEventListener("keydown",e=>{
   if($("play").hidden)return;
   if(e.key==="Enter"&&$("inp")&&!answered){e.preventDefault();grade($("inp").value.trim().toLowerCase())}
