@@ -113,21 +113,18 @@ h2.gap{margin-top:26px}
 .exams{list-style:none;padding:0;margin:0}
 .exams li{padding:7px 0;border-bottom:2px dashed var(--line)}
 .exams li span{display:block;color:var(--soft);font-size:15px}
-.cds{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:8px 0 4px}
-.cd{background:var(--surface);border-radius:16px 6px 14px 5px/6px 14px 5px 16px;padding:10px 12px 12px}
-.cd .num{font-family:var(--brush);font-size:60px;line-height:.9;color:var(--blue)}
-.cd .lbl{font-size:15px;color:var(--soft);margin-bottom:6px}
-.cd b{display:block;line-height:1.2}
-.cd span{display:block;font-size:15px;color:var(--soft)}
-.cd.next{background:#14275A;color:#F4EBD0}
-.cd.next .num{color:#F5C542}
-.cd.next .lbl,.cd.next span{color:#C9D5F3}
-.cd.past{opacity:.55}
-.tl{position:relative;height:10px;background:var(--surface);border-radius:5px;margin:24px 10px 8px}
+.tlw{position:relative;margin:4px 10px 0;padding:48px 0}
+.tl{position:relative;height:10px;background:var(--surface);border-radius:5px}
 .tl i{position:absolute;left:0;top:0;bottom:0;border-radius:5px;background:repeating-linear-gradient(100deg,var(--yellow) 0 12px,var(--ochre) 12px 15px)}
 .tl u{position:absolute;top:50%;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;background:var(--yellow);border:3px solid var(--ink)}
+.tl u.next{width:22px;height:22px;margin:-11px 0 0 -11px;background:var(--blue)}
+.tl u.past{opacity:.55}
 .tl em{position:absolute;top:50%;width:6px;height:24px;margin:-12px 0 0 -3px;background:var(--bad);border-radius:3px}
-.tlx{display:flex;justify-content:space-between;font-size:14px;color:var(--soft);margin:0 2px}
+.tlb{position:absolute;transform:translateX(-50%);font-size:14px;line-height:1.25;color:var(--soft);white-space:nowrap;text-align:center}
+.tlb b{display:block;font-size:15px;color:var(--ink)}
+.tlb.up{bottom:calc(50% + 15px)} .tlb.dn{top:calc(50% + 15px)}
+.tlb.l{transform:translateX(-9px);text-align:left} .tlb.r{transform:translateX(calc(9px - 100%));text-align:right}
+.tlb.next b{color:var(--blue)} .tlb.past{opacity:.55}
 /* onderaan het startscherm */
 #gen{margin-top:20px} #genmsg{margin-top:8px;min-height:20px}
 #wallbox,#duo{margin-top:30px}
@@ -689,10 +686,13 @@ function planHTML(){
   const gs={}; Object.keys(PART).forEach(k=>{if(ex[k])(gs[ex[k]]=gs[ex[k]]||[]).push(PART[k])});
   const dates=Object.keys(gs).sort(), next=dates.find(ds=>dayOf(ds)>=d);
   const start=Math.min(S.plan0||d,d), last=dates.length?dayOf(dates[dates.length-1]):d, at=x=>Math.max(0,Math.min(100,(x-start)/Math.max(1,last-start)*100));
-  const rows=!dates.length?"":`<div class="cds">${dates.map(ds=>{const n=dayOf(ds)-d;
-      return`<div class="cd${n<0?" past":ds===next?" next":""}"><div class="num">${n<0?"✓":n}</div><div class="lbl">${n<0?"geweest":n===0?"vandaag: succes!":n===1?"dag":"dagen"}</div><b>${gs[ds].join(" en ")}</b><span>${fmt(ds)}</span></div>`}).join("")}</div>
-    <div class="tl" role="img" aria-label="Tijdlijn van vandaag tot je laatste examen"><i style="width:${at(d)}%"></i>${dates.map(ds=>`<u style="left:${at(dayOf(ds))}%"></u>`).join("")}<em style="left:${at(d)}%"></em></div>
-    <div class="tlx"><span>start</span><span>${short(dates[dates.length-1])}</span></div>`;
+  const days=n=>n<0?"geweest":n===0?"vandaag!":n===1?"nog 1 dag":"nog "+n+" dagen";
+  const cls=ds=>{const n=dayOf(ds)-d;return n<0?" past":ds===next?" next":""};
+  // labels alternate below/above the bar so close dates don't overlap
+  const rows=!dates.length?"":`<div class="tlw" role="img" aria-label="${dates.map(ds=>gs[ds].join(" en ")+": "+fmt(ds)+", "+days(dayOf(ds)-d)).join("; ")}">
+    <div class="tl"><i style="width:${at(d)}%"></i>${dates.map(ds=>`<u class="${cls(ds)}" style="left:${at(dayOf(ds))}%"></u>`).join("")}<em style="left:${at(d)}%"></em></div>
+    ${dates.map((ds,i)=>{const x=at(dayOf(ds));
+      return`<div class="tlb ${i%2?"up":"dn"}${x<15?" l":x>85?" r":""}${cls(ds)}" style="left:${x}%"><b>${gs[ds].join(" en ")}</b>${short(ds)} · ${days(dayOf(ds)-d)}</div>`}).join("")}</div>`;
   const T=planTasks();
   return`<h2>Vandaag</h2>`+(T.length?T.map(t=>`<button class="sec" data-p="${t.id}"><b>${t.t}</b><span>${t.s}</span>${done.includes(t.id)?"<em>klaar</em>":""}</button>`).join(""):`<p class="note">Er staan geen examens meer in je planning.</p>`)
     +`<h2 class="gap">Mijn examens</h2>${rows}<button class="hint" id="editex">Examendata wijzigen</button>
