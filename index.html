@@ -549,7 +549,18 @@ const $=id=>document.getElementById(id);
 const today=()=>{const d=new Date();return Math.floor((d.getTime()-d.getTimezoneOffset()*6e4)/864e5)};
 let S={items:{},streak:0,last:0,typing:false,errs:[],gen:{lz:[],ls:[]},t:0,exams:{wr:"2026-10-26",knm:"2026-11-17",sp:"2026-11-17",ls:"2026-11-23",lz:"2026-11-23"},day:{d:0,done:[]}};
 try{const r=JSON.parse(localStorage.getItem(KEY));if(r&&r.items)S=Object.assign(S,r)}catch(e){}
-const localSave=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+// Backup copy in IndexedDB: iOS home-screen apps can lose localStorage
+const idb=new Promise((ok,no)=>{try{const r=indexedDB.open("ww",1);r.onupgradeneeded=()=>r.result.createObjectStore("kv");r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)}catch(e){no(e)}});
+idb.catch(()=>{});
+const idbPut=v=>idb.then(db=>db.transaction("kv","readwrite").objectStore("kv").put(v,KEY)).catch(()=>{});
+const idbGet=()=>idb.then(db=>new Promise(ok=>{const r=db.transaction("kv").objectStore("kv").get(KEY);r.onsuccess=()=>ok(r.result);r.onerror=()=>ok(null)})).catch(()=>null);
+try{navigator.storage.persist().catch(()=>{})}catch(e){}
+let restored=false;
+const localSave=()=>{const j=JSON.stringify(S);try{localStorage.setItem(KEY,j)}catch(e){}if(restored)idbPut(j)};
+async function restore(){
+  try{const r=JSON.parse(await idbGet());restored=true;if(r&&r.items&&(r.t||0)>(S.t||0)){S=Object.assign(S,r);addGenerated();if(!$("home").hidden)home()}}catch(e){restored=true}
+  localSave();
+}
 let cloud=null,busy=false,dirty=false,pushT=null;
 function push(){
   if(!cloud)return; if(busy){dirty=true;return} busy=true;
@@ -767,6 +778,12 @@ function record(ok){
     S.items[q.k]=it; if(ok)right++;
   }
   if(!ok&&!cur.exam&&q.type!=="reveal"&&q.type!=="write")queue.push({...q,retry:true});
+  if(pos>=queue.length-1)complete(); else save();
+}
+function complete(){
+  const d=today();
+  if(S.last!==d){S.streak=S.last===d-1?S.streak+1:1;S.last=d}
+  if(planId){if(!S.day||S.day.d!==d)S.day={d,done:[]};if(!S.day.done.includes(planId))S.day.done.push(planId);planId=null}
   save();
 }
 function feedback(ok,q){
@@ -922,9 +939,7 @@ Elk goed antwoord moet duidelijk uit de tekst volgen. De foute antwoorden klinke
   b.disabled=false;
 }
 function finish(){
-  const d=today();
-  if(S.last!==d){S.streak=S.last===d-1?S.streak+1:1;S.last=d;save()}
-  if(planId){if(!S.day||S.day.d!==d)S.day={d,done:[]};if(!S.day.done.includes(planId))S.day.done.push(planId);planId=null;save()}
+  complete();
   head(); $("bar").style.width="100%"; $("mode").hidden=true; clock(0); hush();
   if(cur.exam&&cur.write)return examWrite();
   if(cur.exam){
@@ -965,7 +980,7 @@ document.addEventListener("keydown",e=>{
 });
 addGenerated();
 home();
-initCloud();
+restore().then(initCloud);
 </script>
 </body>
 </html>
