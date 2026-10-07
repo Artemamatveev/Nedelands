@@ -27,7 +27,7 @@
 [hidden]{display:none!important}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:"Alegreya",Georgia,"Times New Roman",serif;font-size:18px;line-height:1.5}
-main{max-width:480px;margin:0 auto;padding:0 16px 48px}
+main{max-width:480px;margin:0 auto;padding:0 16px 48px;overflow-x:clip}
 button{font:inherit;color:inherit;cursor:pointer}
 button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
 
@@ -981,6 +981,25 @@ document.addEventListener("keydown",e=>{
   if(e.key==="Enter"&&$("inp")&&!answered){e.preventDefault();grade($("inp").value.trim().toLowerCase())}
   else if(!answered&&!$("inp")&&/^[1-4]$/.test(e.key)){const b=document.querySelectorAll(".opt")[e.key-1];if(b)b.click()}
 });
+// Swipe sideways on an exercise or stats screen to go back to the start screen
+(()=>{
+  let x0=0,y0=0,el=null,on=false;
+  const reset=t=>{t.style.transition=t.style.transform=t.style.opacity=""};
+  document.addEventListener("touchstart",e=>{
+    el=!$("play").hidden?$("play"):!$("stats").hidden?$("stats"):null;
+    if(!el||e.touches.length>1||e.target.closest("input,textarea")){el=null;return}
+    x0=e.touches[0].clientX;y0=e.touches[0].clientY;on=false},{passive:true});
+  document.addEventListener("touchmove",e=>{
+    if(!el)return; const dx=e.touches[0].clientX-x0,dy=e.touches[0].clientY-y0;
+    if(!on){if(Math.abs(dy)>12&&Math.abs(dy)>Math.abs(dx)){el=null;return} if(Math.abs(dx)>12)on=true}
+    if(on){el.style.transition="none";el.style.transform=`translateX(${dx*.6}px)`;el.style.opacity=1-Math.min(.5,Math.abs(dx)/600)}},{passive:true});
+  const end=e=>{
+    if(!el)return; const t=el,dx=e.changedTouches[0].clientX-x0; el=null; if(!on)return;
+    t.style.transition="transform .18s,opacity .18s";
+    if(e.type==="touchend"&&Math.abs(dx)>90){t.style.transform=`translateX(${Math.sign(dx)*100}%)`;t.style.opacity=0;setTimeout(()=>{reset(t);home()},170)}
+    else{t.style.transform="";t.style.opacity="";setTimeout(()=>reset(t),200)}};
+  document.addEventListener("touchend",end); document.addEventListener("touchcancel",end);
+})();
 addGenerated();
 home();
 restore().then(initCloud);
