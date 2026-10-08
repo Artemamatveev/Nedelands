@@ -19,8 +19,8 @@ generic "AI app" look.
 - **Shapes**: square or nearly square corners (2–4px), solid 1px separators, flat buttons.
 - **Dutch motifs instead of decoration**:
   - Header: the painting of the day (`ART` + `paint()` in `index.html`), with a museum
-    label underneath: artist, title, year, museum, one A2 sentence in Dutch and a Russian
-    translation behind "Vertaling". Tapping the painting shows it in full.
+    label underneath: artist, title, year, museum and one A2 sentence in Dutch (no
+    translation). Tapping the painting shows it in full.
   - Tiles: "Mix van de dag" is a Delft tile with corner motifs; the verb wall is a tile wall
     whose tiles get painted blue as verbs are learned; timeline dots are tiles turned 45°.
   - Streak: a stamp, like on a Museumkaart.
@@ -33,8 +33,7 @@ generic "AI app" look.
 Only public-domain or CC0 images, downloaded from Wikimedia Commons into `art/`,
 resized to max 1000px and compressed (~100–150 KB each). Record every new image in
 `art/CREDITS.md`. To add one, append to `ART` with `f` (file name), `y` (vertical focus
-in % for the header crop), artist, title, year, museum, and an A2 sentence with its
-Russian translation. Check facts in the sentences; they double as KNM material.
+in % for the header crop), artist, title, year, museum and an A2 sentence. Check facts in the sentences; they double as KNM material.
 
 ## Progress
 

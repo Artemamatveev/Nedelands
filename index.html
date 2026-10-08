@@ -48,7 +48,6 @@ h1{position:absolute;left:16px;bottom:12px;z-index:1;margin:0;font-size:28px;fon
 .lab{margin:0;font-size:14px;line-height:1.45;color:var(--soft)}
 .lab b{color:var(--ink);font-weight:700}
 .label .nl{margin:8px 0 0;font-size:18px;font-weight:500;line-height:1.4;color:var(--blue)}
-.label .hint{margin:4px 0 0}
 .zoom{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 16px calc(20px + env(safe-area-inset-bottom,0px));background:#060C1E;color:#D9E2F5;text-align:center}
 .zoom img{max-width:100%;max-height:72vh;object-fit:contain}
 .zoom p{max-width:440px;margin:14px 0 0;font-size:15px}
@@ -659,44 +658,43 @@ function head(){
 // y = vertical focus (%) for the header crop.
 const ART=[
  {f:"melkmeisje",y:24,a:"Johannes Vermeer",t:"Het melkmeisje",d:"ca. 1660",m:"Rijksmuseum, Amsterdam",
-  nl:"Een dienstmeid schenkt melk in een kom. Op tafel ligt brood.",ru:"Служанка наливает молоко в миску. На столе лежит хлеб."},
+  nl:"Een dienstmeid schenkt melk in een kom. Op tafel ligt brood."},
  {f:"oranje",y:36,a:"Adriaen Thomasz. Key",t:"Willem van Oranje",d:"ca. 1579",m:"Rijksmuseum, Amsterdam",
-  nl:"Willem van Oranje heet de Vader des Vaderlands. Het Wilhelmus, het volkslied, gaat over hem.",ru:"Вильгельма Оранского называют Отцом Отечества. Гимн Нидерландов «Вильгельмус» — о нём."},
+  nl:"Willem van Oranje heet de Vader des Vaderlands. Het Wilhelmus, het volkslied, gaat over hem."},
  {f:"avercamp",y:55,a:"Hendrick Avercamp",t:"Winterlandschap met schaatsers",d:"ca. 1608",m:"Rijksmuseum, Amsterdam",
-  nl:"In de winter schaatsen jong en oud op het ijs. Schaatsen is in Nederland nog steeds populair.",ru:"Зимой и молодые, и старые катаются на коньках. В Нидерландах коньки популярны до сих пор."},
+  nl:"In de winter schaatsen jong en oud op het ijs. Schaatsen is in Nederland nog steeds populair."},
  {f:"vangogh",y:40,a:"Vincent van Gogh",t:"Zelfportret",d:"1887",m:"Rijksmuseum, Amsterdam",
-  nl:"Vincent van Gogh kwam uit Brabant. Hij maakte meer dan 800 schilderijen.",ru:"Винсент ван Гог был родом из Брабанта. Он написал больше 800 картин."},
+  nl:"Vincent van Gogh kwam uit Brabant. Hij maakte meer dan 800 schilderijen."},
  {f:"delft",y:60,a:"Johannes Vermeer",t:"Gezicht op Delft",d:"ca. 1660–1661",m:"Mauritshuis, Den Haag",
-  nl:"Dit is de stad Delft. Delft is bekend om het blauwe aardewerk: Delfts blauw.",ru:"Это город Делфт. Он известен синей керамикой — делфтским фаянсом."},
+  nl:"Dit is de stad Delft. Delft is bekend om het blauwe aardewerk: Delfts blauw."},
  {f:"leyster",y:28,a:"Judith Leyster",t:"Zelfportret",d:"ca. 1630",m:"National Gallery of Art, Washington",
-  nl:"Judith Leyster was een schilder uit Haarlem. In 1633 werd ze lid van het schildersgilde.",ru:"Юдит Лейстер была художницей из Харлема. В 1633 году она вступила в гильдию художников."},
+  nl:"Judith Leyster was een schilder uit Haarlem. In 1633 werd ze lid van het schildersgilde."},
  {f:"steen",y:50,a:"Jan Steen",t:"Het vrolijke huisgezin",d:"1668",m:"Rijksmuseum, Amsterdam",
-  nl:"Iedereen zingt, drinkt en maakt muziek. Een rommelig huis noem je ‘een huishouden van Jan Steen’.",ru:"Все поют, пьют и играют музыку. Беспорядок в доме называют «хозяйство Яна Стена»."},
+  nl:"Iedereen zingt, drinkt en maakt muziek. Een rommelig huis noem je ‘een huishouden van Jan Steen’."},
  {f:"erasmus",y:30,a:"Hans Holbein de Jonge",t:"Erasmus",d:"1523",m:"Louvre, Parijs",
-  nl:"Erasmus kwam uit Rotterdam. De Erasmusbrug en de Erasmus Universiteit zijn naar hem genoemd.",ru:"Эразм был родом из Роттердама. В его честь названы мост Эразма и Университет Эразма."},
+  nl:"Erasmus kwam uit Rotterdam. De Erasmusbrug en de Erasmus Universiteit zijn naar hem genoemd."},
  {f:"nachtwacht",y:60,a:"Rembrandt van Rijn",t:"De Nachtwacht",d:"1642",m:"Rijksmuseum, Amsterdam",
-  nl:"De schutters van Amsterdam gaan op pad. Het schilderij is bijna vier meter hoog.",ru:"Амстердамские стрелки выходят в дозор. Картина высотой почти четыре метра."},
+  nl:"De schutters van Amsterdam gaan op pad. Het schilderij is bijna vier meter hoog."},
  {f:"mondriaan",y:35,a:"Piet Mondriaan",t:"Compositie met rood, geel, blauw en zwart",d:"1921",m:"Kunstmuseum Den Haag",
-  nl:"Mondriaan kwam uit Amersfoort. Hij werd beroemd met rechte lijnen en rood, geel en blauw.",ru:"Мондриан был родом из Амерсфорта. Он прославился прямыми линиями и красным, жёлтым и синим."},
+  nl:"Mondriaan kwam uit Amersfoort. Hij werd beroemd met rechte lijnen en rood, geel en blauw."},
  {f:"brief",y:10,a:"Johannes Vermeer",t:"Brieflezende vrouw in het blauw",d:"ca. 1663",m:"Rijksmuseum, Amsterdam",
-  nl:"Een vrouw leest een brief. Van wie is de brief? Dat weten we niet.",ru:"Женщина читает письмо. От кого письмо? Мы не знаем."},
+  nl:"Een vrouw leest een brief. Van wie is de brief? Dat weten we niet."},
  {f:"spinoza",y:32,a:"Onbekende schilder",t:"Baruch de Spinoza",d:"ca. 1665",m:"Herzog August Bibliothek, Wolfenbüttel",
-  nl:"Spinoza was een filosoof uit Amsterdam. Hij schreef over God, de natuur en vrijheid.",ru:"Спиноза был философом из Амстердама. Он писал о Боге, природе и свободе."},
+  nl:"Spinoza was een filosoof uit Amsterdam. Hij schreef over God, de natuur en vrijheid."},
  {f:"molen",y:45,a:"Jacob van Ruisdael",t:"De molen bij Wijk bij Duurstede",d:"ca. 1670",m:"Rijksmuseum, Amsterdam",
-  nl:"Molens horen bij Nederland. Er staan nog meer dan duizend molens.",ru:"Мельницы — часть Нидерландов. Их сохранилось больше тысячи."},
+  nl:"Molens horen bij Nederland. Er staan nog meer dan duizend molens."},
  {f:"rembrandt",y:30,a:"Rembrandt van Rijn",t:"Zelfportret als de apostel Paulus",d:"1661",m:"Rijksmuseum, Amsterdam",
-  nl:"Dit is Rembrandt zelf. Hij woonde in Amsterdam. Zijn huis is nu een museum.",ru:"Это сам Рембрандт. Он жил в Амстердаме. Его дом сейчас — музей."},
+  nl:"Dit is Rembrandt zelf. Hij woonde in Amsterdam. Zijn huis is nu een museum."},
  {f:"aardappeleters",y:40,a:"Vincent van Gogh",t:"De aardappeleters",d:"1885",m:"Van Gogh Museum, Amsterdam",
-  nl:"Een arme familie eet aardappelen. Ze hebben de hele dag op het land gewerkt.",ru:"Бедная семья ест картошку. Они весь день работали в поле."},
+  nl:"Een arme familie eet aardappelen. Ze hebben de hele dag op het land gewerkt."},
  {f:"parel",y:45,a:"Johannes Vermeer",t:"Meisje met de parel",d:"ca. 1665",m:"Mauritshuis, Den Haag",
-  nl:"Niemand weet wie dit meisje is. Ze draagt een blauwe tulband en een grote parel.",ru:"Никто не знает, кто эта девушка. На ней синий тюрбан и большая жемчужина."}
+  nl:"Niemand weet wie dit meisje is. Ze draagt een blauwe tulband en een grote parel."}
 ];
 function paint(){
   const p=ART[today()%ART.length], src="/art/"+p.f+".jpg";
   if(!$("artimg").src.endsWith(src)){$("artimg").src=src;$("zimg").src=src}
   $("artimg").style.objectPosition="50% "+p.y+"%";
-  $("label").innerHTML=`<p class="lab"><b>${p.a}</b><br><i>${p.t}</i>, ${p.d} · ${p.m}</p><p class="nl">${p.nl}</p><button class="hint" id="lru">Vertaling</button>`;
-  $("lru").onclick=()=>{$("lru").textContent=p.ru;$("lru").disabled=true};
+  $("label").innerHTML=`<p class="lab"><b>${p.a}</b><br><i>${p.t}</i>, ${p.d} · ${p.m}</p><p class="nl">${p.nl}</p>`;
   $("zcap").innerHTML=`<b>${p.a}</b><br><i>${p.t}</i>, ${p.d}<br>${p.m}`;
 }
 function home(){
