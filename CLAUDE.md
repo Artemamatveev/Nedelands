@@ -13,8 +13,9 @@ generic "AI app" look.
 - **Colours**: tin-glaze white `--bg`, cobalt `--blue`, light wash `--wash`, and
   `--oranje` as the only accent (timer, today marker, selection, the streak stamp).
   Always use the tokens on `:root`; every colour has a dark-mode value.
-- **Type**: Proza Libre (by Dutch designer Jasper de Waard). One family, no
-  handwriting or decorative fonts.
+- **Type**: the system font only (`-apple-system, system-ui`: SF Pro on iPhone), so the
+  app reads like a native iPhone app. No web fonts; headings semibold (600–700), never 800.
+  No handwriting or decorative fonts.
 - **Shapes**: square or nearly square corners (2–4px), solid 1px separators, flat buttons.
 - **Dutch motifs instead of decoration**:
   - Header: the painting of the day (`ART` + `paint()` in `index.html`), with a museum

@@ -9,10 +9,9 @@
 <link rel="manifest" href="/manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Nederlands A2 — elke dag oefenen</title>
-<link href="https://fonts.googleapis.com/css2?family=Proza+Libre:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <style>
 /* Delfts blauw: tin-glaze white, cobalt, and oranje as the one accent.
-   Type: Proza Libre by Jasper de Waard (Bureau Roffa, Rotterdam). */
+   Type: the phone's own system font (SF Pro on iPhone), so it reads like a native app. */
 :root{
   --bg:#FBFCFE; --surface:#EEF2FA; --wash:#C9D6F2; --ink:#14213D; --soft:#56617C; --line:#D6DDEB;
   --blue:#1F3C96; --deep:#132A6E; --oranje:#C8500C; --good:#2E7D4B; --bad:#C0392B; --on:#FFFFFF;
@@ -27,7 +26,7 @@
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:"Proza Libre",-apple-system,"Segoe UI",sans-serif;font-size:17px;line-height:1.5}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.5}
 main{max-width:480px;margin:0 auto;padding:0 16px 48px;overflow-x:clip}
 button{font:inherit;color:inherit;cursor:pointer}
 button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid var(--oranje);outline-offset:2px}
@@ -38,38 +37,38 @@ main:has(#home[hidden]) header{height:88px}
 .art{position:absolute;inset:0;width:100%;padding:0;border:0;background:none;display:block}
 .art img{width:100%;height:100%;object-fit:cover;display:block}
 header::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(8,16,40,.8),rgba(8,16,40,0) 60%);pointer-events:none}
-h1{position:absolute;left:16px;bottom:12px;z-index:1;margin:0;font-size:27px;font-weight:800;letter-spacing:-.01em;line-height:1;color:#fff;pointer-events:none}
+h1{position:absolute;left:16px;bottom:12px;z-index:1;margin:0;font-size:28px;font-weight:700;letter-spacing:0;line-height:1;color:#fff;pointer-events:none}
 /* stempel op de museumkaart */
 .streak{position:absolute;top:10px;right:14px;z-index:1;width:66px;height:66px;border-radius:50%;background:#FFF7EF;color:#B5470A;border:2px solid #B5470A;box-shadow:inset 0 0 0 3px #FFF7EF,inset 0 0 0 4px #B5470A;
   display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(-9deg);font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;line-height:1.15;text-align:center;pointer-events:none}
-.streak b{font-size:23px;font-weight:800;letter-spacing:0}
+.streak b{font-size:23px;font-weight:700;letter-spacing:0}
 .streak:empty{display:none}
 /* museumbordje */
 .label{margin:0 0 6px;padding:14px 0 16px;border-bottom:1px solid var(--line)}
 .lab{margin:0;font-size:14px;line-height:1.45;color:var(--soft)}
 .lab b{color:var(--ink);font-weight:700}
-.label .nl{margin:8px 0 0;font-size:18px;font-weight:600;line-height:1.4;color:var(--blue)}
+.label .nl{margin:8px 0 0;font-size:18px;font-weight:500;line-height:1.4;color:var(--blue)}
 .label .hint{margin:4px 0 0}
 .zoom{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 16px calc(20px + env(safe-area-inset-bottom,0px));background:#060C1E;color:#D9E2F5;text-align:center}
 .zoom img{max-width:100%;max-height:72vh;object-fit:contain}
 .zoom p{max-width:440px;margin:14px 0 0;font-size:15px}
 .zoom b{color:#fff}
 
-h2{display:flex;align-items:center;gap:10px;font-size:21px;font-weight:800;line-height:1.2;margin:0 0 4px}
+h2{display:flex;align-items:center;gap:10px;font-size:21px;font-weight:600;line-height:1.2;margin:0 0 4px}
 h2::before{content:"";flex:none;width:9px;height:9px;background:var(--blue);transform:rotate(45deg)}
 .sub,.note{color:var(--soft);font-size:15px;margin:0 0 12px}
 
 /* startscherm */
 #menu h2{margin:32px 0 4px}
 .sec{display:block;position:relative;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:13px 0 12px}
-.sec b{display:block;font-size:18px;font-weight:700}
+.sec b{display:block;font-size:18px;font-weight:600}
 .sec span{display:block;color:var(--soft);font-size:14.5px;line-height:1.35;padding-right:76px;margin-top:2px}
 .sec em{position:absolute;right:0;top:15px;font-style:normal;font-weight:600;font-size:14px;color:var(--soft);font-variant-numeric:tabular-nums}
 /* Mix van de dag als tegel, met hoekmotieven */
 #menu .sec:first-child{margin-top:26px;padding:22px 24px;border:2px solid var(--blue);border-radius:2px;box-shadow:inset 0 0 0 4px var(--bg),inset 0 0 0 5px var(--blue);
   background:radial-gradient(circle at 0 0,var(--blue) 0 15px,transparent 16px),radial-gradient(circle at 100% 0,var(--blue) 0 15px,transparent 16px),
     radial-gradient(circle at 100% 100%,var(--blue) 0 15px,transparent 16px),radial-gradient(circle at 0 100%,var(--blue) 0 15px,transparent 16px),var(--bg)}
-#menu .sec:first-child b{font-size:24px;font-weight:800;color:var(--blue)}
+#menu .sec:first-child b{font-size:24px;font-weight:700;color:var(--blue)}
 #menu .sec:first-child span{color:var(--ink)}
 
 /* oefenen */
@@ -81,13 +80,13 @@ h2::before{content:"";flex:none;width:9px;height:9px;background:var(--blue);tran
 .bar{height:6px;background:var(--surface);overflow:hidden;margin:14px 0 22px}
 .bar i{display:block;height:100%;width:0;transition:width .3s;background:var(--blue)}
 .ask{color:var(--blue);font-size:13.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin:0}
-.verb{font-size:44px;font-weight:800;letter-spacing:-.015em;line-height:1.08;margin:6px 0 2px;word-break:break-word}
-.verb.long{font-size:22px;font-weight:700;line-height:1.35;letter-spacing:0;margin:8px 0 10px}
+.verb{font-size:44px;font-weight:700;letter-spacing:0;line-height:1.08;margin:6px 0 2px;word-break:break-word}
+.verb.long{font-size:22px;font-weight:600;line-height:1.35;letter-spacing:0;margin:8px 0 10px}
 .ru{color:var(--soft);margin:0 0 18px}
 .hint{display:block;background:none;border:0;color:var(--soft);text-decoration:underline;font-size:14.5px;padding:4px 0;margin:-12px 0 12px;text-align:left}
 .hint:disabled{text-decoration:none;color:var(--ink);font-size:16px}
 .opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.opt{background:var(--bg);color:var(--ink);border:1.5px solid var(--line);border-radius:4px;box-shadow:0 2px 0 var(--line);padding:14px 8px;font-size:20px;font-weight:700;min-height:60px;word-break:break-word}
+.opt{background:var(--bg);color:var(--ink);border:1.5px solid var(--line);border-radius:4px;box-shadow:0 2px 0 var(--line);padding:14px 8px;font-size:20px;font-weight:600;min-height:60px;word-break:break-word}
 .opt:active{border-color:var(--blue)}
 .opts.one{grid-template-columns:1fr}
 .opts.one .opt{font-size:17px;font-weight:500;text-align:left;padding:11px 14px;min-height:0}
@@ -102,7 +101,7 @@ textarea{display:block;width:100%;font-size:17px;line-height:1.5;padding:12px;ma
 .fld{display:block;margin-bottom:8px}
 .fld span{display:block;font-size:14.5px;color:var(--soft)}
 .fld input{width:100%;font-size:17px;font-weight:400;padding:7px 10px}
-.btn{background:var(--blue);color:var(--on);border:0;border-radius:3px;padding:14px 20px;font-weight:700;font-size:18px}
+.btn{background:var(--blue);color:var(--on);border:0;border-radius:3px;padding:14px 20px;font-weight:600;font-size:18px}
 .btn:active{background:var(--deep)}
 .btn:disabled{opacity:.4;cursor:default}
 .ghost{background:none;border:1.5px solid var(--blue);color:var(--blue);border-radius:3px;padding:11px 12px;font-weight:700}
@@ -128,7 +127,7 @@ textarea{display:block;width:100%;font-size:17px;line-height:1.5;padding:12px;ma
 .errs span{display:block;color:var(--soft);font-size:15px}
 details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:700;padding:6px 0}
 .card h2{margin-top:24px}
-.done .big{font-size:72px;font-weight:800;letter-spacing:-.02em;line-height:1;margin:8px 0;color:var(--blue)}
+.done .big{font-size:72px;font-weight:700;letter-spacing:0;line-height:1;margin:8px 0;color:var(--blue)}
 
 #plan{margin:22px 0 6px}
 #plan .sec em{color:var(--good)}
