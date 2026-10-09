@@ -157,6 +157,11 @@ textarea{display:block;width:100%;font-size:17px;line-height:1.5;padding:12px;ma
 .ghost{background:none;border:1.5px solid var(--blue);color:var(--blue);border-radius:3px;padding:11px 12px;font-weight:700}
 .wide{width:100%}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opt.sel{border-color:var(--oranje);box-shadow:inset 0 0 0 2px var(--oranje)}
+.exnav{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:8px;margin-top:16px} .exnav button{padding:11px 6px}
+.ovw{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;margin:12px 0 16px}
+.ovw button{min-height:46px;background:var(--bg);color:var(--ink);border:1.5px solid var(--line);border-radius:3px;font-weight:600;font-variant-numeric:tabular-nums}
+.ovw button.done{background:var(--wash);border-color:var(--wash)} .ovw button.now{border-color:var(--oranje)}
 .fb{margin-top:18px;min-height:86px}
 .fb b{font-size:19px}
 /* Spreken: neem je antwoord op, met één minuut op de klok */
@@ -1534,7 +1539,7 @@ function spNext(q,r){
   const b=$("recb"); b.textContent=pos<queue.length-1?"Volgende vraag":"Klaar";b.className="btn wide";b.onclick=()=>{pos++;show()};
 }
 let tmr=null,tEnd=0;
-function tick(){const s=Math.max(0,Math.round((tEnd-Date.now())/1000));$("timer").textContent=tEnd?Math.floor(s/60)+":"+String(s%60).padStart(2,"0"):"";if(tEnd&&s<=0&&cur&&cur.exam){const q=queue[pos];if(q&&q.type==="write"&&cur.ans.length===pos)cur.ans.push(grab(q));pos=queue.length;finish()}}
+function tick(){const s=Math.max(0,Math.round((tEnd-Date.now())/1000));$("timer").textContent=tEnd?Math.floor(s/60)+":"+String(s%60).padStart(2,"0"):"";if(tEnd&&s<=0&&cur&&cur.exam){if(cur.nav)return submitExam();const q=queue[pos];if(q&&q.type==="write"&&cur.ans.length===pos)cur.ans.push(grab(q));pos=queue.length;finish()}}
 function clock(min){clearInterval(tmr);tmr=null;tEnd=min?Date.now()+min*6e4:0;tick();if(min)tmr=setInterval(tick,1000)}
 WR.forEach((p,i)=>ITEMS.push({sec:"wr",k:"wr|"+i,ord:i,type:"write",label:p[2]?"Schrijfopdracht: formulier":"Schrijfopdracht",big:p[0],sub:"",right:p[1],fields:p[2],open:p[3]}));
 SP.forEach((p,i)=>ITEMS.push({sec:"sp",k:"sp|"+i,ord:i/5|0,type:"reveal",label:"Antwoord hardop in twee of drie zinnen",big:p[0],sub:p[1],right:p[2],pics:p[3]}));
@@ -1543,7 +1548,8 @@ let cur,queue=[],pos=0,total=0,right=0,answered=false;
 function head(){
   const d=today(), alive=S.last>=d-1?S.streak:0;
   $("streak").innerHTML=alive?`<b>${alive}</b>${alive===1?"dag":"dagen"}<br>op rij`:"";
-  $("bar").style.width=(queue.length?Math.min(100,pos/queue.length*100):0)+"%";
+  const done=cur&&cur.nav&&!cur.sent?cur.pick.filter(x=>x!=null).length:pos;
+  $("bar").style.width=(queue.length?Math.min(100,done/queue.length*100):0)+"%";
   $("mode").textContent=S.typing?"Te moeilijk? Kies uit opties":"Te makkelijk? Typ het antwoord zelf";
 }
 // Schilderij van de dag: public-domain works, images in /art (from Wikimedia Commons).
@@ -1794,6 +1800,7 @@ function build(id,custom){
   queue=cand.slice(0,cur.n);
   if(id==="wr"){const f=cand.filter(q=>q.fields),o=cand.filter(q=>!q.fields);queue=f.slice(0,1).concat(o.slice(0,3))}
   if(cur.pool){const pl=cur.pool();queue=pl.slice(0,cur.n);cur.miss=[];cur.ans=[];cur.log=[];cur.plays={};
+    cur.nav=cur.exam&&["lz","ls","knm"].includes(cur.part);if(cur.nav){cur.pick=[];cur.op=[];cur.sent=false}
     if(cur.exam)cur.nw=queue.length?Math.round(queue.filter(q=>!seenN(q)).length/queue.length*100):0}
   if(!queue.length)queue=shuffle(pool.slice()).slice(0,cur.n);
   if(!cur.keep)shuffle(queue);
@@ -1822,7 +1829,9 @@ function show(){
     <button class="btn wide" id="recb">${cur.exam?"● Antwoord geven":"● Opnemen"}</button><p class="note" id="recn">${cur.exam?"Je hebt één minuut per vraag.":"Je hebt één minuut. Daarna kun je jezelf terugluisteren."}</p></div>
     ${cur.exam?"":`${SR?`<button class="ghost wide" id="spchk" style="margin-bottom:10px">Spreek in en laat nakijken</button>`:""}<button class="ghost wide" id="rev">Toon voorbeeld</button>`}`;
   else if(S.typing&&q.canType)h+=`<div class="type"><input id="inp" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Je antwoord"><button class="btn" id="chk">Controleer</button></div>`;
-  else{o=q.opts();h+=`<div class="opts${o.some(x=>x.length>14)?" one":""}">${o.map((x,i)=>`<button class="opt" data-n="${i}">${x}</button>`).join("")}</div>`}
+  else{const nv=cur.nav&&q.type==="choice";o=nv?cur.op[pos]=cur.op[pos]||q.opts():q.opts();
+    h+=`<div class="opts${o.some(x=>x.length>14)?" one":""}">${o.map((x,i)=>`<button class="opt${nv&&cur.pick[pos]===x?" sel":""}" data-n="${i}"${nv?` aria-pressed="${cur.pick[pos]===x}"`:""}>${x}</button>`).join("")}</div>`;
+    if(nv)h+=`<div class="exnav"><button class="ghost" id="prv"${pos?"":" disabled"}>← Vorige</button><button class="ghost" id="ovw">Overzicht</button><button class="btn" id="nxt">${pos<queue.length-1?"Volgende →":"Klaar"}</button></div>`}
   h+=`<div class="fb" id="fb"></div>`;
   $("card").innerHTML=h;
   document.querySelectorAll("#card [data-pic]").forEach(b=>b.onclick=()=>zoomPic(b.dataset.pic));
@@ -1840,11 +1849,17 @@ function show(){
     $("recb").onclick=()=>listen("rec",spTake); $("rev").onclick=()=>reveal(q);
     if($("spchk"))$("spchk").onclick=()=>{$("spchk").disabled=true;listen("say",r=>spGrade(q,r))};
     return}
+  if(cur.nav&&q.type==="choice"){
+    document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{cur.pick[pos]=o[b.dataset.n];
+      document.querySelectorAll(".opt").forEach(x=>{const on=x===b;x.classList.toggle("sel",on);x.setAttribute("aria-pressed",on)});head()});
+    $("prv").onclick=()=>{pos--;show()}; $("ovw").onclick=overview;
+    $("nxt").onclick=()=>{if(pos<queue.length-1){pos++;show()}else overview()};
+    return}
   const inp=$("inp"); if(inp){inp.focus();$("chk").onclick=()=>grade(inp.value.trim().toLowerCase())}
   document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>grade(o[b.dataset.n],b,o));
 }
-function record(ok){
-  const q=queue[pos],d=today();
+function record(ok,q=queue[pos]){
+  const d=today();
   if(!q.retry){
     const it=S.items[q.k]||{b:0,d};
     if(ok){it.d=d+GAP[it.b];it.b=Math.min(4,it.b+1);it.r=(it.r||0)+1}else{it.b=0;it.d=d;it.w=(it.w||0)+1}
@@ -1865,6 +1880,22 @@ function feedback(ok,q){
     <button class="btn wide" id="next">Verder</button>`;
   $("next").onclick=()=>{pos++;show()}; $("next").focus();
   if(q.tts&&q.big!==q.tts&&canSpeak)speak(q.tts); // Russian → Dutch: hear the Dutch word
+}
+// Proefexamen Lezen, Luisteren, KNM: go back to any question, as on the exam's computer; marked when handed in
+function overview(){
+  hush(); const n=queue.length,open=n-cur.pick.filter(x=>x!=null).length; head();
+  $("card").innerHTML=`<p class="ask">Overzicht</p><p class="note">${n-open} van ${n} vragen beantwoord. Tik op een nummer om naar die vraag te gaan.</p>
+    <div class="ovw">${queue.map((q,i)=>`<button class="${cur.pick[i]!=null?"done":""}${i===pos?" now":""}" data-i="${i}" aria-label="Vraag ${i+1}${cur.pick[i]!=null?", beantwoord":""}">${i+1}</button>`).join("")}</div>
+    ${open?`<p class="note">Nog ${open} ${open===1?"vraag":"vragen"} zonder antwoord. Een open vraag telt als fout.</p>`:""}
+    <div class="two"><button class="ghost" id="bk">← Vraag ${pos+1}</button><button class="btn" id="lever">Inleveren</button></div>`;
+  document.querySelectorAll(".ovw button").forEach(b=>b.onclick=()=>{pos=+b.dataset.i;show()});
+  $("bk").onclick=show;
+  $("lever").onclick=()=>{if(open&&!$("lever").dataset.ok){$("lever").dataset.ok=1;$("lever").textContent="Toch inleveren";return}submitExam()};
+}
+function submitExam(){
+  if(cur.sent)return; cur.sent=true;
+  queue.forEach((q,i)=>{const ok=cur.pick[i]===q.right;record(ok,q);cur.log.push({l:q.label,ok});if(!ok)cur.miss.push({q:q.big,r:q.right})});
+  pos=queue.length; finish();
 }
 function grade(ans,btn,o){
   if(answered||!ans)return; answered=true;
