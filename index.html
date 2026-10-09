@@ -1026,7 +1026,7 @@ function reveal(q){
 }
 function esc(x){return String(x==null?"":x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
 // Schrijven as a Word file, built here without a library: a .docx is a zip (stored, not compressed)
-// with three XML parts. Only what the learner wrote, one entry per task: {form, text}
+// with three XML parts. The task and what the learner wrote, one entry per task: {task, form, text}
 const CRC=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
 const crc32=b=>{let c=~0;for(const x of b)c=CRC[(c^x)&255]^(c>>>8);return~c>>>0};
 function zip(files,type){
@@ -1042,10 +1042,10 @@ function zip(files,type){
 }
 function saveDocx(items){
   const X=t=>String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-  const p=(t,o={})=>`<w:p><w:pPr><w:spacing w:before="${o.before||0}" w:after="120"/></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/>${o.b?"<w:b/>":""}<w:sz w:val="${o.b?28:22}"/></w:rPr><w:t xml:space="preserve">${X(t)}</w:t></w:r></w:p>`;
+  const p=(t,o={})=>`<w:p><w:pPr><w:spacing w:before="${o.before||0}" w:after="120"/></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/>${o.b?"<w:b/>":""}${o.i?'<w:i/><w:color w:val="56617C"/>':""}<w:sz w:val="${o.b?28:22}"/></w:rPr><w:t xml:space="preserve">${X(t)}</w:t></w:r></w:p>`;
   let body="";
   items.forEach((it,i)=>{
-    if(items.length>1)body+=p(`Opdracht ${i+1}`,{b:1,before:i?360:0});
+    body+=p(items.length>1?`Opdracht ${i+1}`:"Opdracht",{b:1,before:i?360:0})+p(it.task,{i:1})+p("");
     body+=((it.form?it.form+"\n\n":"")+it.text).split("\n").map(l=>p(l)).join("");
   });
   const W='xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"';
@@ -1092,12 +1092,12 @@ async function check(q){
       <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(q.right)}</div></details>
       ${docBtn}<button class="btn wide" id="next">Verder</button>`;
     $("next").onclick=()=>{pos++;show()};
-    $("docx").onclick=()=>saveDocx([{form,text}]);
+    $("docx").onclick=()=>saveDocx([{task,form,text}]);
   }catch(e){
     const c=e&&e.code;
     if(c==="rate_limited"){btn.disabled=false;$("txt").readOnly=false;$("fb").innerHTML=`<p class="note">Te veel verzoeken achter elkaar. Wacht een minuut en probeer het opnieuw.</p>`;return}
     btn.hidden=true;
-    selfGrade(q,c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je tekst met het voorbeeld.":"Het nakijken is niet gelukt. Vergelijk je tekst met het voorbeeld.",{form,text});
+    selfGrade(q,c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je tekst met het voorbeeld.":"Het nakijken is niet gelukt. Vergelijk je tekst met het voorbeeld.",{task,form,text});
   }
 }
 function grab(q){
@@ -1106,7 +1106,7 @@ function grab(q){
 }
 async function examWrite(){
   const A=cur.ans, card=$("card");
-  const doc=A.map(a=>({form:a.form,text:a.text}));
+  const doc=A.map(a=>({task:a.q.big+(a.q.open?" "+a.q.open:""),form:a.form,text:a.text}));
   const foot=`${A.length?docBtn:""}<div class="two"><button class="ghost" id="tohome">Alle onderdelen</button><button class="btn" id="more">Nog een keer</button></div>`;
   const bind=()=>{$("more").onclick=()=>build(cur.id,cur);$("tohome").onclick=home;if($("docx"))$("docx").onclick=()=>saveDocx(doc)};
   const own=a=>`<p class="ask">Jouw tekst</p><div class="sample">${esc((a.form?a.form+"\n\n":"")+a.text)||"(niets geschreven)"}</div>`;
