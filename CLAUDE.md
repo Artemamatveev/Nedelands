@@ -121,6 +121,16 @@ lemma, de/het, plural or verb forms (perfectum aux from `V`), and finds separabl
 (bel … op → opbellen). Meanings are in English; the rest of the app stays in Russian.
 No Claude calls in the reader: whole sentences go to Google Translate via a link.
 
+## Geschiedenis van Nederland
+
+"Geschiedenis van Nederland" (a row under "Lezen en luisteren") is a timeline of short A2 chapters in
+`GS` in `index.html`, from the hunebedden to now, grouped by period (`g`). Each chapter has years, a text
+(one paragraph per line, tap a word for the dictionary popup, like in the reader), an optional picture
+(`foto/` or `art/`, same rules as the photos, credited in `foto/CREDITS.md`) and three questions, stored as
+`gs|<id>.<n>` items (also in the Mix and in "Mijn zwakke punten"). Original texts: check facts, they double as
+KNM material. `S.hs` keeps when a chapter was last opened; a chapter is "Klaar" when every question was
+answered right once. Append chapters and questions; don't reorder or rename them.
+
 ## Luisteren en kijken (real Dutch)
 
 Real speech from Dutch YouTube channels and podcasts, listed in `MEDIA` in `index.html` (id, name,

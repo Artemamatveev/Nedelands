@@ -1,4 +1,4 @@
-# Bronnen van de foto's (Spreken)
+# Bronnen van de foto's (Spreken en Geschiedenis)
 
 Alle foto's komen van Wikimedia Commons en zijn publiek domein of CC0.
 Ze zijn verkleind (max. 640 px breed) en gecomprimeerd voor de app.
@@ -41,3 +41,20 @@ Ze zijn verkleind (max. 640 px breed) en gecomprimeerd voor de app.
 | `fietstocht.jpg` | [Older woman with flowers protected bike lane boston.jpg](https://commons.wikimedia.org/wiki/File:Older_woman_with_flowers_protected_bike_lane_boston.jpg) | Photo by Adam Coppola. | CC0 |
 | `lekkeband.jpg` | [Hoe plak ik fietsband PK-F-A.01257.jpg](https://commons.wikimedia.org/wiki/File:Hoe_plak_ik_fietsband_PK-F-A.01257.jpg) | Emmy Andriesse for Anefo | Public domain |
 | `fietsenmaker.jpg` | [U.S. Air Force Tech. Sgt. Juan Sanchezduarte, with the 451st Expeditionary Logistics Readiness Squadron, works on a bicycle at a bike repair shop at Camp Losano, Kandahar Airfield, Afghanistan, Nov. 11, 2013 131111-F-BY961-018.jpg](https://commons.wikimedia.org/wiki/File:U.S._Air_Force_Tech._Sgt._Juan_Sanchezduarte,_with_the_451st_Expeditionary_Logistics_Readiness_Squadron,_works_on_a_bicycle_at_a_bike_repair_shop_at_Camp_Losano,_Kandahar_Airfield,_Afghanistan,_Nov._11,_2013_131111-F-BY961-018.jpg) | Capt Jason Smith | Public domain |
+
+## Geschiedenis van Nederland
+
+De hoofdstukken in Geschiedenis gebruiken ook `art/oranje.jpg` en `art/aardappeleters.jpg` (zie `art/CREDITS.md`).
+
+| Bestand | Origineel op Commons | Maker | Licentie |
+|---|---|---|---|
+| `hunebed.jpg` | [Hunebed D27 in Borger flickr.jpg](https://commons.wikimedia.org/wiki/File:Hunebed_D27_in_Borger_flickr.jpg) | Minko Soomers | CC0 |
+| `amsterdam1538.jpg` | [Gezicht op Amsterdam in vogelvlucht 1538 Cornelis Anthonisz.jpg](https://commons.wikimedia.org/wiki/File:Gezicht_op_Amsterdam_in_vogelvlucht_1538_Cornelis_Anthonisz.jpg) | Cornelis Anthonisz | Public domain |
+| `voc.jpg` | [Een aantal Oostindiëvaarders voor de kust Rijksmuseum SK-A-3108.jpeg](https://commons.wikimedia.org/wiki/File:Een_aantal_Oostindi%C3%ABvaarders_voor_de_kust_Rijksmuseum_SK-A-3108.jpeg) | Hendrick Cornelisz Vroom | Public domain |
+| `slavernij.jpg` | [Erwin de Vries - Nationaal Monument Slavernijverleden 1.jpg](https://commons.wikimedia.org/wiki/File:Erwin_de_Vries_-_Nationaal_Monument_Slavernijverleden_1.jpg) | RoMaVo | CC0 |
+| `thorbecke.jpg` | [Portret van Johan Rudolf Thorbecke, RP-P-1894-A-18399.jpg](https://commons.wikimedia.org/wiki/File:Portret_van_Johan_Rudolf_Thorbecke,_RP-P-1894-A-18399.jpg) | Rijksmuseum | CC0 |
+| `aletta.jpg` | [Aletta Jacobs, 1895-1905.jpg](https://commons.wikimedia.org/wiki/File:Aletta_Jacobs,_1895-1905.jpg) | Max Büttinghausen | Public domain |
+| `bevrijding.jpg` | [Vreugde over de bevrijding in Amsterdam-Zuid., Bestanddeelnr 900-2831.jpg](https://commons.wikimedia.org/wiki/File:Vreugde_over_de_bevrijding_in_Amsterdam-Zuid.,_Bestanddeelnr_900-2831.jpg) | Anefo (Nationaal Archief) | CC0 |
+| `indonesie.jpg` | [Soevereiniteitsoverdracht Indonesië. Koningin Juliana tekent de akte, Bestanddeelnr 934-5295.jpg](https://commons.wikimedia.org/wiki/File:Soevereiniteitsoverdracht_Indonesi%C3%AB._Koningin_Juliana_tekent_de_akte,_Bestanddeelnr_934-5295.jpg) | Joop van Bilsen / Anefo (Nationaal Archief) | CC0 |
+| `watersnood.jpg` | [Watersnood 1953, Bestanddeelnr 059-1000.jpg](https://commons.wikimedia.org/wiki/File:Watersnood_1953,_Bestanddeelnr_059-1000.jpg) | Anefo (Nationaal Archief) | CC0 |
+| `gastarbeiders.jpg` | [Italiaanse gastarbeiders in Twente lezen Nederlandse kranten, Bestanddeelnr 121-0419.jpg](https://commons.wikimedia.org/wiki/File:Italiaanse_gastarbeiders_in_Twente_lezen_Nederlandse_kranten,_Bestanddeelnr_121-0419.jpg) | Anefo (Nationaal Archief) | CC0 |

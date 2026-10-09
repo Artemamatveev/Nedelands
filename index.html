@@ -222,6 +222,16 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
 .mctl .rate.on{border-color:var(--oranje);color:var(--oranje)}
 .msum{margin-top:14px;font-size:17px;line-height:1.55}
 .msum p{margin:0 0 10px}
+/* geschiedenis */
+#hist{position:relative}
+#hist>.back{margin-top:14px}
+#hist h2{margin-top:18px} #hbody>.ask{margin-top:20px} #hbody>.ask+h2{margin-top:4px}
+#hall{margin-top:24px}
+.hfig{margin:14px 0 18px}
+.hfig button{display:block;width:100%;padding:0;border:0;background:var(--surface)}
+.hfig img{display:block;width:100%;aspect-ratio:3/2;max-height:400px;object-fit:cover}
+.hfig figcaption{margin-top:6px;color:var(--soft);font-size:14px;line-height:1.4}
+.hnext{margin-top:22px}
 /* lezen: tik op een woord */
 .pg{color:var(--soft);font-size:15px;font-variant-numeric:tabular-nums}
 .rt{display:flex;align-items:center;gap:6px}
@@ -272,7 +282,7 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
   #menu .list{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));column-gap:40px}
   .exb{grid-template-columns:repeat(5,1fr)}
   .duo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:64px;align-items:start}
-  #play,#stats,#lib,#read,#media{max-width:720px;margin:0 auto}
+  #play,#stats,#lib,#read,#media,#hist{max-width:720px;margin:0 auto}
   .book{font-size:20px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -328,6 +338,10 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
   <div id="media" hidden>
     <button class="back" id="mback"></button>
     <div id="mbody"></div>
+  </div>
+  <div id="hist" hidden>
+    <button class="back" id="hback"></button>
+    <div id="hbody"></div>
   </div>
   <div id="play" hidden>
     <div class="top"><button class="back" id="back"><span aria-hidden="true">←</span>Start</button><span id="timer"></span></div>
@@ -902,7 +916,8 @@ const SEC=[
 {id:"wo",t:"Woordvolgorde",s:"Maak een zin van de woorden",n:6},
 {id:"pr",t:"Tegenwoordige tijd",s:"Vervoeging, modale en scheidbare werkwoorden",n:10},
 {id:"dh",t:"De, het en uitgangen",s:"Lidwoorden, meervoud, bijvoeglijke naamwoorden, niet / geen",n:10},
-{id:"vo",t:"Woordenschat",s:"Ruim 1000 woorden in 23 thema's: dokter, werk, wonen, werkwoorden en meer",n:10}
+{id:"vo",t:"Woordenschat",s:"Ruim 1000 woorden in 23 thema's: dokter, werk, wonen, werkwoorden en meer",n:10},
+{id:"gs",t:"Geschiedenis",s:"Vragen over de geschiedenis van Nederland",n:10}
 ];
 const GAP=[1,2,4,7,14], KEY="ww-v1";
 const $=id=>document.getElementById(id);
@@ -1217,17 +1232,19 @@ function itHTML(attr,t,d,o={}){
 }
 function home(){
   paint();
-  $("play").hidden=true;$("stats").hidden=true;$("lib").hidden=true;$("read").hidden=true;$("media").hidden=true;stopMedia();closePop();$("home").hidden=false;head();clock(0);hush();planId=null;drawPlan();
+  $("play").hidden=true;$("stats").hidden=true;$("lib").hidden=true;$("read").hidden=true;$("media").hidden=true;$("hist").hidden=true;stopMedia();closePop();$("home").hidden=false;head();clock(0);hush();planId=null;drawPlan();
   const sec=id=>SEC.find(x=>x.id===id);
   const row=id=>{const s=sec(id),p=ITEMS.filter(x=>x.sec===id),n=p.filter(x=>S.items[x.k]).length;
     return itHTML(`data-s="${id}"`,s.t,s.s,{n:n+" van "+p.length,bar:n?n/p.length*100:null})};
   // exam parts: how ready you are (from the proefexamens, else from practice); tap to practise
   const part=k=>{const r=ready(k);return itHTML(`data-s="${k}"`,PART[k],r.t,{n:`<span class="${r.cls}">${r.st}</span>`,bar:r.pc,pass:1})};
   const lb=Object.values(S.bk||{}).filter(b=>b.t).sort((a,b)=>b.at-a.at)[0];
+  const hs=S.hs||{},lh=GS.filter(c=>hs[c.id]).sort((a,b)=>hs[b.id]-hs[a.id])[0],gsDone=GS.filter(c=>gsItems(c).every(x=>(S.items[x.k]||{}).r)).length;
   $("menu").innerHTML=`<h2>Naar het examen</h2><p class="sub">Ben je klaar? Tik op een onderdeel om te oefenen. De streep is ${PASS*100}%: zoveel heb je nodig.</p><div class="list">${["lz","ls","wr","sp","knm"].map(part).join("")}</div>`
     +`<h3 class="lh">Proefexamen</h3><p class="sub">Met tijd, zoals op het echte examen. Zo zie je of je klaar bent.</p><div class="exb">${["lz","ls","wr","sp","knm"].map(id=>`<button class="ghost" data-e="${id}">${PART[id]}<small>${EX[id].min} min</small></button>`).join("")}</div>`
     +`<h2>Grammatica en woorden</h2><p class="sub">Korte rondes van 10 vragen. Dit helpt bij alle onderdelen.</p><div class="list">${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`;
   $("books").innerHTML=itHTML(`data-x="books"`,"Boekenkast",lb?`Je leest nu: ${esc(lb.t)}, blz. ${lb.p+1}`:"Verhalen en je eigen e-books. Tik op een woord voor de betekenis.")
+    +itHTML(`data-x="hist"`,"Geschiedenis van Nederland",lh?`Je was bij: ${lh.t}`:`Van de hunebedden tot nu, in ${GS.length} korte teksten met vragen.`,{n:`${gsDone} van ${GS.length}`})
     +itHTML(`data-x="media"`,"Luisteren en kijken","Echt Nederlands: nieuws, video's en podcasts.")
     +((S.words||[]).length?itHTML(`data-x="words"`,"Mijn woorden","Oefen de woorden die je bij het lezen hebt bewaard.",{n:S.words.length}):"");
   $("mine").innerHTML=itHTML(`data-x="stats"`,"Mijn zwakke punten","Zie waar je de meeste fouten maakt en oefen precies dat.")
@@ -1238,6 +1255,7 @@ function home(){
     else if(d.x==="stats")stats();
     else if(d.x==="books")library();
     else if(d.x==="media")media();
+    else if(d.x==="hist")hist();
     else if(d.x==="words")practiseWords();
     else build("custom",{id:"custom",t:"Mijn fouten",n:10,pool:()=>shuffle(errItems())})});
   window.scrollTo(0,0);
@@ -1303,7 +1321,7 @@ function stats(){
   ITEMS.forEach(q=>{if(q.type==="reveal")return;const k=q.sec+"|"+q.label,o=g[k]||(g[k]={sec:q.sec,label:q.label,r:0,w:0,items:[]}),it=S.items[q.k];o.items.push(q);if(it){o.r+=it.r||0;o.w+=it.w||0}});
   const all=Object.values(g),multi={}; all.forEach(o=>multi[o.sec]=(multi[o.sec]||0)+1);
   const gs=all.filter(o=>o.r+o.w>=3).sort((a,b)=>b.w/(b.r+b.w)-a.w/(a.r+a.w));
-  gs.forEach(o=>{const t=SEC.find(x=>x.id===o.sec).t;o.name=multi[o.sec]<2?t:o.sec==="knm"?o.label:t+": "+o.label});
+  gs.forEach(o=>{const t=SEC.find(x=>x.id===o.sec).t;o.name=multi[o.sec]<2?t:o.sec==="knm"||o.sec==="gs"?o.label:t+": "+o.label});
   $("statlist").innerHTML=gs.length?`<div class="list">${gs.map((o,i)=>{const pc=Math.round(o.r/(o.r+o.w)*100);
     return itHTML(`data-i="${i}"`,o.name,`${pc}% goed, ${o.r+o.w} antwoorden`,{bar:pc})}).join("")}</div>`
     :`<p class="note">Nog te weinig antwoorden. Maak eerst een paar rondes; daarna zie je hier je zwakke punten.</p>`;
@@ -1325,7 +1343,9 @@ function build(id,custom){
   if(!cur.keep)shuffle(queue);
   queue=queue.map(q=>({...q,retry:false}));
   pos=0;total=queue.length;right=0;clock(cur.min);
-  ["home","stats","lib","read","media"].forEach(x=>$(x).hidden=true);closePop();stopMedia();$("play").hidden=false;window.scrollTo(0,0);show();
+  ["home","stats","lib","read","media","hist"].forEach(x=>$(x).hidden=true);closePop();stopMedia();$("play").hidden=false;window.scrollTo(0,0);
+  $("back").innerHTML=`<span aria-hidden="true">←</span>${cur.back?cur.back.t:"Start"}`;$("back").onclick=cur.back?cur.back.f:home;
+  show();
 }
 function show(){
   head(); if(pos>=queue.length)return finish();
@@ -1640,8 +1660,8 @@ function finish(){
   $("card").innerHTML=`<div class="done"><p class="ask">${cur.t}: ronde klaar</p>
     <div class="big">${right}/${total}</div>
     <p class="ru">${right<total?"in één keer goed. De rest komt morgen terug.":"zonder fouten. Netjes!"}</p>
-    <div class="two"><button class="ghost" id="tohome">Alle onderdelen</button><button class="btn" id="more">Nog een ronde</button></div></div>`;
-  $("more").onclick=()=>build(cur.id,cur.pool?cur:null); $("tohome").onclick=home;
+    <div class="two"><button class="ghost" id="tohome">${cur.back?cur.back.t:"Alle onderdelen"}</button><button class="btn" id="more">${cur.next?cur.next.t:"Nog een ronde"}</button></div></div>`;
+  $("more").onclick=cur.next?cur.next.f:()=>build(cur.id,cur.pool||cur.back?cur:null); $("tohome").onclick=cur.back?cur.back.f:home;
 }
 // Boekenkast: short A2 stories built in, plus the reader's own books.
 // Own books live in IndexedDB ("books" = list, "book:<id>" = text); S only keeps positions (S.bk) and saved words (S.words).
@@ -1874,6 +1894,170 @@ function turn(d){
   $("rnext").textContent=R.p<R.pages.length-1?"Volgende →":"Boek uit";
   window.scrollTo(0,0);
 }
+// Geschiedenis van Nederland: short A2 chapters from the hunebedden to now (original texts; facts checked, they double as KNM material).
+// g = heading of the period that starts here, y = years, s = one line for the list, p = picture (foto/ or art/), py = vertical focus in %,
+// pc = caption, x = text (one paragraph per line), q = questions [question, right, wrong, wrong, note].
+// Question keys are gs|<id>.<n>: append chapters and questions, don't reorder or rename them.
+const GS=[
+{id:"hunebed",g:"Lang geleden",y:"ca. 3400–3100 v.Chr.",t:"De hunebedden",s:"De oudste bouwwerken van Nederland",p:"foto/hunebed.jpg",py:60,pc:"Het grootste hunebed van Nederland, in Borger (Drenthe)",
+x:`Hunebedden zijn de oudste bouwwerken van Nederland. Ze zijn ongeveer vijfduizend jaar oud. Een hunebed is gemaakt van grote stenen. Er staan stenen in een rij, en daarop liggen nog grotere stenen.
+De stenen komen uit Scandinavië. In de ijstijd nam het ijs ze mee naar het noorden van Nederland. Later vonden de mensen de stenen op het land.
+De bouwers van de hunebedden waren boeren. Ze hielden koeien en schapen en ze verbouwden graan. Een hunebed was een graf. De boeren begroeven er hun doden, samen met potten en andere spullen.
+In Nederland zijn nog 54 hunebedden. Er liggen er 52 in Drenthe en twee in Groningen. Het grootste hunebed ligt in Borger. Daar is ook een museum: het Hunebedcentrum.
+Vroeger dachten mensen dat reuzen de hunebedden hadden gebouwd. Hoe kregen de boeren die zware stenen op hun plaats? Dat weten we nog steeds niet precies.`,
+q:[["Waar liggen de meeste hunebedden?","in Drenthe","in Zeeland","in Limburg","52 van de 54 hunebedden liggen in Drenthe. Twee liggen in Groningen."],
+["Wat was een hunebed?","een graf","een huis","een kerk","De boeren begroeven er hun doden, met potten en andere spullen."],
+["Hoe kwamen de grote stenen naar Nederland?","met het ijs, in de ijstijd","met schepen uit Noorwegen","met de Romeinen","In de ijstijd nam het ijs de stenen mee uit Scandinavië."]]},
+{id:"romeinen",y:"12 v.Chr. – ca. 400",t:"De Romeinen",s:"De Rijn als grens van een groot rijk",
+x:`Ongeveer tweeduizend jaar geleden kwamen de Romeinen naar Nederland. Ze kwamen uit Italië en hadden een heel groot rijk. De rivier de Rijn werd de noordgrens van dat rijk. Die grens heet de limes.
+Langs de Rijn bouwden de Romeinen forten, wegen en bruggen. Soldaten hielden er de wacht. Bij de forten ontstonden dorpen en steden. Utrecht en Nijmegen zijn zo begonnen. Nijmegen noemt zichzelf de oudste stad van Nederland.
+Ten zuiden van de Rijn woonden de Bataven. Veel Bataven werden soldaat in het Romeinse leger. Ten noorden van de Rijn woonden de Friezen. Zij hoorden meestal niet bij het Romeinse rijk.
+De Romeinen brachten nieuwe dingen mee: munten, wijn, badhuizen en het schrift. Rond het jaar 400 vertrokken de laatste soldaten.
+Sinds 2021 staat de limes op de Werelderfgoedlijst van UNESCO. In Nederland vind je nog veel Romeinse sporen, bijvoorbeeld in het Rijksmuseum van Oudheden in Leiden.`,
+q:[["Welke rivier was de grens van het Romeinse rijk?","de Rijn","de Maas","de Amstel","De grens langs de Rijn heet de limes."],
+["Welke stad noemt zichzelf de oudste stad van Nederland?","Nijmegen","Amsterdam","Rotterdam","Nijmegen begon bij een Romeins fort."],
+["Wie woonden ten zuiden van de Rijn?","de Bataven","de Friezen","de Spanjaarden","Veel Bataven werden soldaat in het Romeinse leger."]]},
+{id:"steden",y:"ca. 1000–1500",t:"Dijken, dammen en steden",s:"Hoe Amsterdam en Rotterdam begonnen",p:"foto/amsterdam1538.jpg",py:50,pc:"Amsterdam in 1538, geschilderd door Cornelis Anthonisz",
+x:`In de middeleeuwen was een groot deel van Nederland nat. Er waren veel overstromingen. Daarom gingen de mensen dijken bouwen. Ze pompten ook water weg, later met windmolens. Zo maakten ze nieuw land: een polder.
+Het water was gevaarlijk voor iedereen. Daarom werkten de mensen samen. Ze begonnen waterschappen. Een waterschap zorgt voor de dijken en voor schoon water. De waterschappen bestaan nog steeds. Ze horen bij de oudste democratische organisaties van Nederland.
+Op veel plaatsen bouwden de mensen een dam in een rivier. Rond 1270 kwam er een dam in de Amstel. Zo ontstond Amsterdam. Bij een dam in de Rotte ontstond Rotterdam.
+De steden werden steeds groter en rijker door handel. Schepen brachten graan, hout, vis en wijn. Steden als Deventer, Kampen en Zwolle hoorden bij de Hanze: een groep handelssteden rond de Noordzee en de Oostzee.`,
+q:[["Hoe is de naam Amsterdam ontstaan?","door een dam in de Amstel","door een kasteel aan zee","door een Romeins fort","Rond 1270 bouwden de mensen een dam in de Amstel. Rotterdam ontstond bij een dam in de Rotte."],
+["Wat doet een waterschap?","het zorgt voor de dijken en het water","het bouwt nieuwe huizen","het verkoopt vis op de markt","De waterschappen bestaan nog steeds. Je kunt er ook voor stemmen."],
+["Wat is een polder?","nieuw land, waar het water is weggepompt","een hoge berg van zand","een grote rivier","Rond een polder ligt een dijk. Vroeger pompten windmolens het water weg."]]},
+{id:"opstand",g:"De Republiek",y:"1568–1648",t:"Willem van Oranje en de Opstand",s:"De Tachtigjarige Oorlog tegen Spanje",p:"art/oranje.jpg",py:28,pc:"Willem van Oranje, geschilderd door Adriaen Thomasz. Key (ca. 1579)",
+x:`In de zestiende eeuw was koning Filips II van Spanje de baas over de Nederlanden. Veel mensen waren niet tevreden. Ze moesten veel belasting betalen. Protestanten mochten hun geloof niet vrij hebben: ze werden vervolgd.
+In 1566 vernielden protestanten beelden en schilderijen in de katholieke kerken. Dat heet de Beeldenstorm. Filips stuurde een groot leger.
+Willem van Oranje werd de leider van de opstand. In 1568 begon de oorlog tegen Spanje. Die oorlog duurde tachtig jaar: de Tachtigjarige Oorlog. In 1581 zeiden de noordelijke provincies: Filips is niet meer onze koning.
+In 1584 werd Willem van Oranje in Delft doodgeschoten. Hij heet nog steeds de Vader des Vaderlands. Het volkslied, het Wilhelmus, gaat over hem.
+De noordelijke provincies gingen samen verder als een nieuw land: de Republiek der Zeven Verenigde Nederlanden. In 1648 sloten ze vrede met Spanje, in Münster. Toen was de Republiek officieel een vrij land.`,
+q:[["Wie was de leider van de opstand tegen Spanje?","Willem van Oranje","koning Filips II","Rembrandt","Willem van Oranje heet de Vader des Vaderlands."],
+["Wat was de Beeldenstorm?","protestanten vernielden beelden in katholieke kerken","een grote storm op zee","een oorlog met Engeland","De Beeldenstorm was in 1566."],
+["Waar gaat het Wilhelmus over?","over Willem van Oranje","over koning Filips","over de zee en de dijken","Het Wilhelmus is het volkslied van Nederland."]]},
+{id:"goudeneeuw",y:"1600–1700",t:"De Gouden Eeuw",s:"Handel, kunst en de VOC",p:"foto/voc.jpg",py:50,pc:"Schepen op weg naar Azië, geschilderd door Hendrick Vroom",
+x:`In de zeventiende eeuw was de Republiek een van de rijkste landen van de wereld. Die tijd heet de Gouden Eeuw.
+Het land werd rijk door handel. In 1602 begon de VOC: de Verenigde Oostindische Compagnie. Schepen van de VOC voeren naar Azië. Ze kwamen terug met peper, nootmuskaat, thee en zijde. Iedereen kon een aandeel van de VOC kopen. Daarom noemen we de VOC soms het eerste grote bedrijf met aandeelhouders.
+Amsterdam werd een wereldstad. Rijke kooplieden bouwden mooie huizen aan nieuwe grachten. De grachtengordel staat nu op de Werelderfgoedlijst.
+Er waren ook veel kunstenaars en wetenschappers. Rembrandt schilderde De Nachtwacht en Vermeer Het melkmeisje. Antoni van Leeuwenhoek zag als eerste bacteriën door zijn microscoop.
+Maar de Gouden Eeuw had ook een donkere kant. De VOC gebruikte veel geweld in Azië. En Nederlandse handelaren verdienden geld met slavernij.`,
+q:[["Wat was de VOC?","een handelsbedrijf dat naar Azië voer","een leger tegen Spanje","een school voor schilders","De VOC begon in 1602."],
+["Waarmee kwamen de schepen van de VOC terug uit Azië?","met peper, thee en zijde","met graan en hout","met kolen en ijzer","Specerijen zoals peper en nootmuskaat waren heel duur in Europa."],
+["Wie schilderde De Nachtwacht?","Rembrandt","Vermeer","Van Gogh","Vermeer schilderde Het melkmeisje. Van Gogh leefde in de negentiende eeuw."]]},
+{id:"slavernij",y:"1621–1863",t:"Slavernij",s:"Een pijnlijk verleden, en Keti Koti",p:"foto/slavernij.jpg",py:55,pc:"Het Nationaal Monument Slavernijverleden in het Oosterpark in Amsterdam, gemaakt door Erwin de Vries (2002)",
+x:`In 1621 begon de West-Indische Compagnie, de WIC. De WIC handelde met Afrika en Amerika. Een groot deel van die handel was slavenhandel.
+Nederlandse schepen brachten meer dan een half miljoen Afrikanen naar Amerika. Ze werden tot slaaf gemaakt: ze hadden geen rechten en ze werden verkocht als spullen. Veel mensen stierven al op het schip.
+In Suriname en op de eilanden in de Caraïben moesten de tot slaaf gemaakte mensen hard werken op plantages. Daar kweekten ze suiker, koffie en katoen voor Europa. De eigenaren werden er rijk van. Ook in Azië had de VOC slaven.
+Pas op 1 juli 1863 schafte Nederland de slavernij af. Maar in Suriname moesten veel mensen nog tien jaar verplicht doorwerken op de plantages.
+Op 1 juli vieren veel mensen Keti Koti. Dat is Sranantongo, een taal uit Suriname. Het betekent: de ketenen zijn gebroken. In 2023 bood koning Willem-Alexander excuses aan voor het slavernijverleden.`,
+q:[["Wat vieren veel mensen op 1 juli?","Keti Koti, het einde van de slavernij","de bevrijding van 1945","de verjaardag van de koning","Op 1 juli 1863 schafte Nederland de slavernij af."],
+["Wat moesten de tot slaaf gemaakte mensen in Suriname doen?","hard werken op plantages","in een fabriek in Nederland werken","soldaat worden","Op de plantages kweekten ze suiker, koffie en katoen."],
+["Wat deed koning Willem-Alexander in 2023?","hij bood excuses aan voor de slavernij","hij werd koning","hij opende een nieuwe haven","Willem-Alexander is koning sinds 2013."]]},
+{id:"koninkrijk",g:"Het koninkrijk",y:"1795–1848",t:"Een koning en een grondwet",s:"Napoleon, koning Willem I en Thorbecke",p:"foto/thorbecke.jpg",py:36,pc:"Johan Rudolf Thorbecke, de schrijver van de grondwet van 1848",
+x:`In 1795 kwamen de Fransen naar de Republiek. Later maakte de Franse keizer Napoleon zijn broer Lodewijk koning van Holland. In 1810 werd Nederland zelfs een deel van Frankrijk.
+De Fransen veranderden veel. Iedereen moest bijvoorbeeld een achternaam hebben en die bij de gemeente laten opschrijven. Veel families kozen toen een achternaam, bijvoorbeeld naar hun beroep, zoals Bakker of Visser.
+In 1813 gingen de Fransen weg. De zoon van de laatste stadhouder kwam terug naar Nederland. In 1815 werd hij koning Willem I. Sindsdien is Nederland een koninkrijk. Eerst hoorde België er ook bij, maar in 1830 kwam België in opstand. Het werd een apart land.
+In 1848 kreeg Nederland een nieuwe grondwet. Johan Rudolf Thorbecke schreef die. Sindsdien zijn de ministers verantwoordelijk en niet de koning. Het volk kiest de Tweede Kamer. Maar in 1848 mochten alleen rijke mannen stemmen.`,
+q:[["Wie schreef de grondwet van 1848?","Thorbecke","Napoleon","Willem van Oranje","Sinds 1848 zijn de ministers verantwoordelijk, niet de koning."],
+["Sinds wanneer is Nederland een koninkrijk?","sinds 1815","sinds 1648","sinds 1945","Willem I was de eerste koning."],
+["Wat moest iedereen in de Franse tijd hebben?","een achternaam","een paspoort","een fiets","Veel families kozen toen een achternaam, bijvoorbeeld naar hun beroep."]]},
+{id:"industrie",y:"1839–1901",t:"Treinen, fabrieken en de leerplicht",s:"Armoede en de eerste sociale wetten",p:"art/aardappeleters.jpg",py:45,pc:"De aardappeleters, geschilderd door Vincent van Gogh (1885)",
+x:`In 1839 reed de eerste trein van Nederland, van Amsterdam naar Haarlem. Daarna kwamen er steeds meer spoorlijnen, kanalen en fabrieken.
+Veel mensen werkten in een fabriek. Het werk was zwaar en de dagen waren lang, soms meer dan twaalf uur. Ook kinderen werkten mee. Het loon was laag. Veel families waren arm. Ze aten vaak alleen aardappelen en brood. Vincent van Gogh schilderde zo'n arm gezin: De aardappeleters.
+Langzaam kwamen er wetten om mensen te beschermen. In 1874 kwam het Kinderwetje van Samuel van Houten. Kinderen jonger dan twaalf jaar mochten niet meer in een fabriek werken.
+In 1901 kwam de leerplicht. Alle kinderen van zes tot twaalf jaar moesten naar school. Nu is de leerplicht in Nederland van vijf tot zestien jaar. Daarna moeten jongeren tot hun achttiende nog een diploma halen.`,
+q:[["Wat regelde het Kinderwetje van 1874?","kinderen onder de twaalf mochten niet in een fabriek werken","alle kinderen kregen gratis eten","kinderen moesten naar de kerk","Het wetje was van Samuel van Houten."],
+["Wat is de leerplicht?","kinderen moeten naar school","ouders moeten werken","leraren moeten een diploma hebben","De leerplicht begon in 1901. Nu geldt hij van vijf tot zestien jaar."],
+["Waar reed de eerste trein van Nederland?","van Amsterdam naar Haarlem","van Utrecht naar Arnhem","van Rotterdam naar Den Haag","Dat was in 1839."]]},
+{id:"kiesrecht",y:"1871–1932",t:"Stemrecht voor iedereen",s:"Aletta Jacobs, kiesrecht en de Afsluitdijk",p:"foto/aletta.jpg",py:30,pc:"Aletta Jacobs, rond 1900",
+x:`Aletta Jacobs kwam uit Groningen. In 1871 werd zij de eerste vrouw die in Nederland aan een universiteit mocht studeren. Later werd ze de eerste vrouwelijke arts van Nederland. Ze vond dat vrouwen dezelfde rechten moesten hebben als mannen. Ze wilde ook dat vrouwen mochten stemmen.
+Rond 1900 mocht nog lang niet iedereen stemmen. In 1917 kregen alle mannen kiesrecht. Twee jaar later, in 1919, kregen ook alle vrouwen kiesrecht. Nu mag iedere Nederlander van achttien jaar of ouder stemmen.
+In de Eerste Wereldoorlog, van 1914 tot 1918, bleef Nederland neutraal. Het land deed niet mee aan de oorlog.
+In 1932 was de Afsluitdijk klaar. Die lange dijk sloot de Zuiderzee af van de zee. Zo werd de Zuiderzee een meer: het IJsselmeer. Later werd een deel van het meer land. Zo ontstond de provincie Flevoland.`,
+q:[["Wie was Aletta Jacobs?","de eerste vrouwelijke arts van Nederland","de eerste koningin van Nederland","een schilder uit Delft","Ze streed ook voor kiesrecht voor vrouwen."],
+["Sinds wanneer mogen vrouwen in Nederland stemmen?","sinds 1919","sinds 1848","sinds 1945","Alle mannen kregen kiesrecht in 1917, alle vrouwen in 1919."],
+["Wat werd de Zuiderzee door de Afsluitdijk?","een meer: het IJsselmeer","een rivier: de Rijn","een haven: Rotterdam","De Afsluitdijk was klaar in 1932."]]},
+{id:"oorlog",g:"Oorlog en wederopbouw",y:"1940–1945",t:"De Tweede Wereldoorlog",s:"Bezetting, vervolging en bevrijding",p:"foto/bevrijding.jpg",py:65,pc:"Feest in Amsterdam-Zuid na de bevrijding, mei 1945",
+x:`Op 10 mei 1940 viel Duitsland Nederland aan. Koningin Wilhelmina en de regering gingen naar Londen. Op 14 mei bombardeerden Duitse vliegtuigen het centrum van Rotterdam. Een dag later gaf het Nederlandse leger zich over.
+Vijf jaar lang was Nederland bezet. De Duitsers vervolgden de Joden. Joden moesten een gele ster dragen en ze werden weggevoerd naar kampen. Ongeveer 102.000 Joden uit Nederland werden vermoord. Ook Roma en Sinti werden vermoord. Anne Frank zat ruim twee jaar ondergedoken in Amsterdam. Ze schreef er haar beroemde dagboek.
+Sommige mensen hielpen Joden onderduiken of gingen in het verzet. Veel anderen deden niets, en sommigen werkten samen met de Duitsers.
+In de winter van 1944 op 1945 was er in het westen bijna geen eten. Die winter heet de Hongerwinter. Ongeveer 20.000 mensen stierven.
+Een deel van het zuiden was in 1944 al bevrijd. Op 5 mei 1945 was heel Nederland vrij. Op 4 mei herdenken we de doden en op 5 mei vieren we de bevrijding.`,
+q:[["Welke stad werd op 14 mei 1940 gebombardeerd?","Rotterdam","Amsterdam","Utrecht","Het centrum van Rotterdam werd bijna helemaal verwoest."],
+["Waar ging koningin Wilhelmina in de oorlog naartoe?","naar Londen","naar Berlijn","naar Parijs","Via Radio Oranje sprak ze vanuit Londen tegen de Nederlanders."],
+["Wat moesten Joden in de oorlog dragen?","een gele ster","een oranje hoed","een uniform","Ongeveer 102.000 Joden uit Nederland werden vermoord."]]},
+{id:"indonesie",y:"1945–1949",t:"Indonesië wordt vrij",s:"Het einde van een kolonie",p:"foto/indonesie.jpg",py:45,pc:"Koningin Juliana tekent de papieren: Indonesië is vrij (27 december 1949)",
+x:`Al sinds de zeventiende eeuw had Nederland macht in Indonesië. Het land werd een kolonie: Nederlands-Indië. Nederland verdiende er veel geld aan, bijvoorbeeld met koffie, suiker, tabak en olie. De Indonesiërs zelf hadden weinig rechten.
+In de Tweede Wereldoorlog bezette Japan het land. Op 17 augustus 1945, twee dagen na het einde van de oorlog met Japan, riepen Soekarno en Hatta de onafhankelijkheid uit.
+Nederland wilde de kolonie niet kwijt. Het stuurde meer dan honderdduizend soldaten. Er kwam een oorlog die vier jaar duurde. Ook het Nederlandse leger gebruikte daarbij veel geweld. Er stierven heel veel Indonesiërs en ongeveer vijfduizend Nederlandse soldaten.
+Op 27 december 1949 werd Indonesië officieel vrij. Koningin Juliana tekende de papieren in het paleis op de Dam in Amsterdam.
+Na de oorlog kwamen veel mensen uit Indonesië naar Nederland, onder wie Indische Nederlanders en Molukkers. Veel van hun kinderen en kleinkinderen wonen nu in Nederland.`,
+q:[["Hoe heette Indonesië toen het een kolonie was?","Nederlands-Indië","Suriname","Nieuw-Nederland","Indonesië is sinds 1949 een vrij land."],
+["Wanneer werd Indonesië officieel vrij?","op 27 december 1949","op 5 mei 1945","op 1 juli 1863","Koningin Juliana tekende de papieren in Amsterdam."],
+["Wie riepen in 1945 de onafhankelijkheid van Indonesië uit?","Soekarno en Hatta","Juliana en Drees","Thorbecke en Willem I","Dat was op 17 augustus 1945."]]},
+{id:"watersnood",y:"1953–1997",t:"De Watersnood en de Deltawerken",s:"Een grote ramp, en nooit meer",p:"foto/watersnood.jpg",py:50,pc:"Na de watersnood brengen mensen hun koeien in veiligheid (1953)",
+x:`In de nacht van 31 januari op 1 februari 1953 was er een zware storm. Het was ook springtij: het water in de zee stond extra hoog. Op veel plaatsen in Zeeland, Zuid-Holland en Noord-Brabant braken de dijken.
+Het water kwam midden in de nacht. Veel mensen sliepen. Ze vluchtten naar de zolder of het dak. In totaal stierven 1836 mensen. Ook tienduizenden dieren verdronken en veel huizen werden vernield. Dit heet de Watersnoodramp.
+Daarna zei de regering: dit mag nooit meer gebeuren. Er kwam een groot plan: het Deltaplan. Nederland bouwde dammen, dijken en grote stormvloedkeringen. Dat zijn de Deltawerken.
+De Oosterscheldekering in Zeeland is het bekendste deel. Normaal staat hij open, zodat het zoute water en de natuur blijven. Bij storm gaan de grote schuiven dicht. In 1997 was het laatste deel klaar: de Maeslantkering bij Rotterdam.
+Door klimaatverandering wordt de zee steeds hoger. Daarom blijft Nederland werken aan het water.`,
+q:[["Wat gebeurde er op 1 februari 1953?","de dijken braken en er kwam een grote overstroming","de Afsluitdijk was klaar","Nederland werd bevrijd","Bij de Watersnoodramp stierven 1836 mensen."],
+["Wat zijn de Deltawerken?","dammen, dijken en stormvloedkeringen tegen de zee","nieuwe steden in Zeeland","fabrieken in de haven van Rotterdam","Het laatste deel was klaar in 1997."],
+["Wat doet de Oosterscheldekering bij storm?","hij gaat dicht","hij gaat open","hij pompt water naar de zee","Normaal staat hij open, voor het zoute water en de natuur."]]},
+{id:"migratie",y:"1945–1975",t:"Wederopbouw en nieuwe Nederlanders",s:"Werk, de AOW en gastarbeiders",p:"foto/gastarbeiders.jpg",py:45,pc:"Italiaanse gastarbeiders in Twente lezen de krant",
+x:`Na de oorlog moest Nederland opnieuw beginnen. Er waren te weinig huizen en er was weinig werk. Daarom vertrokken veel Nederlanders naar Canada, Australië of de Verenigde Staten.
+Langzaam werd het beter. Er kwamen nieuwe huizen, wegen en fabrieken. Minister-president Willem Drees regelde in 1957 de AOW: geld van de overheid voor alle ouderen. Zo begon de verzorgingsstaat.
+In de jaren zestig ging het economisch heel goed. Fabrieken hadden juist te weinig werknemers. Daarom haalden bedrijven gastarbeiders naar Nederland: eerst uit Italië en Spanje, later vooral uit Turkije en Marokko. Ze deden vaak zwaar werk. Iedereen dacht dat ze na een paar jaar teruggingen. Maar veel gastarbeiders bleven, en hun familie kwam ook.
+In 1975 werd Suriname onafhankelijk. In die tijd kwamen veel Surinamers naar Nederland. Zo werd Nederland een land met mensen uit veel verschillende culturen.`,
+q:[["Wie regelde in 1957 de AOW?","minister-president Drees","koningin Juliana","Aletta Jacobs","De AOW is geld van de overheid voor ouderen."],
+["Waarom kwamen er gastarbeiders naar Nederland?","de fabrieken hadden te weinig werknemers","ze wilden op vakantie","ze kwamen studeren","Ze kwamen eerst uit Italië en Spanje, later vooral uit Turkije en Marokko."],
+["Waar gingen veel Nederlanders na de oorlog naartoe?","naar Canada en Australië","naar Spanje en Italië","naar Turkije en Marokko","Er waren te weinig huizen en te weinig werk."]]},
+{id:"nu",g:"Nederland nu",y:"1957–nu",t:"Nederland in Europa",s:"De EU, de euro en de koning",
+x:`In 1957 begon Nederland met vijf andere landen de Europese Economische Gemeenschap, de EEG. Dat was het begin van de Europese Unie. In 1992 tekenden de Europese landen het Verdrag van Maastricht. Sinds 2002 betalen we met de euro. Daarvoor had Nederland de gulden.
+Nederland veranderde ook op andere manieren. Veel mensen gingen minder naar de kerk en meer vrouwen gingen buitenshuis werken. In 2001 was Nederland het eerste land ter wereld waar twee mannen of twee vrouwen met elkaar mochten trouwen.
+Nederland is nog steeds een koninkrijk. Van 1890 tot 2013 had het land drie koninginnen: Wilhelmina, Juliana en Beatrix. In 2013 werd Willem-Alexander koning. Zijn verjaardag, 27 april, is nu Koningsdag.
+Nederland is een democratie. Iedereen mag zeggen wat hij denkt. En in artikel 1 van de grondwet staat: iedereen in Nederland wordt in gelijke gevallen gelijk behandeld.`,
+q:[["Waarmee betaalde Nederland vóór de euro?","met de gulden","met de mark","met de frank","De euro kwam in 2002."],
+["Wat mocht in 2001 in Nederland, als eerste land ter wereld?","twee mannen of twee vrouwen mochten trouwen","vrouwen mochten stemmen","je mocht met de euro betalen","Nederland was het eerste land met het homohuwelijk."],
+["Wie is sinds 2013 koning van Nederland?","Willem-Alexander","Willem van Oranje","Willem I","Zijn verjaardag, 27 april, is Koningsdag."]]}
+];
+GS.forEach((c,i)=>c.q.forEach((q,n)=>ch("gs",c.id+"."+n,i,"Geschiedenis: "+c.t,q[0],"",q[1],[q[2],q[3]],q[4])));
+const gsItems=c=>ITEMS.filter(x=>x.k.startsWith("gs|"+c.id+"."));
+let hGo=null; // where the back button (and a swipe) on the history screen goes
+function hBack(t,f){$("hback").innerHTML=`<span aria-hidden="true">←</span>${t}`;$("hback").onclick=hGo=f}
+function hist(){
+  closePop();hush();loadDict().catch(()=>{});
+  $("home").hidden=true;$("play").hidden=true;$("hist").hidden=false;window.scrollTo(0,0);
+  hBack("Start",home);
+  // a chapter is done when every question was answered right at least once
+  const st=c=>{const q=gsItems(c),ok=q.filter(x=>(S.items[x.k]||{}).r).length;
+    return ok===q.length?`<span class="good">Klaar</span>`:ok?`${ok} van ${q.length} goed`:(S.hs||{})[c.id]?"Gelezen":null};
+  let h=`<h2>Geschiedenis van Nederland</h2><p class="sub">Van de hunebedden tot nu, in ${GS.length} korte hoofdstukken. Lees een hoofdstuk, tik op een woord voor de betekenis en beantwoord de vragen. Dit helpt ook bij KNM.</p>`;
+  GS.forEach((c,i)=>{if(c.g)h+=(i?"</div>":"")+`<h3 class="lh">${c.g}</h3><div class="list">`;h+=itHTML(`data-h="${i}"`,c.t,c.y+" · "+c.s,{n:st(c)})});
+  $("hbody").innerHTML=h+`</div><button class="ghost wide" id="hall">Herhaal de vragen van alle hoofdstukken</button>`;
+  document.querySelectorAll("#hbody [data-h]").forEach(b=>b.onclick=()=>chapter(+b.dataset.h));
+  $("hall").onclick=()=>build("gs",{...SEC.find(x=>x.id==="gs"),back:{t:"Geschiedenis",f:hist}});
+}
+function chapter(i){
+  const c=GS[i],nx=GS[i+1]; closePop();hush();
+  S.hs=S.hs||{};S.hs[c.id]=Date.now();save();
+  $("home").hidden=true;$("play").hidden=true;$("hist").hidden=false;
+  hBack("Geschiedenis",hist);
+  $("hbody").innerHTML=`<p class="ask">${c.y}</p><h2>${c.t}</h2>`
+    +(c.p?`<figure class="hfig"><button data-pic="${c.p}" aria-label="Groot bekijken"><img src="${c.p}" alt="" style="object-position:50% ${c.py}%"></button><figcaption>${c.pc}</figcaption></figure>`:"")
+    +(canSpeak?`<button class="hint" id="hsay">▶ Lees voor</button>`:"")
+    +`<article class="book" id="hpage" lang="nl">${pageHTML(c.x.split("\n"))}</article>`
+    +`<p class="note">Tik op een woord: je ziet de betekenis in het Engels.</p>`
+    +`<button class="btn wide" id="hq">Beantwoord de vragen</button>`
+    +(nx?`<div class="list hnext">${itHTML(`data-h="${i+1}"`,"Volgende: "+nx.t,nx.y)}</div>`:"");
+  $("hpage").style.fontSize=$("page").style.fontSize; // the letter size chosen in the reader
+  document.querySelectorAll("#hbody [data-pic]").forEach(b=>b.onclick=()=>zoomPic(b.dataset.pic));
+  if($("hsay"))$("hsay").onclick=()=>speak(c.x);
+  $("hq").onclick=()=>build("custom",{id:"custom",t:c.t,n:c.q.length,pool:()=>gsItems(c),
+    back:{t:"Geschiedenis",f:hist},next:nx&&{t:"Volgende hoofdstuk",f:()=>chapter(i+1)}});
+  document.querySelectorAll("#hbody [data-h]").forEach(b=>b.onclick=()=>chapter(+b.dataset.h));
+  window.scrollTo(0,0);
+}
+$("hbody").onclick=e=>{const w=e.target.closest(".book .w");if(w)tapWord(w)};
 // Luisteren en kijken: real Dutch from YouTube channels and podcasts. api/feed.js fetches the latest episodes
 // (YouTube's feeds can't be read from the page); videos play in YouTube's own player, podcasts in <audio>.
 // What was opened, where a podcast stopped and the speed stay on this device ("ww-media"), not in the progress file.
@@ -2029,8 +2213,8 @@ function entryParts(e){
 let popW=null,popTok=0;
 function closePop(){popTok++;$("pop").hidden=true;if(popW)popW.classList.remove("sel");popW=null}
 function place(){
-  // positioned inside #read, so it stays next to the word when the header above changes height
-  if(!popW)return; const pp=$("pop"),r=popW.getBoundingClientRect(),o=$("read").getBoundingClientRect(),w=pp.offsetWidth,h=pp.offsetHeight;
+  // positioned inside #read or #hist, so it stays next to the word when the header above changes height
+  if(!popW)return; const pp=$("pop"),r=popW.getBoundingClientRect(),o=pp.parentNode.getBoundingClientRect(),w=pp.offsetWidth,h=pp.offsetHeight;
   let top=r.bottom+8; if(top+h>innerHeight-8&&r.top-h-8>8)top=r.top-h-8;
   pp.style.top=top-o.top+"px"; // keep it inside <main>, which clips anything that sticks out
   const m=document.querySelector("main").getBoundingClientRect(),lo=Math.max(8,m.left+8),hi=Math.min(innerWidth,m.right)-w-8;
@@ -2044,6 +2228,7 @@ async function tapWord(el){
   pp.innerHTML=`<div class="ph"><b>${esc(word)}</b>${canSpeak?`<button class="say" id="psay" aria-label="Uitspreken">▶</button>`:""}</div>
     <div id="pdef"><p class="pm">${DICT?"":"Woordenboek laden…"}</p></div>
     <div class="pa"><a class="hint" href="${gt(sent)}" target="_blank" rel="noopener">Vertaal de zin ↗</a></div>`;
+  const host=el.closest("#read,#hist"); if(pp.parentNode!==host)host.appendChild(pp);
   pp.hidden=false; place();
   if($("psay"))$("psay").onclick=()=>speak(word);
   try{await loadDict()}catch(e){if(tok===popTok){$("pdef").innerHTML=`<p class="pm">Het woordenboek laadt niet. Ben je online?</p>`;place()}return}
@@ -2061,7 +2246,7 @@ async function tapWord(el){
       let y=has(); if(!y){y={w:x.w,en:e.g.split("; ")[0],p:e.p,s:sent.slice(0,300),f:[]};S.words.unshift(y);S.words=S.words.slice(0,1000)}
       if(!y.f.includes(f))y.f.push(f);
       save(); kept();
-      document.querySelectorAll("#page .w").forEach(s=>{if(s.textContent.toLowerCase()===f)s.classList.add("kw")});
+      document.querySelectorAll(".book .w").forEach(s=>{if(s.textContent.toLowerCase()===f)s.classList.add("kw")});
     }});
   place();
 }
@@ -2082,7 +2267,7 @@ $("fsm").onclick=()=>fontSize(-1); $("fsp").onclick=()=>fontSize(1); fontSize(0)
 $("rprev").onclick=()=>turn(-1);
 $("rnext").onclick=()=>R.p<R.pages.length-1?turn(1):library();
 document.addEventListener("keydown",e=>{
-  if($("read").hidden)return;
+  if($("read").hidden){if(e.key==="Escape")closePop();return}
   if(e.key==="Escape")closePop();
   else if(e.key==="ArrowRight"&&R.p<R.pages.length-1)turn(1);
   else if(e.key==="ArrowLeft")turn(-1);
@@ -2105,12 +2290,12 @@ document.addEventListener("keydown",e=>{
   if(e.key==="Enter"&&$("inp")&&!answered){e.preventDefault();grade($("inp").value.trim().toLowerCase())}
   else if(!answered&&!$("inp")&&/^[1-4]$/.test(e.key)){const b=document.querySelectorAll(".opt")[e.key-1];if(b)b.click()}
 });
-// Swipe sideways on an exercise or stats screen to go back to the start screen
+// Swipe sideways on an exercise, stats or history screen to go back (to the start screen, or where its back button goes)
 (()=>{
   let x0=0,y0=0,el=null,on=false;
   const reset=t=>{t.style.transition=t.style.transform=t.style.opacity=""};
   document.addEventListener("touchstart",e=>{
-    el=!$("play").hidden?$("play"):!$("stats").hidden?$("stats"):!$("lib").hidden?$("lib"):null;
+    el=!$("play").hidden?$("play"):!$("stats").hidden?$("stats"):!$("lib").hidden?$("lib"):!$("hist").hidden?$("hist"):null;
     if(!el||e.touches.length>1||e.target.closest("input,textarea")){el=null;return}
     x0=e.touches[0].clientX;y0=e.touches[0].clientY;on=false},{passive:true});
   document.addEventListener("touchmove",e=>{
@@ -2120,7 +2305,7 @@ document.addEventListener("keydown",e=>{
   const end=e=>{
     if(!el)return; const t=el,dx=e.changedTouches[0].clientX-x0; el=null; if(!on)return;
     t.style.transition="transform .18s,opacity .18s";
-    if(e.type==="touchend"&&Math.abs(dx)>90){t.style.transform=`translateX(${Math.sign(dx)*100}%)`;t.style.opacity=0;setTimeout(()=>{reset(t);home()},170)}
+    if(e.type==="touchend"&&Math.abs(dx)>90){t.style.transform=`translateX(${Math.sign(dx)*100}%)`;t.style.opacity=0;const go=t===$("hist")?hGo:t===$("play")&&cur&&cur.back?cur.back.f:home;setTimeout(()=>{reset(t);go()},170)}
     else{t.style.transform="";t.style.opacity="";setTimeout(()=>reset(t),200)}};
   document.addEventListener("touchend",end); document.addEventListener("touchcancel",end);
 })();
@@ -2132,7 +2317,7 @@ restore().then(initCloud);
 // Offline (sw.js): the page, and every painting and photo, stay available without a connection
 if("serviceWorker" in navigator&&window.isSecureContext&&!window.claude)
   navigator.serviceWorker.register("/sw.js").then(()=>navigator.serviceWorker.ready)
-    .then(r=>{if(r.active)r.active.postMessage({warm:ART.map(p=>"/art/"+p.f+".jpg").concat(Object.keys(FOTO).map(f=>"/foto/"+f+".jpg"))})}).catch(()=>{});
+    .then(r=>{if(r.active)r.active.postMessage({warm:ART.map(p=>"/art/"+p.f+".jpg").concat(Object.keys(FOTO).map(f=>"/foto/"+f+".jpg"),GS.filter(c=>c.p).map(c=>"/"+c.p))})}).catch(()=>{});
 </script>
 </body>
 </html>
