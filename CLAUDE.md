@@ -11,7 +11,7 @@ The design should also teach Dutch culture. Keep it recognisably Dutch and avoid
 generic "AI app" look.
 
 - **Colours**: tin-glaze white `--bg`, cobalt `--blue`, light wash `--wash`, and
-  `--oranje` as the only accent (timer, today marker, selection, the streak stamp).
+  `--oranje` as the only accent (timer, selection, the streak stamp).
   Always use the tokens on `:root`; every colour has a dark-mode value.
 - **Type**: the system font only (`-apple-system, system-ui`: SF Pro on iPhone), so the
   app reads like a native iPhone app. No web fonts; headings semibold (600–700), never 800.
@@ -21,8 +21,7 @@ generic "AI app" look.
   - Header: the painting of the day (`ART` + `paint()` in `index.html`), with a museum
     label underneath: artist, title, year, museum and one A2 sentence in Dutch (no
     translation), all in one size (15px, no italics). Tapping the painting shows it in full.
-  - Tiles: "Je les van vandaag" (the numbered steps of today's plan, at the top of the home screen) is a Delft tile with corner motifs; timeline dots are tiles
-    turned 45°.
+  - Tiles: "Je les van vandaag" (the numbered steps of today's plan, at the top of the home screen) is a Delft tile with corner motifs.
   - Streak: a stamp, like on a Museumkaart.
 - **Never use**: cream or beige backgrounds, handwriting fonts, wobbly hand-drawn
   border-radius, dashed lines, highlighter underlines under headings, decorative SVG
@@ -31,8 +30,9 @@ generic "AI app" look.
 ## Home screen
 
 One clear path, top to bottom: today's lesson (numbered steps; the next one is filled
-cobalt), then the exam parts (a list, then one "Proefexamen" button per part with its time),
-grammar, reading and listening, and progress (weak points, exam timeline, saving to a file).
+cobalt; no exam dates: the plan starts with the exam part that scores lowest, and Schrijven
+and KNM are in it every day), then the exam parts (a list, then one "Proefexamen" button per part with its time),
+grammar, reading and listening, and progress (weak points, "Ben je klaar?" from the proefexamens, saving to a file).
 Every section appears once; don't add a second entry point to the same exercise.
 
 ## Navigation: one action language
@@ -42,8 +42,8 @@ Every section appears once; don't add a second entry point to the same exercise.
   No "Oefenen →" or "Openen →" text links, no cards with their own buttons.
 - **Filled cobalt `.btn`**: the one main action on a screen (the next step of today,
   Controleer, Volgende). **Outlined `.ghost`**: secondary actions (Proefexamen, Mix van de dag,
-  Examendata invullen, Opslaan, Wis).
-- **Underlined `.hint`**: only small in-place toggles (Vertaling, Uitspraak, Examendata wijzigen).
+  Opslaan, Wis).
+- **Underlined `.hint`**: only small in-place toggles (Vertaling, Uitspraak).
   Text links `<a>` only for other websites, with ↗.
 - One `h2` (with the tile diamond) per section or screen; groups inside it get `h3.lh`
   (small capitals, cobalt). Every inner screen starts with a back button named after where it
@@ -66,7 +66,11 @@ order); `FOTO` holds a short Dutch description of each for screen readers. No em
 ## Progress
 
 Progress is per device: `localStorage` key `ww-v1`, mirrored to IndexedDB as a backup.
-There is no server. Don't change the stored shape without migrating old data.
+There is no server. `S.res` keeps the last 10 proefexamen scores per part (`{at, pc}`); "Ben je klaar?"
+at the bottom of the home screen reads it (ready = the last two average 80% or more; the pass line is 70%).
+
+`sw.js` makes the app work offline: the page network-first (a push is live at once), paintings and
+photos from the cache (the page sends their list after loading), `api/` never cached. Don't change the stored shape without migrating old data.
 To move to another device, the learner saves progress as a JSON file (`S` as is) and loads it
 there; loading merges (per exercise the most practised version wins, words and mistakes are added).
 
@@ -74,7 +78,10 @@ there; loading merges (per exercise the most practised version wins, words and m
 
 Lezen texts are plain strings rendered as documents by `docHTML()`: the first line is the title
 (unless it is a letter or an e-mail), `label: value` lines become a table, `Van:` starts an
-e-mail header. Woordenschat has the definitions in `VO` and the themed A2 word list `WT`
+e-mail header. Luisteren items in `LS` are `[text, question, right, wrong, wrong, photo?]`; a dialogue has one line per
+turn (`A: …` / `B: …`), read with two pitches, and the optional photo from `foto/` sets the scene. In the
+proefexamen a text can be played twice. KNM follows the 8 official themes of the exam since 1 July 2025
+(40 questions, 45 minutes, 28 to pass). Woordenschat has the definitions in `VO` and the themed A2 word list `WT`
 (Dutch with de/het = Russian), practised both ways. Item keys (`lz|3.1`, `wn|de huis`) are
 stored progress: append new items, don't reorder or rename existing ones.
 
@@ -92,7 +99,8 @@ Spreken uses the same function with `{part:"sp", tasks:[{task, text}]}` (up to 1
 proefexamen). Claude can't take audio, so the phone writes the answer down first (Web Speech
 API, `nl-NL`). Recording (`MediaRecorder`, to play the answer back) and transcribing are
 separate takes, never at the same time: on iPhone they compete for the microphone. One
-minute per answer. Recordings and transcripts stay in memory only.
+minute per answer. Recordings and transcripts stay in memory only. "Zeg het na" (free, no Claude call):
+the learner reads the example or corrected answer aloud and the words speech recognition missed are marked.
 
 `api/generate.js` writes new Lezen and Luisteren material (same key, same Origin check);
 inside Claude the page uses `window.claude` instead. Generated items are kept in `S.gen`.
