@@ -4,7 +4,9 @@
 import Anthropic from "@anthropic-ai/sdk";
 
 // Created only when the key is set, so a missing key gives a clear error instead of a crash
-const client = process.env.ANTHROPIC_API_KEY ? new Anthropic() : null;
+// (trimmed: a key pasted into the dashboard with a trailing newline breaks the request header)
+const KEY = (process.env.ANTHROPIC_API_KEY || "").trim();
+const client = KEY ? new Anthropic({ apiKey: KEY }) : null;
 
 const RESULT = {
   type: "object",
@@ -84,9 +86,11 @@ export default async function handler(req, res) {
     if (error instanceof Anthropic.RateLimitError) return res.status(429).json({ error: "rate_limited" });
     if (error instanceof Anthropic.APIError) {
       console.error("Anthropic API error", error.status, error.message);
-      return res.status(502).json({ error: "failed" });
+      // The status and Anthropic's message (never the key) make a failure diagnosable without the Vercel logs
+      return res.status(502).json({ error: "failed", status: error.status, detail: String(error.message).slice(0, 300) });
     }
     console.error(error);
-    return res.status(502).json({ error: "failed" });
+    // Only the error's type: its message could quote the request headers
+    return res.status(502).json({ error: "failed", kind: error?.name || typeof error });
   }
 }
