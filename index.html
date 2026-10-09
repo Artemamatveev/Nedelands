@@ -223,6 +223,10 @@ h2.gap{margin-top:28px}
 .errs .x{float:right;background:none;border:0;color:var(--soft);font-size:15px;text-decoration:underline;padding:0 0 4px 12px}
 /* lezen: tik op een woord */
 .pg{color:var(--soft);font-size:15px;font-variant-numeric:tabular-nums}
+.rt{display:flex;align-items:center;gap:6px}
+.rt .pg{margin-left:6px}
+.fs{min-width:44px;min-height:40px;padding:0 8px;background:none;border:1.5px solid var(--line);border-radius:3px;color:var(--blue);font-size:16px;font-weight:600}
+.fs:disabled{opacity:.35;cursor:default}
 .book{font-size:19px;line-height:1.65}
 .book p{margin:0 0 14px}
 .book h3{font-size:22px;font-weight:600;line-height:1.3;color:var(--blue);margin:0 0 14px}
@@ -319,7 +323,7 @@ h2.gap{margin-top:28px}
     <p class="note" style="margin-top:22px">Woordenboek: <a href="https://en.wiktionary.org">Wiktionary</a> (via <a href="https://kaikki.org">kaikki.org</a>), licentie <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p>
   </div>
   <div id="read" hidden>
-    <div class="top"><button class="back" id="rback"><span aria-hidden="true">←</span>Boekenkast</button><span class="pg" id="pg"></span></div>
+    <div class="top"><button class="back" id="rback"><span aria-hidden="true">←</span>Boekenkast</button><span class="rt"><button class="fs" id="fsm" aria-label="Kleinere letters">A−</button><button class="fs" id="fsp" aria-label="Grotere letters">A+</button><span class="pg" id="pg"></span></span></div>
     <div class="bar"><i id="rbar"></i></div>
     <p class="ask" id="rtitle"></p>
     <article class="book" id="page" lang="nl"></article>
@@ -1908,6 +1912,16 @@ $("page").onclick=e=>{const w=e.target.closest(".w");if(w)tapWord(w)};
 document.addEventListener("click",e=>{if(!$("pop").hidden&&!e.target.closest("#pop,.w"))closePop()});
 addEventListener("resize",place);
 $("rback").onclick=library;
+// Letter size for reading, remembered on this device; until it is changed the stylesheet decides (19px, 20px on a computer)
+const FS=[16,17,19,21,23,25,28];
+function fontSize(d){
+  let n=null; try{n=+localStorage.getItem("ww-fs")||null}catch(e){}
+  if(d){const cur=n||parseFloat(getComputedStyle($("page")).fontSize),i=FS.findIndex(x=>x>=cur-.5);
+    n=FS[Math.max(0,Math.min(FS.length-1,(i<0?FS.length-1:i)+d))]; try{localStorage.setItem("ww-fs",n)}catch(e){} closePop()}
+  $("page").style.fontSize=n?n+"px":"";
+  $("fsm").disabled=n===FS[0]; $("fsp").disabled=n===FS[FS.length-1];
+}
+$("fsm").onclick=()=>fontSize(-1); $("fsp").onclick=()=>fontSize(1); fontSize(0);
 $("rprev").onclick=()=>turn(-1);
 $("rnext").onclick=()=>R.p<R.pages.length-1?turn(1):library();
 document.addEventListener("keydown",e=>{
