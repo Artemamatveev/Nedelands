@@ -20,7 +20,7 @@ generic "AI app" look.
 - **Dutch motifs instead of decoration**:
   - Header: the painting of the day (`ART` + `paint()` in `index.html`), with a museum
     label underneath: artist, title, year, museum and one A2 sentence in Dutch (no
-    translation). Tapping the painting shows it in full.
+    translation), all in one size (15px, no italics). Tapping the painting shows it in full.
   - Tiles: "Je les van vandaag" (the numbered steps of today's plan, at the top of the home screen) is a Delft tile with corner motifs; timeline dots are tiles
     turned 45°.
   - Streak: a stamp, like on a Museumkaart.
@@ -31,9 +31,23 @@ generic "AI app" look.
 ## Home screen
 
 One clear path, top to bottom: today's lesson (numbered steps; the next one is filled
-cobalt), then choose yourself (exam parts with "Oefenen" + "Proefexamen", grammar), then
-reading and listening, and progress. Every section appears once; don't add a second entry point to the
-same exercise.
+cobalt), then the exam parts (a list, then one "Proefexamen" button per part with its time),
+grammar, reading and listening, and progress (weak points, exam timeline, saving to a file).
+Every section appears once; don't add a second entry point to the same exercise.
+
+## Navigation: one action language
+
+- **Going somewhere** (an exercise, a screen, a book, a source) is a list row, `itHTML()`:
+  the whole row is the button, title + grey description, a count on the right, `›` at the end.
+  No "Oefenen →" or "Openen →" text links, no cards with their own buttons.
+- **Filled cobalt `.btn`**: the one main action on a screen (the next step of today,
+  Controleer, Volgende). **Outlined `.ghost`**: secondary actions (Proefexamen, Mix van de dag,
+  Examendata invullen, Opslaan, Wis).
+- **Underlined `.hint`**: only small in-place toggles (Vertaling, Uitspraak, Examendata wijzigen).
+  Text links `<a>` only for other websites, with ↗.
+- One `h2` (with the tile diamond) per section or screen; groups inside it get `h3.lh`
+  (small capitals, cobalt). Every inner screen starts with a back button named after where it
+  goes: "Start" for the home screen.
 
 ## Paintings
 

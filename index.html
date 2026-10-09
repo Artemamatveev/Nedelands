@@ -45,10 +45,12 @@ h1{position:absolute;left:16px;bottom:12px;z-index:1;margin:0;font-size:28px;fon
 .streak b{font-size:23px;font-weight:700;letter-spacing:0}
 .streak:empty{display:none}
 /* museumbordje */
-.label{margin:0 0 6px;padding:14px 0 16px;border-bottom:1px solid var(--line)}
-.lab{margin:0;font-size:14px;line-height:1.45;color:var(--soft)}
-.lab b{color:var(--ink);font-weight:700}
-.label .nl{margin:8px 0 0;font-size:18px;font-weight:500;line-height:1.4;color:var(--blue)}
+.label{margin:0;padding:14px 0 16px;border-bottom:1px solid var(--line)}
+/* one size for the whole label: the name in ink, the facts in grey, then the A2 sentence in ink */
+.lab,.label .nl{margin:0;font-size:15px;line-height:1.45}
+.lab{color:var(--soft)}
+.lab b{color:var(--ink);font-weight:600}
+.label .nl{margin-top:8px;color:var(--ink)}
 .zoom{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 16px calc(20px + env(safe-area-inset-bottom,0px));background:#060C1E;color:#D9E2F5;text-align:center}
 .zoom img{max-width:100%;max-height:72vh;object-fit:contain}
 .zoom p{max-width:440px;margin:14px 0 0;font-size:15px}
@@ -67,12 +69,14 @@ h2::before{content:"";flex:none;width:9px;height:9px;background:var(--blue);tran
 .today h2{font-size:24px;font-weight:700;color:var(--blue);margin:4px 0 4px}
 .today .sub{color:var(--ink);margin:0}
 .today .hint{margin:12px 0 0}
+.today>.ghost{margin-top:14px}
 .steps{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:8px}
 .step{display:grid;grid-template-columns:30px minmax(0,1fr) auto;column-gap:12px;align-items:center;width:100%;height:100%;text-align:left;background:var(--bg);border:1.5px solid var(--line);border-radius:3px;padding:12px 14px}
 .step i{grid-row:1/3;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:700;font-size:15px;border:1.5px solid var(--blue);border-radius:2px;color:var(--blue)}
 .step b{font-size:17px;font-weight:600;line-height:1.3}
 .step span{grid-column:2;color:var(--soft);font-size:14.5px;line-height:1.35}
 .step em{grid-column:3;grid-row:1/3;font-style:normal;font-weight:600;font-size:15px;color:var(--blue);white-space:nowrap}
+.step em.c{font-size:26px;font-weight:400;line-height:1}
 .step:hover{border-color:var(--blue)}
 .step.next{background:var(--blue);border-color:var(--blue);color:var(--on)}
 .step.next i{border-color:var(--on);color:var(--on)}
@@ -80,28 +84,24 @@ h2::before{content:"";flex:none;width:9px;height:9px;background:var(--blue);tran
 .step.next:active{background:var(--deep)}
 .step.ok i{background:var(--good);border-color:var(--good);color:var(--on)}
 .step.ok b{color:var(--soft)} .step.ok em{color:var(--good)}
-/* blokken: kies zelf wat je oefent */
-.blokken{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-top:12px}
-.blok{display:flex;flex-direction:column;gap:4px;width:100%;text-align:left;background:var(--bg);border:1.5px solid var(--line);border-radius:3px;padding:14px 16px 16px}
-button.blok:hover,.blok:has(button:hover){border-color:var(--blue)}
-.blok .th{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
-.blok b{font-size:18px;font-weight:600}
-.blok .th em{font-style:normal;font-size:13.5px;color:var(--soft);font-variant-numeric:tabular-nums;white-space:nowrap}
-.blok .d{flex:1;color:var(--soft);font-size:14.5px;line-height:1.35}
-.blok small{font-size:13.5px;color:var(--soft);font-variant-numeric:tabular-nums}
-.blok>span{display:block}
-.blok .th{display:flex}
-.blok .bar{display:block;height:4px;margin:6px 0 2px}
-.blok .ta{display:grid;gap:8px;margin-top:10px}
-.blok .ta .btn{padding:9px 18px;font-size:16px}
-.blok .ta .ghost{padding:8px 6px;font-size:14.5px;white-space:nowrap;text-align:center}
-/* telefoon en tablet: Oefenen en Proefexamen naast elkaar, lager */
-@media (max-width:959px){
-  .blok{padding:12px 14px 14px}
-  .blok .ta{grid-template-columns:1fr 1fr;margin-top:8px}
-  .blok .ta .btn,.blok .ta .ghost{min-height:40px;padding:6px 4px;font-size:14.5px}
-}
-.blok .go{margin-top:8px;font-weight:600;font-size:16px;color:var(--blue)}
+/* lijsten: één rij = één scherm of oefening. De hele rij is de knop, met › rechts. */
+.list{display:grid;margin-top:8px;border-top:1px solid var(--line)}
+.it{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:11px 0 12px;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);color:var(--ink)}
+.it>span{flex:1;min-width:0}
+.it::after{content:"›";flex:none;font-size:26px;line-height:1;margin-top:-3px;color:var(--blue)}
+.it .th{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.it b{font-size:17px;font-weight:600;line-height:1.3}
+.it small{flex:none;color:var(--soft);font-size:14px;font-variant-numeric:tabular-nums}
+.it .d{display:block;margin-top:1px;color:var(--soft);font-size:14.5px;line-height:1.35}
+.it .bar{display:block;height:3px;margin:8px 0 2px}
+.it:hover b{color:var(--blue)}
+.itw{display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line)} .itw .it{border:0}
+/* kopje boven een groep: klein, kapitalen, zoals de vraag in een oefening */
+.lh{margin:26px 0 4px;color:var(--blue);font-size:13.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+/* proefexamens: een knop per onderdeel, met de tijd */
+.exb{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;margin:8px 0 12px}
+.exb .ghost{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:56px;padding:7px 4px;font-weight:600;line-height:1.25}
+.exb small{color:var(--soft);font-size:13.5px;font-weight:500;font-variant-numeric:tabular-nums}
 
 /* oefenen */
 .top{display:flex;justify-content:space-between;align-items:center;margin:14px 0 0}
@@ -185,7 +185,6 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
 
 #exams .hint{margin:8px 0 0}
 #exform{margin-top:10px}
-h2.gap{margin-top:28px}
 /* tijdlijn: tegeltjes op een lijn */
 .tlw{position:relative;margin:4px 10px 0;padding:64px 0}
 .tl{position:relative;height:4px;background:var(--line)}
@@ -200,7 +199,7 @@ h2.gap{margin-top:28px}
 .tlb.l{transform:translateX(-9px);text-align:left} .tlb.r{transform:translateX(calc(9px - 100%));text-align:right}
 .tlb.next b{color:var(--blue)} .tlb.past{opacity:.5}
 /* onderaan het startscherm */
-#gen{margin-top:20px} #genmsg{margin-top:8px;min-height:20px}
+#gen{margin-top:16px} #genmsg{margin-top:8px} .note:empty{display:none}
 .forms{display:grid;grid-template-columns:auto 1fr;gap:0 14px;margin:4px 0 12px;align-items:baseline}
 .forms dt{grid-column:1/-1;color:var(--blue);font-size:13.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-top:10px}
 .forms dt:first-child{margin-top:0}
@@ -208,15 +207,9 @@ h2.gap{margin-top:28px}
 .forms dd.w{grid-column:1/-1}
 .forms b{font-weight:600}
 .forms mark{background:none;color:var(--blue);font-weight:700}
-.stat{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
-.stat>div{flex:1;min-width:0} .stat b{display:block} .stat span{display:block;color:var(--soft);font-size:14.5px;margin-bottom:6px}
-.stat .bar{margin:0}
 #stats .back,#lib .back{margin-top:14px}
 #stats h2,#lib h2{margin-top:18px}
 /* boekenkast */
-#lib h2.gap{margin-top:30px}
-.bk{flex:1;min-width:0;text-align:left;background:none;border:0;padding:0}
-.bk b{font-size:18px;font-weight:600}
 .file{display:flex;align-items:center;justify-content:center;text-align:center;cursor:pointer}
 .file:focus-within{outline:3px solid var(--oranje);outline-offset:2px}
 #pasteform{margin-top:12px}
@@ -224,7 +217,6 @@ h2.gap{margin-top:28px}
 /* luisteren en kijken */
 #media .back{margin-top:14px}
 #media h2{margin-top:18px}
-#media h2.gap{margin-top:30px}
 #mbody>.ask{margin-top:20px} #mbody>.ask+h2{margin-top:4px}
 .eps{list-style:none;margin:8px 0 0;padding:0}
 .ep{display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:10px 0;color:var(--ink)}
@@ -289,7 +281,8 @@ h2.gap{margin-top:28px}
   #label .lab{flex:0 0 340px} #label .nl{flex:1;margin:0}
   .today{padding:26px 32px 24px}
   .steps{grid-template-columns:repeat(auto-fit,minmax(0,1fr))}
-  .blokken{grid-template-columns:repeat(auto-fill,minmax(190px,1fr))}
+  #menu .list{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));column-gap:40px}
+  .exb{grid-template-columns:repeat(5,1fr)}
   .duo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:64px;align-items:start}
   #play,#stats,#lib,#read,#media{max-width:720px;margin:0 auto}
   .book{font-size:20px}
@@ -307,29 +300,30 @@ h2.gap{margin-top:28px}
     <section class="today" id="plan"></section>
     <div id="menu"></div>
     <div class="duo">
-      <div><h2>Lezen en luisteren</h2><div class="blokken" id="books"></div></div>
-      <div><h2>Mijn voortgang</h2><div class="blokken" id="mine"></div></div>
+      <div><h2>Lezen en luisteren</h2><div class="list" id="books"></div>
+        <button class="ghost wide" id="gen">Nieuwe lees- en luisterteksten maken</button>
+        <p class="note" id="genmsg"></p></div>
+      <div><h2>Mijn voortgang</h2><div class="list" id="mine"></div>
+        <div id="exams"></div>
+        <h3 class="lh">Op een ander apparaat</h3>
+        <p class="sub" id="sync">Je voortgang staat op dit apparaat. Sla hem op als bestand en laad hem op het andere apparaat.</p>
+        <div class="two"><button class="ghost" id="exp">Opslaan als bestand</button><button class="ghost" id="imp">Bestand laden</button></div>
+        <input type="file" id="impf" accept=".json,application/json" hidden>
+        <p class="note" id="impmsg" style="margin-top:8px"></p></div>
     </div>
-    <div id="exams"></div>
-    <button class="ghost wide" id="gen">Nieuwe lees- en luisterteksten maken</button>
-    <p class="note" id="genmsg"></p>
-    <p class="sub" id="sync" style="margin-top:22px">Je voortgang wordt bewaard op dit apparaat. Wil je verder op een ander apparaat? Sla je voortgang op als bestand en laad het daar.</p>
-    <div class="two"><button class="ghost" id="exp">Voortgang opslaan</button><button class="ghost" id="imp">Voortgang laden</button></div>
-    <input type="file" id="impf" accept=".json,application/json" hidden>
-    <p class="note" id="impmsg" style="margin-top:8px"></p>
   </div>
   <div id="stats" hidden>
-    <button class="back" id="sback"><span aria-hidden="true">←</span>Alle onderdelen</button>
+    <button class="back" id="sback"><span aria-hidden="true">←</span>Start</button>
     <h2>Mijn zwakke punten</h2>
     <p class="sub">De onderdelen met de meeste fouten staan bovenaan.</p>
     <div id="statlist"></div>
   </div>
   <div id="lib" hidden>
-    <button class="back" id="lback"><span aria-hidden="true">←</span>Alle onderdelen</button>
+    <button class="back" id="lback"><span aria-hidden="true">←</span>Start</button>
     <h2>Boekenkast</h2>
     <p class="sub">Lees verhalen en je eigen boeken. Tik op een woord: je ziet de betekenis in het Engels.</p>
     <div id="shelf"></div>
-    <h2 class="gap">Boek toevoegen</h2>
+    <h3 class="lh">Boek toevoegen</h3>
     <p class="sub">Een e-book (.epub, zonder kopieerbeveiliging), een tekstbestand (.txt) of een tekst die je plakt. Het boek blijft op dit apparaat.</p>
     <div class="two"><label class="ghost file">Bestand kiezen<input type="file" id="bfile" accept=".epub,.txt,application/epub+zip,text/plain" hidden></label><button class="ghost" id="bpaste">Tekst plakken</button></div>
     <div id="pasteform" hidden>
@@ -338,7 +332,7 @@ h2.gap{margin-top:28px}
       <button class="btn wide" id="pastesave">Bewaar</button>
     </div>
     <p class="note" id="bmsg"></p>
-    <h2 class="gap">Mijn woorden</h2>
+    <h3 class="lh">Mijn woorden</h3>
     <p class="sub" id="wsub"></p>
     <div id="wlist"></div>
     <p class="note" style="margin-top:22px">Woordenboek: <a href="https://en.wiktionary.org">Wiktionary</a> (via <a href="https://kaikki.org">kaikki.org</a>), licentie <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p>
@@ -356,7 +350,7 @@ h2.gap{margin-top:28px}
     <div id="mbody"></div>
   </div>
   <div id="play" hidden>
-    <div class="top"><button class="back" id="back"><span aria-hidden="true">←</span>Alle onderdelen</button><span id="timer"></span></div>
+    <div class="top"><button class="back" id="back"><span aria-hidden="true">←</span>Start</button><span id="timer"></span></div>
     <div class="bar"><i id="bar"></i></div>
     <section class="card" id="card" aria-live="polite"></section>
     <div class="mode"><button id="mode"></button></div>
@@ -1136,26 +1130,28 @@ function paint(){
   const p=ART[today()%ART.length], src="/art/"+p.f+".jpg";
   if(!$("artimg").src.endsWith(src)){$("artimg").src=src;$("zimg").src=src}
   $("artimg").style.objectPosition="50% "+p.y+"%";
-  $("label").innerHTML=`<p class="lab"><b>${p.a}</b><br><i>${p.t}</i>, ${p.d} · ${p.m}</p><p class="nl">${p.nl}</p>`;
-  $("zcap").innerHTML=`<b>${p.a}</b><br><i>${p.t}</i>, ${p.d}<br>${p.m}`;
+  $("label").innerHTML=`<p class="lab"><b>${p.a}</b><br>${p.t}, ${p.d} · ${p.m}</p><p class="nl">${p.nl}</p>`;
+  $("zcap").innerHTML=`<b>${p.a}</b><br>${p.t}, ${p.d} · ${p.m}`;
+}
+// A list row: the whole row is the button, with › on the right. o.n = a count on the right, o.bar = progress in %
+function itHTML(attr,t,d,o={}){
+  return`<button class="it" ${attr}><span><span class="th"><b>${t}</b>${o.n!=null?`<small>${o.n}</small>`:""}</span>${d?`<span class="d">${d}</span>`:""}${o.bar!=null?`<span class="bar"><i style="width:${o.bar}%"></i></span>`:""}</span></button>`;
 }
 function home(){
   paint();
   $("play").hidden=true;$("stats").hidden=true;$("lib").hidden=true;$("read").hidden=true;$("media").hidden=true;stopMedia();closePop();$("home").hidden=false;head();clock(0);hush();planId=null;drawPlan();
-  const sec=id=>SEC.find(x=>x.id===id), go=t=>`<span class="go">${t} →</span>`;
-  const inner=s=>{const p=ITEMS.filter(x=>x.sec===s.id),n=p.filter(x=>S.items[x.k]).length;
-    return`<span class="th"><b>${s.t}</b></span><span class="d">${s.s}</span><span class="bar"><i style="width:${p.length?n/p.length*100:0}%"></i></span><small>${n} van ${p.length} gedaan</small>`};
+  const sec=id=>SEC.find(x=>x.id===id);
+  const row=id=>{const s=sec(id),p=ITEMS.filter(x=>x.sec===id),n=p.filter(x=>S.items[x.k]).length;
+    return itHTML(`data-s="${id}"`,s.t,s.s,{n:n+" van "+p.length,bar:n?n/p.length*100:null})};
   const lb=Object.values(S.bk||{}).filter(b=>b.t).sort((a,b)=>b.at-a.at)[0];
-  $("menu").innerHTML=`<h2>Examenonderdelen</h2><p class="sub">Oefen in je eigen tempo, of doe een proefexamen met tijd, zoals op het echte examen.</p><div class="blokken">`
-    +["lz","ls","wr","sp","knm"].map(id=>`<div class="blok">${inner(sec(id))}<span class="ta"><button class="btn" data-s="${id}">Oefenen</button>${EX[id]?`<button class="ghost" data-e="${id}">Proefexamen, ${EX[id].min} min</button>`:`<span class="ghost" style="visibility:hidden" aria-hidden="true">Proefexamen</span>`}</span></div>`).join("")
-    +`</div>${duoLink}<h2>Grammatica en woorden</h2><p class="sub">Korte rondes van 10 vragen. Dit helpt bij alle onderdelen.</p><div class="blokken">`
-    +["verb","wo","pr","dh","vo"].map(id=>`<button class="blok" data-s="${id}">${inner(sec(id))}${go("Oefenen")}</button>`).join("")
-    +`</div>`;
-  $("books").innerHTML=`<button class="blok" data-x="books"><span class="th"><b>Boekenkast</b></span><span class="d">${lb?`Je leest nu: ${esc(lb.t)}, blz. ${lb.p+1}`:"Verhalen en je eigen e-books. Tik op een woord voor de betekenis."}</span>${go(lb?"Verder lezen":"Openen")}</button>`
-    +`<button class="blok" data-x="media"><span class="th"><b>Luisteren en kijken</b></span><span class="d">Echt Nederlands: nieuws, video's en podcasts.</span>${go("Openen")}</button>`
-    +((S.words||[]).length?`<button class="blok" data-x="words"><span class="th"><b>Mijn woorden</b><em>${S.words.length}</em></span><span class="d">Oefen de woorden die je bij het lezen hebt bewaard.</span>${go("Oefenen")}</button>`:"");
-  $("mine").innerHTML=`<button class="blok" data-x="stats"><span class="th"><b>Mijn zwakke punten</b></span><span class="d">Zie waar je de meeste fouten maakt en oefen precies dat.</span>${go("Bekijken")}</button>`
-    +((S.errs||[]).length?`<button class="blok" data-x="errs"><span class="th"><b>Mijn fouten</b><em>${S.errs.length}</em></span><span class="d">Oefen met fouten uit je eigen teksten en antwoorden.</span>${go("Oefenen")}</button>`:"");
+  $("menu").innerHTML=`<h2>Examenonderdelen</h2><p class="sub">Oefen in je eigen tempo. Tik op een onderdeel.</p><div class="list">${["lz","ls","wr","sp","knm"].map(row).join("")}</div>`
+    +`<h3 class="lh">Proefexamen</h3><p class="sub">Met tijd, zoals op het echte examen.</p><div class="exb">${["lz","ls","wr","sp","knm"].map(id=>`<button class="ghost" data-e="${id}">${PART[id]}<small>${EX[id].min} min</small></button>`).join("")}</div>${duoLink}`
+    +`<h2>Grammatica en woorden</h2><p class="sub">Korte rondes van 10 vragen. Dit helpt bij alle onderdelen.</p><div class="list">${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`;
+  $("books").innerHTML=itHTML(`data-x="books"`,"Boekenkast",lb?`Je leest nu: ${esc(lb.t)}, blz. ${lb.p+1}`:"Verhalen en je eigen e-books. Tik op een woord voor de betekenis.")
+    +itHTML(`data-x="media"`,"Luisteren en kijken","Echt Nederlands: nieuws, video's en podcasts.")
+    +((S.words||[]).length?itHTML(`data-x="words"`,"Mijn woorden","Oefen de woorden die je bij het lezen hebt bewaard.",{n:S.words.length}):"");
+  $("mine").innerHTML=itHTML(`data-x="stats"`,"Mijn zwakke punten","Zie waar je de meeste fouten maakt en oefen precies dat.")
+    +((S.errs||[]).length?itHTML(`data-x="errs"`,"Mijn fouten","Oefen met fouten uit je eigen teksten en antwoorden.",{n:S.errs.length}):"");
   document.querySelectorAll("#menu button,#books button,#mine button").forEach(b=>b.onclick=()=>{const d=b.dataset;
     if(d.s)build(d.s);
     else if(d.e)startExam(d.e);
@@ -1207,8 +1203,8 @@ function planHTML(){
   const date=new Date().toLocaleDateString("nl-NL",{weekday:"long",day:"numeric",month:"long"});
   return`<p class="ask">${date}</p><h2>Je les van vandaag</h2><p class="sub">${intro}</p>
     <ol class="steps">${steps.map((t,i)=>{const ok=done.includes(t.id);
-      return`<li><button class="step${ok?" ok":i===nx?" next":""}" data-p="${t.id}"><i>${ok?"✓":i+1}</i><b>${t.t}</b><span>${t.s}</span><em>${ok?"Klaar":i===nx?"Begin →":"→"}</em></button></li>`}).join("")}</ol>
-    ${!Object.keys(ex).length?`<button class="ghost" id="setex" style="margin-top:14px">Examendata invullen</button>`:T.length?`<button class="hint" data-p="s:mix">Meer tijd? Doe de Mix van de dag: 10 vragen uit alles.</button>`:""}`;
+      return`<li><button class="step${ok?" ok":i===nx?" next":""}" data-p="${t.id}"><i>${ok?"✓":i+1}</i><b>${t.t}</b><span>${t.s}</span><em${ok||i===nx?"":` class="c"`}>${ok?"Klaar":i===nx?"Begin":"›"}</em></button></li>`}).join("")}</ol>
+    ${!Object.keys(ex).length?`<button class="ghost wide" id="setex">Examendata invullen</button>`:T.length?`<button class="ghost wide" data-p="s:mix">Meer tijd? Mix van de dag</button>`:""}`;
 }
 function examsHTML(){
   const d=today(),ex=S.exams||{};
@@ -1224,7 +1220,7 @@ function examsHTML(){
     <div class="tl"><i style="width:${at(d)}%"></i>${dates.map(ds=>`<u class="${cls(ds)}" style="left:${at(dayOf(ds))}%"></u>`).join("")}<em style="left:${at(d)}%"></em></div>
     ${dates.map((ds,i)=>{const x=at(dayOf(ds));
       return`<div class="tlb ${i%2?"up":"dn"}${x<15?" l":x>85?" r":""}${cls(ds)}" style="left:${x}%"><b>${gs[ds].join(" en ")}</b>${short(ds)}<br>${days(dayOf(ds)-d)}</div>`}).join("")}</div>`;
-  return`<h2 class="gap">Mijn examens</h2>${rows||`<p class="sub">Nog geen examendata.</p>`}<button class="hint" id="editex">${dates.length?"Examendata wijzigen":"Examendata invullen"}</button>
+  return`<h3 class="lh">Mijn examens</h3>${rows||`<p class="sub">Nog geen examendata.</p>`}<button class="hint" id="editex">${dates.length?"Examendata wijzigen":"Examendata invullen"}</button>
     <div id="exform" hidden>${Object.keys(PART).map(k=>`<label class="fld"><span>${PART[k]}</span><input type="date" data-k="${k}" value="${ex[k]||""}"></label>`).join("")}<button class="ghost wide" id="saveex">Bewaar</button></div>`;
 }
 function drawPlan(){
@@ -1246,8 +1242,8 @@ function stats(){
   const all=Object.values(g),multi={}; all.forEach(o=>multi[o.sec]=(multi[o.sec]||0)+1);
   const gs=all.filter(o=>o.r+o.w>=3).sort((a,b)=>b.w/(b.r+b.w)-a.w/(a.r+a.w));
   gs.forEach(o=>{const t=SEC.find(x=>x.id===o.sec).t;o.name=multi[o.sec]<2?t:o.sec==="knm"?o.label:t+": "+o.label});
-  $("statlist").innerHTML=gs.length?gs.map((o,i)=>{const pc=Math.round(o.r/(o.r+o.w)*100);
-    return`<div class="stat"><div><b>${o.name}</b><span>${pc}% goed, ${o.r+o.w} antwoorden</span><div class="bar"><i style="width:${pc}%"></i></div></div><button class="ghost" data-i="${i}">Oefen</button></div>`}).join("")
+  $("statlist").innerHTML=gs.length?`<div class="list">${gs.map((o,i)=>{const pc=Math.round(o.r/(o.r+o.w)*100);
+    return itHTML(`data-i="${i}"`,o.name,`${pc}% goed, ${o.r+o.w} antwoorden`,{bar:pc})}).join("")}</div>`
     :`<p class="note">Nog te weinig antwoorden. Maak eerst een paar rondes; daarna zie je hier je zwakke punten.</p>`;
   document.querySelectorAll("#statlist button").forEach(b=>b.onclick=()=>{const o=gs[b.dataset.i];
     build("custom",{id:"custom",t:o.name,n:10,pool:()=>o.items.slice().sort((a,b)=>weak(b)-weak(a))})});
@@ -1267,7 +1263,7 @@ function build(id,custom){
   if(!cur.keep)shuffle(queue);
   queue=queue.map(q=>({...q,retry:false}));
   pos=0;total=queue.length;right=0;clock(cur.min);
-  $("home").hidden=true;$("play").hidden=false;window.scrollTo(0,0);show();
+  ["home","stats","lib","read","media"].forEach(x=>$(x).hidden=true);closePop();stopMedia();$("play").hidden=false;window.scrollTo(0,0);show();
 }
 function show(){
   head(); if(pos>=queue.length)return finish();
@@ -1688,9 +1684,10 @@ async function library(){
   $("home").hidden=true;$("read").hidden=true;$("lib").hidden=false;
   const mine=await kvGet("books")||[];
   const row=(b,own)=>{const r=S.bk[b.id];
-    return`<div class="stat"><button class="bk" data-b="${b.id}"><b>${esc(b.t)}</b><span>${b.a?esc(b.a)+" · ":""}${r?`blz. ${r.p+1} van ${r.n}`:"nog niet gelezen"}</span></button>${own?`<button class="ghost" data-del="${b.id}">Wis</button>`:""}</div>`};
-  $("shelf").innerHTML=BOOKS.map(b=>row(b)).join("")+mine.map(b=>row(b,1)).join("");
-  document.querySelectorAll("#shelf .bk").forEach(b=>b.onclick=()=>openBook(b.dataset.b));
+    const it=itHTML(`data-b="${b.id}"`,esc(b.t),(b.a?esc(b.a)+" · ":"")+(r?`blz. ${r.p+1} van ${r.n}`:"nog niet gelezen"));
+    return own?`<div class="itw">${it}<button class="ghost" data-del="${b.id}">Wis</button></div>`:it};
+  $("shelf").innerHTML=`<div class="list">${BOOKS.map(b=>row(b)).join("")+mine.map(b=>row(b,1)).join("")}</div>`;
+  document.querySelectorAll("#shelf [data-b]").forEach(b=>b.onclick=()=>openBook(b.dataset.b));
   document.querySelectorAll("#shelf [data-del]").forEach(b=>b.onclick=async()=>{const id=b.dataset.del,m=mine.find(x=>x.id===id);
     if(!confirm(`„${m.t}” uit je boekenkast wissen?`))return;
     await kvSet("books",mine.filter(x=>x!==m)).catch(()=>{});await kvSet("book:"+id).catch(()=>{});
@@ -1871,11 +1868,11 @@ function mBack(t,f){$("mback").innerHTML=`<span aria-hidden="true">←</span>${t
 function media(){
   hush();stopMedia();MS=null;
   $("home").hidden=true;$("media").hidden=false;window.scrollTo(0,0);
-  mBack("Alle onderdelen",home);
-  const row=m=>`<div class="stat"><button class="bk" data-m="${m.id}"><b>${m.t}</b><span>${LV[m.lv]} · ${m.s}</span></button></div>`;
+  mBack("Start",home);
+  const row=m=>itHTML(`data-m="${m.id}"`,m.t,LV[m.lv]+" · "+m.s);
   $("mbody").innerHTML=`<h2>Luisteren en kijken</h2><p class="sub">Echt Nederlands, zoals mensen het spreken. Begin met de makkelijke. Je hoeft niet alles te begrijpen: luister naar wat je herkent.</p>
-    <h2 class="gap">Video's</h2>${MEDIA.filter(m=>m.k==="v").map(row).join("")}
-    <h2 class="gap">Podcasts</h2>${MEDIA.filter(m=>m.k==="a").map(row).join("")}`;
+    <h3 class="lh">Video's</h3><div class="list">${MEDIA.filter(m=>m.k==="v").map(row).join("")}</div>
+    <h3 class="lh">Podcasts</h3><div class="list">${MEDIA.filter(m=>m.k==="a").map(row).join("")}</div>`;
   document.querySelectorAll("#mbody [data-m]").forEach(b=>b.onclick=()=>source(b.dataset.m));
 }
 async function source(id){
