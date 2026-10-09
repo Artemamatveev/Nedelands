@@ -1278,8 +1278,8 @@ const PART={wr:"Schrijven",knm:"KNM",sp:"Spreken",ls:"Luisteren",lz:"Lezen"}, HE
 let planId=null;
 // Je les van vandaag, without exam dates: the weakest exam part first (lowest proefexamen or practice score;
 // a part not practised yet counts as 50%), every third day as a proefexamen once it has been practised;
-// then a grammar round that helps that part, and Schrijven every day (when Schrijven is already step 1,
-// another part in turn, so nothing is forgotten)
+// then a grammar round that helps that part, and Schrijven and KNM every day (when one of them is already
+// step 1, another part in turn, so nothing is forgotten)
 function planTasks(){
   const d=today(),T=[],ks=["lz","ls","wr","sp","knm"],sec=id=>SEC.find(x=>x.id===id);
   const sc=ks.map(k=>({k,r:ready(k)})), add=(id,t,s)=>{if(!T.some(x=>x.id===id))T.push({id,t,s})};
@@ -1288,8 +1288,8 @@ function planTasks(){
   if(sc[0].r.pc!=null&&d%3===0)add("e:"+k,"Proefexamen "+PART[k],k==="wr"?"4 opdrachten in 40 minuten":EX[k].min+" minuten, zoals op het examen");
   else add("s:"+k,PART[k],sec(k).s);
   const help=HELP[k].length?HELP[k]:["verb","wo","vo"],h=help[d%help.length];add("s:"+h,sec(h).t,sec(h).s);
-  if(k!=="wr")add("s:wr",PART.wr,sec("wr").s);
-  else{const o=ks.filter(x=>x!==k),k2=o[d%o.length];add("s:"+k2,PART[k2],"Herhaling, zodat je niets vergeet")}
+  add("s:wr",PART.wr,sec("wr").s); add("s:knm",PART.knm,sec("knm").s);
+  if(T.length<4){const o=ks.filter(x=>!T.some(t=>t.id.endsWith(":"+x))),k2=o[d%o.length];add("s:"+k2,PART[k2],"Herhaling, zodat je niets vergeet")}
   return{T,k,pc:sc[0].r.pc};
 }
 function planHTML(){
