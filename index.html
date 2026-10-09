@@ -184,7 +184,7 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
 .done .big{font-size:72px;font-weight:700;letter-spacing:0;line-height:1;margin:8px 0;color:var(--blue)}
 
 /* onderaan het startscherm */
-#gen{margin-top:16px} #genmsg{margin-top:8px} .note:empty{display:none}
+.note:empty{display:none}
 .forms{display:grid;grid-template-columns:auto 1fr;gap:0 14px;margin:4px 0 12px;align-items:baseline}
 .forms dt{grid-column:1/-1;color:var(--blue);font-size:13.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-top:10px}
 .forms dt:first-child{margin-top:0}
@@ -288,9 +288,7 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
     <section class="today" id="plan"></section>
     <div id="menu"></div>
     <div class="duo">
-      <div><h2>Lezen en luisteren</h2><div class="list" id="books"></div>
-        <button class="ghost wide" id="gen">Nieuwe lees- en luisterteksten maken</button>
-        <p class="note" id="genmsg"></p></div>
+      <div><h2>Lezen en luisteren</h2><div class="list" id="books"></div></div>
       <div><h2>Herhalen</h2><div class="list" id="mine"></div></div>
     </div>
   </div>
@@ -1620,33 +1618,6 @@ async function examSpeak(){
     plain(c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je antwoorden met de voorbeelden.":c==="rate_limited"?"Te veel verzoeken achter elkaar. Probeer het over een minuut opnieuw.":"Het nakijken is niet gelukt. Vergelijk je antwoorden met de voorbeelden.");
   }
 }
-async function gen(){
-  const b=$("gen"),m=$("genmsg"); b.disabled=true;
-  m.textContent="Bezig met nieuwe teksten maken… Dit duurt ongeveer een minuut.";
-  // Inside Claude the page asks Claude itself; on the website it asks api/generate.js
-  let sample=null; try{sample=window.claude?await window.claude.use("sample"):null}catch(e){}
-  const topics=shuffle(["de huisarts","de gemeente","school","werk","de supermarkt","het openbaar vervoer","de woning en de buren","de bibliotheek","sport","de tandarts","de bank","een cursus","het weer","een pakket ophalen","een feest","de apotheek","een sollicitatie","de kinderopvang"]).slice(0,5).join(", ");
-  const prompt=`Maak nieuw oefenmateriaal voor het Nederlandse inburgeringsexamen, niveau A2 (Lezen en Luisteren). Gebruik eenvoudige, correcte taal op A2-niveau. Onderwerpen: ${topics}.
-Geef ALLEEN een JSON-object terug, zonder markdown:
-{"lezen":[precies 3 items: {"text":"een korte tekst van 50 tot 90 woorden (advertentie, brief van een instantie, e-mail, mededeling of rooster)","questions":[2 of 3 items: {"q":"vraag","right":"goed antwoord","wrong":["fout antwoord","fout antwoord"]}]}],
- "luisteren":[precies 4 items: {"say":"gesproken bericht van 2 tot 4 zinnen; schrijf getallen en tijden in woorden","q":"vraag","right":"goed antwoord","wrong":["fout antwoord","fout antwoord"]}]}
-Elk goed antwoord moet duidelijk uit de tekst volgen. De foute antwoorden klinken logisch maar zijn fout. Houd de antwoorden kort.`;
-  const valid=q=>q&&q.q&&q.right&&Array.isArray(q.wrong)&&q.wrong.length>=2&&new Set([q.right,q.wrong[0],q.wrong[1]]).size===3;
-  try{
-    let res;
-    if(sample)res=await sample.json(prompt,{cache:false});
-    else{const r=await fetch("/api/generate",{method:"POST"}),j=await r.json().catch(()=>({}));if(!r.ok)throw{code:j.error||"failed"};res=j}
-    S.gen=S.gen||{lz:[],ls:[]};
-    (res.lezen||[]).forEach(t=>{const qs=(t.questions||[]).filter(valid).map(q=>[esc(q.q),esc(q.right),esc(q.wrong[0]),esc(q.wrong[1])]);if(t.text&&qs.length)S.gen.lz.push([esc(t.text),qs])});
-    (res.luisteren||[]).forEach(t=>{if(t&&t.say&&valid(t))S.gen.ls.push([String(t.say),esc(t.q),esc(t.right),esc(t.wrong[0]),esc(t.wrong[1])])});
-    const n=addGenerated(); save(); home();
-    m.textContent=n?`Klaar: ${n} nieuwe vragen bij Lezen en Luisteren.`:"Er kwam geen bruikbare tekst terug. Probeer het opnieuw.";
-  }catch(e){
-    const c=e&&e.code;
-    m.textContent=c==="not_granted"?"Je gaf geen toestemming.":c==="not_configured"?"Nieuwe teksten maken is nog niet ingesteld.":c==="rate_limited"?"Te veel verzoeken. Wacht een minuut.":"Het is niet gelukt. Probeer het later opnieuw.";
-  }
-  b.disabled=false;
-}
 function finish(){
   complete();
   head(); $("bar").style.width="100%"; $("mode").hidden=true; clock(0); hush();
@@ -2124,7 +2095,7 @@ document.addEventListener("keydown",e=>{
     if(Math.abs(dx)<70||Math.abs(dy)>50||Date.now()-t0>700)return;
     if(dx<0&&R.p<R.pages.length-1)turn(1);else if(dx>0&&R.p>0)turn(-1)});
 })();
-$("back").onclick=home; $("sback").onclick=home; $("lback").onclick=home; $("gen").onclick=gen;
+$("back").onclick=home; $("sback").onclick=home; $("lback").onclick=home;
 $("artbtn").onclick=()=>{$("zoom").hidden=false}; $("zoom").onclick=()=>{$("zoom").hidden=true};
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("zoom").hidden)$("zoom").onclick()});
 // Generating new texts needs Claude; hide the button where it can't work

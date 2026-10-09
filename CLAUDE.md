@@ -103,8 +103,8 @@ separate takes, never at the same time: on iPhone they compete for the microphon
 minute per answer. Recordings and transcripts stay in memory only. "Zeg het na" (free, no Claude call):
 the learner reads the example or corrected answer aloud and the words speech recognition missed are marked.
 
-`api/generate.js` writes new Lezen and Luisteren material (same key, same Origin check);
-inside Claude the page uses `window.claude` instead. Generated items are kept in `S.gen`.
+Making new Lezen and Luisteren material with Claude was removed (it cost a call per tap and its
+result was invisible). Items made earlier stay in `S.gen` and are still added by `addGenerated()`.
 
 ## Boekenkast (reading)
 
