@@ -32,7 +32,7 @@ generic "AI app" look.
 
 One clear path, top to bottom: today's lesson (numbered steps; the next one is filled
 cobalt), then choose yourself (exam parts with "Oefenen" + "Proefexamen", grammar), then
-reading and progress. Every section appears once; don't add a second entry point to the
+reading and listening, and progress. Every section appears once; don't add a second entry point to the
 same exercise.
 
 ## Paintings
@@ -105,3 +105,14 @@ line on the Boekenkast screen). It is loaded once, when the shelf opens. The pop
 lemma, de/het, plural or verb forms (perfectum aux from `V`), and finds separable verbs
 (bel … op → opbellen). Meanings are in English; the rest of the app stays in Russian.
 No Claude calls in the reader: whole sentences go to Google Translate via a link.
+
+## Luisteren en kijken (real Dutch)
+
+Real speech from Dutch YouTube channels and podcasts, listed in `MEDIA` in `index.html` (id, name,
+video or audio, level 1–3, a Dutch description). `api/feed.js` fetches the latest 15 episodes of
+the whitelisted feeds (YouTube channel RSS, podcast RSS; no key, cached by Vercel's CDN for 30 min)
+and returns `{link, items:[{t, d, s, v|a, n}]}`; to add a source, add it to both `MEDIA` and `FEEDS`.
+Only free sources whose episodes are entirely in Dutch. Videos play in the YouTube embed
+(`youtube-nocookie.com`, Dutch captions on), podcasts in `<audio>` with 10 s back and 0.75/1/1.25×.
+What was opened, where a podcast stopped and the chosen speed stay in `localStorage` `ww-media`,
+not in `ww-v1`.

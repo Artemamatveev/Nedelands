@@ -225,6 +225,27 @@ h2.gap{margin-top:28px}
 .file:focus-within{outline:3px solid var(--oranje);outline-offset:2px}
 #pasteform{margin-top:12px}
 .errs .x{float:right;background:none;border:0;color:var(--soft);font-size:15px;text-decoration:underline;padding:0 0 4px 12px}
+/* luisteren en kijken */
+#media .back{margin-top:14px}
+#media h2{margin-top:18px}
+#media h2.gap{margin-top:30px}
+#mbody>.ask{margin-top:20px} #mbody>.ask+h2{margin-top:4px}
+.eps{list-style:none;margin:8px 0 0;padding:0}
+.ep{display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:10px 0;color:var(--ink)}
+.ep img{flex:none;width:112px;aspect-ratio:16/9;object-fit:cover;border-radius:2px;background:var(--surface)}
+.ep b{display:block;font-size:16.5px;font-weight:600;line-height:1.3}
+.ep small{display:block;color:var(--soft);font-size:13.5px;margin-top:3px;font-variant-numeric:tabular-nums}
+.ep.on b{color:var(--oranje)}
+#mplay:not(:empty){padding-bottom:14px;border-bottom:1.5px solid var(--blue);margin-bottom:4px}
+.vid{position:relative;aspect-ratio:16/9;background:#000;margin-top:14px}
+.vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.mt{font-size:19px;font-weight:600;line-height:1.3;margin:14px 0 10px}
+#aud{display:block;width:100%;margin:0 0 10px}
+.mctl{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:8px}
+.mctl .ghost{min-height:44px;padding:6px 4px;font-size:15px;font-variant-numeric:tabular-nums}
+.mctl .rate.on{border-color:var(--oranje);color:var(--oranje)}
+.msum{margin-top:14px;font-size:17px;line-height:1.55}
+.msum p{margin:0 0 10px}
 /* lezen: tik op een woord */
 .pg{color:var(--soft);font-size:15px;font-variant-numeric:tabular-nums}
 .rt{display:flex;align-items:center;gap:6px}
@@ -274,7 +295,7 @@ h2.gap{margin-top:28px}
   .steps{grid-template-columns:repeat(auto-fit,minmax(0,1fr))}
   .blokken{grid-template-columns:repeat(auto-fill,minmax(190px,1fr))}
   .duo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:64px;align-items:start}
-  #play,#stats,#lib,#read{max-width:720px;margin:0 auto}
+  #play,#stats,#lib,#read,#media{max-width:720px;margin:0 auto}
   .book{font-size:20px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -290,7 +311,7 @@ h2.gap{margin-top:28px}
     <section class="today" id="plan"></section>
     <div id="menu"></div>
     <div class="duo">
-      <div><h2>Lezen</h2><div class="blokken" id="books"></div></div>
+      <div><h2>Lezen en luisteren</h2><div class="blokken" id="books"></div></div>
       <div><h2>Mijn voortgang</h2><div class="blokken" id="mine"></div></div>
     </div>
     <div id="exams"></div>
@@ -333,6 +354,10 @@ h2.gap{margin-top:28px}
     <article class="book" id="page" lang="nl"></article>
     <div class="two pager"><button class="ghost" id="rprev">← Vorige</button><button class="btn" id="rnext">Volgende →</button></div>
     <div class="pop" id="pop" role="dialog" aria-label="Vertaling" hidden></div>
+  </div>
+  <div id="media" hidden>
+    <button class="back" id="mback"></button>
+    <div id="mbody"></div>
   </div>
   <div id="play" hidden>
     <div class="top"><button class="back" id="back"><span aria-hidden="true">←</span>Alle onderdelen</button><span id="timer"></span></div>
@@ -1218,7 +1243,7 @@ function paint(){
 }
 function home(){
   paint();
-  $("play").hidden=true;$("stats").hidden=true;$("lib").hidden=true;$("read").hidden=true;closePop();$("home").hidden=false;head();clock(0);hush();planId=null;drawPlan();
+  $("play").hidden=true;$("stats").hidden=true;$("lib").hidden=true;$("read").hidden=true;$("media").hidden=true;stopMedia();closePop();$("home").hidden=false;head();clock(0);hush();planId=null;drawPlan();
   const sec=id=>SEC.find(x=>x.id===id), go=t=>`<span class="go">${t} →</span>`;
   const inner=s=>{const p=ITEMS.filter(x=>x.sec===s.id),n=p.filter(x=>S.items[x.k]).length;
     return`<span class="th"><b>${s.t}</b></span><span class="d">${s.s}</span><span class="bar"><i style="width:${p.length?n/p.length*100:0}%"></i></span><small>${n} van ${p.length} gedaan${((S.res||{})[s.id]||[]).length?` · proefexamen ${S.res[s.id][S.res[s.id].length-1].pc}%`:""}</small>`};
@@ -1229,6 +1254,7 @@ function home(){
     +["verb","wo","pr","dh","vo"].map(id=>`<button class="blok" data-s="${id}">${inner(sec(id))}${go("Oefenen")}</button>`).join("")
     +`</div>`;
   $("books").innerHTML=`<button class="blok" data-x="books"><span class="th"><b>Boekenkast</b></span><span class="d">${lb?`Je leest nu: ${esc(lb.t)}, blz. ${lb.p+1}`:"Verhalen en je eigen e-books. Tik op een woord voor de betekenis."}</span>${go(lb?"Verder lezen":"Openen")}</button>`
+    +`<button class="blok" data-x="media"><span class="th"><b>Luisteren en kijken</b></span><span class="d">Echt Nederlands: nieuws, video's en podcasts.</span>${go("Openen")}</button>`
     +((S.words||[]).length?`<button class="blok" data-x="words"><span class="th"><b>Mijn woorden</b><em>${S.words.length}</em></span><span class="d">Oefen de woorden die je bij het lezen hebt bewaard.</span>${go("Oefenen")}</button>`:"");
   $("mine").innerHTML=`<button class="blok" data-x="stats"><span class="th"><b>Mijn zwakke punten</b></span><span class="d">Zie waar je de meeste fouten maakt en oefen precies dat.</span>${go("Bekijken")}</button>`
     +((S.errs||[]).length?`<button class="blok" data-x="errs"><span class="th"><b>Mijn fouten</b><em>${S.errs.length}</em></span><span class="d">Oefen met fouten uit je eigen teksten en antwoorden.</span>${go("Oefenen")}</button>`:"");
@@ -1237,6 +1263,7 @@ function home(){
     else if(d.e)startExam(d.e);
     else if(d.x==="stats")stats();
     else if(d.x==="books")library();
+    else if(d.x==="media")media();
     else if(d.x==="words")practiseWords();
     else build("custom",{id:"custom",t:"Mijn fouten",n:10,pool:()=>shuffle(errItems())})});
   window.scrollTo(0,0);
@@ -1962,6 +1989,92 @@ function turn(d){
   $("rprev").disabled=R.p===0;
   $("rnext").textContent=R.p<R.pages.length-1?"Volgende →":"Boek uit";
   window.scrollTo(0,0);
+}
+// Luisteren en kijken: real Dutch from YouTube channels and podcasts. api/feed.js fetches the latest episodes
+// (YouTube's feeds can't be read from the page); videos play in YouTube's own player, podcasts in <audio>.
+// What was opened, where a podcast stopped and the speed stay on this device ("ww-media"), not in the progress file.
+const MEDIA=[
+  {id:"jj",t:"NOS Jeugdjournaal",k:"v",lv:1,s:"Het nieuws voor kinderen: korte filmpjes, duidelijk en niet te snel."},
+  {id:"ed",t:"Easy Dutch",k:"v",lv:1,s:"Straatinterviews: gewone mensen op straat, met ondertitels in het Nederlands en het Engels."},
+  {id:"kh",t:"Het Klokhuis",k:"v",lv:2,s:"Korte filmpjes over natuur, techniek en het leven in Nederland."},
+  {id:"nos",t:"NOS",k:"v",lv:3,s:"Het nieuws voor volwassenen, zoals op tv."},
+  {id:"jojo",t:"Makkelijk Nederlands met JoJo",k:"a",lv:1,s:"Langzaam en duidelijk Nederlands over het dagelijks leven."},
+  {id:"jjp",t:"NOS Jeugdjournaal podcast",k:"a",lv:2,s:"Elke week één onderwerp uit het nieuws, met vragen van kinderen."},
+  {id:"edp",t:"Easy Dutch podcast",k:"a",lv:2,s:"Tim en Linus praten over het leven in Nederland en over Nederlands leren."},
+  {id:"dag",t:"De Dag",k:"a",lv:3,s:"Een podcast van de NOS: elke werkdag twintig minuten over één nieuwsonderwerp."},
+  {id:"eg",t:"Echt Gebeurd",k:"a",lv:3,s:"Mensen vertellen op een podium een verhaal dat echt gebeurd is."}
+];
+const LV=["","Makkelijk","Gemiddeld","Moeilijk"], FEED={};
+let MS=null; // open source: {m, items, i}
+const mGet=()=>{try{return JSON.parse(localStorage.getItem("ww-media"))||{}}catch(e){return{}}};
+const mSet=m=>{try{localStorage.setItem("ww-media",JSON.stringify(m))}catch(e){}};
+const epKey=x=>MS.m.id+"|"+(x.v||x.d);
+function when(ms){
+  const d=new Date(ms),n=Math.round((new Date().setHours(0,0,0,0)-new Date(ms).setHours(0,0,0,0))/864e5);
+  return n===0?"vandaag":n===1?"gisteren":d.toLocaleDateString("nl-NL",{day:"numeric",month:"long",...(d.getFullYear()!==new Date().getFullYear()&&{year:"numeric"})});
+}
+function stopMedia(){const a=$("aud");if(a)a.pause();if($("mplay"))$("mplay").innerHTML=""}
+function mBack(t,f){$("mback").innerHTML=`<span aria-hidden="true">←</span>${t}`;$("mback").onclick=f}
+function media(){
+  hush();stopMedia();MS=null;
+  $("home").hidden=true;$("media").hidden=false;window.scrollTo(0,0);
+  mBack("Alle onderdelen",home);
+  const row=m=>`<div class="stat"><button class="bk" data-m="${m.id}"><b>${m.t}</b><span>${LV[m.lv]} · ${m.s}</span></button></div>`;
+  $("mbody").innerHTML=`<h2>Luisteren en kijken</h2><p class="sub">Echt Nederlands, zoals mensen het spreken. Begin met de makkelijke. Je hoeft niet alles te begrijpen: luister naar wat je herkent.</p>
+    <h2 class="gap">Video's</h2>${MEDIA.filter(m=>m.k==="v").map(row).join("")}
+    <h2 class="gap">Podcasts</h2>${MEDIA.filter(m=>m.k==="a").map(row).join("")}`;
+  document.querySelectorAll("#mbody [data-m]").forEach(b=>b.onclick=()=>source(b.dataset.m));
+}
+async function source(id){
+  const m=MEDIA.find(x=>x.id===id);
+  stopMedia();MS={m,items:null,i:-1};window.scrollTo(0,0);
+  mBack("Luisteren en kijken",media);
+  $("mbody").innerHTML=`<p class="ask">${m.k==="v"?"Video's":"Podcast"} · ${LV[m.lv]}</p><h2>${m.t}</h2><p class="sub">${m.s}</p><div id="mplay"></div><div id="mlist"><p class="note">Laden…</p></div>`;
+  let j=FEED[id];
+  if(!j)try{const r=await fetch("/api/feed?id="+id);j=await r.json();if(!r.ok||!j.items)throw j;FEED[id]=j}
+    catch(e){if(MS&&MS.m===m)$("mlist").innerHTML=`<p class="note">De lijst kan nu niet worden geladen. Probeer het later opnieuw${e&&e.link?`, of kijk op <a href="${esc(e.link)}" target="_blank" rel="noopener">de website ↗</a>`:""}.</p>`;return}
+  if(!MS||MS.m!==m)return;
+  MS.items=j.items;MS.link=j.link;drawEps();
+}
+function drawEps(){
+  const st=mGet(),seen=new Set(st.h||[]),pos=st.p||{};
+  $("mlist").innerHTML=(MS.items.length?`<ul class="eps">${MS.items.map((x,i)=>{const k=epKey(x),meta=[when(x.d)];
+    if(x.n)meta.push(x.n<60?x.n+" s":Math.round(x.n/60)+" min");
+    if(pos[k])meta.push("verder bij "+mmss(pos[k]));else if(seen.has(k))meta.push("✓");
+    return`<li><button class="ep${i===MS.i?" on":""}" data-i="${i}">${x.v?`<img src="https://i.ytimg.com/vi/${encodeURIComponent(x.v)}/mqdefault.jpg" alt="" loading="lazy">`:""}<span><b>${esc(x.t)}</b><small>${meta.join(" · ")}</small></span></button></li>`}).join("")}</ul>`
+    :`<p class="note">Nog geen afleveringen.</p>`)
+    +(MS.link?`<p class="note" style="margin-top:14px">Bron: <a href="${esc(MS.link)}" target="_blank" rel="noopener">${esc(MS.m.t)} ↗</a></p>`:"");
+  document.querySelectorAll("#mlist .ep").forEach(b=>b.onclick=()=>playEp(+b.dataset.i));
+}
+function playEp(i){
+  stopMedia();MS.i=i;
+  const x=MS.items[i],k=epKey(x),st=mGet();
+  st.h=[k].concat((st.h||[]).filter(y=>y!==k)).slice(0,300);mSet(st);
+  let h="";
+  if(x.v)h=`<div class="vid"><iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(x.v)}?autoplay=1&playsinline=1&rel=0&cc_load_policy=1&cc_lang_pref=nl&hl=nl" title="${esc(x.t)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></div>
+    <h3 class="mt">${esc(x.t)}</h3><p class="note">Ondertiteling: tik op CC. Langzamer: ⚙ → Afspeelsnelheid. <a href="https://www.youtube.com/watch?v=${encodeURIComponent(x.v)}" target="_blank" rel="noopener">Open in YouTube ↗</a></p>`;
+  else h=`<h3 class="mt">${esc(x.t)}</h3><audio id="aud" controls preload="metadata" src="${esc(x.a)}"></audio>
+    <div class="mctl"><button class="ghost" id="aback" aria-label="10 seconden terug">↺ 10 s</button>${[.75,1,1.25].map(r=>`<button class="ghost rate" data-r="${r}" aria-label="Snelheid ${r}">${String(r).replace(".",",")}×</button>`).join("")}</div>`;
+  if(x.s)h+=`<div class="msum" lang="nl">${x.s.split("\n").map(p=>`<p>${esc(p)}</p>`).join("")}</div>`;
+  $("mplay").innerHTML=h;
+  if(x.a){
+    const a=$("aud"),rate=r=>{a.defaultPlaybackRate=a.playbackRate=r;document.querySelectorAll(".rate").forEach(b=>b.classList.toggle("on",+b.dataset.r===r))};
+    rate(st.r||1);
+    document.querySelectorAll(".rate").forEach(b=>b.onclick=()=>{const s=mGet();s.r=+b.dataset.r;mSet(s);rate(s.r)});
+    $("aback").onclick=()=>{a.currentTime=Math.max(0,a.currentTime-10)};
+    // Remember where you stopped (the last 30 episodes), so a long podcast can be heard in parts
+    let last=0;
+    const keep=()=>{if(!a.currentTime)return;const s=mGet();s.p=s.p||{};delete s.p[k];
+      if(a.currentTime>15&&a.currentTime<(a.duration||1e9)-15)s.p[k]=Math.floor(a.currentTime);
+      const ks=Object.keys(s.p);ks.slice(0,Math.max(0,ks.length-30)).forEach(y=>delete s.p[y]);mSet(s)};
+    a.ontimeupdate=()=>{if(Date.now()-last>5000){last=Date.now();keep()}};
+    a.onpause=()=>{keep();if(MS&&MS.items)drawEps()};a.onended=()=>{const s=mGet();if(s.p)delete s.p[k];mSet(s);drawEps()};
+    const at=(st.p||{})[k];if(at)a.addEventListener("loadedmetadata",()=>{a.currentTime=at},{once:true});
+    a.play().catch(()=>{});
+    if("mediaSession" in navigator&&window.MediaMetadata)navigator.mediaSession.metadata=new MediaMetadata({title:x.t,artist:MS.m.t});
+  }
+  drawEps();
+  $("mplay").scrollIntoView({behavior:"smooth",block:"start"});
 }
 // Tap a word: Dutch–English dictionary from English Wiktionary (dict/nl-en.txt, built by dict/build.py).
 // File format: "lemma \t pos \t info \t meanings" lines, then "#", then "form \t lemma:pos|lemma:pos" lines.
