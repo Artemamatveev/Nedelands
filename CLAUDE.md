@@ -31,8 +31,10 @@ generic "AI app" look.
 
 One clear path, top to bottom: today's lesson (numbered steps; the next one is filled
 cobalt; no exam dates: the plan starts with the exam part that scores lowest, and Schrijven
-and KNM are in it every day), then the exam parts (a list, then one "Proefexamen" button per part with its time),
-grammar, reading and listening, and progress (weak points, "Ben je klaar?" from the proefexamens, saving to a file).
+and KNM are in it every day), then "Naar het examen" (one row per exam part with how ready you
+are, from `ready()`: status, last proefexamen and a bar with the 70% line; then one "Proefexamen"
+button per part with its time), then "Grammatica en woorden", "Lezen en luisteren" and
+"Herhalen" (weak points and own mistakes).
 Every section appears once; don't add a second entry point to the same exercise.
 
 ## Navigation: one action language
@@ -42,7 +44,7 @@ Every section appears once; don't add a second entry point to the same exercise.
   No "Oefenen →" or "Openen →" text links, no cards with their own buttons.
 - **Filled cobalt `.btn`**: the one main action on a screen (the next step of today,
   Controleer, Volgende). **Outlined `.ghost`**: secondary actions (Proefexamen, Mix van de dag,
-  Opslaan, Wis).
+  Wis).
 - **Underlined `.hint`**: only small in-place toggles (Vertaling, Uitspraak).
   Text links `<a>` only for other websites, with ↗.
 - One `h2` (with the tile diamond) per section or screen; groups inside it get `h3.lh`
@@ -66,13 +68,12 @@ order); `FOTO` holds a short Dutch description of each for screen readers. No em
 ## Progress
 
 Progress is per device: `localStorage` key `ww-v1`, mirrored to IndexedDB as a backup.
-There is no server. `S.res` keeps the last 10 proefexamen scores per part (`{at, pc}`); "Ben je klaar?"
-at the bottom of the home screen reads it (ready = the last two average 80% or more; the pass line is 70%).
+There is no server. `S.res` keeps the last 10 proefexamen scores per part (`{at, pc}`); the rows in
+"Naar het examen" read it through `ready()` (ready = the last two average 80% or more; the pass line is 70%).
 
 `sw.js` makes the app work offline: the page network-first (a push is live at once), paintings and
 photos from the cache (the page sends their list after loading), `api/` never cached. Don't change the stored shape without migrating old data.
-To move to another device, the learner saves progress as a JSON file (`S` as is) and loads it
-there; loading merges (per exercise the most practised version wins, words and mistakes are added).
+There is no way to move progress to another device (saving to a file was removed on purpose).
 
 ## Content
 

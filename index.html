@@ -192,10 +192,6 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
 .forms dd.w{grid-column:1/-1}
 .forms b{font-weight:600}
 .forms mark{background:none;color:var(--blue);font-weight:700}
-.stat{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
-.stat>div{flex:1;min-width:0} .stat b{display:block} .stat span{display:block;color:var(--soft);font-size:14.5px;margin-bottom:6px}
-.stat .bar{margin:0}
-.stat em{font-style:normal;font-weight:600}
 .echo{border-top:1px solid var(--line);padding-top:12px;margin:4px 0 14px}
 .miss{font:inherit;color:var(--bad);background:none;border:0;border-bottom:2px solid var(--bad);padding:0;margin:0;cursor:pointer}
 .bar.pass{position:relative} .bar.pass::after{content:"";position:absolute;left:70%;top:0;bottom:0;width:2px;background:var(--ink)}
@@ -295,13 +291,7 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
       <div><h2>Lezen en luisteren</h2><div class="list" id="books"></div>
         <button class="ghost wide" id="gen">Nieuwe lees- en luisterteksten maken</button>
         <p class="note" id="genmsg"></p></div>
-      <div><h2>Mijn voortgang</h2><div class="list" id="mine"></div>
-        <div id="exams"></div>
-        <h3 class="lh">Op een ander apparaat</h3>
-        <p class="sub" id="sync">Je voortgang staat op dit apparaat. Sla hem op als bestand en laad hem op het andere apparaat.</p>
-        <div class="two"><button class="ghost" id="exp">Opslaan als bestand</button><button class="ghost" id="imp">Bestand laden</button></div>
-        <input type="file" id="impf" accept=".json,application/json" hidden>
-        <p class="note" id="impmsg" style="margin-top:8px"></p></div>
+      <div><h2>Herhalen</h2><div class="list" id="mine"></div></div>
     </div>
   </div>
   <div id="stats" hidden>
@@ -1223,19 +1213,21 @@ function paint(){
   $("label").innerHTML=`<p class="lab"><b>${p.a}</b><br>${p.t}, ${p.d} · ${p.m}</p><p class="nl">${p.nl}</p>`;
   $("zcap").innerHTML=`<b>${p.a}</b><br>${p.t}, ${p.d} · ${p.m}`;
 }
-// A list row: the whole row is the button, with › on the right. o.n = a count on the right, o.bar = progress in %
+// A list row: the whole row is the button, with › on the right. o.n = count or status on the right, o.bar = progress in %, o.pass = show the 70% line
 function itHTML(attr,t,d,o={}){
-  return`<button class="it" ${attr}><span><span class="th"><b>${t}</b>${o.n!=null?`<small>${o.n}</small>`:""}</span>${d?`<span class="d">${d}</span>`:""}${o.bar!=null?`<span class="bar"><i style="width:${o.bar}%"></i></span>`:""}</span></button>`;
+  return`<button class="it" ${attr}><span><span class="th"><b>${t}</b>${o.n!=null?`<small>${o.n}</small>`:""}</span>${d?`<span class="d">${d}</span>`:""}${o.bar!=null?`<span class="bar${o.pass?" pass":""}"><i style="width:${o.bar}%"></i></span>`:""}</span></button>`;
 }
 function home(){
   paint();
   $("play").hidden=true;$("stats").hidden=true;$("lib").hidden=true;$("read").hidden=true;$("media").hidden=true;stopMedia();closePop();$("home").hidden=false;head();clock(0);hush();planId=null;drawPlan();
-  const sec=id=>SEC.find(x=>x.id===id),res=id=>((S.res||{})[id]||[]).slice(-1)[0];
-  const row=id=>{const s=sec(id),p=ITEMS.filter(x=>x.sec===id),n=p.filter(x=>S.items[x.k]).length,r=res(id);
-    return itHTML(`data-s="${id}"`,s.t,s.s+(r?` · proefexamen ${r.pc}%`:""),{n:n+" van "+p.length,bar:n?n/p.length*100:null})};
+  const sec=id=>SEC.find(x=>x.id===id);
+  const row=id=>{const s=sec(id),p=ITEMS.filter(x=>x.sec===id),n=p.filter(x=>S.items[x.k]).length;
+    return itHTML(`data-s="${id}"`,s.t,s.s,{n:n+" van "+p.length,bar:n?n/p.length*100:null})};
+  // exam parts: how ready you are (from the proefexamens, else from practice); tap to practise
+  const part=k=>{const r=ready(k);return itHTML(`data-s="${k}"`,PART[k],r.t,{n:`<span class="${r.cls}">${r.st}</span>`,bar:r.pc,pass:1})};
   const lb=Object.values(S.bk||{}).filter(b=>b.t).sort((a,b)=>b.at-a.at)[0];
-  $("menu").innerHTML=`<h2>Examenonderdelen</h2><p class="sub">Oefen in je eigen tempo. Tik op een onderdeel.</p><div class="list">${["lz","ls","wr","sp","knm"].map(row).join("")}</div>`
-    +`<h3 class="lh">Proefexamen</h3><p class="sub">Met tijd, zoals op het echte examen.</p><div class="exb">${["lz","ls","wr","sp","knm"].map(id=>`<button class="ghost" data-e="${id}">${PART[id]}<small>${EX[id].min} min</small></button>`).join("")}</div>${duoLink}`
+  $("menu").innerHTML=`<h2>Naar het examen</h2><p class="sub">Ben je klaar? Tik op een onderdeel om te oefenen. De streep is ${PASS*100}%: zoveel heb je nodig.</p><div class="list">${["lz","ls","wr","sp","knm"].map(part).join("")}</div>`
+    +`<h3 class="lh">Proefexamen</h3><p class="sub">Met tijd, zoals op het echte examen. Zo zie je of je klaar bent.</p><div class="exb">${["lz","ls","wr","sp","knm"].map(id=>`<button class="ghost" data-e="${id}">${PART[id]}<small>${EX[id].min} min</small></button>`).join("")}</div>`
     +`<h2>Grammatica en woorden</h2><p class="sub">Korte rondes van 10 vragen. Dit helpt bij alle onderdelen.</p><div class="list">${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`;
   $("books").innerHTML=itHTML(`data-x="books"`,"Boekenkast",lb?`Je leest nu: ${esc(lb.t)}, blz. ${lb.p+1}`:"Verhalen en je eigen e-books. Tik op een woord voor de betekenis.")
     +itHTML(`data-x="media"`,"Luisteren en kijken","Echt Nederlands: nieuws, video's en podcasts.")
@@ -1259,19 +1251,18 @@ function startExam(e){
     return e==="wr"?a.filter(q=>q.fields).slice(0,1).concat(a.filter(q=>!q.fields).slice(0,3)):a}});
 }
 // Pass mark for the computer-marked parts: about 7 in 10 (e.g. 18 of 25 for Lezen, 28 of 40 for KNM); DUO sets it per exam version
-const PASS=.7, DUO="https://www.inburgeren.nl/examen-doen/oefenen.jsp",
-  duoLink=`<p class="note">Oefen ook met de officiële oefenexamens van DUO: <a href="${DUO}" target="_blank" rel="noopener">inburgeren.nl ↗</a></p>`;
+const PASS=.7;
 // Proefexamen results per part (S.res, last 10): {at, pc}. Ready = the last two average 70% or more
 function keepRes(k,pc){if(k){S.res=S.res||{};S.res[k]=(S.res[k]||[]).concat({at:Date.now(),pc}).slice(-10)}save()}
 function ready(k){
   const R=(S.res||{})[k]||[];
   if(!R.length){let r=0,w=0;ITEMS.forEach(x=>{const it=x.sec===k&&S.items[x.k];if(it){r+=it.r||0;w+=it.w||0}});
     const pc=r+w>=10?Math.round(r/(r+w)*100):null;
-    return{pc,st:"Nog geen proefexamen",cls:"",t:pc==null?"Oefen eerst een paar rondes, doe dan een proefexamen.":`Bij het oefenen ${pc}% goed. Doe een proefexamen: dan weet je of je klaar bent.`}}
+    return{pc,st:"Nog geen proefexamen",cls:"",t:pc==null?"Nog weinig geoefend":`Bij het oefenen ${pc}% goed`}}
   const L=R.slice(-2),avg=Math.round(L.reduce((a,x)=>a+x.pc,0)/L.length),pc=R[R.length-1].pc;
   const sure=avg>=80&&R.length>1;
   return{pc,st:sure?"Klaar voor het examen":avg>=PASS*100?"Bijna klaar":"Nog niet klaar",cls:sure?"good":avg>=PASS*100?"":"bad",
-    t:`Laatste proefexamen ${pc}%${R.length>1?`, daarvoor ${R[R.length-2].pc}%`:". Doe er nog een: dan weet je het zeker"}. Nodig: ${PASS*100}%.`}
+    t:`Laatste proefexamen ${pc}%${R.length>1?`, daarvoor ${R[R.length-2].pc}%`:""}`}
 }
 const PART={wr:"Schrijven",knm:"KNM",sp:"Spreken",ls:"Luisteren",lz:"Lezen"}, HELP={wr:["wo","verb"],sp:["pr","verb"],lz:["vo","dh"],ls:["vo","pr"],knm:[]};
 let planId=null;
@@ -1301,12 +1292,8 @@ function planHTML(){
       return`<li><button class="step${ok?" ok":i===nx?" next":""}" data-p="${t.id}"><i>${ok?"✓":i+1}</i><b>${t.t}</b><span>${t.s}</span><em${ok||i===nx?"":` class="c"`}>${ok?"Klaar":i===nx?"Begin":"›"}</em></button></li>`}).join("")}</ol>
     <button class="ghost wide" data-p="s:mix">Meer tijd? Mix van de dag</button>`;
 }
-function readyHTML(){
-  return`<h3 class="lh">Ben je klaar?</h3><p class="sub">Je proefexamens (bij de examenonderdelen) laten zien hoe je ervoor staat. De streep is ${PASS*100}%: zoveel heb je nodig.</p>`
-    +["lz","ls","wr","sp","knm"].map(k=>{const r=ready(k);return`<div class="stat"><div><b>${PART[k]}</b><span><em class="${r.cls}">${r.st}</em><br>${r.t}</span>${r.pc==null?"":`<div class="bar pass"><i style="width:${r.pc}%"></i></div>`}</div></div>`}).join("");
-}
 function drawPlan(){
-  $("plan").innerHTML=planHTML(); $("exams").innerHTML=readyHTML();
+  $("plan").innerHTML=planHTML();
   document.querySelectorAll("#plan [data-p]").forEach(b=>b.onclick=()=>{const id=b.dataset.p,[k,v]=id.split(":");
     if(k==="s")build(v);else startExam(v);
     planId=id});
@@ -1633,34 +1620,6 @@ async function examSpeak(){
     plain(c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je antwoorden met de voorbeelden.":c==="rate_limited"?"Te veel verzoeken achter elkaar. Probeer het over een minuut opnieuw.":"Het nakijken is niet gelukt. Vergelijk je antwoorden met de voorbeelden.");
   }
 }
-// Progress as a file, to carry it to another device (there is no server).
-// Loading merges: for every exercise the most practised version wins, saved words and mistakes are added.
-// Own books stay behind: their text lives only in this device's IndexedDB.
-function exportProgress(){
-  const u=URL.createObjectURL(new Blob([JSON.stringify(S)],{type:"application/json"})),a=document.createElement("a");
-  a.href=u;a.download=`Nederlands A2 voortgang ${new Date().toISOString().slice(0,10)}.json`;document.body.appendChild(a);a.click();a.remove();
-  setTimeout(()=>URL.revokeObjectURL(u),1e4);
-}
-function mergeProgress(r){
-  let n=0; const sc=x=>x?(x.r||0)+(x.w||0):-1;
-  Object.entries(r.items).forEach(([k,v])=>{if(v&&typeof v==="object"&&sc(v)>sc(S.items[k])){S.items[k]=v;n++}});
-  const add=(key,id)=>{S[key]=S[key]||[];(Array.isArray(r[key])?r[key]:[]).forEach(x=>{if(x&&x[id]&&!S[key].some(y=>y[id]===x[id]))S[key].push(x)})};
-  add("words","w"); add("errs","r"); S.errs=S.errs.slice(0,40);
-  S.bk=S.bk||{}; Object.entries(r.bk||{}).forEach(([id,b])=>{const a=S.bk[id];if(b&&(!a||(b.at||0)>(a.at||0)))S.bk[id]=b});
-  if((r.last||0)>(S.last||0)){S.last=r.last;S.streak=r.streak||0}
-  const gl=g=>g?(g.lz||[]).length+(g.ls||[]).length:0; if(!gl(S.gen)&&gl(r.gen))S.gen=r.gen;
-  S.res=S.res||{}; Object.entries(r.res||{}).forEach(([k,a])=>{if(!PART[k]||!Array.isArray(a))return;
-    S.res[k]=(S.res[k]||[]).concat(a.filter(x=>x&&x.at&&!(S.res[k]||[]).some(y=>y.at===x.at))).sort((x,y)=>x.at-y.at).slice(-10)});
-  return n;
-}
-async function importProgress(e){
-  const f=e.target.files[0]; e.target.value=""; if(!f)return;
-  try{
-    const r=JSON.parse(await f.text()); if(!r||!r.items||typeof r.items!=="object")throw 0;
-    const n=mergeProgress(r); addGenerated(); save(); home();
-    $("impmsg").textContent=n?`Klaar: ${n===1?"1 oefening":n+" oefeningen"} bijgewerkt.`:"Klaar. Er was niets nieuws in dit bestand.";
-  }catch(x){$("impmsg").textContent="Dit bestand kan ik niet lezen. Kies een bestand dat je hier hebt opgeslagen."}
-}
 async function gen(){
   const b=$("gen"),m=$("genmsg"); b.disabled=true;
   m.textContent="Bezig met nieuwe teksten maken… Dit duurt ongeveer een minuut.";
@@ -1702,7 +1661,7 @@ function finish(){
     $("card").innerHTML=`<div class="done"><p class="ask">${cur.t}: uitslag</p><div class="big">${pc}%</div><p class="ru">${right} van ${total} goed</p></div>
       <p><b class="${pass?"good":"bad"}">${pass?"Geslaagd":"Nog niet geslaagd"}</b></p>
       <p class="note">Op het examen heb je ongeveer 7 van de 10 vragen goed nodig. Hier is dat ${need} van ${total}.</p>
-      ${themes?`<p class="ask">Per thema</p><ul class="errs">${themes}</ul>`:""}${duoLink}
+      ${themes?`<p class="ask">Per thema</p><ul class="errs">${themes}</ul>`:""}
       ${cur.miss.length?`<p class="ask">Fout beantwoord</p><ul class="errs">${cur.miss.slice(0,20).map(m=>`<li>${m.q}<span>Goed is: ${m.r}</span></li>`).join("")}</ul>`:""}
       <div class="two"><button class="ghost" id="tohome">Alle onderdelen</button><button class="btn" id="more">Nog een keer</button></div>`;
     $("more").onclick=()=>build(cur.id,cur); $("tohome").onclick=home; return;
@@ -2165,7 +2124,6 @@ document.addEventListener("keydown",e=>{
     if(Math.abs(dx)<70||Math.abs(dy)>50||Date.now()-t0>700)return;
     if(dx<0&&R.p<R.pages.length-1)turn(1);else if(dx>0&&R.p>0)turn(-1)});
 })();
-$("exp").onclick=exportProgress; $("imp").onclick=()=>$("impf").click(); $("impf").onchange=importProgress;
 $("back").onclick=home; $("sback").onclick=home; $("lback").onclick=home; $("gen").onclick=gen;
 $("artbtn").onclick=()=>{$("zoom").hidden=false}; $("zoom").onclick=()=>{$("zoom").hidden=true};
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("zoom").hidden)$("zoom").onclick()});
