@@ -84,7 +84,8 @@ export default async function handler(req, res) {
     if (error instanceof Anthropic.RateLimitError) return res.status(429).json({ error: "rate_limited" });
     if (error instanceof Anthropic.APIError) {
       console.error("Anthropic API error", error.status, error.message);
-      return res.status(502).json({ error: "failed" });
+      // The status and Anthropic's message (never the key) make a failure diagnosable without the Vercel logs
+      return res.status(502).json({ error: "failed", status: error.status, detail: String(error.message).slice(0, 300) });
     }
     console.error(error);
     return res.status(502).json({ error: "failed" });
