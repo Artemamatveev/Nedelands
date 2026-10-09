@@ -57,18 +57,44 @@ h2{display:flex;align-items:center;gap:10px;font-size:21px;font-weight:600;line-
 h2::before{content:"";flex:none;width:9px;height:9px;background:var(--blue);transform:rotate(45deg)}
 .sub,.note{color:var(--soft);font-size:15px;margin:0 0 12px}
 
-/* startscherm */
-#menu h2{margin:32px 0 4px}
-.sec{display:block;position:relative;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:13px 0 12px}
-.sec b{display:block;font-size:18px;font-weight:600}
-.sec span{display:block;color:var(--soft);font-size:14.5px;line-height:1.35;padding-right:76px;margin-top:2px}
-.sec em{position:absolute;right:0;top:15px;font-style:normal;font-weight:600;font-size:14px;color:var(--soft);font-variant-numeric:tabular-nums}
-/* Mix van de dag als tegel, met hoekmotieven */
-#menu .sec:first-child{margin-top:26px;padding:22px 24px;border:2px solid var(--blue);border-radius:2px;box-shadow:inset 0 0 0 4px var(--bg),inset 0 0 0 5px var(--blue);
+/* startscherm: eerst de les van vandaag, dan zelf kiezen, dan je voortgang */
+#menu h2,.duo h2{margin:36px 0 4px}
+/* de les van vandaag op een Delftse tegel, met hoekmotieven */
+.today{margin:20px 0 0;padding:22px 24px 20px;border:2px solid var(--blue);border-radius:2px;box-shadow:inset 0 0 0 4px var(--bg),inset 0 0 0 5px var(--blue);
   background:radial-gradient(circle at 0 0,var(--blue) 0 15px,transparent 16px),radial-gradient(circle at 100% 0,var(--blue) 0 15px,transparent 16px),
     radial-gradient(circle at 100% 100%,var(--blue) 0 15px,transparent 16px),radial-gradient(circle at 0 100%,var(--blue) 0 15px,transparent 16px),var(--bg)}
-#menu .sec:first-child b{font-size:24px;font-weight:700;color:var(--blue)}
-#menu .sec:first-child span{color:var(--ink)}
+.today h2{font-size:24px;font-weight:700;color:var(--blue);margin:4px 0 4px}
+.today .sub{color:var(--ink);margin:0}
+.today .hint{margin:12px 0 0}
+.steps{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:8px}
+.step{display:grid;grid-template-columns:30px minmax(0,1fr) auto;column-gap:12px;align-items:center;width:100%;height:100%;text-align:left;background:var(--bg);border:1.5px solid var(--line);border-radius:3px;padding:12px 14px}
+.step i{grid-row:1/3;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:700;font-size:15px;border:1.5px solid var(--blue);border-radius:2px;color:var(--blue)}
+.step b{font-size:17px;font-weight:600;line-height:1.3}
+.step span{grid-column:2;color:var(--soft);font-size:14.5px;line-height:1.35}
+.step em{grid-column:3;grid-row:1/3;font-style:normal;font-weight:600;font-size:15px;color:var(--blue);white-space:nowrap}
+.step:hover{border-color:var(--blue)}
+.step.next{background:var(--blue);border-color:var(--blue);color:var(--on)}
+.step.next i{border-color:var(--on);color:var(--on)}
+.step.next span,.step.next em{color:var(--on)}
+.step.next:active{background:var(--deep)}
+.step.ok i{background:var(--good);border-color:var(--good);color:var(--on)}
+.step.ok b{color:var(--soft)} .step.ok em{color:var(--good)}
+/* blokken: kies zelf wat je oefent */
+.blokken{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-top:12px}
+.blok{display:flex;flex-direction:column;gap:4px;width:100%;text-align:left;background:var(--bg);border:1.5px solid var(--line);border-radius:3px;padding:14px 16px 16px}
+button.blok:hover,.blok:has(button:hover){border-color:var(--blue)}
+.blok .th{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.blok b{font-size:18px;font-weight:600}
+.blok .th em{font-style:normal;font-size:13.5px;color:var(--soft);font-variant-numeric:tabular-nums;white-space:nowrap}
+.blok .d{flex:1;color:var(--soft);font-size:14.5px;line-height:1.35}
+.blok small{font-size:13.5px;color:var(--soft);font-variant-numeric:tabular-nums}
+.blok>span{display:block}
+.blok .th{display:flex}
+.blok .bar{display:block;height:4px;margin:6px 0 2px}
+.blok .ta{display:grid;gap:8px;margin-top:10px}
+.blok .ta .btn{padding:9px 18px;font-size:16px}
+.blok .ta .ghost{padding:8px 6px;font-size:14.5px;white-space:nowrap;text-align:center}
+.blok .go{margin-top:8px;font-weight:600;font-size:16px;color:var(--blue)}
 
 /* oefenen */
 .top{display:flex;justify-content:space-between;align-items:center;margin:14px 0 0}
@@ -128,9 +154,7 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
 .card h2{margin-top:24px}
 .done .big{font-size:72px;font-weight:700;letter-spacing:0;line-height:1;margin:8px 0;color:var(--blue)}
 
-#plan{margin:22px 0 6px}
-#plan .sec em{color:var(--good)}
-#plan .hint{margin:8px 0 0}
+#exams .hint{margin:8px 0 0}
 #exform{margin-top:10px}
 h2.gap{margin-top:28px}
 /* tijdlijn: tegeltjes op een lijn */
@@ -148,7 +172,7 @@ h2.gap{margin-top:28px}
 .tlb.next b{color:var(--blue)} .tlb.past{opacity:.5}
 /* onderaan het startscherm */
 #gen{margin-top:20px} #genmsg{margin-top:8px;min-height:20px}
-#wallbox{margin-top:30px}
+#wallbox{margin-top:8px}
 /* tegelwand: een tegel wordt beschilderd als je het werkwoord kent */
 .wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(28px,1fr));gap:3px}
 .tile{--c:transparent;--m:transparent;--g:var(--bg);aspect-ratio:1;padding:0;border:1px solid var(--line);border-radius:1px;
@@ -208,13 +232,12 @@ h2.gap{margin-top:28px}
   main:has(#home[hidden]) h1{bottom:30px;font-size:30px}
   .streak{top:24px;right:40px;width:78px;height:78px;font-size:10.5px}
   .streak b{font-size:27px}
-  #home{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:repeat(6,auto) 1fr;column-gap:64px;align-items:start}
-  #label{grid-column:1/-1;display:flex;align-items:baseline;gap:40px}
+  #label{display:flex;align-items:baseline;gap:40px}
   #label .lab{flex:0 0 340px} #label .nl{flex:1;margin:0}
-  #plan{grid-column:1;grid-row:2} #wallbox{grid-column:1;grid-row:3} #gen{grid-column:1;grid-row:4}
-  #genmsg{grid-column:1;grid-row:5} #sync{grid-column:1;grid-row:6}
-  #menu{grid-column:2;grid-row:2/-1}
-  #menu .sec:first-child{margin-top:22px}
+  .today{padding:26px 32px 24px}
+  .steps{grid-template-columns:repeat(auto-fit,minmax(0,1fr))}
+  .blokken{grid-template-columns:repeat(auto-fill,minmax(190px,1fr))}
+  .duo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:64px;align-items:start}
   .wall{grid-template-columns:repeat(auto-fill,minmax(32px,1fr))}
   #play,#stats,#lib,#read{max-width:720px;margin:0 auto}
   .book{font-size:20px}
@@ -229,16 +252,23 @@ h2.gap{margin-top:28px}
     <h1>Nederlands A2</h1><span class="streak" id="streak"></span></header>
   <div id="home">
     <div class="label" id="label"></div>
-    <div id="plan"></div>
+    <section class="today" id="plan"></section>
     <div id="menu"></div>
+    <div class="duo">
+      <div><h2>Lezen</h2><div class="blokken" id="books"></div></div>
+      <div><h2>Mijn voortgang</h2><div class="blokken" id="mine"></div></div>
+    </div>
+    <div class="duo">
+      <div id="exams"></div>
+      <div id="wallbox">
+        <h2 class="gap">Werkwoordenmuur</h2>
+        <p class="sub" id="wallsub"></p>
+        <div class="wall" id="wall"></div>
+        <div class="peek" id="peek"></div>
+      </div>
+    </div>
     <button class="ghost wide" id="gen">Nieuwe lees- en luisterteksten maken</button>
     <p class="note" id="genmsg"></p>
-    <div id="wallbox">
-      <h2>Werkwoordenmuur</h2>
-      <p class="sub" id="wallsub"></p>
-      <div class="wall" id="wall"></div>
-      <div class="peek" id="peek"></div>
-    </div>
     <p class="sub" id="sync" style="margin-top:22px">Je voortgang wordt bewaard op dit apparaat.</p>
   </div>
   <div id="stats" hidden>
@@ -779,11 +809,20 @@ function paint(){
 function home(){
   paint();
   $("play").hidden=true;$("stats").hidden=true;$("lib").hidden=true;$("read").hidden=true;closePop();$("home").hidden=false;head();clock(0);hush();planId=null;drawPlan();
-  $("menu").innerHTML=SEC.map(s=>{
-    const p=s.id==="mix"?null:ITEMS.filter(x=>x.sec===s.id), n=p?p.filter(x=>S.items[x.k]).length:0;
-    const hd=s.id==="lz"?"<h2>Examenonderdelen</h2>":s.id==="verb"?"<h2>Grammatica en woorden</h2>":"";
-    return`${hd}<button class="sec" data-s="${s.id}"><b>${s.t}</b><span>${s.s}</span>${p?`<em>${n} / ${p.length}</em>`:""}</button>`}).join("")+extras();
-  document.querySelectorAll("#menu .sec").forEach(b=>b.onclick=()=>{const d=b.dataset;
+  const sec=id=>SEC.find(x=>x.id===id), go=t=>`<span class="go">${t} →</span>`;
+  const inner=s=>{const p=ITEMS.filter(x=>x.sec===s.id),n=p.filter(x=>S.items[x.k]).length;
+    return`<span class="th"><b>${s.t}</b></span><span class="d">${s.s}</span><span class="bar"><i style="width:${p.length?n/p.length*100:0}%"></i></span><small>${n} van ${p.length} gedaan</small>`};
+  const lb=Object.values(S.bk||{}).filter(b=>b.t).sort((a,b)=>b.at-a.at)[0];
+  $("menu").innerHTML=`<h2>Examenonderdelen</h2><p class="sub">Oefen in je eigen tempo, of doe een proefexamen met tijd, zoals op het echte examen.</p><div class="blokken">`
+    +["lz","ls","wr","sp","knm"].map(id=>`<div class="blok">${inner(sec(id))}<span class="ta"><button class="btn" data-s="${id}">Oefenen</button>${EX[id]?`<button class="ghost" data-e="${id}">Proefexamen, ${EX[id].min} min</button>`:`<span class="ghost" style="visibility:hidden" aria-hidden="true">Proefexamen</span>`}</span></div>`).join("")
+    +`</div><h2>Grammatica en woorden</h2><p class="sub">Korte rondes van 10 vragen. Dit helpt bij alle onderdelen.</p><div class="blokken">`
+    +["verb","wo","pr","dh","vo"].map(id=>`<button class="blok" data-s="${id}">${inner(sec(id))}${go("Oefenen")}</button>`).join("")
+    +`</div>`;
+  $("books").innerHTML=`<button class="blok" data-x="books"><span class="th"><b>Boekenkast</b></span><span class="d">${lb?`Je leest nu: ${esc(lb.t)}, blz. ${lb.p+1}`:"Verhalen en je eigen e-books. Tik op een woord voor de vertaling."}</span>${go(lb?"Verder lezen":"Openen")}</button>`
+    +((S.words||[]).length?`<button class="blok" data-x="words"><span class="th"><b>Mijn woorden</b><em>${S.words.length}</em></span><span class="d">Oefen de woorden die je bij het lezen hebt bewaard.</span>${go("Oefenen")}</button>`:"");
+  $("mine").innerHTML=`<button class="blok" data-x="stats"><span class="th"><b>Mijn zwakke punten</b></span><span class="d">Zie waar je de meeste fouten maakt en oefen precies dat.</span>${go("Bekijken")}</button>`
+    +((S.errs||[]).length?`<button class="blok" data-x="errs"><span class="th"><b>Mijn fouten</b><em>${S.errs.length}</em></span><span class="d">Oefen met fouten uit je eigen teksten.</span>${go("Oefenen")}</button>`:"");
+  document.querySelectorAll("#menu button,#books button,#mine button").forEach(b=>b.onclick=()=>{const d=b.dataset;
     if(d.s)build(d.s);
     else if(d.e)startExam(d.e);
     else if(d.x==="stats")stats();
@@ -818,6 +857,21 @@ function planTasks(){
 }
 function planHTML(){
   const d=today(),ex=S.exams||{},done=S.day&&S.day.d===d?S.day.done:[];
+  const T=planTasks(), steps=T.length?T:[{id:"s:mix",t:"Mix van de dag",s:"10 vragen uit alle onderdelen"}], nx=steps.findIndex(t=>!done.includes(t.id));
+  const up=Object.keys(PART).filter(k=>ex[k]&&dayOf(ex[k])>=d).sort((a,b)=>dayOf(ex[a])-dayOf(ex[b]));
+  let intro;
+  if(up.length){const n=dayOf(ex[up[0]])-d,parts=up.filter(k=>ex[k]===ex[up[0]]).map(k=>PART[k]).join(" en ");
+    intro=n===0?`Vandaag is je examen ${parts}. Succes!`:`Nog ${n===1?"1 dag":n+" dagen"} tot je examen ${parts}.`}
+  else intro=Object.keys(ex).length?"Je examens zijn voorbij. Oefen gewoon verder.":"Vul je examendata in. Dan krijg je elke dag een plan, speciaal voor jouw examens.";
+  intro+=nx<0?" Alles van vandaag is klaar. Goed gedaan!":steps.length>1?" Doe de stappen een voor een.":"";
+  const date=new Date().toLocaleDateString("nl-NL",{weekday:"long",day:"numeric",month:"long"});
+  return`<p class="ask">${date}</p><h2>Je les van vandaag</h2><p class="sub">${intro}</p>
+    <ol class="steps">${steps.map((t,i)=>{const ok=done.includes(t.id);
+      return`<li><button class="step${ok?" ok":i===nx?" next":""}" data-p="${t.id}"><i>${ok?"✓":i+1}</i><b>${t.t}</b><span>${t.s}</span><em>${ok?"Klaar":i===nx?"Begin →":"→"}</em></button></li>`}).join("")}</ol>
+    ${!Object.keys(ex).length?`<button class="ghost" id="setex" style="margin-top:14px">Examendata invullen</button>`:T.length?`<button class="hint" data-p="s:mix">Meer tijd? Doe de Mix van de dag: 10 vragen uit alles.</button>`:""}`;
+}
+function examsHTML(){
+  const d=today(),ex=S.exams||{};
   const fmt=str=>{const[y,m,dd]=str.split("-").map(Number);return new Date(y,m-1,dd).toLocaleDateString("nl-NL",{weekday:"long",day:"numeric",month:"long"})};
   const short=str=>{const[y,m,dd]=str.split("-").map(Number);return new Date(y,m-1,dd).toLocaleDateString("nl-NL",{day:"numeric",month:"short"})};
   const gs={}; Object.keys(PART).forEach(k=>{if(ex[k])(gs[ex[k]]=gs[ex[k]]||[]).push(PART[k])});
@@ -830,31 +884,20 @@ function planHTML(){
     <div class="tl"><i style="width:${at(d)}%"></i>${dates.map(ds=>`<u class="${cls(ds)}" style="left:${at(dayOf(ds))}%"></u>`).join("")}<em style="left:${at(d)}%"></em></div>
     ${dates.map((ds,i)=>{const x=at(dayOf(ds));
       return`<div class="tlb ${i%2?"up":"dn"}${x<15?" l":x>85?" r":""}${cls(ds)}" style="left:${x}%"><b>${gs[ds].join(" en ")}</b>${short(ds)}<br>${days(dayOf(ds)-d)}</div>`}).join("")}</div>`;
-  const T=planTasks();
-  return`<h2>Vandaag</h2>`+(T.length?T.map(t=>`<button class="sec" data-p="${t.id}"><b>${t.t}</b><span>${t.s}</span>${done.includes(t.id)?"<em>klaar</em>":""}</button>`).join(""):`<p class="note">Er staan geen examens meer in je planning.</p>`)
-    +`<h2 class="gap">Mijn examens</h2>${rows}<button class="hint" id="editex">Examendata wijzigen</button>
+  return`<h2 class="gap">Mijn examens</h2>${rows||`<p class="sub">Nog geen examendata.</p>`}<button class="hint" id="editex">${dates.length?"Examendata wijzigen":"Examendata invullen"}</button>
     <div id="exform" hidden>${Object.keys(PART).map(k=>`<label class="fld"><span>${PART[k]}</span><input type="date" data-k="${k}" value="${ex[k]||""}"></label>`).join("")}<button class="ghost wide" id="saveex">Bewaar</button></div>`;
 }
 function drawPlan(){
   if(!S.plan0){S.plan0=today();localSave()}
-  $("plan").innerHTML=planHTML();
-  document.querySelectorAll("#plan .sec").forEach(b=>b.onclick=()=>{const id=b.dataset.p,[k,v]=id.split(":");
+  $("plan").innerHTML=planHTML(); $("exams").innerHTML=examsHTML();
+  document.querySelectorAll("#plan [data-p]").forEach(b=>b.onclick=()=>{const id=b.dataset.p,[k,v]=id.split(":");
     if(k==="s")build(v);else if(k==="e")startExam(v);else build("custom",{id:"custom",t:"Mijn fouten",n:10,pool:()=>shuffle(errItems())});
     planId=id});
-  $("editex").onclick=()=>{$("exform").hidden=!$("exform").hidden};
+  const openEx=()=>{$("exform").hidden=false;$("exform").scrollIntoView({behavior:"smooth",block:"center"})};
+  if($("setex"))$("setex").onclick=openEx;
+  $("editex").onclick=()=>{if($("exform").hidden)openEx();else $("exform").hidden=true};
   $("saveex").onclick=()=>{S.exams={};document.querySelectorAll("#exform input").forEach(i=>{if(i.value)S.exams[i.dataset.k]=i.value});save();drawPlan()};
 }
-function extras(){
-  const lb=Object.values(S.bk||{}).filter(b=>b.t).sort((a,b)=>b.at-a.at)[0];
-  let h=`<h2>Boeken</h2><button class="sec" data-x="books"><b>Boekenkast</b><span>${lb?`Verder lezen: ${esc(lb.t)}, blz. ${lb.p+1}`:"Lees verhalen en je eigen e-books. Tik op een woord voor de vertaling."}</span></button>`;
-  h+="<h2>Proefexamen</h2>"+Object.keys(EX).map(k=>{const n=Math.min(EX[k].n,ITEMS.filter(x=>x.sec===k).length);
-    return`<button class="sec" data-e="${k}"><b>${EX[k].t.replace("Proefexamen ","")}</b><span>${k==="wr"?"4 opdrachten, 40 minuten, alles wordt aan het eind nagekeken":n+" vragen, "+EX[k].min+" minuten, uitslag aan het eind"}</span></button>`}).join("");
-  h+="<h2>Persoonlijk</h2>";
-  if((S.words||[]).length)h+=`<button class="sec" data-x="words"><b>Mijn woorden</b><span>Oefen de woorden die je bij het lezen hebt bewaard</span><em>${S.words.length}</em></button>`;
-  if((S.errs||[]).length)h+=`<button class="sec" data-x="errs"><b>Mijn fouten</b><span>Oefen met fouten uit je eigen teksten</span><em>${S.errs.length}</em></button>`;
-  return h+`<button class="sec" data-x="stats"><b>Mijn zwakke punten</b><span>Zie waar je de meeste fouten maakt</span></button>`;
-}
-const weak=q=>{const it=S.items[q.k];return it?(it.w||0)-(it.r||0):0};
 function stats(){
   $("home").hidden=true;$("stats").hidden=false;window.scrollTo(0,0);
   const g={};
