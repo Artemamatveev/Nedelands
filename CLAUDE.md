@@ -47,7 +47,7 @@ in % for the header crop), artist, title, year, museum and an A2 sentence. Check
 Progress is per device: `localStorage` key `ww-v1`, mirrored to IndexedDB as a backup.
 There is no server. Don't change the stored shape without migrating old data.
 
-## Writing check (Schrijven)
+## Writing and speaking check (Schrijven, Spreken)
 
 `api/check.js` is a Vercel function that grades writing with Claude (`claude-opus-5-5`,
 structured JSON output, server-side refusal fallback). The page posts
@@ -56,6 +56,15 @@ the prompt is built on the server, so the page can't send arbitrary prompts. It 
 accepts requests whose Origin is the site itself. It needs `ANTHROPIC_API_KEY` in the
 Vercel project's environment variables (the user adds it in the dashboard; never handle
 the key in chat). Without it the page falls back to showing the example answer.
+
+Spreken uses the same function with `{part:"sp", tasks:[{task, text}]}` (up to 16, for the
+proefexamen). Claude can't take audio, so the phone writes the answer down first (Web Speech
+API, `nl-NL`). Recording (`MediaRecorder`, to play the answer back) and transcribing are
+separate takes, never at the same time: on iPhone they compete for the microphone. One
+minute per answer. Recordings and transcripts stay in memory only.
+
+`api/generate.js` writes new Lezen and Luisteren material (same key, same Origin check);
+inside Claude the page uses `window.claude` instead. Generated items are kept in `S.gen`.
 
 ## Boekenkast (reading)
 

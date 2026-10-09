@@ -29,6 +29,7 @@ html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.5}
 main{max-width:720px;margin:0 auto;padding:0 16px 48px;overflow-x:clip}
 button{font:inherit;color:inherit;cursor:pointer}
+a{color:var(--blue)}
 button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid var(--oranje);outline-offset:2px}
 
 /* het schilderij van vandaag */
@@ -100,7 +101,7 @@ button.blok:hover,.blok:has(button:hover){border-color:var(--blue)}
 .top{display:flex;justify-content:space-between;align-items:center;margin:14px 0 0}
 .back{display:inline-flex;align-items:center;gap:6px;min-height:44px;background:none;border:1.5px solid var(--blue);color:var(--blue);font-weight:700;font-size:16px;padding:5px 14px 6px 10px;border-radius:3px}
 .back span{font-size:20px;line-height:1}
-#timer{font-weight:700;font-variant-numeric:tabular-nums;color:var(--oranje);border:1.5px solid var(--oranje);padding:2px 9px;border-radius:3px}
+#timer,.rec .t{font-weight:700;font-variant-numeric:tabular-nums;color:var(--oranje);border:1.5px solid var(--oranje);padding:2px 9px;border-radius:3px}
 #timer:empty{display:none}
 .bar{height:6px;background:var(--surface);overflow:hidden;margin:14px 0 22px}
 .bar i{display:block;height:100%;width:0;transition:width .3s;background:var(--blue)}
@@ -134,6 +135,12 @@ textarea{display:block;width:100%;font-size:17px;line-height:1.5;padding:12px;ma
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .fb{margin-top:18px;min-height:86px}
 .fb b{font-size:19px}
+/* Spreken: neem je antwoord op, met één minuut op de klok */
+.rec .clk{display:flex;align-items:center;gap:10px;margin:0 0 12px}
+.rec .m{flex:1;height:6px;background:var(--surface);overflow:hidden}
+.rec .m i{display:block;height:100%;width:100%;background:var(--oranje);transition:width .25s linear}
+.card audio{display:block;width:100%;margin:0 0 12px}
+.rec .note{margin:8px 0 14px}
 .good{color:var(--good)} .bad{color:var(--bad)}
 .row{margin:4px 0 12px;font-size:18px;font-weight:700}
 .mode{display:flex;justify-content:center;margin:18px 0 0}
@@ -599,7 +606,33 @@ const SP=[
 ["🤒 → 📞 → 👩‍⚕️  Je ziet drie plaatjes. Vertel wat er gebeurt.","","De man is ziek. Hij belt de huisarts en maakt een afspraak. Daarna gaat hij naar de dokter."],
 ["👨‍🍳  Je ziet een kok in een keuken. Wat doet hij? Zou jij dit werk willen doen? Vertel ook waarom.","","De kok maakt eten in een restaurant. Ik zou dit werk niet willen doen, want je moet vaak 's avonds en in het weekend werken."],
 ["📺 of 📖  Je ziet twee plaatjes: televisie kijken en een boek lezen. Wat doe jij liever 's avonds? Vertel ook waarom.","","Ik kijk liever televisie, want na mijn werk ben ik moe. Een boek lees ik liever in het weekend."],
-["🏊 of ⚽  Je ziet twee plaatjes: zwemmen en voetballen. Welke sport vind jij leuker? Vertel ook waarom.","","Ik vind voetballen leuker, omdat je het samen met vrienden doet. Zwemmen vind ik een beetje saai."]
+["🏊 of ⚽  Je ziet twee plaatjes: zwemmen en voetballen. Welke sport vind jij leuker? Vertel ook waarom.","","Ik vind voetballen leuker, omdat je het samen met vrienden doet. Zwemmen vind ik een beetje saai."],
+["Wie zijn er in je familie?","","Ik heb een man en twee kinderen. Mijn zoon is acht jaar en mijn dochter is vijf. Mijn ouders wonen niet in Nederland."],
+["Wat doe je als je ziek bent?","","Als ik ziek ben, blijf ik thuis in bed. Ik bel mijn werk dat ik niet kom. Als het niet beter wordt, bel ik de huisarts."],
+["Welk feest vier je graag? Wat doe je dan?","","Ik vier graag mijn verjaardag. Dan komen mijn familie en vrienden. We eten taart en we praten veel."],
+["Wat koop je meestal in de supermarkt?","","Ik koop meestal brood, melk, groente en fruit. Soms koop ik ook vlees of vis. Ik ga twee keer per week naar de supermarkt."],
+["Waar ben je het laatst op vakantie geweest?","","Vorig jaar ben ik naar Spanje geweest. Het was heel warm en ik heb veel gezwommen. Ik vond het een mooie vakantie."],
+["Wat voor weer vind je het fijnst? Waarom?","","Ik vind het fijn als de zon schijnt, maar het niet te warm is. Dan kan ik buiten fietsen en wandelen."],
+["Welke taal spreek je thuis?","","Thuis spreek ik mijn eigen taal met mijn familie. Met mijn kinderen spreek ik soms ook Nederlands. Zo oefen ik elke dag."],
+["Wat wil je later in Nederland doen?","","Ik wil een goede baan vinden. Daarom leer ik nu Nederlands. Later wil ik misschien ook een opleiding doen."],
+["Hoe ziet je huis eruit?","","Ik woon in een huis met een kleine tuin. Beneden zijn de keuken en de woonkamer. Boven zijn twee slaapkamers en de badkamer."],
+["Wat doe je samen met je buren?","","Ik praat soms met mijn buren als ik ze op straat zie. Als zij op vakantie zijn, geef ik hun planten water."],
+["Je bent ziek en je kunt niet naar je werk. Je belt je baas. Wat zeg je?","","Goedemorgen, met Anna. Ik ben ziek, ik heb koorts. Ik kan vandaag niet komen werken. Ik bel morgen weer."],
+["Je belt de huisarts, want je hebt al drie dagen hoofdpijn. Wat zeg je tegen de assistente?","","Goedemorgen, met Anna Petrova. Ik heb al drie dagen hoofdpijn. Kan ik vandaag of morgen een afspraak maken met de dokter?"],
+["Je bent in een winkel. Je zoekt een jas, maar je ziet je maat niet. Wat vraag je aan de verkoper?","","Pardon, ik zoek deze jas in maat M. Hebt u die nog? Of komt hij volgende week weer binnen?"],
+["Je buurman heeft elke avond harde muziek aan. Je kunt niet slapen. Wat zeg je tegen hem?","","Hallo, ik woon naast u. Uw muziek is 's avonds erg hard en ik kan niet slapen. Wilt u de muziek na tien uur zachter zetten?"],
+["Je trein heeft vertraging. Je komt te laat op een afspraak. Je belt. Wat zeg je?","","Hallo, met Anna. Ik heb om twee uur een afspraak, maar mijn trein heeft vertraging. Ik ben ongeveer twintig minuten later. Is dat goed?"],
+["Je collega vraagt of je zaterdag wilt werken. Je kunt niet. Wat zeg je?","","Sorry, zaterdag kan ik niet, want dan ga ik naar mijn familie. Maar ik kan wel op zondag werken, als je wilt."],
+["Je wilt een nieuw paspoort aanvragen. Je belt de gemeente. Wat vraag je?","","Goedemiddag, ik wil een nieuw paspoort aanvragen. Moet ik daarvoor een afspraak maken? En wat moet ik meenemen?"],
+["Iemand op straat vraagt de weg naar het station. Je weet de weg. Wat zeg je?","","Het station is niet ver. U gaat hier rechtdoor en bij het stoplicht linksaf. Dan ziet u het station aan de rechterkant."],
+["Je kind is ziek en kan niet naar school. Je belt de school. Wat zeg je?","","Goedemorgen, met de moeder van Sara uit groep vijf. Sara is ziek, ze heeft koorts. Ze komt vandaag niet naar school."],
+["🚆 of 🚌  Je ziet twee plaatjes: de trein en de bus. Waarmee reis jij liever? Vertel ook waarom.","","Ik reis liever met de trein, omdat de trein sneller is. In de trein kan ik ook lezen. De bus vind ik vaak te druk."],
+["🏖️ of ⛰️  Je ziet twee plaatjes: het strand en de bergen. Waar ga jij liever op vakantie? Vertel ook waarom.","","Ik ga liever naar het strand, want ik zwem graag. De bergen zijn mooi, maar lang wandelen vind ik zwaar."],
+["🏬 of 💻  Je ziet twee plaatjes: een winkel en een laptop. Koop jij kleren liever in de winkel of online? Vertel ook waarom.","","Ik koop kleren liever in de winkel, omdat ik ze dan kan passen. Online kopen is makkelijk, maar soms moet je dingen terugsturen."],
+["🐕 of 🐈  Je ziet twee plaatjes: een hond en een kat. Welk dier vind jij leuker? Vertel ook waarom.","","Ik vind een hond leuker, want met een hond ga je elke dag wandelen. Een kat is ook lief, maar die speelt minder met je."],
+["🤕 → 💊 → 🛏️  Je ziet drie plaatjes. Vertel wat de vrouw doet.","","De vrouw heeft hoofdpijn. Ze neemt een pijnstiller. Daarna gaat ze in bed liggen."],
+["🛍️ → 💳 → 🏠  Je ziet drie plaatjes. Vertel wat de man doet.","","De man koopt nieuwe kleren in een winkel. Hij betaalt met zijn bankpas. Daarna gaat hij naar huis."],
+["🚲 → 💥 → 🔧  Je ziet drie plaatjes. Vertel wat er gebeurt.","","De vrouw fietst naar haar werk. Onderweg gaat haar fiets kapot. Daarna brengt ze de fiets naar de fietsenmaker."]
 ];
 // lezen: tekst + vragen [vraag, goed, fout, fout]
 const LZ=[
@@ -620,7 +653,18 @@ const LZ=[
 ["Buurthuis De Brug: cursus Nederlands spreken\nVoor wie? Voor iedereen die beter Nederlands wil spreken.\nWanneer? Elke dinsdagavond van 19.00 tot 20.30 uur. Start: 3 september.\nKosten: € 20 voor tien lessen. Koffie en thee zijn gratis.\nAanmelden kan tot 28 augustus bij de balie.",
  [["Hoeveel kost één les?","€ 2","€ 20","niets"],["Tot wanneer kunt u zich aanmelden?","tot 28 augustus","tot 3 september","elke dinsdag"]]],
 ["Let op!\nOp zaterdag 5 en zondag 6 oktober rijden er geen treinen tussen Utrecht en Amersfoort. Er wordt gewerkt aan het spoor.\nU kunt met de bus reizen. De bussen vertrekken voor het station. Uw reis duurt ongeveer 30 minuten langer.\nUw treinkaartje is ook geldig in de bus.",
- [["Waarom rijden er geen treinen?","er wordt aan het spoor gewerkt","het is slecht weer","het personeel staakt"],["Moet u een nieuw kaartje kopen voor de bus?","nee, het treinkaartje is genoeg","ja, bij de chauffeur","ja, maar alleen op zondag"]]]
+ [["Waarom rijden er geen treinen?","er wordt aan het spoor gewerkt","het is slecht weer","het personeel staakt"],["Moet u een nieuw kaartje kopen voor de bus?","nee, het treinkaartje is genoeg","ja, bij de chauffeur","ja, maar alleen op zondag"]]],
+["Grofvuil ophalen\nHebt u oude meubels, een kapotte koelkast of een oud matras? De gemeente haalt grofvuil gratis bij u op.\nMaak eerst een afspraak via de website of bel de gemeente. U kunt maximaal vijf stukken per keer laten ophalen.\nZet het grofvuil op de dag van de afspraak vóór 7.30 uur buiten.\nOude kleren horen niet bij het grofvuil. Die brengt u naar de kledingcontainer.",[["Wat moet u eerst doen?","een afspraak maken","het grofvuil buiten zetten","geld betalen"],["Hoe laat moet het grofvuil buiten staan?","vóór 7.30 uur 's ochtends","na 7.30 uur 's avonds","om 12.00 uur"],["Wat doet u met oude kleren?","naar de kledingcontainer brengen","bij het grofvuil zetten","in de vuilnisbak doen"]]],
+["Van: Mark de Jong\nAan: alle medewerkers\nOnderwerp: personeelsuitje\n\nBeste collega's,\nOp vrijdag 14 juni gaan we met het hele team naar het strand. We vertrekken om 13.00 uur met de bus vanaf het kantoor. Om 18.00 uur eten we samen in een restaurant aan het strand. Het eten en drinken betaalt het bedrijf. Partners zijn ook welkom, maar zij betalen zelf € 25.\nGa je mee? Laat het voor 1 juni weten aan Sandra.\nGroeten, Mark",[["Hoe gaan de collega's naar het strand?","met de bus","met de trein","met de fiets"],["Wat kost het uitje voor een medewerker?","niets","€ 25","€ 13"],["Wat moet je doen als je mee wilt?","het voor 1 juni aan Sandra laten weten","€ 25 betalen aan Mark","op 14 juni het restaurant bellen"]]],
+["Mededeling voor alle bewoners\nOp dinsdag 3 en woensdag 4 maart krijgt de lift onderhoud. Op deze dagen kunt u de lift niet gebruiken van 8.00 tot 16.00 uur. Gebruik dan de trap.\nHebt u hulp nodig met uw boodschappen, of zit u in een rolstoel? Bel dan voor 1 maart de huismeester, de heer Bakker: 010-1234567. Hij zoekt samen met u een oplossing.\nExcuses voor het ongemak.\nWoonstichting Thuis",[["Wanneer kunt u de lift niet gebruiken?","op 3 en 4 maart overdag","op 1 maart de hele dag","op 3 en 4 maart 's avonds"],["Waarom belt u de huismeester?","als u hulp nodig hebt","als de lift kapot is","als u een nieuwe woning zoekt"]]],
+["Bibliotheek Centrum\nOpeningstijden\nmaandag: gesloten\ndinsdag t/m vrijdag: 10.00 – 20.00 uur\nzaterdag: 10.00 – 17.00 uur\nzondag: 12.00 – 17.00 uur\n\nLid worden\nKinderen tot 18 jaar: gratis\nVolwassenen: € 45 per jaar\n\nTaalhuis: elke woensdag van 14.00 tot 16.00 uur. Oefen gratis Nederlands met een vrijwilliger. U hoeft geen lid te zijn.",[["U werkt op zaterdag tot 18.00 uur. Wanneer kunt u in het weekend naar de bibliotheek?","op zondagmiddag","op zaterdagavond","op zondagochtend"],["Wat kost het Taalhuis?","niets","€ 45 per jaar","€ 45 per maand"],["Uw dochter is 12 jaar. Wat betaalt zij voor een abonnement?","niets","€ 45 per jaar","de helft van € 45"]]],
+["Zwembad De Waterlelie\nBanenzwemmen (alleen volwassenen): maandag t/m vrijdag 7.00 – 9.00 uur\nVrij zwemmen: woensdag 14.00 – 17.00 uur, zaterdag en zondag 10.00 – 16.00 uur\nZwemles voor kinderen: dinsdag en donderdag 16.00 – 18.00 uur\nKinderen onder de 8 jaar zwemmen alleen samen met een volwassene.\nPrijs: € 5,50 per keer. Met een tienbadenkaart betaalt u € 45.",[["U wilt alleen zwemmen, voor uw werk. Wanneer kan dat?","op een werkdag om 7.30 uur","op woensdag om 14.00 uur","op dinsdag om 16.00 uur"],["Uw zoon is 6 jaar. Wat is waar?","hij mag alleen zwemmen met een volwassene","hij mag alleen op woensdag zwemmen","hij mag niet zwemmen"],["Wat kost één keer zwemmen?","€ 5,50","€ 4,50","€ 45"]]],
+["Beste mevrouw Haddad,\nVanaf 1 juli wordt uw huur hoger. U betaalt nu € 650 per maand. Vanaf 1 juli betaalt u € 670 per maand. U hoeft niets te doen: wij passen de automatische betaling zelf aan.\nBent u het niet eens met de huurverhoging? Stuur ons dan voor 1 juli een brief of een e-mail.\nHebt u een laag inkomen? Misschien kunt u huurtoeslag krijgen.\nMet vriendelijke groet,\nWoonstichting Thuis",[["Hoeveel meer huur betaalt mevrouw Haddad vanaf 1 juli?","€ 20 per maand","€ 670 per maand","€ 650 per jaar"],["Wat moet mevrouw Haddad doen voor de nieuwe huur?","niets","een brief sturen","de betaling zelf aanpassen"],["Wat doet zij als zij het niet eens is met de nieuwe huur?","voor 1 juli een brief of e-mail sturen","minder huur betalen","huurtoeslag aanvragen"]]],
+["Vacature: medewerker bakkerij (20 uur per week)\nBakkerij Van Dijk zoekt een vriendelijke collega voor de winkel.\nWat ga je doen? Je helpt klanten, je verkoopt brood en taart en je houdt de winkel schoon.\nWanneer werk je? Van dinsdag tot en met vrijdag, van 7.00 tot 12.00 uur.\nWat vragen wij? Je spreekt een beetje Nederlands. Ervaring is niet nodig.\nInteresse? Kom langs in de winkel met je cv, of bel Peter: 06-98765432.",[["Hoeveel dagen per week werk je?","vier","vijf","twee"],["Wat is waar?","je hoeft geen ervaring te hebben","je moet goed Nederlands spreken","je werkt ook 's middags"],["Hoe kun je reageren?","met je cv naar de winkel gaan","een e-mail sturen","een brief sturen"]]],
+["Beste ouders van groep 4,\nIn de week van 10 tot 14 februari zijn de tienminutengesprekken. U praat dan tien minuten met de leerkracht over uw kind.\nKies zelf een tijd in de ouder-app. Dat kan tot 5 februari.\nKunt u niet in deze week? Stuur dan een bericht aan juf Anouk. Dan maken we samen een andere afspraak.\nUw kind hoeft niet mee te komen.\nMet vriendelijke groet,\nBasisschool De Regenboog",[["Hoe maakt u een afspraak?","in de ouder-app","met een brief aan de school","met een telefoontje naar juf Anouk"],["U kunt niet in die week. Wat doet u?","een bericht sturen aan juf Anouk","niets","uw kind alleen sturen"],["Wat is waar?","uw kind hoeft niet mee","het gesprek duurt een uur","u kunt tot 14 februari een tijd kiezen"]]],
+["Let op: werkzaamheden aan het spoor\nOp zaterdag 12 en zondag 13 oktober rijden er geen treinen tussen Utrecht en Amersfoort.\nEr rijden bussen in plaats van treinen. De bussen vertrekken bij de uitgang Noord van het station.\nReken op 30 minuten extra reistijd.\nMet uw gewone treinkaartje mag u ook in de bus.",[["Hoe reist u op zaterdag van Utrecht naar Amersfoort?","met de bus","met de trein","dat kan niet"],["Wat is waar?","u hebt geen extra kaartje nodig","u moet een buskaartje kopen","de reis duurt korter dan normaal"]]],
+["Buurthuis De Ster: programma\nmaandag 10.00 – 12.00 uur: koffieochtend voor iedereen (gratis)\ndinsdag 19.00 – 21.00 uur: naaicafé, repareer samen je kleren (€ 2)\ndonderdag 15.00 – 17.00 uur: huiswerkhulp voor kinderen van 8 tot 12 jaar (gratis)\nvrijdag 18.00 uur: samen eten (€ 5). Opgeven kan tot woensdag bij de bar.\nIedereen is welkom!",[["Uw zoon van 10 jaar heeft hulp nodig met zijn huiswerk. Wanneer gaat hij?","op donderdagmiddag","op maandagochtend","op dinsdagavond"],["U wilt vrijdag mee-eten. Wat moet u doen?","u geeft zich uiterlijk woensdag op bij de bar","u belt vrijdag het buurthuis","u hoeft niets te doen"],["Wat kost het naaicafé?","€ 2","€ 5","niets"]]],
+["Hoi Sanne,\nIk ga verhuizen! Op zaterdag 6 april breng ik al mijn spullen naar mijn nieuwe huis in Leiden. Kun jij me helpen? We beginnen om 9.00 uur bij mijn oude huis. Mijn broer rijdt de bus. Ik zorg voor koffie en lunch.\n's Avonds geef ik een klein feestje in het nieuwe huis. Je vriend is ook welkom.\nLaat je het weten?\nGroetjes, Fatima",[["Waarom schrijft Fatima?","ze vraagt hulp bij haar verhuizing","ze wil een bus huren","ze zoekt een huis in Leiden"],["Waar begint de verhuizing?","bij het oude huis van Fatima","in Leiden","bij Sanne thuis"],["Wie rijdt de bus?","de broer van Fatima","Sanne","Fatima"]]]
 ];
 // luisteren: gesproken tekst, vraag, goed, fout, fout
 const LS=[
@@ -633,16 +677,51 @@ const LS=[
 ["Het weer voor morgen. In de ochtend is het droog en zonnig. In de middag komt er regen en het gaat hard waaien. Het wordt ongeveer vijftien graden.","Wanneer gaat het regenen?","'s middags","'s ochtends","het blijft droog"],
 ["Hallo, ik bel over de woning in de Kerkstraat. Is die nog vrij? Ik wil graag weten hoeveel de huur is en of ik zaterdag kan komen kijken.","Wat wil de beller op zaterdag doen?","de woning bekijken","verhuizen","de huur betalen"],
 ["Jouw werktijden voor volgende week. Maandag en dinsdag werk je van zeven tot drie. Woensdag ben je vrij. Donderdag en vrijdag begin je om twaalf uur.","Op welke dag hoef je niet te werken?","op woensdag","op maandag","op vrijdag"],
-["Mevrouw, u moet deze tabletten drie keer per dag nemen, steeds na het eten. U mag er geen alcohol bij drinken. Na een week komt u terug voor controle.","Wanneer neemt u de tabletten?","na het eten","voor het eten","alleen voor het slapen"]
+["Mevrouw, u moet deze tabletten drie keer per dag nemen, steeds na het eten. U mag er geen alcohol bij drinken. Na een week komt u terug voor controle.","Wanneer neemt u de tabletten?","na het eten","voor het eten","alleen voor het slapen"],
+["Goedemiddag, u spreekt met de apotheek. Uw medicijnen liggen klaar. U kunt ze vandaag tot zes uur ophalen, of morgen vanaf half negen.","Wanneer kunt u de medicijnen morgen ophalen?","vanaf half negen","tot zes uur","vanaf half zes"],
+["Beste reizigers, de trein naar Amsterdam Centraal vertrekt vandaag niet van spoor vijf, maar van spoor acht.","Van welk spoor vertrekt de trein?","spoor acht","spoor vijf","spoor drie"],
+["Hoi, met Jan. Ik sta in de file. Ik ben er een half uur later. Begin maar vast met eten.","Wat moeten de anderen doen?","alvast gaan eten","op Jan wachten met eten","Jan terugbellen"],
+["Welkom bij de gemeente. Wilt u een afspraak maken voor een paspoort of een identiteitskaart? Toets een. Hebt u een vraag over afval? Toets twee. Voor alle andere vragen: blijf aan de lijn.","U hebt een vraag over uw vuilnisbak. Wat doet u?","u toetst twee","u toetst een","u blijft aan de lijn"],
+["Dames en heren, over tien minuten gaat de winkel dicht. Wilt u naar de kassa gaan? Morgen zijn wij weer open vanaf acht uur.","Wat moeten de klanten doen?","naar de kassa gaan","morgen om tien uur terugkomen","tien minuten wachten"],
+["Hallo, je spreekt met Karin van het uitzendbureau. Ik heb werk voor je in een magazijn. Je kunt maandag beginnen. Wil je me vandaag nog terugbellen?","Wat vraagt Karin?","of je vandaag terugbelt","of je vandaag naar het magazijn gaat","of je maandag belt"],
+["Goedemorgen, dit is een bericht van de tandarts. Uw afspraak van donderdag om drie uur gaat niet door, want de tandarts is die dag op cursus. Wilt u ons bellen voor een nieuwe afspraak?","Waarom gaat de afspraak niet door?","de tandarts is op cursus","de tandarts is ziek","de praktijk is dicht voor vakantie"],
+["Het weer voor het weekend. Zaterdag wordt het een mooie dag, met veel zon en twintig graden. Zondag gaat het regenen en er komt harde wind.","Wat voor weer wordt het op zondag?","regen en harde wind","zon en twintig graden","sneeuw"],
+["Let op, let op. De bus van lijn twaalf rijdt vandaag niet door het centrum, want er is markt. Stap uit bij de halte Stationsplein.","Waarom rijdt de bus niet door het centrum?","er is markt","er is een ongeluk","de weg is kapot"],
+["Hoi mam, met Daan. Ik ben mijn sleutel vergeten. Ik ben om vier uur thuis. Ben jij er dan, of moet ik naar de buren gaan?","Wat is het probleem van Daan?","hij heeft geen sleutel","hij komt te laat","hij is ziek"],
+["Goedemiddag, u bent verbonden met de klantenservice. Alle medewerkers zijn in gesprek. U bent nummer vier in de wachtrij. Een moment geduld alstublieft.","Wat moet de beller doen?","wachten","later terugbellen","een e-mail sturen"],
+["Beste collega's, de vergadering van morgen begint niet om negen uur, maar om tien uur. Hij is in kamer twee, op de eerste verdieping.","Hoe laat begint de vergadering?","om tien uur","om negen uur","om twee uur"],
+["Welkom bij het zwembad. Vanaf vandaag zijn we in de zomer ook op zondag open, van tien tot vijf. Kinderen tot vier jaar zwemmen gratis.","Wie mag gratis zwemmen?","kinderen tot vier jaar","kinderen tot tien jaar","iedereen op zondag"],
+["Goedemorgen, met de school van uw dochter. Uw dochter heeft buikpijn en ze wil graag naar huis. Kunt u haar komen halen?","Wat vraagt de school?","of u uw dochter komt halen","of u medicijnen brengt","of uw dochter morgen thuisblijft"],
+["Hallo, u spreekt met de bezorgdienst. We hebben vandaag geprobeerd een pakket te bezorgen, maar u was niet thuis. Het pakket ligt nu bij uw buren op nummer twaalf.","Waar is het pakket nu?","bij de buren","op het postkantoor","bij de bezorgdienst"],
+["Dames en heren, door een storing rijden er geen treinen tussen Leiden en Den Haag. Er rijden bussen. Die vertrekken aan de voorkant van het station.","Waar vertrekken de bussen?","aan de voorkant van het station","van spoor een","in Den Haag"],
+["Hoi, met Sara. Zullen we zaterdag samen naar de markt gaan? Ik kan om tien uur bij je zijn. Stuur je even een berichtje?","Wat wil Sara zaterdag doen?","naar de markt gaan","bij jou eten","naar de film gaan"],
+["Goedemiddag, met de huisartsenpraktijk. De uitslag van uw bloedonderzoek is goed. U hoeft niet terug te komen.","Wat moet de patiënt doen?","niets","een nieuwe afspraak maken","opnieuw bloed laten prikken"],
+["Beste klanten, deze week zijn alle appels en peren in de aanbieding: twee kilo voor drie euro.","Wat kost twee kilo appels deze week?","drie euro","twee euro","vijf euro"],
+["Goedemorgen, u spreekt met de woningcorporatie. Morgen tussen acht en twaalf uur komt de monteur voor uw verwarming. Wilt u dan thuis zijn?","Waarom komt de monteur?","voor de verwarming","voor de keuken","voor de wasmachine"],
+["Hallo, met Peter van de voetbalclub. De training van woensdag gaat niet door, want het veld is te nat. Zaterdag spelen we wel de wedstrijd.","Wat gaat niet door?","de training op woensdag","de wedstrijd op zaterdag","de training op zaterdag"],
+["Welkom bij de bibliotheek. Boeken die u te laat terugbrengt, kosten twintig cent per dag. U kunt uw boeken ook online verlengen.","Wat kunt u online doen?","uw boeken verlengen","boeken kopen","lid worden"],
+["Beste ouders, volgende week vrijdag gaan alle kinderen naar de dierentuin. Geef uw kind een lunchpakket en een flesje water mee. We zijn om drie uur terug op school.","Wat moet uw kind meenemen?","eten en drinken","geld voor de dierentuin","een jas en een paraplu"],
+["U luistert naar Radio Stad. Vanavond is er een concert op het Marktplein. Het begint om acht uur en het is gratis.","Wat kost het concert?","niets","acht euro","tien euro"],
+["Hoi, met Mohammed. Ik heb een nieuw telefoonnummer. Mijn oude nummer werkt vanaf morgen niet meer. Ik stuur je het nieuwe nummer in een bericht.","Waarom belt Mohammed?","hij heeft een nieuw telefoonnummer","zijn telefoon is kapot","hij wil morgen afspreken"],
+["Goedemiddag, met de gemeente. Uw nieuwe paspoort is klaar. U kunt het komen ophalen. Neem uw oude paspoort mee.","Wat moet u meenemen?","uw oude paspoort","een pasfoto","uw bankpas"],
+["Dames en heren, onze supermarkt zoekt nieuwe medewerkers voor de zaterdag. Bent u zestien jaar of ouder? Vraag een formulier bij de servicebalie.","Waar vraagt u een formulier?","bij de servicebalie","bij de kassa","op de website"],
+["Hallo, met de fietsenmaker. Uw fiets is klaar. De reparatie kost vijfentwintig euro. U kunt hem vandaag tot zes uur ophalen.","Hoeveel kost de reparatie?","vijfentwintig euro","vijftien euro","zes euro"],
+["Goedemorgen, met Linda van de kinderopvang. Uw zoon heeft een beetje koorts. Hij mag vandaag blijven, maar wilt u hem om drie uur ophalen in plaats van om zes uur?","Hoe laat moet u uw zoon ophalen?","om drie uur","om zes uur","nu meteen"],
+["Dit is een bericht voor alle bewoners. Morgen is er in het hele gebouw geen water, van negen tot elf uur.","Wat gebeurt er morgen?","er is twee uur geen water","er is de hele dag geen stroom","de lift doet het niet"],
+["Hoi, met Emma. Bedankt voor het mooie cadeau! De bloemen staan op tafel. Kom je volgende week een keer koffie drinken?","Wat vraagt Emma?","of je koffie komt drinken","of je bloemen wilt kopen","of je een cadeau wilt"],
+["Let op: vanaf een januari mag het oud papier niet meer in de grijze container. Doe het oud papier in de blauwe container.","Waar doet u het oud papier vanaf januari?","in de blauwe container","in de grijze container","bij het grofvuil"],
+["Goedemiddag, met de rijschool. Uw rijles van vrijdag gaat niet door. De les is nu op zaterdag, op dezelfde tijd.","Wanneer is de rijles nu?","zaterdag, op dezelfde tijd","vrijdag, op een andere tijd","zaterdag, op een andere tijd"],
+["Beste reizigers, in deze trein kunt u geen kaartje kopen. Reist u zonder kaartje, dan krijgt u een boete.","Wat is waar?","u koopt het kaartje voor de reis","u kunt in de trein een kaartje kopen","in deze trein hebt u geen kaartje nodig"],
+["Hallo, met Tom, je nieuwe buurman. Ik geef zaterdagavond een feestje. Het wordt misschien een beetje lawaaierig. Je bent ook van harte welkom!","Waarom belt Tom?","hij geeft een feest en nodigt je uit","hij klaagt over lawaai","hij zoekt een nieuw huis"]
 ];
 const RU={};"zijn=быть|hebben=иметь|gaan=идти|komen=приходить|doen=делать|zien=видеть|zeggen=сказать|weten=знать|kunnen=мочь|willen=хотеть|moeten=быть должным|mogen=иметь разрешение|krijgen=получать|geven=давать|nemen=брать|staan=стоять|zitten=сидеть|liggen=лежать|blijven=оставаться|worden=становиться|vinden=находить|denken=думать|brengen=приносить|kopen=покупать|zoeken=искать|lezen=читать|schrijven=писать|spreken=говорить|eten=есть|drinken=пить|slapen=спать|lopen=ходить пешком|rijden=ехать|vliegen=лететь|beginnen=начинать|vergeten=забывать|begrijpen=понимать|helpen=помогать|vragen=спрашивать|dragen=носить|vallen=падать|laten=позволять, оставлять|houden=держать|roepen=звать|sterven=умирать|trekken=тянуть|sluiten=закрывать|kiezen=выбирать|verliezen=терять, проигрывать|winnen=выигрывать|zingen=петь|zwemmen=плавать|bieden=предлагать|breken=ломать|kijken=смотреть|snijden=резать|wassen=мыть|bakken=печь, жарить|lachen=смеяться|verkopen=продавать|werken=работать|wonen=жить (где-то)|maken=делать, изготовлять|leren=учить|praten=разговаривать|fietsen=ехать на велосипеде|betalen=платить|reizen=путешествовать|verhuizen=переезжать|luisteren=слушать|spelen=играть|koken=готовить|wachten=ждать|antwoorden=отвечать|gebeuren=случаться|stoppen=останавливать(ся)|huis=дом|kind=ребёнок|boek=книга|werk=работа|water=вода|brood=хлеб|meisje=девочка|jaar=год|ziekenhuis=больница|station=вокзал|geld=деньги|weer=погода|land=страна|raam=окно|bed=кровать|formulier=бланк|paspoort=паспорт|nummer=номер|kantoor=офис|ontbijt=завтрак|tafel=стол|man=мужчина|vrouw=женщина|auto=машина|fiets=велосипед|school=школа|straat=улица|stad=город|week=неделя|dag=день|kamer=комната|deur=дверь|keuken=кухня|trein=поезд|winkel=магазин|rekening=счёт|afspraak=встреча, запись|taal=язык|gemeente=муниципалитет|jongen=мальчик|ei=яйцо|brief=письмо|foto=фотография|de afspraak=запись на приём|de baan=работа, место|de huur=арендная плата|de vertraging=задержка|de korting=скидка|het formulier=бланк|de huisarts=семейный врач|de werkgever=работодатель|de buurman=сосед|het perron=платформа|de bon=чек|de handtekening=подпись|het recept=рецепт|het loon=зарплата|de verwarming=отопление|overstappen=пересаживаться|pinnen=платить картой|invullen=заполнять|de pijn=боль|de collega=коллега|de sleutel=ключ|het kaartje=билет|de aanbieding=акция|aanvragen=подавать заявление|de koorts=температура|solliciteren=устраиваться на работу|kapot=сломанный|de halte=остановка|duur=дорогой|de belasting=налог|verkouden=простуженный|het contract=договор|de verdieping=этаж|linksaf=налево|goedkoop=дешёвый|de toeslag=доплата, субсидия|de verzekering=страховка|de vergadering=совещание|de rekening=счёт|rechtdoor=прямо|de kassa=касса|geldig=действительный|de tandarts=стоматолог|vrij=свободный, выходной|de buurt=район|de fietsenstalling=велопарковка|ruilen=обменять|de brief=письмо".split("|").forEach(x=>{const[a,b]=x.split("=");RU[a]=b});
-const EX={lz:{t:"Proefexamen Lezen",n:25,min:65},ls:{t:"Proefexamen Luisteren",n:25,min:45},knm:{t:"Proefexamen KNM",n:40,min:45},wr:{t:"Proefexamen Schrijven",n:4,min:40}};
+const EX={lz:{t:"Proefexamen Lezen",n:25,min:65},ls:{t:"Proefexamen Luisteren",n:25,min:45},knm:{t:"Proefexamen KNM",n:40,min:45},wr:{t:"Proefexamen Schrijven",n:4,min:40},sp:{t:"Proefexamen Spreken",n:16,min:35}};
 const SEC=[
 {id:"mix",t:"Mix van de dag",s:"10 vragen uit alle onderdelen",n:10},
 {id:"lz",t:"Lezen",s:"Korte teksten met vragen, zoals op het examen",n:6},
 {id:"ls",t:"Luisteren",s:"Luister naar een bericht en kies het antwoord",n:5},
 {id:"wr",t:"Schrijven",s:"4 opdrachten in 40 minuten, één formulier",n:4,min:40},
-{id:"sp",t:"Spreken",s:"Vragen en plaatjes: antwoord hardop",n:5},
+{id:"sp",t:"Spreken",s:"Vragen en plaatjes: spreek je antwoord in",n:5},
 {id:"knm",t:"KNM",s:"De 7 thema's van het nieuwe examen (sinds juli 2025)",n:10},
 {id:"verb",t:"Werkwoordsvormen",s:"Imperfectum en perfectum",n:10},
 {id:"wo",t:"Woordvolgorde",s:"Maak een zin van de woorden",n:6},
@@ -763,7 +842,105 @@ function errItems(){return(S.errs||[]).map(e=>({sec:"er",k:"er|"+e.r,ord:0,type:
 const canSpeak="speechSynthesis" in window&&typeof SpeechSynthesisUtterance!=="undefined";
 // Voice left unset so the phone uses the Dutch (nl-NL) voice picked in its settings
 function speak(t){try{const u=new SpeechSynthesisUtterance(t);u.lang="nl-NL";u.rate=.95;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
-const hush=()=>{try{if(canSpeak)speechSynthesis.cancel()}catch(e){}};
+let rec=null,recUrl=null;
+const hush=()=>{recEnd(false);if(recUrl){URL.revokeObjectURL(recUrl);recUrl=null}try{if(canSpeak)speechSynthesis.cancel()}catch(e){}};
+// Spreken: listen() puts one minute on the clock and either records the answer (mode "rec", to play it back)
+// or lets the phone write it down (mode "say", Web Speech API) so Claude can grade the text.
+// Never both at once: on iPhone the recorder and speech recognition compete for the microphone.
+// Recordings and transcripts only live in memory; nothing is saved.
+const SPK=60, canRec=!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.MediaRecorder),
+  SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+let sr=null; // one recogniser, reused: iOS asks for permission again for every new one
+const mmss=s=>Math.floor(s/60)+":"+String(s%60).padStart(2,"0");
+// The question as it is read aloud and sent for grading: without the picture emoji
+const spoken=t=>String(t).replace(/[\p{Extended_Pictographic}←-⇿️‍]/gu,"").replace(/\s+/g," ").trim();
+const saidText=r=>r.said.concat(r.part).join(" ").replace(/\s+/g," ").trim();
+async function listen(mode,done){
+  const box=$("rec"),b=$("recb"); recEnd(false); b.disabled=true;
+  if(recUrl){URL.revokeObjectURL(recUrl);recUrl=null} $("recp").innerHTML="";
+  const r={box,mode,done,stream:null,mr:null,sr:null,chunks:[],said:[],part:"",keep:false,fin:false};
+  if(mode==="rec"&&canRec){
+    try{r.stream=await navigator.mediaDevices.getUserMedia({audio:true})}catch(e){}
+    if(box!==$("rec")){if(r.stream)r.stream.getTracks().forEach(t=>t.stop());return}
+    if(r.stream)try{r.mr=new MediaRecorder(r.stream);r.mr.ondataavailable=e=>{if(e.data&&e.data.size)r.chunks.push(e.data)};r.mr.onstop=()=>recDone(r);r.mr.start()}
+      catch(e){r.mr=null;r.stream.getTracks().forEach(t=>t.stop());r.stream=null}
+  }
+  r.start=Date.now(); r.end=r.start+SPK*1e3; rec=r;
+  if(mode==="say"&&SR)try{
+    if(!sr){sr=new SR();sr.lang="nl-NL";sr.continuous=true;sr.interimResults=true}
+    r.sr=sr;
+    sr.onresult=e=>{let t="";for(let i=0;i<e.results.length;i++)t+=e.results[i][0].transcript+" ";r.part=t.trim();
+      if(r.box===$("rec")&&!r.fin)$("recp").innerHTML=`<p class="ask">Dit hoorde de telefoon</p><div class="sample">${esc(saidText(r))}</div>`};
+    sr.onerror=e=>{if(/not-allowed|service-not-allowed|audio-capture|language-not-supported/.test(e.error))r.fail=true};
+    // Recognition stops by itself after a pause: start it again while the minute runs
+    sr.onend=()=>{if(r.part){r.said.push(r.part);r.part=""}
+      if(rec!==r)return recDone(r);
+      if(r.fail){r.sr=null;$("recn").textContent="Meeschrijven lukt hier niet. Spreek toch hardop: de tijd loopt.";return}
+      try{sr.start()}catch(e){}};
+    try{sr.start()}catch(e){setTimeout(()=>{if(rec===r)try{sr.start()}catch(e){}},400)} // the previous take may still be stopping
+  }catch(e){r.sr=null}
+  $("recn").textContent=mode==="rec"?(r.mr?"Spreek nu. Tik op Stop als je klaar bent.":"Opnemen lukt hier niet. Spreek toch hardop: de tijd loopt.")
+    :r.sr?"Spreek nu. De telefoon schrijft mee. Tik op Stop als je klaar bent.":"Meeschrijven lukt hier niet. Spreek toch hardop: de tijd loopt.";
+  b.textContent="■ Stop";b.className="btn wide";b.disabled=false;b.onclick=()=>recEnd(true);
+  const tick=()=>{if(box!==$("rec"))return recEnd(false);const ms=Math.max(0,r.end-Date.now());
+    $("rect").textContent=mmss(Math.ceil(ms/1e3));$("recm").style.width=ms/SPK/10+"%";if(!ms)recEnd(true)};
+  tick(); r.t=setInterval(tick,250);
+}
+function recEnd(keep){
+  const r=rec; if(!r)return; rec=null; clearInterval(r.t); r.keep=keep; r.stop=Date.now();
+  if(r.sr){try{r.sr.stop()}catch(e){}setTimeout(()=>recDone(r),2500)} // onend normally comes first
+  else if(r.mr&&r.mr.state!=="inactive")r.mr.stop(); else recDone(r);
+  if(r.stream)r.stream.getTracks().forEach(t=>t.stop());
+}
+function recDone(r){
+  if(r.fin)return; r.fin=true;
+  if(!r.keep||r.box!==$("rec"))return;
+  const s=Math.min(SPK,Math.round((r.stop-r.start)/1e3));
+  r.text=saidText(r); r.url=r.chunks.length?URL.createObjectURL(new Blob(r.chunks,{type:r.mr.mimeType||""})):"";
+  r.note=(s>=SPK?"De tijd is om. ":"")+`Je sprak ${s===1?"1 seconde":s+" seconden"}. `+(s<15?"Dat is kort: zeg twee of drie zinnen. ":"");
+  r.done(r);
+}
+// Practice: a recording to play back
+function spTake(r){
+  recUrl=r.url; if(r.url)$("recp").innerHTML=`<audio controls src="${r.url}"></audio>`;
+  $("recn").textContent=r.note+(r.mr?r.url?"Luister naar jezelf en vergelijk met het voorbeeld.":"Er is niets opgenomen. Probeer het nog een keer.":"");
+  const b=$("recb"); b.textContent="● Opnieuw opnemen";b.className="ghost wide";b.onclick=()=>listen("rec",spTake);
+  if($("spchk")&&!$("spchk").hidden)$("spchk").className="btn wide"; else if(!$("rev").hidden)$("rev").className="btn wide";
+}
+// Practice: the phone writes the answer down and Claude grades it, like Schrijven
+async function spGrade(q,r){
+  const b=$("recb"),c=$("spchk"); b.textContent="● Opnemen";b.className="ghost wide";b.onclick=()=>listen("rec",spTake);
+  if(r.text.split(" ").filter(Boolean).length<3){
+    if(r.fail)c.hidden=true; else c.disabled=false;
+    $("recn").textContent=r.note+(r.fail?"Meeschrijven lukt hier niet. Neem je antwoord op en vergelijk het met het voorbeeld.":"Ik heb bijna niets verstaan. Spreek wat langzamer en probeer het nog een keer.");return}
+  $("recn").textContent=r.note; c.hidden=true; b.disabled=true;
+  $("fb").innerHTML=`<p class="note">Ik kijk je antwoord na… Dit duurt meestal minder dan een minuut.</p>`;
+  try{
+    const res=(await nakijken([{task:spoken(q.big),text:r.text}],"sp"))[0];
+    if(q!==queue[pos])return;
+    const errs=Array.isArray(res.errors)?res.errors:[], ok=!!res.passed;
+    b.disabled=false; $("rev").hidden=true; keepErrs(errs); record(ok);
+    $("fb").innerHTML=`<b class="${ok?"good":"bad"}">${ok?"Goed zo! Voldoende":"Nog niet voldoende"}</b>
+      <p class="note">${esc(res.verdict)}</p>
+      ${errs.length?`<p class="ask">Fouten: ${errs.length}</p><ul class="errs">${errs.map(e=>`<li><s>${esc(e.wrong)}</s> <strong>${esc(e.right)}</strong><span>${esc(e.why)}</span></li>`).join("")}</ul>`:`<p class="note">Geen fouten gevonden.</p>`}
+      <p class="ask">Zo zeg je het goed</p><div class="sample">${esc(res.corrected)}</div>
+      <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(q.right)}</div></details>
+      <button class="btn wide" id="next">Verder</button>`;
+    $("next").onclick=()=>{pos++;show()};
+  }catch(e){
+    if(q!==queue[pos])return;
+    const k=e&&e.code; b.disabled=false;
+    if(k==="rate_limited"){c.hidden=false;c.disabled=false;$("fb").innerHTML=`<p class="note">Te veel verzoeken achter elkaar. Wacht een minuut en probeer het opnieuw.</p>`;return}
+    $("rev").hidden=true;
+    selfGrade(q,k==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je antwoord met het voorbeeld.":"Het nakijken is niet gelukt. Vergelijk je antwoord met het voorbeeld.");
+  }
+}
+// Proefexamen: one answer per question, no second try; graded together at the end
+function spNext(q,r){
+  cur.ans.push({q,text:r.text,url:r.url});
+  $("recn").textContent=r.note+"Je antwoord is bewaard.";
+  const b=$("recb"); b.textContent=pos<queue.length-1?"Volgende vraag":"Klaar";b.className="btn wide";b.onclick=()=>{pos++;show()};
+}
 let tmr=null,tEnd=0;
 function tick(){const s=Math.max(0,Math.round((tEnd-Date.now())/1000));$("timer").textContent=tEnd?Math.floor(s/60)+":"+String(s%60).padStart(2,"0"):"";if(tEnd&&s<=0&&cur&&cur.exam){const q=queue[pos];if(q&&q.type==="write"&&cur.ans.length===pos)cur.ans.push(grab(q));pos=queue.length;finish()}}
 function clock(min){clearInterval(tmr);tmr=null;tEnd=min?Date.now()+min*6e4:0;tick();if(min)tmr=setInterval(tick,1000)}
@@ -829,13 +1006,13 @@ function home(){
   const lb=Object.values(S.bk||{}).filter(b=>b.t).sort((a,b)=>b.at-a.at)[0];
   $("menu").innerHTML=`<h2>Examenonderdelen</h2><p class="sub">Oefen in je eigen tempo, of doe een proefexamen met tijd, zoals op het echte examen.</p><div class="blokken">`
     +["lz","ls","wr","sp","knm"].map(id=>`<div class="blok">${inner(sec(id))}<span class="ta"><button class="btn" data-s="${id}">Oefenen</button>${EX[id]?`<button class="ghost" data-e="${id}">Proefexamen, ${EX[id].min} min</button>`:`<span class="ghost" style="visibility:hidden" aria-hidden="true">Proefexamen</span>`}</span></div>`).join("")
-    +`</div><h2>Grammatica en woorden</h2><p class="sub">Korte rondes van 10 vragen. Dit helpt bij alle onderdelen.</p><div class="blokken">`
+    +`</div>${duoLink}<h2>Grammatica en woorden</h2><p class="sub">Korte rondes van 10 vragen. Dit helpt bij alle onderdelen.</p><div class="blokken">`
     +["verb","wo","pr","dh","vo"].map(id=>`<button class="blok" data-s="${id}">${inner(sec(id))}${go("Oefenen")}</button>`).join("")
     +`</div>`;
   $("books").innerHTML=`<button class="blok" data-x="books"><span class="th"><b>Boekenkast</b></span><span class="d">${lb?`Je leest nu: ${esc(lb.t)}, blz. ${lb.p+1}`:"Verhalen en je eigen e-books. Tik op een woord voor de betekenis."}</span>${go(lb?"Verder lezen":"Openen")}</button>`
     +((S.words||[]).length?`<button class="blok" data-x="words"><span class="th"><b>Mijn woorden</b><em>${S.words.length}</em></span><span class="d">Oefen de woorden die je bij het lezen hebt bewaard.</span>${go("Oefenen")}</button>`:"");
   $("mine").innerHTML=`<button class="blok" data-x="stats"><span class="th"><b>Mijn zwakke punten</b></span><span class="d">Zie waar je de meeste fouten maakt en oefen precies dat.</span>${go("Bekijken")}</button>`
-    +((S.errs||[]).length?`<button class="blok" data-x="errs"><span class="th"><b>Mijn fouten</b><em>${S.errs.length}</em></span><span class="d">Oefen met fouten uit je eigen teksten.</span>${go("Oefenen")}</button>`:"");
+    +((S.errs||[]).length?`<button class="blok" data-x="errs"><span class="th"><b>Mijn fouten</b><em>${S.errs.length}</em></span><span class="d">Oefen met fouten uit je eigen teksten en antwoorden.</span>${go("Oefenen")}</button>`:"");
   document.querySelectorAll("#menu button,#books button,#mine button").forEach(b=>b.onclick=()=>{const d=b.dataset;
     if(d.s)build(d.s);
     else if(d.e)startExam(d.e);
@@ -846,9 +1023,14 @@ function home(){
   window.scrollTo(0,0);
 }
 function startExam(e){
-  build("exam",{id:"exam",exam:1,keep:e==="lz",write:e==="wr",...EX[e],pool:()=>{const a=shuffle(ITEMS.filter(x=>x.sec===e));
+  build("exam",{id:"exam",exam:1,keep:e==="lz",write:e==="wr",speak:e==="sp",...EX[e],pool:()=>{const a=shuffle(ITEMS.filter(x=>x.sec===e));
+    if(e==="knm"){const g={};a.forEach(q=>(g[q.label]=g[q.label]||[]).push(q));const G=Object.values(g),o=[]; // spread over the 7 themes
+      for(let i=0;o.length<a.length;i++)G.forEach(x=>{if(x[i])o.push(x[i])});return o.slice(0,EX.knm.n)}
     return e==="wr"?a.filter(q=>q.fields).slice(0,1).concat(a.filter(q=>!q.fields).slice(0,3)):a}});
 }
+// Pass mark for the computer-marked parts: about 7 in 10 (e.g. 18 of 25 for Lezen, 28 of 40 for KNM); DUO sets it per exam version
+const PASS=.7, DUO="https://www.inburgeren.nl/examen-doen/oefenen.jsp",
+  duoLink=`<p class="note">Oefen ook met de officiële oefenexamens van DUO: <a href="${DUO}" target="_blank" rel="noopener">inburgeren.nl ↗</a></p>`;
 const PART={wr:"Schrijven",knm:"KNM",sp:"Spreken",ls:"Luisteren",lz:"Lezen"}, HELP={wr:["wo","verb"],sp:["pr","verb"],lz:["vo","dh"],ls:["vo","pr"],knm:[]};
 const dayOf=str=>{const[y,m,d]=str.split("-").map(Number),t=new Date(y,m-1,d);return Math.round((t.getTime()-t.getTimezoneOffset()*6e4)/864e5)};
 let planId=null;
@@ -936,7 +1118,7 @@ function build(id,custom){
   if(id==="mix"){const cnt={};cand=cand.filter(q=>(cnt[q.sec]=(cnt[q.sec]||0)+1)<=(q.sec==="verb"?3:q.sec==="sp"?1:2))}
   queue=cand.slice(0,cur.n);
   if(id==="wr"){const f=cand.filter(q=>q.fields),o=cand.filter(q=>!q.fields);queue=f.slice(0,1).concat(o.slice(0,3))}
-  if(cur.pool){const pl=cur.pool();queue=(cur.exam?shuffle(pl.slice()):pl).slice(0,cur.n);if(cur.keep)queue.sort((a,b)=>a.k<b.k?-1:1);cur.miss=[];cur.ans=[]}
+  if(cur.pool){const pl=cur.pool();queue=(cur.exam?shuffle(pl.slice()):pl).slice(0,cur.n);if(cur.keep)queue.sort((a,b)=>a.k<b.k?-1:1);cur.miss=[];cur.ans=[];cur.log=[]}
   if(!queue.length)queue=shuffle(pool.slice()).slice(0,cur.n);
   if(!cur.keep)shuffle(queue);
   queue=queue.map(q=>({...q,retry:false}));
@@ -955,7 +1137,10 @@ function show(){
   let o;
   if(q.type==="order")h+=`<div class="line" id="line"></div><div class="pool" id="pool"></div><button class="btn wide" id="chk" disabled>Controleer</button>`;
   else if(q.type==="write")h+=(q.fields?q.fields.map((f,i)=>`<label class="fld"><span>${f}</span><input id="f${i}" autocomplete="off"></label>`).join("")+`<p class="ask">${q.open}</p>`:"")+`<textarea id="txt" rows="7" placeholder="Schrijf hier je tekst…" aria-label="Je tekst" spellcheck="false" autocapitalize="sentences"></textarea><button class="btn wide" id="chk">${cur.exam?"Volgende opdracht":"Controleer mijn tekst"}</button>`;
-  else if(q.type==="reveal")h+=`<button class="btn wide" id="rev">Toon voorbeeld</button>`;
+  else if(q.type==="reveal")h+=(canSpeak?`<button class="hint" id="sayq">▶ Luister naar de vraag</button>`:"")
+    +`<div class="rec" id="rec"><div class="clk"><span class="t" id="rect">${mmss(SPK)}</span><div class="m"><i id="recm"></i></div></div><div id="recp"></div>
+    <button class="btn wide" id="recb">${cur.exam?"● Antwoord geven":"● Opnemen"}</button><p class="note" id="recn">${cur.exam?"Je hebt één minuut per vraag.":"Je hebt één minuut. Daarna kun je jezelf terugluisteren."}</p></div>
+    ${cur.exam?"":`${SR?`<button class="ghost wide" id="spchk" style="margin-bottom:10px">Spreek in en laat nakijken</button>`:""}<button class="ghost wide" id="rev">Toon voorbeeld</button>`}`;
   else if(S.typing&&q.canType)h+=`<div class="type"><input id="inp" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Je antwoord"><button class="btn" id="chk">Controleer</button></div>`;
   else{o=q.opts();h+=`<div class="opts${o.some(x=>x.length>14)?" one":""}">${o.map((x,i)=>`<button class="opt" data-n="${i}">${x}</button>`).join("")}</div>`}
   h+=`<div class="fb" id="fb"></div>`;
@@ -964,7 +1149,12 @@ function show(){
   if(RU[q.big])$("tr").onclick=()=>{$("tr").textContent=RU[q.big];$("tr").disabled=true};
   if(q.type==="order")return order(q);
   if(q.type==="write"){$("chk").onclick=()=>{if(cur.exam){cur.ans.push(grab(q));pos++;show()}else check(q)};return}
-  if(q.type==="reveal"){$("rev").onclick=()=>reveal(q);return}
+  if(q.type==="reveal"){
+    if($("sayq"))$("sayq").onclick=()=>speak(spoken(q.big));
+    if(cur.exam){$("recb").onclick=()=>listen(SR?"say":"rec",r=>spNext(q,r));return}
+    $("recb").onclick=()=>listen("rec",spTake); $("rev").onclick=()=>reveal(q);
+    if($("spchk"))$("spchk").onclick=()=>{$("spchk").disabled=true;listen("say",r=>spGrade(q,r))};
+    return}
   const inp=$("inp"); if(inp){inp.focus();$("chk").onclick=()=>grade(inp.value.trim().toLowerCase())}
   document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>grade(o[b.dataset.n],b,o));
 }
@@ -993,7 +1183,7 @@ function feedback(ok,q){
 function grade(ans,btn,o){
   if(answered||!ans)return; answered=true;
   const q=queue[pos],ok=ans===q.right.toLowerCase()||ans===q.right;
-  if(cur.exam){record(ok);if(!ok)cur.miss.push({q:q.big,r:q.right});pos++;return show()}
+  if(cur.exam){record(ok);cur.log.push({l:q.label,ok});if(!ok)cur.miss.push({q:q.big,r:q.right});pos++;return show()}
   document.querySelectorAll(".opt").forEach(b=>{b.disabled=true;if(o&&o[b.dataset.n]===q.right)b.classList.add("ok")});
   if(btn&&!ok)btn.classList.add("no");
   if($("inp"))$("inp").disabled=true; if($("chk"))$("chk").disabled=true;
@@ -1019,7 +1209,7 @@ function order(q){
   };
 }
 function reveal(q){
-  $("rev").hidden=true;
+  recEnd(!!rec&&rec.mode==="rec"); $("rev").hidden=true; if($("spchk"))$("spchk").hidden=true;
   $("fb").innerHTML=`<div class="sample">${q.right}</div><div class="two"><button class="ghost" id="again">Later herhalen</button><button class="btn" id="got">Gelukt</button></div>`;
   const go=ok=>{record(ok);pos++;show()};
   $("again").onclick=()=>go(false); $("got").onclick=()=>go(true);
@@ -1060,8 +1250,13 @@ function saveDocx(items){
 }
 const docBtn=`<button class="ghost wide" id="docx" style="margin-bottom:10px">Download als Word-bestand</button>`;
 // Writing is graded by Claude on the server (api/check.js)
-async function nakijken(tasks){
-  const r=await fetch("/api/check",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({tasks})});
+// Mistakes from the learner's own texts and spoken answers, practised later in "Mijn fouten"
+function keepErrs(errs){
+  errs.forEach(e=>{if(e&&e.wrong&&e.right&&e.wrong!==e.right&&String(e.wrong).length<90&&String(e.right).length<90&&!S.errs.some(x=>x.r===e.right))S.errs.unshift({w:String(e.wrong),r:String(e.right),y:String(e.why||"")})});
+  S.errs=S.errs.slice(0,40);
+}
+async function nakijken(tasks,part){
+  const r=await fetch("/api/check",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(part?{part,tasks}:{tasks})});
   const j=await r.json().catch(()=>({}));
   if(!r.ok||!Array.isArray(j.tasks))throw{code:j.error||"failed"};
   return j.tasks;
@@ -1083,8 +1278,7 @@ async function check(q){
     const res=(await nakijken([{task,form,text}]))[0];
     const errs=Array.isArray(res.errors)?res.errors:[];
     btn.hidden=true; const ok=!!res.passed;
-    errs.forEach(e=>{if(e&&e.wrong&&e.right&&e.wrong!==e.right&&String(e.wrong).length<90&&String(e.right).length<90&&!S.errs.some(x=>x.r===e.right))S.errs.unshift({w:String(e.wrong),r:String(e.right),y:String(e.why||"")})});
-    S.errs=S.errs.slice(0,40); record(ok);
+    keepErrs(errs); record(ok);
     $("fb").innerHTML=`<b class="${ok?"good":"bad"}">${ok?"Goed zo! Voldoende":"Nog niet voldoende"}</b>
       <p class="note">${esc(res.verdict)}</p>
       ${errs.length?`<p class="ask">Fouten: ${errs.length}</p><ul class="errs">${errs.map(e=>`<li><s>${esc(e.wrong)}</s> <strong>${esc(e.right)}</strong><span>${esc(e.why)}</span></li>`).join("")}</ul>`:`<p class="note">Geen fouten gevonden.</p>`}
@@ -1117,23 +1311,47 @@ async function examWrite(){
     const T=await nakijken(A.map(a=>({task:a.q.big+(a.q.open?" "+a.q.open:""),form:a.form,text:a.text})));
     let good=0;
     const body=A.map((a,i)=>{const t=T[i]||{},errs=Array.isArray(t.errors)?t.errors:[];if(t.passed)good++;
-      errs.forEach(e=>{if(e&&e.wrong&&e.right&&e.wrong!==e.right&&String(e.wrong).length<90&&String(e.right).length<90&&!S.errs.some(x=>x.r===e.right))S.errs.unshift({w:String(e.wrong),r:String(e.right),y:String(e.why||"")})});
+      keepErrs(errs);
       return`<h2>Opdracht ${i+1}: <span class="${t.passed?"good":"bad"}">${t.passed?"voldoende":"nog niet voldoende"}</span></h2><p class="note">${a.q.big}</p><p class="note">${esc(t.verdict)}</p>
         ${errs.length?`<ul class="errs">${errs.map(e=>`<li><s>${esc(e.wrong)}</s> <strong>${esc(e.right)}</strong><span>${esc(e.why)}</span></li>`).join("")}</ul>`:""}
         ${own(a)}<p class="ask">Verbeterde tekst</p><div class="sample">${esc(t.corrected)}</div>
         <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(a.q.right)}</div></details>`}).join("");
-    S.errs=S.errs.slice(0,40); save();
+    save();
     card.innerHTML=`<div class="done"><p class="ask">${cur.t}: uitslag</p><div class="big">${good}/${A.length}</div><p class="ru">opdrachten voldoende</p></div>`+body+foot; bind();
   }catch(e){
     const c=e&&e.code;
     fallback(c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je teksten met de voorbeelden.":c==="rate_limited"?"Te veel verzoeken achter elkaar. Probeer het over een minuut opnieuw.":"Het nakijken is niet gelukt. Vergelijk je teksten met de voorbeelden.");
   }
 }
+async function examSpeak(){
+  const A=cur.ans, card=$("card");
+  const foot=`<div class="two"><button class="ghost" id="tohome">Alle onderdelen</button><button class="btn" id="more">Nog een keer</button></div>`;
+  const bind=()=>{$("more").onclick=()=>build(cur.id,cur);$("tohome").onclick=home};
+  const own=a=>`<p class="ask">Jouw antwoord</p>${a.url?`<audio controls src="${a.url}"></audio>`:""}${a.text||!a.url?`<div class="sample">${esc(a.text)||"(niets verstaan)"}</div>`:""}`;
+  const plain=msg=>{card.innerHTML=`<p class="note">${msg}</p>`+A.map((a,i)=>`<h2>Vraag ${i+1}</h2><p class="note">${a.q.big}</p>${own(a)}<p class="ask">Voorbeeld</p><div class="sample">${esc(a.q.right)}</div>`).join("")+foot;bind()};
+  if(!A.length){card.innerHTML=`<p class="note">Je hebt geen vraag beantwoord.</p>`+foot;return bind()}
+  if(!A.some(a=>a.text))return plain("Luister naar je antwoorden en vergelijk ze met de voorbeelden.");
+  card.innerHTML=`<p class="note">Ik kijk je ${A.length} antwoorden na… Dit duurt een of twee minuten.</p>`;
+  try{
+    const T=await nakijken(A.map(a=>({task:spoken(a.q.big),text:a.text})),"sp");
+    let good=0;
+    const body=A.map((a,i)=>{const t=T[i]||{},errs=Array.isArray(t.errors)?t.errors:[];if(t.passed)good++;keepErrs(errs);
+      return`<h2>Vraag ${i+1}: <span class="${t.passed?"good":"bad"}">${t.passed?"voldoende":"nog niet voldoende"}</span></h2><p class="note">${a.q.big}</p><p class="note">${esc(t.verdict)}</p>
+        ${errs.length?`<ul class="errs">${errs.map(e=>`<li><s>${esc(e.wrong)}</s> <strong>${esc(e.right)}</strong><span>${esc(e.why)}</span></li>`).join("")}</ul>`:""}
+        ${own(a)}${a.text?`<p class="ask">Zo zeg je het goed</p><div class="sample">${esc(t.corrected)}</div>`:""}
+        <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(a.q.right)}</div></details>`}).join("");
+    save();
+    card.innerHTML=`<div class="done"><p class="ask">${cur.t}: uitslag</p><div class="big">${good}/${A.length}</div><p class="ru">antwoorden voldoende${A.length<queue.length?`; ${queue.length-A.length} van de ${queue.length} vragen niet beantwoord`:""}</p></div>`+body+foot; bind();
+  }catch(e){
+    const c=e&&e.code;
+    plain(c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je antwoorden met de voorbeelden.":c==="rate_limited"?"Te veel verzoeken achter elkaar. Probeer het over een minuut opnieuw.":"Het nakijken is niet gelukt. Vergelijk je antwoorden met de voorbeelden.");
+  }
+}
 async function gen(){
   const b=$("gen"),m=$("genmsg"); b.disabled=true;
   m.textContent="Bezig met nieuwe teksten maken… Dit duurt ongeveer een minuut.";
+  // Inside Claude the page asks Claude itself; on the website it asks api/generate.js
   let sample=null; try{sample=window.claude?await window.claude.use("sample"):null}catch(e){}
-  if(!sample){m.textContent="Nieuwe teksten maken kan hier niet.";return}
   const topics=shuffle(["de huisarts","de gemeente","school","werk","de supermarkt","het openbaar vervoer","de woning en de buren","de bibliotheek","sport","de tandarts","de bank","een cursus","het weer","een pakket ophalen","een feest","de apotheek","een sollicitatie","de kinderopvang"]).slice(0,5).join(", ");
   const prompt=`Maak nieuw oefenmateriaal voor het Nederlandse inburgeringsexamen, niveau A2 (Lezen en Luisteren). Gebruik eenvoudige, correcte taal op A2-niveau. Onderwerpen: ${topics}.
 Geef ALLEEN een JSON-object terug, zonder markdown:
@@ -1142,7 +1360,9 @@ Geef ALLEEN een JSON-object terug, zonder markdown:
 Elk goed antwoord moet duidelijk uit de tekst volgen. De foute antwoorden klinken logisch maar zijn fout. Houd de antwoorden kort.`;
   const valid=q=>q&&q.q&&q.right&&Array.isArray(q.wrong)&&q.wrong.length>=2&&new Set([q.right,q.wrong[0],q.wrong[1]]).size===3;
   try{
-    const res=await sample.json(prompt,{cache:false});
+    let res;
+    if(sample)res=await sample.json(prompt,{cache:false});
+    else{const r=await fetch("/api/generate",{method:"POST"}),j=await r.json().catch(()=>({}));if(!r.ok)throw{code:j.error||"failed"};res=j}
     S.gen=S.gen||{lz:[],ls:[]};
     (res.lezen||[]).forEach(t=>{const qs=(t.questions||[]).filter(valid).map(q=>[esc(q.q),esc(q.right),esc(q.wrong[0]),esc(q.wrong[1])]);if(t.text&&qs.length)S.gen.lz.push([esc(t.text),qs])});
     (res.luisteren||[]).forEach(t=>{if(t&&t.say&&valid(t))S.gen.ls.push([String(t.say),esc(t.q),esc(t.right),esc(t.wrong[0]),esc(t.wrong[1])])});
@@ -1150,7 +1370,7 @@ Elk goed antwoord moet duidelijk uit de tekst volgen. De foute antwoorden klinke
     m.textContent=n?`Klaar: ${n} nieuwe vragen bij Lezen en Luisteren.`:"Er kwam geen bruikbare tekst terug. Probeer het opnieuw.";
   }catch(e){
     const c=e&&e.code;
-    m.textContent=c==="not_granted"?"Je gaf geen toestemming.":c==="rate_limited"?"Te veel verzoeken. Wacht een minuut.":"Het is niet gelukt. Probeer het later opnieuw.";
+    m.textContent=c==="not_granted"?"Je gaf geen toestemming.":c==="not_configured"?"Nieuwe teksten maken is nog niet ingesteld.":c==="rate_limited"?"Te veel verzoeken. Wacht een minuut.":"Het is niet gelukt. Probeer het later opnieuw.";
   }
   b.disabled=false;
 }
@@ -1158,9 +1378,17 @@ function finish(){
   complete();
   head(); $("bar").style.width="100%"; $("mode").hidden=true; clock(0); hush();
   if(cur.exam&&cur.write)return examWrite();
+  if(cur.exam&&cur.speak)return examSpeak();
   if(cur.exam){
-    const pc=total?Math.round(right/total*100):0;
+    const pc=total?Math.round(right/total*100):0, need=Math.ceil(total*PASS), pass=right>=need, by={};
+    // KNM: score per theme, weakest first
+    cur.log.forEach(x=>{const t=x.l.replace(/^KNM: /,""),o=by[t]||(by[t]={r:0,n:0});o.n++;if(x.ok)o.r++});
+    const themes=Object.keys(by).length>1?Object.keys(by).sort((a,b)=>by[a].r/by[a].n-by[b].r/by[b].n)
+      .map(t=>`<li>${t}<span>${by[t].r} van ${by[t].n} goed</span></li>`).join(""):"";
     $("card").innerHTML=`<div class="done"><p class="ask">${cur.t}: uitslag</p><div class="big">${pc}%</div><p class="ru">${right} van ${total} goed</p></div>
+      <p><b class="${pass?"good":"bad"}">${pass?"Geslaagd":"Nog niet geslaagd"}</b></p>
+      <p class="note">Op het examen heb je ongeveer 7 van de 10 vragen goed nodig. Hier is dat ${need} van ${total}.</p>
+      ${themes?`<p class="ask">Per thema</p><ul class="errs">${themes}</ul>`:""}${duoLink}
       ${cur.miss.length?`<p class="ask">Fout beantwoord</p><ul class="errs">${cur.miss.slice(0,20).map(m=>`<li>${m.q}<span>Goed is: ${m.r}</span></li>`).join("")}</ul>`:""}
       <div class="two"><button class="ghost" id="tohome">Alle onderdelen</button><button class="btn" id="more">Nog een keer</button></div>`;
     $("more").onclick=()=>build(cur.id,cur); $("tohome").onclick=home; return;
@@ -1512,7 +1740,7 @@ $("back").onclick=home; $("sback").onclick=home; $("lback").onclick=home; $("gen
 $("artbtn").onclick=()=>{$("zoom").hidden=false}; $("zoom").onclick=()=>{$("zoom").hidden=true};
 document.addEventListener("keydown",e=>{if(e.key==="Escape")$("zoom").hidden=true});
 // Generating new texts needs Claude; hide the button where it can't work
-if(!window.claude){$("gen").hidden=true;$("genmsg").hidden=true}$("mode").onclick=()=>{S.typing=!S.typing;save();if(!answered)show();else head()};
+$("mode").onclick=()=>{S.typing=!S.typing;save();if(!answered)show();else head()};
 document.addEventListener("keydown",e=>{
   if($("play").hidden)return;
   if(e.key==="Enter"&&$("inp")&&!answered){e.preventDefault();grade($("inp").value.trim().toLowerCase())}
