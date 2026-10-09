@@ -23,3 +23,8 @@ Ze zijn verkleind en gecomprimeerd voor de app (max. 1000 px).
 | `molen.jpg` | [De molen bij Wijk bij Duurstede, SK-C-211.jpg](https://commons.wikimedia.org/wiki/File:De_molen_bij_Wijk_bij_Duurstede,_SK-C-211.jpg) | Public domain |
 
 `spinoza.jpg` is bijgesneden: de lijst en de kleurenkaart van het museum zijn weggehaald.
+
+`t/` holds small square details (120 px) of these paintings, used as pictures in the lists on the home screen:
+Lezen = brief, Luisteren = steen, Schrijven = erasmus, Spreken = leyster, KNM = oranje, the four grammar rounds =
+details of mondriaan, Woordenschat = melkmeisje, Boekenkast = spinoza, Luisteren en kijken = avercamp,
+Mijn woorden = parel, Mijn zwakke punten = molen, Mijn fouten = vangogh.

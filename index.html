@@ -51,6 +51,15 @@ h1{position:absolute;left:16px;bottom:12px;z-index:1;margin:0;font-size:28px;fon
 .lab{color:var(--soft)}
 .lab b{color:var(--ink);font-weight:600}
 .label .nl{margin-top:8px;color:var(--ink)}
+/* wat zie je op het schilderij: woorden om te horen en te bewaren, en zelf vertellen */
+.seen{margin-top:14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.chip{background:var(--bg);color:var(--blue);border:1.5px solid var(--line);border-radius:3px;padding:6px 12px;font-size:16px;font-weight:600}
+.chip.on{background:var(--blue);border-color:var(--blue);color:var(--on)}
+.wm{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:10px 0 0;font-size:16px}
+.wm .ghost{flex:none;padding:6px 12px;font-size:15px}
+.wm .ghost:disabled{opacity:.5;cursor:default}
+.seen>.ghost{margin-top:12px}
 .zoom{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 16px calc(20px + env(safe-area-inset-bottom,0px));background:#060C1E;color:#D9E2F5;text-align:center}
 .zoom img{max-width:100%;max-height:72vh;object-fit:contain}
 .zoom p{max-width:440px;margin:14px 0 0;font-size:15px}
@@ -88,6 +97,7 @@ h2::before{content:"";flex:none;width:9px;height:9px;background:var(--blue);tran
 .list{display:grid;margin-top:8px;border-top:1px solid var(--line)}
 .it{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:11px 0 12px;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);color:var(--ink)}
 .it>span{flex:1;min-width:0}
+.it img{flex:none;width:52px;height:52px;object-fit:cover;border-radius:2px;background:var(--surface)}
 .it::after{content:"›";flex:none;font-size:26px;line-height:1;margin-top:-3px;color:var(--blue)}
 .it .th{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
 .it b{font-size:17px;font-weight:600;line-height:1.3}
@@ -170,6 +180,7 @@ textarea{display:block;width:100%;font-size:17px;line-height:1.5;padding:12px;ma
 .pics.n2{grid-template-columns:1fr 1fr} .pics.n3{grid-template-columns:1fr 1fr 1fr}
 .pics figure{position:relative;margin:0;aspect-ratio:4/3;background:var(--surface);border:1px solid var(--line)}
 .pics.n1 figure{aspect-ratio:16/9}
+.pics figure.art1{aspect-ratio:4/3;background:#060C1E} .pics .art1 img{object-fit:contain}
 .pics button{display:block;width:100%;height:100%;padding:0;border:0;background:none}
 .pics img{display:block;width:100%;height:100%;object-fit:cover}
 .pics span{pointer-events:none;position:absolute;left:0;top:0;background:var(--blue);color:var(--on);font-weight:700;font-size:14px;line-height:1;padding:5px 7px}
@@ -266,7 +277,8 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
   .streak{top:24px;right:40px;width:78px;height:78px;font-size:10.5px}
   .streak b{font-size:27px}
   #label{display:flex;align-items:baseline;gap:40px}
-  #label .lab{flex:0 0 340px} #label .nl{flex:1;margin:0}
+  #label{flex-wrap:wrap} #label .lab{flex:0 0 340px} #label .nl{flex:1;margin:0} #label .seen{flex:0 0 100%;margin-top:4px}
+  .seen>.ghost{width:auto;padding:9px 20px}
   .today{padding:26px 32px 24px}
   .steps{grid-template-columns:repeat(auto-fit,minmax(0,1fr))}
   #menu .list{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));column-gap:40px}
@@ -1172,66 +1184,114 @@ function head(){
 // y = vertical focus (%) for the header crop.
 const ART=[
  {f:"melkmeisje",y:24,a:"Johannes Vermeer",t:"Het melkmeisje",d:"ca. 1660",m:"Rijksmuseum, Amsterdam",
-  nl:"Een dienstmeid schenkt melk in een kom. Op tafel ligt brood."},
+  nl:"Een dienstmeid schenkt melk in een kom. Op tafel ligt brood.",
+  w:"de kan=кувшин|het brood=хлеб|de mand=корзина|het raam=окно",
+  z:"Ik zie een vrouw in een keuken. Ze schenkt melk uit een kan. Op de tafel liggen brood en een mand. Het licht komt door het raam."},
  {f:"oranje",y:36,a:"Adriaen Thomasz. Key",t:"Willem van Oranje",d:"ca. 1579",m:"Rijksmuseum, Amsterdam",
-  nl:"Willem van Oranje heet de Vader des Vaderlands. Het Wilhelmus, het volkslied, gaat over hem."},
+  nl:"Willem van Oranje heet de Vader des Vaderlands. Het Wilhelmus, het volkslied, gaat over hem.",
+  w:"de baard=борода|de snor=усы|de kraag=воротник|de muts=шапка",
+  z:"Ik zie een man met een baard en een snor. Hij draagt een witte kraag en een zwarte muts. Hij kijkt serieus."},
  {f:"avercamp",y:55,a:"Hendrick Avercamp",t:"Winterlandschap met schaatsers",d:"ca. 1608",m:"Rijksmuseum, Amsterdam",
-  nl:"In de winter schaatsen jong en oud op het ijs. Schaatsen is in Nederland nog steeds populair."},
+  nl:"In de winter schaatsen jong en oud op het ijs. Schaatsen is in Nederland nog steeds populair.",
+  w:"het ijs=лёд|de schaats=конёк|de kerk=церковь|de boom=дерево",
+  z:"Het is winter. Veel mensen schaatsen op het ijs. Links staat een kerk. De bomen hebben geen bladeren."},
  {f:"vangogh",y:40,a:"Vincent van Gogh",t:"Zelfportret",d:"1887",m:"Rijksmuseum, Amsterdam",
-  nl:"Vincent van Gogh kwam uit Brabant. Hij maakte meer dan 800 schilderijen."},
+  nl:"Vincent van Gogh kwam uit Brabant. Hij maakte meer dan 800 schilderijen.",
+  w:"de hoed=шляпа|de baard=борода|de jas=пиджак, куртка|het gezicht=лицо",
+  z:"Ik zie een man met een rode baard. Hij draagt een hoed en een jas. De achtergrond is blauw. Hij kijkt naar mij."},
  {f:"delft",y:60,a:"Johannes Vermeer",t:"Gezicht op Delft",d:"ca. 1660–1661",m:"Mauritshuis, Den Haag",
-  nl:"Dit is de stad Delft. Delft is bekend om het blauwe aardewerk: Delfts blauw."},
+  nl:"Dit is de stad Delft. Delft is bekend om het blauwe aardewerk: Delfts blauw.",
+  w:"de stad=город|het water=вода|de wolk=облако|de boot=лодка",
+  z:"Ik zie een stad aan het water. In de lucht zijn veel wolken. Op het water liggen boten. Links staan een paar mensen."},
  {f:"leyster",y:28,a:"Judith Leyster",t:"Zelfportret",d:"ca. 1630",m:"National Gallery of Art, Washington",
-  nl:"Judith Leyster was een schilder uit Haarlem. In 1633 werd ze lid van het schildersgilde."},
+  nl:"Judith Leyster was een schilder uit Haarlem. In 1633 werd ze lid van het schildersgilde.",
+  w:"het penseel=кисть|de viool=скрипка|de kraag=воротник|de stoel=стул",
+  z:"Ik zie een vrouw met een penseel in haar hand. Ze lacht en kijkt naar mij. Achter haar staat een schilderij van een man met een viool."},
  {f:"steen",y:50,a:"Jan Steen",t:"Het vrolijke huisgezin",d:"1668",m:"Rijksmuseum, Amsterdam",
-  nl:"Iedereen zingt, drinkt en maakt muziek. Een rommelig huis noem je ‘een huishouden van Jan Steen’."},
+  nl:"Iedereen zingt, drinkt en maakt muziek. Een rommelig huis noem je ‘een huishouden van Jan Steen’.",
+  w:"de familie=семья|de tafel=стол|de hond=собака|het raam=окно",
+  z:"Ik zie een grote familie in een kamer. Iedereen zingt of maakt muziek. Op de tafel staat eten. Er is ook een hond."},
  {f:"erasmus",y:30,a:"Hans Holbein de Jonge",t:"Erasmus",d:"1523",m:"Louvre, Parijs",
-  nl:"Erasmus kwam uit Rotterdam. De Erasmusbrug en de Erasmus Universiteit zijn naar hem genoemd."},
+  nl:"Erasmus kwam uit Rotterdam. De Erasmusbrug en de Erasmus Universiteit zijn naar hem genoemd.",
+  w:"het boek=книга|de pen=перо, ручка|de muts=шапка|de ring=кольцо",
+  z:"Ik zie een man die schrijft. Hij draagt een zwarte muts. Hij schrijft met een pen. Hij heeft een ring aan zijn vinger."},
  {f:"nachtwacht",y:60,a:"Rembrandt van Rijn",t:"De Nachtwacht",d:"1642",m:"Rijksmuseum, Amsterdam",
-  nl:"De schutters van Amsterdam gaan op pad. Het schilderij is bijna vier meter hoog."},
+  nl:"De schutters van Amsterdam gaan op pad. Het schilderij is bijna vier meter hoog.",
+  w:"de hoed=шляпа|de trommel=барабан|het meisje=девочка|het geweer=ружьё",
+  z:"Ik zie veel mannen met hoeden en geweren. In het midden lopen twee mannen naar voren. Links staat een meisje. Rechts staat een man met een trommel."},
  {f:"mondriaan",y:35,a:"Piet Mondriaan",t:"Compositie met rood, geel, blauw en zwart",d:"1921",m:"Kunstmuseum Den Haag",
-  nl:"Mondriaan kwam uit Amersfoort. Hij werd beroemd met rechte lijnen en rood, geel en blauw."},
+  nl:"Mondriaan kwam uit Amersfoort. Hij werd beroemd met rechte lijnen en rood, geel en blauw.",
+  w:"rood=красный|geel=жёлтый|blauw=синий|de lijn=линия",
+  z:"Ik zie rechte zwarte lijnen. Er is een groot rood vierkant. Ik zie ook geel, blauw en wit. Er staan geen mensen op het schilderij."},
  {f:"brief",y:10,a:"Johannes Vermeer",t:"Brieflezende vrouw in het blauw",d:"ca. 1663",m:"Rijksmuseum, Amsterdam",
-  nl:"Een vrouw leest een brief. Van wie is de brief? Dat weten we niet."},
+  nl:"Een vrouw leest een brief. Van wie is de brief? Dat weten we niet.",
+  w:"de brief=письмо|de kaart=карта|de stoel=стул|de muur=стена",
+  z:"Ik zie een vrouw in een blauwe jas. Ze leest een brief. Aan de muur hangt een kaart. In de kamer staan twee stoelen."},
  {f:"spinoza",y:32,a:"Onbekende schilder",t:"Baruch de Spinoza",d:"ca. 1665",m:"Herzog August Bibliothek, Wolfenbüttel",
-  nl:"Spinoza was een filosoof uit Amsterdam. Hij schreef over God, de natuur en vrijheid."},
+  nl:"Spinoza was een filosoof uit Amsterdam. Hij schreef over God, de natuur en vrijheid.",
+  w:"het haar=волосы|de kraag=воротник|het gezicht=лицо|de ogen=глаза",
+  z:"Ik zie een man met lang, donker haar. Hij draagt zwarte kleren en een witte kraag. Hij kijkt rustig. De achtergrond is donker."},
  {f:"molen",y:45,a:"Jacob van Ruisdael",t:"De molen bij Wijk bij Duurstede",d:"ca. 1670",m:"Rijksmuseum, Amsterdam",
-  nl:"Molens horen bij Nederland. Er staan nog meer dan duizend molens."},
+  nl:"Molens horen bij Nederland. Er staan nog meer dan duizend molens.",
+  w:"de molen=мельница|het water=вода|de wolk=облако|de boot=лодка",
+  z:"Ik zie een molen aan het water. Er zijn veel donkere wolken. Links is een boot. Het land is plat."},
  {f:"rembrandt",y:30,a:"Rembrandt van Rijn",t:"Zelfportret als de apostel Paulus",d:"1661",m:"Rijksmuseum, Amsterdam",
-  nl:"Dit is Rembrandt zelf. Hij woonde in Amsterdam. Zijn huis is nu een museum."},
+  nl:"Dit is Rembrandt zelf. Hij woonde in Amsterdam. Zijn huis is nu een museum.",
+  w:"de tulband=тюрбан|het boek=книга|het gezicht=лицо|de jas=пиджак, куртка",
+  z:"Ik zie een oude man met een tulband op zijn hoofd. Hij heeft een boek in zijn hand. Hij kijkt naar mij. Het schilderij is donker."},
  {f:"aardappeleters",y:40,a:"Vincent van Gogh",t:"De aardappeleters",d:"1885",m:"Van Gogh Museum, Amsterdam",
-  nl:"Een arme familie eet aardappelen. Ze hebben de hele dag op het land gewerkt."},
+  nl:"Een arme familie eet aardappelen. Ze hebben de hele dag op het land gewerkt.",
+  w:"de familie=семья|de lamp=лампа|de aardappel=картофелина|de tafel=стол",
+  z:"Ik zie een familie aan tafel. Ze eten aardappels. Boven de tafel hangt een lamp. Het is avond en het is donker."},
  {f:"parel",y:45,a:"Johannes Vermeer",t:"Meisje met de parel",d:"ca. 1665",m:"Mauritshuis, Den Haag",
-  nl:"Niemand weet wie dit meisje is. Ze draagt een blauwe tulband en een grote parel."}
+  nl:"Niemand weet wie dit meisje is. Ze draagt een blauwe tulband en een grote parel.",
+  w:"de parel=жемчужина|de tulband=тюрбан|de kraag=воротник|de mond=рот",
+  z:"Ik zie een meisje met een blauwe tulband. Ze draagt een grote parel. Ze kijkt over haar schouder naar mij. De achtergrond is zwart."}
 ];
 function paint(){
   const p=ART[today()%ART.length], src="/art/"+p.f+".jpg";
   if(!$("artimg").src.endsWith(src)){$("artimg").src=src;$("zimg").src=src}
   $("artimg").style.objectPosition="50% "+p.y+"%";
-  $("label").innerHTML=`<p class="lab"><b>${p.a}</b><br>${p.t}, ${p.d} · ${p.m}</p><p class="nl">${p.nl}</p>`;
+  const W=(p.w||"").split("|").filter(Boolean).map(x=>x.split("="));
+  $("label").innerHTML=`<p class="lab"><b>${p.a}</b><br>${p.t}, ${p.d} · ${p.m}</p><p class="nl">${p.nl}</p>`
+    +(W.length?`<div class="seen"><p class="ask">Wat zie je?</p><div class="chips">${W.map((x,i)=>`<button class="chip" data-i="${i}">${x[0]}</button>`).join("")}</div>
+      <p class="wm" id="wm" hidden></p><button class="ghost wide" id="vertel">Vertel over het schilderij</button></div>`:"");
   $("zcap").innerHTML=`<b>${p.a}</b><br>${p.t}, ${p.d} · ${p.m}`;
+  // tap a word: hear it, see the meaning, keep it in Mijn woorden (practised like the words from the books)
+  document.querySelectorAll("#label .chip").forEach(b=>b.onclick=()=>{
+    const[w,ru]=W[b.dataset.i],has=()=>(S.words||[]).find(y=>y.w===w);
+    document.querySelectorAll("#label .chip").forEach(c=>c.classList.toggle("on",c===b)); speak(w);
+    const m=$("wm"); m.hidden=false; m.innerHTML=`<span><b>${w}</b> — ${ru}</span><button class="ghost" id="wkeep">${has()?"Bewaard":"Bewaar"}</button>`;
+    $("wkeep").disabled=!!has();
+    $("wkeep").onclick=()=>{if(!has()){S.words=S.words||[];S.words.unshift({w,ru,p:/^(de|het) /.test(w)?"n":"a",s:p.t+" ("+p.a+")",f:[]});save()}
+      $("wkeep").textContent="Bewaard";$("wkeep").disabled=true};
+  });
+  if($("vertel"))$("vertel").onclick=()=>{
+    const q={sec:"kz",k:"kz|"+p.f,ord:0,type:"reveal",label:"Wat zie je?",big:"Kijk naar het schilderij. Wat zie je? Vertel het in drie of vier zinnen.",sub:"",right:p.z,art:"/art/"+p.f+".jpg"};
+    build("custom",{id:"custom",t:"Wat zie je?",n:1,pool:()=>[q]})};
 }
-// A list row: the whole row is the button, with › on the right. o.n = count or status on the right, o.bar = progress in %, o.pass = show the 70% line
+// A list row: the whole row is the button, with › on the right. o.n = count or status on the right, o.bar = progress in %, o.pass = show the 70% line,
+// o.img = a detail of a painting on the left (art/t/, see art/CREDITS.md)
 function itHTML(attr,t,d,o={}){
-  return`<button class="it" ${attr}><span><span class="th"><b>${t}</b>${o.n!=null?`<small>${o.n}</small>`:""}</span>${d?`<span class="d">${d}</span>`:""}${o.bar!=null?`<span class="bar${o.pass?" pass":""}"><i style="width:${o.bar}%"></i></span>`:""}</span></button>`;
+  return`<button class="it" ${attr}>${o.img?`<img src="/art/t/${o.img}.jpg" alt="" loading="lazy">`:""}<span><span class="th"><b>${t}</b>${o.n!=null?`<small>${o.n}</small>`:""}</span>${d?`<span class="d">${d}</span>`:""}${o.bar!=null?`<span class="bar${o.pass?" pass":""}"><i style="width:${o.bar}%"></i></span>`:""}</span></button>`;
 }
 function home(){
   paint();
   $("play").hidden=true;$("stats").hidden=true;$("lib").hidden=true;$("read").hidden=true;$("media").hidden=true;stopMedia();closePop();$("home").hidden=false;head();clock(0);hush();planId=null;drawPlan();
   const sec=id=>SEC.find(x=>x.id===id);
   const row=id=>{const s=sec(id),p=ITEMS.filter(x=>x.sec===id),n=p.filter(x=>S.items[x.k]).length;
-    return itHTML(`data-s="${id}"`,s.t,s.s,{n:n+" van "+p.length,bar:n?n/p.length*100:null})};
+    return itHTML(`data-s="${id}"`,s.t,s.s,{n:n+" van "+p.length,bar:n?n/p.length*100:null,img:id})};
   // exam parts: how ready you are (from the proefexamens, else from practice); tap to practise
-  const part=k=>{const r=ready(k);return itHTML(`data-s="${k}"`,PART[k],r.t,{n:`<span class="${r.cls}">${r.st}</span>`,bar:r.pc,pass:1})};
+  const part=k=>{const r=ready(k);return itHTML(`data-s="${k}"`,PART[k],r.t,{n:`<span class="${r.cls}">${r.st}</span>`,bar:r.pc,pass:1,img:k})};
   const lb=Object.values(S.bk||{}).filter(b=>b.t).sort((a,b)=>b.at-a.at)[0];
   $("menu").innerHTML=`<h2>Naar het examen</h2><p class="sub">Ben je klaar? Tik op een onderdeel om te oefenen. De streep is ${PASS*100}%: zoveel heb je nodig.</p><div class="list">${["lz","ls","wr","sp","knm"].map(part).join("")}</div>`
     +`<h3 class="lh">Proefexamen</h3><p class="sub">Met tijd, zoals op het echte examen. Zo zie je of je klaar bent.</p><div class="exb">${["lz","ls","wr","sp","knm"].map(id=>`<button class="ghost" data-e="${id}">${PART[id]}<small>${EX[id].min} min</small></button>`).join("")}</div>`
     +`<h2>Grammatica en woorden</h2><p class="sub">Korte rondes van 10 vragen. Dit helpt bij alle onderdelen.</p><div class="list">${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`;
-  $("books").innerHTML=itHTML(`data-x="books"`,"Boekenkast",lb?`Je leest nu: ${esc(lb.t)}, blz. ${lb.p+1}`:"Verhalen en je eigen e-books. Tik op een woord voor de betekenis.")
-    +itHTML(`data-x="media"`,"Luisteren en kijken","Echt Nederlands: nieuws, video's en podcasts.")
-    +((S.words||[]).length?itHTML(`data-x="words"`,"Mijn woorden","Oefen de woorden die je bij het lezen hebt bewaard.",{n:S.words.length}):"");
-  $("mine").innerHTML=itHTML(`data-x="stats"`,"Mijn zwakke punten","Zie waar je de meeste fouten maakt en oefen precies dat.")
-    +((S.errs||[]).length?itHTML(`data-x="errs"`,"Mijn fouten","Oefen met fouten uit je eigen teksten en antwoorden.",{n:S.errs.length}):"");
+  $("books").innerHTML=itHTML(`data-x="books"`,"Boekenkast",lb?`Je leest nu: ${esc(lb.t)}, blz. ${lb.p+1}`:"Verhalen en je eigen e-books. Tik op een woord voor de betekenis.",{img:"books"})
+    +itHTML(`data-x="media"`,"Luisteren en kijken","Echt Nederlands: nieuws, video's en podcasts.",{img:"media"})
+    +((S.words||[]).length?itHTML(`data-x="words"`,"Mijn woorden","Oefen de woorden die je bij het lezen hebt bewaard.",{n:S.words.length,img:"words"}):"");
+  $("mine").innerHTML=itHTML(`data-x="stats"`,"Mijn zwakke punten","Zie waar je de meeste fouten maakt en oefen precies dat.",{img:"stats"})
+    +((S.errs||[]).length?itHTML(`data-x="errs"`,"Mijn fouten","Oefen met fouten uit je eigen teksten en antwoorden.",{n:S.errs.length,img:"errs"}):"");
   document.querySelectorAll("#menu button,#books button,#mine button").forEach(b=>b.onclick=()=>{const d=b.dataset;
     if(d.s)build(d.s);
     else if(d.e)startExam(d.e);
@@ -1333,6 +1393,7 @@ function show(){
   let h=`<p class="ask">${q.label}</p>`;
   if(q.text)h+=docHTML(q.text);
   if(q.pics)h+=picsHTML(q.pics);
+  if(q.art)h+=`<div class="pics n1"><figure class="art1"><button data-pic="${q.art}" aria-label="Het schilderij groot bekijken"><img src="${q.art}" alt=""></button></figure></div>`;
   if(q.say)h+=canSpeak?`<button class="btn wide" id="say">▶ Luister</button><p class="note">${cur.exam?"Je mag twee keer luisteren.":"Luister twee keer, zoals op het examen."}</p>`:`<p class="note">Audio werkt hier niet. Lees de tekst.</p><div class="sample">${esc(sayLines(q.say).map(l=>/^[AB]: /.test(q.say)?"– "+l:l).join("\n"))}</div>`;
   if(q.big)h+=`<div class="verb${q.big.length>22?" long":""}">${q.big}</div>`;
   h+=`<p class="ru">${q.sub||""}</p>`;

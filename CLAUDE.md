@@ -57,6 +57,13 @@ Only public-domain or CC0 images, downloaded from Wikimedia Commons into `art/`,
 resized to max 1000px and compressed (~100–150 KB each). Record every new image in
 `art/CREDITS.md`. To add one, append to `ART` with `f` (file name), `y` (vertical focus
 in % for the header crop), artist, title, year, museum and an A2 sentence. Check facts in the sentences; they double as KNM material.
+Each painting also has `w`, three or four things you can really see on it (`de kan=кувшин|…`), and `z`, an
+example answer of three or four A2 sentences describing it. Under the label they become "Wat zie je?": tap a
+word to hear it and keep it in Mijn woorden (`{w, ru, p, s, f}`), or "Vertel over het schilderij", a one-minute
+speaking task like Spreken (item key `kz|<f>`). Look at the painting before writing `w` and `z`.
+
+List rows on the home screen show a detail of a painting (`art/t/<id>.jpg`, 120 px, ~3 KB), chosen for its
+meaning (Erasmus writing for Schrijven, Mondriaan for grammar); the list is in `art/CREDITS.md`.
 
 ## Photos (Spreken)
 
