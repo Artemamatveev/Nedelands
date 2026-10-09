@@ -55,8 +55,12 @@ the key in chat). Without it the page falls back to showing the example answer.
 Built-in A2 stories live in `BOOKS` in `index.html` (original texts; check facts, they double
 as KNM material). Readers can add their own books (.epub without DRM, .txt, pasted text);
 those are stored only in IndexedDB (`books` list, `book:<id>` text), never in `ww-v1`.
-`S.bk` keeps reading positions and `S.words` the saved words (practised as `bw|…` items,
-also in the Mix). Tapping a word calls `api/translate.js` (`{word, sentence}` →
-`{lemma, article, pos, ru, lemma_ru, note}`, or `{sentence, mode:"sentence"}` → `{ru}`);
-answers are cached per device in `localStorage` `ww-tr`. Without the API key the popup falls
-back to the built-in `RU` dictionary.
+`S.bk` keeps reading positions and `S.words` the saved words (`{w, en, p, s, f}`; a few early
+ones have `ru` instead of `en`), practised as `bw|…` items, also in the Mix.
+
+Tapping a word looks it up in `dict/nl-en.txt`, a free offline Dutch–English dictionary built
+from English Wiktionary by `dict/build.py` (kaikki.org extract, CC BY-SA 4.0; keep the credit
+line on the Boekenkast screen). It is loaded once, when the shelf opens. The popup shows the
+lemma, de/het, plural or verb forms (perfectum aux from `V`), and finds separable verbs
+(bel … op → opbellen). Meanings are in English; the rest of the app stays in Russian.
+No Claude calls in the reader: whole sentences go to Google Translate via a link.

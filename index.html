@@ -190,11 +190,16 @@ h2.gap{margin-top:28px}
 .pop .ph b{font-size:22px;font-weight:700;word-break:break-word}
 .pop .say{flex:none;min-width:44px;min-height:40px;background:none;border:1.5px solid var(--blue);color:var(--blue);border-radius:3px;font-size:15px}
 .pop .pm{margin:0;color:var(--soft);font-size:14.5px}
-.pop .pt{margin:4px 0 2px;font-size:19px;font-weight:600;color:var(--blue)}
-.pop .pn{margin:0;color:var(--soft);font-size:14.5px}
-.pop .pa{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px}
+.pop .pt{margin:2px 0 0;font-size:16.5px;font-weight:500;color:var(--blue)}
+.pop .pe{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--line)}
+.pop .pe>div{flex:1;min-width:0}
+.pop .pe .ghost{flex:none;padding:6px 10px;font-size:15px}
+.pop .pe .ghost:disabled{opacity:.5}
+.pop .pw{margin:0;font-size:17px}
+.pop .pw b{font-weight:600}
+.pop .pa{padding-top:8px;border-top:1px solid var(--line)}
 .pop .pa .hint{margin:0}
-.pop .pz{margin:10px 0 0;padding-top:8px;border-top:1px solid var(--line);font-size:15.5px}
+
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -226,7 +231,7 @@ h2.gap{margin-top:28px}
   <div id="lib" hidden>
     <button class="back" id="lback"><span aria-hidden="true">←</span>Alle onderdelen</button>
     <h2>Boekenkast</h2>
-    <p class="sub">Lees verhalen en je eigen boeken. Tik op een woord: je ziet meteen de vertaling.</p>
+    <p class="sub">Lees verhalen en je eigen boeken. Tik op een woord: je ziet de betekenis in het Engels.</p>
     <div id="shelf"></div>
     <h2 class="gap">Boek toevoegen</h2>
     <p class="sub">Een e-book (.epub, zonder kopieerbeveiliging), een tekstbestand (.txt) of een tekst die je plakt. Het boek blijft op dit apparaat.</p>
@@ -240,6 +245,7 @@ h2.gap{margin-top:28px}
     <h2 class="gap">Mijn woorden</h2>
     <p class="sub" id="wsub"></p>
     <div id="wlist"></div>
+    <p class="note" style="margin-top:22px">Woordenboek: <a href="https://en.wiktionary.org">Wiktionary</a> (via <a href="https://kaikki.org">kaikki.org</a>), licentie <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p>
   </div>
   <div id="read" hidden>
     <div class="top"><button class="back" id="rback"><span aria-hidden="true">←</span>Boekenkast</button><span class="pg" id="pg"></span></div>
@@ -822,7 +828,7 @@ function drawPlan(){
 }
 function extras(){
   const lb=Object.values(S.bk||{}).filter(b=>b.t).sort((a,b)=>b.at-a.at)[0];
-  let h=`<h2>Boeken</h2><button class="sec" data-x="books"><b>Boekenkast</b><span>${lb?`Verder lezen: ${esc(lb.t)}, blz. ${lb.p+1}`:"Lees verhalen en je eigen e-books. Tik op een woord voor de vertaling."}</span></button>`;
+  let h=`<h2>Boeken</h2><button class="sec" data-x="books"><b>Boekenkast</b><span>${lb?`Verder lezen: ${esc(lb.t)}, blz. ${lb.p+1}`:"Lees verhalen en je eigen e-books. Tik op een woord voor de betekenis."}</span></button>`;
   h+="<h2>Proefexamen</h2>"+Object.keys(EX).map(k=>{const n=Math.min(EX[k].n,ITEMS.filter(x=>x.sec===k).length);
     return`<button class="sec" data-e="${k}"><b>${EX[k].t.replace("Proefexamen ","")}</b><span>${k==="wr"?"4 opdrachten, 40 minuten, alles wordt aan het eind nagekeken":n+" vragen, "+EX[k].min+" minuten, uitslag aan het eind"}</span></button>`}).join("");
   h+="<h2>Persoonlijk</h2>";
@@ -1123,6 +1129,7 @@ const kvSet=(k,v)=>idb.then(db=>new Promise((ok,no)=>{const t=db.transaction("kv
 async function library(){
   closePop();hush();
   if($("lib").hidden)window.scrollTo(0,0);
+  loadDict().catch(()=>{});
   $("home").hidden=true;$("read").hidden=true;$("lib").hidden=false;
   const mine=await kvGet("books")||[];
   const row=(b,own)=>{const r=S.bk[b.id];
@@ -1139,16 +1146,27 @@ function drawWords(){
   const W=S.words||[];
   $("wsub").textContent=W.length?`${W.length} ${W.length===1?"woord":"woorden"}. Je oefent ze ook in de Mix van de dag.`:"Nog geen woorden. Tik bij het lezen op een woord en dan op Bewaar.";
   $("wlist").innerHTML=(W.length?`<button class="btn wide" id="wprac">Oefen mijn woorden</button>`:"")
-    +`<ul class="errs">${W.map((x,i)=>`<li><button class="x" data-i="${i}">wis</button><b>${esc(x.w)}</b> — ${esc(x.ru)}<span>${esc(x.s)}</span></li>`).join("")}</ul>`;
+    +`<ul class="errs">${W.map((x,i)=>`<li><button class="x" data-i="${i}">wis</button><b>${esc(x.w)}</b> — ${esc(x.en||x.ru)}<span>${esc(x.s)}</span></li>`).join("")}</ul>`;
   if(W.length)$("wprac").onclick=practiseWords;
   document.querySelectorAll("#wlist .x").forEach(b=>b.onclick=()=>{S.words.splice(b.dataset.i,1);save();drawWords()});
 }
+// Wrong options in the same language as the answer: other saved words first, then common A2 words
+// (English meanings from the dictionary once it is loaded, Russian from RU for older saved words)
+const EN0="house; to work; the train; to buy; big; the street; to eat; tomorrow; the doctor; cheap; to wait; the key; to read; small; the shop; to pay".split("; ");
 function wordItems(){
   const W=S.words||[];
-  return W.map(x=>({sec:"bw",k:"bw|"+x.w,ord:0,type:"choice",label:"Wat betekent dit woord?",big:esc(x.w),sub:esc(x.s),right:esc(x.ru),
-    opts:()=>{const o=[...new Set(shuffle(W.map(y=>y.ru)).concat(shuffle(Object.values(RU))))].filter(r=>r!==x.ru).slice(0,3);return shuffle([x.ru,...o]).map(esc)}}));
+  return W.map(x=>{const en=!!x.en,t=x.en||x.ru;
+    return{sec:"bw",k:"bw|"+x.w,ord:0,type:"choice",label:"Wat betekent dit woord?",big:esc(x.w),sub:esc(x.s),right:esc(t),
+    opts:()=>{
+      let more=shuffle(Object.values(RU));
+      if(en&&!DICT)more=shuffle(EN0.slice());
+      if(en&&DICT){const c=shuffle(Object.keys(RU).map(k=>(DICT.L.get(k.replace(/^(de|het) /,""))||[])[0]).filter(Boolean));
+        more=c.filter(e=>e[0]===x.p).concat(c).map(e=>e[2].split("; ")[0])}
+      const o=[...new Set(shuffle(W.filter(y=>!!y.en===en).map(y=>y.en||y.ru)).concat(more))].filter(r=>r!==t).slice(0,3);
+      return shuffle([t,...o]).map(esc)}}});
 }
-function practiseWords(){
+async function practiseWords(){
+  try{await loadDict()}catch(e){}
   const d=today(),due=q=>{const it=S.items[q.k];return it?it.d-d:-1};
   build("custom",{id:"custom",t:"Mijn woorden",n:10,pool:()=>shuffle(wordItems()).sort((a,b)=>due(a)-due(b))});
 }
@@ -1270,19 +1288,54 @@ function turn(d){
   $("rnext").textContent=R.p<R.pages.length-1?"Volgende →":"Boek uit";
   window.scrollTo(0,0);
 }
-// Tap a word: translation in context from Claude (api/translate.js), cached on this device
-let trc={}; try{trc=JSON.parse(localStorage.getItem("ww-tr"))||{}}catch(e){}
-async function lookup(word,sentence){
-  const k=(word?word.toLowerCase():"")+"|"+sentence; if(trc[k])return trc[k];
-  const r=await fetch("/api/translate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(word?{word,sentence}:{sentence,mode:"sentence"})});
-  const j=await r.json().catch(()=>({}));
-  if(!r.ok||typeof j.ru!=="string")throw{code:j.error||"failed"};
-  trc[k]=j; const ks=Object.keys(trc); if(ks.length>1500)ks.slice(0,300).forEach(x=>delete trc[x]);
-  try{localStorage.setItem("ww-tr",JSON.stringify(trc))}catch(e){}
-  return j;
+// Tap a word: Dutch–English dictionary from English Wiktionary (dict/nl-en.txt, built by dict/build.py).
+// File format: "lemma \t pos \t info \t meanings" lines, then "#", then "form \t lemma:pos|lemma:pos" lines.
+let DICT=null,dictP=null;
+function loadDict(){
+  return dictP||(dictP=fetch("/dict/nl-en.txt").then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>{
+    const L=new Map(),F=new Map();let forms=false;
+    for(const ln of t.split("\n")){
+      if(ln==="#"){forms=true;continue} if(!ln)continue;
+      const a=ln.split("\t");
+      if(forms)F.set(a[0],a[1].split("|").map(x=>{const i=x.lastIndexOf(":");return[x.slice(0,i),x.slice(i+1)]}));
+      else{const v=[a[1],a[2],a[3]],e=L.get(a[0]);if(e)e.push(v);else L.set(a[0],[v])}
+    }
+    return DICT={L,F};
+  }).catch(e=>{dictP=null;throw e}));
 }
-const localWord=w=>{w=w.toLowerCase();for(const k of[w,"de "+w,"het "+w])if(RU[k]){const a=k.split(" ");return{lemma:a[a.length-1],article:a.length>1?a[0]:"",pos:"",ru:RU[k],lemma_ru:RU[k],note:""}}return null};
-const trErr=e=>{const c=e&&e.code;return c==="not_configured"?"Vertalen is nog niet ingesteld.":c==="rate_limited"?"Te veel vragen achter elkaar. Wacht even.":"Vertalen lukt nu niet. Ben je online?"};
+const POSN={n:"noun",v:"verb",a:"adjective",d:"adverb",p:"preposition",r:"pronoun",c:"conjunction",u:"number",t:"article",i:"interjection",m:"name",x:"particle"};
+const SUBJ=new Set("ik jij je hij zij ze wij we u jullie men".split(" "));
+const DET=new Set("de het een geen veel weinig twee drie vier vijf alle elke ieder sommige mijn jouw zijn haar ons onze hun uw deze die dit dat".split(" "));
+const CONJ=new Set("als omdat dat want maar en of wanneer terwijl toen zodat nadat voordat totdat hoewel".split(" "));
+// Dictionary entries for a word as it appears in a sentence: its own entries, the words it is a form of,
+// and a separable verb when its particle closes the clause (bel … op → opbellen)
+function define(word,sent){
+  const{L,F}=DICT,lw=word.toLowerCase(),out=[];
+  const push=(l,p)=>(L.get(l)||[]).forEach(([q,i,g])=>{if((!p||q===p)&&!out.some(e=>e.l===l&&e.p===q))out.push({l,p:q,i,g})});
+  [word,lw].forEach(w=>{push(w);(F.get(w)||[]).forEach(([l,p])=>push(l,p))});
+  const ws=sent.toLowerCase().match(WRE)||[],k=ws.indexOf(lw);
+  // after ik/je/hij… a verb is likely, after de/een/veel… a noun; het/dat/die can be either,
+  // so there a common verb (from V, like "het was") wins
+  const commonV=out.some(e=>e.p==="v"&&V.some(v=>v[0]===e.l));
+  const first=SUBJ.has(ws[k-1])||SUBJ.has(ws[k+1])||/^(het|dat|dit|die|deze|er)$/.test(ws[k-1])&&commonV?"v":DET.has(ws[k-1])?"n":"";
+  if(k>=0&&first)out.sort((a,b)=>(b.p===first)-(a.p===first));
+  const ends=new Set([...sent.toLowerCase().matchAll(/([\p{L}]+)(?=\s*(?:[,.!?;:…"'”’)]|$))/gu)].map(m=>m[1]));
+  ws.forEach((o,j)=>{if(CONJ.has(ws[j+1]))ends.add(o)});
+  const verbs=w=>(L.get(w)||[]).some(e=>e[0]==="v")?[w]:(F.get(w)||[]).filter(f=>f[1]==="v").map(f=>f[0]);
+  const sep=[];
+  const tryV=v=>{const e=(L.get(v)||[]).find(e=>e[0]==="v");if(e&&!sep.some(s=>s.l===v))sep.push({l:v,p:"v",i:e[1],g:e[2],sep:1})};
+  ws.forEach((o,j)=>{
+    if(j>k&&ends.has(o))verbs(lw).forEach(v=>tryV(o+v));       // tapped the verb, particle later at the end
+    if(j<k&&ends.has(lw))verbs(o).forEach(v=>tryV(lw+v))});    // tapped the particle, verb earlier
+  return sep.concat(out.filter(e=>!sep.some(s=>s.l===e.l&&e.p==="v"))).slice(0,3);
+}
+// "het huis", "verb · woonde – gewoond · met hebben"
+function entryParts(e){
+  let art="",info=e.i;
+  const m=info.match(/^(de\/het|de|het)(?: · |$)(.*)/); if(m){art=m[1];info=m[2]}
+  const v=e.p==="v"&&V.find(x=>x[0]===e.l), aux=v&&v[5]?"met "+v[5]:"";
+  return{w:(art?art+" ":"")+e.l,meta:[POSN[e.p],info,aux].filter(Boolean).join(" · ")};
+}
 let popW=null,popTok=0;
 function closePop(){popTok++;$("pop").hidden=true;if(popW)popW.classList.remove("sel");popW=null}
 function place(){
@@ -1295,36 +1348,29 @@ async function tapWord(el){
   if(popW===el)return closePop();
   closePop(); popW=el; el.classList.add("sel"); const tok=popTok;
   const word=el.textContent, sent=el.closest(".s").textContent.trim(), pp=$("pop");
+  const gt=t=>`https://translate.google.com/?sl=nl&tl=en&op=translate&text=${encodeURIComponent(t)}`;
   pp.innerHTML=`<div class="ph"><b>${esc(word)}</b>${canSpeak?`<button class="say" id="psay" aria-label="Uitspreken">▶</button>`:""}</div>
-    <p class="pm" id="pmeta">Vertaling zoeken…</p><p class="pt" id="ptr"></p><p class="pn" id="pnote"></p>
-    <div class="pa"><button class="hint" id="psent">Vertaal de zin</button><button class="ghost" id="pkeep" disabled>Bewaar</button></div><div id="pzin"></div>`;
+    <div id="pdef"><p class="pm">${DICT?"":"Woordenboek laden…"}</p></div>
+    <div class="pa"><a class="hint" href="${gt(sent)}" target="_blank" rel="noopener">Vertaal de zin ↗</a></div>`;
   pp.hidden=false; place();
   if($("psay"))$("psay").onclick=()=>speak(word);
-  $("psent").onclick=async()=>{const b=$("psent");b.disabled=true;$("pzin").innerHTML=`<p class="pz">Bezig…</p>`;place();
-    try{const r=await lookup(null,sent);if(tok!==popTok)return;$("pzin").innerHTML=`<p class="pz">${esc(r.ru)}</p>`}
-    catch(e){if(tok!==popTok)return;$("pzin").innerHTML=`<p class="pz">${trErr(e)}</p>`;b.disabled=false}
-    place()};
-  let res=null,err=null;
-  try{res=await lookup(word,sent)}catch(e){err=e;res=localWord(word)}
+  try{await loadDict()}catch(e){if(tok===popTok){$("pdef").innerHTML=`<p class="pm">Het woordenboek laadt niet. Ben je online?</p>`;place()}return}
   if(tok!==popTok)return;
-  if(!res){
-    $("pmeta").innerHTML=`${trErr(err)} <a href="https://translate.google.com/?sl=nl&tl=ru&text=${encodeURIComponent(word)}" target="_blank" rel="noopener">Google Translate</a>`;
-    return place();
-  }
-  const lemma=((res.article?res.article+" ":"")+(res.lemma||word)).trim();
-  $("pmeta").textContent=[lemma,res.pos].filter(Boolean).join(" · ");
-  $("ptr").textContent=res.ru;
-  const dict=res.lemma_ru||res.ru;
-  $("pnote").textContent=[res.note,dict!==res.ru?lemma+" — "+dict:""].filter(Boolean).join(" · ");
-  const keep=$("pkeep"),f=word.toLowerCase(),has=()=>S.words.find(x=>x.w===lemma);
-  const kept=()=>{keep.textContent="Bewaard";keep.disabled=true};
-  if(has())kept(); else keep.disabled=false;
-  keep.onclick=()=>{
-    let x=has(); if(!x){x={w:lemma,ru:dict,s:sent.slice(0,300),f:[]};S.words.unshift(x);S.words=S.words.slice(0,1000)}
-    if(!x.f.includes(f))x.f.push(f);
-    save(); kept();
-    document.querySelectorAll("#page .w").forEach(s=>{if(s.textContent.toLowerCase()===f)s.classList.add("kw")});
-  };
+  const E=define(word,sent);
+  if(!E.length){$("pdef").innerHTML=`<p class="pm">Niet in het woordenboek. <a href="${gt(word)}" target="_blank" rel="noopener">Google Translate ↗</a></p>`;return place()}
+  $("pdef").innerHTML=E.map((e,n)=>{const x=entryParts(e);
+    return`<div class="pe"><div><p class="pw">${e.sep?"samen: ":""}<b>${esc(x.w)}</b></p><p class="pm">${esc(x.meta)}</p><p class="pt">${esc(e.g)}</p></div><button class="ghost" data-n="${n}">Bewaar</button></div>`}).join("");
+  const f=word.toLowerCase();
+  $("pdef").querySelectorAll("button").forEach(b=>{
+    const e=E[b.dataset.n],x=entryParts(e),has=()=>S.words.find(y=>y.w===x.w);
+    const kept=()=>{b.textContent="Bewaard";b.disabled=true};
+    if(has())kept();
+    b.onclick=()=>{
+      let y=has(); if(!y){y={w:x.w,en:e.g.split("; ")[0],p:e.p,s:sent.slice(0,300),f:[]};S.words.unshift(y);S.words=S.words.slice(0,1000)}
+      if(!y.f.includes(f))y.f.push(f);
+      save(); kept();
+      document.querySelectorAll("#page .w").forEach(s=>{if(s.textContent.toLowerCase()===f)s.classList.add("kw")});
+    }});
   place();
 }
 $("page").onclick=e=>{const w=e.target.closest(".w");if(w)tapWord(w)};
@@ -1393,6 +1439,8 @@ document.addEventListener("keydown",e=>{
   document.addEventListener("touchend",end); document.addEventListener("touchcancel",end);
 })();
 addGenerated();
+// saved book words show up in the Mix; their wrong options come from the dictionary
+if((S.words||[]).some(x=>x.en))loadDict().catch(()=>{});
 home();
 restore().then(initCloud);
 </script>
