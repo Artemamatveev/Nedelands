@@ -33,7 +33,7 @@ One clear path, top to bottom: today's lesson (numbered steps; the next one is f
 cobalt; no exam dates: the plan starts with the exam part that scores lowest, and Schrijven
 and KNM are in it every day), then "Naar het examen" (one row per exam part with how ready you
 are, from `ready()`: status, last proefexamen and a bar with the 70% line; then one "Proefexamen"
-button per part with its time), then "Grammatica en woorden", "Lezen, luisteren en spreken" and
+button per part with its time, and one row to DUO's 15 official oefenexamens ↗), then "Grammatica en woorden", "Lezen, luisteren en spreken" and
 "Herhalen" (weak points and own mistakes).
 Every section appears once; don't add a second entry point to the same exercise.
 
@@ -75,8 +75,11 @@ order); `FOTO` holds a short Dutch description of each for screen readers. No em
 ## Progress
 
 Progress is per device: `localStorage` key `ww-v1`, mirrored to IndexedDB as a backup.
-There is no server. `S.res` keeps the last 10 proefexamen scores per part (`{at, pc}`); the rows in
-"Naar het examen" read it through `ready()` (ready = the last two average 80% or more; the pass line is 70%).
+There is no server. `S.res` keeps the last 10 proefexamen scores per part (`{at, pc, nw}`, `nw` = % of new
+questions; older results have none); the rows in "Naar het examen" read it through `ready()` (ready = the last two
+average 80% or more and not both mostly known questions; the pass line is 70%). The proefexamen takes the least-seen
+questions first (`seenN()`: practice answers plus `S.xs`, how often a question was in a proefexamen); Lezen takes
+whole texts.
 
 `sw.js` makes the app work offline: the page network-first (a push is live at once), paintings and
 photos from the cache (the page sends their list after loading), `api/` never cached. Don't change the stored shape without migrating old data.
