@@ -93,8 +93,8 @@ e-mail header. Luisteren items in `LS` are `[text, question, right, wrong, wrong
 turn (`A: …` / `B: …`), read with two pitches, and the optional photo from `foto/` sets the scene. In the
 proefexamen a fragment can be played twice (counted per fragment). `LSM` holds longer fragments with two or three
 questions (`[text, photo, [[q, right, wrong, wrong], …]]`, keys `ls|m<i>.<j>`); each Luisteren proefexamen has two of
-them, questions kept together. In the Lezen, Luisteren and KNM proefexamens you can go back: an answer is only
-selected (`cur.pick`, option order kept in `cur.op`), "Overzicht" shows every question, and everything is marked when
+them, questions kept together. In the Lezen, Luisteren, KNM and Schrijven proefexamens you can go back: an answer is only
+selected (`cur.pick`, option order kept in `cur.op`; for Schrijven `{f, t}`, the form fields and the text), "Overzicht" shows every question, and everything is marked when
 handed in (`submitExam()`, also when the time runs out). KNM follows the 8 official themes of the exam since 1 July 2025
 (40 questions, 45 minutes, 28 to pass). Woordenschat has the definitions in `VO` and the themed A2 word list `WT`
 (Dutch with de/het = Russian), practised both ways. Item keys (`lz|3.1`, `wn|de huis`) are
