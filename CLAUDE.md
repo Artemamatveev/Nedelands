@@ -41,6 +41,7 @@ Every section appears once; don't add a second entry point to the same exercise.
 
 - **Going somewhere** (an exercise, a screen, a book, a source) is a list row, `itHTML()`:
   the whole row is the button, title + grey description, a count on the right, `›` at the end.
+  On the home screen a row starts with a line icon on a small tile (`IC`, drawn with `--blue`), not a picture.
   No "Oefenen →" or "Openen →" text links, no cards with their own buttons.
 - **Filled cobalt `.btn`**: the one main action on a screen (the next step of today,
   Controleer, Volgende). **Outlined `.ghost`**: secondary actions (Proefexamen, Mix van de dag,
@@ -63,8 +64,6 @@ row, "Het verhaal van dit schilderij", opens `story()`: the painting, the story 
 synthesis), and the words, each can be kept in Mijn woorden (`{w, en, p, s, f}`). Look at the painting
 before writing `w`, and check every fact in `v`.
 
-List rows on the home screen show a detail of a painting (`art/t/<id>.jpg`, 120 px, ~3 KB), chosen for its
-meaning (Erasmus writing for Schrijven, Mondriaan for grammar); the list is in `art/CREDITS.md`.
 
 ## Photos (Spreken)
 

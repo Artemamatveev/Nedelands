@@ -102,7 +102,9 @@ h2::before{content:"";flex:none;width:9px;height:9px;background:var(--blue);tran
 .list{display:grid;margin-top:8px;border-top:1px solid var(--line)}
 .it{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:11px 0 12px;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);color:var(--ink)}
 .it>span{flex:1;min-width:0}
-.it img{flex:none;width:52px;height:52px;object-fit:cover;border-radius:2px;background:var(--surface)}
+.it .ic{flex:none;display:flex;align-items:center;justify-content:center;width:42px;height:42px;background:var(--surface);color:var(--blue);border-radius:3px}
+.ic svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.ic text{fill:currentColor;stroke:none;font:600 12px -apple-system,system-ui,sans-serif}
 .it::after{content:"›";flex:none;font-size:26px;line-height:1;margin-top:-3px;color:var(--blue)}
 .it .th{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
 .it b{font-size:17px;font-weight:600;line-height:1.3}
@@ -1285,27 +1287,44 @@ function story(p){
     b.textContent="Bewaard";b.disabled=true});
 }
 // A list row: the whole row is the button, with › on the right. o.n = count or status on the right, o.bar = progress in %, o.pass = show the 70% line,
-// o.img = a detail of a painting on the left (art/t/, see art/CREDITS.md)
+// o.ic = a line icon from IC on the left, on a small tile
+// Line icons (24×24, drawn with the stroke in --blue): one per exercise or screen, chosen for its meaning
+const IC={
+  lz:'<path d="M3 5.5c2.6-1 5.6-.8 9 1.3v13c-3.4-2.1-6.4-2.3-9-1.3zM21 5.5c-2.6-1-5.6-.8-9 1.3v13c3.4-2.1 6.4-2.3 9-1.3z"/>',
+  ls:'<path d="M4 15v-3a8 8 0 0 1 16 0v3"/><path d="M4 14h3v6H5a1 1 0 0 1-1-1zM20 14h-3v6h2a1 1 0 0 0 1-1z"/>',
+  wr:'<path d="M4 20l1-4.5L15.5 5 19 8.5 8.5 19z"/><path d="M13.5 7l3.5 3.5"/>',
+  sp:'<path d="M4 5h16v11h-9l-5 4v-4H4z"/><path d="M8 9.5h8M8 12.5h5"/>',
+  knm:'<path d="M5 21V11h2V8h2V5h6v3h2v3h2v10z"/><path d="M10.5 21v-4h3v4M9 13h1.5M13.5 13h1.5"/>',
+  verb:'<path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3.5 4v4.5H8M12 8v4.5l3 2"/>',
+  wo:'<path d="M3 9h5v6H3zM10 9h5v6h-5zM17 9h4v6h-4z"/>',
+  pr:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7v5h4"/>',
+  dh:'<path d="M3 11.5V4h7.5L20 13.5 13.5 20z"/><circle cx="7.5" cy="8.5" r="1.3"/>',
+  vo:'<text x="12" y="16.5" text-anchor="middle">Aa</text><path d="M4 20h16"/>',
+  books:'<path d="M5 4h3v16H5zM10 4h3v16h-3zM15.4 5.2l2.8-.7 3.3 14.7-2.8.7zM3 20h18"/>',
+  media:'<path d="M3 5h18v12H3z"/><path d="M10 8.5v5l4.3-2.5zM8 20h8"/>',
+  words:'<path d="M6 3h12v18l-6-4-6 4z"/>',
+  stats:'<path d="M5 20v-9M10 20V5M15 20v-6M20 20v-11M3 20h18"/>',
+  errs:'<path d="M4 7h16M4 12h9M4 17h6M15 14l5 5M20 14l-5 5"/>'};
 function itHTML(attr,t,d,o={}){
-  return`<button class="it" ${attr}>${o.img?`<img src="/art/t/${o.img}.jpg" alt="" loading="lazy">`:""}<span><span class="th"><b>${t}</b>${o.n!=null?`<small>${o.n}</small>`:""}</span>${d?`<span class="d">${d}</span>`:""}${o.bar!=null?`<span class="bar${o.pass?" pass":""}"><i style="width:${o.bar}%"></i></span>`:""}</span></button>`;
+  return`<button class="it" ${attr}>${o.ic?`<i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC[o.ic]}</svg></i>`:""}<span><span class="th"><b>${t}</b>${o.n!=null?`<small>${o.n}</small>`:""}</span>${d?`<span class="d">${d}</span>`:""}${o.bar!=null?`<span class="bar${o.pass?" pass":""}"><i style="width:${o.bar}%"></i></span>`:""}</span></button>`;
 }
 function home(){
   paint();
   $("play").hidden=true;$("stats").hidden=true;$("lib").hidden=true;$("read").hidden=true;$("media").hidden=true;$("story").hidden=true;stopMedia();closePop();$("home").hidden=false;head();clock(0);hush();planId=null;drawPlan();
   const sec=id=>SEC.find(x=>x.id===id);
   const row=id=>{const s=sec(id),p=ITEMS.filter(x=>x.sec===id),n=p.filter(x=>S.items[x.k]).length;
-    return itHTML(`data-s="${id}"`,s.t,s.s,{n:n+" van "+p.length,bar:n?n/p.length*100:null,img:id})};
+    return itHTML(`data-s="${id}"`,s.t,s.s,{n:n+" van "+p.length,bar:n?n/p.length*100:null,ic:id})};
   // exam parts: how ready you are (from the proefexamens, else from practice); tap to practise
-  const part=k=>{const r=ready(k);return itHTML(`data-s="${k}"`,PART[k],r.t,{n:`<span class="${r.cls}">${r.st}</span>`,bar:r.pc,pass:1,img:k})};
+  const part=k=>{const r=ready(k);return itHTML(`data-s="${k}"`,PART[k],r.t,{n:`<span class="${r.cls}">${r.st}</span>`,bar:r.pc,pass:1,ic:k})};
   const lb=Object.values(S.bk||{}).filter(b=>b.t).sort((a,b)=>b.at-a.at)[0];
   $("menu").innerHTML=`<h2>Naar het examen</h2><p class="sub">Ben je klaar? Tik op een onderdeel om te oefenen. De streep is ${PASS*100}%: zoveel heb je nodig.</p><div class="list">${["lz","ls","wr","sp","knm"].map(part).join("")}</div>`
     +`<h3 class="lh">Proefexamen</h3><p class="sub">Met tijd, zoals op het echte examen. Zo zie je of je klaar bent.</p><div class="exb">${["lz","ls","wr","sp","knm"].map(id=>`<button class="ghost" data-e="${id}">${PART[id]}<small>${EX[id].min} min</small></button>`).join("")}</div>`
     +`<h2>Grammatica en woorden</h2><p class="sub">Korte rondes van 10 vragen. Dit helpt bij alle onderdelen.</p><div class="list">${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`;
-  $("books").innerHTML=itHTML(`data-x="books"`,"Boekenkast",lb?`Je leest nu: ${esc(lb.t)}, blz. ${lb.p+1}`:"Verhalen en je eigen e-books. Tik op een woord voor de betekenis.",{img:"books"})
-    +itHTML(`data-x="media"`,"Luisteren en kijken","Echt Nederlands: nieuws, video's en podcasts.",{img:"media"})
-    +((S.words||[]).length?itHTML(`data-x="words"`,"Mijn woorden","Oefen de woorden die je bij het lezen hebt bewaard.",{n:S.words.length,img:"words"}):"");
-  $("mine").innerHTML=itHTML(`data-x="stats"`,"Mijn zwakke punten","Zie waar je de meeste fouten maakt en oefen precies dat.",{img:"stats"})
-    +((S.errs||[]).length?itHTML(`data-x="errs"`,"Mijn fouten","Oefen met fouten uit je eigen teksten en antwoorden.",{n:S.errs.length,img:"errs"}):"");
+  $("books").innerHTML=itHTML(`data-x="books"`,"Boekenkast",lb?`Je leest nu: ${esc(lb.t)}, blz. ${lb.p+1}`:"Verhalen en je eigen e-books. Tik op een woord voor de betekenis.",{ic:"books"})
+    +itHTML(`data-x="media"`,"Luisteren en kijken","Echt Nederlands: nieuws, video's en podcasts.",{ic:"media"})
+    +((S.words||[]).length?itHTML(`data-x="words"`,"Mijn woorden","Oefen de woorden die je bij het lezen hebt bewaard.",{n:S.words.length,ic:"words"}):"");
+  $("mine").innerHTML=itHTML(`data-x="stats"`,"Mijn zwakke punten","Zie waar je de meeste fouten maakt en oefen precies dat.",{ic:"stats"})
+    +((S.errs||[]).length?itHTML(`data-x="errs"`,"Mijn fouten","Oefen met fouten uit je eigen teksten en antwoorden.",{n:S.errs.length,ic:"errs"}):"");
   document.querySelectorAll("#menu button,#books button,#mine button").forEach(b=>b.onclick=()=>{const d=b.dataset;
     if(d.s)build(d.s);
     else if(d.e)startExam(d.e);
