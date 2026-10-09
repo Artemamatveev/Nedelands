@@ -21,8 +21,8 @@ generic "AI app" look.
   - Header: the painting of the day (`ART` + `paint()` in `index.html`), with a museum
     label underneath: artist, title, year, museum and one A2 sentence in Dutch (no
     translation). Tapping the painting shows it in full.
-  - Tiles: "Je les van vandaag" (the numbered steps of today's plan, at the top of the home screen) is a Delft tile with corner motifs; the verb wall is a tile wall
-    whose tiles get painted blue as verbs are learned; timeline dots are tiles turned 45°.
+  - Tiles: "Je les van vandaag" (the numbered steps of today's plan, at the top of the home screen) is a Delft tile with corner motifs; timeline dots are tiles
+    turned 45°.
   - Streak: a stamp, like on a Museumkaart.
 - **Never use**: cream or beige backgrounds, handwriting fonts, wobbly hand-drawn
   border-radius, dashed lines, highlighter underlines under headings, decorative SVG

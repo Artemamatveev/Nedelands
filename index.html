@@ -171,18 +171,6 @@ h2.gap{margin-top:28px}
 .tlb.next b{color:var(--blue)} .tlb.past{opacity:.5}
 /* onderaan het startscherm */
 #gen{margin-top:20px} #genmsg{margin-top:8px;min-height:20px}
-#wallbox{margin-top:8px}
-/* tegelwand: een tegel wordt beschilderd als je het werkwoord kent */
-.wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(28px,1fr));gap:3px}
-.tile{--c:transparent;--m:transparent;--g:var(--bg);aspect-ratio:1;padding:0;border:1px solid var(--line);border-radius:1px;
-  background:radial-gradient(circle at 0 0,var(--c) 0 24%,transparent 25%),radial-gradient(circle at 100% 0,var(--c) 0 24%,transparent 25%),
-    radial-gradient(circle at 100% 100%,var(--c) 0 24%,transparent 25%),radial-gradient(circle at 0 100%,var(--c) 0 24%,transparent 25%),
-    radial-gradient(circle,var(--m) 0 17%,transparent 18%),var(--g)}
-.tile.l1{--c:var(--wash)}
-.tile.l2{--c:var(--blue);--m:var(--wash)}
-.tile.l3{--c:var(--bg);--m:var(--bg);--g:var(--blue);border-color:var(--blue)}
-.tile.sel{outline:2px solid var(--oranje);outline-offset:1px}
-.peek{min-height:52px;margin-top:12px}
 .forms{display:grid;grid-template-columns:auto 1fr;gap:0 14px;margin:4px 0 12px;align-items:baseline}
 .forms dt{grid-column:1/-1;color:var(--blue);font-size:13.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-top:10px}
 .forms dt:first-child{margin-top:0}
@@ -247,7 +235,6 @@ h2.gap{margin-top:28px}
   .steps{grid-template-columns:repeat(auto-fit,minmax(0,1fr))}
   .blokken{grid-template-columns:repeat(auto-fill,minmax(190px,1fr))}
   .duo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:64px;align-items:start}
-  .wall{grid-template-columns:repeat(auto-fill,minmax(32px,1fr))}
   #play,#stats,#lib,#read{max-width:720px;margin:0 auto}
   .book{font-size:20px}
 }
@@ -267,15 +254,7 @@ h2.gap{margin-top:28px}
       <div><h2>Lezen</h2><div class="blokken" id="books"></div></div>
       <div><h2>Mijn voortgang</h2><div class="blokken" id="mine"></div></div>
     </div>
-    <div class="duo">
-      <div id="exams"></div>
-      <div id="wallbox">
-        <h2 class="gap">Werkwoordenmuur</h2>
-        <p class="sub" id="wallsub"></p>
-        <div class="wall" id="wall"></div>
-        <div class="peek" id="peek"></div>
-      </div>
-    </div>
+    <div id="exams"></div>
     <button class="ghost wide" id="gen">Nieuwe lees- en luisterteksten maken</button>
     <p class="note" id="genmsg"></p>
     <p class="sub" id="sync" style="margin-top:22px">Je voortgang wordt bewaard op dit apparaat.</p>
@@ -864,7 +843,7 @@ function home(){
     else if(d.x==="books")library();
     else if(d.x==="words")practiseWords();
     else build("custom",{id:"custom",t:"Mijn fouten",n:10,pool:()=>shuffle(errItems())})});
-  wall(); window.scrollTo(0,0);
+  window.scrollTo(0,0);
 }
 function startExam(e){
   build("exam",{id:"exam",exam:1,keep:e==="lz",write:e==="wr",...EX[e],pool:()=>{const a=shuffle(ITEMS.filter(x=>x.sec===e));
@@ -1492,22 +1471,6 @@ document.addEventListener("keydown",e=>{
     if(Math.abs(dx)<70||Math.abs(dy)>50||Date.now()-t0>700)return;
     if(dx<0&&R.p<R.pages.length-1)turn(1);else if(dx>0&&R.p>0)turn(-1)});
 })();
-function level(v){
-  const ks=TL.filter(t=>t!=="aux"||v[5]).map(t=>S.items[v[0]+"|"+t]);
-  if(!ks.some(Boolean))return 0;
-  const avg=ks.reduce((s,i)=>s+(i?i.b:0),0)/ks.length;
-  return avg>=3?3:avg>=1.5?2:1;
-}
-function wall(){
-  let known=0;
-  $("wall").innerHTML=V.map((v,i)=>{const l=level(v);if(l===3)known++;return`<button class="tile l${l}" data-i="${i}" aria-label="${v[0]}"></button>`}).join("");
-  $("wallsub").textContent=`${known} van ${V.length} geleerd. Een tegel wordt blauw als je het werkwoord kent. Tik op een tegel om de vormen te zien.`;
-  document.querySelectorAll(".tile").forEach(b=>b.onclick=()=>{
-    document.querySelectorAll(".tile.sel").forEach(x=>x.classList.remove("sel")); b.classList.add("sel");
-    const v=V[b.dataset.i];
-    $("peek").innerHTML=vforms(v);
-  });
-}
 $("back").onclick=home; $("sback").onclick=home; $("lback").onclick=home; $("gen").onclick=gen;
 $("artbtn").onclick=()=>{$("zoom").hidden=false}; $("zoom").onclick=()=>{$("zoom").hidden=true};
 document.addEventListener("keydown",e=>{if(e.key==="Escape")$("zoom").hidden=true});
