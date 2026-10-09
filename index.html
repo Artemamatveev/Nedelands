@@ -51,6 +51,20 @@ h1{position:absolute;left:16px;bottom:12px;z-index:1;margin:0;font-size:28px;fon
 .lab{color:var(--soft)}
 .lab b{color:var(--ink);font-weight:600}
 .label .nl{margin-top:8px;color:var(--ink)}
+.label .it{margin-top:8px;border-top:1px solid var(--line);border-bottom:0;padding-bottom:0}
+/* het verhaal van het schilderij: lezen en luisteren */
+#story .back{margin-top:14px}
+#story h2{margin-top:18px}
+#story .lab{margin:0 0 14px;font-size:15px;color:var(--soft)} #story .lab b{color:var(--ink);font-weight:600}
+.sart{display:block;width:100%;margin:14px 0 4px;padding:0;border:0;background:#060C1E}
+.sart img{display:block;width:100%;max-height:60vh;object-fit:contain}
+#story .book{margin-top:14px}
+.sw{list-style:none;margin:8px 0 0;padding:0}
+.sw li{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:17px}
+.sw li>span{flex:1;min-width:0}
+.sw .say{flex:none;background:none;border:0;color:var(--blue);font-size:15px;padding:6px 4px}
+.sw .ghost{flex:none;padding:6px 12px;font-size:15px}
+.sw .ghost:disabled{opacity:.5;cursor:default}
 .zoom{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 16px calc(20px + env(safe-area-inset-bottom,0px));background:#060C1E;color:#D9E2F5;text-align:center}
 .zoom img{max-width:100%;max-height:72vh;object-fit:contain}
 .zoom p{max-width:440px;margin:14px 0 0;font-size:15px}
@@ -88,6 +102,7 @@ h2::before{content:"";flex:none;width:9px;height:9px;background:var(--blue);tran
 .list{display:grid;margin-top:8px;border-top:1px solid var(--line)}
 .it{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:11px 0 12px;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);color:var(--ink)}
 .it>span{flex:1;min-width:0}
+.it img{flex:none;width:52px;height:52px;object-fit:cover;border-radius:2px;background:var(--surface)}
 .it::after{content:"›";flex:none;font-size:26px;line-height:1;margin-top:-3px;color:var(--blue)}
 .it .th{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
 .it b{font-size:17px;font-weight:600;line-height:1.3}
@@ -276,13 +291,13 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
   .streak{top:24px;right:40px;width:78px;height:78px;font-size:10.5px}
   .streak b{font-size:27px}
   #label{display:flex;align-items:baseline;gap:40px}
-  #label .lab{flex:0 0 340px} #label .nl{flex:1;margin:0}
+  #label{flex-wrap:wrap} #label .lab{flex:0 0 340px} #label .nl{flex:1;margin:0} #label .it{flex:0 0 100%}
   .today{padding:26px 32px 24px}
   .steps{grid-template-columns:repeat(auto-fit,minmax(0,1fr))}
   #menu .list{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));column-gap:40px}
   .exb{grid-template-columns:repeat(5,1fr)}
   .duo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:64px;align-items:start}
-  #play,#stats,#lib,#read,#media,#hist{max-width:720px;margin:0 auto}
+  #play,#stats,#lib,#read,#media,#story,#hist{max-width:720px;margin:0 auto}
   .book{font-size:20px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -301,6 +316,10 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
       <div><h2>Lezen en luisteren</h2><div class="list" id="books"></div></div>
       <div><h2>Herhalen</h2><div class="list" id="mine"></div></div>
     </div>
+  </div>
+  <div id="story" hidden>
+    <button class="back" id="vback"><span aria-hidden="true">←</span>Start</button>
+    <div id="vbody"></div>
   </div>
   <div id="stats" hidden>
     <button class="back" id="sback"><span aria-hidden="true">←</span>Start</button>
@@ -1187,68 +1206,123 @@ function head(){
 // y = vertical focus (%) for the header crop.
 const ART=[
  {f:"melkmeisje",y:24,a:"Johannes Vermeer",t:"Het melkmeisje",d:"ca. 1660",m:"Rijksmuseum, Amsterdam",
-  nl:"Een dienstmeid schenkt melk in een kom. Op tafel ligt brood."},
+  nl:"Een dienstmeid schenkt melk in een kom. Op tafel ligt brood.",
+  w:"de kan=jug|het brood=bread|de mand=basket|het raam=window",
+  v:"Johannes Vermeer woonde zijn hele leven in Delft. Hij werkte heel langzaam: we kennen maar ongeveer 35 schilderijen van hem.\nOp dit schilderij werkt een dienstmeid in de keuken. Ze schenkt heel voorzichtig melk in een kom. Vermeer schilderde het licht van het raam op de muur, op het brood en op haar kleren.\nHet Rijksmuseum kocht het schilderij in 1908. Nu is het een van de bekendste schilderijen van Nederland."},
  {f:"oranje",y:36,a:"Adriaen Thomasz. Key",t:"Willem van Oranje",d:"ca. 1579",m:"Rijksmuseum, Amsterdam",
-  nl:"Willem van Oranje heet de Vader des Vaderlands. Het Wilhelmus, het volkslied, gaat over hem."},
+  nl:"Willem van Oranje heet de Vader des Vaderlands. Het Wilhelmus, het volkslied, gaat over hem.",
+  w:"de baard=beard|de snor=moustache|de kraag=collar|de muts=cap",
+  v:"Willem van Oranje leefde van 1533 tot 1584. Hij was de leider van de opstand tegen de Spaanse koning Filips II. Daarom heet hij de Vader des Vaderlands.\nIn 1584 werd hij in Delft vermoord. Hij ligt begraven in de Nieuwe Kerk in Delft.\nHet Wilhelmus, het Nederlandse volkslied, gaat over hem. De koninklijke familie heet nog steeds Oranje-Nassau. Daarom dragen veel Nederlanders oranje op Koningsdag."},
  {f:"avercamp",y:55,a:"Hendrick Avercamp",t:"Winterlandschap met schaatsers",d:"ca. 1608",m:"Rijksmuseum, Amsterdam",
-  nl:"In de winter schaatsen jong en oud op het ijs. Schaatsen is in Nederland nog steeds populair."},
+  nl:"In de winter schaatsen jong en oud op het ijs. Schaatsen is in Nederland nog steeds populair.",
+  w:"het ijs=ice|de schaats=skate|de kerk=church|de boom=tree",
+  v:"Hendrick Avercamp woonde in Kampen. Hij kon niet horen en niet goed praten. Daarom noemden de mensen hem ‘de Stomme van Kampen’.\nHij schilderde vaak de winter. In zijn tijd waren de winters heel koud: de rivieren en de grachten waren vaak bevroren.\nOp dit schilderij zie je arme en rijke mensen samen op het ijs. Ze schaatsen, spelen en praten. Kijk goed: er gebeuren heel veel kleine dingen."},
  {f:"vangogh",y:40,a:"Vincent van Gogh",t:"Zelfportret",d:"1887",m:"Rijksmuseum, Amsterdam",
-  nl:"Vincent van Gogh kwam uit Brabant. Hij maakte meer dan 800 schilderijen."},
+  nl:"Vincent van Gogh kwam uit Brabant. Hij maakte meer dan 800 schilderijen.",
+  w:"de hoed=hat|de baard=beard|de jas=jacket|het gezicht=face",
+  v:"Vincent van Gogh werd in 1853 geboren in Zundert, in Brabant. In 1886 ging hij naar Parijs, naar zijn broer Theo.\nIn Parijs zag hij het werk van andere moderne schilders. Hij ging lichter schilderen, met veel kleur en korte streepjes.\nHij had weinig geld voor een model. Daarom schilderde hij vaak zichzelf: in Parijs maakte hij meer dan twintig zelfportretten. Dit is er een uit 1887."},
  {f:"delft",y:60,a:"Johannes Vermeer",t:"Gezicht op Delft",d:"ca. 1660–1661",m:"Mauritshuis, Den Haag",
-  nl:"Dit is de stad Delft. Delft is bekend om het blauwe aardewerk: Delfts blauw."},
+  nl:"Dit is de stad Delft. Delft is bekend om het blauwe aardewerk: Delfts blauw.",
+  w:"de stad=city|het water=water|de wolk=cloud|de boot=boat",
+  v:"Dit is de stad van Johannes Vermeer: Delft. Hij schilderde de stad vanaf de andere kant van het water.\nJe ziet de oude stadspoorten, boten en een paar mensen aan de kant. De wolken zijn donker, maar de zon schijnt op de daken.\nRechts van het midden zie je de lichte toren van de Nieuwe Kerk. In die kerk ligt Willem van Oranje begraven."},
  {f:"leyster",y:28,a:"Judith Leyster",t:"Zelfportret",d:"ca. 1630",m:"National Gallery of Art, Washington",
-  nl:"Judith Leyster was een schilder uit Haarlem. In 1633 werd ze lid van het schildersgilde."},
+  nl:"Judith Leyster was een schilder uit Haarlem. In 1633 werd ze lid van het schildersgilde.",
+  w:"het penseel=paintbrush|de viool=violin|de kraag=collar|de stoel=chair",
+  v:"Judith Leyster werd in 1609 in Haarlem geboren. In die tijd waren er maar weinig vrouwen die schilder waren.\nIn 1633 werd ze lid van het schildersgilde van Haarlem. Dat was heel bijzonder. Ze had een eigen atelier en ook leerlingen.\nOp dit zelfportret zit ze voor haar schilderij en kijkt ze ons vrolijk aan. Ze schildert een man met een viool. Lang dachten mensen dat haar schilderijen van Frans Hals waren."},
  {f:"steen",y:50,a:"Jan Steen",t:"Het vrolijke huisgezin",d:"1668",m:"Rijksmuseum, Amsterdam",
-  nl:"Iedereen zingt, drinkt en maakt muziek. Een rommelig huis noem je ‘een huishouden van Jan Steen’."},
+  nl:"Iedereen zingt, drinkt en maakt muziek. Een rommelig huis noem je ‘een huishouden van Jan Steen’.",
+  w:"de familie=family|de tafel=table|de hond=dog|het raam=window",
+  v:"Jan Steen woonde lang in Leiden. Hij had daar ook een herberg, een soort café.\nHij schilderde vaak gezinnen waar het druk en rommelig is. Op dit schilderij zingen en drinken de ouders en de opa. De kinderen doen alles na: een jongen rookt zelfs een pijp.\nRechtsboven hangt een papier met een oude zin: zoals de ouden zongen, zo piepen de jongen. Dat betekent: kinderen doen wat hun ouders doen. Een rommelig huis heet nog steeds ‘een huishouden van Jan Steen’."},
  {f:"erasmus",y:30,a:"Hans Holbein de Jonge",t:"Erasmus",d:"1523",m:"Louvre, Parijs",
-  nl:"Erasmus kwam uit Rotterdam. De Erasmusbrug en de Erasmus Universiteit zijn naar hem genoemd."},
+  nl:"Erasmus kwam uit Rotterdam. De Erasmusbrug en de Erasmus Universiteit zijn naar hem genoemd.",
+  w:"het boek=book|de pen=pen|de muts=cap|de ring=ring",
+  v:"Erasmus werd rond 1466 in Rotterdam geboren. Hij was een van de beroemdste denkers van Europa. Hij schreef veel boeken, in het Latijn, en reisde door heel Europa.\nHans Holbein was een Duitse schilder. Hij schilderde Erasmus terwijl hij schrijft. Erasmus stuurde zulke portretten naar zijn vrienden.\nNu dragen een brug en een universiteit in Rotterdam zijn naam. Ook het Erasmus-programma heet naar hem: daarmee studeren jonge Europeanen een tijd in een ander land."},
  {f:"nachtwacht",y:60,a:"Rembrandt van Rijn",t:"De Nachtwacht",d:"1642",m:"Rijksmuseum, Amsterdam",
-  nl:"De schutters van Amsterdam gaan op pad. Het schilderij is bijna vier meter hoog."},
+  nl:"De schutters van Amsterdam gaan op pad. Het schilderij is bijna vier meter hoog.",
+  w:"de hoed=hat|de trommel=drum|het meisje=girl|het geweer=gun",
+  v:"Rembrandt schilderde dit grote schilderij in 1642 voor de schutters van Amsterdam. Schutters waren burgers die de stad moesten beschermen.\nOp andere groepsportretten staan mensen netjes naast elkaar. Hier niet: de mannen gaan op pad, er is beweging en licht.\nLater werd het schilderij donker door een oude laag vernis. Toen dachten mensen dat het nacht was. Zo kreeg het de naam De Nachtwacht. Maar Rembrandt schilderde de dag."},
  {f:"mondriaan",y:35,a:"Piet Mondriaan",t:"Compositie met rood, geel, blauw en zwart",d:"1921",m:"Kunstmuseum Den Haag",
-  nl:"Mondriaan kwam uit Amersfoort. Hij werd beroemd met rechte lijnen en rood, geel en blauw."},
+  nl:"Mondriaan kwam uit Amersfoort. Hij werd beroemd met rechte lijnen en rood, geel en blauw.",
+  w:"rood=red|geel=yellow|blauw=blue|de lijn=line",
+  v:"Piet Mondriaan werd in 1872 in Amersfoort geboren. Eerst schilderde hij landschappen, bomen en molens.\nLangzaam werden zijn schilderijen steeds eenvoudiger. Op het eind gebruikte hij alleen rechte zwarte lijnen en de kleuren rood, geel en blauw, met wit en grijs.\nHij woonde lang in Parijs en later in New York. Zijn stijl zie je nu overal: op kleding, op posters en op gebouwen."},
  {f:"brief",y:10,a:"Johannes Vermeer",t:"Brieflezende vrouw in het blauw",d:"ca. 1663",m:"Rijksmuseum, Amsterdam",
-  nl:"Een vrouw leest een brief. Van wie is de brief? Dat weten we niet."},
+  nl:"Een vrouw leest een brief. Van wie is de brief? Dat weten we niet.",
+  w:"de brief=letter|de kaart=map|de stoel=chair|de muur=wall",
+  v:"Ook dit schilderij is van Johannes Vermeer. Een vrouw in een blauwe jas leest een brief. Ze is helemaal stil.\nAan de muur hangt een kaart van Holland. Van wie is de brief? Misschien van iemand die ver weg is. Vermeer vertelt het niet: dat mag je zelf bedenken.\nHet blauw is ultramarijn. Die verf was heel duur: hij werd gemaakt van een blauwe steen uit Afghanistan."},
  {f:"spinoza",y:32,a:"Onbekende schilder",t:"Baruch de Spinoza",d:"ca. 1665",m:"Herzog August Bibliothek, Wolfenbüttel",
-  nl:"Spinoza was een filosoof uit Amsterdam. Hij schreef over God, de natuur en vrijheid."},
+  nl:"Spinoza was een filosoof uit Amsterdam. Hij schreef over God, de natuur en vrijheid.",
+  w:"het haar=hair|de kraag=collar|het gezicht=face|de ogen=eyes",
+  v:"Baruch de Spinoza werd in 1632 in Amsterdam geboren. Zijn familie was Joods en kwam uit Portugal.\nHij dacht heel vrij over God, de natuur en de mens. Daarom moest hij in 1656 de Joodse gemeenschap van Amsterdam verlaten.\nHij verdiende geld met het slijpen van glazen lenzen, voor brillen en microscopen. Hij woonde in Rijnsburg, Voorburg en Den Haag. In 1677 stierf hij in Den Haag."},
  {f:"molen",y:45,a:"Jacob van Ruisdael",t:"De molen bij Wijk bij Duurstede",d:"ca. 1670",m:"Rijksmuseum, Amsterdam",
-  nl:"Molens horen bij Nederland. Er staan nog meer dan duizend molens."},
+  nl:"Molens horen bij Nederland. Er staan nog meer dan duizend molens.",
+  w:"de molen=windmill|het water=water|de wolk=cloud|de boot=boat",
+  v:"Jacob van Ruisdael kwam uit Haarlem. Hij schilderde vooral landschappen: de lucht, het water, bomen en molens.\nDeze molen staat bij Wijk bij Duurstede, een stadje aan de rivier de Lek. De molen is groot en donker tegen de grijze lucht.\nMolens maalden graan en pompten water uit de polders. Zonder molens kon je in een groot deel van Nederland niet wonen."},
  {f:"rembrandt",y:30,a:"Rembrandt van Rijn",t:"Zelfportret als de apostel Paulus",d:"1661",m:"Rijksmuseum, Amsterdam",
-  nl:"Dit is Rembrandt zelf. Hij woonde in Amsterdam. Zijn huis is nu een museum."},
+  nl:"Dit is Rembrandt zelf. Hij woonde in Amsterdam. Zijn huis is nu een museum.",
+  w:"de tulband=turban|het boek=book|het gezicht=face|de mantel=cloak",
+  v:"Rembrandt van Rijn werd in 1606 in Leiden geboren. Later woonde en werkte hij in Amsterdam.\nHij schilderde zichzelf heel vaak: er zijn ongeveer veertig geschilderde zelfportretten van hem. Op dit schilderij is hij oud. Hij is verkleed als de apostel Paulus, uit de Bijbel.\nRembrandt gaf te veel geld uit. In 1656 kon hij zijn schulden niet meer betalen. Zijn huis in Amsterdam is nu een museum: het Rembrandthuis."},
  {f:"aardappeleters",y:40,a:"Vincent van Gogh",t:"De aardappeleters",d:"1885",m:"Van Gogh Museum, Amsterdam",
-  nl:"Een arme familie eet aardappelen. Ze hebben de hele dag op het land gewerkt."},
+  nl:"Een arme familie eet aardappelen. Ze hebben de hele dag op het land gewerkt.",
+  w:"de familie=family|de lamp=lamp|de aardappel=potato|de tafel=table",
+  v:"Vincent van Gogh schilderde dit in 1885 in Nuenen, in Brabant. Hij wilde laten zien hoe arme boeren leven.\nDe familie eet aardappels die ze zelf op het land hebben gehaald. Daarom zijn de handen en de gezichten grof en zijn de kleuren donker.\nVan Gogh vond het zelf een van zijn beste schilderijen. Maar toen hij leefde, verkocht hij bijna niets."},
  {f:"parel",y:45,a:"Johannes Vermeer",t:"Meisje met de parel",d:"ca. 1665",m:"Mauritshuis, Den Haag",
-  nl:"Niemand weet wie dit meisje is. Ze draagt een blauwe tulband en een grote parel."}
+  nl:"Niemand weet wie dit meisje is. Ze draagt een blauwe tulband en een grote parel.",
+  w:"de parel=pearl|de tulband=turban|de kraag=collar|de mond=mouth",
+  v:"Ook dit schilderij is van Johannes Vermeer. Het is geen portret van een echte persoon, maar een ‘tronie’: een schilderij van een gezicht met bijzondere kleren.\nHet meisje draagt een blauwe tulband en een grote parel. Misschien is de parel niet echt, maar van glas.\nHet schilderij hangt in het Mauritshuis in Den Haag. Mensen noemen het soms de Mona Lisa van het Noorden."}
 ];
 function paint(){
   const p=ART[today()%ART.length], src="/art/"+p.f+".jpg";
   if(!$("artimg").src.endsWith(src)){$("artimg").src=src;$("zimg").src=src}
   $("artimg").style.objectPosition="50% "+p.y+"%";
-  $("label").innerHTML=`<p class="lab"><b>${p.a}</b><br>${p.t}, ${p.d} · ${p.m}</p><p class="nl">${p.nl}</p>`;
+  $("label").innerHTML=`<p class="lab"><b>${p.a}</b><br>${p.t}, ${p.d} · ${p.m}</p><p class="nl">${p.nl}</p>`
+    +(p.v?itHTML(`id="vopen"`,"Het verhaal van dit schilderij","Wie maakte het, en wat is de geschiedenis? Lees en luister."):"");
   $("zcap").innerHTML=`<b>${p.a}</b><br>${p.t}, ${p.d} · ${p.m}`;
+  if($("vopen"))$("vopen").onclick=()=>story(p);
 }
-// A list row: the whole row is the button, with › on the right. o.n = count or status on the right, o.bar = progress in %, o.pass = show the 70% line
+// The story of the painting of the day: who made it and why it is famous, in A2 Dutch (read or listen),
+// then the things you can see on it, with the English meaning like in the books; a word can be kept in Mijn woorden, practised like the words from the books
+function story(p){
+  hush(); $("home").hidden=true; $("story").hidden=false; window.scrollTo(0,0);
+  const W=(p.w||"").split("|").filter(Boolean).map(x=>x.split("=")), has=w=>(S.words||[]).some(y=>y.w===w);
+  $("vbody").innerHTML=`<button class="sart" id="vart" aria-label="Bekijk het hele schilderij"><img src="/art/${p.f}.jpg" alt=""></button>
+    <h2>${p.t}</h2><p class="lab"><b>${p.a}</b>, ${p.d} · ${p.m}</p>
+    ${canSpeak?`<button class="ghost" id="vsay">▶ Luister</button>`:""}
+    <article class="book" lang="nl">${p.v.split("\n").map(x=>`<p>${x}</p>`).join("")}</article>
+    ${W.length?`<h3 class="lh">Op het schilderij</h3><ul class="sw">${W.map((x,i)=>`<li><span><b>${x[0]}</b> — ${x[1]}</span>${canSpeak?`<button class="say" data-i="${i}" aria-label="Luister">▶</button>`:""}<button class="ghost" data-k="${i}"${has(x[0])?" disabled":""}>${has(x[0])?"Bewaard":"Bewaar"}</button></li>`).join("")}</ul>`:""}`;
+  $("vart").onclick=()=>{$("zoom").hidden=false};
+  if($("vsay"))$("vsay").onclick=()=>{const b=$("vsay");
+    if(b.dataset.on){hush();b.textContent="▶ Luister";delete b.dataset.on;return}
+    speak(p.v.replace(/\n/g," "));b.textContent="■ Stop";b.dataset.on=1;
+    try{const t=setInterval(()=>{if(!speechSynthesis.speaking){clearInterval(t);b.textContent="▶ Luister";delete b.dataset.on}},500)}catch(e){}};
+  document.querySelectorAll("#vbody .say").forEach(b=>b.onclick=()=>speak(W[b.dataset.i][0]));
+  document.querySelectorAll("#vbody [data-k]").forEach(b=>b.onclick=()=>{const[w,en]=W[b.dataset.k];
+    if(!has(w)){S.words=S.words||[];S.words.unshift({w,en,p:/^(de|het) /.test(w)?"n":"a",s:p.t+" ("+p.a+")",f:[]});save()}
+    b.textContent="Bewaard";b.disabled=true});
+}
+// A list row: the whole row is the button, with › on the right. o.n = count or status on the right, o.bar = progress in %, o.pass = show the 70% line,
+// o.img = a detail of a painting on the left (art/t/, see art/CREDITS.md)
 function itHTML(attr,t,d,o={}){
-  return`<button class="it" ${attr}><span><span class="th"><b>${t}</b>${o.n!=null?`<small>${o.n}</small>`:""}</span>${d?`<span class="d">${d}</span>`:""}${o.bar!=null?`<span class="bar${o.pass?" pass":""}"><i style="width:${o.bar}%"></i></span>`:""}</span></button>`;
+  return`<button class="it" ${attr}>${o.img?`<img src="/art/t/${o.img}.jpg" alt="" loading="lazy">`:""}<span><span class="th"><b>${t}</b>${o.n!=null?`<small>${o.n}</small>`:""}</span>${d?`<span class="d">${d}</span>`:""}${o.bar!=null?`<span class="bar${o.pass?" pass":""}"><i style="width:${o.bar}%"></i></span>`:""}</span></button>`;
 }
 function home(){
   paint();
-  $("play").hidden=true;$("stats").hidden=true;$("lib").hidden=true;$("read").hidden=true;$("media").hidden=true;$("hist").hidden=true;stopMedia();closePop();$("home").hidden=false;head();clock(0);hush();planId=null;drawPlan();
+  $("play").hidden=true;$("stats").hidden=true;$("lib").hidden=true;$("read").hidden=true;$("media").hidden=true;$("story").hidden=true;$("hist").hidden=true;stopMedia();closePop();$("home").hidden=false;head();clock(0);hush();planId=null;drawPlan();
   const sec=id=>SEC.find(x=>x.id===id);
   const row=id=>{const s=sec(id),p=ITEMS.filter(x=>x.sec===id),n=p.filter(x=>S.items[x.k]).length;
-    return itHTML(`data-s="${id}"`,s.t,s.s,{n:n+" van "+p.length,bar:n?n/p.length*100:null})};
+    return itHTML(`data-s="${id}"`,s.t,s.s,{n:n+" van "+p.length,bar:n?n/p.length*100:null,img:id})};
   // exam parts: how ready you are (from the proefexamens, else from practice); tap to practise
-  const part=k=>{const r=ready(k);return itHTML(`data-s="${k}"`,PART[k],r.t,{n:`<span class="${r.cls}">${r.st}</span>`,bar:r.pc,pass:1})};
+  const part=k=>{const r=ready(k);return itHTML(`data-s="${k}"`,PART[k],r.t,{n:`<span class="${r.cls}">${r.st}</span>`,bar:r.pc,pass:1,img:k})};
   const lb=Object.values(S.bk||{}).filter(b=>b.t).sort((a,b)=>b.at-a.at)[0];
   const hs=S.hs||{},lh=GS.filter(c=>hs[c.id]).sort((a,b)=>hs[b.id]-hs[a.id])[0],gsDone=GS.filter(c=>gsItems(c).every(x=>(S.items[x.k]||{}).r)).length;
   $("menu").innerHTML=`<h2>Naar het examen</h2><p class="sub">Ben je klaar? Tik op een onderdeel om te oefenen. De streep is ${PASS*100}%: zoveel heb je nodig.</p><div class="list">${["lz","ls","wr","sp","knm"].map(part).join("")}</div>`
     +`<h3 class="lh">Proefexamen</h3><p class="sub">Met tijd, zoals op het echte examen. Zo zie je of je klaar bent.</p><div class="exb">${["lz","ls","wr","sp","knm"].map(id=>`<button class="ghost" data-e="${id}">${PART[id]}<small>${EX[id].min} min</small></button>`).join("")}</div>`
     +`<h2>Grammatica en woorden</h2><p class="sub">Korte rondes van 10 vragen. Dit helpt bij alle onderdelen.</p><div class="list">${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`;
-  $("books").innerHTML=itHTML(`data-x="books"`,"Boekenkast",lb?`Je leest nu: ${esc(lb.t)}, blz. ${lb.p+1}`:"Verhalen en je eigen e-books. Tik op een woord voor de betekenis.")
-    +itHTML(`data-x="hist"`,"Geschiedenis van Nederland",lh?`Je was bij: ${lh.t}`:`Van de hunebedden tot nu, in ${GS.length} korte teksten met vragen.`,{n:`${gsDone} van ${GS.length}`})
-    +itHTML(`data-x="media"`,"Luisteren en kijken","Echt Nederlands: nieuws, video's en podcasts.")
-    +((S.words||[]).length?itHTML(`data-x="words"`,"Mijn woorden","Oefen de woorden die je bij het lezen hebt bewaard.",{n:S.words.length}):"");
-  $("mine").innerHTML=itHTML(`data-x="stats"`,"Mijn zwakke punten","Zie waar je de meeste fouten maakt en oefen precies dat.")
-    +((S.errs||[]).length?itHTML(`data-x="errs"`,"Mijn fouten","Oefen met fouten uit je eigen teksten en antwoorden.",{n:S.errs.length}):"");
+  $("books").innerHTML=itHTML(`data-x="books"`,"Boekenkast",lb?`Je leest nu: ${esc(lb.t)}, blz. ${lb.p+1}`:"Verhalen en je eigen e-books. Tik op een woord voor de betekenis.",{img:"books"})
+    +itHTML(`data-x="hist"`,"Geschiedenis van Nederland",lh?`Je was bij: ${lh.t}`:`Van de hunebedden tot nu, in ${GS.length} korte teksten met vragen.`,{n:`${gsDone} van ${GS.length}`,img:"hist"})
+    +itHTML(`data-x="media"`,"Luisteren en kijken","Echt Nederlands: nieuws, video's en podcasts.",{img:"media"})
+    +((S.words||[]).length?itHTML(`data-x="words"`,"Mijn woorden","Oefen de woorden die je bij het lezen hebt bewaard.",{n:S.words.length,img:"words"}):"");
+  $("mine").innerHTML=itHTML(`data-x="stats"`,"Mijn zwakke punten","Zie waar je de meeste fouten maakt en oefen precies dat.",{img:"stats"})
+    +((S.errs||[]).length?itHTML(`data-x="errs"`,"Mijn fouten","Oefen met fouten uit je eigen teksten en antwoorden.",{n:S.errs.length,img:"errs"}):"");
   document.querySelectorAll("#menu button,#books button,#mine button").forEach(b=>b.onclick=()=>{const d=b.dataset;
     if(d.s)build(d.s);
     else if(d.e)startExam(d.e);
@@ -1343,7 +1417,7 @@ function build(id,custom){
   if(!cur.keep)shuffle(queue);
   queue=queue.map(q=>({...q,retry:false}));
   pos=0;total=queue.length;right=0;clock(cur.min);
-  ["home","stats","lib","read","media","hist"].forEach(x=>$(x).hidden=true);closePop();stopMedia();$("play").hidden=false;window.scrollTo(0,0);
+  ["home","stats","lib","read","media","story","hist"].forEach(x=>$(x).hidden=true);closePop();stopMedia();$("play").hidden=false;window.scrollTo(0,0);
   $("back").innerHTML=`<span aria-hidden="true">←</span>${cur.back?cur.back.t:"Start"}`;$("back").onclick=cur.back?cur.back.f:home;
   show();
 }
@@ -2280,7 +2354,7 @@ document.addEventListener("keydown",e=>{
     if(Math.abs(dx)<70||Math.abs(dy)>50||Date.now()-t0>700)return;
     if(dx<0&&R.p<R.pages.length-1)turn(1);else if(dx>0&&R.p>0)turn(-1)});
 })();
-$("back").onclick=home; $("sback").onclick=home; $("lback").onclick=home;
+$("back").onclick=home; $("sback").onclick=home; $("vback").onclick=home; $("lback").onclick=home;
 $("artbtn").onclick=()=>{$("zoom").hidden=false}; $("zoom").onclick=()=>{$("zoom").hidden=true};
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("zoom").hidden)$("zoom").onclick()});
 // Generating new texts needs Claude; hide the button where it can't work

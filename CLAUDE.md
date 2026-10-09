@@ -57,6 +57,14 @@ Only public-domain or CC0 images, downloaded from Wikimedia Commons into `art/`,
 resized to max 1000px and compressed (~100–150 KB each). Record every new image in
 `art/CREDITS.md`. To add one, append to `ART` with `f` (file name), `y` (vertical focus
 in % for the header crop), artist, title, year, museum and an A2 sentence. Check facts in the sentences; they double as KNM material.
+Each painting also has `v`, its story in A2 Dutch (who made it, what it shows, why it is famous; paragraphs
+split by `\n`), and `w`, three or four things you can really see on it (`de kan=jug|…`, English like the dictionary). Under the label one
+row, "Het verhaal van dit schilderij", opens `story()`: the painting, the story to read or hear (speech
+synthesis), and the words, each can be kept in Mijn woorden (`{w, en, p, s, f}`). Look at the painting
+before writing `w`, and check every fact in `v`.
+
+List rows on the home screen show a detail of a painting (`art/t/<id>.jpg`, 120 px, ~3 KB), chosen for its
+meaning (Erasmus writing for Schrijven, Mondriaan for grammar); the list is in `art/CREDITS.md`.
 
 ## Photos (Spreken)
 
