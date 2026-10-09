@@ -95,6 +95,12 @@ button.blok:hover,.blok:has(button:hover){border-color:var(--blue)}
 .blok .ta{display:grid;gap:8px;margin-top:10px}
 .blok .ta .btn{padding:9px 18px;font-size:16px}
 .blok .ta .ghost{padding:8px 6px;font-size:14.5px;white-space:nowrap;text-align:center}
+/* telefoon en tablet: Oefenen en Proefexamen naast elkaar, lager */
+@media (max-width:959px){
+  .blok{padding:12px 14px 14px}
+  .blok .ta{grid-template-columns:1fr 1fr;margin-top:8px}
+  .blok .ta .btn,.blok .ta .ghost{min-height:40px;padding:6px 4px;font-size:14.5px}
+}
 .blok .go{margin-top:8px;font-weight:600;font-size:16px;color:var(--blue)}
 
 /* oefenen */
