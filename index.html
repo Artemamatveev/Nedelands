@@ -1025,6 +1025,48 @@ function reveal(q){
   $("again").onclick=()=>go(false); $("got").onclick=()=>go(true);
 }
 function esc(x){return String(x==null?"":x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+// Schrijven as a Word file, built here without a library: a .docx is a zip (stored, not compressed)
+// with three XML parts. One entry per task: {task, form, text, passed, verdict, errors, corrected, example}
+const CRC=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
+const crc32=b=>{let c=~0;for(const x of b)c=CRC[(c^x)&255]^(c>>>8);return~c>>>0};
+function zip(files,type){
+  const en=new TextEncoder(),loc=[],cen=[];let off=0;
+  files.forEach(([n,d])=>{
+    const name=en.encode(n),data=en.encode(d),crc=crc32(data),h=new DataView(new ArrayBuffer(30)),c=new DataView(new ArrayBuffer(46));
+    [[0,0x04034b50,4],[4,20],[6,0x800],[12,33],[14,crc,4],[18,data.length,4],[22,data.length,4],[26,name.length]].forEach(([o,v,w])=>w?h.setUint32(o,v,true):h.setUint16(o,v,true));
+    [[0,0x02014b50,4],[4,20],[6,20],[8,0x800],[14,33],[16,crc,4],[20,data.length,4],[24,data.length,4],[28,name.length],[42,off,4]].forEach(([o,v,w])=>w?c.setUint32(o,v,true):c.setUint16(o,v,true));
+    loc.push(h,name,data);cen.push(c,name);off+=30+name.length+data.length});
+  const size=cen.reduce((a,x)=>a+x.byteLength,0),e=new DataView(new ArrayBuffer(22));
+  e.setUint32(0,0x06054b50,true);e.setUint16(8,files.length,true);e.setUint16(10,files.length,true);e.setUint32(12,size,true);e.setUint32(16,off,true);
+  return new Blob([...loc,...cen,e],{type});
+}
+function saveDocx(items){
+  const X=t=>String(t==null?"":t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const r=(t,o={})=>`<w:r><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/>${o.b?"<w:b/>":""}${o.s?"<w:strike/>":""}${o.c?`<w:color w:val="${o.c}"/>`:""}<w:sz w:val="${o.z||22}"/></w:rPr>${String(t).split("\n").map(l=>`<w:t xml:space="preserve">${X(l)}</w:t>`).join("<w:br/>")}</w:r>`;
+  const p=(runs,o={})=>`<w:p><w:pPr><w:spacing w:before="${o.before||0}" w:after="${o.after==null?120:o.after}"/>${o.box?`<w:shd w:val="clear" w:color="auto" w:fill="EEF2FA"/><w:ind w:left="170" w:right="170"/>`:""}</w:pPr>${runs}</w:p>`;
+  const label=t=>p(r(t.toUpperCase(),{b:1,c:"1F3C96",z:18}),{before:200,after:60});
+  const box=t=>p(r(t),{box:1,after:160});
+  const date=new Date().toLocaleDateString("nl-NL",{day:"numeric",month:"long",year:"numeric"});
+  let body=p(r("Nederlands A2: Schrijven",{b:1,c:"1F3C96",z:36}),{after:60})+p(r(date,{c:"56617C"}),{after:240});
+  items.forEach((it,i)=>{
+    body+=p(r(items.length>1?`Opdracht ${i+1}`:"Opdracht",{b:1,z:28}),{before:i?360:0,after:80})+p(r(it.task));
+    if(it.passed!=null)body+=p(r(it.passed?"Voldoende":"Nog niet voldoende",{b:1,c:it.passed?"2E7D4B":"C0392B"}))+(it.verdict?p(r(it.verdict)):"");
+    body+=label("Jouw tekst")+box((it.form?it.form+"\n\n":"")+(it.text||"(niets geschreven)"));
+    if(it.errors&&it.errors.length)body+=label("Fouten")+it.errors.map(e=>p(r(e.wrong,{s:1,c:"C0392B"})+r("  →  ")+r(e.right,{b:1,c:"2E7D4B"})+(e.why?r("\n"+e.why,{c:"56617C",z:20}):""))).join("");
+    if(it.corrected)body+=label("Verbeterde tekst")+box(it.corrected);
+    body+=label("Voorbeeldantwoord")+box(it.example);
+  });
+  const W='xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"';
+  const blob=zip([
+    ["[Content_Types].xml",'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>'],
+    ["_rels/.rels",'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>'],
+    ["word/document.xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document ${W}><w:body>${body}<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134" w:header="708" w:footer="708" w:gutter="0"/></w:sectPr></w:body></w:document>`]
+  ],"application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+  const a=document.createElement("a"),u=URL.createObjectURL(blob);
+  a.href=u;a.download=`Schrijven ${new Date().toISOString().slice(0,10)}.docx`;document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(u),4000);
+}
+const docBtn=`<button class="ghost wide" id="docx" style="margin-bottom:10px">Download als Word-bestand</button>`;
 // Writing is graded by Claude on the server (api/check.js)
 async function nakijken(tasks){
   const r=await fetch("/api/check",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({tasks})});
@@ -1032,20 +1074,21 @@ async function nakijken(tasks){
   if(!r.ok||!Array.isArray(j.tasks))throw{code:j.error||"failed"};
   return j.tasks;
 }
-function selfGrade(q,msg){
+function selfGrade(q,msg,doc){
   $("fb").innerHTML=`<p class="note">${msg}</p><p class="ask">Voorbeeld</p><div class="sample">${esc(q.right)}</div>
-    <div class="two"><button class="ghost" id="again">Later herhalen</button><button class="btn" id="got">Gelukt</button></div>`;
+    ${doc?docBtn:""}<div class="two"><button class="ghost" id="again">Later herhalen</button><button class="btn" id="got">Gelukt</button></div>`;
   const go=ok=>{record(ok);pos++;show()};
   $("again").onclick=()=>go(false); $("got").onclick=()=>go(true);
+  if(doc)$("docx").onclick=()=>saveDocx([doc]);
 }
 async function check(q){
   const text=$("txt").value.trim();
   if(text.split(/\s+/).length<5){$("fb").innerHTML=`<p class="note">Schrijf minimaal een paar zinnen.</p>`;return}
   const form=q.fields?q.fields.map((f,i)=>f+": "+$("f"+i).value.trim()).join("\n"):"";
-  const btn=$("chk"); btn.disabled=true; $("txt").readOnly=true;
+  const task=q.big+(q.open?" "+q.open:""), btn=$("chk"); btn.disabled=true; $("txt").readOnly=true;
   $("fb").innerHTML=`<p class="note">Ik kijk je tekst na… Dit duurt meestal minder dan een minuut.</p>`;
   try{
-    const res=(await nakijken([{task:q.big+(q.open?" "+q.open:""),form,text}]))[0];
+    const res=(await nakijken([{task,form,text}]))[0];
     const errs=Array.isArray(res.errors)?res.errors:[];
     btn.hidden=true; const ok=!!res.passed;
     errs.forEach(e=>{if(e&&e.wrong&&e.right&&e.wrong!==e.right&&String(e.wrong).length<90&&String(e.right).length<90&&!S.errs.some(x=>x.r===e.right))S.errs.unshift({w:String(e.wrong),r:String(e.right),y:String(e.why||"")})});
@@ -1055,13 +1098,14 @@ async function check(q){
       ${errs.length?`<p class="ask">Fouten: ${errs.length}</p><ul class="errs">${errs.map(e=>`<li><s>${esc(e.wrong)}</s> <strong>${esc(e.right)}</strong><span>${esc(e.why)}</span></li>`).join("")}</ul>`:`<p class="note">Geen fouten gevonden.</p>`}
       <p class="ask">Verbeterde tekst</p><div class="sample">${esc(res.corrected)}</div>
       <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(q.right)}</div></details>
-      <button class="btn wide" id="next">Verder</button>`;
+      ${docBtn}<button class="btn wide" id="next">Verder</button>`;
     $("next").onclick=()=>{pos++;show()};
+    $("docx").onclick=()=>saveDocx([{task,form,text,passed:ok,verdict:res.verdict,errors:errs,corrected:res.corrected,example:q.right}]);
   }catch(e){
     const c=e&&e.code;
     if(c==="rate_limited"){btn.disabled=false;$("txt").readOnly=false;$("fb").innerHTML=`<p class="note">Te veel verzoeken achter elkaar. Wacht een minuut en probeer het opnieuw.</p>`;return}
     btn.hidden=true;
-    selfGrade(q,c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je tekst met het voorbeeld.":"Het nakijken is niet gelukt. Vergelijk je tekst met het voorbeeld.");
+    selfGrade(q,c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je tekst met het voorbeeld.":"Het nakijken is niet gelukt. Vergelijk je tekst met het voorbeeld.",{task,form,text,example:q.right});
   }
 }
 function grab(q){
@@ -1070,8 +1114,9 @@ function grab(q){
 }
 async function examWrite(){
   const A=cur.ans, card=$("card");
-  const foot=`<div class="two"><button class="ghost" id="tohome">Alle onderdelen</button><button class="btn" id="more">Nog een keer</button></div>`;
-  const bind=()=>{$("more").onclick=()=>build(cur.id,cur);$("tohome").onclick=home};
+  const doc=A.map(a=>({task:a.q.big+(a.q.open?" "+a.q.open:""),form:a.form,text:a.text,example:a.q.right}));
+  const foot=`${A.length?docBtn:""}<div class="two"><button class="ghost" id="tohome">Alle onderdelen</button><button class="btn" id="more">Nog een keer</button></div>`;
+  const bind=()=>{$("more").onclick=()=>build(cur.id,cur);$("tohome").onclick=home;if($("docx"))$("docx").onclick=()=>saveDocx(doc)};
   const own=a=>`<p class="ask">Jouw tekst</p><div class="sample">${esc((a.form?a.form+"\n\n":"")+a.text)||"(niets geschreven)"}</div>`;
   const fallback=msg=>{card.innerHTML=`<p class="note">${msg}</p>`+A.map((a,i)=>`<h2>Opdracht ${i+1}</h2><p class="note">${a.q.big}</p>${own(a)}<p class="ask">Voorbeeld</p><div class="sample">${esc(a.q.right)}</div>`).join("")+foot;bind()};
   if(!A.length){card.innerHTML=`<p class="note">Je hebt geen opdracht gemaakt.</p>`+foot;return bind()}
@@ -1080,6 +1125,7 @@ async function examWrite(){
     const T=await nakijken(A.map(a=>({task:a.q.big+(a.q.open?" "+a.q.open:""),form:a.form,text:a.text})));
     let good=0;
     const body=A.map((a,i)=>{const t=T[i]||{},errs=Array.isArray(t.errors)?t.errors:[];if(t.passed)good++;
+      Object.assign(doc[i],{passed:!!t.passed,verdict:t.verdict,errors:errs,corrected:t.corrected});
       errs.forEach(e=>{if(e&&e.wrong&&e.right&&e.wrong!==e.right&&String(e.wrong).length<90&&String(e.right).length<90&&!S.errs.some(x=>x.r===e.right))S.errs.unshift({w:String(e.wrong),r:String(e.right),y:String(e.why||"")})});
       return`<h2>Opdracht ${i+1}: <span class="${t.passed?"good":"bad"}">${t.passed?"voldoende":"nog niet voldoende"}</span></h2><p class="note">${a.q.big}</p><p class="note">${esc(t.verdict)}</p>
         ${errs.length?`<ul class="errs">${errs.map(e=>`<li><s>${esc(e.wrong)}</s> <strong>${esc(e.right)}</strong><span>${esc(e.why)}</span></li>`).join("")}</ul>`:""}
