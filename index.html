@@ -166,6 +166,13 @@ textarea{display:block;width:100%;font-size:17px;line-height:1.5;padding:12px;ma
 .doc .gap{height:8px}
 .doc dl{display:grid;grid-template-columns:fit-content(42%) 1fr;gap:3px 12px;margin:0 0 6px}
 .doc dt{color:var(--soft)} .doc dd{margin:0}
+.pics{display:grid;gap:8px;margin:8px 0 10px}
+.pics.n2{grid-template-columns:1fr 1fr} .pics.n3{grid-template-columns:1fr 1fr 1fr}
+.pics figure{position:relative;margin:0;aspect-ratio:4/3;background:var(--surface);border:1px solid var(--line)}
+.pics.n1 figure{aspect-ratio:16/9}
+.pics button{display:block;width:100%;height:100%;padding:0;border:0;background:none}
+.pics img{display:block;width:100%;height:100%;object-fit:cover}
+.pics span{pointer-events:none;position:absolute;left:0;top:0;background:var(--blue);color:var(--on);font-weight:700;font-size:14px;line-height:1;padding:5px 7px}
 .doc .mail{background:var(--surface);margin:0 -16px 12px;padding:8px 16px}
 .doc .mail dl{margin:0}
 .errs{list-style:none;padding:0;margin:4px 0 14px}
@@ -670,16 +677,16 @@ const SP=[
 ["Waar woon je en hoe is je buurt?","","Ik woon in een appartement in de stad. Mijn buurt is rustig en er zijn veel winkels."],
 ["Wat vind je leuk aan Nederland?","","Ik vind het leuk dat je overal kunt fietsen. De mensen zijn ook vriendelijk."],
 ["Wat deed je vroeger, toen je klein was?","","Toen ik klein was, speelde ik veel buiten. Ik ging elke dag naar school en ik had veel vrienden."],
-["🚲 of 🚗  Je ziet twee plaatjes: een fiets en een auto. Hoe ga jij het liefst naar je werk? Vertel ook waarom.","","Ik ga het liefst met de fiets, want dat is gezond en goedkoop. Met de auto sta ik vaak in de file."],
-["🏙️ of 🌳  Je ziet twee plaatjes: een stad en een dorp. Waar woon jij het liefst? Vertel ook waarom.","","Ik woon het liefst in de stad, omdat er veel winkels en restaurants zijn. In een dorp is het voor mij te rustig."],
-["🛒 → 🍳 → 🍽️  Je ziet drie plaatjes. Vertel wat de man doet.","","Eerst doet de man boodschappen in de supermarkt. Daarna kookt hij het eten. Ten slotte eet hij aan tafel."],
-["🍳 of 🍕  Je ziet twee plaatjes: thuis koken en eten in een restaurant. Wat doe jij het liefst? Vertel ook waarom.","","Ik kook het liefst thuis, want dat is goedkoper en gezonder. Maar soms ga ik naar een restaurant met vrienden."],
-["⏰ → 🚿 → 🚆  Je ziet drie plaatjes. Vertel wat de vrouw 's ochtends doet.","","Eerst staat de vrouw op. Daarna doucht ze. Dan gaat ze met de trein naar haar werk."],
-["☀️ of ❄️  Je ziet twee plaatjes: de zomer en de winter. Welk seizoen vind jij het fijnst? Vertel ook waarom.","","Ik vind de zomer het fijnst, omdat het dan warm is en ik veel buiten kan zijn. In de winter is het te koud en te donker."],
-["🤒 → 📞 → 👩‍⚕️  Je ziet drie plaatjes. Vertel wat er gebeurt.","","De man is ziek. Hij belt de huisarts en maakt een afspraak. Daarna gaat hij naar de dokter."],
-["👨‍🍳  Je ziet een kok in een keuken. Wat doet hij? Zou jij dit werk willen doen? Vertel ook waarom.","","De kok maakt eten in een restaurant. Ik zou dit werk niet willen doen, want je moet vaak 's avonds en in het weekend werken."],
-["📺 of 📖  Je ziet twee plaatjes: televisie kijken en een boek lezen. Wat doe jij liever 's avonds? Vertel ook waarom.","","Ik kijk liever televisie, want na mijn werk ben ik moe. Een boek lees ik liever in het weekend."],
-["🏊 of ⚽  Je ziet twee plaatjes: zwemmen en voetballen. Welke sport vind jij leuker? Vertel ook waarom.","","Ik vind voetballen leuker, omdat je het samen met vrienden doet. Zwemmen vind ik een beetje saai."],
+["Je ziet twee plaatjes: een fiets en een auto. Hoe ga jij het liefst naar je werk? Vertel ook waarom.","","Ik ga het liefst met de fiets, want dat is gezond en goedkoop. Met de auto sta ik vaak in de file.",["fiets","auto"]],
+["Je ziet twee plaatjes: een stad en een dorp. Waar woon jij het liefst? Vertel ook waarom.","","Ik woon het liefst in de stad, omdat er veel winkels en restaurants zijn. In een dorp is het voor mij te rustig.",["stad","dorp"]],
+["Je ziet drie plaatjes. Vertel wat er gebeurt, in de goede volgorde.","","Eerst doet een man boodschappen in de supermarkt. Daarna koken een man en een vrouw het eten. Ten slotte eet het gezin samen aan tafel.",["supermarkt","koken","eten"]],
+["Je ziet twee plaatjes: thuis koken en eten in een restaurant. Wat doe jij het liefst? Vertel ook waarom.","","Ik kook het liefst thuis, want dat is goedkoper en gezonder. Maar soms ga ik naar een restaurant met vrienden.",["koken","restaurant"]],
+["Je ziet drie plaatjes. Vertel wat jij 's ochtends doet.","","Eerst gaat de wekker en sta ik op. Daarna douche ik. Dan ga ik met de trein naar mijn werk.",["wekker","douche","trein"]],
+["Je ziet twee plaatjes: de zomer en de winter. Welk seizoen vind jij het fijnst? Vertel ook waarom.","","Ik vind de zomer het fijnst, omdat het dan warm is en ik veel buiten kan zijn. In de winter is het te koud en te donker.",["zomer","winter"]],
+["Je ziet drie plaatjes. Vertel wat je doet als je ziek bent.","","Ik voel me niet goed, dus ik ga in bed liggen. De volgende ochtend bel ik de huisarts. Ik krijg een afspraak en de dokter onderzoekt me.",["ziek","bellen","dokter"]],
+["Je ziet een kok in een keuken. Wat doet hij? Zou jij dit werk willen doen? Vertel ook waarom.","","De kok maakt eten in een restaurant. Ik zou dit werk niet willen doen, want je moet vaak 's avonds en in het weekend werken.",["kok"]],
+["Je ziet twee plaatjes: televisie kijken en een boek lezen. Wat doe jij liever 's avonds? Vertel ook waarom.","","Ik kijk liever televisie, want na mijn werk ben ik moe. Een boek lees ik liever in het weekend.",["tv","boek"]],
+["Je ziet twee plaatjes: zwemmen en voetballen. Welke sport vind jij leuker? Vertel ook waarom.","","Ik vind voetballen leuker, omdat je het samen met vrienden doet. Zwemmen vind ik een beetje saai.",["zwemmen","voetbal"]],
 ["Wie zijn er in je familie?","","Ik heb een man en twee kinderen. Mijn zoon is acht jaar en mijn dochter is vijf. Mijn ouders wonen niet in Nederland."],
 ["Wat doe je als je ziek bent?","","Als ik ziek ben, blijf ik thuis in bed. Ik bel mijn werk dat ik niet kom. Als het niet beter wordt, bel ik de huisarts."],
 ["Welk feest vier je graag? Wat doe je dan?","","Ik vier graag mijn verjaardag. Dan komen mijn familie en vrienden. We eten taart en we praten veel."],
@@ -699,13 +706,13 @@ const SP=[
 ["Je wilt een nieuw paspoort aanvragen. Je belt de gemeente. Wat vraag je?","","Goedemiddag, ik wil een nieuw paspoort aanvragen. Moet ik daarvoor een afspraak maken? En wat moet ik meenemen?"],
 ["Iemand op straat vraagt de weg naar het station. Je weet de weg. Wat zeg je?","","Het station is niet ver. U gaat hier rechtdoor en bij het stoplicht linksaf. Dan ziet u het station aan de rechterkant."],
 ["Je kind is ziek en kan niet naar school. Je belt de school. Wat zeg je?","","Goedemorgen, met de moeder van Sara uit groep vijf. Sara is ziek, ze heeft koorts. Ze komt vandaag niet naar school."],
-["🚆 of 🚌  Je ziet twee plaatjes: de trein en de bus. Waarmee reis jij liever? Vertel ook waarom.","","Ik reis liever met de trein, omdat de trein sneller is. In de trein kan ik ook lezen. De bus vind ik vaak te druk."],
-["🏖️ of ⛰️  Je ziet twee plaatjes: het strand en de bergen. Waar ga jij liever op vakantie? Vertel ook waarom.","","Ik ga liever naar het strand, want ik zwem graag. De bergen zijn mooi, maar lang wandelen vind ik zwaar."],
-["🏬 of 💻  Je ziet twee plaatjes: een winkel en een laptop. Koop jij kleren liever in de winkel of online? Vertel ook waarom.","","Ik koop kleren liever in de winkel, omdat ik ze dan kan passen. Online kopen is makkelijk, maar soms moet je dingen terugsturen."],
-["🐕 of 🐈  Je ziet twee plaatjes: een hond en een kat. Welk dier vind jij leuker? Vertel ook waarom.","","Ik vind een hond leuker, want met een hond ga je elke dag wandelen. Een kat is ook lief, maar die speelt minder met je."],
-["🤕 → 💊 → 🛏️  Je ziet drie plaatjes. Vertel wat de vrouw doet.","","De vrouw heeft hoofdpijn. Ze neemt een pijnstiller. Daarna gaat ze in bed liggen."],
-["🛍️ → 💳 → 🏠  Je ziet drie plaatjes. Vertel wat de man doet.","","De man koopt nieuwe kleren in een winkel. Hij betaalt met zijn bankpas. Daarna gaat hij naar huis."],
-["🚲 → 💥 → 🔧  Je ziet drie plaatjes. Vertel wat er gebeurt.","","De vrouw fietst naar haar werk. Onderweg gaat haar fiets kapot. Daarna brengt ze de fiets naar de fietsenmaker."]
+["Je ziet twee plaatjes: de trein en de bus. Waarmee reis jij liever? Vertel ook waarom.","","Ik reis liever met de trein, omdat de trein sneller is. In de trein kan ik ook lezen. De bus vind ik vaak te druk.",["trein","bus"]],
+["Je ziet twee plaatjes: het strand en de bergen. Waar ga jij liever op vakantie? Vertel ook waarom.","","Ik ga liever naar het strand, want ik zwem graag. De bergen zijn mooi, maar lang wandelen vind ik zwaar.",["strand","bergen"]],
+["Je ziet twee plaatjes: een winkel en een laptop. Koop jij kleren liever in de winkel of online? Vertel ook waarom.","","Ik koop kleren liever in de winkel, omdat ik ze dan kan passen. Online kopen is makkelijk, maar soms moet je dingen terugsturen.",["winkel","laptop"]],
+["Je ziet twee plaatjes: een hond en een kat. Welk dier vind jij leuker? Vertel ook waarom.","","Ik vind een hond leuker, want met een hond ga je elke dag wandelen. Een kat is ook lief, maar die speelt minder met je.",["hond","kat"]],
+["Je ziet drie plaatjes. Vertel wat je doet als je hoofdpijn hebt.","","Als ik hoofdpijn heb, neem ik een pijnstiller met een glas water. Daarna ga ik even in bed liggen. Meestal is de pijn dan snel weg.",["hoofdpijn","pil","bed"]],
+["Je ziet drie plaatjes. Vertel hoe jij nieuwe kleren koopt.","","Eerst zoek ik in de winkel een nieuwe trui. Dan betaal ik met mijn bankpas. Daarna fiets ik naar huis.",["winkel","pinnen","fietsen"]],
+["Je ziet drie plaatjes. Je fiets is kapot. Vertel wat je doet.","","Ik fiets naar mijn werk, maar onderweg krijg ik een lekke band. Ik breng mijn fiets naar de fietsenmaker. Hij repareert de band en ik betaal.",["fietstocht","lekkeband","fietsenmaker"]]
 ];
 // lezen: tekst + vragen [vraag, goed, fout, fout]
 const LZ=[
@@ -1038,7 +1045,7 @@ let tmr=null,tEnd=0;
 function tick(){const s=Math.max(0,Math.round((tEnd-Date.now())/1000));$("timer").textContent=tEnd?Math.floor(s/60)+":"+String(s%60).padStart(2,"0"):"";if(tEnd&&s<=0&&cur&&cur.exam){const q=queue[pos];if(q&&q.type==="write"&&cur.ans.length===pos)cur.ans.push(grab(q));pos=queue.length;finish()}}
 function clock(min){clearInterval(tmr);tmr=null;tEnd=min?Date.now()+min*6e4:0;tick();if(min)tmr=setInterval(tick,1000)}
 WR.forEach((p,i)=>ITEMS.push({sec:"wr",k:"wr|"+i,ord:i,type:"write",label:p[2]?"Schrijfopdracht: formulier":"Schrijfopdracht",big:p[0],sub:"",right:p[1],fields:p[2],open:p[3]}));
-SP.forEach((p,i)=>ITEMS.push({sec:"sp",k:"sp|"+i,ord:i/5|0,type:"reveal",label:"Antwoord hardop in twee of drie zinnen",big:p[0],sub:p[1],right:p[2]}));
+SP.forEach((p,i)=>ITEMS.push({sec:"sp",k:"sp|"+i,ord:i/5|0,type:"reveal",label:"Antwoord hardop in twee of drie zinnen",big:p[0],sub:p[1],right:p[2],pics:p[3]}));
 
 let cur,queue=[],pos=0,total=0,right=0,answered=false;
 function head(){
@@ -1224,6 +1231,7 @@ function show(){
   let h=`<p class="ask">${q.label}</p>`;
   if(q.text)h+=docHTML(q.text);
   if(q.say)h+=canSpeak?`<button class="btn wide" id="say">▶ Luister</button><p class="note">Je mag twee keer luisteren.</p>`:`<p class="note">Audio werkt hier niet. Lees de tekst.</p><div class="sample">${esc(q.say)}</div>`;
+  if(q.pics)h+=picsHTML(q.pics);
   if(q.big)h+=`<div class="verb${q.big.length>22?" long":""}">${q.big}</div>`;
   h+=`<p class="ru">${q.sub||""}</p>`;
   if(q.tts&&canSpeak&&q.big===q.tts)h+=`<button class="hint" id="tts">▶ Uitspraak</button>`;
@@ -1245,6 +1253,7 @@ function show(){
   if(q.type==="order")return order(q);
   if(q.type==="write"){$("chk").onclick=()=>{if(cur.exam){cur.ans.push(grab(q));pos++;show()}else check(q)};return}
   if(q.type==="reveal"){
+    document.querySelectorAll("#card [data-pic]").forEach(b=>b.onclick=()=>zoomPic(b.dataset.pic));
     if($("sayq"))$("sayq").onclick=()=>speak(spoken(q.big));
     if(cur.exam){$("recb").onclick=()=>listen(SR?"say":"rec",r=>spNext(q,r));return}
     $("recb").onclick=()=>listen("rec",spTake); $("rev").onclick=()=>reveal(q);
@@ -1312,6 +1321,25 @@ function reveal(q){
 }
 // A Lezen text as a document. The first line is the title of a notice or advert;
 // "label: value" lines become a table; an e-mail gets its header (Van, Aan, Onderwerp) on top
+// Spreken pictures (photos in /foto, sources in foto/CREDITS.md): two side by side to choose from,
+// or three in order, numbered. FOTO describes each photo for screen readers.
+const FOTO={fiets:"een fiets",auto:"een auto",stad:"huizen aan een gracht in de stad",dorp:"een dorp met water en bruggetjes",
+  supermarkt:"boodschappen doen in de supermarkt",koken:"een man en een vrouw koken",eten:"een gezin eet samen",restaurant:"twee mensen eten in een restaurant",
+  wekker:"een wekker",douche:"een douche",trein:"mensen stappen in de trein",zomer:"een park in de zomer",winter:"een fiets in de sneeuw",
+  ziek:"iemand ligt ziek in bed",bellen:"een man belt",dokter:"een dokter praat met een patiënt",kok:"een kok in een keuken",
+  tv:"een gezin kijkt televisie",boek:"een vrouw leest een boek",zwemmen:"mensen zwemmen in een zwembad",voetbal:"een voetbalwedstrijd",
+  bus:"een bus",strand:"het strand",bergen:"de bergen",winkel:"een kledingwinkel",laptop:"iemand werkt op een laptop",hond:"een hond",kat:"een kat",
+  hoofdpijn:"een man met hoofdpijn",pil:"iemand neemt een pil met water",bed:"iemand ligt in bed",pinnen:"betalen met een bankpas",
+  fietsen:"een vrouw op de fiets",fietstocht:"een vrouw fietst",lekkeband:"een lekke band plakken",fietsenmaker:"een fietsenmaker repareert een fiets"};
+function picsHTML(P){
+  return`<div class="pics n${P.length}">${P.map((f,i)=>`<figure><button data-pic="foto/${f}.jpg" aria-label="Plaatje ${i+1} groot bekijken"><img src="foto/${f}.jpg" alt="${FOTO[f]||""}" loading="lazy"></button>${P.length===3?`<span>${i+1}</span>`:""}</figure>`).join("")}</div>`;
+}
+// A photo full screen in the painting viewer; closing puts the painting back
+function zoomPic(src){
+  const z=$("zoom"),im=$("zimg"),c=$("zcap"),ps=im.src,pc=c.innerHTML;
+  im.src=src; c.innerHTML=""; z.hidden=false;
+  z.onclick=()=>{z.hidden=true;im.src=ps;c.innerHTML=pc;z.onclick=()=>{z.hidden=true}};
+}
 function docHTML(t){
   const L=String(t).split("\n"), row=/^([^:.?!]{2,45}):\s+(.+)$/, f=L[0]||"";
   const letter=/^(Beste|Geachte|Hallo|Hoi|Lieve)\b/.test(f), mail=/^Van:/.test(f);
@@ -1899,7 +1927,7 @@ document.addEventListener("keydown",e=>{
 $("exp").onclick=exportProgress; $("imp").onclick=()=>$("impf").click(); $("impf").onchange=importProgress;
 $("back").onclick=home; $("sback").onclick=home; $("lback").onclick=home; $("gen").onclick=gen;
 $("artbtn").onclick=()=>{$("zoom").hidden=false}; $("zoom").onclick=()=>{$("zoom").hidden=true};
-document.addEventListener("keydown",e=>{if(e.key==="Escape")$("zoom").hidden=true});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("zoom").hidden)$("zoom").onclick()});
 // Generating new texts needs Claude; hide the button where it can't work
 $("mode").onclick=()=>{S.typing=!S.typing;save();if(!answered)show();else head()};
 document.addEventListener("keydown",e=>{

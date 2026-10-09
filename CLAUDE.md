@@ -42,6 +42,13 @@ resized to max 1000px and compressed (~100–150 KB each). Record every new imag
 `art/CREDITS.md`. To add one, append to `ART` with `f` (file name), `y` (vertical focus
 in % for the header crop), artist, title, year, museum and an A2 sentence. Check facts in the sentences; they double as KNM material.
 
+## Photos (Spreken)
+
+The picture tasks in Spreken use real photos in `foto/`, by the same rules as the paintings:
+public domain or CC0 from Wikimedia Commons, max 640px wide (~30–100 KB), each recorded in
+`foto/CREDITS.md`. An `SP` item lists its photos in `p[3]` (two to choose from, or three in
+order); `FOTO` holds a short Dutch description of each for screen readers. No emoji as pictures.
+
 ## Progress
 
 Progress is per device: `localStorage` key `ww-v1`, mirrored to IndexedDB as a backup.
