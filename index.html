@@ -183,6 +183,13 @@ h2.gap{margin-top:28px}
 .tile.l3{--c:var(--bg);--m:var(--bg);--g:var(--blue);border-color:var(--blue)}
 .tile.sel{outline:2px solid var(--oranje);outline-offset:1px}
 .peek{min-height:52px;margin-top:12px}
+.forms{display:grid;grid-template-columns:auto 1fr;gap:0 14px;margin:4px 0 12px;align-items:baseline}
+.forms dt{grid-column:1/-1;color:var(--blue);font-size:13.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-top:10px}
+.forms dt:first-child{margin-top:0}
+.forms dd{margin:0}
+.forms dd.w{grid-column:1/-1}
+.forms b{font-weight:600}
+.forms mark{background:none;color:var(--blue);font-weight:700}
 .stat{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
 .stat>div{flex:1;min-width:0} .stat b{display:block} .stat span{display:block;color:var(--soft);font-size:14.5px;margin-bottom:6px}
 .stat .bar{margin:0}
@@ -724,8 +731,34 @@ function options(v,t){
 
 const ITEMS=[];
 const ch=(sec,k,ord,label,big,sub,right,wrong,note)=>ITEMS.push({sec,k:sec+"|"+k,ord,type:"choice",label,big,sub,right,opts:()=>shuffle([right,...wrong]),note});
+// Present tense for ik, jij, hij, wij: regular verbs follow the spelling rules, the rest are listed
+const PRES={zijn:"ben bent is",hebben:"heb hebt heeft",gaan:"ga gaat gaat",staan:"sta staat staat",kunnen:"kan kunt kan",willen:"wil wilt wil",mogen:"mag mag mag",komen:"kom komt komt",luisteren:"luister luistert luistert"};
+function present(inf){
+  if(PRES[inf])return[...PRES[inf].split(" "),inf];
+  let s=/[aeiou]en$/.test(inf)?inf.slice(0,-1):inf.slice(0,-2);
+  if(/([b-df-hj-np-tv-z])\1$/.test(s))s=s.slice(0,-1);
+  else if(/(^|[^aeiou])[aeou][^aeiou]$/.test(s))s=s.slice(0,-2)+s.slice(-2,-1).repeat(2)+s.slice(-1);
+  s=s.replace(/z$/,"s").replace(/v$/,"f");
+  const t=s.endsWith("t")?s:s+"t";
+  return[s,t,t,inf];
+}
+// A verb's forms as a small table: under each tense the pronouns that go with each form,
+// so it is clear which form is which; t marks the form that was just asked
+function vforms(v,t){
+  const g=v[0]==="gebeuren", hl=(k,x)=>k===t?`<mark>${x}</mark>`:x,
+    row=(p,f)=>`<dd>${p}</dd><dd><b>${f}</b></dd>`,
+    who=g?["het","ze"]:["ik","jij","hij, zij, het","wij, jullie, zij"],
+    pick=a=>g?[a[2],a[3]]:a,
+    pres=pick(present(v[0])),
+    aux=pick(["ben","bent","is","zijn"].map((z,i)=>{const h=["heb","hebt","heeft","hebben"][i];return v[5]==="zijn"?z:v[5]==="hebben"?h:h+" / "+z}));
+  return`<dl class="forms"><dt>infinitief</dt><dd class="w"><b>${v[0]}</b></dd>
+    <dt>presens</dt>${who.map((p,i)=>row(p,pres[i])).join("")}
+    <dt>imperfectum</dt>${row(g?"het":"ik, jij, hij, zij",hl("past",v[2]))}${row(g?"ze":"wij, jullie, zij",hl("pastpl",v[3]))}
+    <dt>perfectum</dt>${who.map((p,i)=>row(p,hl("aux",aux[i])+" "+hl("pp",v[4]))).join("")}</dl>`;
+}
 V.forEach((v,i)=>TL.forEach(t=>{if(t==="aux"&&!v[5])return;
-  ITEMS.push({sec:"verb",k:v[0]+"|"+t,ord:Math.floor(i/8),type:"choice",label:TYPES[t],big:v[0],sub:v[1],right:answer(v,t),opts:()=>options(v,t),canType:t!=="aux"})}));
+  ITEMS.push({sec:"verb",k:v[0]+"|"+t,ord:Math.floor(i/8),type:"choice",label:TYPES[t],big:v[0],sub:v[1],right:answer(v,t),opts:()=>options(v,t),canType:t!=="aux",
+    note:vforms(v,t)})}));
 WO.forEach((w,i)=>ITEMS.push({sec:"wo",k:"wo|"+i,ord:i/6|0,type:"order",label:"Maak een zin",sub:w[1],right:w[0],note:w[2]}));
 PR.forEach((p,i)=>ch("pr",i,i/6|0,"Kies de juiste vorm",p[0],p[1],p[2],p.slice(3)));
 HET.forEach((w,i)=>{const[a,b]=w.split(":");ch("dh","a"+a,i/3|0,"De of het?",a,"","het",["de"])});
@@ -1468,11 +1501,11 @@ function level(v){
 function wall(){
   let known=0;
   $("wall").innerHTML=V.map((v,i)=>{const l=level(v);if(l===3)known++;return`<button class="tile l${l}" data-i="${i}" aria-label="${v[0]}"></button>`}).join("");
-  $("wallsub").textContent=`${known} van ${V.length} geleerd. Een tegel wordt blauw als je het werkwoord kent. Tik op een tegel om het werkwoord te zien.`;
+  $("wallsub").textContent=`${known} van ${V.length} geleerd. Een tegel wordt blauw als je het werkwoord kent. Tik op een tegel om de vormen te zien.`;
   document.querySelectorAll(".tile").forEach(b=>b.onclick=()=>{
     document.querySelectorAll(".tile.sel").forEach(x=>x.classList.remove("sel")); b.classList.add("sel");
     const v=V[b.dataset.i];
-    $("peek").innerHTML=`<b>${v[0]}</b>`;
+    $("peek").innerHTML=vforms(v);
   });
 }
 $("back").onclick=home; $("sback").onclick=home; $("lback").onclick=home; $("gen").onclick=gen;
