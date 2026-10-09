@@ -46,6 +46,16 @@ in % for the header crop), artist, title, year, museum and an A2 sentence. Check
 
 Progress is per device: `localStorage` key `ww-v1`, mirrored to IndexedDB as a backup.
 There is no server. Don't change the stored shape without migrating old data.
+To move to another device, the learner saves progress as a JSON file (`S` as is) and loads it
+there; loading merges (per exercise the most practised version wins, words and mistakes are added).
+
+## Content
+
+Lezen texts are plain strings rendered as documents by `docHTML()`: the first line is the title
+(unless it is a letter or an e-mail), `label: value` lines become a table, `Van:` starts an
+e-mail header. Woordenschat has the definitions in `VO` and the themed A2 word list `WT`
+(Dutch with de/het = Russian), practised both ways. Item keys (`lz|3.1`, `wn|de huis`) are
+stored progress: append new items, don't reorder or rename existing ones.
 
 ## Writing and speaking check (Schrijven, Spreken)
 

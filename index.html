@@ -152,6 +152,16 @@ textarea{display:block;width:100%;font-size:17px;line-height:1.5;padding:12px;ma
 .line .tok{background:var(--blue);color:var(--on);border-color:var(--blue);box-shadow:none}
 .sample{white-space:pre-line;background:var(--surface);border-left:3px solid var(--blue);padding:12px 14px;margin:4px 0 14px}
 .card .sample{font-size:16.5px}
+/* Lezen: the text as the document it is (letter, e-mail, advert, notice), like on the exam */
+.doc{background:var(--bg);border:1px solid var(--line);border-top:3px solid var(--blue);padding:0 16px 12px;margin:4px 0 16px;font-size:16.5px}
+.doc .kind{font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);padding:8px 0 7px;border-bottom:1px solid var(--line);margin-bottom:10px}
+.doc h3{font-size:19px;font-weight:700;margin:0 0 8px;line-height:1.3}
+.doc p{margin:0 0 6px}
+.doc .gap{height:8px}
+.doc dl{display:grid;grid-template-columns:fit-content(42%) 1fr;gap:3px 12px;margin:0 0 6px}
+.doc dt{color:var(--soft)} .doc dd{margin:0}
+.doc .mail{background:var(--surface);margin:0 -16px 12px;padding:8px 16px}
+.doc .mail dl{margin:0}
 .errs{list-style:none;padding:0;margin:4px 0 14px}
 .errs li{padding:8px 0;border-bottom:1px solid var(--line)}
 .errs s{color:var(--bad)} .errs strong{color:var(--good)}
@@ -265,7 +275,10 @@ h2.gap{margin-top:28px}
     <div id="exams"></div>
     <button class="ghost wide" id="gen">Nieuwe lees- en luisterteksten maken</button>
     <p class="note" id="genmsg"></p>
-    <p class="sub" id="sync" style="margin-top:22px">Je voortgang wordt bewaard op dit apparaat.</p>
+    <p class="sub" id="sync" style="margin-top:22px">Je voortgang wordt bewaard op dit apparaat. Wil je verder op een ander apparaat? Sla je voortgang op als bestand en laad het daar.</p>
+    <div class="two"><button class="ghost" id="exp">Voortgang opslaan</button><button class="ghost" id="imp">Voortgang laden</button></div>
+    <input type="file" id="impf" accept=".json,application/json" hidden>
+    <p class="note" id="impmsg" style="margin-top:8px"></p>
   </div>
   <div id="stats" hidden>
     <button class="back" id="sback"><span aria-hidden="true">←</span>Alle onderdelen</button>
@@ -663,7 +676,7 @@ const LZ=[
 ["Beste mevrouw Haddad,\nVanaf 1 juli wordt uw huur hoger. U betaalt nu € 650 per maand. Vanaf 1 juli betaalt u € 670 per maand. U hoeft niets te doen: wij passen de automatische betaling zelf aan.\nBent u het niet eens met de huurverhoging? Stuur ons dan voor 1 juli een brief of een e-mail.\nHebt u een laag inkomen? Misschien kunt u huurtoeslag krijgen.\nMet vriendelijke groet,\nWoonstichting Thuis",[["Hoeveel meer huur betaalt mevrouw Haddad vanaf 1 juli?","€ 20 per maand","€ 670 per maand","€ 650 per jaar"],["Wat moet mevrouw Haddad doen voor de nieuwe huur?","niets","een brief sturen","de betaling zelf aanpassen"],["Wat doet zij als zij het niet eens is met de nieuwe huur?","voor 1 juli een brief of e-mail sturen","minder huur betalen","huurtoeslag aanvragen"]]],
 ["Vacature: medewerker bakkerij (20 uur per week)\nBakkerij Van Dijk zoekt een vriendelijke collega voor de winkel.\nWat ga je doen? Je helpt klanten, je verkoopt brood en taart en je houdt de winkel schoon.\nWanneer werk je? Van dinsdag tot en met vrijdag, van 7.00 tot 12.00 uur.\nWat vragen wij? Je spreekt een beetje Nederlands. Ervaring is niet nodig.\nInteresse? Kom langs in de winkel met je cv, of bel Peter: 06-98765432.",[["Hoeveel dagen per week werk je?","vier","vijf","twee"],["Wat is waar?","je hoeft geen ervaring te hebben","je moet goed Nederlands spreken","je werkt ook 's middags"],["Hoe kun je reageren?","met je cv naar de winkel gaan","een e-mail sturen","een brief sturen"]]],
 ["Beste ouders van groep 4,\nIn de week van 10 tot 14 februari zijn de tienminutengesprekken. U praat dan tien minuten met de leerkracht over uw kind.\nKies zelf een tijd in de ouder-app. Dat kan tot 5 februari.\nKunt u niet in deze week? Stuur dan een bericht aan juf Anouk. Dan maken we samen een andere afspraak.\nUw kind hoeft niet mee te komen.\nMet vriendelijke groet,\nBasisschool De Regenboog",[["Hoe maakt u een afspraak?","in de ouder-app","met een brief aan de school","met een telefoontje naar juf Anouk"],["U kunt niet in die week. Wat doet u?","een bericht sturen aan juf Anouk","niets","uw kind alleen sturen"],["Wat is waar?","uw kind hoeft niet mee","het gesprek duurt een uur","u kunt tot 14 februari een tijd kiezen"]]],
-["Let op: werkzaamheden aan het spoor\nOp zaterdag 12 en zondag 13 oktober rijden er geen treinen tussen Utrecht en Amersfoort.\nEr rijden bussen in plaats van treinen. De bussen vertrekken bij de uitgang Noord van het station.\nReken op 30 minuten extra reistijd.\nMet uw gewone treinkaartje mag u ook in de bus.",[["Hoe reist u op zaterdag van Utrecht naar Amersfoort?","met de bus","met de trein","dat kan niet"],["Wat is waar?","u hebt geen extra kaartje nodig","u moet een buskaartje kopen","de reis duurt korter dan normaal"]]],
+["Weekmarkt op een andere plek\nVan 1 tot en met 30 november staat de weekmarkt niet op het Marktplein, maar op het parkeerterrein bij het station. Op het Marktplein wordt de straat gerepareerd.\nDe markt is zoals altijd op donderdag en zaterdag, van 9.00 tot 17.00 uur.\nIn november kunt u niet parkeren bij het station. Kom daarom met de fiets of met de bus.",[["Waar is de markt in november?","op het parkeerterrein bij het station","op het Marktplein","in een andere stad"],["Waarom komt u in november beter niet met de auto?","u kunt bij het station niet parkeren","de markt is alleen voor fietsers","de straat bij het station is kapot"]]],
 ["Buurthuis De Ster: programma\nmaandag 10.00 – 12.00 uur: koffieochtend voor iedereen (gratis)\ndinsdag 19.00 – 21.00 uur: naaicafé, repareer samen je kleren (€ 2)\ndonderdag 15.00 – 17.00 uur: huiswerkhulp voor kinderen van 8 tot 12 jaar (gratis)\nvrijdag 18.00 uur: samen eten (€ 5). Opgeven kan tot woensdag bij de bar.\nIedereen is welkom!",[["Uw zoon van 10 jaar heeft hulp nodig met zijn huiswerk. Wanneer gaat hij?","op donderdagmiddag","op maandagochtend","op dinsdagavond"],["U wilt vrijdag mee-eten. Wat moet u doen?","u geeft zich uiterlijk woensdag op bij de bar","u belt vrijdag het buurthuis","u hoeft niets te doen"],["Wat kost het naaicafé?","€ 2","€ 5","niets"]]],
 ["Hoi Sanne,\nIk ga verhuizen! Op zaterdag 6 april breng ik al mijn spullen naar mijn nieuwe huis in Leiden. Kun jij me helpen? We beginnen om 9.00 uur bij mijn oude huis. Mijn broer rijdt de bus. Ik zorg voor koffie en lunch.\n's Avonds geef ik een klein feestje in het nieuwe huis. Je vriend is ook welkom.\nLaat je het weten?\nGroetjes, Fatima",[["Waarom schrijft Fatima?","ze vraagt hulp bij haar verhuizing","ze wil een bus huren","ze zoekt een huis in Leiden"],["Waar begint de verhuizing?","bij het oude huis van Fatima","in Leiden","bij Sanne thuis"],["Wie rijdt de bus?","de broer van Fatima","Sanne","Fatima"]]]
 ];
@@ -728,7 +741,7 @@ const SEC=[
 {id:"wo",t:"Woordvolgorde",s:"Maak een zin van de woorden",n:6},
 {id:"pr",t:"Tegenwoordige tijd",s:"Vervoeging, modale en scheidbare werkwoorden",n:10},
 {id:"dh",t:"De, het en uitgangen",s:"Lidwoorden, meervoud, bijvoeglijke naamwoorden, niet / geen",n:10},
-{id:"vo",t:"Woordenschat",s:"Dokter, werk, wonen, vervoer, winkel",n:10}
+{id:"vo",t:"Woordenschat",s:"Woorden per thema: dokter, werk, wonen, vervoer, winkel en meer",n:10}
 ];
 const GAP=[1,2,4,7,14], KEY="ww-v1";
 const $=id=>document.getElementById(id);
@@ -828,6 +841,26 @@ NG.forEach((p,i)=>ch("dh","n"+i,i/2|0,"Niet of geen?",p[0],"",p[1],[p[1]==="niet
 const kc={};KNM.forEach((p,i)=>{kc[p[0]]=(kc[p[0]]||0)+1;ch("knm",i,kc[p[0]]/2|0,"KNM: "+p[0],p[1],"",p[2],[p[3],p[4]],p[5])});
 VO.forEach((p,i)=>ITEMS.push({sec:"vo",k:"vo|"+p[0],ord:i/6|0,type:"choice",label:"Wat betekent dit woord?",big:p[0],sub:"",right:p[1],
   opts:()=>shuffle([p[1],...shuffle(VO.filter(x=>x!==p)).slice(0,3).map(x=>x[1])])}));
+// Woorden per thema: A2 words for the exam topics, both ways (Dutch → Russian, Russian → Dutch).
+// The wrong options come from the same theme; for a noun, one of them is the word with the other article.
+const WT=[
+["Gezondheid","de huisarts=семейный врач|het ziekenhuis=больница|de apotheek=аптека|het recept=рецепт|het medicijn=лекарство|de pijn=боль|de hoofdpijn=головная боль|de buikpijn=боль в животе|de koorts=температура, жар|hoesten=кашлять|ziek=больной|beter worden=выздоравливать|de tandarts=стоматолог|de verpleegkundige=медсестра, медбрат|de specialist=врач-специалист|het bloed=кровь|de uitslag=результат (анализа)|de zorgverzekering=медицинская страховка|het eigen risico=франшиза (своя часть оплаты лечения)|de huisartsenpost=дежурный врач (ночью и в выходные)|de ambulance=скорая помощь|het spreekuur=часы приёма|de griep=грипп|het been=нога|de arm=рука|de rug=спина|de keel=горло|gezond=здоровый"],
+["Werk","de baan=работа, должность|de werkgever=работодатель|de werknemer=работник|de collega=коллега|de baas=начальник|het salaris=зарплата|het contract=трудовой договор|de vacature=вакансия|solliciteren=откликаться на вакансию|het sollicitatiegesprek=собеседование|het cv=резюме|de ervaring=опыт|de opleiding=обучение, образование|het diploma=диплом|parttime=неполный рабочий день|fulltime=полный рабочий день|de werktijden=рабочее время|de pauze=перерыв|de vakantiedagen=дни отпуска|het uitzendbureau=кадровое агентство|werkloos=безработный|de uitkering=пособие|het kantoor=офис|de vergadering=совещание|het rooster=график работы|de klant=клиент|verdienen=зарабатывать|ontslaan=увольнять"],
+["Wonen","de woning=жильё|het huis=дом|het appartement=квартира|de huur=арендная плата|de huurder=арендатор, жилец|de verhuurder=арендодатель|de woningcorporatie=жилищная корпорация|huren=снимать (жильё)|verhuizen=переезжать|de buren=соседи|de buurt=район|de verdieping=этаж|de trap=лестница|de lift=лифт|de slaapkamer=спальня|de woonkamer=гостиная|de badkamer=ванная комната|de keuken=кухня|de wc=туалет|de tuin=сад|het balkon=балкон|de verwarming=отопление|de rekening=счёт (за услуги)|de stroom=электричество|de vuilnisbak=мусорное ведро|het afval=мусор|de sleutel=ключ|de monteur=мастер, техник|kapot=сломанный|de reparatie=ремонт"],
+["Vervoer","de trein=поезд|de bus=автобус|de tram=трамвай|de metro=метро|de fiets=велосипед|de auto=машина|het station=вокзал|het perron=платформа|de halte=остановка|het kaartje=билет|de ov-chipkaart=транспортная карта|inchecken=отметиться картой при входе|uitchecken=отметиться картой при выходе|overstappen=пересаживаться|de vertraging=задержка|vertrekken=отправляться|aankomen=прибывать|de reis=поездка|het rijbewijs=водительские права|de file=пробка|parkeren=парковаться|de weg=дорога|het verkeer=движение (на дороге)|het stoplicht=светофор|rechtsaf=направо|linksaf=налево|rechtdoor=прямо|de kruising=перекрёсток|de fietsenstalling=велопарковка"],
+["Winkelen en geld","de winkel=магазин|de supermarkt=супермаркет|de markt=рынок|de kassa=касса|de bon=чек|de prijs=цена|duur=дорогой|goedkoop=дешёвый|de korting=скидка|de aanbieding=акция, спецпредложение|betalen=платить|pinnen=платить картой|contant=наличными|de pinpas=банковская карта|het geld=деньги|de portemonnee=кошелёк|de maat=размер|passen=примерять|ruilen=обменивать|terugbrengen=возвращать (в магазин)|de klantenservice=служба поддержки|bestellen=заказывать|het pakket=посылка|bezorgen=доставлять|de bank=банк|het rekeningnummer=номер счёта|sparen=копить|lenen=брать в долг|de belasting=налог"],
+["School en kinderen","de basisschool=начальная школа|de middelbare school=средняя школа|de groep=класс (в начальной школе)|de leerkracht=учитель|de juf=учительница|de leerling=ученик|het huiswerk=домашнее задание|het rapport=табель с оценками|de ouderavond=родительское собрание|de kinderopvang=присмотр за детьми, детский сад|de oppas=няня|het schoolreisje=школьная экскурсия|de schoolvakantie=школьные каникулы|spijbelen=прогуливать школу|leerplichtig=обязан ходить в школу|de gymles=урок физкультуры|het lokaal=классная комната|de les=урок|leren=учить, учиться|uitleggen=объяснять|het cijfer=оценка|de toets=контрольная|de opvoeding=воспитание|het consultatiebureau=детская консультация (для малышей)"],
+["Gemeente en instanties","de gemeente=муниципалитет|het gemeentehuis=здание муниципалитета|het loket=окошко приёма|het formulier=бланк|invullen=заполнять|aanvragen=подавать заявление|de aanvraag=заявление|het paspoort=паспорт|de identiteitskaart=удостоверение личности|geldig=действительный|verlopen=истекать (о сроке)|de handtekening=подпись|ondertekenen=подписывать|het adres=адрес|zich inschrijven=регистрироваться|de Belastingdienst=налоговая служба|de toeslag=пособие, доплата|het burgerservicenummer=личный номер (BSN)|de politie=полиция|de brandweer=пожарная служба|het alarmnummer=номер экстренной помощи (112)|de wet=закон|de regel=правило|de boete=штраф|de verzekering=страховка|de brief=письмо|de postcode=почтовый индекс|de geboortedatum=дата рождения|de nationaliteit=гражданство"],
+["Tijd en weer","de ochtend=утро|de middag=день (после полудня)|de avond=вечер|de nacht=ночь|vandaag=сегодня|morgen=завтра|gisteren=вчера|overmorgen=послезавтра|de week=неделя|het weekend=выходные|de maand=месяц|het jaar=год|het uur=час|het kwartier=четверть часа|vroeg=рано|laat=поздно|op tijd=вовремя|het weer=погода|de zon=солнце|de regen=дождь|de wind=ветер|de sneeuw=снег|de wolk=облако|warm=тёплый, жаркий|koud=холодный|nat=мокрый|droog=сухой|de lente=весна|de zomer=лето|de herfst=осень|de winter=зима"],
+["Familie en mensen","de familie=родственники|het gezin=семья (родители и дети)|de ouders=родители|de vader=отец|de moeder=мать|de zoon=сын|de dochter=дочь|de broer=брат|de zus=сестра|de opa=дедушка|de oma=бабушка|de man=муж, мужчина|de vrouw=жена, женщина|getrouwd=женат, замужем|gescheiden=разведён|de baby=младенец|het kind=ребёнок|de vriend=друг|de vriendin=подруга|de buurman=сосед|de buurvrouw=соседка|de verjaardag=день рождения|jarig zijn=праздновать день рождения|feliciteren=поздравлять|trouwen=жениться, выходить замуж|oud=старый|jong=молодой|aardig=милый, приятный|boos=сердитый|blij=радостный|verdrietig=грустный"],
+["Eten en drinken","het ontbijt=завтрак|de lunch=обед|het avondeten=ужин|het brood=хлеб|de boterham=бутерброд|de kaas=сыр|de melk=молоко|het ei=яйцо|de groente=овощи|het fruit=фрукты|de appel=яблоко|het vlees=мясо|de vis=рыба|de kip=курица|de rijst=рис|de aardappel=картофель|de soep=суп|de koffie=кофе|de thee=чай|de suiker=сахар|het zout=соль|koken=готовить|bakken=печь, жарить|snijden=резать|de pan=кастрюля, сковорода|het bord=тарелка|het glas=стакан|het mes=нож|de vork=вилка|de lepel=ложка|lekker=вкусный|honger hebben=быть голодным|dorst hebben=хотеть пить"]
+];
+WT.forEach(([t,list],ti)=>{const W=list.split("|").map(x=>x.split("="));
+  W.forEach(([nl,ru],i)=>{const o=W.filter(x=>x[0]!==nl), m=nl.match(/^(de|het) (.+)$/), ord=1+ti*3+(i/10|0);
+    ITEMS.push({sec:"vo",k:"wn|"+nl,ord,type:"choice",label:"Wat betekent dit woord?",big:nl,sub:t,right:ru,tts:nl,
+      opts:()=>shuffle([ru,...shuffle(o.slice()).slice(0,3).map(x=>x[1])])});
+    ITEMS.push({sec:"vo",k:"wt|"+nl,ord:ord+1,type:"choice",label:"Hoe zeg je dit in het Nederlands?",big:ru,sub:t,right:nl,tts:nl,
+      opts:()=>{const w=shuffle(o.slice()).slice(0,3).map(x=>x[0]);if(m)w[0]=(m[1]==="de"?"het ":"de ")+m[2];return shuffle([nl,...w])}})})});
 LZ.forEach((t,i)=>t[1].forEach((q,j)=>ITEMS.push({sec:"lz",k:"lz|"+i+"."+j,ord:j,type:"choice",label:"Lees de tekst",text:t[0],big:q[0],sub:"",right:q[1],opts:()=>shuffle(q.slice(1))})));
 LS.forEach((p,i)=>ITEMS.push({sec:"ls",k:"ls|"+i,ord:i/5|0,type:"choice",label:"Luister en kies het goede antwoord",say:p[0],big:p[1],sub:"",right:p[2],opts:()=>shuffle(p.slice(2)),note:"Tekst: "+p[0]}));
 const genN={lz:0,ls:0};
@@ -1130,11 +1163,12 @@ function show(){
   head(); if(pos>=queue.length)return finish();
   const q=queue[pos]; answered=false; $("mode").hidden=!q.canType; hush();
   let h=`<p class="ask">${q.label}</p>`;
-  if(q.text)h+=`<div class="sample">${q.text}</div>`;
+  if(q.text)h+=docHTML(q.text);
   if(q.say)h+=canSpeak?`<button class="btn wide" id="say">▶ Luister</button><p class="note">Je mag twee keer luisteren.</p>`:`<p class="note">Audio werkt hier niet. Lees de tekst.</p><div class="sample">${esc(q.say)}</div>`;
   if(q.big)h+=`<div class="verb${q.big.length>22?" long":""}">${q.big}</div>`;
   h+=`<p class="ru">${q.sub||""}</p>`;
-  if(RU[q.big])h+=`<button class="hint" id="tr">Vertaling</button>`;
+  if(q.tts&&canSpeak&&q.big===q.tts)h+=`<button class="hint" id="tts">▶ Uitspraak</button>`;
+  else if(RU[q.big]&&!q.tts)h+=`<button class="hint" id="tr">Vertaling</button>`;
   let o;
   if(q.type==="order")h+=`<div class="line" id="line"></div><div class="pool" id="pool"></div><button class="btn wide" id="chk" disabled>Controleer</button>`;
   else if(q.type==="write")h+=(q.fields?q.fields.map((f,i)=>`<label class="fld"><span>${f}</span><input id="f${i}" autocomplete="off"></label>`).join("")+`<p class="ask">${q.open}</p>`:"")+`<textarea id="txt" rows="7" placeholder="Schrijf hier je tekst…" aria-label="Je tekst" spellcheck="false" autocapitalize="sentences"></textarea><button class="btn wide" id="chk">${cur.exam?"Volgende opdracht":"Controleer mijn tekst"}</button>`;
@@ -1147,7 +1181,8 @@ function show(){
   h+=`<div class="fb" id="fb"></div>`;
   $("card").innerHTML=h;
   if($("say"))$("say").onclick=()=>speak(q.say);
-  if(RU[q.big])$("tr").onclick=()=>{$("tr").textContent=RU[q.big];$("tr").disabled=true};
+  if($("tts"))$("tts").onclick=()=>speak(q.tts);
+  if($("tr"))$("tr").onclick=()=>{$("tr").textContent=RU[q.big];$("tr").disabled=true};
   if(q.type==="order")return order(q);
   if(q.type==="write"){$("chk").onclick=()=>{if(cur.exam){cur.ans.push(grab(q));pos++;show()}else check(q)};return}
   if(q.type==="reveal"){
@@ -1180,6 +1215,7 @@ function feedback(ok,q){
     ${q.note?(q.sec==="verb"?q.note:`<div class="note">${q.note}</div>`):"<div class='row'></div>"}
     <button class="btn wide" id="next">Verder</button>`;
   $("next").onclick=()=>{pos++;show()}; $("next").focus();
+  if(q.tts&&q.big!==q.tts&&canSpeak)speak(q.tts); // Russian → Dutch: hear the Dutch word
 }
 function grade(ans,btn,o){
   if(answered||!ans)return; answered=true;
@@ -1214,6 +1250,24 @@ function reveal(q){
   $("fb").innerHTML=`<div class="sample">${q.right}</div><div class="two"><button class="ghost" id="again">Later herhalen</button><button class="btn" id="got">Gelukt</button></div>`;
   const go=ok=>{record(ok);pos++;show()};
   $("again").onclick=()=>go(false); $("got").onclick=()=>go(true);
+}
+// A Lezen text as a document. The first line is the title of a notice or advert;
+// "label: value" lines become a table; an e-mail gets its header (Van, Aan, Onderwerp) on top
+function docHTML(t){
+  const L=String(t).split("\n"), row=/^([^:.?!]{2,45}):\s+(.+)$/, f=L[0]||"";
+  const letter=/^(Beste|Geachte|Hallo|Hoi|Lieve)\b/.test(f), mail=/^Van:/.test(f);
+  const kind=mail?"E-mail":letter?(/^(Hallo|Hoi|Lieve)/.test(f)?"Bericht":"Brief")
+    :/^(Te koop|Vacature|Gezocht|Deze week|Aanbieding)/i.test(f)?"Advertentie":/^(Let op|Mededeling)|werkzaamheden|op een andere plek/i.test(f)?"Mededeling":"Informatie";
+  let h="",i=0,dl=[];
+  const flush=()=>{if(dl.length)h+=`<dl>${dl.join("")}</dl>`;dl=[]};
+  if(mail){while(i<L.length&&row.test(L[i])){const[,a,b]=L[i].match(row);dl.push(`<dt>${a}</dt><dd>${b}</dd>`);i++}
+    h+=`<div class="mail">`;flush();h+=`</div>`}
+  else if(!letter){h+=`<h3>${f}</h3>`;i=1}
+  for(;i<L.length;i++){const x=L[i],m=x.match(row);
+    if(m&&!letter){dl.push(`<dt>${m[1]}</dt><dd>${m[2]}</dd>`);continue}
+    flush(); h+=x.trim()?`<p>${x}</p>`:`<div class="gap"></div>`}
+  flush();
+  return`<div class="doc"><div class="kind">${kind}</div>${h}</div>`;
 }
 function esc(x){return String(x==null?"":x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
 // Schrijven as a Word file, built here without a library: a .docx is a zip (stored, not compressed)
@@ -1347,6 +1401,34 @@ async function examSpeak(){
     const c=e&&e.code;
     plain(c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je antwoorden met de voorbeelden.":c==="rate_limited"?"Te veel verzoeken achter elkaar. Probeer het over een minuut opnieuw.":"Het nakijken is niet gelukt. Vergelijk je antwoorden met de voorbeelden.");
   }
+}
+// Progress as a file, to carry it to another device (there is no server).
+// Loading merges: for every exercise the most practised version wins, saved words and mistakes are added.
+// Own books stay behind: their text lives only in this device's IndexedDB.
+function exportProgress(){
+  const u=URL.createObjectURL(new Blob([JSON.stringify(S)],{type:"application/json"})),a=document.createElement("a");
+  a.href=u;a.download=`Nederlands A2 voortgang ${new Date().toISOString().slice(0,10)}.json`;document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(u),1e4);
+}
+function mergeProgress(r){
+  let n=0; const sc=x=>x?(x.r||0)+(x.w||0):-1;
+  Object.entries(r.items).forEach(([k,v])=>{if(v&&typeof v==="object"&&sc(v)>sc(S.items[k])){S.items[k]=v;n++}});
+  const add=(key,id)=>{S[key]=S[key]||[];(Array.isArray(r[key])?r[key]:[]).forEach(x=>{if(x&&x[id]&&!S[key].some(y=>y[id]===x[id]))S[key].push(x)})};
+  add("words","w"); add("errs","r"); S.errs=S.errs.slice(0,40);
+  S.bk=S.bk||{}; Object.entries(r.bk||{}).forEach(([id,b])=>{const a=S.bk[id];if(b&&(!a||(b.at||0)>(a.at||0)))S.bk[id]=b});
+  if((r.last||0)>(S.last||0)){S.last=r.last;S.streak=r.streak||0}
+  if(!Object.keys(S.exams||{}).length&&r.exams)S.exams=r.exams;
+  const gl=g=>g?(g.lz||[]).length+(g.ls||[]).length:0; if(!gl(S.gen)&&gl(r.gen))S.gen=r.gen;
+  if(r.plan0&&(!S.plan0||r.plan0<S.plan0))S.plan0=r.plan0;
+  return n;
+}
+async function importProgress(e){
+  const f=e.target.files[0]; e.target.value=""; if(!f)return;
+  try{
+    const r=JSON.parse(await f.text()); if(!r||!r.items||typeof r.items!=="object")throw 0;
+    const n=mergeProgress(r); addGenerated(); save(); home();
+    $("impmsg").textContent=n?`Klaar: ${n===1?"1 oefening":n+" oefeningen"} bijgewerkt.`:"Klaar. Er was niets nieuws in dit bestand.";
+  }catch(x){$("impmsg").textContent="Dit bestand kan ik niet lezen. Kies een bestand dat je hier hebt opgeslagen."}
 }
 async function gen(){
   const b=$("gen"),m=$("genmsg"); b.disabled=true;
@@ -1755,6 +1837,7 @@ document.addEventListener("keydown",e=>{
     if(Math.abs(dx)<70||Math.abs(dy)>50||Date.now()-t0>700)return;
     if(dx<0&&R.p<R.pages.length-1)turn(1);else if(dx>0&&R.p>0)turn(-1)});
 })();
+$("exp").onclick=exportProgress; $("imp").onclick=()=>$("impf").click(); $("impf").onchange=importProgress;
 $("back").onclick=home; $("sback").onclick=home; $("lback").onclick=home; $("gen").onclick=gen;
 $("artbtn").onclick=()=>{$("zoom").hidden=false}; $("zoom").onclick=()=>{$("zoom").hidden=true};
 document.addEventListener("keydown",e=>{if(e.key==="Escape")$("zoom").hidden=true});
