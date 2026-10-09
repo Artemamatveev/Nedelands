@@ -30,7 +30,7 @@ generic "AI app" look.
 ## Home screen
 
 One clear path, top to bottom: today's lesson (numbered steps; the next one is filled
-cobalt; no exam dates: the plan starts with the exam part that scores lowest), then choose yourself (exam parts with "Oefenen" + "Proefexamen", grammar), then
+cobalt; no exam dates: the plan starts with the exam part that scores lowest, and Schrijven is in it every day), then choose yourself (exam parts with "Oefenen" + "Proefexamen", grammar), then
 reading and listening, and progress. Every section appears once; don't add a second entry point to the
 same exercise.
 
