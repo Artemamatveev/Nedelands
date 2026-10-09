@@ -249,6 +249,34 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
 .hfig img{display:block;width:100%;aspect-ratio:3/2;max-height:400px;object-fit:cover}
 .hfig figcaption{margin-top:6px;color:var(--soft);font-size:14px;line-height:1.4}
 .hnext{margin-top:22px}
+/* gesprekken: het gesprek als een toneeltekst; wat jij zegt springt in */
+#talk{position:relative}
+#talk>.back{margin-top:14px}
+#talk h2{margin-top:18px} #tbody>.ask{margin-top:20px} #tbody>.ask+h2{margin-top:4px}
+#tbody .pics{margin:14px 0 16px}
+.talk{margin:18px 0 0;border-top:1px solid var(--line)}
+.talk:empty{display:none}
+.tl{padding:9px 0 10px;border-bottom:1px solid var(--line)}
+.tl p{margin:0}
+.tl .ask{display:flex;align-items:center;gap:6px;font-size:12.5px}
+.tl .say{background:none;border:0;color:var(--blue);font-size:13px;padding:2px 6px;margin:-2px 0}
+.tl.me{padding-left:28px}
+.tl.me .ask{color:var(--soft)}
+.tl.no p:last-child{color:var(--soft)}
+.tl small{display:block;color:var(--bad);font-size:14px}
+#tctl{margin-top:16px}
+#tctl .rec{margin-bottom:10px}
+#tctl .type{margin-bottom:6px}
+#tctl .type input{font-size:17px;font-weight:400}
+#tctl .hint{margin:4px 0 8px}
+#thv .ghost{margin-bottom:8px}
+.tend b{font-size:19px}
+.tsum{list-style:none;margin:6px 0 18px;padding:0;border-top:1px solid var(--line)}
+.tsum li{padding:9px 0 6px;border-bottom:1px solid var(--line)}
+.tsum span{display:block;color:var(--soft);font-size:15px}
+.tsum b{display:block;font-weight:600}
+.tsum .hint{margin:2px 0 0}
+#tre{margin-top:10px}
 /* lezen: tik op een woord */
 .pg{color:var(--soft);font-size:15px;font-variant-numeric:tabular-nums}
 .rt{display:flex;align-items:center;gap:6px}
@@ -299,7 +327,7 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
   #menu .list{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));column-gap:40px}
   .exb{grid-template-columns:repeat(5,1fr)}
   .duo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:64px;align-items:start}
-  #play,#stats,#lib,#read,#media,#story,#hist{max-width:720px;margin:0 auto}
+  #play,#stats,#lib,#read,#media,#story,#hist,#talk{max-width:720px;margin:0 auto}
   .book{font-size:20px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -315,7 +343,7 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
     <section class="today" id="plan"></section>
     <div id="menu"></div>
     <div class="duo">
-      <div><h2>Lezen en luisteren</h2><div class="list" id="books"></div></div>
+      <div><h2>Lezen, luisteren en spreken</h2><div class="list" id="books"></div></div>
       <div><h2>Herhalen</h2><div class="list" id="mine"></div></div>
     </div>
   </div>
@@ -369,6 +397,10 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
     <div class="bar"><i id="bar"></i></div>
     <section class="card" id="card" aria-live="polite"></section>
     <div class="mode"><button id="mode"></button></div>
+  </div>
+  <div id="talk" hidden>
+    <button class="back" id="tback"></button>
+    <div id="tbody"></div>
   </div>
 </main>
 <div class="zoom" id="zoom" hidden><img id="zimg" alt=""><p id="zcap"></p></div>
@@ -1320,13 +1352,14 @@ const IC={
   words:'<path d="M6 3h12v18l-6-4-6 4z"/>',
   stats:'<path d="M5 20v-9M10 20V5M15 20v-6M20 20v-11M3 20h18"/>',
   errs:'<path d="M4 7h16M4 12h9M4 17h6M15 14l5 5M20 14l-5 5"/>',
-  hist:'<path d="M7 3h10M7 21h10M8 3v2.5c0 2.5 4 4 4 6.5s-4 4-4 6.5V21M16 3v2.5c0 2.5-4 4-4 6.5s4 4 4 6.5V21"/>'};
+  hist:'<path d="M7 3h10M7 21h10M8 3v2.5c0 2.5 4 4 4 6.5s-4 4-4 6.5V21M16 3v2.5c0 2.5-4 4-4 6.5s4 4 4 6.5V21"/>',
+  talk:'<path d="M3 4h11v8H8l-3 3v-3H3z"/><path d="M14 8h7v8h-2v3l-3-3h-6v-4"/>'};
 function itHTML(attr,t,d,o={}){
   return`<button class="it" ${attr}>${o.ic?`<i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC[o.ic]}</svg></i>`:""}<span><span class="th"><b>${t}</b>${o.n!=null?`<small>${o.n}</small>`:""}</span>${d?`<span class="d">${d}</span>`:""}${o.bar!=null?`<span class="bar${o.pass?" pass":""}"><i style="width:${o.bar}%"></i></span>`:""}</span></button>`;
 }
 function home(){
   paint();
-  $("play").hidden=true;$("stats").hidden=true;$("lib").hidden=true;$("read").hidden=true;$("media").hidden=true;$("story").hidden=true;$("hist").hidden=true;stopMedia();closePop();$("home").hidden=false;head();clock(0);hush();planId=null;drawPlan();
+  $("play").hidden=true;$("stats").hidden=true;$("lib").hidden=true;$("read").hidden=true;$("media").hidden=true;$("story").hidden=true;$("hist").hidden=true;$("talk").hidden=true;stopMedia();closePop();$("home").hidden=false;head();clock(0);hush();planId=null;drawPlan();
   const sec=id=>SEC.find(x=>x.id===id);
   const row=id=>{const s=sec(id),p=ITEMS.filter(x=>x.sec===id),n=p.filter(x=>S.items[x.k]).length;
     return itHTML(`data-s="${id}"`,s.t,s.s,{n:n+" van "+p.length,bar:n?n/p.length*100:null,ic:id})};
@@ -1340,6 +1373,7 @@ function home(){
   $("books").innerHTML=itHTML(`data-x="books"`,"Boekenkast",lb?`Je leest nu: ${esc(lb.t)}, blz. ${lb.p+1}`:"Verhalen en je eigen e-books. Tik op een woord voor de betekenis.",{ic:"books"})
     +itHTML(`data-x="hist"`,"Geschiedenis van Nederland",lh?`Je was bij: ${lh.t}`:`Van de hunebedden tot nu, in ${GS.length} korte teksten met vragen.`,{n:`${gsDone} van ${GS.length}`,ic:"hist"})
     +itHTML(`data-x="media"`,"Luisteren en kijken","Echt Nederlands: nieuws, video's en podcasts.",{ic:"media"})
+    +itHTML(`data-x="talk"`,"Gesprekken","Bel de dokter, koop brood, praat met de buren: antwoord hardop.",{n:`${GP.filter(c=>(S.gp||{})[c.id]).length} van ${GP.length}`,ic:"talk"})
     +((S.words||[]).length?itHTML(`data-x="words"`,"Mijn woorden","Oefen de woorden die je bij het lezen hebt bewaard.",{n:S.words.length,ic:"words"}):"");
   $("mine").innerHTML=itHTML(`data-x="stats"`,"Mijn zwakke punten","Zie waar je de meeste fouten maakt en oefen precies dat.",{ic:"stats"})
     +((S.errs||[]).length?itHTML(`data-x="errs"`,"Mijn fouten","Oefen met fouten uit je eigen teksten en antwoorden.",{n:S.errs.length,ic:"errs"}):"");
@@ -1350,6 +1384,7 @@ function home(){
     else if(d.x==="books")library();
     else if(d.x==="media")media();
     else if(d.x==="hist")hist();
+    else if(d.x==="talk")talks();
     else if(d.x==="words")practiseWords();
     else build("custom",{id:"custom",t:"Mijn fouten",n:10,pool:()=>shuffle(errItems())})});
   window.scrollTo(0,0);
@@ -1437,7 +1472,7 @@ function build(id,custom){
   if(!cur.keep)shuffle(queue);
   queue=queue.map(q=>({...q,retry:false}));
   pos=0;total=queue.length;right=0;clock(cur.min);
-  ["home","stats","lib","read","media","story","hist"].forEach(x=>$(x).hidden=true);closePop();stopMedia();$("play").hidden=false;window.scrollTo(0,0);
+  ["home","stats","lib","read","media","story","hist","talk"].forEach(x=>$(x).hidden=true);closePop();stopMedia();$("play").hidden=false;window.scrollTo(0,0);
   $("back").innerHTML=`<span aria-hidden="true">←</span>${cur.back?cur.back.t:"Start"}`;$("back").onclick=cur.back?cur.back.f:home;
   show();
 }
@@ -2152,6 +2187,194 @@ function chapter(i){
   window.scrollTo(0,0);
 }
 $("hbody").onclick=e=>{const w=e.target.closest(".book .w");if(w)tapWord(w)};
+// Gesprekken: everyday conversations, free and offline (no Claude). The other person (w) says a line (a), read aloud;
+// the learner answers out loud (speech recognition writes it down) or types. An answer fits when it has a word from
+// every group in k: "a|b c" = a, or b and c; a word of 1–2 letters must match exactly, 3 letters the start of a word,
+// longer ones any part of a word (volkoren → volkorenbrood). k empty: any answer (a name, an address).
+// x: skip this line when the previous answer already said it. r: what the other person says when it did not fit.
+// m: an example answer (the hint, and the summary). o: the learner's task. e: the last line. g starts a group.
+// S.gp keeps, per conversation, how often it was finished (n), the best number of answers without help (b) and when (at).
+const GP=[
+{id:"arts",g:"Aan de telefoon",t:"De huisarts bellen",s:"Je bent ziek: maak een afspraak.",w:"Assistente",p:"ziek",
+ o:"Je hebt al drie dagen keelpijn en koorts. Bel de huisarts en maak een afspraak. Je kunt alleen 's ochtends.",
+ d:[{a:"Huisartsenpraktijk De Linde, goedemorgen. U spreekt met Anouk.",k:["afspra|langskomen|huisarts|dokter"],m:"Goedemorgen, met [je naam]. Ik wil graag een afspraak maken bij de huisarts.",r:"Waarmee kan ik u helpen?"},
+  {a:"Wat is uw naam en uw geboortedatum?",k:[],m:"Mijn naam is [je naam]. Ik ben geboren op 12 maart 1990.",r:"Sorry, dat heb ik niet goed gehoord. Hoe heet u, en wanneer bent u geboren?"},
+  {a:"Dank u wel. Wat zijn uw klachten?",k:["keel|koorts|pijn|ziek|hoest|griep"],m:"Ik heb al drie dagen keelpijn en koorts.",r:"Wat is het probleem? Waar heeft u last van?"},
+  {a:"Wat vervelend. Kunt u vanmiddag om drie uur komen?",k:["nee|niet|helaas|geen","ochtend|morgens"],m:"Nee, dat kan ik helaas niet. Ik kan alleen 's ochtends.",r:"Kunt u vanmiddag om drie uur? Of wanneer kunt u wel?"},
+  {a:"Even kijken… Morgenochtend om half tien is er nog plek. Past dat?",k:["ja|prima|goed|past|graag"],m:"Ja, dat past goed. Morgen om half tien.",r:"Kunt u morgen om half tien?"},
+  {a:"Dan zie ik u morgen om half tien. Neem uw zorgpas mee. Heeft u nog een vraag?",k:["nee|ja|dank|bedankt|vraag|duidelijk|hoe|waar|wat"],m:"Nee, dank u wel. Tot morgen!",r:"Heeft u nog een vraag, of is alles duidelijk?"}],
+ e:"Graag gedaan. Beterschap, en tot morgen!"},
+{id:"werk",t:"Je ziek melden op je werk",s:"Bel je leidinggevende: je bent ziek.",w:"Peter",p:"bellen",
+ o:"Je werkt bij Bakkerij Smit. Vandaag ben je ziek: je hebt griep. Bel je leidinggevende Peter. Morgen ga je naar de dokter.",
+ d:[{a:"Bakkerij Smit, met Peter.",k:["ziek|griep|koorts|lekker"],m:"Hallo Peter, met [je naam]. Ik bel omdat ik ziek ben.",r:"Hallo? Wat is er aan de hand?"},
+  {a:"O, wat vervelend. Wat heb je?",x:1,k:["griep|koorts|hoofdpijn|buikpijn|verkouden|keel|misselijk"],m:"Ik heb griep. Ik heb koorts en hoofdpijn.",r:"Wat heb je precies? Heb je koorts?"},
+  {a:"Ben je al naar de dokter geweest?",k:["morgen|nee|nog niet"],m:"Nee, nog niet. Morgen ga ik naar de dokter.",r:"Ga je naar de dokter?"},
+  {a:"Hoe lang denk je dat je ziek bent?",k:["dag|week|weet|lang"],m:"Ik weet het nog niet. Misschien twee of drie dagen.",r:"Weet je hoe lang het duurt? Een paar dagen?"},
+  {a:"Oké. Wil je me morgen na de dokter bellen? Dan weet ik hoe het gaat.",k:["ja|goed|prima|oke|oké|doe|bel"],m:"Ja, dat is goed. Ik bel je morgen.",r:"Bel je me morgen even?"}],
+ e:"Goed. Beterschap, en rust lekker uit!"},
+{id:"huis",t:"De verwarming is kapot",s:"Bel de verhuurder en maak een afspraak met de monteur.",w:"Sandra",
+ o:"Je huurt een huis van Woonstichting De Kern. Sinds gisteren doet de verwarming het niet. Bel en meld het. Morgen werk je tot één uur; vanaf twee uur ben je thuis.",
+ d:[{a:"Woonstichting De Kern, goedemiddag. U spreekt met Sandra.",k:["verwarming|kachel"],m:"Goedemiddag, met [je naam]. De verwarming in mijn huis is kapot.",r:"Waarover belt u?"},
+  {a:"Wat vervelend. Wat is uw adres?",k:[],m:"Mijn adres is Lindelaan 14 in Zwolle.",r:"Op welk adres woont u? De straat, het huisnummer en de plaats graag."},
+  {a:"Dank u. Sinds wanneer werkt de verwarming niet?",k:["gisteren|sinds"],m:"Sinds gisteren. Het is heel koud in huis.",r:"Wanneer is het probleem begonnen?"},
+  {a:"Morgen kan er een monteur komen, tussen acht en twaalf uur. Bent u dan thuis?",k:["nee|niet|helaas|werk","middag|twee|14|na"],m:"Nee, dan moet ik werken. Kan het ook 's middags? Vanaf twee uur ben ik thuis.",r:"Bent u morgenochtend thuis? Zo niet: wanneer wel?"},
+  {a:"Dat kan. De monteur komt morgen tussen twee en vijf uur. Is dat goed?",k:["ja|goed|prima|kan|graag|oke|oké"],m:"Ja, dat is goed. Dank u wel.",r:"Is morgen tussen twee en vijf uur goed voor u?"},
+  {a:"Mogen we u bellen als de monteur onderweg is? Wat is uw telefoonnummer?",k:[],m:"Ja, dat is goed. Mijn nummer is 06 12345678.",r:"Wat is uw telefoonnummer?"}],
+ e:"Ik heb alles genoteerd. De monteur komt morgenmiddag. Fijne dag nog!"},
+{id:"school",t:"Je kind ziek melden op school",s:"Je zoon heeft koorts: bel de school.",w:"School",
+ o:"Je zoon Sem zit in groep 4. Vandaag heeft hij koorts: hij blijft thuis. Bel de school. Je weet nog niet of hij morgen weer komt.",
+ d:[{a:"Basisschool De Regenboog, goedemorgen.",k:["ziek|koorts|thuis|komt niet|kan niet"],m:"Goedemorgen, met [je naam]. Mijn zoon Sem is ziek. Hij blijft vandaag thuis.",r:"Goedemorgen. Waarmee kan ik u helpen?"},
+  {a:"Wat vervelend. Hoe heet uw zoon?",x:1,k:["sem|sam|zem"],m:"Hij heet Sem.",r:"Wat is de naam van uw zoon?"},
+  {a:"En in welke groep zit hij?",x:1,k:["vier|4"],m:"Hij zit in groep 4.",r:"In welke groep zit Sem?"},
+  {a:"Dank u. Wat heeft hij?",x:1,k:["koorts|griep|pijn|verkouden|misselijk|overgeven"],m:"Hij heeft koorts.",r:"Heeft hij koorts? Of iets anders?"},
+  {a:"Beterschap voor Sem. Komt hij morgen weer naar school?",k:["weet|misschien|bel|hoop"],m:"Dat weet ik nog niet. Ik bel morgenochtend weer.",r:"Weet u al of Sem morgen komt?"},
+  {a:"Goed. Wilt u dan morgen voor half negen bellen?",k:["ja|goed|prima|doe|oke|oké|natuurlijk"],m:"Ja, dat doe ik. Dank u wel.",r:"Belt u morgen voor half negen?"}],
+ e:"Dank u wel voor het bellen. Dag!"},
+{id:"gem",t:"De gemeente bellen",s:"Maak een afspraak voor een nieuwe ID-kaart.",w:"Gemeente",
+ o:"Je ID-kaart is bijna verlopen. Bel de gemeente en maak een afspraak voor een nieuwe. Je kunt volgende week op dinsdag of woensdag. Vraag wat je mee moet nemen.",
+ d:[{a:"Gemeente Zwolle, goedemorgen. Waarmee kan ik u helpen?",k:["id|idkaart|identiteit|paspoort"],m:"Goedemorgen. Ik wil een afspraak maken voor een nieuwe ID-kaart.",r:"Waarvoor belt u?"},
+  {a:"Wanneer kunt u langskomen?",x:1,k:["dinsdag|woensdag"],m:"Volgende week, op dinsdag of woensdag.",r:"Welke dag kunt u komen?"},
+  {a:"Dinsdag om tien over elf is er nog plek. Is dat goed?",k:["ja|goed|prima|kan|graag"],m:"Ja, dat is goed.",r:"Kunt u dinsdag om tien over elf?"},
+  {a:"Mag ik uw naam en geboortedatum?",k:[],m:"Mijn naam is [je naam]. Ik ben geboren op 12 maart 1990.",r:"Hoe heet u, en wanneer bent u geboren?"},
+  {a:"Dank u. Uw afspraak is dinsdag om 11.10 uur, in het stadskantoor.",k:["mee|nodig"],m:"Dank u. Wat moet ik meenemen?",r:"Heeft u nog een vraag?"},
+  {a:"Neem uw oude ID-kaart en een pasfoto mee. Betalen kan met de pinpas.",k:["dank|bedankt|duidelijk|goed|oke|oké|foto"],m:"Mijn oude ID-kaart en een pasfoto. Dank u wel!",r:"Is alles duidelijk?"}],
+ e:"Graag gedaan. Tot dinsdag!"},
+{id:"bakker",g:"In de stad en in de buurt",t:"Bij de bakker",s:"Koop brood en croissants.",w:"Bakker",p:"pinnen",
+ o:"Je wilt een volkorenbrood, gesneden, en vier croissants. Je betaalt met je pinpas. De bon hoef je niet.",
+ d:[{a:"Goedemiddag! Wie is er aan de beurt?",k:["ik|mij|beurt"],m:"Ik ben aan de beurt.",r:"Bent u aan de beurt?"},
+  {a:"Zegt u het maar. Wat mag het zijn?",x:1,k:["volkoren"],m:"Ik wil graag een volkorenbrood.",r:"Welk brood wilt u? Wit, bruin of volkoren?"},
+  {a:"Een volkorenbrood. Heel of gesneden?",x:1,k:["gesneden|snij"],m:"Gesneden, graag.",r:"Wilt u het brood gesneden?"},
+  {a:"Alstublieft. Anders nog iets?",x:1,k:["croissant"],m:"Ja, ook graag vier croissants.",r:"Wilt u nog iets anders?"},
+  {a:"Hoeveel croissants wilt u?",x:1,k:["vier|4"],m:"Vier, graag.",r:"Hoeveel croissants?"},
+  {a:"Dat is dan samen € 8,40. Hoe wilt u betalen?",k:["pin|kaart|bankpas|betaalpas"],m:"Ik betaal met mijn pinpas.",r:"Betaalt u contant of met de pinpas?"},
+  {a:"Houdt u de pas maar tegen het apparaat. Gelukt! Wilt u de bon?",k:["nee|hoeft|niet"],m:"Nee, dank u wel.",r:"Wilt u de bon, ja of nee?"}],
+ e:"Alstublieft, uw brood en uw croissants. Fijne dag nog!"},
+{id:"apotheek",t:"Bij de apotheek",s:"Haal je medicijnen op en vraag hoe je ze neemt.",w:"Assistent",p:"pil",
+ o:"De huisarts heeft medicijnen voorgeschreven. Haal ze op bij de apotheek en vraag hoe je ze moet gebruiken. Herhaal het antwoord, zo weet je zeker dat je het goed begrijpt. Je wilt ook een doosje paracetamol.",
+ d:[{a:"Goedemorgen, waarmee kan ik u helpen?",k:["medicij|recept|ophalen|huisarts|dokter"],m:"Goedemorgen. Ik kom mijn medicijnen ophalen.",r:"Wat kan ik voor u doen?"},
+  {a:"Wat is uw geboortedatum?",k:[],m:"Ik ben geboren op 12 maart 1990.",r:"Wanneer bent u geboren? De dag, de maand en het jaar graag."},
+  {a:"Dank u. Uw medicijnen liggen klaar. Weet u hoe u ze moet gebruiken?",k:["nee|hoe|vaak|wanneer|uitleg|niet"],m:"Nee. Hoe vaak moet ik ze innemen?",r:"Weet u hoe vaak u ze moet nemen?"},
+  {a:"U neemt drie keer per dag één tablet, bij het eten. Drink er geen alcohol bij.",k:["drie|3","eten|maaltijd"],m:"Drie keer per dag, bij het eten. Duidelijk, dank u.",r:"Kunt u even herhalen hoe vaak u een tablet neemt, en wanneer?"},
+  {a:"Precies. Kan ik verder nog iets voor u doen?",k:["paracetamol"],m:"Ja, ik wil ook graag een doosje paracetamol.",r:"Wilt u nog iets anders? Iets tegen pijn misschien?"},
+  {a:"Een doosje met twintig tabletten kost € 2,50. Is dat goed?",k:["ja|goed|prima|graag"],m:"Ja, prima.",r:"Wilt u de paracetamol voor € 2,50?"}],
+ e:"Alstublieft: uw medicijnen en de paracetamol. Beterschap!"},
+{id:"cafe",t:"In een café",s:"Bestel iets te drinken en te eten, en reken af.",w:"Ober",p:"restaurant",
+ o:"Je zit in een café. Je wilt koffie met melk en een tosti ham-kaas. Daarna reken je af: je geeft een briefje van tien euro en de rest is een fooi.",
+ d:[{a:"Hallo! Weet u al wat u wilt drinken?",k:["koffie"],m:"Ja, ik wil graag een koffie.",r:"Wilt u koffie, thee of iets anders?"},
+  {a:"Met melk of zwart?",x:1,k:["melk"],m:"Met melk, graag.",r:"Wilt u melk in uw koffie?"},
+  {a:"Wilt u er ook iets bij eten?",x:1,k:["tosti"],m:"Ja, graag een tosti.",r:"We hebben soep, broodjes en tosti's. Wat wilt u?"},
+  {a:"Ham-kaas of alleen kaas?",x:1,k:["ham"],m:"Ham-kaas, graag.",r:"Wilt u er ham op?"},
+  {a:"Alstublieft: uw koffie en een tosti ham-kaas. Eet smakelijk!",k:["dank|bedankt|lekker"],m:"Dank u wel!",r:"Eet smakelijk!"},
+  {a:"Smaakte het?",k:["lekker|goed|ja","afreken|betalen|rekening"],m:"Ja, heel lekker. Mag ik afrekenen?",r:"Fijn! Wilt u nog iets, of wilt u betalen?"},
+  {a:"Natuurlijk. Dat is dan € 8,50.",k:["tien|10","rest|goed zo|klopt|houden|fooi"],m:"Alstublieft, tien euro. Laat de rest maar zitten.",r:"Hoeveel geeft u? En wilt u geld terug?"}],
+ e:"Dank u wel, dat is heel aardig! Fijne dag nog."},
+{id:"station",t:"Een treinkaartje kopen",s:"Koop een kaartje en vraag van welk spoor de trein gaat.",w:"Medewerker",p:"trein",
+ o:"Je staat bij de servicebalie op het station. Je wilt vandaag naar Utrecht, tweede klas, en vanavond weer terug (retour). Je betaalt met je pinpas. Vraag ook van welk spoor de trein vertrekt, en herhaal het antwoord.",
+ d:[{a:"Goedemiddag, zegt u het maar.",k:["kaart|retour|reis|utrecht"],m:"Goedemiddag. Ik wil graag een kaartje naar Utrecht.",r:"Waarmee kan ik u helpen?"},
+  {a:"Waar wilt u naartoe?",x:1,k:["utrecht"],m:"Naar Utrecht.",r:"Naar welk station wilt u?"},
+  {a:"Enkele reis of retour?",x:1,k:["retour|terug"],m:"Retour, graag. Ik kom vanavond terug.",r:"Komt u vandaag ook weer terug?"},
+  {a:"Eerste of tweede klas?",x:1,k:["tweede|2"],m:"Tweede klas.",r:"In welke klas wilt u reizen?"},
+  {a:"Een retour Utrecht, tweede klas. Dat is € 19,80. Pinnen of contant?",k:["pin|kaart|bankpas|betaalpas"],m:"Ik pin.",r:"Hoe wilt u betalen?"},
+  {a:"Alstublieft, uw kaartje. Goede reis!",k:["spoor|perron"],m:"Dank u wel. Van welk spoor vertrekt de trein naar Utrecht?",r:"Heeft u nog een vraag?"},
+  {a:"De trein naar Utrecht vertrekt om 14.12 uur van spoor 5.",k:["vijf|5"],m:"Spoor 5, om 14.12 uur. Dank u wel!",r:"Sorry, ik begrijp u niet. Ik zeg het nog een keer: de trein vertrekt om 14.12 uur van spoor 5."}],
+ e:"Precies. Goede reis!"},
+{id:"buren",t:"Je nieuwe buurvrouw",s:"Stel je voor en nodig haar uit voor koffie.",w:"Els",p:"stad",
+ o:"Je bent net verhuisd. Op straat zie je je buurvrouw. Vertel wie je bent en waar je vandaan komt. Nodig haar uit voor koffie, zaterdagmiddag om drie uur.",
+ d:[{a:"Hallo! Woont u sinds kort hier, op nummer 12?",k:["ja|klopt|woon"],m:"Ja, ik woon hier sinds vorige week.",r:"Bent u de nieuwe buurvrouw of buurman?"},
+  {a:"Welkom in de straat! Ik ben Els, van nummer 10. Hoe heet u?",k:[],m:"Ik heet [je naam]. Leuk u te ontmoeten.",r:"Sorry, hoe heet u?"},
+  {a:"Leuk u te ontmoeten. Waar komt u vandaan?",k:[],m:"Ik kom uit [je land].",r:"Uit welk land komt u?"},
+  {a:"En wat doet u? Werkt u, of gaat u naar school?",k:[],m:"Ik leer Nederlands. Later wil ik in een ziekenhuis werken.",r:"Heeft u werk? Of studeert u?"},
+  {a:"Wat goed! Als u iets nodig hebt, kunt u altijd bij mij aanbellen.",k:["koffie|thee","zaterdag"],m:"Dank u wel! Wilt u zaterdag een kopje koffie bij mij komen drinken?",r:"Wilde u nog iets vragen?"},
+  {a:"Wat gezellig! Graag. Hoe laat?",x:1,k:["drie|3|15"],m:"Om drie uur. Is dat goed?",r:"Hoe laat zal ik komen?"}],
+ e:"Drie uur is prima. Tot zaterdag!"}
+];
+const gpWords=s=>String(s).toLowerCase().split(/[^\p{L}\d]+/u).filter(Boolean);
+function gpFits(k,said){
+  const W=gpWords(said); if(!k.length)return W.length>0;
+  const has=w=>W.some(t=>w.length<3?t===w:w.length<4?t.startsWith(w):t.includes(w));
+  return k.every(g=>g.split("|").some(alt=>alt.split(" ").every(has)));
+}
+const gpGroup=i=>{while(i>0&&!GP[i].g)i--;return GP[i].g};
+let TK=null,tGo=null; // the open conversation; where the back button (and a swipe) on the screen goes
+function tBack(t,f){$("tback").innerHTML=`<span aria-hidden="true">←</span>${t}`;$("tback").onclick=tGo=f}
+function talks(){
+  closePop();hush();TK=null;$("card").innerHTML=""; // the card may hold an old #rec, which listen() would find first
+  $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;window.scrollTo(0,0);
+  tBack("Start",home);
+  const st=c=>{const g=(S.gp||{})[c.id];return g?`<span class="good">Gelukt</span>`:null};
+  let h=`<h2>Gesprekken</h2><p class="sub">Gesprekken uit het dagelijks leven: aan de telefoon, in de winkel, op straat. Je hoort wat de ander zegt en je antwoordt hardop${SR?"":" (of je typt)"}. Begrijpt de ander je, dan gaat het gesprek verder.</p>`;
+  GP.forEach((c,i)=>{if(c.g)h+=(i?"</div>":"")+`<h3 class="lh">${c.g}</h3><div class="list">`;h+=itHTML(`data-t="${i}"`,c.t,c.s,{n:st(c)})});
+  $("tbody").innerHTML=h+"</div>";
+  document.querySelectorAll("#tbody [data-t]").forEach(b=>b.onclick=()=>talk(+b.dataset.t));
+}
+function talk(i){
+  const c=GP[i]; closePop();hush();$("card").innerHTML="";
+  $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;
+  tBack("Gesprekken",talks);
+  TK={i,c,n:0,log:[],miss:0,hint:false,self:0};
+  $("tbody").innerHTML=`<p class="ask">${gpGroup(i)}</p><h2>${c.t}</h2>`+(c.p?picsHTML([c.p]):"")
+    +`<p class="ask">Jouw opdracht</p><div class="sample">${c.o}</div><div class="talk" id="tlog" aria-live="polite"></div><div id="tctl"></div>`;
+  document.querySelectorAll("#tbody [data-pic]").forEach(b=>b.onclick=()=>zoomPic(b.dataset.pic));
+  $("tctl").innerHTML=`<button class="btn wide" id="tgo">Begin het gesprek</button>`
+    +(canSpeak?"":`<p class="note">Geluid werkt hier niet: lees wat de ander zegt.</p>`);
+  $("tgo").onclick=()=>tSay(c.d[0].a);
+  window.scrollTo(0,0);
+}
+function tDraw(){
+  const c=TK.c;
+  $("tlog").innerHTML=TK.log.map((l,j)=>l.me
+    ?`<div class="tl me${l.no?" no":""}"><p class="ask">Jij</p><p>${esc(l.t)}${l.no?`<small>Niet begrepen</small>`:""}</p></div>`
+    :`<div class="tl"><p class="ask">${c.w}${canSpeak?` <button class="say" data-j="${j}" aria-label="Nog een keer luisteren">▶</button>`:""}</p><p>${esc(l.t)}</p></div>`).join("");
+  document.querySelectorAll("#tlog .say").forEach(b=>b.onclick=()=>speak(TK.log[b.dataset.j].t));
+}
+// The other person speaks; then it is the learner's turn
+function tSay(line){
+  TK.log.push({t:line}); tDraw(); speak(line);
+  const s=TK.c.d[TK.n];
+  $("tctl").innerHTML=(SR?`<div class="rec" id="rec"><div class="clk"><span class="t" id="rect">${mmss(SPK)}</span><div class="m"><i id="recm"></i></div></div><div id="recp"></div>
+    <button class="btn wide" id="recb">● Antwoord</button><p class="note" id="recn"></p></div>`:"")
+    +`<div class="type"><input id="tin" placeholder="${SR?"Of typ je antwoord":"Typ je antwoord"}" autocomplete="off" autocapitalize="sentences" spellcheck="false" aria-label="Je antwoord"><button class="${SR?"ghost":"btn"}" id="tsend">Stuur</button></div>`
+    +`<button class="hint" id="thint">Wat kan ik zeggen?</button><div id="thv"></div>`;
+  if(SR)$("recb").onclick=tRec;
+  $("tsend").onclick=()=>{const v=$("tin").value.trim();if(v)tAnswer(v)};
+  $("tin").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();$("tsend").click()}};
+  $("thint").onclick=()=>tHint(s);
+  if(TK.miss>=2)tHint(s);
+  $("tctl").scrollIntoView({block:"nearest",behavior:"smooth"});
+}
+function tHint(s){
+  TK.hint=true; $("thint").hidden=true;
+  $("thv").innerHTML=`<p class="ask">Je kunt zeggen</p><div class="sample">${esc(s.m)}</div><button class="ghost wide" id="tuse">Zeg het zo en ga verder</button>`;
+  $("tuse").onclick=()=>tAnswer(s.m);
+}
+function tRec(){try{if(canSpeak)speechSynthesis.cancel()}catch(e){} listen("say",tHeard)}
+function tHeard(r){
+  const b=$("recb"); if(!b||!TK)return;
+  b.textContent="● Antwoord";b.className="btn wide";b.onclick=tRec; $("recp").innerHTML="";
+  if(!r.text){$("recn").textContent=r.fail?"Meeschrijven lukt hier niet. Typ je antwoord.":"Ik heb niets verstaan. Spreek wat harder, of dichter bij de telefoon.";return}
+  $("recn").textContent=""; tAnswer(r.text);
+}
+function tAnswer(said){
+  const c=TK.c,s=c.d[TK.n];
+  if(!gpFits(s.k,said)){TK.log.push({me:1,t:said,no:1});TK.miss++;return tSay(s.r||"Sorry, dat begrijp ik niet. Kunt u het nog een keer zeggen?")}
+  const own=!TK.hint; TK.log.push({me:1,t:said}); if(own)TK.self++;
+  TK.n++; TK.miss=0; TK.hint=false;
+  // an answer that already said what the next question asks: skip that question
+  while(TK.n<c.d.length&&c.d[TK.n].x&&gpFits(c.d[TK.n].k,said)){if(own)TK.self++;TK.n++}
+  if(TK.n<c.d.length)return tSay(c.d[TK.n].a);
+  talkEnd();
+}
+function talkEnd(){
+  const c=TK.c,N=c.d.length,self=Math.min(TK.self,N);
+  TK.log.push({t:c.e}); tDraw(); speak(c.e);
+  S.gp=S.gp||{}; const g=S.gp[c.id]||{n:0,b:0}; S.gp[c.id]={n:g.n+1,b:Math.max(g.b,self),at:Date.now()}; complete();
+  const nx=(TK.i+1)%GP.length;
+  $("tctl").innerHTML=`<div class="tend"><b class="good">Gesprek gelukt!</b><p class="note">${self===N?"Je hebt alles zelf gezegd, zonder hulp. Heel goed!":`Je antwoordde ${self} van de ${N} keer zonder hulp.`}</p></div>
+    <h3 class="lh">Zo kun je het zeggen</h3><ol class="tsum">${c.d.map((s,j)=>`<li><span>${esc(s.a)}</span><b>${esc(s.m)}</b>${canSpeak?`<button class="hint" data-m="${j}">▶ Luister</button>`:""}</li>`).join("")}</ol>
+    <button class="btn wide" id="tnx">Volgende: ${GP[nx].t}</button><button class="ghost wide" id="tre">Nog een keer</button>`;
+  document.querySelectorAll("#tctl [data-m]").forEach(b=>b.onclick=()=>speak(c.d[b.dataset.m].m.replace(/\[|\]/g,"")));
+  $("tnx").onclick=()=>talk(nx); $("tre").onclick=()=>talk(TK.i);
+}
 // Luisteren en kijken: real Dutch from YouTube channels and podcasts. api/feed.js fetches the latest episodes
 // (YouTube's feeds can't be read from the page); videos play in YouTube's own player, podcasts in <audio>.
 // What was opened, where a podcast stopped and the speed stay on this device ("ww-media"), not in the progress file.
@@ -2389,7 +2612,7 @@ document.addEventListener("keydown",e=>{
   let x0=0,y0=0,el=null,on=false;
   const reset=t=>{t.style.transition=t.style.transform=t.style.opacity=""};
   document.addEventListener("touchstart",e=>{
-    el=!$("play").hidden?$("play"):!$("stats").hidden?$("stats"):!$("lib").hidden?$("lib"):!$("hist").hidden?$("hist"):null;
+    el=!$("play").hidden?$("play"):!$("stats").hidden?$("stats"):!$("lib").hidden?$("lib"):!$("hist").hidden?$("hist"):!$("talk").hidden?$("talk"):null;
     if(!el||e.touches.length>1||e.target.closest("input,textarea")){el=null;return}
     x0=e.touches[0].clientX;y0=e.touches[0].clientY;on=false},{passive:true});
   document.addEventListener("touchmove",e=>{
@@ -2399,7 +2622,7 @@ document.addEventListener("keydown",e=>{
   const end=e=>{
     if(!el)return; const t=el,dx=e.changedTouches[0].clientX-x0; el=null; if(!on)return;
     t.style.transition="transform .18s,opacity .18s";
-    if(e.type==="touchend"&&Math.abs(dx)>90){t.style.transform=`translateX(${Math.sign(dx)*100}%)`;t.style.opacity=0;const go=t===$("hist")?hGo:t===$("play")&&cur&&cur.back?cur.back.f:home;setTimeout(()=>{reset(t);go()},170)}
+    if(e.type==="touchend"&&Math.abs(dx)>90){t.style.transform=`translateX(${Math.sign(dx)*100}%)`;t.style.opacity=0;const go=t===$("hist")?hGo:t===$("talk")?tGo:t===$("play")&&cur&&cur.back?cur.back.f:home;setTimeout(()=>{reset(t);go()},170)}
     else{t.style.transform="";t.style.opacity="";setTimeout(()=>reset(t),200)}};
   document.addEventListener("touchend",end); document.addEventListener("touchcancel",end);
 })();

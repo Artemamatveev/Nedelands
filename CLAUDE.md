@@ -33,7 +33,7 @@ One clear path, top to bottom: today's lesson (numbered steps; the next one is f
 cobalt; no exam dates: the plan starts with the exam part that scores lowest, and Schrijven
 and KNM are in it every day), then "Naar het examen" (one row per exam part with how ready you
 are, from `ready()`: status, last proefexamen and a bar with the 70% line; then one "Proefexamen"
-button per part with its time), then "Grammatica en woorden", "Lezen en luisteren" and
+button per part with its time), then "Grammatica en woorden", "Lezen, luisteren en spreken" and
 "Herhalen" (weak points and own mistakes).
 Every section appears once; don't add a second entry point to the same exercise.
 
@@ -137,6 +137,17 @@ No Claude calls in the reader: whole sentences go to Google Translate via a link
 `gs|<id>.<n>` items (also in the Mix and in "Mijn zwakke punten"). Original texts: check facts, they double as
 KNM material. `S.hs` keeps when a chapter was last opened; a chapter is "Klaar" when every question was
 answered right once. Append chapters and questions; don't reorder or rename them.
+
+## Gesprekken (conversations)
+
+"Gesprekken" (a row under "Lezen, luisteren en spreken") are everyday role plays: calling the huisarts, work,
+the landlord, the school or the gemeente; the bakker, the apotheek, a café, the station, a new neighbour. Free and
+offline, no Claude (the user chose this over an AI conversation partner). Each one in `GP` in `index.html` is a script:
+the other person's line is read aloud (`speak()`), the learner answers out loud through `listen("say")` or types,
+and `gpFits()` checks the answer for keywords (`k`, groups of alternatives); a line marked `x` is skipped when the
+answer already said it. Two misses show the example answer (`m`). At the end: how many answers needed no help and
+every example answer to listen to. `S.gp` keeps per conversation `{n, b, at}`. Check that every `m` fits its own `k`.
+Facts in the scripts double as KNM material: check them.
 
 ## Luisteren en kijken (real Dutch)
 
