@@ -2,6 +2,7 @@ woordenboek	n	het · mv. woordenboeken	dictionary
 gratis	a		free, without charge
 gratuit	a		gratuitous, not obliged to
 pond	n	het · mv. ponden	metric pound (500 grams); pound (453.6 grams); British pound, pound sterling (currency)
+pies	n	de	pee, piss
 raven	v	ravede – geraved	to (hold a) rave, to party wildly
 dialect	n	het · mv. dialecten	dialect (language variety); non-standard dialect; vernacular
 patronage	n	het · mv. patronages	patronage (act of providing approval and support)
@@ -46,6 +47,7 @@ ik	r		I; first-person singular subjective personal pronoun
 te	d		too (indicating excess)
 te	p		to; located at, in, on
 te	t		in idiom; a form of the definite article de
+dat	t		referring to a thing or a person further away
 dat	r		that, that there; that same (thing), the aforementioned; who, which, that
 dat	c		that (introducing a subordinate clause); used behind another subordinating conjunction
 die	t		that; referring to a thing or a person further away; those
@@ -77,11 +79,13 @@ pseudo-	n		pseudo-
 bit	n	het · mv. bitten	bit (for a working animal); bit (rotary cutting tool); mouthguard
 man	n	de · mv. mannen	man, human male, either adult or age-irrespective; husband, male spouse
 man	i		indicates that something is larger/stronger/etc. than usual
+is	v		is, equals
 are	n	de · mv. aren	are, a unit of surface area
 doctrine	n	de · mv. doctrines	doctrine
 port	n	de/het · mv. porten	postage; port, port wine, Porto
 os	n	de · mv. ossen	ox (castrated bull)
 date	n	de · mv. dates	a date (romantic outing)
+NASA	m		NASA
 lol	n	de	fun
 lol	i		LOL ("laughing out loud", expression of mirth)
 bot	a		not sharp, blunt, dull; impolite, badly behaving: curt, blunt, rude
@@ -96,6 +100,7 @@ RAM	n	het	RAM (random-access memory)
 USSR	m		USSR (initialism of Union of Soviet Socialist Republics, official name of…
 most	n	de	must (unfermented or partially fermented mashed grapes or rarely other…
 war	n	de · mv. warren	confusion, disarray; tangle, mess; an elevated area on the floor of a body of water, a kind of contraption for…
+EU	m		initialism of Europese Unie (“European Union”)
 country	n	de	country music
 euro	n	de · mv. euro's	euro (currency); a euro (a coin of that currency)
 Finland	m		Finland (a country in Northern Europe)
@@ -402,6 +407,7 @@ bad	n	het · mv. baden	bath (object); the act or process of bathing; immersion
 kind	n	het · mv. kinderen	child, kid, non-adult human; first-degree descendant, still a minor or irrespective of age; product of influence, breeding etc
 bal	n	de · mv. ballen	a ball or any object with such a shape; testicle, nut; pass, shot
 tamp	n	de · mv. tampen	the end of a rope or chain; penis
+SP	m		the Socialist Party, a left-wing democratic socialist party in the Netherlands
 ban	n	de · mv. bannen	excommunication, denunciation, shunning; anathema which is cast upon one who is excommunicated; magic spell
 barak	n	de · mv. barakken	barracks (housing for (garrisoned) soldiers); barrack (building used for housing in a (concentration) camp); barrack (any relatively primitive temporary building, especially used for…
 beat	n	de · mv. beats	a beat, a rhythmic pattern, notably in music; beat an early rock genre
@@ -429,6 +435,7 @@ slang	n	de · mv. slangen	snake, squamate of the suborder Serpentes; hose (flexi
 pedant	a		pedantic
 polder	n	de · mv. polders	polder (land reclaimed from a body of water and enclosed by dykes)
 me	r		myself; first-person singular reflexive pronoun; me, myself (the ethical dative)
+uwe	r		yours
 Taiwanese	n	de · mv. Taiwanesen	Taiwanese woman
 talent	n	het · mv. talenten	talent (gift, quality, capability)
 handicap	n	de · mv. handicaps	disability; handicap, disadvantage; handicap, measure of ability
@@ -486,12 +493,13 @@ pin	n	de · mv. pinnen	peg, pin; PIN (A number used to confirm an individual's i
 race	n	de · mv. races	a speed contest, a race
 darmstadtium	n	het	darmstadtium
 arts	n	de · mv. artsen	physician, doctor
-daar	d		there
+daar	d		there; that
 daar	c		since (preceding a reason why something is like it is)
-hier	d		here
-er	d		there (can refer to any place, used when not emphasizing the distance to the…; there (used in more constructions than in English, often not translated); of them, of those (often not translated in English)
+hier	d		here; this
+er	d		there (can refer to any place, used when not emphasizing the distance to the…; there (used in more constructions than in English, often not translated); him, her, them
 copyright	n	het · mv. copyrights	copyright
 facet	n	het · mv. facetten	facet
+bent	v		are
 bet	d		better
 bled	n	het · mv. bledden	a metal strip with holes; a flat board such as a tabletop; middle of nowhere
 breed	a		broad, wide; large, ample
@@ -620,6 +628,7 @@ octopus	n	de · mv. octopussen	octopus
 penis	n	de · mv. penissen	penis
 rooster	n	de/het · mv. roosters	grill, grid a metallic maze-structure; some things containing one; a device for roasting
 wisent	n	de · mv. wisenten	wisent
+hare	r		hers
 otter	n	de · mv. otters	Any otter; European otter, Lutra lutra
 lynx	n	de · mv. lynxen	lynx (felid of the genus Lynx), also used of certain other medium-sized…; Eurasian lynx (Lynx lynx)
 marmot	n	de · mv. marmotten	marmot, rodent of the genus Marmota
@@ -817,6 +826,7 @@ vond	n	de · mv. vonden	synonym of vondst (“a find; the act of finding”)
 geven	v	gaf – gegeven	to give; to have a negative effect; to care about
 jaguar	n	de · mv. jaguars	jaguar
 otto	n	de · mv. otto's	wheelie bin
+onze	r		ours
 rot	a		rotten, spoiled, decayed, putrid; rotten, tedious, unkind, mean
 rot	n	het · mv. rotten	rot (process of becoming rotten; putrefaction); a file (of men)
 dame	n	de · mv. dames	noblewoman; Polite term or title of address for any (adult or adolescent) woman; queen
@@ -877,6 +887,7 @@ millimeter	n		millimetre
 hectometer	n	de · mv. hectometers	a hectometre (100 m)
 petroleum	n	de	petroleum
 corrupt	a		corrupt (lacking integrity, being prone to discriminating, open to bribes, etc.); corrupt (containing (many) errors); deprave, morally corrupt
+CDA	m		Christian Democratic Appeal, a centre-right Christian democratic party in…
 dag	n	de · mv. dagen	day (period of 24 hours); daytime (time between sunrise and sunset); a meeting or assembly with legal or political power, originally convened on…
 dag	i		hello, short for goedendag (“good day”) 'goodday; goodbye'; goodbye, same shortening
 dam	n	de · mv. dammen	dam; king (double draught/checker)
@@ -993,6 +1004,7 @@ vacuüm	n	het · mv. vacuüms	a vacuum; emptiness, meaninglessness
 vacuüm	a		in or constituting a vacuum; empty, meaningless
 croissant	n	de · mv. croissants	croissant
 pers	n	de · mv. persen	a press, mechanical device to exert pression; the press, media; a Persian cat (breed)
+NW	n		northwest
 Attica	m		Attica (region in Greece where Athens is located)
 vat	n	het · mv. vaten	barrel, tank; vessel; grip, both literal and figurative
 pint	n	de · mv. pinten	a glass of beer (usually 25 cl or 33cl, not an imperial pint)
@@ -1053,6 +1065,7 @@ omega	n	de · mv. omegas	omega (Greek letter)
 lief	a		nice, sweet, lovely; beloved, dear
 lief	n	het · mv. lieven	one's beloved in a romantic relationship, i.e. a boyfriend or girlfriend
 der	d		there
+der	t		of the
 das	n	de · mv. dassen	A badger, various species of genera Meles and Taxidea; Eurasian badger (Meles meles); necktie
 Dijle	m		Dyle (River flowing through Belgium)
 Schelde	m		The river Scheldt (a river in France, Belgium and the Netherlands)
@@ -1488,7 +1501,7 @@ Cherokee	m		the Cherokee language; Cherokee people
 Cherokee	n	de · mv. Cherokees	a member of the Cherokee people
 sedan	n	de · mv. sedans	sedan, saloon (car type)
 saloon	n	de · mv. saloons	saloon (tavern in the Old West)
-best	a		fine, okay; dear, venerable (in a polite address)
+best	a		best; fine, okay; dear, venerable (in a polite address)
 best	d		quite, rather
 fuga	n	de · mv. fuga's	fugue (piece of music)
 lid	n	het · mv. leden	member (of a group); member, limb (extremity of a body); member, penis
@@ -2289,6 +2302,7 @@ manja	n	de · mv. manja's	mango; mango tree, Mangifera indica
 dingo	n	de · mv. dingo's	dingo, Canis lupus dingo (Australian wild dog)
 model	n	het · mv. modellen	model (type, design); model (someone or something serving as an artistic subject); model (simplified representation)
 guy	n	de · mv. guys	guy
+NO	n		NE
 glucose	n	de	glucose
 sucrose	n	de	sucrose
 fructose	n	de	fructose
@@ -2577,7 +2591,7 @@ rag	n	het · mv. raggen	spider silk; a piece of ragtime music
 rapper	n	de · mv. rappers	rapper (performer of rap music)
 rave	n	de · mv. raves	rave (electronic dance party)
 ree	n	de/het · mv. reeën	the roe, Capreolus capreolus; any deer of the genus Capreolus
-reef	n	de · mv. reven	line drawn on the ground, furrow
+reef	n	de · mv. reven	line drawn on the ground, furrow; strip of sail)
 repertoire	n	de · mv. repertoires	repertoire
 reserve	n	de · mv. reserves	reserve, emergency supply (that which is reserved, or kept back, as for…; military reserves; reservation, restraint
 route	n	de · mv. routes	route, course, way (particular pathway or direction one travels); road, route
@@ -3140,12 +3154,14 @@ hint	n	de · mv. hints	hint
 soit	i		so be it
 knap	a		attractive, handsome, pretty; impressive, decent, rather good or big; smart, intelligent, gifted, clever
 knap	d		quite, rather, pretty (reinforces what follows)
+minder	t		less; fewer
+minder	d		less
 minder	a		worse, not as good; less fortunate
 minaret	n	de · mv. minaretten	minaret
 djellaba	n	de · mv. djellaba's	a djellaba
 min	p		minus
 min	n	de · mv. minnen	minus sign; minus (disadvantage); love
-min	a		few, little, less common synonym of weinig; opprobrious, unpleasant
+min	a		less, fewer; few, little, less common synonym of weinig; opprobrious, unpleasant
 prat	a		focused, bent, fixated
 prat	n	de · mv. pratten	a pride, arrogance; the act of pouting or sulking
 stalking	n	de	stalking (act or crime of following and harassing someone)
@@ -3272,6 +3288,7 @@ vintage	a		vintage
 smaragd	n	de · mv. smaragden	emerald
 tuin	n	de · mv. tuinen	a garden, yard
 bolster	n	de · mv. bolsters	a bur, a spiny cupule, often of a chestnut
+btw	n	de	VAT, value-added tax
 watersport	n	de · mv. watersporten	watersport (sport played on or in water)
 gluten	n	het	gluten
 immanent	a		immanent
@@ -3448,6 +3465,8 @@ piercing	n	de · mv. piercings	piercing (ornament)
 aspis	n	de · mv. aspides	asp
 ka	n	de · mv. ka's	dominant woman; ka (ancient Egyptian notion of the soul, with raised arms, signfying an…
 deadline	n	de · mv. deadlines	deadline
+dit	t		referring to a thing or a person closer by
+dit	r		this, this here
 comeback	n	de · mv. comebacks	comeback
 vol	a		full, replete; complete; whole
 loop	n	de · mv. lopen	course, duration; a river course; course of a projectile
@@ -3725,6 +3744,7 @@ Jo	m		a diminutive of the female given names Johanna and Josefien
 Job	m		Job (the eighteenth book of the Old Testament); Job (Biblical character); a male given name
 Joke	m		a diminutive of the female given name Jo
 Judas	m		Judas
+KI	n	de	artificial intelligence”)
 Kim	m		a unisex given name from English
 Komen	m		Comines (a city in Belgium)
 Koran	m		the Qur'an
@@ -3760,6 +3780,7 @@ Monster	m		a village and former municipality of Westland, South Holland, Netherl
 Moor	n	de · mv. Moren	a Moor (member of a Berber people from western North Africa, also ruling…; a black person, a negro
 Most	m		a hamlet in Horst aan de Maas, Limburg, Netherlands
 Ms.	n		majesteits — Majesty
+N	n		north
 Nagel	m		a surname
 Namen	m		Namur, a city in southern Belgium; Namur, a former countship in present Belgium, named after its above capital city; Namur, a province of Belgium, named after its above capital city
 Narcissus	m		Narcissus
@@ -3767,6 +3788,7 @@ Nel	m		a female given name
 Net	m		Reticulum
 Nutter	m		a hamlet in Dinkelland, Overijssel, Netherlands
 O	m		a surname
+O	d		east
 Oda	m		a neighbourhood of Weert, Limburg, Netherlands
 Park	m		a hamlet in Land van Cuijk, North Brabant, Netherlands
 Pers	m		a Persian, a person from Persia
@@ -3813,13 +3835,16 @@ Vene	m		Ronald Venetiaan
 Vera	m		a female given name
 Vilnius	m		Vilnius (the capital city of Lithuania)
 Vita	m		a female given name
+W	d		west
 Ward	m		a given name, either as a diminutive of Edward or officially given…
 Wend	n	de · mv. Wenden	Wend, one of several Slavic groups living near German-speaking areas
 Winkel	m		a village and former municipality of Hollands Kroon, North Holland, Netherlands; a hamlet in Cranendonck, North Brabant, Netherlands; a surname
 Winter	m		a surname
 Wolf	m		Lupus
+Z	d		south
 Zon	m		the Sun (closest star to the Earth)
 Zoom	m		a hamlet in Nunspeet, Gelderland, Netherlands; a neighbourhood of Lelystad, Flevoland, Netherlands
+pb	n	de · mv. pb's	DM, PM; private message
 bh	n	de · mv. bh's	bra
 sm	n	het	sadomasochism
 champagne	n	de · mv. champagnes	the sparkling wine champagne from the French region Champagne; a brand, type or serving of champagne; the color champagne
@@ -3840,6 +3865,7 @@ lak	n	de/het · mv. lakken	lacquer; foolery, foolishness, nonsense; indifference
 ugli	n	de · mv. ugli's	ugli
 internet	n	het	Internet (specific internet consisting of the global network of computers)
 mie	n	de · mv. mies	woman; Chinese-style wheat noodle (e.g. ramen)
+menschen	n		obsolete spelling of mensen
 capsule	n	de · mv. capsules	capsule (encapsulation containing drugs or supplements); cover over the cork and opening of a bottle
 brigade	n	de · mv. brigades	brigade, a military unit consisting of two or more regiments, often using…; a police unit of varying size or purpose, but often serving a specialised…
 Samaria	m		Samaria (ancient capital of the northern kingdom of Israel and of the region…; Samaria (ancient region in Palestine)
@@ -3932,6 +3958,7 @@ opdrachtgever	n	de · mv. opdrachtgevers	a commissioner, one who commissions an 
 smoking	n	de · mv. smokings	tuxedo, dinner jacket
 turbulent	a		turbulent
 dissident	n	de · mv. dissidenten	dissident
+AOA	n	de · mv. AOA's	acute medical unit, acute admissions unit”)
 Marokko	m		Morocco (a country in North Africa)
 expo	n	de · mv. expo's	expo, exposition
 graf	n	het · mv. graven	grave
@@ -4366,6 +4393,7 @@ Eden	m		Eden (mythological garden in Genesis)
 minibus	n	de · mv. minibussen	minibus, minivan
 plebs	n	het	plebs, rabble, riffraff
 luns	n	de · mv. lunzen	linchpin; any pin inserted into an opening to keep an object in place
+ff	d		briefly, just
 hoes	n	de · mv. hoezen	cover
 training	n	de · mv. trainingen	training (imparting or acquisition of skills, esp. in exercise and sports,…; a training session
 taille	n	de · mv. tailles	waistline
@@ -4932,7 +4960,7 @@ binnen	p		inside, within; within (a time)
 binnen	a		set for life (having obtained such success professionally and having been…
 beneden	d		below; downstairs
 beneden	p		under, below, beneath
-beter	a		not sick anymore; recovered (from a disease); of high quality
+beter	a		better; not sick anymore; recovered (from a disease)
 goed	a		good (not bad); correct, right (factually or morally); all right, fine
 goed	d		well; correct; pretty, quite
 goed	n	het · mv. goederen	goods, wares, commodities, assets; clothes, clothing, outfit
@@ -5133,6 +5161,7 @@ toename	n	de · mv. toenamen	increase
 toename	v		singular dependent-clause past subjunctive of toenemen
 tweede	a		second, number two
 geboren	a		born
+geboren	v		born
 oefening	n	de · mv. oefeningen	practice; exercise (activity or problem to train a skill, e.g. exercises in…
 opeens	d		suddenly, all of a sudden
 zeker	a		certain, sure; confident, secure; confirmed
@@ -5185,6 +5214,7 @@ moeten	v	moest – gemoeten	to be necessary, to be required; to have to, must; s
 liggen	v	lag – gelegen	to lie; to be lying down; to be, to be placed or located
 welkom	a		welcome
 welkom	i		welcome!
+welke	r		which
 waarom	d		why, because of what
 gebruikelijk	a		usual; customary
 herinneren	v	herinnerde – herinnerd	to remind, prompt; to remember, remind oneself, recall
@@ -5271,6 +5301,7 @@ maas	n	de · mv. mazen	the basic element constituting a mesh or net
 sambal	n	de · mv. sambals	Sambal, a relish made from chili peppers; a spicy spread made of chili peppers and chicken, esp. chopped liver
 Maas	m		Meuse, Maas (a major river that flows about 901 km (560 mi) from France…; a surname
 gematria	n	de	gematria
+witter	a		whiter
 horst	n	de · mv. horsten	an area of the earth's surface which is raised relative to surrounding land;…; an elevated land overgrown with shrub; a nest of a bird of prey
 inwit	a		extremely white
 coronavirus	n	het · mv. coronavirussen	coronavirus (member of the family Coronaviridae)
@@ -5337,7 +5368,7 @@ Italië	m		Italy (a country in Southern Europe)
 Slovenië	m		Slovenia (a country on the Balkan Peninsula in Central Europe)
 Macedonië	m		Macedonia (a geographic region in Southeastern Europe in the Balkans,…; Macedonia (former name of North Macedonia: a country in Southeastern Europe…; Macedonia (a geographic region and former administrative region of Greece)
 Bosnië	m		Bosnia (a geographic region of Bosnia and Herzegovina, consisting of the…; Bosnia (a country in southeastern Europe; in full, Bosnië en Herzegovina)
-heeft	v		second-person (u) singular present indicative of hebben; have
+heeft	v		has; second-person (u) singular present indicative of hebben; have
 Noord-Amerika	m		North America (the continent forming the northern part of the Americas)
 Zuid-Amerika	m		South America (the continent forming the southern part of the Americas)
 antarctisch	a		Antarctic
@@ -6813,6 +6844,7 @@ neuken	v	neukte – geneukt	to fuck, to screw; to fuck, to disrespect; used to e
 harpist	n	de · mv. harpisten	harpist
 Jasper	m		a male given name, equivalent to English Caspar
 dozijn	n	het · mv. dozijnen	dozen, twelve
+mijne	r		mine
 ambulant	a		ambulant
 Margreet	m		a female given name, equivalent to English Margaret
 duizend	u		thousand
@@ -6932,7 +6964,7 @@ voorbij	p		past, beyond
 voorbij	a		past, previous
 precies	a		exact, precise; accurate, careful
 precies	d		exactly, precisely
-ergens	d		somewhere, anywhere; somehow, in some unspecified way
+ergens	d		somewhere, anywhere; somehow, in some unspecified way; something
 linkerkant	n	de · mv. linkerkanten	left-hand side
 rechterkant	n	de · mv. rechterkanten	right-hand side
 evacué	n	de · mv. evacués	evacuee
@@ -7129,7 +7161,7 @@ vanochtend	d		this morning, the morning at the beginning of the current day (in 
 vanmiddag	d		this afternoon, the afternoon of the current day (in the future or past)
 vanavond	d		tonight, this evening, the evening of the current day (in the future or past)
 mobiel	a		mobile
-mobiel	n	de · mv. mobielen	a mobile (kinetic arrangement)
+mobiel	n	de · mv. mobielen	a mobile phone, cellphone, mobile; a mobile (kinetic arrangement)
 telefoontje	n	het · mv. telefoontjes	telephone conversation
 meteen	d		immediately; at once; while one is at it (while doing something related), at the same time
 vorig	a		previous
@@ -7155,6 +7187,7 @@ aantal	n	het · mv. aantallen	countable amount; a number, a plurality; a few
 leeuwin	n	de · mv. leeuwinnen	lioness
 Leeuwenhoek	m		a neighborhood of Leiden, South Holland, Netherlands
 bijwoord	n	het · mv. bijwoorden	adverb
+waarvan	d		of which
 betrouwbaar	a		trustworthy, reliable
 afronden	v	rondde af – afgerond	to round up; to round off, wrap up; to finish
 jaarverslag	n	het · mv. jaarverslagen	annual report
@@ -7368,6 +7401,7 @@ baco	n	de · mv. baco's	a rum and coke
 André	m		a male given name borrowed from French
 trouwens	d		besides; by the way
 bovendien	d		moreover, furthermore; besides, in addition
+daarna	d		thereafter, afterwards
 dierentuin	n	de · mv. dierentuinen	zoo
 overig	a		remaining
 bezoeken	v	bezocht – bezocht	to visit
@@ -7947,6 +7981,7 @@ verkrijgen	v	verkreeg – verkregen	to obtain, gain, get
 navolgen	v	volgde na – nagevolgd	to succeed, to come after, to follow (an example)
 aanduiden	v	duidde aan – aangeduid	to indicate, to mark, to point out; to express, to put into words
 duiden	v	duidde – geduid	to point to, refer to, suggest; to explain, clarify
+waarbij	d		whereby
 voorop	d		on/at the front; first, foremost
 voorop	p		on/at the front of
 uitbeelding	n	de · mv. uitbeeldingen	portrayal
@@ -8021,6 +8056,7 @@ pannenkoek	n	de · mv. pannenkoeken	pancake; pannekoek; flapjack
 koekhappen	n	het	bite-the-cake; a game, especially for children, in which piece(s) of cake…
 concreet	a		concrete, not abstract; perceivable, real
 tastbaar	a		tangible, palpable
+enz.	d		etc
 herinnering	n	de · mv. herinneringen	a memory, something that one remembers; the act of remembering; a reminder, something that reminds one about something
 wijken	v	week – geweken	to yield, make way; to recede; to disappear
 afgang	n	de · mv. afgangen	the act of descending; the act of leaving the stage; the loss of face
@@ -8250,6 +8286,7 @@ vriendschap	n	de · mv. vriendschappen	friendship
 bondgenoot	n	de · mv. bondgenoten	ally (member of the same alliance; one who offers support when needed)
 genoot	n	de · mv. genoten	(male) companion; fellow member of a group or organisation
 zelfstandigheid	n	de	independence
+daarmee	d		therewith
 verklaring	n	de · mv. verklaringen	declaration, statement; explanation
 waarnemer	n	de · mv. waarnemers	observer; representative
 waarneming	n	de · mv. waarnemingen	observation; perception
@@ -8771,6 +8808,7 @@ goot	n	de · mv. goten	gutter
 stikstof	n	de	nitrogen
 stok	n	de · mv. stokken	stick, natural (wood) or artificial; cane; deck, stock (set of playing cards)
 linker	a		left
+PDS	n	het	IBS
 tof	a		cool (objects); nice (persons); tough, difficult, harsh
 tof	i		great!
 banga	n	de · mv. banga's	slut (promiscuous woman)
@@ -8783,6 +8821,7 @@ hakken	v	hakte – gehakt	to hack, chop; to dance in a style originating from th
 hakken	n	het	a style of dance originating from the Dutch hardcore and gabber scene
 instinkt	v		second/third-person singular dependent-clause present indicative of instinken
 Jehova	m		Jehovah (name for God derived from vocalisation of the Tetragrammaton)
+effe	d		for a moment”)
 calvados	n	de · mv. calvadossen	calvados
 narwal	n	de · mv. narwals	narwhal, Monodon monoceros
 potvis	n	de · mv. potvissen	sperm whale (Physeter catodon syn. Physeter macrocephalus); sperm whale, any member of the family Physeteridae, including the above and…
@@ -9596,6 +9635,7 @@ bezoeker	n	de · mv. bezoekers	visitor
 eens	d		once, one time; sometime, at an unspecified time; modal particle which casualizes statements, gives a slightly softer tone to…
 eens	c		once, as soon as
 eens	a		of one accord or opinion, in agreement
+eens	t		of a
 beweren	v	beweerde – beweerd	to claim, to assert, to allege
 betaald	a		nonfree, paid, for payment
 winst	n	de · mv. winsten	profit; gain, act or process of gaining; gain, advantage, benefit
@@ -9653,7 +9693,7 @@ joods	a		Jewish (concerning the Jewish religion)
 christelijk	a		Christian
 afgod	n	de · mv. afgoden	idol; false deity
 openbaren	v	openbaarde – geopenbaard	to reveal
-lhb	n	de · mv. lhb's	a person who is part of the LGB umbrella
+lhb	n	de · mv. lhb's	the LGB umbrella; a person who is part of the LGB umbrella
 onvergelijkbaar	a		incomparable
 sowieso	d		anyhow, in any case, anyway; necessarily, in all cases
 derhalve	d		therefore
@@ -10039,6 +10079,7 @@ muilpeer	n	de · mv. muilperen	a slap in the face, usually a painfully hard blow
 orgelen	v	orgelde – georgeld	to play the organ
 verlegen	a		shy, bashful, timid; embarrassed; lacking, having a shortage
 Nederlander	n	de · mv. Nederlanders	a Dutchman, citizen of - or person originating from the kingdom of the…; inhabitant of the Low Countries, roughly including present Dutchmen,…
+lichtjes	d		lightly, slightly, to a modest degree
 gekkekoeienziekte	n	de · mv. gekkekoeienziekten	mad cow disease, BSE
 dollekoeienziekte	n	de · mv. dollekoeienziekten	the mad cow disease, BSE
 mannin	n	de · mv. manninnen	a masculine woman; an effeminate man
@@ -10120,6 +10161,7 @@ bijgevolg	n	het · mv. bijgevolgen	a side effect, a side consequence
 keu	n	de · mv. keuen	cue (for playing billiards); sow; piglet
 kleuren	v	kleurde – gekleurd	to color, paint; to blush, turn red
 gekleurd	a		not neutral, subjective
+15e	a		15th
 bijnaam	n	de · mv. bijnamen	nickname
 veruit	d		by far
 zwaartepunt	n	het · mv. zwaartepunten	center of mass; centroid; eye of the storm
@@ -10146,7 +10188,14 @@ verdenken	v	verdacht – verdacht	to suspect (that someone is guilty)
 bedragen	v	bedroeg – bedragen	to amount to
 grachtenpand	n	het · mv. grachtenpanden	a building located beside an urban canal
 waarborg	n	de · mv. waarborgen	guarantee
+19e	a		19th
 stadhuis	n	het · mv. stadhuizen	town hall, city hall
+4e	a		4th
+18e	a		18th
+13e	a		13th
+11e	a		11th
+14e	a		14th
+17e	a		17th
 Robben	m		a surname
 billentikker	n	de · mv. billentikkers	synonym of kontekletser
 benigne	a		benign
@@ -10433,6 +10482,7 @@ verkoudheid	n	de · mv. verkoudheden	cold (illness)
 temperatuur	n	de · mv. temperaturen	temperature (measure of cold or heat)
 spreekwijze	n	de · mv. spreekwijzen	expression (colloquialism or idiom)
 gelaatsuitdrukking	n	de · mv. gelaatsuitdrukkingen	facial expression
+anderen	n		others
 openbloeien	v	bloeide open – opengebloeid	bloom; flower (to put forth blooms)
 verzinnen	v	verzon – verzonnen	to invent, to make up
 Sander	m		a male given name
@@ -10654,9 +10704,15 @@ uitvoerig	d		extensively
 inheems	a		native, indigenous, domestic, autochthonous
 schrik	n	de · mv. schrikken	shock, sudden fear or dread; fear, terror, menace
 afkoelen	v	koelde af – afgekoeld	to cool off, cool down
-overal	d		everywhere, anywhere; all over, throughout (present all over a place)
+1e	a		1st
+2e	a		2nd
+3e	a		3rd
+5e	a		5th
+6e	a		6th
+7e	a		7th
+overal	d		everywhere, anywhere; all over, throughout (present all over a place); everything
 overal	n	de · mv. overals	overall
-nergens	d		nowhere
+nergens	d		nowhere; nothing
 zweven	v	zweefde – gezweefd	to float, to hover; to glide; to go back and forth, to dither
 gunst	n	de · mv. gunsten	favour
 gunst	i		good grief, gosh
@@ -10775,6 +10831,7 @@ raakpunt	n	het · mv. raakpunten	point of tangency
 helling	n	de · mv. hellingen	inclination, slope; dip
 strekking	n	de · mv. strekkingen	purpose, tenor; scope (of a sanction); drift (of a storyline)
 gesteente	n	het · mv. gesteenten	rock (aggregate of minerals)
+slijper	n	de · mv. slijpers	sharpener
 slijpen	v	sleep – geslepen	to sharpen; to grind (a lens e.g.)
 verovering	n	de · mv. veroveringen	conquest, victory
 vervolgen	v	vervolgde – vervolgd	to continue, carry on; to persecute, pursue; to prosecute, sue
@@ -10897,6 +10954,7 @@ onverhoopt	d		unexpectedly
 grillig	a		capricious, impulsive; unusual, irregular, strange
 gelieven	v	geliefde – geliefd	to please, to delight; to enjoy, love
 accepteren	v	accepteerde – geaccepteerd	to accept
+10e	a		10th
 eeuwig	a		eternal
 eeuwig	d		forever
 standbeeld	n	het · mv. standbeelden	statue
@@ -11282,6 +11340,9 @@ lauw	a		lukewarm (temperature); cold, indifferent; nice, cool, chill
 kirren	v	kirde – gekird	to coo like a pigeon, speak in a soft and low voice
 korren	v	korde – gekord	to fish by pulling a small funnel-shaped dragnet by a long rope over the sea…
 gambiet	n	het · mv. gambieten	gambit
+8e	a		8th
+9e	a		9th
+12e	a		12th
 erbarmen	v	erbarmde – erbarmd	to have mercy, to take pity
 erbarmen	n	het	mercy, pity
 framboos	n	de · mv. frambozen	raspberry, plant of the species Rubus idaeus; raspberry, a fruit of this plant; raspberry, the reddish color of raspberries
@@ -11384,6 +11445,7 @@ smidse	n	de · mv. smidsen	forge, smithy (workshop of a smith)
 organel	n	het · mv. organellen	organelle (a membrane bound compartment found within cells)
 huig	n	de · mv. huigen	uvula (appendage that hangs from the palate)
 affiche	n	de/het · mv. affiches	a placard, a poster containing an announcement or promotional information…
+l8	v		laughs”)
 Noors	a		Norwegian
 Noors	m		the Norwegian language
 competitie	n	de · mv. competities	competition (contest for a prize or award); competition (series of contests or matches, for a prizze); competition, rivalry
@@ -11492,6 +11554,7 @@ sneeuwen	a		snowy, consisting of snow; snow white, being the colour of snow
 e-mailen	v	e-mailde – ge-e-maild	to e-mail
 rammen	v	ramde – geramd	to ram, to intentionally collide with (a ship or car or building) with the…; to strike (something) hard
 boomen	v	boomde – geboomd	to boom (to flourish, grow, or progress)
+boomen	n		plural of boom
 kijk	n	de	view, opinion (way of understanding or looking at something)
 aanzwellen	v	zwol aan – aangezwollen	to swell; to swell up, surge
 opzwellen	v	zwol op – opgezwollen	To swell up
@@ -11917,6 +11980,7 @@ leest	n	de · mv. leesten	last (form on which shoes are made or repaired); style
 stapel	n	de · mv. stapels	pile; sound post; cricket (or alternatively, grasshopper)
 nadien	d		afterwards, since then
 naargelang	p		according to, depending on; as, to the extent that, along
+ZW	n		SW
 vergezellen	v	vergezelde – vergezeld	to accompany (attend as a companion)
 dadelijk	d		presently, very soon, at once
 knus	a		cozy, (UK) cosy; snug, intimate
@@ -12332,6 +12396,7 @@ razzia	n	de · mv. razzia's	razzia, raid
 uitbreken	v	brak uit – uitgebroken	break out
 krijgsmacht	n	de · mv. krijgsmachten	armed forces
 verzetsbeweging	n	de · mv. verzetsbewegingen	resistance movement
+degenen	r		those
 halfstok	d		half-staff, half-mast
 halfweg	d		halfway
 voorheen	d		formerly, used to
@@ -12449,6 +12514,8 @@ invoer	v		first-person singular dependent-clause present indicative of invoeren
 uitvoer	n	de	output (of information, data, etc.); export; execution (of a task or plan)
 uitvoer	v		first-person singular dependent-clause present indicative of uitvoeren
 uitkomst	n	de · mv. uitkomsten	an outcome, a result; a solution or relief, a means or opportunity to resolve a problem
+jouwe	r		yours
+hunne	r		theirs
 graan	n	het · mv. granen	grain, the edible seeds of certain grasses; a grain plant, crop or harvest; a cereal, a type of grass
 Filipijnen	m		Philippines (a country in Southeast Asia)
 triangel	n	de · mv. triangels	triangle (percussion instrument)
@@ -12596,6 +12663,7 @@ valsspelen	v	speelde vals – valsgespeeld	to cheat
 valsspeler	n	de · mv. valsspelers	cheater
 speler	n	de · mv. spelers	a player, someone who plays a game; a player, someone who plays a musical instrument; a device to play music
 speeltje	n	het · mv. speeltjes	a toy, a plaything
+bijv.	d		e.g
 toerist	n	de · mv. toeristen	tourist (male or of unspecified sex)
 ANWB	m		Koninklijke Nederlandse Toeristenbond ANWB (originally Algemene Nederlandse…
 castreren	v	castreerde – gecastreerd	to castrate, to neuter (remove the testicles of); to remove the female genitals, or even a plant's stamen; to emasculate, to reduce to a lesser, weaker state ('less balls')
@@ -12915,6 +12983,7 @@ schijf	n	de · mv. schijven	disk; a slice
 taxonomie	n	de	taxonomy
 verrekijker	n	de · mv. verrekijkers	pair of binoculars
 uitdagend	a		daring, dashing
+diegenen	r		those who, those which
 ongemak	n	het · mv. ongemakken	inconvenience; unease, discomfort; flaw, defect
 ongemakkelijk	a		uncomfortable, awkward; inconvenient; uneasy, difficult
 opwekken	v	wekte op – opgewekt	to generate; to excite, stimulate
@@ -13432,6 +13501,7 @@ verongelukken	v	verongelukte – verongelukt	to die in an accident
 mankement	n	het · mv. mankementen	defect
 onrust	n	de · mv. onrusten	unrest (state of agitation); unrest, upheaval (agitated situation); balance wheel
 wegnemen	v	nam weg – weggenomen	to take away
+n.Chr.	d		abbreviation of na Christus; AD
 onschendbaar	a		inviolable; immune (from prosecution)
 achterneef	n	de · mv. achterneven	a grandnephew; a male second cousin
 teugel	n	de · mv. teugels	rein
@@ -14032,6 +14102,7 @@ naleving	n	de · mv. nalevingen	living up to, observance
 indamming	n	de · mv. indammingen	curtailment; the act or process of damming
 activa	n		assets
 schoeien	v	schoeide – geschoeid	to shoe
+geschoeid	v		shod
 afvallig	a		renegade, apostate, disloyal
 getrouw	a		faithful, loyal, true
 vervallen	v	verviel – vervallen	to decline, reject; to worsen; to decay, rot
@@ -14632,6 +14703,7 @@ gewerveld	a		vertebrate
 ongewerveld	a		invertebrate
 geruis	n	het	rustling, rushing, noise; murmur (of the heart)
 geruisloos	a		soundless, silent
+stilletjes	d		silently, stealthily
 naaldboom	n	de · mv. naaldbomen	a conifer, tree of the order Coniferales
 leerlooien	n	het	tanning
 leerlooien	v	leerlooide – geleerlooid	to tan (to soak an animal hide in tannic acid/gallic acid, thereby changing…
@@ -14800,6 +14872,7 @@ beleven	v	beleefde – beleefd	to experience, live through, go through; to profe
 boeiend	a		captivating, interesting; riveting, astonishing
 boeiend	i		so what! Who cares!
 boeien	v	boeide – geboeid	to tie down, tie up, bind, shackle; to captivate, fascinate, interest; to raise the ship's side with side-boards
+boeien	i		don't care, whatev
 ex-president	n	de · mv. ex-presidenten	ex-president
 omkopen	v	kocht om – omgekocht	to bribe, buy off
 intimidator	n	de · mv. intimidators	intimidator
@@ -15010,7 +15083,7 @@ vermeerdering	n	de · mv. vermeerderingen	increase (in population), accretion
 gebakje	n	het · mv. gebakjes	a piece of pastry
 tompoes	n	de · mv. tompoezen	tompouce: a Dutch version of mille-feuille, having a thick layer of pastry…
 muisknop	n	de · mv. muisknoppen	mouse button, a computer input device
-katje	n	het · mv. katjes	catkin; salary
+katje	n	het · mv. katjes	kitty; catkin; salary
 hondje	n	het · mv. hondjes	flatbed cart or trolley without any handles
 eigenhandig	a		personally (with one's own hands)
 schuif	n	de · mv. schuiven	drawer; bolt, to lock a door etc; slide, moving or moveable
@@ -15183,6 +15256,7 @@ legende	n	de · mv. legenden	legend (fictional story based on oral tradition, po
 fotorespiratie	n	de	photorespiration
 lichtreactie	n	de · mv. lichtreacties	light reaction, a part of the process of photosynthesis
 aartshertogin	n	de · mv. aartshertoginnen	archduchess, wife of an archduke or daughter or granddaughter of the Emperor…
+Baskische	n	de · mv. Baskischen	female Basque (female native or inhabitant of the Basque Country, Spain)
 krulsla	n	de	leaf lettuce, Lactuca sativa L. var. crispa
 paradoxaal	a		paradoxical
 antimoon	n	het	the metallic chemical element antimony
@@ -15466,6 +15540,7 @@ paraatheid	n	de	preparedness
 ontzeggen	v	ontzei – ontzegd	to deny, to keep from having
 femtocandela	n	de · mv. femtocandela's	femtocandela: 10⁻¹⁵ candela
 banja	n	de · mv. banja's	banya (Russian sauna)
+vree	n	de	peace
 vree	d		very
 welbehagen	n	het	pleasure
 peis	n	de	peace
@@ -15709,6 +15784,8 @@ nederwiet	n	de	weed, marijuana grown in the Netherlands
 colbert	n	de/het · mv. colberts	a formal jacket without tails
 antifibrinolyticum	n	het · mv. antifibrinolyticums	antifibrinolytic, a drug to inhibit fibrinolysis
 accusativus	n	de · mv. accusativi	the accusative case or a word therein
+enen	t		to a; a
+ener	t		of a; to a, for a
 sarcasme	n	het	sarcasm
 kalven	v	kalfde – gekalfd	to calve; to give birth to a calf
 prijskaartje	n	het · mv. prijskaartjes	price tag
@@ -15736,6 +15813,7 @@ papegaaien	v	papegaaide – gepapegaaid	to parrot (to repeat without necessarily
 motten	v	motte – gemot	to fight, to row
 epifanie	n	de · mv. epifanieën	epiphany
 dasspeld	n	de · mv. dasspelden	tiepin
+zachtjes	d		softly, gently, quietly
 zwaantje	n	het · mv. zwaantjes	a national police officer in a motorcycle-mounted unit
 verdoving	n	de · mv. verdovingen	anesthesia
 bader	n	de · mv. baders	someone who bathes, is taking a bath, mostly in a river or open water, or in…
@@ -16141,6 +16219,7 @@ slordig	a		sloppy, careless; undisciplined, haphazard; unkempt, untidy, slovenly
 smaragden	a		emerald
 briefomslag	n	de/het · mv. briefomslagen	an envelope, fit to post a letter in
 tormentil	n	de	tormentil (Potentilla erecta, syn. Potentilla tormentilla)
+onzes	r		our
 salp	n	de · mv. salpen	salp, any member of the class Thaliacea
 feut	n	de · mv. feuten	freshman
 faal	n	de · mv. falen	failure, mistake, blunder
@@ -16180,6 +16259,7 @@ geografisch	a		geographic, geographical
 geografisch	d		geographically
 nochtans	d		nevertheless
 herontdekking	n	de · mv. herontdekkingen	rediscovery
+20e	a		20th
 deksels	i		darn!; boy!
 deksels	a		darned, bloody
 xenofobie	n	de · mv. xenofobieën	xenophobia, hatred and/or pathological fear towards strangers or foreigners
@@ -17236,6 +17316,7 @@ regionaal	a		regional
 mijlpaal	n	de · mv. mijlpalen	milestone (something that marks an important or notable occasion); milepost, milestone (milepost or other object marking a mile distance of one…
 verdrukking	n	de · mv. verdrukkingen	oppression
 combineren	v	combineerde – gecombineerd	to combine
+21e	a		21st
 beknopt	a		concise
 memoriseren	v	memoriseerde – gememoriseerd	to memorize (US), memorise (UK)
 onderrichter	n	de · mv. onderrichters	instructor
@@ -17373,6 +17454,7 @@ vanzelf	d		automatically
 octaaf	n	de/het · mv. octaven	octave
 deelbaar	a		divisible
 Faeröer	m		Faroe Islands (an archipelago and self-governing autonomous territory of…
+Ardenne	m		alternative form of Ardennen
 activeren	v	activeerde – geactiveerd	to activate, put into action; render (more) active; to enable (to activate a function of an electronic or mechanical device)
 distributie	n	de · mv. distributies	a distribution, the act, process or an instance of distributing or being…; publicly controlled assignment/delivery of restricted goods, notably under…; an agency in charge of the above
 rukbunker	n	de · mv. rukbunkers	bed
@@ -18023,6 +18105,7 @@ volière	n	de · mv. volières	aviary
 scholen	v	schoolde – geschoold	to school, give formal/organized training
 glottisslag	n	de · mv. glottisslagen	a glottal stop, plosive sound formed in and articulated with the glottis
 statief	n	het · mv. statieven	a tripod serving as an optic - or other device's three-legged stand or mount
+pilipili	n	de · mv. pilipili's	the common term in Belgium
 analepsis	n	de	analepsis
 kout	n	de	banter, chit-chat, pleasant but idle talk
 slagveld	n	het · mv. slagvelden	battlefield; carnage, disaster area
@@ -19355,6 +19438,7 @@ geschiedkundige	n	de · mv. geschiedkundigen	historian
 suggereren	v	suggereerde – gesuggereerd	to suggest
 aftakking	n	de · mv. aftakkingen	bifurcation, crotch; ramification, branching; distributary
 telexbericht	n	het · mv. telexberichten	a message delivered by a telex machine
+zuidelijkst	a		southernmost
 ambassadrice	n	de · mv. ambassadrices	an ambassadress, female ambassador
 verzot	a		very fond of, infatuated with
 Rogier	m		a male given name
@@ -19375,6 +19459,7 @@ uitwerken	v	werkte uit – uitgewerkt	to effect, put in place; to elaborate, exp
 vinnig	a		unfriendly in a brusque way, mean, acrimonious; alert, agile; having fins
 bolrond	a		convex
 borstelig	a		prickly (of hair)
+voren	d		in advance, to the front
 ruk	n	de · mv. rukken	pull, jerk
 ruk	a		crap, shitty, garbage
 oneens	a		not of the same opinion
@@ -19970,10 +20055,13 @@ rellen	v	relde – gereld	to riot
 elektra	n	de/het	electronics; electricity
 smeltpunt	n	het · mv. smeltpunten	melting point
 Eckart	m		a neighbourhood of Eindhoven, North Brabant, Netherlands
+Hr.Ms.	n		HNLMS
+Zr.Ms.	n		HNLMS
 karmisch	a		karmic
 agitatie	n	de · mv. agitaties	agitation
 kraaiennest	n	het · mv. kraaiennesten	crow's nest (a small open-top shelter atop the foremast for a lookout)
-zijner	t		genitive feminine/plural of zijn; of his
+zijner	t		to his
+zijner	r		of him
 ongeremd	a		wild, unrestrained
 weloverwogen	a		measured, deliberate (such as a plan or a murder)
 begiftigen	v	begiftigde – begiftigd	to grant, gift
@@ -20395,6 +20483,7 @@ ransomware	n	de	ransomware
 zakkenrollerij	n	de · mv. zakkenrollerijen	pickpocketing, the crime committed by a pickpocket
 zakkenrollen	v		to pickpocket
 uitdenken	v	dacht uit – uitgedacht	to conceive (a plan); to invent, think outside the box
+IFA	m		IPA (International Phonetic Alphabet)
 arteriogram	n	het · mv. arteriogrammen	arteriogram
 zweem	n	de · mv. zwemen	a trace amount; a tiny bit, a tinge, a whiff
 zorgzaam	a		caring, considerate
@@ -20465,6 +20554,7 @@ aktetas	n	de · mv. aktetassen	briefcase
 akte	n	de · mv. akten	act (of a theatrical play); legal instrument, deed; a certificate, a licence, a diploma or, in general, any official document…
 gammahydroxybutyraat	n	het	gamma hydroxybutyrate
 gammahydroxybutaanzuur	n	het	gamma-hydroxybutyric acid
+eventjes	d		momentarily, in a moment
 dolletjes	a		super, very fun, most enjoyable, amazing
 weids	a		broad, widely spread; spacious
 uitvloeisel	n	het · mv. uitvloeisels	result, outcome
@@ -21444,8 +21534,8 @@ stilstondt	v		second-person (gij) singular dependent-clause past indicative of s
 stilstond	v		singular dependent-clause past indicative of stilstaan
 stilstonde	v		singular dependent-clause past subjunctive of stilstaan
 stilstaat	v		second/third-person singular dependent-clause present indicative of stilstaan
-ondergingt	v		second-person (gij) singular dependent-clause past indicative of ondergaan…
-onderginge	v		singular dependent-clause past subjunctive of ondergaan (“to go down”)
+ondergingt	v		to tolerate”); second-person (gij) singular dependent-clause past indicative of ondergaan…
+onderginge	v		to tolerate”)
 omgaat	v		second/third-person singular dependent-clause present indicative of omgaan
 omgingt	v		second-person (gij) singular dependent-clause past indicative of omgaan
 omging	v		singular dependent-clause past indicative of omgaan
@@ -23153,6 +23243,7 @@ hulpbron	n	de · mv. hulpbronnen	resource
 evolueren	v	evolueerde – geëvolueerd	to evolve, to develop gradually or in stages
 polariseren	v	polariseerde – gepolariseerd	to polarize; (said of a situation etc.) to polarize; to cause to have two extremes
 scharnierpen	n	de · mv. scharnierpennen	a hinge pin
+truste	i		night
 nachtjapon	n	de · mv. nachtjaponnen	nightgown, nightshirt, nightdress
 inzoome	v		singular dependent-clause present subjunctive of inzoomen
 inzoom	v		first-person singular dependent-clause present indicative of inzoomen
@@ -25400,6 +25491,7 @@ Kroatische	n	de · mv. Kroatischen	a Croatian woman
 geodeet	n	de · mv. geodeten	geodesic (shortest section of a line or curve on a surface of a certain…; geodesist (land surveyor)
 geodetisch	a		geodesic
 supervisie	n	de · mv. supervisies	supervision
+moesje	n	het · mv. moesjes	mom
 onverbogen	a		undeclined, uninflected
 stalinisme	n	het	Stalinism
 seminarist	n	de · mv. seminaristen	a student at a seminary, usually Roman Catholic, Remonstrant or Lutheran
@@ -26426,6 +26518,7 @@ aanscherpt	v		second/third-person singular dependent-clause present indicative o
 bruinkool	n	de · mv. bruinkolen	lignite, brown coal
 kolen	n		coal, especially in pieces
 naamgever	n	de · mv. naamgevers	eponym
+Catalaanse	n	de · mv. Catalaansen	female Catalan, female Catalonian (female native or inhabitant of Catalonia)
 gedaante	n	de · mv. gedaanten	form, appearance
 klaverjassen	n	het	a type of trick-taking card game popular in the Netherlands, akin to belote…
 klaverjassen	v	klaverjaste – geklaverjast	to play the above card game
@@ -26657,6 +26750,7 @@ achtduizend	u		eight thousand
 zesduizend	u		six thousand
 tichel	n	de · mv. tichels	roof tile; brick; flagstone
 lavement	n	het · mv. lavementen	washing, wash; lavement, enema, clyster
+contrôleur	n	de · mv. contrôleurs	controller”)
 uitschiet	v		first/second/third-person singular dependent-clause present indicative of…
 uitschoot	v		singular dependent-clause past indicative of uitschieten
 uitschote	v		singular dependent-clause past subjunctive of uitschieten
@@ -26805,6 +26899,7 @@ schokdemper	n	de · mv. schokdempers	shock absorber
 voordringen	v	drong voor – voorgedrongen	to jump the queue, to cut in line
 oorlel	n	de · mv. oorlellen	earlobe
 alver	n	de · mv. alvers	bleak (Alburnus alburnus)
+MMT	n	het · mv. MMT's	air ambulance medical personnel”)
 autogas	n	het	autogas (liquefied petroleum gas)
 thematisch	a		thematic (pertaining to a theme); thematic (forming verb stems with a thematic vowel)
 voordring	v		first-person singular dependent-clause present indicative of voordringen
@@ -27215,6 +27310,10 @@ onvruchtbaar	a		infertile, sterile, barren
 onvruchtbaarheid	n	de	infertility, barrenness
 kwakkel	n	de · mv. kwakkels	synonym of kwartel (“quail”)
 raffinaderij	n	de · mv. raffinaderijen	refinery
+PvdA	m		Labour Party, a left-wing social-democratic party in the Netherlands
+D66	m		Democrats 66, a social liberal political party in the Netherlands
+VVD	m		People's Party for Freedom and Democracy, a conservative liberal political…
+PvdD	m		Party for the Animals, an animal rights political party in the Netherlands
 na-ape	v		singular dependent-clause present subjunctive of na-apen
 na-aapt	v		second/third-person singular dependent-clause present indicative of na-apen
 na-aap	v		first-person singular dependent-clause present indicative of na-apen
@@ -27753,6 +27852,7 @@ windas	n	de · mv. windassen	windlass
 warmwaterkruik	n	de · mv. warmwaterkruiken	hot water bottle
 pij	n	de · mv. pijen	cowl
 naaldhak	n	de · mv. naaldhakken	stiletto heel
+16e	a		16th
 adventskalender	n	de · mv. adventskalenders	Advent calendar
 kerstverlichting	n	de	Christmas lights
 kerstcadeau	n	het · mv. kerstcadeaus	Christmas present
@@ -28992,6 +29092,7 @@ finaal	d		totally, completely
 blindengeleidehond	n	de · mv. blindengeleidehonden	guide dog
 galvanisch	a		galvanic
 vastknopen	v	knoopte vast – vastgeknoopt	to attach or secure with a knot
+hierbij	d		hereby
 hiertoe	d		to this, hereto; to this end
 achtennegentig	u		ninety-eight
 driehonderd	u		three hundred
@@ -30093,6 +30194,8 @@ schots	n	de · mv. schotsen	floe, ice floe
 herkansen	v	herkanste – herkanst	to retry, to reattempt, to retake, to have another go at (a test, exam etc.)
 slaapzucht	n	de	narcolepsy; lethargy
 polsband	n	de · mv. polsbanden	wristband: mostly used in the diminutive
+bandje	n	het · mv. bandjes	tyre; tape”)
+bandjes	n		tyre; tape”)
 politieman	n	de · mv. politiemannen	synonym of politieagent
 chinezen	v	chineesde – gechineesd	to dine out at a Chinese(-Indonesian) restaurant; to chase the dragon, to inhale the vapour from heated heroin
 lerares	n	de · mv. leraressen	female teacher
@@ -30715,6 +30818,7 @@ klavier	n	het · mv. klavieren	piano (string instrument); keyboard (set of keys 
 spreng	n	de · mv. sprengen	small spring, especially the source of a creek
 Zand	m		a hamlet in Deurne, North Brabant, Netherlands; a hamlet in Gemert-Bakel, North Brabant, Netherlands
 stickie	n	het · mv. stickies	a marihuana cigarette (generally smaller than a joint)
+jaha	i		yeah, yeah
 sojaolie	n	de · mv. sojaoliën	soybean oil
 kokosolie	n	de · mv. kokosoliën	coconut oil
 Roos	m		a female given name
@@ -31660,6 +31764,7 @@ inpolderen	v	polderde in – ingepolderd	to turn into a polder
 broeikaseffect	n	het	greenhouse effect
 superbroeikasgas	n	het · mv. superbroeikasgassen	super greenhouse gas, greenhouse gases with a much more potent greenhouse…
 stopformulier	n	het · mv. stopformulieren	stop and search record (form filled in by police officers when having…
+kindeke	n	het · mv. kindekes	diminutive of kind
 Valk	m		a surname
 wegstemmen	v	stemde weg – weggestemd	to vote out, to reject, to vote away
 lanterfanter	n	de · mv. lanterfanters	slacker, good-for-nothing
@@ -31750,9 +31855,11 @@ troef	n	de · mv. troeven	trump; asset, advantage
 vaardigen	v	vaardigde – gevaardigd	to ready, make ready
 zonderen	v	zonderde – gezonderd	to separate, to set apart
 zwakken	v	zwakte – gezwakt	to weaken, to become/make strengthless
-mijner	t		genitive feminine/plural of mijn; of my
+mijner	t		to my
+mijner	r		of me
 mijner	n	de · mv. mijners	buyer or bidder at a public auction; miner
-jouwer	t		genitive feminine/plural of jouw; of your
+jouwer	t		to your
+jouwer	r		of you
 Koum	m		a hamlet in Waadhoeke, Friesland, Netherlands
 smoken	v	smookte – gesmookt	to smoke, especially tobacco or a pipe; to burn, cause to emit smoke; to fry, cook, or braise
 druïde	n	de · mv. druïden	druid
@@ -31878,6 +31985,7 @@ nooddruft	n	de	poverty
 nooddruftig	a		needy
 gondellied	n	het · mv. gondelliederen	barcarole
 camee	n	de · mv. cameeën	a piece of jewelry carved in relief; a cameo
+gediskwalificeerd	v		disqualified
 kanaliseren	v	kanaliseerde – gekanaliseerd	to channel
 crèmewit	a		creamy white; cream
 papschool	n	de · mv. papscholen	kindergarten
@@ -33345,6 +33453,7 @@ vorst-bisschop	n	de · mv. vorst-bisschoppen	prince-bishop
 vorstbisdom	n	het · mv. vorstbisdommen	prince-bishopric; the bishopric of a prince bishop
 koejon	n		bully
 hartsvriendin	n	de · mv. hartsvriendinnen	intimate female friend
+bestuursvorm	n	de · mv. bestuursvormen	polity
 bolleke	n	het · mv. bollekes	a kind of rounded glass in which regular De Koninck beer is served; a bolleke full of De Koninck
 rittenwedstrijd	n	de · mv. rittenwedstrijden	stage race
 grondstof	n	de · mv. grondstoffen	raw material, natural resource
@@ -34539,6 +34648,8 @@ talmen	v	talmde – getalmd	to tarry, dawdle
 i-grec	n	de · mv. i-grecs	the letter Y, y (wye) in the Latin script; the letter Υ, υ (upsilon) in the Greek script
 collectie	n	de · mv. collecties	collection
 brokaten	a		brocaded, made of or containing brocade
+mijns	t		of my
+mijns	r		of me
 uwen	t		dative neuter/plural of uw
 beermarter	n	de · mv. beermarters	binturong, bearcat (Arctictis binturong)
 bintoerong	n	de · mv. bintoerongs	binturong
@@ -35008,6 +35119,7 @@ Gerner	m		a hamlet in Dalfsen, Overijssel, Netherlands
 luguber	a		macabre, gloomy and scary
 eschatologische	a		eschatologisch
 irrigeren	v	irrigeerde – geïrrigeerd	to irrigate
+achteren	d		backward, to the back
 Mook	m		a village in Mook en Middelaar, Limburg, Netherlands
 Hallum	m		a village and former municipality of Noardeast-Fryslân, Friesland, Netherlands
 Vermeulen	m		a surname
@@ -38749,6 +38861,7 @@ mensenrechtenactivist	n	de · mv. mensenrechtenactivisten	human rights activist
 mensenrechtenactiviste	n	de · mv. mensenrechtenactivistes	female human rights activist
 mensenrechtenactivisme	n	het	human rights activism
 bloedvink	n	de · mv. bloedvinken	synonym of goudvink (“bullfinch”) (Pyrrhula pyrrhula)
+OSF	m		a Dutch political alliance of local parties that only contest elections for…
 vakterm	n	de · mv. vaktermen	technical term, a specialist term used in jargon
 citerspel	n	het	zither music
 kwekerij	n	de · mv. kwekerijen	a farm where plants are grown, in particular for saplings, flowers and…; a nursery where: (Belgium, Suriname) any animals are raised or (Netherlands)…; the activity of farming at a farm of one of the above types
@@ -40857,7 +40970,7 @@ broederliefde	n	de	brotherly love, fraternal love
 zusterliefde	n	de	sisterly love, sororal love
 lerarenkamer	n	de · mv. lerarenkamers	a staff room for teachers in a school
 heipaal	n	de · mv. heipalen	a pile (pole or beam driven into the ground as part of a foundation)
-Gelderen	m		Geldern, Guelder (city in North Rhine-Westphalia, Germany)
+Gelderen	m		Geldern, Guelder (city in North Rhine-Westphalia, Germany); historical duchy in the Low Countries”)
 bestuursvergadering	n	de · mv. bestuursvergaderingen	board meeting
 emissiehandel	n	de	emissions trading
 diklippig	a		thick-lipped
@@ -41079,6 +41192,8 @@ ikzelf	r		myself
 achilleshiel	n	de · mv. achilleshielen	Achilles heel, the Achilles tendon; Achilles heel, a vulnerability
 wijsneus	n	de · mv. wijsneuzen	know-it-all
 welker	r		whose, of whom; to which, to whom
+dezes	t		of this
+dezer	t		of this; of these; to this
 afritsbroek	n	de · mv. afritsbroeken	zip-off trousers
 insgelijks	d		likewise (said in reply to a well-wish)
 zulks	r		such
@@ -41174,6 +41289,10 @@ hondsdagen	n		dog days
 zienswaardig	a		worth seeing
 zienswaardigheid	n	de · mv. zienswaardigheden	tourist attraction
 vuistbijl	n	de · mv. vuistbijlen	hand axe, biface (primitive axe without a handle)
+jouws	t		of your
+jouws	r		of you
+zijns	t		of his
+zijns	r		of him
 nabuurlijk	a		neighbourly
 maanlanding	n	de · mv. maanlandingen	moon landing
 spreeuwenkist	n	de · mv. spreeuwenkisten	a contraption that makes sounds (used for radios, loudspeakers, televisions…
@@ -41238,6 +41357,14 @@ rotszwaluw	n	de · mv. rotszwaluwen	Eurasian crag martin (Ptyonoprogne rupestris
 steppearend	n	de · mv. steppearenden	steppe eagle (Aquila nipalensis)
 ooggetuige	n	de · mv. ooggetuigen	eyewitness
 Dit	m		a diminutive of the female given name Dirkje
+22e	a		22nd
+23e	a		23rd
+24e	a		24th
+25e	a		25th
+26e	a		26th
+27e	a		27th
+28e	a		28th
+29e	a		29th
 hakkelen	v	hakkelde – gehakkeld	to hack, to chop, to mince (to cut into small pieces); to stutter, to stammer
 Ingoesjetië	m		Ingushetia (a republic and federal subject of Russia in the Caucasus)
 hitparade	n	de · mv. hitparades	a hit parade, a list or ranking of hit songs
@@ -43120,6 +43247,7 @@ ondertrouwen	v	ondertrouwde – ondertrouwd	to undertake an engagement
 onderstutten	v	onderstutte – onderstut	to support, to place support under
 onderstellen	v	onderstelde – ondersteld	to assume, suppose
 onderschikken	v	onderschikte – onderschikt	to suppress, to subjugate; to be subservient
+contr.	n	de · mv. contrs.	controller”)
 kookpunt	n	het · mv. kookpunten	boiling point
 voedselbon	n	de · mv. voedselbonnen	food stamp
 onderpresteren	v	presteerde onder – ondergepresteerd	to underperform, to underachieve
@@ -55345,6 +55473,7 @@ voetenkraan	n	de · mv. voetenkranen	a water tap installed approximately at knee
 verbeeldingskracht	n	de · mv. verbeeldingskrachten	imagination, power of imagination (image-making faculty of the mind)
 Twan	m		a male given name
 faseruimte	n	de · mv. faseruimtes	phase space
+bistu	x		bist
 donders	a		darned
 donders	i		darn!
 individualistisch	a		individualistic
@@ -55648,6 +55777,7 @@ sportkleding	n	de	sportswear
 familieomstandigheden	n		family circumstances
 Bruynzeel	m		a surname
 mobilofoon	n	de · mv. mobilofoons	a mobile radio used in vehicles, such as a citizens' band radio
+d.o	a		identical”)
 mess:r	n	de · mv. mess:rs	monsieur
 kwebbelkous	n	de · mv. kwebbelkousen	chatterbox
 gekwebbel	n	het	chatter
@@ -55669,6 +55799,7 @@ studentenvereniging	n	de · mv. studentenverenigingen	student society, student a
 complicatie	n	de · mv. complicaties	complication, entanglement; complication
 bedrijfskunde	n	de	business administration (course of study in higher education intended to…
 edelheid	n	de · mv. edelheden	nobility, nobleness
+gls.	n	de	plural of gl
 krooneend	n	de · mv. krooneenden	red-crested pochard (Netta rufina)
 grondeleend	n	de · mv. grondeleenden	dabbling duck
 zwemeend	n	de · mv. zwemeenden	dabbling duck
@@ -56179,6 +56310,7 @@ reductie	n	de · mv. reducties	reduction
 tongelen	v	tongelde – getongeld	to stick out or flick the tongue briefly
 Noord-Afrika	m		North Africa (a geographic region comprising the northern part of Africa,…
 Eritrese	n	de · mv. Eritresen	Eritrean woman
+strakjes	d		later, soon; tight
 actreutel	n	de · mv. actreutels	a bad actress
 wiebelig	a		wobbly
 lelkraanvogel	n	de · mv. lelkraanvogels	the wattled crane, Grus carunculata
@@ -56403,6 +56535,7 @@ onwijs	d		very, really (used as an intensifier)
 randstedelijk	a		of or relating to the Randstad region of the Netherlands
 gasontploffing	n	de · mv. gasontploffingen	gas explosion
 magertjes	a		meager, skinny; poor, meager, insufficient
+magertjes	d		poorly, meagerly, insufficiently
 terughoudend	a		reticent, reserved, aloof
 jongvolwassene	n	de · mv. jongvolwassenen	young adult, adolescent
 wegrotten	v	rotte weg – weggerot	to rot away
@@ -56479,7 +56612,7 @@ servicestation	n	het · mv. servicestations	filling station, petrol station (UK)
 klimopbremraap	n	de · mv. klimopbremrapen	ivy broomrape (Orobanche hederae)
 schubwortel	n	de · mv. schubwortels	a toothwort; any plant of the genus Lathraea
 prachtschubwortel	n	de · mv. prachtschubwortels	synonym of paarse schubwortel (“Lathraea clandestina”)
-lhbt	n	de · mv. lhbt's	a person who is part of the LGBT umbrella
+lhbt	n	de · mv. lhbt's	the LGBT umbrella; a person who is part of the LGBT umbrella
 eendenbek	n	de · mv. eendenbekken	speculum (medical tool for examining cavities)
 facultatief	a		facultative, optional, elective
 facultair	a		pertaining to a (university) faculty
@@ -57081,6 +57214,7 @@ drinklustig	a		having a lust for drinking
 griezelen	v	griezelde – gegriezeld	to spook, get spooked
 griezeligheid	n	de	scariness, spookiness, grisliness
 groezeligheid	n	de	grubbiness
+stavaza	n	de · mv. stavaza's	the current situation”)
 poepiedoepie	n	het · mv. poepiedoepies	sweetie, cutie pie (term of endearment, typically for young children or animals)
 ratjetoe	n	de/het · mv. ratjetoes	synonym of ratatouille; a diverse mixture, hodgepodge, mess
 ziehier	i		behold!
@@ -57226,6 +57360,7 @@ onbewust	a		unconscious (without directed thought or awareness)
 migratie	n	de · mv. migraties	migration (moving to live in another place); migration (movement of animals)
 Moerkerke	m		a town in Damme, West Flanders, Belgium
 kobmeeuw	n	de · mv. kobmeeuwen	several species of seagull; European herring gull (Larus argentatus)
+bbp	n	het · mv. bbp's	GDP
 dienstverlener	n	de · mv. dienstverleners	service provider
 deeltijd	n	de	part-time
 voltijd	n	de	full-time
@@ -57378,6 +57513,7 @@ ossenpikker	n	de · mv. ossenpikkers	oxpecker, bird of the family Buphagidae
 rewilden	v	rewildde – gerewild	synonym of herwilderen (“to rewild”)
 verstappen	v	verstapte – verstapt	to misstep
 pieremachochel	n	de · mv. pieremachochels	a rickety and/or makeshift boat
+rustigjes	d		calmly, taking one's time
 biobouwer	n	de · mv. biobouwers	ecosystem engineer (species that significantly impacts its habitat)
 Keizerstad	m		synonym of Nijmegen
 naaktbeeld	n	het · mv. naaktbeelden	nude (painting, sculpture or photograph depicting one or more human…
@@ -57737,7 +57873,7 @@ illustratief	a		illustrative
 functionaliteit	n	de · mv. functionaliteiten	functionality
 derdelander	n	de · mv. derdelanders	a refugee who has fled a country where he or she has resided but does not…
 veiligelander	n	de · mv. veiligelanders	a migrant originating from a country judged safe (usually by immigration…
-legitimatie	n	de · mv. legitimaties	legitimization
+legitimatie	n	de · mv. legitimaties	legitimization; ID card, identification
 legitimiteit	n	de · mv. legitimiteiten	legitimacy
 lidrus	n	de · mv. lidrussen	marsh horsetail (Equisetum palustre)
 rummikuppen	v	rummikupte – gerummikupt	to play Rummikub
@@ -58797,6 +58933,7 @@ ouderengeneeskunde	n	de	geriatric medicine
 risicofactor	n	de · mv. risicofactoren	risk factor
 denkvermogen	n	het · mv. denkvermogens	mind, intellect, thinking ability
 langlopend	a		long-term
+gerandomiseerd	v		randomised/randomized
 randomiseren	v	randomiseerde – gerandomiseerd	to randomise
 vijftiger	n	de · mv. vijftigers	a fiftysomething (person between 50 and 59 years old)
 misvatting	n	de · mv. misvattingen	misunderstanding, fallacy
@@ -59741,6 +59878,7 @@ rijsmiddel	n	het · mv. rijsmiddelen	leaven (any agent used to make dough rise o
 toekomstbestendig	a		future-proof
 vakkennis	n	de	expertise, expert knowledge
 officemanager	n	de · mv. officemanagers	office manager
+grooter	a		comparative degree of groot
 beduidzaam	a		meaningful, significant
 bedwingzaam	a		showing restraint, restraintful
 begrijpzaam	a		having understanding; understandable
@@ -59919,6 +60057,7 @@ bloedspoed	n	de	great haste
 configuratie	n	de · mv. configuraties	configuration (form of a thing, as depending on the relative placement of…; configuration (relative positions of a set of things); configuration (aspect of the planets)
 sermoen	n	het · mv. sermoenen	sermon (religious discourse); sermon (speech of reproval)
 bedsermoen	n	het · mv. bedsermoenen	curtain lecture (scolding given by a wife to her husband in bed)
+waartijdens	d		during which
 hemelwater	n	het	rainwater
 kortgeleden	d		recently, a short while ago
 pasgeleden	d		synonym of kortgeleden
@@ -60628,6 +60767,7 @@ triggeren	v	triggerde – getriggerd	to trigger
 zaterdagmiddag	n	de · mv. zaterdagmiddagen	Saturday afternoon
 Buurma	m		Buurma: a surname
 honderdjarig	a		centenary
+kbv	n	de · mv. kbv's	a little brown job
 taxirit	n	de · mv. taxiritten	taxi ride
 wegbeschrijving	n	de · mv. wegbeschrijvingen	directions (driving); route description; itinerary
 kleinsteeds	a		small-town, provincial
@@ -61089,9 +61229,13 @@ mangrovekwal	n	de · mv. mangrovekwallen	upside-down jellyfish (Cassiopea xamach
 ingenieus	a		ingenious
 meeslepend	a		immersive, compelling
 zelfste	d		synonym of zelfde
+hefboomen	n		plural of hefboom
 vunzig	a		dirty, indecent, lewd
 alpijns	a		alpine (of or relating to high mountains); alpine (of or relating to slalom or downhill skiing)
+wreeder	a		comparative degree of wreed
+steenen	n		plural of steen
 determineren	v	determineerde – gedetermineerd	to determine; to identify a species
+echtgenooten	n		plural of echtgenoot
 fotovoltaïsch	a		photovoltaic
 voltaïsch	a		voltaic
 roodkokend	a		that turns red when cooked (mostly said of pears)
@@ -61677,6 +61821,7 @@ kaalvreten	v	vrat kaal – kaalgevreten	to clear or strip completely by eating
 kaalhoofdig	a		bald-headed (having a bald head)
 kaalhoofdigheid	n	de	the state or condition of having a bald head; baldness
 kaalte	n	de	bareness, featurelessness
+kaaltjes	d		bare, featureless, plain
 kaalplukteam	n	het · mv. kaalplukteams	team set up to retrieve stolen goods from criminals
 wegscheren	v	schoor weg – weggeschoren	to remove by shaving; to scram
 bijscheren	v	schoor bij – bijgeschoren	to trim by shaving
@@ -62785,6 +62930,7 @@ paginavullend	a		full-page, page-filling
 zakkenvullen	v		to profiteer
 zakkenvullend	a		money-grubbing, profiteering
 zakkenvullerij	n	de	profiteering
+waarvolgens	d		according to which
 vijfjaarsoverleving	n	de · mv. vijfjaarsoverlevingen	chance of surviving the next five years
 overlevingscriminaliteit	n	de	crime committed in order to survive
 overlevingsdrang	n	de	survival instinct (will to live and thrive)
@@ -63408,6 +63554,8 @@ aanbrandde	v		singular dependent-clause past indicative of aanbranden
 gezichtshaar	n	het	facial hair; an individual strand of facial hair
 nabouwen	v	bouwde na – nagebouwd	to recreate by building, to build in imitation
 achttienplusser	n	de · mv. achttienplussers	Someone above the age of 18
+lhbtqia	n	de · mv. lhbtqia's	the LGBT umbrella
+lhbtqia+	n	de	the LGBTQ umbrella
 ejecteren	v	ejecteerde – geëjecteerd	To throw out, to eject
 cilindervormig	a		Having a cylindrical shape
 insnuiven	v	snoof in – ingesnoven	to snort (something) in; to really expressly get in contact with something
@@ -63419,6 +63567,7 @@ kearl	n	de · mv. kearls	man, guy
 twentisme	n	het · mv. twentismen	A Dutch word or phrase calqued from Twents, often used exclusively in Twente…
 slaperd	n	de · mv. slaperds	Someone unwise; idiot, moron; Someone in a sleeping or near-sleeping condition
 toepasselijkheid	n	de	applicability
+weetstu	x		y'know
 waterballon	n	de · mv. waterballonnen	water balloon
 manisch-depressiviteit	n	de · mv. manisch-depressiviteiten	synonym of bipolaire stoornis
 keukenrobot	n	de · mv. keukenrobots	food processor
@@ -63903,6 +64052,7 @@ ossen	os:n
 osje	os:n
 dates	date:n
 date	daten:v
+BTW	btw:n
 lolletje	lol:n
 botter	bot:a
 botst	bot:a|botsen:v
@@ -64118,7 +64268,7 @@ polyglotte	polyglot:a|polyglot:n
 handen	hand:n
 handje	hand:n
 at	eten:v|atten:v
-toe	toen:d|toen:c
+toe	tot:|toen:d|toen:c
 ellen	el:n
 elletje	el:n
 regimes	regime:n
@@ -64351,13 +64501,13 @@ ais	ai:n
 vrijer	vrij:a
 vrijst	vrij:a
 vrije	vrij:a|vrijen:v
-vrijere	vrij:a
+vrijere	vrij:a|vrijer:
 vrijste	vrij:a
 vrij	vrijen:v
 wei	weide:n
-haren	haar:n|haar:t
+haren	haar:n|hare:r|haar:t
 haartje	haar:n
-mijnen	mijn:n|mijn:t
+mijnen	mijn:n|mijne:r|mijn:t
 mijntje	mijn:n
 goden	god:n
 godje	god:n
@@ -64376,6 +64526,7 @@ bals	bal:n
 bal	ballen:v
 tampen	tamp:n
 tampje	tamp:n
+PB	pb:n
 bannen	ban:n
 bans	ban:n
 ban	bannen:v
@@ -64440,8 +64591,8 @@ polders	polder:n
 poldertje	polder:n
 we	wij:r
 he	hè:i|hé:i
-me	mij:r
-uwe	uw:t
+me	mij:r|mijn:
+uwe	uw:|uw:t
 Taiwanese	Taiwanees:a
 Taiwanesen	Taiwanese:n
 talenten	talent:n
@@ -64501,7 +64652,7 @@ takje	tak:n
 harder	hard:a
 hardst	hard:a
 harde	hard:a|harden:v
-hardere	hard:a
+hardere	hard:a|harder:
 hardste	hard:a
 hard	harden:v
 transgenders	transgender:n
@@ -64543,6 +64694,9 @@ raceje	race:n
 race	racen:v
 artsen	arts:n
 artsje	arts:n
+daar	dat:
+hier	dit:
+er	het:
 copyrights	copyright:n
 copyright	copyrighten:v
 facetten	facet:n
@@ -65404,7 +65558,7 @@ nerven	nerf:n
 ft.	fort:n|vesting:n
 kilo	kilogram:n
 dagen	dag:n
-dagje	dag:n
+dagje	dag:n|dagge:n
 daagje	dag:n
 daggen	dag:n|dagge:n
 dammen	dam:n
@@ -65448,7 +65602,7 @@ nader	na:a|naderen:v
 naast	na:a|naasten:v
 naë	na:a
 nadere	na:a|nader:a|naderen:v
-naaste	na:a|naasten:v
+naaste	na:a|naasten:v|naast:
 na	naar:p
 si's	si:n
 sietje	si:n
@@ -65470,6 +65624,7 @@ croissants	croissant:n
 croissantje	croissant:n
 persje	pers:n
 perzen	pers:n
+NW	noordwest:
 vaten	vat:n
 vatje	vat:n
 vaatje	vat:n
@@ -65552,8 +65707,8 @@ omegaatje	omega:n
 liever	lief:a|graag:d
 liefst	lief:a|graag:d
 lieve	lief:a
-lievere	lief:a
-liefste	lief:a
+lievere	lief:a|liever:
+liefste	lief:a|liefst:
 lieven	lief:n
 liefje	lief:n
 der	de:t
@@ -65588,7 +65743,7 @@ manifeste	manifest:a
 echter	echt:a
 echtst	echt:a
 echte	echt:a
-echtere	echt:a
+echtere	echt:a|echter:
 echtste	echt:a
 forks	fork:n
 forkje	fork:n
@@ -65669,7 +65824,7 @@ splinters	splinter:n
 splintertje	splinter:n
 protagonisten	protagonist:n
 onsen	ons:n
-onzen	ons:n|ons:t
+onzen	ons:n|onze:r|ons:t
 onsje	ons:n
 banger	bang:a
 bangst	bang:a
@@ -65899,6 +66054,7 @@ los	lossen:v
 backslashes	backslash:n
 backslashen	backslash:n
 backslashje	backslash:n
+OTO	opleiden:
 occulter	occult:a
 occultst	occult:a
 occulte	occult:a
@@ -66006,7 +66162,7 @@ gehapt	happen:v
 happen	hap:n
 heir	heer:n
 mane	manen:v
-je	jij:r|jullie:r|jullie:t
+je	jij:r|jullie:r|jij:
 stalk	stalken:v
 honden	hond:n
 hondje	hond:n
@@ -66095,7 +66251,7 @@ moretje	more:n
 logger	log:a
 logst	log:a
 logge	log:a
-loggere	log:a
+loggere	log:a|logger:
 logste	log:a
 loggen	log:n
 logje	log:n
@@ -66415,7 +66571,7 @@ tokens	token:n
 tokentje	token:n
 quarantaines	quarantaine:n
 quarantainetje	quarantaine:n
-Polen	Pool:n
+Polen	Pool:|Pool:n
 trio's	trio:n
 triootje	trio:n
 details	detail:n
@@ -66593,7 +66749,7 @@ zetten	zet:n
 zetje	zet:n
 zet	zetten:v
 voors	voor:n
-voren	voor:n|voorn:n
+voren	voor:n|voor:|voorn:n
 voortje	voor:n
 boren	boor:n
 boortje	boor:n
@@ -66851,6 +67007,7 @@ desserts	dessert:n
 dessertje	dessert:n
 crucifixen	crucifix:n
 crucifixje	crucifix:n
+bob	Bob:
 bobs	bob:n
 printers	printer:n
 printertje	printer:n
@@ -67587,7 +67744,7 @@ autobusje	autobus:n
 serene	sereen:a
 dessen	des:n
 desje	des:n
-des	de:t
+des	de:t|dat:t
 exploiten	exploit:n
 exploitje	exploit:n
 exploits	exploit:n
@@ -67891,6 +68048,7 @@ modellen	model:n
 modelletje	model:n
 guys	guy:n
 guytje	guy:n
+NO	noordoost:
 musket	mosket:n
 musketten	musket:n
 musketje	musket:n
@@ -67902,7 +68060,7 @@ redundantst	redundant:a
 redundante	redundant:a
 redundantere	redundant:a
 redundantste	redundant:a
-'s	eens:d
+'s	des:|eens:d
 bounty's	bounty:n
 bounty'tje	bounty:n
 binten	bint:n
@@ -68524,7 +68682,7 @@ veil	veilen:v
 veiler	veil:a
 veilst	veil:a
 veile	veil:a|veilen:v
-veilere	veil:a
+veilere	veil:a|veiler:
 veilste	veil:a
 vestige	vestigen:v
 wane	wanen:v
@@ -69593,8 +69751,8 @@ minaretje	minaret:n
 djellaba's	djellaba:n
 minnen	min:n
 minnetje	min:n
-min	minnen:v
-minst	min:a
+min	weinig:|minnen:v
+minst	min:a|weinig:
 pratter	prat:a
 pratst	prat:a
 pratte	prat:a
@@ -70249,6 +70407,7 @@ auditoriums	auditorium:n
 auditoriumpje	auditorium:n
 delve	delven:v
 ringtones	ringtone:n
+WHO	Wereldgezondheidsorganisatie:
 airbags	airbag:n
 airbagje	airbag:n
 persiflages	persiflage:n
@@ -70493,7 +70652,7 @@ parades	parade:n
 paradetje	parade:n
 a's	a:n
 aatje	a:n
-a	u:r
+a	u:r|uw:
 Afrikanertje	Afrikaner:n
 Angelen	Angel:n
 Antichrist	antichrist:m
@@ -70504,6 +70663,7 @@ Baskischt	Baskisch:a
 Baskische	Baskisch:a|Bask:n
 Baskischere	Baskisch:a
 Baskischte	Baskisch:a
+Boeren	Boer:
 D	dame:n
 Esten	Est:n
 Finnen	Fin:n
@@ -70537,6 +70697,7 @@ Manhattans	Manhattan:n
 Manhattantje	Manhattan:n
 Moren	Moor:n
 Moortje	Moor:n
+N	noord:
 O	oost:d
 P	paard:n
 Pooltje	Pool:n
@@ -70553,6 +70714,7 @@ Turkse	Turks:a
 Turksere	Turks:a
 Turkste	Turks:a
 U	u:r
+Uwe	uwe:r
 Veda's	Veda:n
 Vita	vita:n
 W	west:d
@@ -70560,6 +70722,8 @@ Wenden	Wend:n
 Z	zuid:d
 boutique	boetiek:n
 pb	privébericht:n
+pb's	pb:n
+pb'tje	pb:n
 bh's	bh:n
 bh'tje	bh:n
 champagnes	champagne:n
@@ -70663,7 +70827,7 @@ disses	diss:n
 lichter	licht:a
 lichtst	licht:a
 lichte	licht:a|lichten:v
-lichtere	licht:a
+lichtere	licht:a|lichter:
 lichtste	licht:a
 lichten	licht:n
 lichtje	licht:n
@@ -70760,6 +70924,7 @@ turbulentere	turbulent:a
 turbulentste	turbulent:a
 dissidenten	dissident:n
 dissidentje	dissident:n
+AOA's	AOA:n
 expo's	expo:n
 graven	graf:n|graaf:n
 grafje	graf:n
@@ -70795,6 +70960,7 @@ avg's	avg:n
 avg'tje	avg:n
 int	innen:v
 memo's	memo:n
+BBP	bbp:n
 regenten	regent:n
 regent	regenen:v
 dixi's	dixi:n
@@ -71154,7 +71320,7 @@ intolerantst	intolerant:a
 intolerante	intolerant:a
 intolerantere	intolerant:a
 intolerantste	intolerant:a
-waar	waren:v
+waar	wie:|waren:v
 ruggen	rug:n
 ruggetje	rug:n
 rugje	rug:n
@@ -71553,7 +71719,7 @@ maanden	manen:v|maand:n
 manend	manen:v
 gemaand	manen:v
 manen	maan:n
-legere	legeren:v|leeg:a
+legere	leger:|legeren:v|leeg:a
 koppen	kop:n
 kop	koppen:v
 minne	min:n|minnen:v
@@ -71587,6 +71753,7 @@ vere	veren:v|veer:n
 minibussen	minibus:n
 minibusje	minibus:n
 lunzen	luns:n
+ff	effen:
 hoezen	hoes:n
 hoesje	hoes:n
 trainingen	training:n
@@ -71810,6 +71977,7 @@ jammer	jammeren:v
 bendes	bende:n
 benden	bende:n
 bendetje	bende:n
+bende	bent:
 vertalingen	vertaling:n
 vertalinkje	vertaling:n
 mangroven	mangrove:n
@@ -72038,7 +72206,7 @@ hongersnoden	hongersnood:n
 hongersnoodje	hongersnood:n
 flaneurs	flaneur:n
 flaneurtje	flaneur:n
-'t	het:r
+'t	het:|het:r
 gigolo's	gigolo:n
 gigolootje	gigolo:n
 sirocco's	sirocco:n
@@ -72522,7 +72690,7 @@ elektrische	elektrisch:a
 droger	droog:a
 droogst	droog:a
 droge	droog:a|drogen:v
-drogere	droog:a
+drogere	droog:a|droger:
 droogste	droog:a
 donkerder	donker:a
 donkerst	donker:a
@@ -72935,7 +73103,7 @@ verwijderden	verwijderen:v
 verwijderend	verwijderen:v
 verwijderd	verwijderen:v
 verenig	verenigen:v
-verenigde	verenigen:v|verenigd:a
+verenigde	verenigen:v|verenigd:a|verenigd:
 verenigt	verenigen:v
 verenigden	verenigen:v
 verenigend	verenigen:v
@@ -73144,7 +73312,7 @@ vijandje	vijand:n
 derden	derde:n
 deeltje	deel:n
 dubbele	dubbel:a
-volgende	volgend:a
+volgende	volgend:a|volgend:
 één	een:u|een:n
 enthousiaster	enthousiast:a
 enthousiastst	enthousiast:a
@@ -73285,7 +73453,7 @@ rozeste	roze:a
 scherper	scherp:a
 scherpst	scherp:a
 scherpe	scherp:a|scherpen:v
-scherpere	scherp:a
+scherpere	scherp:a|scherper:
 scherpste	scherp:a
 scherp	scherpen:v
 gemener	gemeen:a
@@ -73315,7 +73483,7 @@ gespannenste	gespannen:a
 gespannen	spannen:v|gespan:n
 geschikter	geschikt:a
 geschiktst	geschikt:a
-geschikte	geschikt:a
+geschikte	geschikt:a|geschikt:
 geschiktere	geschikt:a
 geschiktste	geschikt:a
 geschikt	schikken:v
@@ -73382,7 +73550,7 @@ verliest	verliezen:v
 verloren	verliezen:v
 verliezend	verliezen:v
 vernietig	vernietigen:v
-vernietigde	vernietigen:v|vernietigd:a
+vernietigde	vernietigen:v|vernietigd:a|vernietigd:
 vernietigt	vernietigen:v
 vernietigden	vernietigen:v
 vernietigend	vernietigen:v
@@ -73496,7 +73664,7 @@ viezere	vies:a
 vieste	vies:a
 laagst	laag:a
 lage	laag:a|liggen:v
-lagere	laag:a
+lagere	laag:a|lager:
 laagste	laag:a
 laagje	laag:n
 laatst	laat:a
@@ -73571,7 +73739,7 @@ gezorgd	zorgen:v
 ouder	oud:a
 oudst	oud:a
 oude	oud:a
-oudere	oud:a
+oudere	oud:a|ouder:
 oudste	oud:a
 ruik	ruiken:v
 ruikt	ruiken:v
@@ -73806,7 +73974,7 @@ succesje	succes:n
 straten	straat:n
 straatje	straat:n
 overleden	overlijden:v
-specialer	speciaal:a
+specialer	speciaal:a|special:
 speciaalst	speciaal:a
 speciale	speciaal:a
 specialere	speciaal:a
@@ -73821,7 +73989,7 @@ rechtvaardigste	rechtvaardig:a
 rechtvaardig	rechtvaardigen:v
 verkeerder	verkeerd:a
 verkeerdst	verkeerd:a
-verkeerde	verkeerd:a|verkeren:v
+verkeerde	verkeerd:a|verkeren:v|verkeerd:
 verkeerdere	verkeerd:a
 verkeerdste	verkeerd:a
 verkeerd	verkeren:v
@@ -74160,7 +74328,7 @@ verdomd	verdommen:v
 kenmerkend	kenmerken:v
 kenmerkender	kenmerkend:a
 kenmerkendst	kenmerkend:a
-kenmerkende	kenmerkend:a
+kenmerkende	kenmerkend:a|kenmerkend:
 kenmerkendere	kenmerkend:a
 kenmerkendste	kenmerkend:a
 teleurstellender	teleurstellend:a
@@ -74853,6 +75021,7 @@ carbonades	carbonade:n
 carbonaadje	carbonade:n
 carbonadetje	carbonade:n
 tricola	tricolon:n
+weinige	weinig:
 edelgesteenten	edelgesteente:n
 edelgesteentes	edelgesteente:n
 beheerders	beheerder:n
@@ -74919,6 +75088,7 @@ friesje	fries:n
 toppings	topping:n
 snippen	snip:n
 snipje	snip:n
+ravens	raven:
 winterser	winters:a
 winterst	winters:a
 winterse	winters:a
@@ -75011,6 +75181,7 @@ barmannen	barman:n
 Uw	uw:t
 gij	gei:n
 'k	ik:r
+jou	jouw:
 intrest	interest:n
 pessimisten	pessimist:n
 pessimistje	pessimist:n
@@ -75157,8 +75328,8 @@ tele	telen:v
 mulatten	mulat:n
 mulatje	mulat:n
 inga	ingaan:v
-lellen	lel:n
-lelletje	lel:n
+lellen	lel:n|lel:
+lelletje	lel:n|lel:
 magnetrons	magnetron:n
 magnetronnetje	magnetron:n
 stoppers	stopper:n
@@ -75276,6 +75447,7 @@ blootje	bloot:n
 hertogen	hertog:n
 hertogje	hertog:n
 metend	meten:v
+stamper	stampen:
 stampers	stamper:n
 stampertje	stamper:n
 lederhosen	lederhose:n
@@ -75335,7 +75507,9 @@ piekje	piek:n
 piek	pieken:v
 rijksdaalders	rijksdaalder:n
 rijksdaaldertje	rijksdaalder:n
+vijfje	vijf:
 vijfjes	vijfje:n
+tientje	tien:
 tientjes	tientje:n
 geeltjes	geeltje:n
 zonnebloemen	zonnebloem:n
@@ -75548,7 +75722,7 @@ weder	weer:d|weer:n
 vermoeid	vermoeien:v
 vermoeider	vermoeid:a
 vermoeidst	vermoeid:a
-vermoeide	vermoeid:a|vermoeien:v
+vermoeide	vermoeid:a|vermoeien:v|vermoeid:
 vermoeidere	vermoeid:a
 vermoeidste	vermoeid:a
 kopt	koppen:v
@@ -75827,6 +76001,7 @@ pufje	puf:n
 puf	puffen:v
 votten	vot:n
 votje	vot:n
+waarvoor	voor:
 wendde	wenden:v
 wendt	wenden:v
 wendden	wenden:v
@@ -76036,7 +76211,7 @@ klemmend	klemmen:v
 geklemd	klemmen:v
 klemmen	klem:n
 erken	erkennen:v
-erkende	erkennen:v|erkend:a
+erkende	erkennen:v|erkend:a|erkend:
 erkent	erkennen:v
 erkenden	erkennen:v
 erkennend	erkennen:v
@@ -76334,6 +76509,7 @@ neveneffectje	neveneffect:n
 catechisten	catechist:n
 russen	rus:n
 rusje	rus:n
+rus	ruis:
 ketten	ket:n
 ketje	ket:n
 ket	ketamine:n
@@ -76858,7 +77034,7 @@ harpistje	harpist:n
 dozijnen	dozijn:n
 dozijntje	dozijn:n
 theelepeltje	theelepel:n
-mijne	mijn:t
+mijne	mijn:|mijn:t
 ambulante	ambulant:a
 duizenden	duizend:n
 koor	koren:v
@@ -77114,6 +77290,7 @@ knabbelt	knabbelen:v
 knabbelden	knabbelen:v
 knabbelend	knabbelen:v
 geknabbeld	knabbelen:v
+m'n	mijn:
 afwas	afwassen:v
 afwaste	afwassen:v
 afwast	afwassen:v
@@ -77664,6 +77841,7 @@ betrouwbaarst	betrouwbaar:a
 betrouwbare	betrouwbaar:a
 betrouwbaardere	betrouwbaar:a
 betrouwbaarste	betrouwbaar:a
+waarmee	met:
 afrond	afronden:v
 afrondde	afronden:v
 afrondt	afronden:v
@@ -77691,7 +77869,9 @@ relatietje	relatie:n
 zakenrelaties	zakenrelatie:n
 zakenrelatietje	zakenrelatie:n
 getekende	getekend:a
+ernaar	naar:
 eraan	aan:d
+ermee	met:
 eronder	onder:d
 erbij	bij:d
 cijfers	cijfer:n
@@ -77870,7 +78050,7 @@ onmogelijke	onmogelijk:a
 onmogelijkere	onmogelijk:a
 onmogelijkste	onmogelijk:a
 bepaal	bepalen:v
-bepaalde	bepalen:v|bepaald:a
+bepaalde	bepalen:v|bepaald:a|bepaald:
 bepaalt	bepalen:v
 bepaalden	bepalen:v
 bepalend	bepalen:v
@@ -78102,6 +78282,8 @@ camelia's	camelia:n
 baco's	baco:n
 bacootje	baco:n
 Monika	Monica:m
+daarnaast	naast:
+daarna	na:
 dierentuinen	dierentuin:n
 dierentuintje	dierentuin:n
 overige	overig:a
@@ -78126,7 +78308,7 @@ eenvoudige	eenvoudig:a
 eenvoudigere	eenvoudig:a
 eenvoudigste	eenvoudig:a
 bezorg	bezorgen:v
-bezorgde	bezorgen:v|bezorgd:a
+bezorgde	bezorgen:v|bezorgd:a|bezorgd:
 bezorgt	bezorgen:v
 bezorgden	bezorgen:v
 bezorgend	bezorgen:v
@@ -78167,7 +78349,7 @@ zeilbootje	zeilboot:n
 spreekbeurten	spreekbeurt:n
 spreekbeurtje	spreekbeurt:n
 verscheidene	verscheiden:a
-verschillende	verschillend:a
+verschillende	verschillend:a|verschillend:
 plaatselijker	plaatselijk:a
 plaatselijkst	plaatselijk:a
 plaatselijke	plaatselijk:a
@@ -78344,7 +78526,7 @@ bisschoppen	bisschop:n
 bisschopje	bisschop:n
 geregelder	geregeld:a
 geregeldst	geregeld:a
-geregelde	geregeld:a
+geregelde	geregeld:a|geregeld:
 geregeldere	geregeld:a
 geregeldste	geregeld:a
 geregeld	regelen:v
@@ -78544,7 +78726,7 @@ bevochtten	bevochten:v
 bevochtend	bevochten:v
 bevochten	bevechten:v
 beperk	beperken:v
-beperkte	beperken:v|beperkt:a
+beperkte	beperken:v|beperkt:a|beperkt:
 beperkt	beperken:v
 beperkten	beperken:v
 beperkend	beperken:v
@@ -78655,7 +78837,7 @@ rekeningen	rekening:n
 rekeningetje	rekening:n
 geslaagder	geslaagd:a
 geslaagdst	geslaagd:a
-geslaagde	geslaagd:a
+geslaagde	geslaagd:a|geslaagd:
 geslaagdere	geslaagd:a
 geslaagdste	geslaagd:a
 bewaar	bewaren:v
@@ -78738,6 +78920,7 @@ krabben	krab:n
 krabbetje	krab:n
 krab	krabben:v
 weest	zijn:v|wijzen:v
+mee	met:
 skateboarders	skateboarder:n
 quenelles	quenelle:n
 quenelletje	quenelle:n
@@ -79007,8 +79190,8 @@ geboden	bieden:v|gebieden:v|gebod:n
 gebood	gebieden:v
 gebiedt	gebieden:v
 gebiedend	gebieden:v
-aanvoegende	aanvoegend:a
-aantonende	aantonend:a
+aanvoegende	aanvoegend:a|aanvoegend:
+aantonende	aantonend:a|aantonend:
 gebiedende	gebiedend:a
 presentaties	presentatie:n
 presentatietje	presentatie:n
@@ -79038,7 +79221,7 @@ woonregio's	woonregio:n
 woonregiootje	woonregio:n
 opvallender	opvallend:a
 opvallendst	opvallend:a
-opvallende	opvallend:a
+opvallende	opvallend:a|opvallend:
 opvallendere	opvallend:a
 opvallendste	opvallend:a
 woningtypen	woningtype:n
@@ -79047,7 +79230,7 @@ vrijstaande	vrijstaand:a
 aanvankelijke	aanvankelijk:a
 dreigender	dreigend:a
 dreigendst	dreigend:a
-dreigende	dreigend:a
+dreigende	dreigend:a|dreigend:
 dreigendere	dreigend:a
 dreigendste	dreigend:a
 economen	econoom:n
@@ -79262,7 +79445,7 @@ kledingkasten	kledingkast:n
 kledingkastje	kledingkast:n
 bekender	bekend:a
 bekendst	bekend:a
-bekende	bekend:a|bekennen:v
+bekende	bekend:a|bekend:|bekennen:v
 bekendere	bekend:a
 bekendste	bekend:a
 bekend	bekennen:v
@@ -79726,7 +79909,7 @@ steunend	steunen:v
 gesteund	steunen:v
 uitgebreider	uitgebreid:a
 uitgebreidst	uitgebreid:a
-uitgebreide	uitgebreid:a
+uitgebreide	uitgebreid:a|uitgebreid:
 uitgebreidere	uitgebreid:a
 uitgebreidste	uitgebreid:a
 uitgebreid	uitbreiden:v
@@ -79936,10 +80119,10 @@ meewerkend	meewerken:v
 meegewerkt	meewerken:v
 aanduidingen	aanduiding:n
 aanduidinkje	aanduiding:n
-genoemde	genoemd:a
+genoemde	genoemd:a|genoemd:
 gewilder	gewild:a
 gewildst	gewild:a
-gewilde	gewild:a
+gewilde	gewild:a|gewild:
 gewildere	gewild:a
 gewildste	gewild:a
 toestanden	toestand:n
@@ -79996,7 +80179,7 @@ opsporend	opsporen:v
 opgespoord	opsporen:v
 verrassender	verrassend:a
 verrassendst	verrassend:a
-verrassende	verrassend:a
+verrassende	verrassend:a|verrassend:
 verrassendere	verrassend:a
 verrassendste	verrassend:a
 Albanesen	Albanese:n
@@ -80325,7 +80508,7 @@ rechtszaken	rechtszaak:n
 rechtszaakje	rechtszaak:n
 landschappen	landschap:n
 landschapje	landschap:n
-scherpers	scherper:n
+scherpers	scherper:n|scherper:
 scherpertje	scherper:n
 leggers	legger:n
 leggertje	legger:n
@@ -80423,6 +80606,7 @@ bondgenoten	bondgenoot:n
 bondgenootje	bondgenoot:n
 genootje	genoot:n|genote:n
 bw.	bijwoord:n
+daarmee	met:
 verklaringen	verklaring:n
 verklarinkje	verklaring:n
 waarnemers	waarnemer:n
@@ -80564,7 +80748,7 @@ bevestigd	bevestigen:v
 vasten	vaste:n
 kabels	kabel:n
 kabeltje	kabel:n
-gevulde	gevuld:a
+gevulde	gevuld:a|gevuld:
 vissersschepen	vissersschip:n
 vissersscheepje	vissersschip:n
 vissersboten	vissersboot:n
@@ -80750,7 +80934,7 @@ gezinnen	gezin:n
 gezinnetje	gezin:n
 aangepaster	aangepast:a
 aangepastst	aangepast:a
-aangepaste	aangepast:a
+aangepaste	aangepast:a|aangepast:
 aangepastere	aangepast:a
 aangepastste	aangepast:a
 inneem	innemen:v
@@ -81258,6 +81442,7 @@ onweren	onweer:n
 onweertje	onweer:n
 onweer	onweren:v
 omweer	onweer:n
+hiervoor	voor:
 stoffelijker	stoffelijk:a
 stoffelijkst	stoffelijk:a
 stoffelijke	stoffelijk:a
@@ -81345,6 +81530,7 @@ punkers	punker:n
 virologen	viroloog:n
 quotiënten	quotiënt:n
 quotiëntje	quotiënt:n
+waarna	na:
 gezamenlijker	gezamenlijk:a
 gezamenlijkst	gezamenlijk:a
 gezamenlijke	gezamenlijk:a
@@ -81494,6 +81680,7 @@ Shetlandsere	Shetlands:a
 Shetlandste	Shetlands:a
 deprimere	deprimeren:v
 blo	blood:a
+tienen	tien:
 behavioristen	behaviorist:n
 bedels	bedel:n
 bedeltje	bedel:n
@@ -81604,7 +81791,7 @@ storend	storen:v
 gestoord	storen:v
 gestoorder	gestoord:a
 gestoordst	gestoord:a
-gestoorde	gestoord:a
+gestoorde	gestoord:a|gestoord:
 gestoordere	gestoord:a
 gestoordste	gestoord:a
 beterde	beteren:v
@@ -81690,7 +81877,7 @@ wezens	wezen:n
 wezentje	wezen:n
 uitstekender	uitstekend:a
 uitstekendst	uitstekend:a
-uitstekende	uitstekend:a
+uitstekende	uitstekend:a|uitstekend:
 uitstekendere	uitstekend:a
 uitstekendste	uitstekend:a
 uitstekend	uitsteken:v
@@ -82331,6 +82518,7 @@ zwervend	zwerven:v
 gezworven	zwerven:v
 maina's	maina:n
 mainaatje	maina:n
+springer	springen:
 liturgieën	liturgie:n
 liturgietje	liturgie:n
 schuif	schuiven:v
@@ -82625,7 +82813,7 @@ dwingend	dwingen:v
 gedwongen	dwingen:v
 dringender	dringend:a
 dringendst	dringend:a
-dringende	dringend:a
+dringende	dringend:a|dringend:
 dringendere	dringend:a
 dringendste	dringend:a
 muitten	muiten:v
@@ -82775,7 +82963,7 @@ zeemijlen	zeemijl:n
 zeemijltje	zeemijl:n
 mijlen	mijl:n
 mijltje	mijl:n
-blijvende	blijvend:a
+blijvende	blijvend:a|blijvend:
 vastmaak	vastmaken:v
 vastmaakte	vastmaken:v
 vastmaakt	vastmaken:v
@@ -82892,7 +83080,7 @@ kooplui	koopman:n
 koopmannen	koopman:n
 koopmannetje	koopman:n
 begrens	begrenzen:v
-begrensde	begrenzen:v|begrensd:a
+begrensde	begrenzen:v|begrensd:a|begrensd:
 begrenst	begrenzen:v
 begrensden	begrenzen:v
 begrenzend	begrenzen:v
@@ -82913,11 +83101,12 @@ voortzet	voortzetten:v
 voortzette	voortzetten:v
 voortzettend	voortzetten:v
 voortgezet	voortzetten:v
-voortgezette	voortgezet:a
+voortgezette	voortgezet:a|voortgezet:
 knoppen	knop:n
 knopje	knop:n
 rietjes	rietje:n
 weeksluitingen	weeksluiting:n
+Internet	internet:
 bovenbouwen	bovenbouw:n
 bovenbouwtje	bovenbouw:n
 onderbouwen	onderbouw:n
@@ -82958,7 +83147,7 @@ relateert	relateren:v
 relateerden	relateren:v
 relaterend	relateren:v
 gerelateerd	relateren:v
-gerelateerde	gerelateerd:a
+gerelateerde	gerelateerd:a|gerelateerd:
 luchthavens	luchthaven:n
 luchthaventje	luchthaven:n
 vervoer	vervoeren:v|vervaren:v
@@ -83636,6 +83825,7 @@ beschreef	beschrijven:v
 beschrijft	beschrijven:v
 beschreven	beschrijven:v
 beschrijvend	beschrijven:v
+a.u.b.	alstublieft:
 tijdjes	tijdje:n
 databanken	databank:n
 databankje	databank:n
@@ -83748,7 +83938,7 @@ ontstekingen	ontsteking:n
 ontstekinkje	ontsteking:n
 grondwetten	grondwet:n
 grondwetje	grondwet:n
-toegevoegde	toegevoegd:a
+toegevoegde	toegevoegd:a|toegevoegd:
 ontwerpje	ontwerp:n
 malser	mals:a
 malse	mals:a
@@ -83963,7 +84153,7 @@ opgericht	oprichten:v
 geleerdheden	geleerdheid:n
 geleerder	geleerd:a
 geleerdst	geleerd:a
-geleerde	geleerd:a
+geleerde	geleerd:a|geleerd:
 geleerdere	geleerd:a
 geleerdste	geleerd:a
 gewesten	gewest:n
@@ -84074,7 +84264,7 @@ overgangetje	overgang:n
 vergaander	vergaand:a
 verstgaand	vergaand:a|verregaand:a
 vergaandst	vergaand:a
-vergaande	vergaand:a
+vergaande	vergaand:a|vergaand:
 verdergaande	vergaand:a|verregaand:a
 verstgaande	vergaand:a|verregaand:a
 vergaandere	vergaand:a
@@ -84208,7 +84398,7 @@ haalbare	haalbaar:a
 haalbaardere	haalbaar:a
 haalbaarste	haalbaar:a
 achterhaal	achterhalen:v
-achterhaalde	achterhalen:v|achterhaald:a
+achterhaalde	achterhalen:v|achterhaald:a|achterhaald:
 achterhaalt	achterhalen:v
 achterhaalden	achterhalen:v
 achterhalend	achterhalen:v
@@ -84277,7 +84467,7 @@ jaarlijkse	jaarlijks:a
 zegels	zegel:n
 zegeltje	zegel:n
 zegel	zegelen:v
-zittende	zittend:a
+zittende	zittend:a|zittend:
 studeer	studeren:v
 studeerde	studeren:v
 studeert	studeren:v
@@ -84308,16 +84498,16 @@ tipt	tippen:v
 tipten	tippen:v
 tippend	tippen:v
 getipt	tippen:v
-levende	levend:a
+levende	levend:a|levend:
 verwar	verwarren:v
-verwarde	verwarren:v|verward:a
+verwarde	verwarren:v|verward:a|verward:
 verwart	verwarren:v
 verwarden	verwarren:v
 verwarrend	verwarren:v
 verward	verwarren:v
 verwarrender	verwarrend:a
 verwarrendst	verwarrend:a
-verwarrende	verwarrend:a
+verwarrende	verwarrend:a|verwarrend:
 verwarrendere	verwarrend:a
 verwarrendste	verwarrend:a
 vakgebieden	vakgebied:n
@@ -84552,7 +84742,7 @@ bet.	betekenis:n
 blikken	blik:n
 blikje	blik:n
 blik	blikken:v
-betr.	betrekking:n
+betr.	betrekking:n|betreffende:
 evt.	eventueel:d
 inz.	inzonderheid:d
 verraad	verraden:v
@@ -84715,7 +84905,7 @@ oordeelden	oordelen:v
 oordelend	oordelen:v
 geoordeeld	oordelen:v
 veroordeel	veroordelen:v
-veroordeelde	veroordelen:v|veroordeeld:a
+veroordeelde	veroordelen:v|veroordeeld:a|veroordeeld:
 veroordeelt	veroordelen:v
 veroordeelden	veroordelen:v|veroordeelde:n
 veroordelend	veroordelen:v
@@ -84797,6 +84987,7 @@ verlegenst	verlegen:a
 verlegenste	verlegen:a
 Nederlanders	Nederlander:n
 Nederlandertje	Nederlander:n
+lichtjes	licht:
 gekkekoeienziekten	gekkekoeienziekte:n
 gekkekoeienziektes	gekkekoeienziekte:n
 dollekoeienziekten	dollekoeienziekte:n
@@ -84881,7 +85072,7 @@ roofdieren	roofdier:n
 roofdiertje	roofdier:n
 afgezonderder	afgezonderd:a
 afgezonderdst	afgezonderd:a
-afgezonderde	afgezonderd:a
+afgezonderde	afgezonderd:a|afgezonderd:
 afgezonderdere	afgezonderd:a
 afgezonderdste	afgezonderd:a
 kluizenaars	kluizenaar:n
@@ -85008,7 +85199,7 @@ kleurt	kleuren:v
 kleurden	kleuren:v
 kleurend	kleuren:v
 gekleurd	kleuren:v
-gekleurde	gekleurd:a
+gekleurde	gekleurd:a|gekleurd:
 15e	vijftiende:a
 bijnamen	bijnaam:n
 bijnaampje	bijnaam:n
@@ -85039,7 +85230,7 @@ ontruimt	ontruimen:v
 ontruimden	ontruimen:v
 ontruimend	ontruimen:v
 ontruimd	ontruimen:v
-ingezette	ingezet:a
+ingezette	ingezet:a|ingezet:
 ontken	ontkennen:v
 ontkende	ontkennen:v
 ontkent	ontkennen:v
@@ -85408,7 +85599,8 @@ uitzonderlijkste	uitzonderlijk:a
 zeldzame	zeldzaam:a
 overblijvender	overblijvend:a
 overblijvendst	overblijvend:a
-resterende	resterend:a
+overblijvende	overblijvend:
+resterende	resterend:a|resterend:
 resterend	resteren:v
 onregelmatiger	onregelmatig:a
 onregelmatigst	onregelmatig:a
@@ -85654,6 +85846,7 @@ castend	casten:v
 gecast	casten:v
 afgietsels	afgietsel:n
 afgietseltje	afgietsel:n
+zijwaartse	zijwaarts:
 schijnen	schijn:n
 schijntje	schijn:n
 smijt	smijten:v
@@ -85714,7 +85907,7 @@ beeldschoonste	beeldschoon:a
 generaties	generatie:n
 generatietje	generatie:n
 verouder	verouderen:v
-verouderde	verouderen:v|verouderd:a
+verouderde	verouderen:v|verouderd:a|verouderd:
 veroudert	verouderen:v
 verouderden	verouderen:v
 verouderend	verouderen:v
@@ -85889,6 +86082,7 @@ temperatuur	temperaturen:v
 spreekwijzen	spreekwijze:n
 gelaatsuitdrukkingen	gelaatsuitdrukking:n
 gelaatsuitdrukkinkje	gelaatsuitdrukking:n
+anderen	ander:
 openbloei	openbloeien:v
 openbloeide	openbloeien:v
 openbloeit	openbloeien:v
@@ -86382,6 +86576,7 @@ kreet	krijten:v
 uitten	uiten:v
 uitend	uiten:v
 geüit	uiten:v
+daartoe	tot:
 kuste	kussen:v
 kust	kussen:v
 kusten	kussen:v|kust:n
@@ -86451,8 +86646,10 @@ afgekoeld	afkoelen:v
 5e	vijfde:a
 6e	zesde:a
 7e	zevende:a
+overal	alles:
 overals	overal:n
 overalletje	overal:n
+nergens	niets:
 zweef	zweven:v
 zweefde	zweven:v
 zweeft	zweven:v
@@ -86581,7 +86778,7 @@ zettameters	zettameter:n
 zettametertje	zettameter:n
 samenhangender	samenhangend:a
 samenhangendst	samenhangend:a
-samenhangende	samenhangend:a
+samenhangende	samenhangend:a|samenhangend:
 samenhangendere	samenhangend:a
 samenhangendste	samenhangend:a
 kortdurende	kortdurend:a
@@ -86767,6 +86964,9 @@ strekkinkje	strekking:n
 e-mails	e-mail:n
 gesteenten	gesteente:n
 gesteentes	gesteente:n
+slijper	slijpen:
+slijpers	slijper:n
+slijpertje	slijper:n
 slijp	slijpen:v
 slijpt	slijpen:v
 slijpend	slijpen:v
@@ -86801,7 +87001,7 @@ binnenvalt	binnenvallen:v
 binnenvielen	binnenvallen:v
 binnenvallend	binnenvallen:v
 binnengevallen	binnenvallen:v
-gevangenen	gevangene:n
+gevangenen	gevangene:n|gevangen:
 afsta	afstaan:v
 afstond	afstaan:v
 afstaat	afstaan:v
@@ -87035,8 +87235,8 @@ hoornaars	hoornaar:n
 hoornaartje	hoornaar:n
 overdrachten	overdracht:n
 overdrachtje	overdracht:n
-Stoli's	Stoli:n
-Stolietje	Stoli:n
+Stoli's	Stoli:n|Stoli:
+Stolietje	Stoli:n|Stoli:
 weerhou	weerhouden:v
 weerhoud	weerhouden:v
 weerhield	weerhouden:v
@@ -87228,6 +87428,7 @@ uitoefent	uitoefenen:v
 uitoefenden	uitoefenen:v
 uitoefenend	uitoefenen:v
 uitgeoefend	uitoefenen:v
+waartegen	tegen:
 stichters	stichter:n
 stichtertje	stichter:n
 toeschrijf	toeschrijven:v
@@ -87317,7 +87518,7 @@ geschroefd	schroeven:v
 schroeven	schroef:n
 nagedachtenissen	nagedachtenis:n
 nagedachtenisje	nagedachtenis:n
-bereide	bereid:a|bereiden:v
+bereide	bereid:a|bereid:|bereiden:v
 voorgangers	voorganger:n
 voorgangertje	voorganger:n
 opvolgers	opvolger:n
@@ -87394,7 +87595,7 @@ matigend	matigen:v
 gematigd	matigen:v
 gematigder	gematigd:a
 gematigdst	gematigd:a
-gematigde	gematigd:a
+gematigde	gematigd:a|gematigd:
 gematigdere	gematigd:a
 gematigdste	gematigd:a
 verzoekje	verzoek:n
@@ -87708,6 +87909,7 @@ kwasten	kwast:n
 kwastje	kwast:n
 staljongens	staljongen:n
 staljongetje	staljongen:n
+Kerst	kerst:
 kerstmannen	kerstman:n
 kerstmannetje	kerstman:n
 bobsleeën	bobslee:n
@@ -88193,7 +88395,7 @@ verbuigingen	verbuiging:n
 verbuiginkje	verbuiging:n
 beleefder	beleefd:a
 beleefdst	beleefd:a
-beleefde	beleefd:a|beleven:v
+beleefde	beleefd:a|beleven:v|beleefd:
 beleefdere	beleefd:a
 beleefdste	beleefd:a
 beleefd	beleven:v
@@ -88313,6 +88515,7 @@ organelletje	organel:n
 huigen	huig:n
 huigje	huig:n
 affiches	affiche:n
+w8	wacht:
 golde	gelden:v
 Noorser	Noors:a
 Noorst	Noors:a
@@ -88356,7 +88559,7 @@ behoorden	behoren:v
 behorend	behoren:v
 behoord	behoren:v
 synthetische	synthetisch:a
-vermiste	vermissen:v|vermist:a
+vermiste	vermissen:v|vermist:a|vermist:
 vermist	vermissen:v
 vermisten	vermissen:v|vermiste:n
 vermissend	vermissen:v
@@ -88566,7 +88769,9 @@ rammend	rammen:v
 geramd	rammen:v
 appt	appen:v
 overdoses	overdosis:n
+waarnaar	naar:
 boomend	boomen:v
+boomen	bomen:
 kijkje	kijk:n
 aanzwel	aanzwellen:v
 aanzwol	aanzwellen:v
@@ -88871,7 +89076,7 @@ themaatje	thema:n
 piere	pieren:v
 bruidegoms	bruidegom:n
 bruidegommetje	bruidegom:n
-schokkende	schokkend:a
+schokkende	schokkend:a|schokkend:
 autocues	autocue:n
 schenners	schenner:n
 schennertje	schenner:n
@@ -89313,7 +89518,7 @@ wrensere	wrens:a
 wrenste	wrens:a|wrensen:v
 crashe	crashen:v
 verleng	verlengen:v
-verlengde	verlengen:v|verlengd:a
+verlengde	verlengen:v|verlengd:a|verlengd:
 verlengt	verlengen:v
 verlengden	verlengen:v
 verlengend	verlengen:v
@@ -89545,6 +89750,7 @@ leestje	leest:n
 stapels	stapel:n
 stapeltje	stapel:n
 stapel	stapelen:v
+ZW	zuidwest:
 vergezel	vergezellen:v
 vergezelde	vergezellen:v
 vergezelt	vergezellen:v
@@ -89567,6 +89773,7 @@ teints	teint:n
 teintje	teint:n
 peins	peinzen:v
 nationale	nationaal:a
+da's	dat:
 onkruiden	onkruid:n
 onkruidje	onkruid:n
 hulle	hullen:v
@@ -89713,7 +89920,7 @@ vreemdgaand	vreemdgaan:v
 vreemdgegaan	vreemdgaan:v
 beschrijvender	beschrijvend:a
 beschrijvendst	beschrijvend:a
-beschrijvende	beschrijvend:a
+beschrijvende	beschrijvend:a|beschrijvend:
 beschrijvendere	beschrijvend:a
 beschrijvendste	beschrijvend:a
 organiseer	organiseren:v
@@ -90025,7 +90232,7 @@ beklagend	beklagen:v
 beklaagd	beklagen:v
 extraverter	extravert:a
 extravertst	extravert:a
-extraverte	extravert:a
+extraverte	extravert:a|extravert:
 extravertere	extravert:a
 extravertste	extravert:a
 extraverten	extravert:n
@@ -90318,7 +90525,7 @@ loofbossen	loofbos:n
 loofbosje	loofbos:n
 doorlatender	doorlatend:a
 doorlatendst	doorlatend:a
-doorlatende	doorlatend:a
+doorlatende	doorlatend:a|doorlatend:
 doorlatendere	doorlatend:a
 doorlatendste	doorlatend:a
 doorlatend	doorlaten:v
@@ -90378,6 +90585,7 @@ deelgemeentetje	deelgemeente:n
 fusiegemeenten	fusiegemeente:n
 fusiegemeentes	fusiegemeente:n
 fusiegemeentetje	fusiegemeente:n
+engen	eng:
 ulken	ulk:n
 ulkje	ulk:n
 stamde	stammen:v
@@ -90513,14 +90721,14 @@ strekten	strekken:v
 strekkend	strekken:v
 gestrekt	strekken:v
 onderdruk	onderdrukken:v
-onderdrukte	onderdrukken:v|onderdrukt:a
+onderdrukte	onderdrukken:v|onderdrukt:a|onderdrukt:
 onderdrukt	onderdrukken:v
 onderdrukten	onderdrukken:v
 onderdrukkend	onderdrukken:v
 gestreepte	gestreept:a
 gemengder	gemengd:a
 gemengdst	gemengd:a
-gemengde	gemengd:a
+gemengde	gemengd:a|gemengd:
 gemengdere	gemengd:a
 gemengdste	gemengd:a
 opstanden	opstand:n
@@ -90551,7 +90759,7 @@ Kyiv	Kiev:m
 Odesa	Odessa:m
 uitvoerender	uitvoerend:a
 uitvoerendst	uitvoerend:a
-uitvoerende	uitvoerend:a
+uitvoerende	uitvoerend:a|uitvoerend:
 uitvoerendere	uitvoerend:a
 uitvoerendste	uitvoerend:a
 vliegshows	vliegshow:n
@@ -90732,7 +90940,7 @@ controleert	controleren:v
 controleerden	controleren:v
 controlerend	controleren:v
 gecontroleerd	controleren:v
-verplichte	verplicht:a|verplichten:v
+verplichte	verplicht:a|verplichten:v|verplicht:
 verplicht	verplichten:v
 muisstille	muisstil:a
 tronies	tronie:n
@@ -90879,6 +91087,7 @@ racet	racen:v
 raceten	racen:v
 racend	racen:v
 geracet	racen:v
+daaromheen	omheen:
 stampte	stampen:v
 stampt	stampen:v
 stampten	stampen:v
@@ -90931,8 +91140,8 @@ stopcontactje	stopcontact:n
 wandcontactdozen	wandcontactdoos:n
 wandcontactdoosje	wandcontactdoos:n
 uitkomsten	uitkomst:n
-jouwe	jouw:t
-zijne	zijn:t
+jouwe	jouw:|jouw:t
+zijne	zijn:|zijn:t
 hunne	hun:r|hun:t
 granen	graan:n
 graantje	graan:n
@@ -90994,7 +91203,7 @@ toeliet	toelaten:v
 toelieten	toelaten:v
 toelatend	toelaten:v
 toegelaten	toelaten:v
-benodigde	benodigd:a|benodigen:v
+benodigde	benodigd:a|benodigen:v|benodigd:
 benodigd	benodigen:v
 toetreed	toetreden:v
 toetrad	toetreden:v
@@ -91148,7 +91357,7 @@ onbeschaafdere	onbeschaafd:a
 onbeschaafdste	onbeschaafd:a
 beschaafder	beschaafd:a
 beschaafdst	beschaafd:a
-beschaafde	beschaafd:a|beschaven:v
+beschaafde	beschaafd:a|beschaven:v|beschaafd:
 beschaafdere	beschaafd:a
 beschaafdste	beschaafd:a
 beschaafd	beschaven:v
@@ -91197,7 +91406,7 @@ grensgebieden	grensgebied:n
 grensgebiedje	grensgebied:n
 afwijkender	afwijkend:a
 afwijkendst	afwijkend:a
-afwijkende	afwijkend:a
+afwijkende	afwijkend:a|afwijkend:
 afwijkendere	afwijkend:a
 afwijkendste	afwijkend:a
 hul	hullen:v
@@ -91215,7 +91424,7 @@ betwijfeld	betwijfelen:v
 bestuurlijke	bestuurlijk:a
 beboster	bebost:a
 bebostst	bebost:a
-beboste	bebost:a|bebossen:v
+beboste	bebost:a|bebossen:v|bebost:
 bebostere	bebost:a
 bebostste	bebost:a
 bebost	bebossen:v
@@ -91278,7 +91487,7 @@ waterkerinkje	waterkering:n
 hieraan	aan:d
 spannender	spannend:a
 spannendst	spannend:a
-spannende	spannend:a
+spannende	spannend:a|spannend:
 spannendere	spannend:a
 spannendste	spannend:a
 vraagtekens	vraagteken:n
@@ -91581,7 +91790,7 @@ tikkend	tikken:v
 getikt	tikken:v
 getikter	getikt:a
 getiktst	getikt:a
-getikte	getikt:a
+getikte	getikt:a|getikt:
 getiktere	getikt:a
 getiktste	getikt:a
 trede	tree:n|treden:v
@@ -91789,6 +91998,7 @@ aanspraakje	aanspraak:n
 zieken	zieke:n
 baronieën	baronie:n
 baronietje	baronie:n
+joune	jouwe:
 burchten	burcht:n
 burchtje	burcht:n
 geintjes	geintje:n
@@ -91942,7 +92152,7 @@ verlokt	verlokken:v
 verlokten	verlokken:v
 verlokkend	verlokken:v
 inwonertallen	inwonertal:n
-aansluitende	aansluitend:a
+aansluitende	aansluitend:a|aansluitend:
 zandlagen	zandlaag:n
 zandlaagje	zandlaag:n
 spoel	spoelen:v
@@ -92229,6 +92439,7 @@ vernieuwingen	vernieuwing:n
 vernieuwinkje	vernieuwing:n
 omwegen	omweg:n
 omweggetje	omweg:n
+ervoor	voor:
 trouwerijen	trouwerij:n
 trouwerijtje	trouwerij:n
 dreefje	dreef:n
@@ -92701,6 +92912,7 @@ geneesmiddelen	geneesmiddel:n
 geneesmiddeltje	geneesmiddel:n
 toevalstreffers	toevalstreffer:n
 toevalstreffertje	toevalstreffer:n
+hierna	na:
 eerbetonen	eerbetoon:n
 nachtblinde	nachtblind:a
 boet	boeten:v
@@ -92893,7 +93105,7 @@ afgelastingen	afgelasting:n
 afgelastinkje	afgelasting:n
 schendingen	schending:n
 schendinkje	schending:n
-gewapende	gewapend:a
+gewapende	gewapend:a|gewapend:
 gewapend	wapenen:v
 gevangengenomen	gevangennemen:v
 slotpleidooien	slotpleidooi:n
@@ -93718,7 +93930,7 @@ menigtes	menigte:n
 nabestaanden	nabestaande:n
 naslepen	nasleep:n
 nasleepje	nasleep:n
-misdadigers	misdadiger:n
+misdadigers	misdadiger:n|misdadiger:
 misdadigertje	misdadiger:n
 misdadiger	misdadig:a
 herzie	herzien:v
@@ -94366,7 +94578,7 @@ detecteerbaardere	detecteerbaar:a
 detecteerbaarste	detecteerbaar:a
 afgeplatter	afgeplat:a
 afgeplatst	afgeplat:a
-afgeplatte	afgeplat:a
+afgeplatte	afgeplat:a|afgeplat:
 afgeplattere	afgeplat:a
 afgeplatste	afgeplat:a
 spiralen	spiraal:n
@@ -94718,6 +94930,7 @@ vaargeulen	vaargeul:n
 vaargeultje	vaargeul:n
 stuwmeren	stuwmeer:n
 stuwmeertje	stuwmeer:n
+ertoe	tot:
 gehuisveste	gehuisvest:a
 gehuisvest	huisvesten:v
 steuren	steur:n
@@ -94788,6 +95001,7 @@ bespaart	besparen:v
 bespaarden	besparen:v
 besparend	besparen:v
 bespaard	besparen:v
+hiermee	met:
 vrachtauto's	vrachtauto:n
 vrachtautootje	vrachtauto:n
 kanonslopen	kanonsloop:n
@@ -95060,6 +95274,7 @@ schoeit	schoeien:v
 schoeiden	schoeien:v
 schoeiend	schoeien:v
 geschoeid	schoeien:v
+geschoeide	geschoeid:v
 afvalliger	afvallig:a
 afvalligst	afvallig:a
 afvallige	afvallig:a
@@ -95080,7 +95295,7 @@ vervallenste	vervallen:a
 grootmachten	grootmacht:n
 grootmachtje	grootmacht:n
 misluk	mislukken:v
-mislukte	mislukken:v|mislukt:a
+mislukte	mislukken:v|mislukt:a|mislukt:
 mislukt	mislukken:v
 mislukten	mislukken:v
 mislukkend	mislukken:v
@@ -95190,6 +95405,7 @@ pagara's	pagara:n
 pagaraatje	pagara:n
 baken	baak:n|bakenen:v
 baakje	baak:n
+waartoe	tot:
 regisseurs	regisseur:n
 regisseurtje	regisseur:n
 bekroon	bekronen:v
@@ -95288,6 +95504,7 @@ Neerland	Nederland:m
 servietten	serviet:n
 servietje	serviet:n
 therians	therian:n
+kaik	kijk:
 jaargetijden	jaargetijde:n|jaargetij:n
 bakboorden	bakboord:n
 bakboordje	bakboord:n
@@ -95941,11 +96158,11 @@ demonstrerend	demonstreren:v
 gedemonstreerd	demonstreren:v
 gezetter	gezet:a
 gezetst	gezet:a
-gezette	gezet:a
+gezette	gezet:a|gezet:
 gezettere	gezet:a
 gezetste	gezet:a
 Laotianen	Laotiaan:n
-Laotiaantje	Laotiaan:n
+Laotiaantje	Laotiaan:n|Laotiaan:
 dwalingen	dwaling:n
 dwalinkje	dwaling:n
 bloederiger	bloederig:a
@@ -96072,7 +96289,7 @@ geheimzinnigere	geheimzinnig:a
 geheimzinnigste	geheimzinnig:a
 drukkender	drukkend:a
 drukkendst	drukkend:a
-drukkende	drukkend:a
+drukkende	drukkend:a|drukkend:
 drukkendere	drukkend:a
 drukkendste	drukkend:a
 expressionistischer	expressionistisch:a
@@ -96218,7 +96435,7 @@ onwaarschijnlijkere	onwaarschijnlijk:a
 onwaarschijnlijkste	onwaarschijnlijk:a
 nakender	nakend:a
 nakendst	nakend:a
-nakende	nakend:a
+nakende	nakend:a|nakend:
 nakendere	nakend:a
 nakendste	nakend:a
 pioniers	pionier:n
@@ -96553,7 +96770,7 @@ benigere	benig:a
 benigste	benig:a
 spaarvarkens	spaarvarken:n
 spaarvarkentje	spaarvarken:n
-doffers	doffer:n
+doffers	doffer:n|doffer:
 doffertje	doffer:n
 doffer	dof:a
 bergketens	bergketen:n
@@ -96644,6 +96861,7 @@ geruisloost	geruisloos:a
 geruisloze	geruisloos:a
 geruislozere	geruisloos:a
 geruislooste	geruisloos:a
+stilletjes	stil:
 naaldbomen	naaldboom:n
 naaldboompje	naaldboom:n
 leerlooi	leerlooien:v
@@ -96837,7 +97055,7 @@ rozijnen	rozijn:n
 rozijntje	rozijn:n
 ontroerender	ontroerend:a
 ontroerendst	ontroerend:a
-ontroerende	ontroerend:a
+ontroerende	ontroerend:a|ontroerend:
 ontroerendere	ontroerend:a
 ontroerendste	ontroerend:a
 ontroerend	ontroeren:v
@@ -97284,7 +97502,7 @@ pesthaarden	pesthaard:n
 pesthaardje	pesthaard:n
 ontroerder	ontroerd:a
 ontroerdst	ontroerd:a
-ontroerde	ontroerd:a|ontroeren:v
+ontroerde	ontroerd:a|ontroeren:v|ontroerd:
 ontroerdere	ontroerd:a
 ontroerdste	ontroerd:a
 ontroerd	ontroeren:v
@@ -97541,6 +97759,7 @@ oplevend	opleven:v
 opgeleefd	opleven:v
 voorkomender	voorkomend:a
 voorkomendst	voorkomend:a
+voorkomende	voorkomend:
 rendiermossen	rendiermos:n
 vermeerderingen	vermeerdering:n
 souffleuse	souffleur:n
@@ -97575,7 +97794,7 @@ oneffenheden	oneffenheid:n
 oneffenheidje	oneffenheid:n
 reflecterender	reflecterend:a
 reflecterendst	reflecterend:a
-reflecterende	reflecterend:a
+reflecterende	reflecterend:a|reflecterend:
 reflecterendere	reflecterend:a
 reflecterendste	reflecterend:a
 reflecterend	reflecteren:v
@@ -97626,6 +97845,7 @@ principieelst	principieel:a
 principiële	principieel:a
 principiëlere	principieel:a
 principieelste	principieel:a
+waaromtrent	omtrent:
 vleierijen	vleierij:n
 vleierijtje	vleierij:n
 dekmantels	dekmantel:n
@@ -97991,13 +98211,18 @@ lichtreactietje	lichtreactie:n
 aartshertoginnen	aartshertogin:n
 aartshertoginnetje	aartshertogin:n
 loyaler	loyaal:a
+Baskischen	Baskische:n
 paradoxaler	paradoxaal:a
 paradoxaalst	paradoxaal:a
 paradoxale	paradoxaal:a
 paradoxalere	paradoxaal:a
 paradoxaalste	paradoxaal:a
+hierachter	achter:
 zeetongen	zeetong:n
 zeetongetje	zeetong:n
+daarachter	achter:
+erachter	achter:
+waarachter	achter:
 daaronder	onder:d
 daarvandaan	vandaan:d
 nominale	nominaal:a
@@ -98552,6 +98777,7 @@ verlaginkje	verlaging:n
 morenen	morene:n
 morenes	morene:n
 morre	morren:v
+erna	na:
 overzettingen	overzetting:n
 voortschrijd	voortschrijden:v
 voortschreed	voortschrijden:v
@@ -98731,7 +98957,7 @@ presentatortje	presentator:n
 journaals	journaal:n
 journaaltje	journaal:n
 journalen	journaal:n
-gedetineerde	gedetineerd:a
+gedetineerde	gedetineerd:a|gedetineerd:
 gedetineerd	detineren:v
 overtreed	overtreden:v
 overtrad	overtreden:v
@@ -99285,6 +99511,7 @@ epifanietje	epifanie:n
 dasspelden	dasspeld:n
 dasspeldje	dasspeld:n
 wenskaarten	wenskaart:n
+zachtjes	zacht:
 zwaantjes	zwaantje:n
 verdovingen	verdoving:n
 verdovinkje	verdoving:n
@@ -99793,7 +100020,7 @@ maatstrepen	maatstreep:n
 maatstreepje	maatstreep:n
 monturen	montuur:n
 montuurtje	montuur:n
-hunnen	hun:t
+hunnen	hunne:r|hun:t
 denkbeelden	denkbeeld:n
 denkbeeldje	denkbeeld:n
 stafje	staf:n
@@ -100641,7 +100868,7 @@ getwist	twisten:v
 twisten	twist:n
 vermaarder	vermaard:a
 vermaardst	vermaard:a
-vermaarde	vermaard:a|vermaren:v
+vermaarde	vermaard:a|vermaren:v|vermaard:
 vermaardere	vermaard:a
 vermaardste	vermaard:a
 vermaard	vermaren:v
@@ -100690,7 +100917,7 @@ gezantschappen	gezantschap:n
 gezantschapje	gezantschap:n
 onderhoudender	onderhoudend:a
 onderhoudendst	onderhoudend:a
-onderhoudende	onderhoudend:a
+onderhoudende	onderhoudend:a|onderhoudend:
 onderhoudendere	onderhoudend:a
 onderhoudendste	onderhoudend:a
 correspondeer	corresponderen:v
@@ -101204,6 +101431,7 @@ mondialere	mondiaal:a
 mondiaalste	mondiaal:a
 klimaten	klimaat:n
 klimaatje	klimaat:n
+ontstane	ontstaan:
 inademingen	inademing:n
 inademingetje	inademing:n
 toxicologische	toxicologisch:a
@@ -101476,7 +101704,7 @@ uitvergrootten	uitvergroten:v
 uitvergrotend	uitvergroten:v
 stommelingen	stommeling:n
 stommelingetje	stommeling:n
-gehuwde	gehuwd:a
+gehuwde	gehuwd:a|gehuwd:
 gehuwden	gehuwde:n
 onderdaniger	onderdanig:a
 onderdanigst	onderdanig:a
@@ -101513,7 +101741,7 @@ iconen	icoon:n
 icoontje	icoon:n
 ruimtevaarttijdperken	ruimtevaarttijdperk:n
 ruimtevaarttijdperkje	ruimtevaarttijdperk:n
-geaaide	geaaid:a
+geaaide	geaaid:a|geaaid:
 futuristischer	futuristisch:a
 futuristischt	futuristisch:a
 futuristische	futuristisch:a
@@ -101776,6 +102004,8 @@ sponsort	sponsoren:v
 sponsorden	sponsoren:v
 sponsorend	sponsoren:v
 gesponsord	sponsoren:v
+Koerden	Koerd:
+Koerdje	Koerd:
 kiekens	kieken:n|kiek:n
 kiekentje	kieken:n
 kiek	kieken:v|kiekendief:n
@@ -101909,7 +102139,7 @@ doodsangsten	doodsangst:n
 doodsangstje	doodsangst:n
 vervelender	vervelend:a
 vervelendst	vervelend:a
-vervelende	vervelend:a
+vervelende	vervelend:a|vervelend:
 vervelendere	vervelend:a
 vervelendste	vervelend:a
 doodsbange	doodsbang:a
@@ -102642,7 +102872,7 @@ wandaden	wandaad:n
 wandaadje	wandaad:n
 tekenender	tekenend:a
 tekenendst	tekenend:a
-tekenende	tekenend:a
+tekenende	tekenend:a|tekenend:
 tekenendere	tekenend:a
 tekenendste	tekenend:a
 stabiliteiten	stabiliteit:n
@@ -102922,6 +103152,7 @@ knofloken	knoflook:n
 knoflookje	knoflook:n
 trompettisten	trompettist:n
 trompettistje	trompettist:n
+lopende	lopend:
 omloopje	omloop:n
 overlopen	overloop:n
 overloopje	overloop:n
@@ -102958,6 +103189,7 @@ combineert	combineren:v
 combineerden	combineren:v
 combinerend	combineren:v
 gecombineerd	combineren:v
+wasda	wat:
 21e	eenentwintigste:a
 21ste	eenentwintigste:a
 beknopter	beknopt:a
@@ -103064,7 +103296,7 @@ mogendheidje	mogendheid:n
 precolumbiaanse	precolumbiaans:a
 behoudender	behoudend:a
 behoudendst	behoudend:a
-behoudende	behoudend:a
+behoudende	behoudend:a|behoudend:
 behoudendere	behoudend:a
 behoudendste	behoudend:a
 protectoraten	protectoraat:n
@@ -103259,6 +103491,7 @@ miauwt	miauwen:v
 miauwden	miauwen:v
 miauwend	miauwen:v
 gemiauwd	miauwen:v
+miauwen	miauw:
 koningsmoorden	koningsmoord:n
 koningsmoordje	koningsmoord:n
 toeristes	toeriste:n
@@ -103471,7 +103704,7 @@ geestdodendere	geestdodend:a
 geestdodendste	geestdodend:a
 dodender	dodend:a
 dodendst	dodend:a
-dodende	dodend:a
+dodende	dodend:a|dodend:
 dodendere	dodend:a
 dodendste	dodend:a
 gluiperiger	gluiperig:a
@@ -104266,7 +104499,7 @@ dalmatieken	dalmatiek:n
 dalmatiekje	dalmatiek:n
 Ripuariërs	Ripuariër:n
 Ripuariërtje	Ripuariër:n
-Oudnoors	Oudnoords:a
+Oudnoors	Oudnoords:|Oudnoords:a
 Oudnoorse	Oudnoors:a
 deminutivum	diminutivum:n
 pantoffels	pantoffel:n
@@ -104693,6 +104926,7 @@ glottisslagje	glottisslag:n
 statieven	statief:n
 statiefje	statief:n
 pilipili	piri-piri:n
+pilipili's	pilipili:n
 slagvelden	slagveld:n
 slagveldje	slagveld:n
 binnenga	binnengaan:v
@@ -104722,7 +104956,7 @@ Sorbischere	Sorbisch:a
 Sorbischte	Sorbisch:a
 gecompliceerder	gecompliceerd:a
 gecompliceerdst	gecompliceerd:a
-gecompliceerde	gecompliceerd:a
+gecompliceerde	gecompliceerd:a|gecompliceerd:
 gecompliceerdere	gecompliceerd:a
 gecompliceerdste	gecompliceerd:a
 gecompliceerd	compliceren:v
@@ -106101,7 +106335,7 @@ sappigere	sappig:a
 sappigste	sappig:a
 woedender	woedend:a
 woedendst	woedend:a
-woedende	woedend:a
+woedende	woedend:a|woedend:
 woedendere	woedend:a
 woedendste	woedend:a
 vernietige	vernietigen:v
@@ -106129,7 +106363,7 @@ uitschijnend	uitschijnen:v
 uitgeschenen	uitschijnen:v
 benedenhuizen	benedenhuis:n
 benedenhuisje	benedenhuis:n
-aanschouwende	aanschouwend:a
+aanschouwende	aanschouwend:a|aanschouwend:
 kleinigheden	kleinigheid:n
 kleinigheidje	kleinigheid:n
 walg	walgen:v
@@ -106232,7 +106466,7 @@ onderdruktst	onderdrukt:a
 intenst	intens:a
 intensere	intens:a
 intenste	intens:a
-gerede	gereed:a
+gerede	gereed:a|gereed:
 verdiensten	verdienste:n
 bijzet	bijzetten:v
 bijzette	bijzetten:v
@@ -106294,6 +106528,7 @@ buitenkerntje	buitenkern:n
 zonnewinden	zonnewind:n
 zonnewindje	zonnewind:n
 bescherme	beschermen:v
+vloeiende	vloeiend:
 draaie	draaien:v
 bidsprinkhanen	bidsprinkhaan:n
 bidsprinkhaantje	bidsprinkhaan:n
@@ -106307,7 +106542,7 @@ rotatiesnelheden	rotatiesnelheid:n
 afstoten	afstoot:n
 afstotender	afstotend:a
 afstotendst	afstotend:a
-afstotende	afstotend:a
+afstotende	afstotend:a|afstotend:
 afstotendere	afstotend:a
 afstotendste	afstotend:a
 gemiddeldes	gemiddelde:n
@@ -106449,6 +106684,7 @@ karakteristiekst	karakteristiek:a
 karakteristieke	karakteristiek:a
 karakteristiekere	karakteristiek:a
 karakteristiekste	karakteristiek:a
+dusdanige	dusdanig:
 verdamp	verdampen:v
 verdampte	verdampen:v
 verdampt	verdampen:v
@@ -106723,7 +106959,7 @@ begrotingskorten	begrotingskort:n
 begrotingskortje	begrotingskort:n
 inspirerender	inspirerend:a
 inspirerendst	inspirerend:a
-inspirerende	inspirerend:a
+inspirerende	inspirerend:a|inspirerend:
 inspirerendere	inspirerend:a
 inspirerendste	inspirerend:a
 ziektekostenverzekeringen	ziektekostenverzekering:n
@@ -106742,7 +106978,7 @@ kantonnetje	kanton:n
 beduidend	beduiden:v
 beduidender	beduidend:a
 beduidendst	beduidend:a
-beduidende	beduidend:a
+beduidende	beduidend:a|beduidend:
 beduidendere	beduidend:a
 beduidendste	beduidend:a
 perifeerder	perifeer:a
@@ -106956,6 +107192,7 @@ behelst	behelzen:v
 behelsden	behelzen:v
 behelzend	behelzen:v
 behelsd	behelzen:v
+sprekende	sprekend:
 spreke	spreken:v
 brandstofcellen	brandstofcel:n
 brandstofcelletje	brandstofcel:n
@@ -107096,7 +107333,7 @@ waardevollere	waardevol:a
 waardevolste	waardevol:a
 aanvallender	aanvallend:a
 aanvallendst	aanvallend:a
-aanvallende	aanvallend:a
+aanvallende	aanvallend:a|aanvallend:
 aanvallendere	aanvallend:a
 aanvallendste	aanvallend:a
 muiters	muiter:n
@@ -107242,7 +107479,7 @@ rockbands	rockband:n
 rockbandje	rockband:n
 verkope	verkopen:v
 sommigen	sommige:r
-uitgebrachte	uitgebracht:a
+uitgebrachte	uitgebracht:a|uitgebracht:
 schildere	schilderen:v
 experimentere	experimenteren:v
 doorbreek	doorbreken:v
@@ -107831,7 +108068,7 @@ arrestaties	arrestatie:n
 arrestatietje	arrestatie:n
 uitnemender	uitnemend:a
 uitnemendst	uitnemend:a
-uitnemende	uitnemend:a
+uitnemende	uitnemend:a|uitnemend:
 uitnemendere	uitnemend:a
 uitnemendste	uitnemend:a
 intimideer	intimideren:v
@@ -107931,6 +108168,7 @@ fetisjistische	fetisjistisch:a
 fetisjistischere	fetisjistisch:a
 fetisjistischte	fetisjistisch:a
 prae	pre:n
+horens	horen:
 versnellingspoken	versnellingspook:n
 versnellingspookje	versnellingspook:n
 beraden	beraad:n
@@ -108292,6 +108530,7 @@ pauselijke	pauselijk:a
 pauselijkere	pauselijk:a
 pauselijkste	pauselijk:a
 schuive	schuiven:v
+eromheen	omheen:
 beeltenissen	beeltenis:n
 beeltenisje	beeltenis:n
 commerçanten	commerçant:n
@@ -108836,6 +109075,7 @@ algebraïschere	algebraïsch:a
 algebraïschte	algebraïsch:a
 inverteerbare	inverteerbaar:a
 bijectieve	bijectief:a
+daartussen	tussen:
 kruinen	kruin:n
 kruintje	kruin:n
 variëteiten	variëteit:n
@@ -109163,7 +109403,7 @@ paalsteken	paalsteek:n
 paalsteekje	paalsteek:n
 geprononceerder	geprononceerd:a
 geprononceerdst	geprononceerd:a
-geprononceerde	geprononceerd:a
+geprononceerde	geprononceerd:a|geprononceerd:
 geprononceerdere	geprononceerd:a
 geprononceerdste	geprononceerd:a
 geprononceerd	prononceren:v
@@ -109331,6 +109571,7 @@ agitaties	agitatie:n
 agitatietje	agitatie:n
 kraaiennesten	kraaiennest:n
 kraaiennestje	kraaiennest:n
+Zr.	zijner:r
 zijner	zijn:t|hij:r
 ongeremder	ongeremd:a
 ongeremdst	ongeremd:a
@@ -109543,6 +109784,7 @@ homofielst	homofiel:a
 homofiele	homofiel:a
 homofielere	homofiel:a
 homofielste	homofiel:a
+Kerstman	kerstman:
 gangpaden	gangpad:n
 gangpaadje	gangpad:n
 verhoortje	verhoor:n
@@ -109608,6 +109850,7 @@ Nigeriaanse	Nigeriaans:a
 Nigeriaansere	Nigeriaans:a
 Nigeriaanste	Nigeriaans:a
 Nigeriaansen	Nigeriaanse:n
+Nigerianen	Nigeriaan:
 stiefmoeders	stiefmoeder:n
 stiefmoedertje	stiefmoeder:n
 stiefzoons	stiefzoon:n
@@ -110656,7 +110899,7 @@ schielijkere	schielijk:a
 schielijkste	schielijk:a
 gecontroleerder	gecontroleerd:a
 gecontroleerdst	gecontroleerd:a
-gecontroleerde	gecontroleerd:a
+gecontroleerde	gecontroleerd:a|gecontroleerd:
 gecontroleerdere	gecontroleerd:a
 gecontroleerdste	gecontroleerd:a
 ongecontroleerder	ongecontroleerd:a
@@ -110795,6 +111038,7 @@ verkoelend	verkoelen:v
 verkoeld	verkoelen:v
 verkoelingen	verkoeling:n
 verkoelinkje	verkoeling:n
+watan	wat:
 persconferenties	persconferentie:n
 persconferentietje	persconferentie:n
 conferenties	conferentie:n
@@ -112626,7 +112870,7 @@ uitput	uitputten:v
 uitputte	uitputten:v
 uitputtend	uitputten:v
 uitgeput	uitputten:v
-Saksen	Saks:n
+Saksen	Saks:|Saks:n
 lempers	lemper:n
 lempertje	lemper:n
 berichte	berichten:v
@@ -113081,7 +113325,7 @@ verwaarloosden	verwaarlozen:v
 verwaarlozend	verwaarlozen:v
 verwaarloosd	verwaarlozen:v
 hervorm	hervormen:v
-hervormde	hervormen:v|hervormd:a
+hervormde	hervormen:v|hervormd:a|hervormd:
 hervormt	hervormen:v
 hervormden	hervormen:v
 hervormend	hervormen:v
@@ -113916,7 +114160,7 @@ voltrokke	voltrekken:v
 aanblijfen	aanblijven:v
 aangrijpender	aangrijpend:a
 aangrijpendst	aangrijpend:a
-aangrijpende	aangrijpend:a
+aangrijpende	aangrijpend:a|aangrijpend:
 aangrijpendere	aangrijpend:a
 aangrijpendste	aangrijpend:a
 bedrijve	bedrijven:v
@@ -113956,7 +114200,7 @@ bezweekt	bezwijken:v
 bijte	bijten:v
 bijtender	bijtend:a
 bijtendst	bijtend:a
-bijtende	bijtend:a
+bijtende	bijtend:a|bijtend:
 bijtendere	bijtend:a
 bijtendste	bijtend:a
 blijke	blijken:v
@@ -113980,7 +114224,7 @@ herkreegt	herkrijgen:v
 hijse	hijsen:v
 ingrijpender	ingrijpend:a
 ingrijpendst	ingrijpend:a
-ingrijpende	ingrijpend:a
+ingrijpende	ingrijpend:a|ingrijpend:
 ingrijpendere	ingrijpend:a
 ingrijpendste	ingrijpend:a
 keekt	kijken:v
@@ -114443,7 +114687,7 @@ harsten	harst:n
 hechter	hecht:a
 hechtst	hecht:a
 hechte	hecht:a|hechten:v
-hechtere	hecht:a
+hechtere	hecht:a|hechter:
 hechtste	hecht:a
 hinke	hinken:v
 hoeste	hoesten:v
@@ -114705,7 +114949,7 @@ verneuke	verneuken:v
 verongelukke	verongelukken:v
 verontrustender	verontrustend:a
 verontrustendst	verontrustend:a
-verontrustende	verontrustend:a
+verontrustende	verontrustend:a|verontrustend:
 verontrustendere	verontrustend:a
 verontrustendste	verontrustend:a
 verontruste	verontrusten:v
@@ -115307,7 +115551,7 @@ overhalen	overhaal:n
 overhaaltje	overhaal:n
 overhandige	overhandigen:v
 overlegge	overleggen:v
-overgeleverde	overgeleverd:a
+overgeleverde	overgeleverd:a|overgeleverd:
 overmeestere	overmeesteren:v
 overstrome	overstromen:v
 overvleugele	overvleugelen:v
@@ -118001,6 +118245,7 @@ overtolligst	overtollig:a
 overtollige	overtollig:a
 overtolligere	overtollig:a
 overtolligste	overtollig:a
+hiertegen	tegen:
 potentiële	potentieel:a
 diaconieën	diaconie:n
 videocratieën	videocratie:n
@@ -118623,6 +118868,7 @@ persisteert	persisteren:v
 persisteerden	persisteren:v
 persisterend	persisteren:v
 gepersisteerd	persisteren:v
+meeste	meest:
 vertrage	vertragen:v
 verlangzame	verlangzamen:v
 rantsoenere	rantsoeneren:v
@@ -118830,6 +119076,8 @@ vilajets	vilajet:n
 pisbakken	pisbak:n
 pisbakje	pisbak:n
 Indo-Europese	Indo-Europees:a
+Perzen	Pers:
+Persje	Pers:
 tijdlijnen	tijdlijn:n
 tijdlijntje	tijdlijn:n
 aanricht	aanrichten:v
@@ -119016,12 +119264,14 @@ eerstgenoemde	eerstgenoemd:a
 lobbe	lobben:v
 lobbesen	lobbes:n
 lobbesje	lobbes:n
+Kroaten	Kroaat:
 karikaturen	karikatuur:n
 karikatuurtje	karikatuur:n
 Limburgers	Limburger:n
 Limburgertje	Limburger:n
 klantenservices	klantenservice:n
 Duitstalige	Duitstalig:a
+maandelijkse	maandelijks:
 waarborgde	waarborgen:v
 waarborgt	waarborgen:v
 waarborgden	waarborgen:v
@@ -119095,12 +119345,13 @@ boetseert	boetseren:v
 boetseerden	boetseren:v
 boetserend	boetseren:v
 geboetseerd	boetseren:v
+representatieven	representatief:
 rechtlijniger	rechtlijnig:a
 rechtlijnigst	rechtlijnig:a
 rechtlijnige	rechtlijnig:a
 rechtlijnigere	rechtlijnig:a
 rechtlijnigste	rechtlijnig:a
-merck	merk:n
+merck	merk:n|merk:
 boetsere	boetseren:v
 kane	kanen:v
 bikke	bikken:v
@@ -119143,6 +119394,7 @@ geodetische	geodetisch:a
 supervisies	supervisie:n
 supervisietje	supervisie:n
 moesje	moes:n
+moesjes	moesje:n
 verbogene	verbogen:a
 onverbogene	onverbogen:a
 stalinismetje	stalinisme:n
@@ -119879,6 +120131,7 @@ boerst	boers:a
 boerse	boers:a
 boersere	boers:a
 boerste	boers:a
+barvoets	barrevoets:
 sjanse	sjansen:v
 gleuven	gleuf:n
 gleufje	gleuf:n
@@ -120179,7 +120432,7 @@ doorlaat	doorlaten:v
 doorliet	doorlaten:v
 doorlieten	doorlaten:v
 doorgelaten	doorlaten:v
-doorlatends	doorlatend:a
+doorlatends	doorlatend:a|doorlatend:
 middenfrequenties	middenfrequentie:n
 uitkeringen	uitkering:n
 uitkerinkje	uitkering:n
@@ -120367,6 +120620,7 @@ gecontacteerd	contacteren:v
 waterski's	waterski:n
 alanten	alant:n
 gordijntje	gordijn:n
+a.s.	aanstaande:
 strandlopers	strandloper:n
 strandlopertje	strandloper:n
 epileptici	epilepticus:n
@@ -120434,7 +120688,7 @@ stapsgewijze	stapsgewijs:a
 vadems	vadem:n
 vadempje	vadem:n
 stepsgewijze	stapsgewijs:a
-hechters	hechter:n
+hechters	hechter:n|hechter:
 hechtertje	hechter:n
 hechts	hecht:a
 heerlijks	heerlijk:a
@@ -121467,6 +121721,7 @@ bruinkolen	bruinkool:n
 bruinkooltje	bruinkool:n
 naamgevers	naamgever:n
 naamgevertje	naamgever:n
+Catalaansen	Catalaanse:n
 gedaanten	gedaante:n
 gedaantes	gedaante:n
 gedaantetje	gedaante:n
@@ -121587,6 +121842,7 @@ vreesachtigs	vreesachtig:a
 levenskrachtigs	levenskrachtig:a
 neveligs	nevelig:a
 echts	echt:a
+echters	echter:
 examinatoren	examinator:n
 examinators	examinator:n
 sorteringen	sortering:n
@@ -122089,6 +122345,8 @@ ticheltje	tichel:n
 lavementen	lavement:n
 lavementje	lavement:n
 contrôleur	controleur:n
+contrôleurs	contrôleur:n
+contrôleurtje	contrôleur:n
 ontsiere	ontsieren:v
 relax	relaxen:v
 relaxt	relaxen:v|relaxed:a
@@ -122407,6 +122665,7 @@ oorlellen	oorlel:n
 oorlelletje	oorlel:n
 alvers	alver:n
 alvertje	alver:n
+MMT's	MMT:n
 thematische	thematisch:a
 fabelachtigs	fabelachtig:a
 reisspiegels	reisspiegel:n
@@ -122452,6 +122711,7 @@ abd.	abdij:n
 abm.	aartsbisdom:n
 abs.	aartsbisschop:n
 bs.	bisschop:n
+Byz.	Byzantijns:
 dyn.	dynastie:n
 eil.	eiland:n
 ghert.	groothertogdom:n
@@ -122465,6 +122725,7 @@ kzr.	keizerrijk:n
 Maced.	Macedonisch:m
 mgrs.	markgraafschap:n
 orth.	orthodox:a
+Osm.	Osmaans:
 prov.	provincie:n
 Pun.	Punisch:m
 rep.	republiek:n
@@ -124610,7 +124871,7 @@ ontaardden	ontaarden:v
 ontaardend	ontaarden:v
 ontaardingen	ontaarding:n
 ontaardinkje	ontaarding:n
-ontaarde	ontaard:a|ontaarden:v
+ontaarde	ontaard:a|ontaarden:v|ontaard:
 ontaards	ontaard:a
 miezerigs	miezerig:a
 miezer	miezeren:v|miezerd:n
@@ -124631,7 +124892,7 @@ vedelen	vedel:n
 vedeltje	vedel:n
 geschifter	geschift:a
 geschiftst	geschift:a
-geschifte	geschift:a
+geschifte	geschift:a|geschift:
 geschiftere	geschift:a
 geschiftste	geschift:a
 geschift	schiften:v
@@ -124856,6 +125117,7 @@ uitwisselingen	uitwisseling:n
 uitwisselingetje	uitwisseling:n
 vectorfuncties	vectorfunctie:n
 vectorfunctietje	vectorfunctie:n
+Eredivisie	eredivisie:
 paplepels	paplepel:n
 paplepeltje	paplepel:n
 essayeurs	essayeur:n
@@ -126048,6 +126310,7 @@ nhd.	Nieuwhoogduits:m
 os.	Oudsaksisch:m
 mnd.	Middelnederduits:m
 oe.	Oudengels:m
+kymr.	Kymrisch:
 landdrosten	landdrost:n
 muishonden	muishond:n
 muishondje	muishond:n
@@ -126585,6 +126848,7 @@ neerdaalt	neerdalen:v
 neerdaalden	neerdalen:v
 neerdalend	neerdalen:v
 neergedaald	neerdalen:v
+ziens	zien:
 epileptische	epileptisch:a
 wisseltonige	wisseltonig:a
 gelijktonige	gelijktonig:a
@@ -126615,7 +126879,7 @@ veredelt	veredelen:v
 veredelden	veredelen:v
 veredelend	veredelen:v
 veredeld	veredelen:v
-passende	passend:a
+passende	passend:a|passend:
 basklarinetten	basklarinet:n
 ootmoediger	ootmoedig:a
 ootmoedigst	ootmoedig:a
@@ -126737,15 +127001,31 @@ vastgeknoopt	vastknopen:v
 hierbij	bij:d
 hierboven	boven:d
 waarboven	boven:d
+ernaast	naast:
+hiernaast	naast:
+waarnaast	naast:
 erom	om:d
 hierom	om:d
+hieromheen	omheen:
+waaromheen	omheen:
+hiertoe	tot:
+ertussen	tussen:
+hiertussen	tussen:
+waartussen	tussen:
 hierbinnen	binnen:d
 daarbinnen	binnen:d
 waarbinnen	binnen:d
 hierbuiten	buiten:d
 waarbuiten	buiten:d
+hiernaar	naar:
+daarnaar	naar:
 daaruit	uit:d
 daaraan	aan:d
+ertegen	tegen:
+daartegen	tegen:
+eromtrent	omtrent:
+hieromtrent	omtrent:
+daaromtrent	omtrent:
 erachteraan	achteraan:d
 hierachteraan	achteraan:d
 daarachteraan	achteraan:d
@@ -126756,6 +127036,22 @@ errond	rond:d
 hierrond	rond:d
 daarrond	rond:d
 waarrond	rond:d
+ertegenover	tegenover:
+hiertegenover	tegenover:
+daartegenover	tegenover:
+waartegenover	tegenover:
+erdoorheen	doorheen:
+hierdoorheen	doorheen:
+daardoorheen	doorheen:
+waardoorheen	doorheen:
+ernaartoe	naartoe:
+hiernaartoe	naartoe:
+daarnaartoe	naartoe:
+waarnaartoe	naartoe:
+eroverheen	overheen:
+hieroverheen	overheen:
+daaroverheen	overheen:
+waaroverheen	overheen:
 ertussendoor	tussendoor:d
 hiertussendoor	tussendoor:d
 daartussendoor	tussendoor:d
@@ -126777,6 +127073,10 @@ hoofdwerkertje	hoofdwerker:n
 motorischer	motorisch:a
 motorische	motorisch:a
 motorischere	motorisch:a
+ervanaf	vanaf:
+hiervanaf	vanaf:
+daarvanaf	vanaf:
+waarvanaf	vanaf:
 Azteken	Azteek:n
 toeleidingen	toeleiding:n
 toeleidingetje	toeleiding:n
@@ -127170,7 +127470,7 @@ surreëelst	surreëel:a
 surreële	surreëel:a
 surreëlere	surreëel:a
 surreëelste	surreëel:a
-opzienbarende	opzienbarend:a
+opzienbarende	opzienbarend:a|opzienbarend:
 opzienbarender	opzienbarend:a
 opzienbarendst	opzienbarend:a
 opzienbarendere	opzienbarend:a
@@ -127195,6 +127495,7 @@ sloppenwijkje	sloppenwijk:n
 quartel	kwartel:n
 klaterlachen	klaterlach:n
 klaterlachje	klaterlach:n
+Oerknal	oerknal:
 nieuwslezeressen	nieuwslezeres:n
 nieuwslezeresje	nieuwslezeres:n
 lezeressen	lezeres:n
@@ -127377,6 +127678,9 @@ behoeftige	behoeftig:a
 behoeftigere	behoeftig:a
 behoeftigste	behoeftig:a
 behoeftigs	behoeftig:a
+Estische	Estisch:
+Estischer	Estisch:
+Estischt	Estisch:
 afnemers	afnemer:n
 puntstukken	puntstuk:n
 puntstukje	puntstuk:n
@@ -127965,6 +128269,7 @@ speechten	speechen:v
 speechend	speechen:v
 gespeecht	speechen:v
 Somalischen	Somalische:n
+Somalische	Somalisch:
 smartegelden	smartegeld:n
 kachtels	kachtel:n
 kachteltje	kachtel:n
@@ -128280,7 +128585,7 @@ platendraaiers	platendraaier:n
 platendraaiertje	platendraaier:n
 schooiers	schooier:n
 schooiertje	schooier:n
-doode	dode:n
+doode	dode:n|dode:
 schildluizen	schildluis:n
 schildluisje	schildluis:n
 GAS-boetes	GAS-boete:n
@@ -128537,6 +128842,7 @@ gestoeid	stoeien:v
 regelnichten	regelnicht:n
 regelnichtje	regelnicht:n
 lemmetjes	lemmetje:n
+lijfeigentje	lijfeigen:
 lijfjes	lijfje:n
 shuttlebussen	shuttlebus:n
 shuttlebusje	shuttlebus:n
@@ -128936,6 +129242,7 @@ herkansten	herkansen:v
 herkansend	herkansen:v
 sjuutje	jus:n
 polsbanden	polsband:n
+bandjes	bandje:n
 politiemannen	politieman:n
 politiemannetje	politieman:n
 chinees	chinezen:v
@@ -129118,6 +129425,7 @@ treeften	treeft:n
 treeftje	treeft:n
 prikborden	prikbord:n
 prikbordje	prikbord:n
+luitjes	lui:
 maaltijdde	maaltijden:v
 maaltijdt	maaltijden:v
 maaltijdden	maaltijden:v
@@ -129633,7 +129941,7 @@ haardkleden	haardkleed:n
 haardkleedje	haardkleed:n
 gestrester	gestrest:a
 gestrestst	gestrest:a
-gestreste	gestrest:a
+gestreste	gestrest:a|gestrest:
 gestrestere	gestrest:a
 gestrestste	gestrest:a
 gestrest	stressen:v
@@ -130301,7 +130609,7 @@ verknalden	verknallen:v
 verknallend	verknallen:v
 verknald	verknallen:v
 vreê	vrede:n
-fascinerende	fascinerend:a
+fascinerende	fascinerend:a|fascinerend:
 armzaliger	armzalig:a
 armzalige	armzalig:a
 armzaligere	armzalig:a
@@ -130340,7 +130648,7 @@ juffrouwen	juffrouw:n
 juffrouwtje	juffrouw:n
 narcisten	narcist:n
 narcistje	narcist:n
-veilers	veiler:n
+veilers	veiler:n|veiler:
 veilertje	veiler:n
 openhaal	openhalen:v
 openhaalde	openhalen:v
@@ -131965,6 +132273,7 @@ ingepolderd	inpolderen:v
 superbroeikasgassen	superbroeikasgas:n
 stopformulieren	stopformulier:n
 stopformuliertje	stopformulier:n
+kindekes	kindeke:n
 wegstem	wegstemmen:v
 wegstemde	wegstemmen:v
 wegstemt	wegstemmen:v
@@ -132508,7 +132817,7 @@ verderfenissen	verderfenis:n
 verderfenisje	verderfenis:n
 geheimenissen	geheimenis:n
 geheimenisje	geheimenis:n
-ontheemde	ontheemd:a|onthemen:v
+ontheemde	ontheemd:a|onthemen:v|ontheemd:
 ontheem	onthemen:v
 ontheemt	onthemen:v
 ontheemden	onthemen:v
@@ -132614,6 +132923,7 @@ gondelliedje	gondellied:n
 cameeën	camee:n
 cameetje	camee:n
 gediskwalificeerd	diskwalificeren:v
+gediskwalificeerde	gediskwalificeerd:v
 kanaliseer	kanaliseren:v
 kanaliseerde	kanaliseren:v
 kanaliseert	kanaliseren:v
@@ -134061,6 +134371,7 @@ afkanselt	afkanselen:v
 afkanselden	afkanselen:v
 afkanselend	afkanselen:v
 afgekanseld	afkanselen:v
+meesten	meest:
 sessies	sessie:n
 sessietje	sessie:n
 pilaarheiligen	pilaarheilige:n
@@ -135104,6 +135415,7 @@ ledebraakten	ledebraken:v
 ledebrakend	ledebraken:v
 geledebraakt	ledebraken:v
 naaststaanden	naaststaande:n
+pili-pili	pilipili:n
 toneelkijkers	toneelkijker:n
 toneelkijkertje	toneelkijker:n
 veldkijkers	veldkijker:n
@@ -135872,6 +136184,7 @@ vorstbisdommetje	vorstbisdom:n
 hartsvriendinnen	hartsvriendin:n
 hartsvriendinnetje	hartsvriendin:n
 vriendinneke	vriendin:n
+bestuursvormen	bestuursvorm:n
 bollekes	bolleke:n
 bollekestrui	bolletjestrui:n
 rittenwedstrijden	rittenwedstrijd:n
@@ -136918,6 +137231,7 @@ staatssecretarisje	staatssecretaris:n
 maansikkels	maansikkel:n
 maansikkeltje	maansikkel:n
 tevrêe	tevreden:a
+benee	beneden:
 oppeuzel	oppeuzelen:v
 oppeuzelde	oppeuzelen:v
 oppeuzelt	oppeuzelen:v
@@ -137328,6 +137642,7 @@ weerklonk	weerklinken:v
 weerklinkt	weerklinken:v
 weerklonken	weerklinken:v
 weerklinkend	weerklinken:v
+jeneverstad	Jeneverstad:
 jeneversteden	jeneverstad:n
 jeneverstadje	jeneverstad:n
 iö	io:i
@@ -137362,6 +137677,7 @@ sneeuwhoenders	sneeuwhoen:n
 sneeuwhoenderen	sneeuwhoen:n
 sneeuwhoenen	sneeuwhoen:n
 sneeuwhoentje	sneeuwhoen:n
+losjes	los:
 kinderopvangen	kinderopvang:n
 broge	brooche:n
 hoofdpersonen	hoofdpersoon:n
@@ -137518,7 +137834,7 @@ behuwend	behuwen:v
 behuwd	behuwen:v
 bezatte	bezatten:v
 bezattend	bezatten:v
-artikelsgewijze	artikelsgewijs:a
+artikelsgewijze	artikelsgewijs:a|artikelsgewijs:
 woonarken	woonark:n
 woonarkje	woonark:n
 achterhuizen	achterhuis:n
@@ -138575,7 +138891,7 @@ jonnen	gunnen:v
 collecties	collectie:n
 collectietje	collectie:n
 mijns	mijn:t|ik:r
-uwen	uw:t
+uwen	uwe:r|uw:t
 beermarters	beermarter:n
 beermartertje	beermarter:n
 bintoerongs	bintoerong:n
@@ -139032,6 +139348,7 @@ afkerigste	afkerig:a
 eeren	eren:v
 startpijnen	startpijn:n
 startpijntje	startpijn:n
+eenen	enen:t|enen:|enen:
 groeipijnen	groeipijn:n
 groeipijntje	groeipijn:n
 passievruchtensappen	passievruchtensap:n
@@ -139362,7 +139679,7 @@ aankaartte	aankaarten:v
 aankaartten	aankaarten:v
 aankaartend	aankaarten:v
 aangekaart	aankaarten:v
-toover	tover:n
+toover	tover:n|tover:
 vervaar	vervaren:v
 vervaart	vervaren:v
 vervoeren	vervaren:v
@@ -139518,6 +139835,7 @@ irrigeert	irrigeren:v
 irrigeerden	irrigeren:v
 irrigerend	irrigeren:v
 geïrrigeerd	irrigeren:v
+achteren	achter:
 bisams	bisam:n
 menukaarten	menukaart:n
 menukaartje	menukaart:n
@@ -141707,6 +142025,7 @@ gegourmet	gourmetten:v
 ontkentenissen	ontkentenis:n
 gynaecologen	gynaecoloog:n
 gynaecoloogje	gynaecoloog:n
+gynecoloog	gynaecoloog:
 gyneseksueler	gyneseksueel:a
 gyneseksueelst	gyneseksueel:a
 gyneseksuele	gyneseksueel:a
@@ -141918,7 +142237,7 @@ verifiërend	verifiëren:v
 geverifieerd	verifiëren:v
 sneeuwschuivers	sneeuwschuiver:n
 sneeuwschuivertje	sneeuwschuiver:n
-drieën	drie:u
+drieën	drie:u|drie:
 werkwoordelijke	werkwoordelijk:a
 uitrij	uitrijden:v
 uitrijd	uitrijden:v
@@ -142176,6 +142495,7 @@ pulskorren	pulskor:n
 minnegoden	minnegod:n
 minnegodje	minnegod:n
 mingodinnen	mingodin:n
+zachtkens	zachtjes:d
 parelvissers	parelvisser:n
 vegaburgers	vegaburger:n
 boetieks	boetiek:n
@@ -142255,6 +142575,7 @@ broddelden	broddelen:v
 broddelend	broddelen:v
 gebroddeld	broddelen:v
 sagopalmen	sagopalm:n
+mogge	morgen:
 afmik	afmikken:v
 afmikte	afmikken:v
 afmikt	afmikken:v
@@ -142780,7 +143101,7 @@ knauwden	knauwen:v
 knauwend	knauwen:v
 geknauwd	knauwen:v
 Angelsassisch	Angelsaksisch:a|Angelsaksisch:m
-Sassisch	Saksisch:a
+Sassisch	Saksisch:a|Saksisch:
 bezabber	bezabberen:v
 bezabberde	bezabberen:v
 bezabbert	bezabberen:v
@@ -143324,6 +143645,7 @@ bokshandschoentje	bokshandschoen:n
 boksballen	boksbal:n
 huifkarren	huifkar:n
 huifkarretje	huifkar:n
+dattie	dat:
 peptalks	peptalk:n
 spijbelaars	spijbelaar:n
 spijbelaartje	spijbelaar:n
@@ -143902,6 +144224,9 @@ dinsdagse	dinsdags:a
 dinsdags	dinsdag:n
 woensdagse	woensdags:a
 woensdags	woensdag:n
+zevenen	zeven:
+vijven	vijf:
+twaalven	twaalf:
 negenen	negen:n
 gezelschapspellen	gezelschapspel:n
 gezelschapspelen	gezelschapspel:n
@@ -144050,6 +144375,7 @@ kettingrokers	kettingroker:n
 kettingrokertje	kettingroker:n
 kettingzagen	kettingzaag:n
 kettingzaagje	kettingzaag:n
+bestje	best:
 muziekdozen	muziekdoos:n
 muziekdoosje	muziekdoos:n
 speeldozen	speeldoos:n
@@ -144367,6 +144693,7 @@ blankvoorns	blankvoorn:n
 blankvoorntje	blankvoorn:n
 voorns	voorn:n
 voorntje	voorn:n
+vorens	voren:
 elzenvoorns	elzenvoorn:n
 elritsen	elrits:n
 elritsje	elrits:n
@@ -144510,6 +144837,7 @@ klaarmaakt	klaarmaken:v
 klaarmaakten	klaarmaken:v
 klaarmakend	klaarmaken:v
 klaargemaakt	klaarmaken:v
+asjeblieft	alsjeblieft:
 audities	auditie:n
 auditietje	auditie:n
 jongedames	jongedame:n
@@ -148262,7 +148590,7 @@ jouwt	jouwen:v
 jouwden	jouwen:v
 jouwend	jouwen:v
 gejouwd	jouwen:v
-jouwen	jouw:t
+jouwen	jouwe:r|jouw:t
 uitjouw	uitjouwen:v
 uitjouwde	uitjouwen:v
 uitjouwt	uitjouwen:v
@@ -150067,6 +150395,7 @@ wijsneusje	wijsneus:n
 dezes	deze:t
 dezer	deze:t
 afritsbroeken	afritsbroek:n
+daarmede	daarmee:d
 omzichtigs	omzichtig:a
 uitleid	uitleiden:v
 uitleidde	uitleiden:v
@@ -152008,6 +152337,7 @@ veenmossen	veenmos:n
 sjofeur	chauffeur:n
 kompjoeter	computer:n
 panoramadekken	panoramadek:n
+mogguh	morgen:
 mantelmeeuwen	mantelmeeuw:n
 mantelmeeuwtje	mantelmeeuw:n
 megool	mongool:n
@@ -153654,6 +153984,7 @@ overstemden	overstemmen:v
 overstemmend	overstemmen:v
 overgestemd	overstemmen:v
 overstemd	overstemmen:v
+hetzelve	hetzelfde:
 dezelve	dezelfde:t
 overpraat	overpraten:v
 overpraatte	overpraten:v
@@ -153814,6 +154145,7 @@ onderschikt	onderschikken:v
 onderschikten	onderschikken:v
 onderschikkend	onderschikken:v
 contr.	contractie:n|controleur:n
+contrs.	contr.:n
 kookpunten	kookpunt:n
 kookpuntje	kookpunt:n
 voedselbonnen	voedselbon:n
@@ -153928,7 +154260,7 @@ mismaakt	mismaken:v
 mismaakten	mismaken:v
 mismakend	mismaken:v
 misvorm	misvormen:v
-misvormde	misvormen:v|misvormd:a
+misvormde	misvormen:v|misvormd:a|misvormd:
 misvormt	misvormen:v
 misvormden	misvormen:v
 misvormend	misvormen:v
@@ -155548,6 +155880,7 @@ schoonheidssalons	schoonheidssalon:n
 roodbonte	roodbont:a
 ijzerdraden	ijzerdraad:n
 ijzerdraadje	ijzerdraad:n
+uitverkoren	uitverkiezen:
 invallers	invaller:n
 stopflessen	stopfles:n
 straffeloze	straffeloos:a
@@ -159303,7 +159636,7 @@ transactioneler	transactioneel:n
 transactioneelst	transactioneel:n
 relationeler	relationeel:n
 relationeelst	relationeel:n
-boeiends	boeiend:a
+boeiends	boeiend:a|boeiend:
 ongewortelde	ongeworteld:a
 bubbelbaden	bubbelbad:n
 bubbelbadje	bubbelbad:n
@@ -162668,6 +163001,7 @@ romaanse	romaans:a
 Moriaan	moriaan:n
 moriaanshoofden	moriaanshoofd:n
 moriaanshoofdje	moriaanshoofd:n
+Moriaanshoofden	Moriaanshoofd:
 voorspraken	voorspraak:n
 wetenswaardiger	wetenswaardig:a
 wetenswaardigst	wetenswaardig:a
@@ -163750,7 +164084,7 @@ Bataafsch	Bataafs:a
 Bataefsch	Bataafs:a
 naeuwkeurig	nauwkeurig:a
 leeven	leven:v|leven:n
-koleuren	kleuren:v
+koleuren	kleuren:v|kleuren:
 coleur	kleur:n
 koleur	kleur:n
 loffelijker	loffelijk:a
@@ -163931,6 +164265,7 @@ arendbuizerds	arendbuizerd:n
 arendbuizerdje	arendbuizerd:n
 schaamsoorten	schaamsoort:n
 schaamsoortje	schaamsoort:n
+scharrelaar	scharrelen:
 scharrelaars	scharrelaar:n
 scharrelaartje	scharrelaar:n
 vloedvlakten	vloedvlakte:n
@@ -163957,6 +164292,7 @@ veldspitsmuisje	veldspitsmuis:n
 boosdoender	boosdoener:n
 doender	doener:n
 veehouwer	veehouder:n
+gouwe	goud:
 puntlipneushoorns	puntlipneushoorn:n
 puntlipneushoorntje	puntlipneushoorn:n
 breedlipneushoorns	breedlipneushoorn:n
@@ -164269,7 +164605,7 @@ tongelden	tongelen:v
 tongelend	tongelen:v
 getongeld	tongelen:v
 Eritresen	Eritrese:n
-strakjes	straks:d
+strakjes	straks:d|strak:
 dalijk	dadelijk:d
 actreutels	actreutel:n
 actreuteltje	actreutel:n
@@ -164426,7 +164762,7 @@ kaneeltalingen	kaneeltaling:n
 kaneeltalinkje	kaneeltaling:n
 gevlekter	gevlekt:a
 gevlektst	gevlekt:a
-gevlekte	gevlekt:a
+gevlekte	gevlekt:a|gevlekt:
 gevlektere	gevlekt:a
 gevlektste	gevlekt:a
 wenkbrauweenden	wenkbrauweend:n
@@ -164532,7 +164868,7 @@ tuinresedaatje	tuinreseda:n
 muurslaatje	muursla:n
 muurpepers	muurpeper:n
 muurpepertje	muurpeper:n
-wetgevende	wetgevend:a
+wetgevende	wetgevend:a|wetgevend:
 wetgevend	wetgeven:v
 kaaljakkers	kaaljakker:n
 kaaljakkertje	kaaljakker:n
@@ -164742,6 +165078,7 @@ onwijzere	onwijs:a
 onwijste	onwijs:a
 randstedelijke	randstedelijk:a
 gasontploffingen	gasontploffing:n
+magertjes	mager:
 terughoudender	terughoudend:a
 terughoudendst	terughoudend:a
 terughoudende	terughoudend:a
@@ -166100,6 +166437,7 @@ griezelden	griezelen:v
 griezelend	griezelen:v
 gegriezeld	griezelen:v
 pitpoes	pitspoes:n
+stavaza's	stavaza:n
 poepiedoepies	poepiedoepie:n
 ratjetoes	ratjetoe:n
 ratjetoetje	ratjetoe:n
@@ -166452,6 +166790,8 @@ migraties	migratie:n
 migratietje	migratie:n
 kobmeeuwen	kobmeeuw:n
 kobmeeuwtje	kobmeeuw:n
+bbp's	bbp:n
+bbp'tje	bbp:n
 eiglk	eigenlijk:d
 dienstverleners	dienstverlener:n
 prc	precies:d
@@ -166485,6 +166825,7 @@ sleutelbloemen	sleutelbloem:n
 sleutelbloempje	sleutelbloem:n
 maretakken	maretak:n
 maretakje	maretak:n
+eener	ener:t
 havermoutpapje	havermoutpap:n
 alweder	alweer:d
 educaties	educatie:n
@@ -168878,6 +169219,7 @@ kooklesje	kookles:n
 frips	fris:a
 hotellobby's	hotellobby:n
 dienovereenkomstige	dienovereenkomstig:a
+horentje	horen:
 siksijoeroe's	siksijoeroe:n
 pretentieuzer	pretentieus:a
 pretentieust	pretentieus:a
@@ -169597,7 +169939,7 @@ hoogrendementsketels	hoogrendementsketel:n
 hoogrendementsketeltje	hoogrendementsketel:n
 gebruiksfasen	gebruiksfase:n
 gebruiksfases	gebruiksfase:n
-aanpalende	aanpalend:a
+aanpalende	aanpalend:|aanpalend:a
 aanpalender	aanpalend:a
 aanpalendst	aanpalend:a
 aanpalendere	aanpalend:a
@@ -169635,7 +169977,7 @@ zweverigst	zweverig:a
 zweverige	zweverig:a
 zweverigere	zweverig:a
 zweverigste	zweverig:a
-geachte	geacht:a
+geachte	geacht:a|geacht:
 enkelspelers	enkelspeler:n
 enkelspelertje	enkelspeler:n
 nieuwwaarden	nieuwwaarde:n
@@ -169681,6 +170023,7 @@ meegespeeld	meespelen:v
 ongemerkte	ongemerkt:a
 controlemogelijkheden	controlemogelijkheid:n
 medewerkertevredenheid	medewerkerstevredenheid:n
+ravenen	raven:
 raeven	raaf:n
 raef	raaf:n
 raaven	raaf:n
@@ -169738,6 +170081,7 @@ gedigt	gedicht:n
 digtkunst	dichtkunst:n
 dichtkonst	dichtkunst:n
 digtkonst	dichtkunst:n
+kga	ik:
 oncomfortabeler	oncomfortabel:a
 oncomfortabelst	oncomfortabel:a
 oncomfortabele	oncomfortabel:a
@@ -169992,6 +170336,7 @@ langlopende	langlopend:a
 langlopendere	langlopend:a
 langlopendste	langlopend:a
 gerandomiseerd	randomiseren:v
+gerandomiseerde	gerandomiseerd:v
 randomiseer	randomiseren:v
 randomiseerde	randomiseren:v
 randomiseert	randomiseren:v
@@ -170032,7 +170377,7 @@ esthetiekst	esthetiek:a
 esthetieke	esthetiek:a
 esthetiekere	esthetiek:a
 esthetiekste	esthetiek:a
-schoonen	schonen:v
+schoonen	schonen:v|schonen:|schonen:
 Schoonen	Schonen:m
 beenders	been:n
 kettinghorren	kettinghor:n
@@ -170051,7 +170396,7 @@ amortiseerden	amortiseren:v
 amortiserend	amortiseren:v
 geamortiseerd	amortiseren:v
 amortiseerbaarder	amortiseerbaar:a
-amortiseerbaarst	amortiseerbaar:a
+amortiseerbaarst	amortiseerbaar:a|amortiseerbaar:
 amortiseerbare	amortiseerbaar:a
 amortiseerbaardere	amortiseerbaar:a
 amortiseerbaarste	amortiseerbaar:a
@@ -170240,6 +170585,7 @@ reproduceerbaardere	reproduceerbaar:a
 reproduceerbaarste	reproduceerbaar:a
 genoegdoeningen	genoegdoening:n
 genoegdoeninkje	genoegdoening:n
+ofzoiets	zoiets:
 declaraties	declaratie:n
 declaratietje	declaratie:n
 declarabeler	declarabel:a
@@ -171097,6 +171443,7 @@ drogeert	drogeren:v
 drogeerden	drogeren:v
 drogerend	drogeren:v
 gedrogeerd	drogeren:v
+drogeren	droger:
 vezelrijker	vezelrijk:a
 vezelrijkst	vezelrijk:a
 vezelrijke	vezelrijk:a
@@ -171566,8 +171913,10 @@ kakstoelen	kakstoel:n
 kakstoeltje	kakstoel:n
 noodkreten	noodkreet:n
 noodkreetje	noodkreet:n
+efkes	eventjes:d
 tyfuslijders	tyfuslijder:n
 tyfuslijdertje	tyfuslijder:n
+effies	eventjes:d
 binnenvetters	binnenvetter:n
 binnenvettertje	binnenvetter:n
 edelstalen	edelstaal:n
@@ -172009,6 +172358,7 @@ wereldreisje	wereldreis:n
 wiskundeknobbels	wiskundeknobbel:n
 wiskundeknobbeltje	wiskundeknobbel:n
 criminologen	criminoloog:n
+doorlopende	doorlopend:
 zwakbegaafder	zwakbegaafd:a
 zwakbegaafdst	zwakbegaafd:a
 zwakbegaafde	zwakbegaafd:a
@@ -172136,7 +172486,7 @@ adresseert	adresseren:v
 adresseerden	adresseren:v
 adresserend	adresseren:v
 geadresseerd	adresseren:v
-geadresseerde	geadresseerd:a
+geadresseerde	geadresseerd:a|geadresseerd:
 geadresseerden	geadresseerde:n
 attendeer	attenderen:v
 attendeerde	attenderen:v
@@ -172722,6 +173072,7 @@ sermoenen	sermoen:n
 sermoentje	sermoen:n
 bedsermoenen	bedsermoen:n
 bedsermoentje	bedsermoen:n
+waartijdens	tijdens:
 pasgetrouwde	pasgetrouwd:a
 onverharde	onverhard:a
 alkoofje	alkoof:n
@@ -173218,8 +173569,8 @@ vorsinkje	vorsing:n
 navorsching	navorsing:n
 vorsching	vorsing:n
 navorschen	navorsen:v
-vorschen	vorsen:v
-vorsch	vors:n
+vorschen	vorsen:v|vorsen:
+vorsch	vors:n|vors:
 kikvorsch	kikvors:n
 lichtgeloviger	lichtgelovig:a
 lichtgelovigst	lichtgelovig:a
@@ -174163,6 +174514,8 @@ zaterdagmiddagen	zaterdagmiddag:n
 zaterdagmiddagje	zaterdagmiddag:n
 honderdjarige	honderdjarig:a
 hsl	hogesnelheidslijn:n
+kbv's	kbv:n
+kbv'tje	kbv:n
 taxiritten	taxirit:n
 taxiritje	taxirit:n
 wegbeschrijvingen	wegbeschrijving:n
@@ -175139,11 +175492,12 @@ meeslepende	meeslepend:a
 meeslependere	meeslepend:a
 meeslependste	meeslepend:a
 overheerschen	overheersen:v
+oogen	ogen:
 beteekenis	betekenis:n
 zooeven	zo-even:d
 zooverre	zoverre:d
 zoowel	zowel:c
-typeerend	typerend:a
+typeerend	typerend:|typerend:a
 praestatie	prestatie:n
 hooren	horen:v
 reageeren	reageren:v
@@ -175151,6 +175505,7 @@ hoovaardij	hovaardij:n
 Grieksch	Grieks:a
 verderve	verderf:n
 eenig	enig:a
+eenige	enige:
 beteekenen	betekenen:v
 wensch	wens:n
 zoover	zover:d
@@ -175190,6 +175545,7 @@ beleediging	belediging:n
 beleedigen	beledigen:v
 tooneel	toneel:n
 zoolang	zolang:d
+schoone	schone:
 menschdom	mensdom:n
 passeeren	passeren:v
 onnoozel	onnozel:a
@@ -175264,7 +175620,7 @@ gelooven	geloven:v
 conformeeren	conformeren:v
 contrasteeren	contrasteren:v
 koopen	kopen:v
-steenen	stenen:a
+steenen	stenen:a|stenen:
 regeeren	regeren:v
 leelijk	lelijk:a
 onnoodig	onnodig:a
@@ -175317,7 +175673,7 @@ paranoten	paranoot:n
 paranootje	paranoot:n
 gelijkgestemder	gelijkgestemd:a
 gelijkgestemdst	gelijkgestemd:a
-gelijkgestemde	gelijkgestemd:a
+gelijkgestemde	gelijkgestemd:a|gelijkgestemd:
 gelijkgestemdere	gelijkgestemd:a
 gelijkgestemdste	gelijkgestemd:a
 gelijkgestemden	gelijkgestemde:n
@@ -175563,6 +175919,7 @@ naderinkje	nadering:n
 ellendelingen	ellendeling:n
 ellendelingetje	ellendeling:n
 opgetogenheden	opgetogenheid:n
+verontrustends	verontrustend:
 verontrustenders	verontrustend:a
 zeikerds	zeikerd:n
 zeikerdje	zeikerd:n
@@ -175570,6 +175927,7 @@ foempen	foemp:n
 foempje	foemp:n
 trainingspakken	trainingspak:n
 trainingspakje	trainingspak:n
+eersten	eerste:
 wederverkopers	wederverkoper:n
 aardrijkskundeleraars	aardrijkskundeleraar:n
 aardrijkskundeleraren	aardrijkskundeleraar:n
@@ -176597,6 +176955,7 @@ kaalhoofdigst	kaalhoofdig:a
 kaalhoofdige	kaalhoofdig:a
 kaalhoofdigere	kaalhoofdig:a
 kaalhoofdigste	kaalhoofdig:a
+kaaltjes	kaal:
 kaalplukteams	kaalplukteam:n
 wegscheer	wegscheren:v
 wegschoor	wegscheren:v
@@ -180477,6 +180836,7 @@ zakkenvullendst	zakkenvullend:a
 zakkenvullende	zakkenvullend:a
 zakkenvullendere	zakkenvullend:a
 zakkenvullendste	zakkenvullend:a
+waarvolgens	volgens:
 vijfjaarsoverlevingen	vijfjaarsoverleving:n
 overlevingskansen	overlevingskans:n
 overlevingskansje	overlevingskans:n
@@ -180863,7 +181223,7 @@ ochtendwandelingen	ochtendwandeling:n
 ochtendwandelinkje	ochtendwandeling:n
 opgeluchter	opgelucht:a
 opgeluchtst	opgelucht:a
-opgeluchte	opgelucht:a
+opgeluchte	opgelucht:a|opgelucht:
 opgeluchtere	opgelucht:a
 opgeluchtste	opgelucht:a
 vechtsters	vechtster:n
@@ -181168,6 +181528,7 @@ druppelsgewijze	druppelsgewijs:a
 gymleraren	gymleraar:n
 gymlerares	gymleraar:n
 artikelgewijs	artikelsgewijs:a
+artikelgewijze	artikelsgewijs:
 computerproblemen	computerprobleem:n
 kroonjaren	kroonjaar:n
 kroonjaartje	kroonjaar:n
@@ -181176,10 +181537,11 @@ brilsternen	brilstern:n
 brilsterntje	brilstern:n
 computerwinkels	computerwinkel:n
 computerwinkeltje	computerwinkel:n
-bedrijfstaksgewijze	bedrijfstaksgewijs:a
+bedrijfstaksgewijze	bedrijfstaksgewijs:a|bedrijfstaksgewijs:
 bedrijfstakgewijs	bedrijfstaksgewijs:a
-broksgewijze	broksgewijs:a
-dakpansgewijze	dakpansgewijs:a
+bedrijfstakgewijze	bedrijfstaksgewijs:
+broksgewijze	broksgewijs:a|broksgewijs:
+dakpansgewijze	dakpansgewijs:a|dakpansgewijs:
 schildmaagden	schildmaagd:n
 schildmaagdje	schildmaagd:n
 IT-oplossingen	IT-oplossing:n
@@ -181650,6 +182012,7 @@ cosplayend	cosplayen:v
 gecosplayd	cosplayen:v
 kiek'n	kieken:v
 cosplayst	cosplayen:v
+hestu	hest:
 adventskransen	adventskrans:n
 gezichtsharen	gezichtshaar:n
 gezichtshaartje	gezichtshaar:n
@@ -181667,6 +182030,8 @@ achttienplussertje	achttienplusser:n
 18-plusser	achttienplusser:n
 18+'er	achttienplusser:n
 lhbtqia	lhbt:n
+lhbtqia's	lhbtqia:n
+lhbtqia+	enzovoort:
 ejecteer	ejecteren:v
 ejecteerde	ejecteren:v
 ejecteert	ejecteren:v
@@ -181833,7 +182198,7 @@ wegzapten	wegzappen:v
 wegzappend	wegzappen:v
 weggezapt	wegzappen:v
 bureaucratiseringen	bureaucratisering:n
-gijen	geien:v
+gijen	geien:v|gij:
 foto-expo's	foto-expo:n
 thriftte	thriften:v
 thriftten	thriften:v

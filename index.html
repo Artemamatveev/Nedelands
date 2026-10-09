@@ -202,6 +202,7 @@ h2.gap{margin-top:28px}
 .pop .pe .ghost:disabled{opacity:.5}
 .pop .pw{margin:0;font-size:17px}
 .pop .pw b{font-weight:600}
+.pop .pw small{color:var(--soft);font-size:13.5px}
 .pop .pa{padding-top:8px;border-top:1px solid var(--line)}
 .pop .pa .hint{margin:0}
 /* computer: het schilderij hangt aan een blauwe museummuur; startscherm in twee kolommen */
@@ -1350,10 +1351,28 @@ const CONJ=new Set("als omdat dat want maar en of wanneer terwijl toen zodat nad
 // Dictionary entries for a word as it appears in a sentence: its own entries, the words it is a form of,
 // and a separable verb when its particle closes the clause (bel … op → opbellen)
 function define(word,sent){
+  word=word.replace(/’/g,"'"); // books use the curly apostrophe (zo’n), the dictionary the straight one
   const{L,F}=DICT,lw=word.toLowerCase(),out=[];
   const push=(l,p)=>(L.get(l)||[]).forEach(([q,i,g])=>{if((!p||q===p)&&!out.some(e=>e.l===l&&e.p===q))out.push({l,p:q,i,g})});
-  [word,lw].forEach(w=>{push(w);(F.get(w)||[]).forEach(([l,p])=>push(l,p))});
-  const ws=sent.toLowerCase().match(WRE)||[],k=ws.indexOf(lw);
+  const look=w=>{push(w);(F.get(w)||[]).forEach(([l,p])=>push(l,p))};
+  look(word);look(lw);
+  if(!out.length)look(lw.normalize("NFD").replace(/[\u0300-\u036f]/g,"")); // stress accents: én, dát
+  // inflected forms the dictionary lacks: misplaatste → misplaatst, geschatte → geschat,
+  // raspende → raspen, verslaafder → verslaafd, oudjes → oudje
+  [lw.replace(/e$/,""),lw.replace(/([b-df-hj-np-tv-z])\1e$/,"$1"),lw.replace(/ende?$/,"en"),lw.replace(/er$/,""),lw.replace(/s$/,"")].forEach(x=>{if(!out.length&&x!==lw&&x.length>=3)look(x)});
+  const ws=sent.replace(/’/g,"'").toLowerCase().match(WRE)||[],k=ws.indexOf(lw);
+  // compounds (bewonerscommissie = bewoner + commissie): gender and plural come from the last part.
+  // A capital letter inside the sentence means a name, so those are left alone.
+  if(!out.length&&lw.length>=7&&(word[0]===lw[0]||k===0)){
+    const ent=w=>{const r=[];(L.get(w)||[]).forEach(e=>r.push([w,...e]));(F.get(w)||[]).forEach(([l])=>(L.get(l)||[]).forEach(e=>r.push([l,...e])));return r};
+    for(let i=3;i<=lw.length-3;i++){       // shortest first part first: mee + leven, not meel + ven
+      const h=lw.slice(0,i),t=ent(lw.slice(i))[0]; if(!t)continue;
+      const hd=[h,h.replace(/(s|en|e)$/,"")].filter(x=>x.length>=3).map(ent).find(x=>x.length); if(!hd)continue;
+      const[hl,,,hg]=hd[0],[tl,tp,ti,tg]=t;
+      out.push({l:lw,p:tp,i:tp==="n"?ti.replace(/mv\. (\S+)/,(m,pl)=>"mv. "+h+pl):"",g:`${hl} (${hg.split("; ")[0]}) + ${tl} (${tg.split("; ")[0]})`,comp:1});
+      break;
+    }
+  }
   // after ik/je/hij… a verb is likely, after de/een/veel… a noun; het/dat/die can be either,
   // so there a common verb (from V, like "het was") wins
   const commonV=out.some(e=>e.p==="v"&&V.some(v=>v[0]===e.l));
@@ -1401,7 +1420,7 @@ async function tapWord(el){
   const E=define(word,sent);
   if(!E.length){$("pdef").innerHTML=`<p class="pm">Niet in het woordenboek. <a href="${gt(word)}" target="_blank" rel="noopener">Google Translate ↗</a></p>`;return place()}
   $("pdef").innerHTML=E.map((e,n)=>{const x=entryParts(e);
-    return`<div class="pe"><div><p class="pw">${e.sep?"samen: ":""}<b>${esc(x.w)}</b></p><p class="pm">${esc(x.meta)}</p><p class="pt">${esc(e.g)}</p></div><button class="ghost" data-n="${n}">Bewaar</button></div>`}).join("");
+    return`<div class="pe"><div><p class="pw">${e.sep?"samen: ":""}<b>${esc(x.w)}</b>${e.comp?" <small>(samengesteld)</small>":""}</p><p class="pm">${esc(x.meta)}</p><p class="pt">${esc(e.g)}</p></div><button class="ghost" data-n="${n}">Bewaar</button></div>`}).join("");
   const f=word.toLowerCase();
   $("pdef").querySelectorAll("button").forEach(b=>{
     const e=E[b.dataset.n],x=entryParts(e),has=()=>S.words.find(y=>y.w===x.w);

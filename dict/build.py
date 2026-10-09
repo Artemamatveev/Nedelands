@@ -25,6 +25,9 @@ for line in gzip.open(src,"rt"):
         fo=(s.get("form_of") or [])+(s.get("alt_of") or [])
         if fo:
             for x in fo: addform(w,x.get("word"),p)
+            g=s.get("glosses") or [""]
+            if ";" in g[-1] and not g[-1].startswith("inflection of"):
+                real.append({"glosses":[g[-1].split(";",1)[1].strip()],"tags":[]})
             continue
         if not s.get("glosses") or "no-gloss" in (s.get("tags") or []): continue
         real.append(s)
@@ -67,7 +70,7 @@ for w,es in entries.items():
     for p,(i,gl) in merged.items(): lines.append(f"{w}\t{p}\t{i}\t{'; '.join(gl)}")
 fl=[]
 for f,ls in forms.items():
-    ls=[(l,p) for l,p in ls if any(q==p for q,_,_ in entries.get(l,[]))]
+    ls=[(l,p if any(q==p for q,_,_ in entries[l]) else "") for l,p in ls if l in entries]
     if ls: fl.append(f"{f}\t{'|'.join(l+':'+p for l,p in ls[:3])}")
 open(out,"w").write("\n".join(lines)+"\n#\n"+"\n".join(fl)+"\n")
 print(len(entries),"lemmas",len(lines),"entry lines",len(fl),"forms")
