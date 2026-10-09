@@ -27,7 +27,7 @@
 [hidden]{display:none!important}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.5}
-main{max-width:480px;margin:0 auto;padding:0 16px 48px;overflow-x:clip}
+main{max-width:720px;margin:0 auto;padding:0 16px 48px;overflow-x:clip}
 button{font:inherit;color:inherit;cursor:pointer}
 button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid var(--oranje);outline-offset:2px}
 
@@ -195,6 +195,30 @@ h2.gap{margin-top:28px}
 .pop .pa{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px}
 .pop .pa .hint{margin:0}
 .pop .pz{margin:10px 0 0;padding-top:8px;border-top:1px solid var(--line);font-size:15.5px}
+/* computer: het schilderij hangt aan een blauwe museummuur; startscherm in twee kolommen */
+@media (min-width:960px){
+  main{max-width:1160px;padding:0 40px 64px}
+  header{height:300px;margin:0 -40px}
+  main:has(#home[hidden]) header{height:96px}
+  header::after{display:none}
+  .art{left:50%;right:auto;top:28px;bottom:28px;width:auto;transform:translateX(-50%);box-shadow:0 0 0 1px rgba(255,255,255,.18),0 10px 30px rgba(0,0,0,.35)}
+  main:has(#home[hidden]) .art{top:12px;bottom:12px}
+  .art img{width:auto;height:100%;object-fit:contain}
+  h1{left:40px;bottom:28px;font-size:36px}
+  main:has(#home[hidden]) h1{bottom:30px;font-size:30px}
+  .streak{top:24px;right:40px;width:78px;height:78px;font-size:10.5px}
+  .streak b{font-size:27px}
+  #home{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:repeat(6,auto) 1fr;column-gap:64px;align-items:start}
+  #label{grid-column:1/-1;display:flex;align-items:baseline;gap:40px}
+  #label .lab{flex:0 0 340px} #label .nl{flex:1;margin:0}
+  #plan{grid-column:1;grid-row:2} #wallbox{grid-column:1;grid-row:3} #gen{grid-column:1;grid-row:4}
+  #genmsg{grid-column:1;grid-row:5} #sync{grid-column:1;grid-row:6}
+  #menu{grid-column:2;grid-row:2/-1}
+  #menu .sec:first-child{margin-top:22px}
+  .wall{grid-template-columns:repeat(auto-fill,minmax(32px,1fr))}
+  #play,#stats,#lib,#read{max-width:720px;margin:0 auto}
+  .book{font-size:20px}
+}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -1289,7 +1313,9 @@ function place(){
   // positioned inside #read, so it stays next to the word when the header above changes height
   if(!popW)return; const pp=$("pop"),r=popW.getBoundingClientRect(),o=$("read").getBoundingClientRect(),w=pp.offsetWidth,h=pp.offsetHeight;
   let top=r.bottom+8; if(top+h>innerHeight-8&&r.top-h-8>8)top=r.top-h-8;
-  pp.style.top=top-o.top+"px"; pp.style.left=Math.max(8,Math.min(innerWidth-w-8,r.left+r.width/2-w/2))-o.left+"px";
+  pp.style.top=top-o.top+"px"; // keep it inside <main>, which clips anything that sticks out
+  const m=document.querySelector("main").getBoundingClientRect(),lo=Math.max(8,m.left+8),hi=Math.min(innerWidth,m.right)-w-8;
+  pp.style.left=Math.max(lo,Math.min(hi,r.left+r.width/2-w/2))-o.left+"px";
 }
 async function tapWord(el){
   if(popW===el)return closePop();
