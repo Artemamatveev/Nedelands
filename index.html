@@ -164,8 +164,37 @@ h2.gap{margin-top:28px}
 .stat{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
 .stat>div{flex:1;min-width:0} .stat b{display:block} .stat span{display:block;color:var(--soft);font-size:14.5px;margin-bottom:6px}
 .stat .bar{margin:0}
-#stats .back{margin-top:14px}
-#stats h2{margin-top:18px}
+#stats .back,#lib .back{margin-top:14px}
+#stats h2,#lib h2{margin-top:18px}
+/* boekenkast */
+#lib h2.gap{margin-top:30px}
+.bk{flex:1;min-width:0;text-align:left;background:none;border:0;padding:0}
+.bk b{font-size:18px;font-weight:600}
+.file{display:flex;align-items:center;justify-content:center;text-align:center;cursor:pointer}
+.file:focus-within{outline:3px solid var(--oranje);outline-offset:2px}
+#pasteform{margin-top:12px}
+.errs .x{float:right;background:none;border:0;color:var(--soft);font-size:15px;text-decoration:underline;padding:0 0 4px 12px}
+/* lezen: tik op een woord */
+.pg{color:var(--soft);font-size:15px;font-variant-numeric:tabular-nums}
+.book{font-size:19px;line-height:1.65}
+.book p{margin:0 0 14px}
+.book h3{font-size:22px;font-weight:600;line-height:1.3;color:var(--blue);margin:0 0 14px}
+.w{cursor:pointer;border-radius:2px;-webkit-tap-highlight-color:transparent}
+.w.kw{background:color-mix(in srgb,var(--wash) 55%,transparent)}
+.w.sel{background:var(--oranje);color:var(--on)}
+.pager{margin-top:22px}
+.pager button:disabled{opacity:.35;cursor:default}
+#read{position:relative}
+.pop{position:absolute;z-index:9;left:8px;top:0;width:min(340px,calc(100vw - 16px));background:var(--bg);border:1.5px solid var(--blue);border-radius:3px;box-shadow:0 8px 28px rgba(8,16,40,.22);padding:10px 14px 12px}
+.pop .ph{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.pop .ph b{font-size:22px;font-weight:700;word-break:break-word}
+.pop .say{flex:none;min-width:44px;min-height:40px;background:none;border:1.5px solid var(--blue);color:var(--blue);border-radius:3px;font-size:15px}
+.pop .pm{margin:0;color:var(--soft);font-size:14.5px}
+.pop .pt{margin:4px 0 2px;font-size:19px;font-weight:600;color:var(--blue)}
+.pop .pn{margin:0;color:var(--soft);font-size:14.5px}
+.pop .pa{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px}
+.pop .pa .hint{margin:0}
+.pop .pz{margin:10px 0 0;padding-top:8px;border-top:1px solid var(--line);font-size:15.5px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -193,6 +222,32 @@ h2.gap{margin-top:28px}
     <h2>Mijn zwakke punten</h2>
     <p class="sub">De onderdelen met de meeste fouten staan bovenaan.</p>
     <div id="statlist"></div>
+  </div>
+  <div id="lib" hidden>
+    <button class="back" id="lback"><span aria-hidden="true">←</span>Alle onderdelen</button>
+    <h2>Boekenkast</h2>
+    <p class="sub">Lees verhalen en je eigen boeken. Tik op een woord: je ziet meteen de vertaling.</p>
+    <div id="shelf"></div>
+    <h2 class="gap">Boek toevoegen</h2>
+    <p class="sub">Een e-book (.epub, zonder kopieerbeveiliging), een tekstbestand (.txt) of een tekst die je plakt. Het boek blijft op dit apparaat.</p>
+    <div class="two"><label class="ghost file">Bestand kiezen<input type="file" id="bfile" accept=".epub,.txt,application/epub+zip,text/plain" hidden></label><button class="ghost" id="bpaste">Tekst plakken</button></div>
+    <div id="pasteform" hidden>
+      <label class="fld"><span>Titel</span><input id="ptitle" autocomplete="off"></label>
+      <textarea id="ptext" rows="8" placeholder="Plak hier de tekst…" aria-label="Tekst"></textarea>
+      <button class="btn wide" id="pastesave">Bewaar</button>
+    </div>
+    <p class="note" id="bmsg"></p>
+    <h2 class="gap">Mijn woorden</h2>
+    <p class="sub" id="wsub"></p>
+    <div id="wlist"></div>
+  </div>
+  <div id="read" hidden>
+    <div class="top"><button class="back" id="rback"><span aria-hidden="true">←</span>Boekenkast</button><span class="pg" id="pg"></span></div>
+    <div class="bar"><i id="rbar"></i></div>
+    <p class="ask" id="rtitle"></p>
+    <article class="book" id="page" lang="nl"></article>
+    <div class="two pager"><button class="ghost" id="rprev">← Vorige</button><button class="btn" id="rnext">Volgende →</button></div>
+    <div class="pop" id="pop" role="dialog" aria-label="Vertaling" hidden></div>
   </div>
   <div id="play" hidden>
     <div class="top"><button class="back" id="back"><span aria-hidden="true">←</span>Alle onderdelen</button><span id="timer"></span></div>
@@ -555,7 +610,7 @@ const SEC=[
 const GAP=[1,2,4,7,14], KEY="ww-v1";
 const $=id=>document.getElementById(id);
 const today=()=>{const d=new Date();return Math.floor((d.getTime()-d.getTimezoneOffset()*6e4)/864e5)};
-let S={items:{},streak:0,last:0,typing:false,errs:[],gen:{lz:[],ls:[]},t:0,exams:{wr:"2026-10-26",knm:"2026-11-17",sp:"2026-11-17",ls:"2026-11-23",lz:"2026-11-23"},day:{d:0,done:[]}};
+let S={items:{},streak:0,last:0,typing:false,errs:[],gen:{lz:[],ls:[]},t:0,exams:{wr:"2026-10-26",knm:"2026-11-17",sp:"2026-11-17",ls:"2026-11-23",lz:"2026-11-23"},day:{d:0,done:[]},words:[],bk:{}};
 try{const r=JSON.parse(localStorage.getItem(KEY));if(r&&r.items)S=Object.assign(S,r)}catch(e){}
 // Backup copy in IndexedDB: iOS home-screen apps can lose localStorage
 const idb=new Promise((ok,no)=>{try{const r=indexedDB.open("ww",1);r.onupgradeneeded=()=>r.result.createObjectStore("kv");r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)}catch(e){no(e)}});
@@ -699,7 +754,7 @@ function paint(){
 }
 function home(){
   paint();
-  $("play").hidden=true;$("stats").hidden=true;$("home").hidden=false;head();clock(0);hush();planId=null;drawPlan();
+  $("play").hidden=true;$("stats").hidden=true;$("lib").hidden=true;$("read").hidden=true;closePop();$("home").hidden=false;head();clock(0);hush();planId=null;drawPlan();
   $("menu").innerHTML=SEC.map(s=>{
     const p=s.id==="mix"?null:ITEMS.filter(x=>x.sec===s.id), n=p?p.filter(x=>S.items[x.k]).length:0;
     const hd=s.id==="lz"?"<h2>Examenonderdelen</h2>":s.id==="verb"?"<h2>Grammatica en woorden</h2>":"";
@@ -708,6 +763,8 @@ function home(){
     if(d.s)build(d.s);
     else if(d.e)startExam(d.e);
     else if(d.x==="stats")stats();
+    else if(d.x==="books")library();
+    else if(d.x==="words")practiseWords();
     else build("custom",{id:"custom",t:"Mijn fouten",n:10,pool:()=>shuffle(errItems())})});
   wall(); window.scrollTo(0,0);
 }
@@ -764,9 +821,12 @@ function drawPlan(){
   $("saveex").onclick=()=>{S.exams={};document.querySelectorAll("#exform input").forEach(i=>{if(i.value)S.exams[i.dataset.k]=i.value});save();drawPlan()};
 }
 function extras(){
-  let h="<h2>Proefexamen</h2>"+Object.keys(EX).map(k=>{const n=Math.min(EX[k].n,ITEMS.filter(x=>x.sec===k).length);
+  const lb=Object.values(S.bk||{}).filter(b=>b.t).sort((a,b)=>b.at-a.at)[0];
+  let h=`<h2>Boeken</h2><button class="sec" data-x="books"><b>Boekenkast</b><span>${lb?`Verder lezen: ${esc(lb.t)}, blz. ${lb.p+1}`:"Lees verhalen en je eigen e-books. Tik op een woord voor de vertaling."}</span></button>`;
+  h+="<h2>Proefexamen</h2>"+Object.keys(EX).map(k=>{const n=Math.min(EX[k].n,ITEMS.filter(x=>x.sec===k).length);
     return`<button class="sec" data-e="${k}"><b>${EX[k].t.replace("Proefexamen ","")}</b><span>${k==="wr"?"4 opdrachten, 40 minuten, alles wordt aan het eind nagekeken":n+" vragen, "+EX[k].min+" minuten, uitslag aan het eind"}</span></button>`}).join("");
   h+="<h2>Persoonlijk</h2>";
+  if((S.words||[]).length)h+=`<button class="sec" data-x="words"><b>Mijn woorden</b><span>Oefen de woorden die je bij het lezen hebt bewaard</span><em>${S.words.length}</em></button>`;
   if((S.errs||[]).length)h+=`<button class="sec" data-x="errs"><b>Mijn fouten</b><span>Oefen met fouten uit je eigen teksten</span><em>${S.errs.length}</em></button>`;
   return h+`<button class="sec" data-x="stats"><b>Mijn zwakke punten</b><span>Zie waar je de meeste fouten maakt</span></button>`;
 }
@@ -786,7 +846,7 @@ function stats(){
 }
 function build(id,custom){
   cur=custom||SEC.find(s=>s.id===id); const d=today(), due=[],fresh=[];
-  const pool=id==="mix"?ITEMS.filter(x=>x.sec!=="wr"):ITEMS.filter(x=>x.sec===id);
+  const pool=id==="mix"?ITEMS.filter(x=>x.sec!=="wr").concat(wordItems()):ITEMS.filter(x=>x.sec===id);
   shuffle(pool.slice()).forEach(q=>{const it=S.items[q.k];if(!it)fresh.push(q);else if(it.d<=d)due.push(q)});
   due.sort((a,b)=>S.items[a.k].b-S.items[b.k].b);
   fresh.sort((a,b)=>a.ord-b.ord);
@@ -992,6 +1052,301 @@ function finish(){
     <div class="two"><button class="ghost" id="tohome">Alle onderdelen</button><button class="btn" id="more">Nog een ronde</button></div></div>`;
   $("more").onclick=()=>build(cur.id,cur.pool?cur:null); $("tohome").onclick=home;
 }
+// Boekenkast: short A2 stories built in, plus the reader's own books.
+// Own books live in IndexedDB ("books" = list, "book:<id>" = text); S only keeps positions (S.bk) and saved words (S.words).
+// Book text: paragraphs separated by \n, chapters by \f, "# " marks a heading.
+const BOOKS=[
+{id:"lena",t:"Een nieuw begin",a:"Verhaal op A2-niveau",c:[
+["De verhuizing",`Lena is tweeëndertig jaar. Ze komt uit een grote stad ver weg, maar nu woont ze in Utrecht. Haar man Pavel werkt bij een bedrijf in de stad. Ze hebben een klein appartement op de derde verdieping, vlak bij het station. Er is geen lift, dus Lena loopt elke dag veel trappen.
+De eerste week is moeilijk. Het regent bijna elke dag en Lena kent niemand. In de supermarkt begrijpt ze de mensen niet goed. Ze praten zo snel! Maar Lena wil Nederlands leren. Ze koopt een schrift en een woordenboek. Elke avond schrijft ze tien nieuwe woorden op.
+'Na een jaar ken ik drieduizend woorden,' zegt ze tegen Pavel.
+Pavel lacht. 'Dan spreek jij beter Nederlands dan ik.'`],
+["Naar de gemeente",`Op maandag heeft Lena een afspraak bij de gemeente. Ze moet zich inschrijven, want ze woont nu in Utrecht. Ze neemt haar paspoort en het huurcontract mee.
+Bij de balie zit een vriendelijke vrouw. 'Goedemorgen. Mag ik uw paspoort zien?' vraagt ze.
+Lena geeft haar paspoort. De vrouw typt iets op de computer. Na tien minuten is alles klaar.
+'U krijgt een burgerservicenummer,' zegt de vrouw. 'Dat is uw BSN. U heeft het nodig bij de huisarts, bij de bank en op uw werk.'
+'Dank u wel,' zegt Lena. Buiten op straat glimlacht ze. Ze heeft het hele gesprek in het Nederlands gedaan!`],
+["Een fiets",`In Nederland heeft bijna iedereen een fiets. Lena wil ook een fiets. Een nieuwe fiets is duur, dus ze zoekt op internet naar een tweedehands fiets. Ze vindt een blauwe fiets voor negentig euro.
+Op zaterdag gaat ze met Pavel naar de verkoper. De fiets is oud, maar hij rijdt goed. 'Koop ook twee goede sloten,' zegt de verkoper. 'In de stad worden veel fietsen gestolen.'
+Op zondag fietst Lena voor het eerst door Utrecht. Het is druk. Overal zijn fietsers, en ze rijden snel. Lena steekt haar hand uit als ze linksaf gaat, net als de anderen. Bij het rode licht stopt ze. Na een uur is ze moe, maar blij. Nu voelt ze zich een echte Utrechtse.`],
+["De buurvrouw",`Op een avond gaat de bel. Het is de buurvrouw, mevrouw De Vries. Ze is ongeveer zeventig jaar en ze woont al veertig jaar in dit gebouw.
+'Welkom in de straat!' zegt ze. 'Ik heb een appeltaart voor jullie gebakken.'
+Lena is verrast. 'Wat lief! Komt u binnen? Wilt u koffie of thee?'
+'Graag koffie,' zegt mevrouw De Vries.
+Ze praten een uur. Mevrouw De Vries vertelt over de buurt: waar de markt is, welke bakker het lekkerste brood heeft en op welke dag het oud papier wordt opgehaald. Lena vertelt over haar cursus Nederlands.
+'U spreekt al goed Nederlands,' zegt de buurvrouw.
+'Nog niet zo goed,' zegt Lena. 'Maar elke dag een beetje beter.'`]]},
+{id:"museum",t:"Een dag in het Rijksmuseum",a:"Verhaal op A2-niveau",c:[
+["Een cadeau",`Ahmed is jarig. Van zijn vrouw Fatima krijgt hij een Museumkaart. 'Met deze kaart kun je een jaar lang gratis naar honderden musea in Nederland,' zegt ze.
+Ahmed is blij. Hij wil eerst naar het Rijksmuseum in Amsterdam. Daar hangen de beroemdste schilderijen van Nederland.
+Op zaterdag nemen ze de trein naar Amsterdam Centraal. Daarna gaan ze met de tram naar het museum. Het Rijksmuseum is een groot gebouw van rode baksteen uit 1885. Ahmed en Fatima hebben online een tijd gereserveerd, dus ze kunnen meteen naar binnen.`],
+["De Nachtwacht",`In de grootste zaal hangt De Nachtwacht van Rembrandt. Er staan veel mensen voor het schilderij. Het is enorm: bijna vier meter hoog en meer dan vier meter breed.
+Rembrandt maakte het schilderij in 1642. Je ziet een groep mannen met wapens. Ze zijn schutters: ze moesten de stad beschermen. In het midden lopen de kapitein, in het zwart, en zijn luitenant, in het geel.
+'Waarom heet het De Nachtwacht?' vraagt Fatima. 'Het is toch geen nacht?'
+Ahmed leest het bordje naast het schilderij. 'Je hebt gelijk. Het schilderij werd door oude vernis heel donker. Daarom dachten mensen later dat het nacht was.'`],
+["Het melkmeisje",`Daarna zoeken ze een klein schilderij: Het melkmeisje van Johannes Vermeer. Het is veel kleiner dan Ahmed dacht, niet groter dan een krant.
+Een jonge vrouw giet melk uit een kan. Ze draagt een gele jas en een blauwe schort. Door het raam valt licht op de tafel met brood.
+'Kijk naar het licht,' zegt Fatima zachtjes. 'Het lijkt echt.'
+Vermeer woonde in Delft. Hij schilderde langzaam en niet veel. Er zijn maar ongeveer vijfendertig schilderijen van hem bekend.
+In het café van het museum drinken ze thee. 'Volgende maand gaan we naar het Mauritshuis in Den Haag,' zegt Ahmed. 'Daar hangt het Meisje met de parel, ook van Vermeer.'`]]},
+{id:"koningsdag",t:"Koningsdag",a:"Verhaal op A2-niveau",c:[
+["Alles is oranje",`Op 27 april is het Koningsdag. Dan is koning Willem-Alexander jarig. Hij is geboren op 27 april 1967. Valt 27 april op een zondag? Dan is Koningsdag een dag eerder, op zaterdag.
+Op Koningsdag is bijna heel Nederland oranje. Mensen dragen oranje kleren, oranje hoeden en soms een oranje pruik. Overal hangen vlaggen. Waarom oranje? De koninklijke familie heet Van Oranje-Nassau.
+Tom is tien jaar en zijn zus Sara is zeven. Ze zijn al vroeg wakker. Vandaag gaan ze met hun moeder naar de vrijmarkt.`],
+["De vrijmarkt",`Op Koningsdag mag iedereen op straat spullen verkopen. Dat heet de vrijmarkt. Tom en Sara leggen een groot kleed op de stoep. Daarop leggen ze oude boeken, speelgoed en een puzzel.
+'Hoeveel kost deze auto?' vraagt een jongen.
+'Eén euro,' zegt Tom.
+'Mag het voor vijftig cent?'
+Tom denkt even na. 'Oké, vijftig cent.'
+Sara zingt een liedje en speelt op haar blokfluit. Voor haar staat een hoedje. Sommige mensen gooien er een paar munten in. Hun moeder drinkt koffie en praat met de buren.`],
+["Spelletjes",`Na de lunch zijn er spelletjes in het park. Het leukste spel is koekhappen. Aan een touw hangen stukken ontbijtkoek. Je mag je handen niet gebruiken. Je moet de koek met je mond pakken.
+Sara wint! Ze heeft overal kruimels op haar gezicht.
+Op televisie zien ze de koning en de koningin. Ze bezoeken elk jaar een andere stad of een ander dorp. Mensen zwaaien met vlaggen en roepen: 'Lang leve de koning!'
+'s Avonds tellen Tom en Sara hun geld. Ze hebben drieëntwintig euro verdiend. 'Van dat geld kopen we morgen een ijsje,' zegt Tom. 'Voor iedereen.'`]]},
+{id:"sinterklaas",t:"Sinterklaas",a:"Verhaal op A2-niveau",c:[
+["De intocht",`Elk jaar in november komt Sinterklaas naar Nederland. Volgens het verhaal komt hij uit Spanje, met een stoomboot. Hij is een oude man met een lange witte baard. Hij draagt een rode mantel en een hoge rode muts: een mijter. Hij rijdt op een wit paard.
+Zijn helpers heten Pieten. Ze geven de kinderen pepernoten en ze maken grapjes.
+Mila is zes jaar. Met haar vader staat ze aan de haven. Er staan heel veel kinderen. Ze zingen liedjes. Dan komt de boot! Sinterklaas zwaait naar de kinderen. Mila zwaait terug. Haar ogen zijn heel groot.`],
+["Schoen zetten",`Een paar keer in de weken voor Sinterklaas mag Mila haar schoen zetten. 's Avonds zet ze haar schoen bij de deur. Ze doet er een tekening voor Sinterklaas in, en een wortel voor het paard.
+Dan zingt ze een liedje en gaat ze naar bed.
+De volgende ochtend rent Mila naar de deur. De wortel is weg! In haar schoen zit een chocoladeletter: een grote M van chocola. Er liggen ook kruidnoten naast.
+'Papa, het paard heeft de wortel opgegeten!' roept ze.
+Haar vader lacht. 'Dan had het paard zeker veel honger.'`],
+["Pakjesavond",`Op 5 december is het pakjesavond. De hele familie komt bij elkaar. Opa en oma zijn er ook.
+Om zeven uur wordt er hard op de deur geklopt. Als Mila de deur opendoet, staat er een grote zak met cadeautjes. Sinterklaas zelf is al weg.
+De volwassenen geven elkaar een surprise: een cadeau in een grappige verpakking, met een gedicht. Oom Kees krijgt een grote papieren fiets. In het gedicht staat dat hij altijd te laat komt. Iedereen lacht, oom Kees ook.
+Op 6 december is Sinterklaas jarig. Daarna gaat hij terug naar Spanje. 'Tot volgend jaar, Sinterklaas!' zegt Mila.`]]}
+];
+const bookText=b=>b.c.map(([h,t])=>"# "+h+"\n"+t.trim()).join("\f");
+const kvGet=k=>idb.then(db=>new Promise(ok=>{const r=db.transaction("kv").objectStore("kv").get(k);r.onsuccess=()=>ok(r.result);r.onerror=()=>ok(null)})).catch(()=>null);
+const kvSet=(k,v)=>idb.then(db=>new Promise((ok,no)=>{const t=db.transaction("kv","readwrite"),o=t.objectStore("kv");if(v===undefined)o.delete(k);else o.put(v,k);t.oncomplete=ok;t.onerror=()=>no(t.error)}));
+async function library(){
+  closePop();hush();
+  if($("lib").hidden)window.scrollTo(0,0);
+  $("home").hidden=true;$("read").hidden=true;$("lib").hidden=false;
+  const mine=await kvGet("books")||[];
+  const row=(b,own)=>{const r=S.bk[b.id];
+    return`<div class="stat"><button class="bk" data-b="${b.id}"><b>${esc(b.t)}</b><span>${b.a?esc(b.a)+" · ":""}${r?`blz. ${r.p+1} van ${r.n}`:"nog niet gelezen"}</span></button>${own?`<button class="ghost" data-del="${b.id}">Wis</button>`:""}</div>`};
+  $("shelf").innerHTML=BOOKS.map(b=>row(b)).join("")+mine.map(b=>row(b,1)).join("");
+  document.querySelectorAll("#shelf .bk").forEach(b=>b.onclick=()=>openBook(b.dataset.b));
+  document.querySelectorAll("#shelf [data-del]").forEach(b=>b.onclick=async()=>{const id=b.dataset.del,m=mine.find(x=>x.id===id);
+    if(!confirm(`„${m.t}” uit je boekenkast wissen?`))return;
+    await kvSet("books",mine.filter(x=>x!==m)).catch(()=>{});await kvSet("book:"+id).catch(()=>{});
+    delete S.bk[id];save();library()});
+  drawWords();
+}
+function drawWords(){
+  const W=S.words||[];
+  $("wsub").textContent=W.length?`${W.length} ${W.length===1?"woord":"woorden"}. Je oefent ze ook in de Mix van de dag.`:"Nog geen woorden. Tik bij het lezen op een woord en dan op Bewaar.";
+  $("wlist").innerHTML=(W.length?`<button class="btn wide" id="wprac">Oefen mijn woorden</button>`:"")
+    +`<ul class="errs">${W.map((x,i)=>`<li><button class="x" data-i="${i}">wis</button><b>${esc(x.w)}</b> — ${esc(x.ru)}<span>${esc(x.s)}</span></li>`).join("")}</ul>`;
+  if(W.length)$("wprac").onclick=practiseWords;
+  document.querySelectorAll("#wlist .x").forEach(b=>b.onclick=()=>{S.words.splice(b.dataset.i,1);save();drawWords()});
+}
+function wordItems(){
+  const W=S.words||[];
+  return W.map(x=>({sec:"bw",k:"bw|"+x.w,ord:0,type:"choice",label:"Wat betekent dit woord?",big:esc(x.w),sub:esc(x.s),right:esc(x.ru),
+    opts:()=>{const o=[...new Set(shuffle(W.map(y=>y.ru)).concat(shuffle(Object.values(RU))))].filter(r=>r!==x.ru).slice(0,3);return shuffle([x.ru,...o]).map(esc)}}));
+}
+function practiseWords(){
+  const d=today(),due=q=>{const it=S.items[q.k];return it?it.d-d:-1};
+  build("custom",{id:"custom",t:"Mijn woorden",n:10,pool:()=>shuffle(wordItems()).sort((a,b)=>due(a)-due(b))});
+}
+// Own books: .txt, pasted text or .epub (unzipped here with DecompressionStream)
+const decodeTxt=buf=>{try{return new TextDecoder("utf-8",{fatal:true}).decode(buf)}catch(e){return new TextDecoder("windows-1252").decode(buf)}};
+function normTxt(s){
+  s=s.replace(/\r\n?/g,"\n").replace(/[﻿\f]/g,"");
+  // hard-wrapped text (paragraphs between blank lines) or one paragraph per line
+  return(/\n[ \t]*\n/.test(s)?s.split(/\n[ \t]*\n+/).map(p=>p.replace(/\s+/g," ")):s.split("\n")).map(p=>p.trim()).filter(Boolean).join("\n");
+}
+function htmlText(doc){
+  const out=[],BLOCK=/^(P|DIV|LI|BLOCKQUOTE|SECTION|ARTICLE|TR|DT|DD|PRE|TABLE|UL|OL|FIGCAPTION|H[4-6])$/;let buf="";
+  const end=pre=>{const t=buf.replace(/\s+/g," ").trim();if(t)out.push((pre||"")+t);buf=""};
+  const walk=n=>{for(const c of n.childNodes){
+    if(c.nodeType===3){buf+=c.data;continue}
+    if(c.nodeType!==1)continue;
+    const tag=c.tagName.toUpperCase();
+    if(/^(SCRIPT|STYLE|HEAD|TITLE)$/.test(tag))continue;
+    if(tag==="BR"){end();continue}
+    if(/^H[1-3]$/.test(tag)){end();walk(c);end("# ");continue}
+    const b=BLOCK.test(tag); if(b)end(); walk(c); if(b)end()}};
+  walk(doc.body||doc.documentElement); end(); return out.join("\n");
+}
+async function readEpub(buf){
+  const u8=new Uint8Array(buf),dv=new DataView(buf),files={},td=new TextDecoder();
+  let e=u8.length-22; while(e>=0&&dv.getUint32(e,true)!==0x06054b50)e--;
+  if(e<0)throw 0;
+  for(let i=dv.getUint16(e+10,true),p=dv.getUint32(e+16,true);i>0;i--){
+    const nl=dv.getUint16(p+28,true);
+    files[td.decode(u8.subarray(p+46,p+46+nl))]={m:dv.getUint16(p+10,true),size:dv.getUint32(p+20,true),off:dv.getUint32(p+42,true)};
+    p+=46+nl+dv.getUint16(p+30,true)+dv.getUint16(p+32,true);
+  }
+  const read=async name=>{const f=files[name];if(!f)return"";
+    const s=f.off+30+dv.getUint16(f.off+26,true)+dv.getUint16(f.off+28,true),data=u8.subarray(s,s+f.size);
+    if(f.m===0)return td.decode(data);
+    return new Response(new Blob([data]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).text()};
+  const xml=s=>new DOMParser().parseFromString(s,"application/xml"), tags=(d,t)=>[...d.getElementsByTagNameNS("*",t)];
+  const opfPath=tags(xml(await read("META-INF/container.xml")),"rootfile")[0].getAttribute("full-path");
+  const opf=xml(await read(opfPath)), dir=opfPath.replace(/[^/]*$/,""), man={}, ch=[];
+  tags(opf,"item").forEach(i=>man[i.getAttribute("id")]=i);
+  for(const r of tags(opf,"itemref")){
+    const it=man[r.getAttribute("idref")]; if(!it||!/html/.test(it.getAttribute("media-type")||""))continue;
+    try{
+      const src=await read(decodeURIComponent(new URL(it.getAttribute("href"),"http://epub/"+dir).pathname.slice(1))); if(!src)continue;
+      let doc=new DOMParser().parseFromString(src,"application/xhtml+xml");
+      if(doc.getElementsByTagName("parsererror").length)doc=new DOMParser().parseFromString(src,"text/html");
+      const t=htmlText(doc); if(t)ch.push(t);
+    }catch(err){}
+  }
+  const meta=t=>{const x=tags(opf,t)[0];return x?x.textContent.trim():""};
+  return{t:meta("title"),a:meta("creator"),text:ch.join("\f")};
+}
+async function addBook(b){
+  const id="u"+Date.now().toString(36), mine=await kvGet("books")||[];
+  await kvSet("book:"+id,b.text);
+  mine.push({id,t:(b.t||"Zonder titel").slice(0,120),a:(b.a||"").slice(0,80)});
+  await kvSet("books",mine);
+  await library();
+}
+$("bfile").onchange=async e=>{
+  const f=e.target.files[0]; e.target.value=""; if(!f)return;
+  const m=$("bmsg"); m.textContent="Bezig met openen…";
+  try{
+    const buf=await f.arrayBuffer(), name=f.name.replace(/\.[^.]+$/,"");
+    const b=/\.epub$/i.test(f.name)?await readEpub(buf):{t:name,text:normTxt(decodeTxt(buf))};
+    if(!b.text||b.text.replace(/\s/g,"").length<20)throw 0;
+    await addBook({...b,t:b.t||name}); m.textContent=`„${b.t||name}” staat nu in je boekenkast.`;
+  }catch(err){m.textContent="Dit bestand kan ik niet openen. Probeer een .epub zonder kopieerbeveiliging of een .txt-bestand."}
+};
+$("bpaste").onclick=()=>{$("pasteform").hidden=!$("pasteform").hidden;if(!$("pasteform").hidden)$("ptitle").focus()};
+$("pastesave").onclick=async()=>{
+  const text=normTxt($("ptext").value);
+  if(text.length<20){$("bmsg").textContent="Plak eerst een tekst.";return}
+  try{await addBook({t:$("ptitle").value.trim()||text.slice(0,40)+"…",text});$("ptext").value="";$("ptitle").value="";$("pasteform").hidden=true;$("bmsg").textContent="De tekst staat nu in je boekenkast."}
+  catch(e){$("bmsg").textContent="Bewaren is niet gelukt."}
+};
+// Pages of about one phone screen; a chapter always starts on a new page
+const LIM=1100;
+const sents=p=>p.replace(/([.!?…]+["'”’»)]*\s+)/g,"$1\u0000").split("\u0000").filter(Boolean);
+function paginate(text){
+  const P=[];let cur=[],len=0;
+  const flush=()=>{if(cur.length)P.push(cur);cur=[];len=0};
+  const parts=p=>{if(p.length<=LIM)return[p];const o=[];let b="";sents(p).forEach(s=>{if(b&&b.length+s.length>LIM){o.push(b.trim());b=""}b+=s});if(b.trim())o.push(b.trim());return o};
+  text.split("\f").forEach(ch=>{flush();ch.split("\n").forEach(p=>{p=p.trim();if(p)parts(p).forEach(x=>{if(len&&len+x.length>LIM)flush();cur.push(x);len+=x.length})})});
+  flush(); return P.length?P:[["(leeg)"]];
+}
+const WRE=/[\p{L}\p{M}\d]+(?:['’-][\p{L}\p{M}\d]+)*/gu;
+const knownSet=()=>new Set((S.words||[]).flatMap(x=>(x.f||[]).concat(x.w.toLowerCase().replace(/^(de|het) /,""))));
+function wordsHTML(s,known){
+  let h="",i=0;
+  for(const m of s.matchAll(WRE)){const w=m[0];h+=esc(s.slice(i,m.index));i=m.index+w.length;
+    h+=/\p{L}/u.test(w)?`<span class="w${known.has(w.toLowerCase())?" kw":""}">${esc(w)}</span>`:esc(w)}
+  return h+esc(s.slice(i));
+}
+function pageHTML(pg){
+  const known=knownSet();
+  return pg.map(p=>{const hd=p.startsWith("# "),inner=sents(hd?p.slice(2):p).map(s=>`<span class="s">${wordsHTML(s,known)}</span>`).join("");
+    return hd?`<h3>${inner}</h3>`:`<p>${inner}</p>`}).join("");
+}
+let R=null;
+async function openBook(id){
+  const b=BOOKS.find(x=>x.id===id); let text,t;
+  if(b){text=bookText(b);t=b.t}
+  else{text=await kvGet("book:"+id);const m=(await kvGet("books")||[]).find(x=>x.id===id);t=m?m.t:""}
+  if(!text){$("bmsg").textContent="Dit boek staat niet op dit apparaat.";return}
+  const pages=paginate(text),r=S.bk[id];
+  R={id,t,pages,p:Math.min(r?r.p:0,pages.length-1)};
+  $("home").hidden=true;$("lib").hidden=true;$("read").hidden=false;
+  $("rtitle").textContent=t; turn(0);
+}
+function turn(d){
+  closePop();hush();
+  R.p=Math.max(0,Math.min(R.pages.length-1,R.p+d));
+  S.bk[R.id]={p:R.p,n:R.pages.length,t:R.t,at:Date.now()}; save();
+  $("page").innerHTML=pageHTML(R.pages[R.p]);
+  $("pg").textContent=`blz. ${R.p+1} / ${R.pages.length}`;
+  $("rbar").style.width=(R.p+1)/R.pages.length*100+"%";
+  $("rprev").disabled=R.p===0;
+  $("rnext").textContent=R.p<R.pages.length-1?"Volgende →":"Boek uit";
+  window.scrollTo(0,0);
+}
+// Tap a word: translation in context from Claude (api/translate.js), cached on this device
+let trc={}; try{trc=JSON.parse(localStorage.getItem("ww-tr"))||{}}catch(e){}
+async function lookup(word,sentence){
+  const k=(word?word.toLowerCase():"")+"|"+sentence; if(trc[k])return trc[k];
+  const r=await fetch("/api/translate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(word?{word,sentence}:{sentence,mode:"sentence"})});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok||typeof j.ru!=="string")throw{code:j.error||"failed"};
+  trc[k]=j; const ks=Object.keys(trc); if(ks.length>1500)ks.slice(0,300).forEach(x=>delete trc[x]);
+  try{localStorage.setItem("ww-tr",JSON.stringify(trc))}catch(e){}
+  return j;
+}
+const localWord=w=>{w=w.toLowerCase();for(const k of[w,"de "+w,"het "+w])if(RU[k]){const a=k.split(" ");return{lemma:a[a.length-1],article:a.length>1?a[0]:"",pos:"",ru:RU[k],lemma_ru:RU[k],note:""}}return null};
+const trErr=e=>{const c=e&&e.code;return c==="not_configured"?"Vertalen is nog niet ingesteld.":c==="rate_limited"?"Te veel vragen achter elkaar. Wacht even.":"Vertalen lukt nu niet. Ben je online?"};
+let popW=null,popTok=0;
+function closePop(){popTok++;$("pop").hidden=true;if(popW)popW.classList.remove("sel");popW=null}
+function place(){
+  // positioned inside #read, so it stays next to the word when the header above changes height
+  if(!popW)return; const pp=$("pop"),r=popW.getBoundingClientRect(),o=$("read").getBoundingClientRect(),w=pp.offsetWidth,h=pp.offsetHeight;
+  let top=r.bottom+8; if(top+h>innerHeight-8&&r.top-h-8>8)top=r.top-h-8;
+  pp.style.top=top-o.top+"px"; pp.style.left=Math.max(8,Math.min(innerWidth-w-8,r.left+r.width/2-w/2))-o.left+"px";
+}
+async function tapWord(el){
+  if(popW===el)return closePop();
+  closePop(); popW=el; el.classList.add("sel"); const tok=popTok;
+  const word=el.textContent, sent=el.closest(".s").textContent.trim(), pp=$("pop");
+  pp.innerHTML=`<div class="ph"><b>${esc(word)}</b>${canSpeak?`<button class="say" id="psay" aria-label="Uitspreken">▶</button>`:""}</div>
+    <p class="pm" id="pmeta">Vertaling zoeken…</p><p class="pt" id="ptr"></p><p class="pn" id="pnote"></p>
+    <div class="pa"><button class="hint" id="psent">Vertaal de zin</button><button class="ghost" id="pkeep" disabled>Bewaar</button></div><div id="pzin"></div>`;
+  pp.hidden=false; place();
+  if($("psay"))$("psay").onclick=()=>speak(word);
+  $("psent").onclick=async()=>{const b=$("psent");b.disabled=true;$("pzin").innerHTML=`<p class="pz">Bezig…</p>`;place();
+    try{const r=await lookup(null,sent);if(tok!==popTok)return;$("pzin").innerHTML=`<p class="pz">${esc(r.ru)}</p>`}
+    catch(e){if(tok!==popTok)return;$("pzin").innerHTML=`<p class="pz">${trErr(e)}</p>`;b.disabled=false}
+    place()};
+  let res=null,err=null;
+  try{res=await lookup(word,sent)}catch(e){err=e;res=localWord(word)}
+  if(tok!==popTok)return;
+  if(!res){
+    $("pmeta").innerHTML=`${trErr(err)} <a href="https://translate.google.com/?sl=nl&tl=ru&text=${encodeURIComponent(word)}" target="_blank" rel="noopener">Google Translate</a>`;
+    return place();
+  }
+  const lemma=((res.article?res.article+" ":"")+(res.lemma||word)).trim();
+  $("pmeta").textContent=[lemma,res.pos].filter(Boolean).join(" · ");
+  $("ptr").textContent=res.ru;
+  const dict=res.lemma_ru||res.ru;
+  $("pnote").textContent=[res.note,dict!==res.ru?lemma+" — "+dict:""].filter(Boolean).join(" · ");
+  const keep=$("pkeep"),f=word.toLowerCase(),has=()=>S.words.find(x=>x.w===lemma);
+  const kept=()=>{keep.textContent="Bewaard";keep.disabled=true};
+  if(has())kept(); else keep.disabled=false;
+  keep.onclick=()=>{
+    let x=has(); if(!x){x={w:lemma,ru:dict,s:sent.slice(0,300),f:[]};S.words.unshift(x);S.words=S.words.slice(0,1000)}
+    if(!x.f.includes(f))x.f.push(f);
+    save(); kept();
+    document.querySelectorAll("#page .w").forEach(s=>{if(s.textContent.toLowerCase()===f)s.classList.add("kw")});
+  };
+  place();
+}
+$("page").onclick=e=>{const w=e.target.closest(".w");if(w)tapWord(w)};
+document.addEventListener("click",e=>{if(!$("pop").hidden&&!e.target.closest("#pop,.w"))closePop()});
+addEventListener("resize",place);
+$("rback").onclick=library;
+$("rprev").onclick=()=>turn(-1);
+$("rnext").onclick=()=>R.p<R.pages.length-1?turn(1):library();
+document.addEventListener("keydown",e=>{
+  if($("read").hidden)return;
+  if(e.key==="Escape")closePop();
+  else if(e.key==="ArrowRight"&&R.p<R.pages.length-1)turn(1);
+  else if(e.key==="ArrowLeft")turn(-1);
+});
+// Swipe left or right on a page to turn it
+(()=>{
+  let x0=0,y0=0,t0=0;
+  $("read").addEventListener("touchstart",e=>{x0=e.touches[0].clientX;y0=e.touches[0].clientY;t0=Date.now()},{passive:true});
+  $("read").addEventListener("touchend",e=>{const dx=e.changedTouches[0].clientX-x0,dy=e.changedTouches[0].clientY-y0;
+    if(Math.abs(dx)<70||Math.abs(dy)>50||Date.now()-t0>700)return;
+    if(dx<0&&R.p<R.pages.length-1)turn(1);else if(dx>0&&R.p>0)turn(-1)});
+})();
 function level(v){
   const ks=TL.filter(t=>t!=="aux"||v[5]).map(t=>S.items[v[0]+"|"+t]);
   if(!ks.some(Boolean))return 0;
@@ -1008,7 +1363,7 @@ function wall(){
     $("peek").innerHTML=`${v[0]} – ${v[2]}, ${v[3]} – ${v[4]} <small>perfectum met ${v[5]||"hebben / zijn"}</small>`;
   });
 }
-$("back").onclick=home; $("sback").onclick=home; $("gen").onclick=gen;
+$("back").onclick=home; $("sback").onclick=home; $("lback").onclick=home; $("gen").onclick=gen;
 $("artbtn").onclick=()=>{$("zoom").hidden=false}; $("zoom").onclick=()=>{$("zoom").hidden=true};
 document.addEventListener("keydown",e=>{if(e.key==="Escape")$("zoom").hidden=true});
 // Generating new texts needs Claude; hide the button where it can't work
@@ -1023,7 +1378,7 @@ document.addEventListener("keydown",e=>{
   let x0=0,y0=0,el=null,on=false;
   const reset=t=>{t.style.transition=t.style.transform=t.style.opacity=""};
   document.addEventListener("touchstart",e=>{
-    el=!$("play").hidden?$("play"):!$("stats").hidden?$("stats"):null;
+    el=!$("play").hidden?$("play"):!$("stats").hidden?$("stats"):!$("lib").hidden?$("lib"):null;
     if(!el||e.touches.length>1||e.target.closest("input,textarea")){el=null;return}
     x0=e.touches[0].clientX;y0=e.touches[0].clientY;on=false},{passive:true});
   document.addEventListener("touchmove",e=>{

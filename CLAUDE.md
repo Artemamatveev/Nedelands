@@ -49,3 +49,14 @@ the prompt is built on the server, so the page can't send arbitrary prompts. It 
 accepts requests whose Origin is the site itself. It needs `ANTHROPIC_API_KEY` in the
 Vercel project's environment variables (the user adds it in the dashboard; never handle
 the key in chat). Without it the page falls back to showing the example answer.
+
+## Boekenkast (reading)
+
+Built-in A2 stories live in `BOOKS` in `index.html` (original texts; check facts, they double
+as KNM material). Readers can add their own books (.epub without DRM, .txt, pasted text);
+those are stored only in IndexedDB (`books` list, `book:<id>` text), never in `ww-v1`.
+`S.bk` keeps reading positions and `S.words` the saved words (practised as `bw|…` items,
+also in the Mix). Tapping a word calls `api/translate.js` (`{word, sentence}` →
+`{lemma, article, pos, ru, lemma_ru, note}`, or `{sentence, mode:"sentence"}` → `{ru}`);
+answers are cached per device in `localStorage` `ww-tr`. Without the API key the popup falls
+back to the built-in `RU` dictionary.
