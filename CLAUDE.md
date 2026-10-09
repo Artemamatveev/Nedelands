@@ -91,7 +91,9 @@ Lezen texts are plain strings rendered as documents by `docHTML()`: the first li
 (unless it is a letter or an e-mail), `label: value` lines become a table, `Van:` starts an
 e-mail header. Luisteren items in `LS` are `[text, question, right, wrong, wrong, photo?]`; a dialogue has one line per
 turn (`A: …` / `B: …`), read with two pitches, and the optional photo from `foto/` sets the scene. In the
-proefexamen a text can be played twice. KNM follows the 8 official themes of the exam since 1 July 2025
+proefexamen a fragment can be played twice (counted per fragment). `LSM` holds longer fragments with two or three
+questions (`[text, photo, [[q, right, wrong, wrong], …]]`, keys `ls|m<i>.<j>`); each Luisteren proefexamen has two of
+them, questions kept together. KNM follows the 8 official themes of the exam since 1 July 2025
 (40 questions, 45 minutes, 28 to pass). Woordenschat has the definitions in `VO` and the themed A2 word list `WT`
 (Dutch with de/het = Russian), practised both ways. Item keys (`lz|3.1`, `wn|de huis`) are
 stored progress: append new items, don't reorder or rename existing ones.
@@ -107,7 +109,11 @@ Vercel project's environment variables (the user adds it in the dashboard; never
 the key in chat). Without it the page falls back to showing the example answer.
 
 Spreken uses the same function with `{part:"sp", tasks:[{task, text}]}` (up to 16, for the
-proefexamen). Claude can't take audio, so the phone writes the answer down first (Web Speech
+proefexamen); `task` also says what the photos show (`spTask()`, from `FOTO`). Each result also has `scores`
+(inhoud 0–3, woorden 0–2, grammatica 0–2, samenhang 0–1: DUO's criteria as far as a transcript shows them; pronunciation
+and fluency can't be judged), clamped on the server; the Spreken proefexamen score is points of all 16 questions.
+The Spreken proefexamen has DUO's four parts of four (since March 2025): a question, one photo (describe and answer),
+two photos (choose and explain), three photos (tell in order); `SP` items fall into a part by their number of photos. Claude can't take audio, so the phone writes the answer down first (Web Speech
 API, `nl-NL`). Recording (`MediaRecorder`, to play the answer back) and transcribing are
 separate takes, never at the same time: on iPhone they compete for the microphone. One
 minute per answer. Recordings and transcripts stay in memory only. "Zeg het na" (free, no Claude call):
