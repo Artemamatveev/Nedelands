@@ -183,22 +183,7 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
 .card h2{margin-top:24px}
 .done .big{font-size:72px;font-weight:700;letter-spacing:0;line-height:1;margin:8px 0;color:var(--blue)}
 
-#exams .hint{margin:8px 0 0}
-#exform{margin-top:10px}
 h2.gap{margin-top:28px}
-/* tijdlijn: tegeltjes op een lijn */
-.tlw{position:relative;margin:4px 10px 0;padding:64px 0}
-.tl{position:relative;height:4px;background:var(--line)}
-.tl i{position:absolute;left:0;top:0;bottom:0;background:var(--blue)}
-.tl u{position:absolute;top:50%;width:14px;height:14px;margin:-7px 0 0 -7px;background:var(--bg);border:2px solid var(--blue);transform:rotate(45deg)}
-.tl u.next{width:18px;height:18px;margin:-9px 0 0 -9px;background:var(--blue)}
-.tl u.past{opacity:.5}
-.tl em{position:absolute;top:50%;width:4px;height:22px;margin:-11px 0 0 -2px;background:var(--oranje)}
-.tlb{position:absolute;transform:translateX(-50%);font-size:13px;line-height:1.25;color:var(--soft);white-space:nowrap;text-align:center}
-.tlb b{display:block;font-size:14.5px;color:var(--ink)}
-.tlb.up{bottom:calc(50% + 15px)} .tlb.dn{top:calc(50% + 15px)}
-.tlb.l{transform:translateX(-9px);text-align:left} .tlb.r{transform:translateX(calc(9px - 100%));text-align:right}
-.tlb.next b{color:var(--blue)} .tlb.past{opacity:.5}
 /* onderaan het startscherm */
 #gen{margin-top:20px} #genmsg{margin-top:8px;min-height:20px}
 .forms{display:grid;grid-template-columns:auto 1fr;gap:0 14px;margin:4px 0 12px;align-items:baseline}
@@ -937,7 +922,7 @@ const SEC=[
 const GAP=[1,2,4,7,14], KEY="ww-v1";
 const $=id=>document.getElementById(id);
 const today=()=>{const d=new Date();return Math.floor((d.getTime()-d.getTimezoneOffset()*6e4)/864e5)};
-let S={items:{},streak:0,last:0,typing:false,errs:[],gen:{lz:[],ls:[]},t:0,exams:{wr:"2026-10-26",knm:"2026-11-17",sp:"2026-11-17",ls:"2026-11-23",lz:"2026-11-23"},day:{d:0,done:[]},words:[],bk:{}};
+let S={items:{},streak:0,last:0,typing:false,errs:[],gen:{lz:[],ls:[]},t:0,day:{d:0,done:[]},words:[],bk:{}};
 try{const r=JSON.parse(localStorage.getItem(KEY));if(r&&r.items)S=Object.assign(S,r)}catch(e){}
 // Backup copy in IndexedDB: iOS home-screen apps can lose localStorage
 const idb=new Promise((ok,no)=>{try{const r=indexedDB.open("ww",1);r.onupgradeneeded=()=>r.result.createObjectStore("kv");r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)}catch(e){no(e)}});
@@ -1290,71 +1275,40 @@ function ready(k){
     t:`Laatste proefexamen ${pc}%${R.length>1?`, daarvoor ${R[R.length-2].pc}%`:". Doe er nog een: dan weet je het zeker"}. Nodig: ${PASS*100}%.`}
 }
 const PART={wr:"Schrijven",knm:"KNM",sp:"Spreken",ls:"Luisteren",lz:"Lezen"}, HELP={wr:["wo","verb"],sp:["pr","verb"],lz:["vo","dh"],ls:["vo","pr"],knm:[]};
-const dayOf=str=>{const[y,m,d]=str.split("-").map(Number),t=new Date(y,m-1,d);return Math.round((t.getTime()-t.getTimezoneOffset()*6e4)/864e5)};
 let planId=null;
+// Je les van vandaag, without exam dates: the weakest exam part first (lowest proefexamen or practice score;
+// a part not practised yet counts as 50%), every third day as a proefexamen once it has been practised;
+// then a grammar round that helps that part, and another part in turn so nothing is forgotten
 function planTasks(){
-  const d=today(),ex=S.exams||{},groups={},T=[];
-  Object.keys(PART).forEach(k=>{if(ex[k]){const n=dayOf(ex[k])-d;if(n>=0)(groups[n]=groups[n]||[]).push(k)}});
-  const ns=Object.keys(groups).map(Number).sort((a,b)=>a-b);
-  const sec=id=>SEC.find(x=>x.id===id), add=(id,t,s)=>{if(T.length<4&&!T.some(x=>x.id===id))T.push({id,t,s})};
-  if(!ns.length)return T;
-  const n0=ns[0],g0=groups[n0];
-  g0.forEach(k=>{
-    if(n0>0&&n0<=6&&n0%2===0&&EX[k])add("e:"+k,"Proefexamen "+PART[k],k==="wr"?"4 opdrachten in 40 minuten":EX[k].min+" minuten, zoals op het examen");
-    else add("s:"+k,PART[k],sec(k).s)});
-  if(g0.includes("wr")&&(S.errs||[]).length)add("x:errs","Mijn fouten","Fouten uit je eigen teksten");
-  const help=[].concat(...g0.map(k=>HELP[k]));
-  if(help.length){const h=help[d%help.length];add("s:"+h,sec(h).t,sec(h).s)}
-  if(ns[1]!=null){const g=groups[ns[1]],k=g.includes("knm")&&d%3?"knm":g[d%g.length];add("s:"+k,PART[k],"Alvast voor je volgende examen")}
-  if(T.length<3){const h=["verb","wo","vo"][d%3];add("s:"+h,sec(h).t,sec(h).s)}
-  return T;
+  const d=today(),T=[],ks=["lz","ls","wr","sp","knm"],sec=id=>SEC.find(x=>x.id===id);
+  const sc=ks.map(k=>({k,r:ready(k)})), add=(id,t,s)=>{if(!T.some(x=>x.id===id))T.push({id,t,s})};
+  sc.sort((a,b)=>(a.r.pc==null?50:a.r.pc)-(b.r.pc==null?50:b.r.pc)||ks.indexOf(a.k)-ks.indexOf(b.k));
+  const k=sc[0].k;
+  if(sc[0].r.pc!=null&&d%3===0)add("e:"+k,"Proefexamen "+PART[k],k==="wr"?"4 opdrachten in 40 minuten":EX[k].min+" minuten, zoals op het examen");
+  else add("s:"+k,PART[k],sec(k).s);
+  const help=HELP[k].length?HELP[k]:["verb","wo","vo"],h=help[d%help.length];add("s:"+h,sec(h).t,sec(h).s);
+  const o=ks.filter(x=>x!==k),k2=o[d%o.length];add("s:"+k2,PART[k2],"Herhaling, zodat je niets vergeet");
+  return{T,k,pc:sc[0].r.pc};
 }
 function planHTML(){
-  const d=today(),ex=S.exams||{},done=S.day&&S.day.d===d?S.day.done:[];
-  const T=planTasks(), steps=T.length?T:[{id:"s:mix",t:"Mix van de dag",s:"10 vragen uit alle onderdelen"}], nx=steps.findIndex(t=>!done.includes(t.id));
-  const up=Object.keys(PART).filter(k=>ex[k]&&dayOf(ex[k])>=d).sort((a,b)=>dayOf(ex[a])-dayOf(ex[b]));
-  let intro;
-  if(up.length){const n=dayOf(ex[up[0]])-d,parts=up.filter(k=>ex[k]===ex[up[0]]).map(k=>PART[k]).join(" en ");
-    intro=n===0?`Vandaag is je examen ${parts}. Succes!`:`Nog ${n===1?"1 dag":n+" dagen"} tot je examen ${parts}.`}
-  else intro=Object.keys(ex).length?"Je examens zijn voorbij. Oefen gewoon verder.":"Vul je examendata in. Dan krijg je elke dag een plan, speciaal voor jouw examens.";
-  intro+=nx<0?" Alles van vandaag is klaar. Goed gedaan!":steps.length>1?" Doe de stappen een voor een.":"";
+  const d=today(),done=S.day&&S.day.d===d?S.day.done:[],P=planTasks(),steps=P.T,nx=steps.findIndex(t=>!done.includes(t.id));
+  const intro=(P.pc!=null?`Vandaag vooral ${PART[P.k]}: daar scoor je nu het laagst.`:"Drie korte stappen.")
+    +(nx<0?" Alles van vandaag is klaar. Goed gedaan!":" Doe ze een voor een.");
   const date=new Date().toLocaleDateString("nl-NL",{weekday:"long",day:"numeric",month:"long"});
   return`<p class="ask">${date}</p><h2>Je les van vandaag</h2><p class="sub">${intro}</p>
     <ol class="steps">${steps.map((t,i)=>{const ok=done.includes(t.id);
       return`<li><button class="step${ok?" ok":i===nx?" next":""}" data-p="${t.id}"><i>${ok?"✓":i+1}</i><b>${t.t}</b><span>${t.s}</span><em>${ok?"Klaar":i===nx?"Begin →":"→"}</em></button></li>`}).join("")}</ol>
-    ${!Object.keys(ex).length?`<button class="ghost" id="setex" style="margin-top:14px">Examendata invullen</button>`:T.length?`<button class="hint" data-p="s:mix">Meer tijd? Doe de Mix van de dag: 10 vragen uit alles.</button>`:""}`;
+    <button class="hint" data-p="s:mix">Meer tijd? Doe de Mix van de dag: 10 vragen uit alles.</button>`;
 }
-function examsHTML(){
-  const d=today(),ex=S.exams||{};
-  const fmt=str=>{const[y,m,dd]=str.split("-").map(Number);return new Date(y,m-1,dd).toLocaleDateString("nl-NL",{weekday:"long",day:"numeric",month:"long"})};
-  const short=str=>{const[y,m,dd]=str.split("-").map(Number);return new Date(y,m-1,dd).toLocaleDateString("nl-NL",{day:"numeric",month:"short"})};
-  const gs={}; Object.keys(PART).forEach(k=>{if(ex[k])(gs[ex[k]]=gs[ex[k]]||[]).push(PART[k])});
-  const dates=Object.keys(gs).sort(), next=dates.find(ds=>dayOf(ds)>=d);
-  const start=Math.min(S.plan0||d,d), last=dates.length?dayOf(dates[dates.length-1]):d, at=x=>Math.max(0,Math.min(100,(x-start)/Math.max(1,last-start)*100));
-  const days=n=>n<0?"geweest":n===0?"vandaag!":n===1?"nog 1 dag":"nog "+n+" dagen";
-  const cls=ds=>{const n=dayOf(ds)-d;return n<0?" past":ds===next?" next":""};
-  // labels alternate below/above the bar so close dates don't overlap
-  const rows=!dates.length?"":`<div class="tlw" role="img" aria-label="${dates.map(ds=>gs[ds].join(" en ")+": "+fmt(ds)+", "+days(dayOf(ds)-d)).join("; ")}">
-    <div class="tl"><i style="width:${at(d)}%"></i>${dates.map(ds=>`<u class="${cls(ds)}" style="left:${at(dayOf(ds))}%"></u>`).join("")}<em style="left:${at(d)}%"></em></div>
-    ${dates.map((ds,i)=>{const x=at(dayOf(ds));
-      return`<div class="tlb ${i%2?"up":"dn"}${x<15?" l":x>85?" r":""}${cls(ds)}" style="left:${x}%"><b>${gs[ds].join(" en ")}</b>${short(ds)}<br>${days(dayOf(ds)-d)}</div>`}).join("")}</div>`;
-  const order=Object.keys(PART).sort((a,b)=>(ex[a]?dayOf(ex[a]):1e9)-(ex[b]?dayOf(ex[b]):1e9));
-  const rdy=`<h2 class="gap">Ben je klaar?</h2><p class="sub">Je proefexamens laten zien hoe je ervoor staat. De streep is ${PASS*100}%: zoveel heb je nodig.</p>`
-    +order.map(k=>{const r=ready(k);return`<div class="stat"><div><b>${PART[k]}</b><span><em class="${r.cls}">${r.st}</em><br>${r.t}</span>${r.pc==null?"":`<div class="bar pass"><i style="width:${r.pc}%"></i></div>`}</div><button class="ghost" data-e="${k}">Proefexamen</button></div>`}).join("");
-  return`<h2 class="gap">Mijn examens</h2>${rows||`<p class="sub">Nog geen examendata.</p>`}<button class="hint" id="editex">${dates.length?"Examendata wijzigen":"Examendata invullen"}</button>
-    <div id="exform" hidden>${Object.keys(PART).map(k=>`<label class="fld"><span>${PART[k]}</span><input type="date" data-k="${k}" value="${ex[k]||""}"></label>`).join("")}<button class="ghost wide" id="saveex">Bewaar</button></div>${rdy}`;
+function readyHTML(){
+  return`<h2 class="gap">Ben je klaar?</h2><p class="sub">Je proefexamens (bij de examenonderdelen) laten zien hoe je ervoor staat. De streep is ${PASS*100}%: zoveel heb je nodig.</p>`
+    +["lz","ls","wr","sp","knm"].map(k=>{const r=ready(k);return`<div class="stat"><div><b>${PART[k]}</b><span><em class="${r.cls}">${r.st}</em><br>${r.t}</span>${r.pc==null?"":`<div class="bar pass"><i style="width:${r.pc}%"></i></div>`}</div></div>`}).join("");
 }
 function drawPlan(){
-  if(!S.plan0){S.plan0=today();localSave()}
-  $("plan").innerHTML=planHTML(); $("exams").innerHTML=examsHTML();
-  document.querySelectorAll("#exams [data-e]").forEach(b=>b.onclick=()=>startExam(b.dataset.e));
+  $("plan").innerHTML=planHTML(); $("exams").innerHTML=readyHTML();
   document.querySelectorAll("#plan [data-p]").forEach(b=>b.onclick=()=>{const id=b.dataset.p,[k,v]=id.split(":");
-    if(k==="s")build(v);else if(k==="e")startExam(v);else build("custom",{id:"custom",t:"Mijn fouten",n:10,pool:()=>shuffle(errItems())});
+    if(k==="s")build(v);else startExam(v);
     planId=id});
-  const openEx=()=>{$("exform").hidden=false;$("exform").scrollIntoView({behavior:"smooth",block:"center"})};
-  if($("setex"))$("setex").onclick=openEx;
-  $("editex").onclick=()=>{if($("exform").hidden)openEx();else $("exform").hidden=true};
-  $("saveex").onclick=()=>{S.exams={};document.querySelectorAll("#exform input").forEach(i=>{if(i.value)S.exams[i.dataset.k]=i.value});save();drawPlan()};
 }
 const weak=q=>{const it=S.items[q.k];return it?(it.w||0)-(it.r||0):0};
 function stats(){
@@ -1693,9 +1647,7 @@ function mergeProgress(r){
   add("words","w"); add("errs","r"); S.errs=S.errs.slice(0,40);
   S.bk=S.bk||{}; Object.entries(r.bk||{}).forEach(([id,b])=>{const a=S.bk[id];if(b&&(!a||(b.at||0)>(a.at||0)))S.bk[id]=b});
   if((r.last||0)>(S.last||0)){S.last=r.last;S.streak=r.streak||0}
-  if(!Object.keys(S.exams||{}).length&&r.exams)S.exams=r.exams;
   const gl=g=>g?(g.lz||[]).length+(g.ls||[]).length:0; if(!gl(S.gen)&&gl(r.gen))S.gen=r.gen;
-  if(r.plan0&&(!S.plan0||r.plan0<S.plan0))S.plan0=r.plan0;
   S.res=S.res||{}; Object.entries(r.res||{}).forEach(([k,a])=>{if(!PART[k]||!Array.isArray(a))return;
     S.res[k]=(S.res[k]||[]).concat(a.filter(x=>x&&x.at&&!(S.res[k]||[]).some(y=>y.at===x.at))).sort((x,y)=>x.at-y.at).slice(-10)});
   return n;

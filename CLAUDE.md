@@ -11,7 +11,7 @@ The design should also teach Dutch culture. Keep it recognisably Dutch and avoid
 generic "AI app" look.
 
 - **Colours**: tin-glaze white `--bg`, cobalt `--blue`, light wash `--wash`, and
-  `--oranje` as the only accent (timer, today marker, selection, the streak stamp).
+  `--oranje` as the only accent (timer, selection, the streak stamp).
   Always use the tokens on `:root`; every colour has a dark-mode value.
 - **Type**: the system font only (`-apple-system, system-ui`: SF Pro on iPhone), so the
   app reads like a native iPhone app. No web fonts; headings semibold (600–700), never 800.
@@ -21,8 +21,7 @@ generic "AI app" look.
   - Header: the painting of the day (`ART` + `paint()` in `index.html`), with a museum
     label underneath: artist, title, year, museum and one A2 sentence in Dutch (no
     translation). Tapping the painting shows it in full.
-  - Tiles: "Je les van vandaag" (the numbered steps of today's plan, at the top of the home screen) is a Delft tile with corner motifs; timeline dots are tiles
-    turned 45°.
+  - Tiles: "Je les van vandaag" (the numbered steps of today's plan, at the top of the home screen) is a Delft tile with corner motifs.
   - Streak: a stamp, like on a Museumkaart.
 - **Never use**: cream or beige backgrounds, handwriting fonts, wobbly hand-drawn
   border-radius, dashed lines, highlighter underlines under headings, decorative SVG
@@ -31,7 +30,7 @@ generic "AI app" look.
 ## Home screen
 
 One clear path, top to bottom: today's lesson (numbered steps; the next one is filled
-cobalt), then choose yourself (exam parts with "Oefenen" + "Proefexamen", grammar), then
+cobalt; no exam dates: the plan starts with the exam part that scores lowest), then choose yourself (exam parts with "Oefenen" + "Proefexamen", grammar), then
 reading and listening, and progress. Every section appears once; don't add a second entry point to the
 same exercise.
 
@@ -53,7 +52,7 @@ order); `FOTO` holds a short Dutch description of each for screen readers. No em
 
 Progress is per device: `localStorage` key `ww-v1`, mirrored to IndexedDB as a backup.
 There is no server. `S.res` keeps the last 10 proefexamen scores per part (`{at, pc}`); "Ben je klaar?"
-under Mijn examens reads it (ready = the last two average 80% or more; the pass line is 70%).
+at the bottom of the home screen reads it (ready = the last two average 80% or more; the pass line is 70%).
 
 `sw.js` makes the app work offline: the page network-first (a push is live at once), paintings and
 photos from the cache (the page sends their list after loading), `api/` never cached. Don't change the stored shape without migrating old data.
