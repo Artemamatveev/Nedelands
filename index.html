@@ -110,7 +110,6 @@ textarea{display:block;width:100%;font-size:17px;line-height:1.5;padding:12px;ma
 .fb b{font-size:19px}
 .good{color:var(--good)} .bad{color:var(--bad)}
 .row{margin:4px 0 12px;font-size:18px;font-weight:700}
-.row small{font-weight:400;color:var(--soft)}
 .mode{display:flex;justify-content:center;margin:18px 0 0}
 .mode button{background:none;border:0;color:var(--soft);text-decoration:underline;font-size:15px;padding:8px}
 .line{min-height:58px;border-bottom:2px solid var(--blue);padding:8px 0;margin-bottom:14px}
@@ -159,8 +158,11 @@ h2.gap{margin-top:28px}
 .tile.l2{--c:var(--blue);--m:var(--wash)}
 .tile.l3{--c:var(--bg);--m:var(--bg);--g:var(--blue);border-color:var(--blue)}
 .tile.sel{outline:2px solid var(--oranje);outline-offset:1px}
-.peek{min-height:52px;margin-top:12px;font-weight:700}
-.peek small{display:block;font-weight:400;color:var(--soft)}
+.peek{min-height:52px;margin-top:12px}
+.forms{display:grid;grid-template-columns:auto 1fr;gap:2px 14px;margin:4px 0 12px;align-items:baseline}
+.forms dt{color:var(--soft);font-size:14.5px}
+.forms dd{margin:0;font-weight:600}
+.forms mark{background:none;color:var(--blue);font-weight:700}
 .stat{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
 .stat>div{flex:1;min-width:0} .stat b{display:block} .stat span{display:block;color:var(--soft);font-size:14.5px;margin-bottom:6px}
 .stat .bar{margin:0}
@@ -691,9 +693,19 @@ function options(v,t){
 
 const ITEMS=[];
 const ch=(sec,k,ord,label,big,sub,right,wrong,note)=>ITEMS.push({sec,k:sec+"|"+k,ord,type:"choice",label,big,sub,right,opts:()=>shuffle([right,...wrong]),note});
+// A verb's forms as a small table: each form with its name and a pronoun, so it is clear
+// which form is which; t marks the form that was just asked
+function vforms(v,t){
+  const g=v[0]==="gebeuren", p=g?["het","ze"]:["ik","wij"],
+    aux=v[5]==="zijn"?(g?"is":"ben"):v[5]==="hebben"?"heb":"heb / ben",
+    hl=(k,x)=>k===t?`<mark>${x}</mark>`:x;
+  return`<dl class="forms"><dt>infinitief</dt><dd>${v[0]}</dd>
+    <dt>imperfectum</dt><dd>${hl("past",p[0]+" "+v[2])}<br>${hl("pastpl",p[1]+" "+v[3])}</dd>
+    <dt>perfectum</dt><dd>${p[0]} ${hl("aux",aux)} ${hl("pp",v[4])}</dd></dl>`;
+}
 V.forEach((v,i)=>TL.forEach(t=>{if(t==="aux"&&!v[5])return;
   ITEMS.push({sec:"verb",k:v[0]+"|"+t,ord:Math.floor(i/8),type:"choice",label:TYPES[t],big:v[0],sub:v[1],right:answer(v,t),opts:()=>options(v,t),canType:t!=="aux",
-    note:`${v[0]} – ${v[2]}, ${v[3]} – ${v[4]} <small>(${v[5]||"hebben / zijn"})</small>`})}));
+    note:vforms(v,t)})}));
 WO.forEach((w,i)=>ITEMS.push({sec:"wo",k:"wo|"+i,ord:i/6|0,type:"order",label:"Maak een zin",sub:w[1],right:w[0],note:w[2]}));
 PR.forEach((p,i)=>ch("pr",i,i/6|0,"Kies de juiste vorm",p[0],p[1],p[2],p.slice(3)));
 HET.forEach((w,i)=>{const[a,b]=w.split(":");ch("dh","a"+a,i/3|0,"De of het?",a,"","het",["de"])});
@@ -928,7 +940,7 @@ function complete(){
 }
 function feedback(ok,q){
   $("fb").innerHTML=`<b class="${ok?"good":"bad"}">${ok?"Goed zo!":"Goed is: "+q.right}</b>
-    ${q.note?`<div class="${q.sec==="verb"?"row":"note"}">${q.note}</div>`:"<div class='row'></div>"}
+    ${q.note?(q.sec==="verb"?q.note:`<div class="note">${q.note}</div>`):"<div class='row'></div>"}
     <button class="btn wide" id="next">Verder</button>`;
   $("next").onclick=()=>{pos++;show()}; $("next").focus();
 }
@@ -1386,7 +1398,7 @@ function wall(){
   document.querySelectorAll(".tile").forEach(b=>b.onclick=()=>{
     document.querySelectorAll(".tile.sel").forEach(x=>x.classList.remove("sel")); b.classList.add("sel");
     const v=V[b.dataset.i];
-    $("peek").innerHTML=`${v[0]} – ${v[2]}, ${v[3]} – ${v[4]} <small>perfectum met ${v[5]||"hebben / zijn"}</small>`;
+    $("peek").innerHTML=vforms(v);
   });
 }
 $("back").onclick=home; $("sback").onclick=home; $("lback").onclick=home; $("gen").onclick=gen;
