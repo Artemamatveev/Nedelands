@@ -211,6 +211,10 @@ h2.gap{margin-top:28px}
 .stat{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
 .stat>div{flex:1;min-width:0} .stat b{display:block} .stat span{display:block;color:var(--soft);font-size:14.5px;margin-bottom:6px}
 .stat .bar{margin:0}
+.stat em{font-style:normal;font-weight:600}
+.echo{border-top:1px solid var(--line);padding-top:12px;margin:4px 0 14px}
+.miss{font:inherit;color:var(--bad);background:none;border:0;border-bottom:2px solid var(--bad);padding:0;margin:0;cursor:pointer}
+.bar.pass{position:relative} .bar.pass::after{content:"";position:absolute;left:70%;top:0;bottom:0;width:2px;background:var(--ink)}
 #stats .back,#lib .back{margin-top:14px}
 #stats h2,#lib h2{margin-top:18px}
 /* boekenkast */
@@ -442,24 +446,24 @@ const ADJ=[["een ___ huis","groot","groot","grote","Het-woord met 'een': geen -e
 const NG=[["Ik heb ___ auto.","geen","Voor een zelfstandig naamwoord zonder lidwoord: geen."],["Ik werk ___.","niet","Bij een werkwoord: niet."],["Hij spreekt ___ Engels.","geen","Voor een zelfstandig naamwoord zonder lidwoord: geen."],["Dat is ___ goed.","niet","Voor een bijvoeglijk naamwoord: niet."],["Ik heb ___ tijd.","geen","Voor een zelfstandig naamwoord zonder lidwoord: geen."],["Ik woon ___ in Amsterdam.","niet","Voor een voorzetsel: niet."],["Wij hebben ___ kinderen.","geen","Voor een zelfstandig naamwoord zonder lidwoord: geen."],["Ik kom morgen ___.","niet","Bij een werkwoord: niet, aan het eind."]];
 
 const KNM=[
-["Gezondheidszorg", "Je bent ziek, maar het is geen spoed. Waar ga je eerst naartoe?", "naar de huisarts", "naar het ziekenhuis", "naar de apotheek", "Je gaat altijd eerst naar de huisarts. De huisarts stuurt je door naar het ziekenhuis."],
-["Gezondheidszorg", "Welk nummer bel je bij brand of levensgevaar?", "112", "0900-8844", "911", "112 is voor spoed. 0900-8844 is de politie zonder spoed."],
-["Gezondheidszorg", "Welke verzekering is verplicht voor iedereen in Nederland?", "de zorgverzekering", "de reisverzekering", "de inboedelverzekering", "De basisverzekering is verplicht voor iedereen."],
-["Gezondheidszorg", "Waar haal je medicijnen met een recept?", "bij de apotheek", "bij de drogist", "bij de huisarts", "Medicijnen met een recept haal je bij de apotheek."],
-["Gezondheidszorg", "Het is nacht. De huisarts is dicht en je hebt snel een dokter nodig. Wie bel je?", "de huisartsenpost", "de apotheek", "het consultatiebureau", "'s Avonds, 's nachts en in het weekend bel je de huisartsenpost."],
-["Gezondheidszorg", "Waar ga je naartoe met je baby voor controle en vaccinaties?", "naar het consultatiebureau", "naar de tandarts", "naar de apotheek", "Het consultatiebureau controleert de gezondheid van jonge kinderen."],
-["Gezondheidszorg", "Wat is het eigen risico?", "een bedrag dat je eerst zelf betaalt voor zorg", "een extra verzekering voor de tandarts", "een boete van de verzekering", "Je betaalt eerst zelf een bedrag per jaar. Voor de huisarts betaal je geen eigen risico."],
-["Gezondheidszorg", "Je hebt een laag inkomen. Welke toeslag helpt je de zorgverzekering te betalen?", "de zorgtoeslag", "de huurtoeslag", "de kinderbijslag", "Zorgtoeslag vraag je aan bij de Belastingdienst (Dienst Toeslagen)."],
-["Gezondheidszorg", "Wie stuurt je door naar een specialist in het ziekenhuis?", "de huisarts", "de apotheek", "de zorgverzekering", "Voor een specialist heb je een verwijzing van de huisarts nodig."],
-["Werken", "Je verliest je baan. Wie betaalt de WW-uitkering?", "het UWV", "de gemeente", "de werkgever", "Het UWV betaalt de WW-uitkering."],
-["Werken", "Waar vraag je bijstand aan?", "bij de gemeente", "bij het UWV", "bij de Belastingdienst", "Bijstand vraag je aan bij de gemeente."],
-["Werken", "Je begint met een nieuwe baan. Wat krijg je van je werkgever?", "een arbeidscontract", "een DigiD", "een zorgpas", "In het contract staan je loon, je uren en je vakantiedagen."],
-["Werken", "Wat is brutoloon?", "het loon voordat de belasting eraf gaat", "het loon dat je op je rekening krijgt", "het loon voor overwerk", "Bruto min belasting en premies is netto. Nettoloon krijg je op je rekening."],
-["Werken", "Je bent ziek en je kunt niet werken. Wat doe je?", "je meldt je dezelfde dag ziek bij je werkgever", "je wacht tot je weer beter bent", "je belt het UWV", "Je moet je meteen ziek melden bij je werkgever."],
-["Werken", "Wie kan je helpen bij een conflict met je werkgever?", "de vakbond", "de huisarts", "de woningcorporatie", "De vakbond komt op voor werknemers."],
-["Werken", "Iemand werkt en betaalt geen belasting over het loon. Hoe heet dat?", "zwart werken", "vrijwilligerswerk", "overwerk", "Zwart werken is verboden. Je bent dan ook niet verzekerd."],
-["Werken", "Wat is de AOW?", "een uitkering van de overheid voor ouderen", "een uitkering als je ziek bent", "een toeslag voor de huur", "De AOW is het basispensioen van de overheid."],
-["Werken", "Wat staat op een loonstrook?", "je brutoloon en je nettoloon", "je huur en je energiekosten", "je diploma's", "Op de loonstrook zie je hoeveel je verdient en hoeveel belasting je betaalt."],
+["Gezondheid en gezondheidszorg", "Je bent ziek, maar het is geen spoed. Waar ga je eerst naartoe?", "naar de huisarts", "naar het ziekenhuis", "naar de apotheek", "Je gaat altijd eerst naar de huisarts. De huisarts stuurt je door naar het ziekenhuis."],
+["Gezondheid en gezondheidszorg", "Welk nummer bel je bij brand of levensgevaar?", "112", "0900-8844", "911", "112 is voor spoed. 0900-8844 is de politie zonder spoed."],
+["Gezondheid en gezondheidszorg", "Welke verzekering is verplicht voor iedereen in Nederland?", "de zorgverzekering", "de reisverzekering", "de inboedelverzekering", "De basisverzekering is verplicht voor iedereen."],
+["Gezondheid en gezondheidszorg", "Waar haal je medicijnen met een recept?", "bij de apotheek", "bij de drogist", "bij de huisarts", "Medicijnen met een recept haal je bij de apotheek."],
+["Gezondheid en gezondheidszorg", "Het is nacht. De huisarts is dicht en je hebt snel een dokter nodig. Wie bel je?", "de huisartsenpost", "de apotheek", "het consultatiebureau", "'s Avonds, 's nachts en in het weekend bel je de huisartsenpost."],
+["Gezondheid en gezondheidszorg", "Waar ga je naartoe met je baby voor controle en vaccinaties?", "naar het consultatiebureau", "naar de tandarts", "naar de apotheek", "Het consultatiebureau controleert de gezondheid van jonge kinderen."],
+["Gezondheid en gezondheidszorg", "Wat is het eigen risico?", "een bedrag dat je eerst zelf betaalt voor zorg", "een extra verzekering voor de tandarts", "een boete van de verzekering", "Je betaalt eerst zelf een bedrag per jaar. Voor de huisarts betaal je geen eigen risico."],
+["Gezondheid en gezondheidszorg", "Je hebt een laag inkomen. Welke toeslag helpt je de zorgverzekering te betalen?", "de zorgtoeslag", "de huurtoeslag", "de kinderbijslag", "Zorgtoeslag vraag je aan bij de Belastingdienst (Dienst Toeslagen)."],
+["Gezondheid en gezondheidszorg", "Wie stuurt je door naar een specialist in het ziekenhuis?", "de huisarts", "de apotheek", "de zorgverzekering", "Voor een specialist heb je een verwijzing van de huisarts nodig."],
+["Werk en inkomen", "Je verliest je baan. Wie betaalt de WW-uitkering?", "het UWV", "de gemeente", "de werkgever", "Het UWV betaalt de WW-uitkering."],
+["Werk en inkomen", "Waar vraag je bijstand aan?", "bij de gemeente", "bij het UWV", "bij de Belastingdienst", "Bijstand vraag je aan bij de gemeente."],
+["Werk en inkomen", "Je begint met een nieuwe baan. Wat krijg je van je werkgever?", "een arbeidscontract", "een DigiD", "een zorgpas", "In het contract staan je loon, je uren en je vakantiedagen."],
+["Werk en inkomen", "Wat is brutoloon?", "het loon voordat de belasting eraf gaat", "het loon dat je op je rekening krijgt", "het loon voor overwerk", "Bruto min belasting en premies is netto. Nettoloon krijg je op je rekening."],
+["Werk en inkomen", "Je bent ziek en je kunt niet werken. Wat doe je?", "je meldt je dezelfde dag ziek bij je werkgever", "je wacht tot je weer beter bent", "je belt het UWV", "Je moet je meteen ziek melden bij je werkgever."],
+["Werk en inkomen", "Wie kan je helpen bij een conflict met je werkgever?", "de vakbond", "de huisarts", "de woningcorporatie", "De vakbond komt op voor werknemers."],
+["Werk en inkomen", "Iemand werkt en betaalt geen belasting over het loon. Hoe heet dat?", "zwart werken", "vrijwilligerswerk", "overwerk", "Zwart werken is verboden. Je bent dan ook niet verzekerd."],
+["Werk en inkomen", "Wat is de AOW?", "een uitkering van de overheid voor ouderen", "een uitkering als je ziek bent", "een toeslag voor de huur", "De AOW is het basispensioen van de overheid."],
+["Werk en inkomen", "Wat staat op een loonstrook?", "je brutoloon en je nettoloon", "je huur en je energiekosten", "je diploma's", "Op de loonstrook zie je hoeveel je verdient en hoeveel belasting je betaalt."],
 ["Wonen", "Je verhuist. Waar geef je je nieuwe adres door?", "bij de gemeente", "bij de politie", "bij de Belastingdienst", "Een verhuizing geef je door aan de gemeente."],
 ["Wonen", "Je huurt een woning en je hebt een laag inkomen. Welke toeslag kun je aanvragen?", "huurtoeslag", "zorgtoeslag", "kinderopvangtoeslag", "Huurtoeslag vraag je aan bij de Belastingdienst (Dienst Toeslagen)."],
 ["Wonen", "Bij wie huur je een sociale huurwoning?", "bij een woningcorporatie", "bij de bank", "bij het UWV", "Woningcorporaties verhuren woningen met een lage huur."],
@@ -467,14 +471,14 @@ const KNM=[
 ["Wonen", "Waar gooi je oud papier weg?", "in de papierbak", "bij het restafval", "in de glasbak", "In Nederland scheid je afval: papier, glas, plastic, gft en restafval."],
 ["Wonen", "Je buren maken vaak veel lawaai. Wat doe je eerst?", "met de buren praten", "112 bellen", "meteen verhuizen", "Eerst praat je zelf met de buren. Helpt dat niet? Dan kun je naar buurtbemiddeling."],
 ["Wonen", "Er is brand geweest en je spullen zijn kapot. Welke verzekering betaalt dat?", "de inboedelverzekering", "de zorgverzekering", "de reisverzekering", "De inboedelverzekering is voor de spullen in je huis."],
-["Opvoeding en onderwijs", "Vanaf welke leeftijd moet een kind naar school?", "5 jaar", "3 jaar", "7 jaar", "De leerplicht begint bij 5 jaar. De meeste kinderen gaan met 4 jaar naar school."],
-["Opvoeding en onderwijs", "Naar welke school gaan kinderen van 4 tot 12 jaar?", "de basisschool", "de middelbare school", "het mbo", "Kinderen van 4 tot 12 jaar gaan naar de basisschool."],
-["Opvoeding en onderwijs", "Naar welke school gaat een kind na de basisschool?", "de middelbare school", "de universiteit", "de peuterspeelzaal", "Na groep 8 gaan kinderen naar het voortgezet onderwijs."],
-["Opvoeding en onderwijs", "Je kind is ziek en kan niet naar school. Wat doe je?", "je belt de school voordat de les begint", "je doet niets", "je schrijft een brief aan de gemeente", "Je meldt je kind altijd ziek bij de school."],
-["Opvoeding en onderwijs", "Wie controleert of kinderen naar school gaan?", "de leerplichtambtenaar", "de huisarts", "de burgemeester", "De leerplichtambtenaar werkt bij de gemeente."],
-["Opvoeding en onderwijs", "Op welke school leer je een beroep, bijvoorbeeld kok of monteur?", "het mbo", "de basisschool", "de universiteit", "Op het mbo leer je een beroep."],
-["Opvoeding en onderwijs", "De leraar nodigt je uit voor een oudergesprek. Waar gaat dat over?", "over hoe het met je kind gaat op school", "over de huur", "over je werk", "Ouders en school praten samen over het kind."],
-["Opvoeding en onderwijs", "Mogen ouders hun kind slaan?", "nee, dat is verboden", "ja, thuis mag dat", "alleen als het kind niet luistert", "Geweld tegen kinderen is in Nederland verboden."],
+["Onderwijs en opvoeding", "Vanaf welke leeftijd moet een kind naar school?", "5 jaar", "3 jaar", "7 jaar", "De leerplicht begint bij 5 jaar. De meeste kinderen gaan met 4 jaar naar school."],
+["Onderwijs en opvoeding", "Naar welke school gaan kinderen van 4 tot 12 jaar?", "de basisschool", "de middelbare school", "het mbo", "Kinderen van 4 tot 12 jaar gaan naar de basisschool."],
+["Onderwijs en opvoeding", "Naar welke school gaat een kind na de basisschool?", "de middelbare school", "de universiteit", "de peuterspeelzaal", "Na groep 8 gaan kinderen naar het voortgezet onderwijs."],
+["Onderwijs en opvoeding", "Je kind is ziek en kan niet naar school. Wat doe je?", "je belt de school voordat de les begint", "je doet niets", "je schrijft een brief aan de gemeente", "Je meldt je kind altijd ziek bij de school."],
+["Onderwijs en opvoeding", "Wie controleert of kinderen naar school gaan?", "de leerplichtambtenaar", "de huisarts", "de burgemeester", "De leerplichtambtenaar werkt bij de gemeente."],
+["Onderwijs en opvoeding", "Op welke school leer je een beroep, bijvoorbeeld kok of monteur?", "het mbo", "de basisschool", "de universiteit", "Op het mbo leer je een beroep."],
+["Onderwijs en opvoeding", "De leraar nodigt je uit voor een oudergesprek. Waar gaat dat over?", "over hoe het met je kind gaat op school", "over de huur", "over je werk", "Ouders en school praten samen over het kind."],
+["Onderwijs en opvoeding", "Mogen ouders hun kind slaan?", "nee, dat is verboden", "ja, thuis mag dat", "alleen als het kind niet luistert", "Geweld tegen kinderen is in Nederland verboden."],
 ["Instanties", "Waar vraag je een paspoort aan?", "bij de gemeente", "bij de politie", "bij het UWV", "Een paspoort en een rijbewijs vraag je aan bij de gemeente."],
 ["Instanties", "Wat is DigiD?", "een code om in te loggen bij de overheid", "een bankpas", "een zorgverzekering", "Met DigiD log je in op websites van de overheid."],
 ["Instanties", "Welke organisatie betaalt de kinderbijslag?", "de SVB", "het UWV", "DUO", "De Sociale Verzekeringsbank (SVB) betaalt kinderbijslag en AOW."],
@@ -483,62 +487,62 @@ const KNM=[
 ["Instanties", "Welke organisatie regelt het inburgeringsexamen?", "DUO", "de IND", "de SVB", "DUO is de Dienst Uitvoering Onderwijs."],
 ["Instanties", "Je fiets is gestolen. Waar doe je aangifte?", "bij de politie", "bij de gemeente", "bij de huisarts", "Aangifte doe je bij de politie; dat kan ook online."],
 ["Instanties", "Wat is het BSN?", "je persoonlijke nummer bij de overheid", "het nummer van je bankrekening", "het nummer van je huis", "Iedereen die in Nederland staat ingeschreven heeft een burgerservicenummer."],
-["De Nederlandse staat", "Wie is het staatshoofd van Nederland?", "de koning", "de minister-president", "de burgemeester", "De koning is het staatshoofd. De minister-president leidt de regering."],
-["De Nederlandse staat", "In welke stad zit de regering?", "Den Haag", "Amsterdam", "Utrecht", "De regering en het parlement zitten in Den Haag."],
-["De Nederlandse staat", "Vanaf welke leeftijd mag je stemmen?", "18 jaar", "16 jaar", "21 jaar", "Je mag stemmen vanaf 18 jaar."],
-["De Nederlandse staat", "Wie kiezen de Nederlanders direct?", "de Tweede Kamer", "de koning", "de minister-president", "De burgers kiezen de Tweede Kamer direct."],
-["De Nederlandse staat", "Wat staat in artikel 1 van de Grondwet?", "iedereen is gelijk, discriminatie is verboden", "iedereen moet werken", "iedereen moet Nederlands spreken", "Artikel 1: iedereen is gelijk en discriminatie is verboden."],
-["De Nederlandse staat", "Hoe vaak zijn er normaal verkiezingen voor de Tweede Kamer?", "elke vier jaar", "elk jaar", "elke tien jaar", "Normaal zijn er elke vier jaar verkiezingen."],
-["De Nederlandse staat", "Hoeveel leden heeft de Tweede Kamer?", "150", "75", "225", "De Tweede Kamer heeft 150 leden, de Eerste Kamer 75."],
-["De Nederlandse staat", "Wie leidt het bestuur van een gemeente?", "de burgemeester", "de minister", "de koning", "De burgemeester leidt de gemeente, samen met de wethouders."],
-["De Nederlandse staat", "Wat betekent vrijheid van godsdienst?", "iedereen mag zelf kiezen wat hij gelooft", "iedereen moet naar de kerk", "geloof is verboden", "Je mag zelf kiezen of en wat je gelooft."],
-["De Nederlandse staat", "Wie beslist of iemand straf krijgt?", "de rechter", "de politie", "de burgemeester", "De rechter is onafhankelijk."],
-["Wonen", "Hoeveel provincies heeft Nederland?", "12", "10", "15", "Nederland heeft twaalf provincies."],
-["Wonen", "Wat is de hoofdstad van Nederland?", "Amsterdam", "Den Haag", "Rotterdam", "Amsterdam is de hoofdstad, maar de regering zit in Den Haag."],
-["Samenleven", "Wanneer is Koningsdag?", "27 april", "5 mei", "30 april", "Koningsdag is op 27 april."],
-["Samenleven", "Wat gebeurt er op 4 mei?", "Nederland herdenkt de doden van de oorlog", "Nederland viert de bevrijding", "de koning is jarig", "Op 4 mei is de Dodenherdenking. Om 20.00 uur is het twee minuten stil."],
-["Samenleven", "Wat viert Nederland op 5 mei?", "de bevrijding", "Koningsdag", "Sinterklaas", "5 mei is Bevrijdingsdag (1945)."],
-["De Nederlandse staat", "Wie was Willem van Oranje?", "de leider van de opstand tegen Spanje", "een beroemde schilder", "de eerste koning", "Willem van Oranje is de 'vader des vaderlands'."],
-["De Nederlandse staat", "Wanneer was Nederland bezet door Duitsland?", "1940–1945", "1914–1918", "1950–1955", "De Duitse bezetting duurde van 1940 tot 1945."],
-["De Nederlandse staat", "Wie schreef een beroemd dagboek in de Tweede Wereldoorlog?", "Anne Frank", "Rembrandt", "Willem van Oranje", "Anne Frank zat ondergedoken in Amsterdam."],
-["De Nederlandse staat", "Wie was Rembrandt?", "een beroemde schilder", "een koning", "een schrijver", "Rembrandt schilderde in de 17e eeuw, bijvoorbeeld De Nachtwacht."],
-["Wonen", "Een groot deel van Nederland ligt lager dan de zee. Wat beschermt het land?", "dijken", "bergen", "bossen", "Dijken en duinen beschermen Nederland tegen het water."],
-["Wonen", "Welke landen liggen naast Nederland?", "België en Duitsland", "Frankrijk en Duitsland", "België en Denemarken", "België ligt in het zuiden, Duitsland in het oosten."],
-["De Nederlandse staat", "Wat is de Gouden Eeuw?", "de 17e eeuw, toen Nederland rijk werd door handel", "de tijd na de Tweede Wereldoorlog", "de tijd van de Romeinen", "In de 17e eeuw was er veel handel, kunst en wetenschap."],
-["Samenleven", "Je hebt een afspraak om 10.00 uur. Hoe laat kom je?", "iets voor 10.00 uur", "om 10.15 uur", "dat maakt niet uit", "In Nederland kom je op tijd."],
-["Samenleven", "Mogen twee mannen of twee vrouwen trouwen in Nederland?", "ja, dat mag", "nee, dat mag niet", "alleen in grote steden", "Sinds 2001 mogen twee mannen of twee vrouwen trouwen."],
-["Samenleven", "Je bent uitgenodigd op een verjaardag. Wat doe je meestal?", "je feliciteert de jarige en neemt een klein cadeau mee", "je neemt niets mee en zegt niets", "je komt een dag later", "Je feliciteert vaak ook de familie van de jarige."],
-["Samenleven", "Hoe begroet je iemand bij een sollicitatiegesprek?", "je geeft een hand en zegt je naam", "je geeft drie zoenen", "je zegt niets", "Een hand geven en de ander aankijken is normaal."],
-["Samenleven", "Tegen wie zeg je meestal 'u'?", "tegen oudere mensen en mensen die je niet kent", "tegen kinderen", "tegen goede vrienden", "'U' is beleefd; 'je' is voor vrienden, familie en collega's."],
-["Samenleven", "Je wilt bij iemand op bezoek gaan. Wat doe je meestal eerst?", "een afspraak maken", "gewoon langsgaan", "een brief sturen", "Nederlanders maken graag eerst een afspraak."],
-["Samenleven", "Mag een werkgever iemand weigeren om zijn geloof of afkomst?", "nee, dat is discriminatie", "ja, dat mag altijd", "alleen bij kleine bedrijven", "Discriminatie is verboden. Je kunt het melden."],
-["Samenleven", "Hebben mannen en vrouwen dezelfde rechten?", "ja, ze zijn gelijk voor de wet", "nee, mannen hebben meer rechten", "alleen op het werk", "Mannen en vrouwen zijn gelijk."],
-["Samenleven", "Nederlanders zeggen vaak eerlijk wat ze denken. Hoe noem je dat?", "direct zijn", "verlegen zijn", "beleefd zijn", "Direct zijn is in Nederland normaal en niet onbeleefd bedoeld."],
-["Samenleven", "Wat vieren mensen op 1 juli met Keti Koti?", "het einde van de slavernij", "het einde van de Tweede Wereldoorlog", "de verjaardag van de koning", "Keti Koti was eerst een Surinaams feest. Nu vieren ook andere mensen het."],
-["Samenleven", "Er is een baby geboren. Wat krijgt het bezoek vaak te eten?", "beschuit met muisjes", "oliebollen", "pepernoten", "Beschuit met muisjes eet je als er een baby is geboren."],
-["Samenleven", "Wanneer eten veel Nederlanders oliebollen?", "met oud en nieuw", "met Pasen", "op Koningsdag", "Op 31 december eten veel mensen oliebollen."],
-["Samenleven", "Welke kleur dragen veel mensen op Koningsdag?", "oranje", "rood", "blauw", "Oranje is de kleur van de koninklijke familie."],
-["Samenleven", "Wat vieren moslims na een maand vasten?", "het Suikerfeest", "Pinksteren", "Sinterklaas", "Het Suikerfeest is het einde van de ramadan."],
-["Samenleven", "Wat vieren christenen met Kerstmis?", "de geboorte van Jezus", "het einde van het vasten", "het begin van het nieuwe jaar", "Kerstmis is op 25 en 26 december."],
-["Samenleven", "Hoe heet het Nederlandse volkslied?", "het Wilhelmus", "het Oranjelied", "de Vlaggenmars", "Het Wilhelmus is het volkslied van Nederland."],
-["Samenleven", "Wat is vrijwilligerswerk?", "werk waarvoor je geen loon krijgt", "werk in het weekend", "werk voor de regering", "Bijna de helft van de mensen in Nederland doet vrijwilligerswerk."],
-["Samenleven", "Twee mensen wonen samen, maar ze zijn niet getrouwd. Mag dat?", "ja, dat mag", "nee, dat is verboden", "alleen als ze kinderen hebben", "Veel mensen wonen samen zonder te trouwen."],
-["Samenleven", "Je kunt niet naar een afspraak komen. Wat doe je?", "je zegt de afspraak op tijd af", "je doet niets", "je komt een dag later", "Afspraken zijn belangrijk. Kun je niet? Dan laat je dat op tijd weten."],
-["Samenleven", "Je wilt meer mensen in je buurt leren kennen. Wat kun je doen?", "lid worden van een vereniging", "een brief schrijven aan de gemeente", "wachten tot mensen bij je aanbellen", "Bij een sportclub of andere vereniging ontmoet je snel mensen."],
-["Gezondheidszorg", "Tot hoeveel weken zwangerschap mag abortus in Nederland?", "tot 24 weken", "tot 12 weken", "tot 30 weken", "Abortus is in de Nederlandse wet geregeld."],
-["Gezondheidszorg", "Wat is euthanasie?", "een arts helpt een heel zieke patiënt te sterven, als de patiënt dat zelf wil", "een operatie in het ziekenhuis", "een medicijn tegen pijn", "Euthanasie mag alleen onder strenge regels uit de wet."],
-["Gezondheidszorg", "Waar leg je vast of je orgaandonor wilt zijn?", "in het donorregister", "bij de gemeente", "bij de apotheek", "Je kunt je keuze op internet of op papier registreren."],
-["Gezondheidszorg", "Is orgaandonatie verplicht?", "nee, je kiest zelf", "ja, voor iedereen", "ja, vanaf 65 jaar", "Je mag toestemming geven of bezwaar maken."],
-["Gezondheidszorg", "Mag je huisarts jouw medische informatie aan je werkgever geven?", "nee, alleen als jij toestemming geeft", "ja, altijd", "ja, als de werkgever het vraagt", "Iedereen in de zorg heeft beroepsgeheim."],
-["Gezondheidszorg", "Hoe vaak ga je meestal naar de tandarts voor controle?", "één of twee keer per jaar", "elke maand", "alleen als je pijn hebt", "Bij een controle ziet de tandarts problemen op tijd."],
-["Gezondheidszorg", "Wat is de premie van de zorgverzekering?", "het bedrag dat je elke maand betaalt", "het bedrag dat je terugkrijgt", "een boete", "Volwassenen betalen elke maand premie."],
-["Gezondheidszorg", "Waar kun je vaccinaties halen?", "bij de GGD", "bij het UWV", "bij de IND", "De GGD beschermt de gezondheid van de inwoners. Ook het consultatiebureau hoort erbij."],
-["Gezondheidszorg", "Je hebt na een ongeluk misschien je been gebroken. Waar word je geholpen?", "bij de Spoedeisende Hulp (SEH)", "bij de apotheek", "bij het consultatiebureau", "De SEH is de afdeling voor spoed in het ziekenhuis."],
-["Wonen", "In welke provincie liggen de meeste Deltawerken?", "Zeeland", "Friesland", "Limburg", "De Deltawerken zijn dammen en dijken die het land beschermen."],
-["Wonen", "Waarom zijn de Deltawerken gebouwd?", "om het land te beschermen tegen de zee", "om elektriciteit te maken", "om meer toeristen te krijgen", "Een groot deel van Nederland ligt lager dan de zee."],
-["Wonen", "Wat is de Afsluitdijk?", "een lange dijk tussen de Waddenzee en het IJsselmeer", "een brug in Rotterdam", "een eiland in de Noordzee", "De Afsluitdijk is dertig kilometer lang."],
-["Wonen", "Welke twee grote rivieren stromen door Nederland?", "de Rijn en de Maas", "de Donau en de Rijn", "de Seine en de Maas", "De Rijn en de Maas stromen naar de Noordzee."],
-["Wonen", "Wat zijn de vier grootste steden van Nederland?", "Amsterdam, Rotterdam, Den Haag en Utrecht", "Amsterdam, Rotterdam, Eindhoven en Groningen", "Amsterdam, Den Haag, Maastricht en Zwolle", "Deze vier steden liggen in het westen en midden van het land."],
+["Staatsinrichting en rechtsstaat", "Wie is het staatshoofd van Nederland?", "de koning", "de minister-president", "de burgemeester", "De koning is het staatshoofd. De minister-president leidt de regering."],
+["Staatsinrichting en rechtsstaat", "In welke stad zit de regering?", "Den Haag", "Amsterdam", "Utrecht", "De regering en het parlement zitten in Den Haag."],
+["Staatsinrichting en rechtsstaat", "Vanaf welke leeftijd mag je stemmen?", "18 jaar", "16 jaar", "21 jaar", "Je mag stemmen vanaf 18 jaar."],
+["Staatsinrichting en rechtsstaat", "Wie kiezen de Nederlanders direct?", "de Tweede Kamer", "de koning", "de minister-president", "De burgers kiezen de Tweede Kamer direct."],
+["Staatsinrichting en rechtsstaat", "Wat staat in artikel 1 van de Grondwet?", "iedereen is gelijk, discriminatie is verboden", "iedereen moet werken", "iedereen moet Nederlands spreken", "Artikel 1: iedereen is gelijk en discriminatie is verboden."],
+["Staatsinrichting en rechtsstaat", "Hoe vaak zijn er normaal verkiezingen voor de Tweede Kamer?", "elke vier jaar", "elk jaar", "elke tien jaar", "Normaal zijn er elke vier jaar verkiezingen."],
+["Staatsinrichting en rechtsstaat", "Hoeveel leden heeft de Tweede Kamer?", "150", "75", "225", "De Tweede Kamer heeft 150 leden, de Eerste Kamer 75."],
+["Staatsinrichting en rechtsstaat", "Wie leidt het bestuur van een gemeente?", "de burgemeester", "de minister", "de koning", "De burgemeester leidt de gemeente, samen met de wethouders."],
+["Staatsinrichting en rechtsstaat", "Wat betekent vrijheid van godsdienst?", "iedereen mag zelf kiezen wat hij gelooft", "iedereen moet naar de kerk", "geloof is verboden", "Je mag zelf kiezen of en wat je gelooft."],
+["Staatsinrichting en rechtsstaat", "Wie beslist of iemand straf krijgt?", "de rechter", "de politie", "de burgemeester", "De rechter is onafhankelijk."],
+["Geschiedenis en geografie", "Hoeveel provincies heeft Nederland?", "12", "10", "15", "Nederland heeft twaalf provincies."],
+["Geschiedenis en geografie", "Wat is de hoofdstad van Nederland?", "Amsterdam", "Den Haag", "Rotterdam", "Amsterdam is de hoofdstad, maar de regering zit in Den Haag."],
+["Omgangsvormen, waarden en normen", "Wanneer is Koningsdag?", "27 april", "5 mei", "30 april", "Koningsdag is op 27 april."],
+["Geschiedenis en geografie", "Wat gebeurt er op 4 mei?", "Nederland herdenkt de doden van de oorlog", "Nederland viert de bevrijding", "de koning is jarig", "Op 4 mei is de Dodenherdenking. Om 20.00 uur is het twee minuten stil."],
+["Geschiedenis en geografie", "Wat viert Nederland op 5 mei?", "de bevrijding", "Koningsdag", "Sinterklaas", "5 mei is Bevrijdingsdag (1945)."],
+["Geschiedenis en geografie", "Wie was Willem van Oranje?", "de leider van de opstand tegen Spanje", "een beroemde schilder", "de eerste koning", "Willem van Oranje is de 'vader des vaderlands'."],
+["Geschiedenis en geografie", "Wanneer was Nederland bezet door Duitsland?", "1940–1945", "1914–1918", "1950–1955", "De Duitse bezetting duurde van 1940 tot 1945."],
+["Geschiedenis en geografie", "Wie schreef een beroemd dagboek in de Tweede Wereldoorlog?", "Anne Frank", "Rembrandt", "Willem van Oranje", "Anne Frank zat ondergedoken in Amsterdam."],
+["Geschiedenis en geografie", "Wie was Rembrandt?", "een beroemde schilder", "een koning", "een schrijver", "Rembrandt schilderde in de 17e eeuw, bijvoorbeeld De Nachtwacht."],
+["Geschiedenis en geografie", "Een groot deel van Nederland ligt lager dan de zee. Wat beschermt het land?", "dijken", "bergen", "bossen", "Dijken en duinen beschermen Nederland tegen het water."],
+["Geschiedenis en geografie", "Welke landen liggen naast Nederland?", "België en Duitsland", "Frankrijk en Duitsland", "België en Denemarken", "België ligt in het zuiden, Duitsland in het oosten."],
+["Geschiedenis en geografie", "Wat is de Gouden Eeuw?", "de 17e eeuw, toen Nederland rijk werd door handel", "de tijd na de Tweede Wereldoorlog", "de tijd van de Romeinen", "In de 17e eeuw was er veel handel, kunst en wetenschap."],
+["Omgangsvormen, waarden en normen", "Je hebt een afspraak om 10.00 uur. Hoe laat kom je?", "iets voor 10.00 uur", "om 10.15 uur", "dat maakt niet uit", "In Nederland kom je op tijd."],
+["Omgangsvormen, waarden en normen", "Mogen twee mannen of twee vrouwen trouwen in Nederland?", "ja, dat mag", "nee, dat mag niet", "alleen in grote steden", "Sinds 2001 mogen twee mannen of twee vrouwen trouwen."],
+["Omgangsvormen, waarden en normen", "Je bent uitgenodigd op een verjaardag. Wat doe je meestal?", "je feliciteert de jarige en neemt een klein cadeau mee", "je neemt niets mee en zegt niets", "je komt een dag later", "Je feliciteert vaak ook de familie van de jarige."],
+["Omgangsvormen, waarden en normen", "Hoe begroet je iemand bij een sollicitatiegesprek?", "je geeft een hand en zegt je naam", "je geeft drie zoenen", "je zegt niets", "Een hand geven en de ander aankijken is normaal."],
+["Omgangsvormen, waarden en normen", "Tegen wie zeg je meestal 'u'?", "tegen oudere mensen en mensen die je niet kent", "tegen kinderen", "tegen goede vrienden", "'U' is beleefd; 'je' is voor vrienden, familie en collega's."],
+["Omgangsvormen, waarden en normen", "Je wilt bij iemand op bezoek gaan. Wat doe je meestal eerst?", "een afspraak maken", "gewoon langsgaan", "een brief sturen", "Nederlanders maken graag eerst een afspraak."],
+["Omgangsvormen, waarden en normen", "Mag een werkgever iemand weigeren om zijn geloof of afkomst?", "nee, dat is discriminatie", "ja, dat mag altijd", "alleen bij kleine bedrijven", "Discriminatie is verboden. Je kunt het melden."],
+["Omgangsvormen, waarden en normen", "Hebben mannen en vrouwen dezelfde rechten?", "ja, ze zijn gelijk voor de wet", "nee, mannen hebben meer rechten", "alleen op het werk", "Mannen en vrouwen zijn gelijk."],
+["Omgangsvormen, waarden en normen", "Nederlanders zeggen vaak eerlijk wat ze denken. Hoe noem je dat?", "direct zijn", "verlegen zijn", "beleefd zijn", "Direct zijn is in Nederland normaal en niet onbeleefd bedoeld."],
+["Omgangsvormen, waarden en normen", "Wat vieren mensen op 1 juli met Keti Koti?", "het einde van de slavernij", "het einde van de Tweede Wereldoorlog", "de verjaardag van de koning", "Keti Koti was eerst een Surinaams feest. Nu vieren ook andere mensen het."],
+["Omgangsvormen, waarden en normen", "Er is een baby geboren. Wat krijgt het bezoek vaak te eten?", "beschuit met muisjes", "oliebollen", "pepernoten", "Beschuit met muisjes eet je als er een baby is geboren."],
+["Omgangsvormen, waarden en normen", "Wanneer eten veel Nederlanders oliebollen?", "met oud en nieuw", "met Pasen", "op Koningsdag", "Op 31 december eten veel mensen oliebollen."],
+["Omgangsvormen, waarden en normen", "Welke kleur dragen veel mensen op Koningsdag?", "oranje", "rood", "blauw", "Oranje is de kleur van de koninklijke familie."],
+["Omgangsvormen, waarden en normen", "Wat vieren moslims na een maand vasten?", "het Suikerfeest", "Pinksteren", "Sinterklaas", "Het Suikerfeest is het einde van de ramadan."],
+["Omgangsvormen, waarden en normen", "Wat vieren christenen met Kerstmis?", "de geboorte van Jezus", "het einde van het vasten", "het begin van het nieuwe jaar", "Kerstmis is op 25 en 26 december."],
+["Omgangsvormen, waarden en normen", "Hoe heet het Nederlandse volkslied?", "het Wilhelmus", "het Oranjelied", "de Vlaggenmars", "Het Wilhelmus is het volkslied van Nederland."],
+["Omgangsvormen, waarden en normen", "Wat is vrijwilligerswerk?", "werk waarvoor je geen loon krijgt", "werk in het weekend", "werk voor de regering", "Bijna de helft van de mensen in Nederland doet vrijwilligerswerk."],
+["Omgangsvormen, waarden en normen", "Twee mensen wonen samen, maar ze zijn niet getrouwd. Mag dat?", "ja, dat mag", "nee, dat is verboden", "alleen als ze kinderen hebben", "Veel mensen wonen samen zonder te trouwen."],
+["Omgangsvormen, waarden en normen", "Je kunt niet naar een afspraak komen. Wat doe je?", "je zegt de afspraak op tijd af", "je doet niets", "je komt een dag later", "Afspraken zijn belangrijk. Kun je niet? Dan laat je dat op tijd weten."],
+["Omgangsvormen, waarden en normen", "Je wilt meer mensen in je buurt leren kennen. Wat kun je doen?", "lid worden van een vereniging", "een brief schrijven aan de gemeente", "wachten tot mensen bij je aanbellen", "Bij een sportclub of andere vereniging ontmoet je snel mensen."],
+["Gezondheid en gezondheidszorg", "Tot hoeveel weken zwangerschap mag abortus in Nederland?", "tot 24 weken", "tot 12 weken", "tot 30 weken", "Abortus is in de Nederlandse wet geregeld."],
+["Gezondheid en gezondheidszorg", "Wat is euthanasie?", "een arts helpt een heel zieke patiënt te sterven, als de patiënt dat zelf wil", "een operatie in het ziekenhuis", "een medicijn tegen pijn", "Euthanasie mag alleen onder strenge regels uit de wet."],
+["Gezondheid en gezondheidszorg", "Waar leg je vast of je orgaandonor wilt zijn?", "in het donorregister", "bij de gemeente", "bij de apotheek", "Je kunt je keuze op internet of op papier registreren."],
+["Gezondheid en gezondheidszorg", "Is orgaandonatie verplicht?", "nee, je kiest zelf", "ja, voor iedereen", "ja, vanaf 65 jaar", "Je mag toestemming geven of bezwaar maken."],
+["Gezondheid en gezondheidszorg", "Mag je huisarts jouw medische informatie aan je werkgever geven?", "nee, alleen als jij toestemming geeft", "ja, altijd", "ja, als de werkgever het vraagt", "Iedereen in de zorg heeft beroepsgeheim."],
+["Gezondheid en gezondheidszorg", "Hoe vaak ga je meestal naar de tandarts voor controle?", "één of twee keer per jaar", "elke maand", "alleen als je pijn hebt", "Bij een controle ziet de tandarts problemen op tijd."],
+["Gezondheid en gezondheidszorg", "Wat is de premie van de zorgverzekering?", "het bedrag dat je elke maand betaalt", "het bedrag dat je terugkrijgt", "een boete", "Volwassenen betalen elke maand premie."],
+["Gezondheid en gezondheidszorg", "Waar kun je vaccinaties halen?", "bij de GGD", "bij het UWV", "bij de IND", "De GGD beschermt de gezondheid van de inwoners. Ook het consultatiebureau hoort erbij."],
+["Gezondheid en gezondheidszorg", "Je hebt na een ongeluk misschien je been gebroken. Waar word je geholpen?", "bij de Spoedeisende Hulp (SEH)", "bij de apotheek", "bij het consultatiebureau", "De SEH is de afdeling voor spoed in het ziekenhuis."],
+["Geschiedenis en geografie", "In welke provincie liggen de meeste Deltawerken?", "Zeeland", "Friesland", "Limburg", "De Deltawerken zijn dammen en dijken die het land beschermen."],
+["Geschiedenis en geografie", "Waarom zijn de Deltawerken gebouwd?", "om het land te beschermen tegen de zee", "om elektriciteit te maken", "om meer toeristen te krijgen", "Een groot deel van Nederland ligt lager dan de zee."],
+["Geschiedenis en geografie", "Wat is de Afsluitdijk?", "een lange dijk tussen de Waddenzee en het IJsselmeer", "een brug in Rotterdam", "een eiland in de Noordzee", "De Afsluitdijk is dertig kilometer lang."],
+["Geschiedenis en geografie", "Welke twee grote rivieren stromen door Nederland?", "de Rijn en de Maas", "de Donau en de Rijn", "de Seine en de Maas", "De Rijn en de Maas stromen naar de Noordzee."],
+["Geschiedenis en geografie", "Wat zijn de vier grootste steden van Nederland?", "Amsterdam, Rotterdam, Den Haag en Utrecht", "Amsterdam, Rotterdam, Eindhoven en Groningen", "Amsterdam, Den Haag, Maastricht en Zwolle", "Deze vier steden liggen in het westen en midden van het land."],
 ["Wonen", "Wat is OZB?", "belasting aan de gemeente als je een huis hebt gekocht", "een toeslag voor de huur", "de rekening voor gas en licht", "OZB betekent onroerendezaakbelasting."],
 ["Wonen", "Je hebt een probleem met je verhuurder en praten helpt niet. Wie kan je helpen?", "de huurcommissie", "de IND", "het UWV", "De huurcommissie helpt bij problemen tussen huurder en verhuurder."],
 ["Wonen", "Wat doet het waterschap?", "het zorgt voor het water in een gebied, zoals dijken en schoon water", "het geeft verblijfsvergunningen", "het regelt het openbaar vervoer", "Je betaalt belasting aan het waterschap."],
@@ -546,28 +550,28 @@ const KNM=[
 ["Wonen", "Bij welk energiecontract betaal je één of drie jaar dezelfde prijs?", "bij een vast contract", "bij een variabel contract", "bij elk contract", "Bij een variabel contract kan de prijs elke maand anders zijn."],
 ["Wonen", "Wat is afvalstoffenheffing?", "belasting aan de gemeente voor het ophalen van je afval", "een boete voor afval op straat", "de prijs van een vuilniszak", "Je betaalt de gemeente voor het ophalen en verwerken van afval."],
 ["Wonen", "Wat geef je door aan je energieleverancier?", "je meterstanden", "je DigiD", "je huurcontract", "Met de meterstanden rekent het bedrijf uit hoeveel je hebt gebruikt."],
-["Wonen", "Waarom zit Nederland in de Europese Unie?", "de landen werken samen, bijvoorbeeld bij handel en vrij reizen", "alle landen hebben dezelfde koning", "alle landen spreken dezelfde taal", "Inwoners van de EU mogen vrij reizen tussen de landen."],
-["Opvoeding en onderwijs", "Wat doet een kraamhulp?", "zij helpt ongeveer een week thuis als de baby geboren is", "zij geeft les op de basisschool", "zij werkt bij de huisarts", "Je regelt de kraamhulp zelf, op tijd in de zwangerschap."],
-["Opvoeding en onderwijs", "Wat is BSO?", "opvang voor kinderen na schooltijd", "een school voor volwassenen", "een sportvereniging", "BSO betekent buitenschoolse opvang."],
-["Opvoeding en onderwijs", "Je maakt je zorgen over geweld in een gezin. Wie kun je bellen voor advies?", "Veilig Thuis", "het UWV", "DUO", "Veilig Thuis kun je ook bellen over kinderen van een ander."],
-["Opvoeding en onderwijs", "Je wilt met je kind van tien een week op vakantie buiten de schoolvakantie. Mag dat?", "nee, je kunt een boete krijgen", "ja, dat mag altijd", "ja, als je de school belt", "Door de leerplicht is een kind alleen in de schoolvakanties vrij."],
-["Opvoeding en onderwijs", "Is de ouderbijdrage op school verplicht?", "nee, die is vrijwillig", "ja, voor alle ouders", "ja, maar alleen op de basisschool", "Scholen vragen de ouderbijdrage voor bijvoorbeeld een schoolreisje."],
-["Opvoeding en onderwijs", "Wat betekent vrijheid van onderwijs?", "ouders kiezen zelf een school voor hun kind", "kinderen hoeven niet naar school", "elke school is gratis", "Er zijn openbare scholen en scholen met een geloof of een eigen manier van lesgeven."],
-["Opvoeding en onderwijs", "Je wilt weten wat je buitenlandse diploma in Nederland waard is. Waar vraag je dat?", "bij het IDW (internationale diplomawaardering)", "bij de politie", "bij de Belastingdienst", "Met een diplomawaardering weet je wat je met je diploma kunt doen."],
-["Opvoeding en onderwijs", "Tot welke leeftijd geldt de leerplicht?", "tot 16 jaar; zonder diploma ga je ook met 16 en 17 jaar naar school", "tot 12 jaar", "tot 21 jaar", "De leerplicht begint bij 5 jaar."],
-["Opvoeding en onderwijs", "Tot welke leeftijd is onderwijs gratis?", "tot 18 jaar", "tot 12 jaar", "tot 25 jaar", "Ben je ouder dan 18? Dan betaal je lesgeld of collegegeld."],
-["Opvoeding en onderwijs", "Wie zijn verantwoordelijk voor de opvoeding van een kind?", "de ouders", "de school", "de gemeente", "Ouders zijn verantwoordelijk. Ze kunnen wel hulp vragen."],
-["Opvoeding en onderwijs", "Bij welke organisatie kun je geld lenen voor een opleiding?", "bij DUO", "bij de IND", "bij de SVB", "DUO is de Dienst Uitvoering Onderwijs."],
-["Werken", "Wat is een cao?", "afspraken tussen werkgevers en werknemers in een sector", "een uitkering voor werklozen", "een verzekering tegen ziekte", "In de cao staan de rechten en plichten voor een sector, bijvoorbeeld de horeca."],
-["Werken", "Wat is een ondernemingsraad (OR)?", "een groep werknemers die meepraat over het bedrijf", "de directie van het bedrijf", "een vakbond", "Via de OR beslissen werknemers mee."],
-["Werken", "Je wilt een eigen bedrijf beginnen. Waar schrijf je je in?", "bij de Kamer van Koophandel (KvK)", "bij het UWV", "bij de IND", "Elk bedrijf staat ingeschreven bij de KvK."],
-["Werken", "Wat staat in een tijdelijk contract en niet in een vast contract?", "een einddatum", "je loon", "je werktijden", "Een baan is bijna altijd eerst tijdelijk."],
-["Werken", "Je kunt door ziekte lange tijd niet meer werken. Welke uitkering kun je krijgen?", "een WIA-uitkering", "een WW-uitkering", "de AOW", "WIA is voor mensen die arbeidsongeschikt zijn. WW is voor werklozen."],
-["Werken", "Wat is werken in deeltijd?", "minder uren werken dan een volle werkweek", "alleen 's nachts werken", "thuis werken", "Voltijd is een volle werkweek; deeltijd is minder."],
-["Werken", "Wat stuur je naar een werkgever als je solliciteert?", "een cv en een sollicitatiebrief", "je paspoort en je bankpas", "je loonstrook", "In je brief schrijf je waarom je de baan wilt."],
-["Werken", "Je wordt op je werk gediscrimineerd. Wat kun je doen?", "erover praten met een vertrouwenspersoon en het melden", "niets, dat hoort erbij", "je moet ontslag nemen", "Je kunt het ook melden bij een meldpunt of aangifte doen bij de politie."],
-["Werken", "Wat is een netwerk?", "de mensen die je kent en die je kunnen helpen, bijvoorbeeld bij het zoeken naar werk", "een contract bij een uitzendbureau", "een cursus van de gemeente", "Veel mensen vinden werk via hun netwerk."],
-["Werken", "Je hebt een bijstandsuitkering. Wat moet je doen?", "werk zoeken en veranderingen doorgeven aan de gemeente", "niets, je krijgt altijd geld", "elke maand naar het UWV gaan", "Bij een uitkering heb je rechten en plichten."],
+["Staatsinrichting en rechtsstaat", "Waarom zit Nederland in de Europese Unie?", "de landen werken samen, bijvoorbeeld bij handel en vrij reizen", "alle landen hebben dezelfde koning", "alle landen spreken dezelfde taal", "Inwoners van de EU mogen vrij reizen tussen de landen."],
+["Onderwijs en opvoeding", "Wat doet een kraamhulp?", "zij helpt ongeveer een week thuis als de baby geboren is", "zij geeft les op de basisschool", "zij werkt bij de huisarts", "Je regelt de kraamhulp zelf, op tijd in de zwangerschap."],
+["Onderwijs en opvoeding", "Wat is BSO?", "opvang voor kinderen na schooltijd", "een school voor volwassenen", "een sportvereniging", "BSO betekent buitenschoolse opvang."],
+["Onderwijs en opvoeding", "Je maakt je zorgen over geweld in een gezin. Wie kun je bellen voor advies?", "Veilig Thuis", "het UWV", "DUO", "Veilig Thuis kun je ook bellen over kinderen van een ander."],
+["Onderwijs en opvoeding", "Je wilt met je kind van tien een week op vakantie buiten de schoolvakantie. Mag dat?", "nee, je kunt een boete krijgen", "ja, dat mag altijd", "ja, als je de school belt", "Door de leerplicht is een kind alleen in de schoolvakanties vrij."],
+["Onderwijs en opvoeding", "Is de ouderbijdrage op school verplicht?", "nee, die is vrijwillig", "ja, voor alle ouders", "ja, maar alleen op de basisschool", "Scholen vragen de ouderbijdrage voor bijvoorbeeld een schoolreisje."],
+["Onderwijs en opvoeding", "Wat betekent vrijheid van onderwijs?", "ouders kiezen zelf een school voor hun kind", "kinderen hoeven niet naar school", "elke school is gratis", "Er zijn openbare scholen en scholen met een geloof of een eigen manier van lesgeven."],
+["Onderwijs en opvoeding", "Je wilt weten wat je buitenlandse diploma in Nederland waard is. Waar vraag je dat?", "bij het IDW (internationale diplomawaardering)", "bij de politie", "bij de Belastingdienst", "Met een diplomawaardering weet je wat je met je diploma kunt doen."],
+["Onderwijs en opvoeding", "Tot welke leeftijd geldt de leerplicht?", "tot 16 jaar; zonder diploma ga je ook met 16 en 17 jaar naar school", "tot 12 jaar", "tot 21 jaar", "De leerplicht begint bij 5 jaar."],
+["Onderwijs en opvoeding", "Tot welke leeftijd is onderwijs gratis?", "tot 18 jaar", "tot 12 jaar", "tot 25 jaar", "Ben je ouder dan 18? Dan betaal je lesgeld of collegegeld."],
+["Onderwijs en opvoeding", "Wie zijn verantwoordelijk voor de opvoeding van een kind?", "de ouders", "de school", "de gemeente", "Ouders zijn verantwoordelijk. Ze kunnen wel hulp vragen."],
+["Onderwijs en opvoeding", "Bij welke organisatie kun je geld lenen voor een opleiding?", "bij DUO", "bij de IND", "bij de SVB", "DUO is de Dienst Uitvoering Onderwijs."],
+["Werk en inkomen", "Wat is een cao?", "afspraken tussen werkgevers en werknemers in een sector", "een uitkering voor werklozen", "een verzekering tegen ziekte", "In de cao staan de rechten en plichten voor een sector, bijvoorbeeld de horeca."],
+["Werk en inkomen", "Wat is een ondernemingsraad (OR)?", "een groep werknemers die meepraat over het bedrijf", "de directie van het bedrijf", "een vakbond", "Via de OR beslissen werknemers mee."],
+["Werk en inkomen", "Je wilt een eigen bedrijf beginnen. Waar schrijf je je in?", "bij de Kamer van Koophandel (KvK)", "bij het UWV", "bij de IND", "Elk bedrijf staat ingeschreven bij de KvK."],
+["Werk en inkomen", "Wat staat in een tijdelijk contract en niet in een vast contract?", "een einddatum", "je loon", "je werktijden", "Een baan is bijna altijd eerst tijdelijk."],
+["Werk en inkomen", "Je kunt door ziekte lange tijd niet meer werken. Welke uitkering kun je krijgen?", "een WIA-uitkering", "een WW-uitkering", "de AOW", "WIA is voor mensen die arbeidsongeschikt zijn. WW is voor werklozen."],
+["Werk en inkomen", "Wat is werken in deeltijd?", "minder uren werken dan een volle werkweek", "alleen 's nachts werken", "thuis werken", "Voltijd is een volle werkweek; deeltijd is minder."],
+["Werk en inkomen", "Wat stuur je naar een werkgever als je solliciteert?", "een cv en een sollicitatiebrief", "je paspoort en je bankpas", "je loonstrook", "In je brief schrijf je waarom je de baan wilt."],
+["Werk en inkomen", "Je wordt op je werk gediscrimineerd. Wat kun je doen?", "erover praten met een vertrouwenspersoon en het melden", "niets, dat hoort erbij", "je moet ontslag nemen", "Je kunt het ook melden bij een meldpunt of aangifte doen bij de politie."],
+["Werk en inkomen", "Wat is een netwerk?", "de mensen die je kent en die je kunnen helpen, bijvoorbeeld bij het zoeken naar werk", "een contract bij een uitzendbureau", "een cursus van de gemeente", "Veel mensen vinden werk via hun netwerk."],
+["Werk en inkomen", "Je hebt een bijstandsuitkering. Wat moet je doen?", "werk zoeken en veranderingen doorgeven aan de gemeente", "niets, je krijgt altijd geld", "elke maand naar het UWV gaan", "Bij een uitkering heb je rechten en plichten."],
 ["Instanties", "Vanaf welke leeftijd moet je altijd een identiteitsbewijs bij je hebben?", "vanaf 14 jaar", "vanaf 12 jaar", "vanaf 18 jaar", "De politie mag vragen om je identiteitsbewijs."],
 ["Instanties", "Hoelang is een paspoort voor een volwassene geldig?", "tien jaar", "vijf jaar", "twee jaar", "Daarna vraag je een nieuw paspoort aan bij de gemeente."],
 ["Instanties", "Na hoeveel jaar legaal wonen in Nederland kun je meestal naturalisatie aanvragen?", "na vijf jaar", "na twee jaar", "na tien jaar", "Met een Nederlandse partner kan het na drie jaar. Je moet ook klaar zijn met je inburgering."],
@@ -581,24 +585,62 @@ const KNM=[
 ["Instanties", "Je hebt schulden en je kunt ze niet betalen. Waar vraag je hulp?", "bij de schuldhulpverlening van de gemeente", "bij DUO", "bij de IND", "De gemeente helpt bij financiële problemen."],
 ["Instanties", "Mag je je DigiD aan iemand anders geven?", "nee, DigiD is persoonlijk", "ja, aan familie", "ja, aan je werkgever", "Met jouw DigiD kan iemand anders zaken regelen op jouw naam."],
 ["Instanties", "Welke toeslag is er voor de kosten van de kinderopvang?", "de kinderopvangtoeslag", "de huurtoeslag", "de zorgtoeslag", "Toeslagen vraag je aan bij de Belastingdienst."],
-["De Nederlandse staat", "Tegen welk land vocht Nederland in de Tachtigjarige Oorlog?", "Spanje", "Duitsland", "Engeland", "In die tijd hoorden de Nederlanden bij Spanje."],
-["De Nederlandse staat", "In welk jaar eindigde de Tachtigjarige Oorlog?", "1648", "1945", "1848", "De oorlog tegen Spanje duurde tot 1648."],
-["De Nederlandse staat", "Welke landen waren vroeger koloniën van Nederland?", "Indonesië en Suriname", "België en Duitsland", "Turkije en Marokko", "Indonesië werd vrij in 1949 en Suriname in 1975."],
-["De Nederlandse staat", "In welk jaar werd Suriname een vrij land?", "1975", "1949", "1945", "Indonesië werd in 1949 een vrij land."],
-["De Nederlandse staat", "Wat is de Holocaust?", "de moord op zes miljoen Joden in de Tweede Wereldoorlog", "het bombardement op Rotterdam", "de winter van 1944", "Discriminatie van Joden heet antisemitisme."],
-["De Nederlandse staat", "Hoe noemen we de winter van 1944 in Nederland?", "de Hongerwinter", "de Gouden Eeuw", "de Watersnood", "In die winter gingen veel mensen dood van de honger."],
-["De Nederlandse staat", "Wie waren de gastarbeiders?", "mensen uit bijvoorbeeld Turkije en Marokko die hier kwamen werken", "soldaten uit Canada", "toeristen uit Duitsland", "Rond 1970 waren er te weinig mensen voor al het werk."],
-["De Nederlandse staat", "Wie zitten in de regering?", "de koning en de ministers", "de leden van de Tweede Kamer", "de rechters", "De regering is de uitvoerende macht."],
-["De Nederlandse staat", "Wie zitten in het parlement?", "de leden van de Eerste en de Tweede Kamer", "de ministers", "de burgemeesters", "Het parlement controleert de regering."],
-["De Nederlandse staat", "Wat gebeurt er op Prinsjesdag?", "de koning vertelt de plannen van de regering voor het nieuwe jaar", "de koning viert zijn verjaardag", "er zijn verkiezingen", "Prinsjesdag is op de derde dinsdag van september."],
-["De Nederlandse staat", "Wie maken samen de wetten in Nederland?", "de regering en het parlement", "de rechters", "de burgemeesters", "Samen zijn zij de wetgevende macht."],
-["De Nederlandse staat", "Wat is de rechterlijke macht?", "de rechters", "de ministers", "de politie", "Rechters beslissen onafhankelijk van de regering."],
-["De Nederlandse staat", "Wat is een coalitie?", "partijen die samen een meerderheid hebben en samen gaan besturen", "de partijen die de verkiezingen verliezen", "één politieke partij", "Na de verkiezingen vormen partijen een coalitie."],
-["De Nederlandse staat", "Wie leidt het bestuur van een provincie?", "de commissaris van de Koning", "de burgemeester", "de minister-president", "De Provinciale Staten beslissen over de plannen van de provincie."],
-["De Nederlandse staat", "Wie stemmen over de plannen in een gemeente?", "de leden van de gemeenteraad", "de Provinciale Staten", "de Tweede Kamer", "Je kiest de gemeenteraad bij de gemeenteraadsverkiezingen."],
-["De Nederlandse staat", "Wat is een rechtsstaat?", "een land waar iedereen zich aan de wet moet houden, ook de overheid", "een land waar de koning alles beslist", "een land zonder rechters", "In een rechtsstaat heeft iedereen dezelfde rechten."],
-["De Nederlandse staat", "Wat betekent actief kiesrecht?", "je mag zelf stemmen", "je mag gekozen worden", "je moet stemmen", "Passief kiesrecht betekent dat mensen op jou kunnen stemmen."],
-["De Nederlandse staat", "Wat is de NAVO?", "een groep landen die militair samenwerkt", "een groep landen met dezelfde munt", "een Nederlandse politieke partij", "Nederland is lid van de NAVO, de EU en de Verenigde Naties."]
+["Geschiedenis en geografie", "Tegen welk land vocht Nederland in de Tachtigjarige Oorlog?", "Spanje", "Duitsland", "Engeland", "In die tijd hoorden de Nederlanden bij Spanje."],
+["Geschiedenis en geografie", "In welk jaar eindigde de Tachtigjarige Oorlog?", "1648", "1945", "1848", "De oorlog tegen Spanje duurde tot 1648."],
+["Geschiedenis en geografie", "Welke landen waren vroeger koloniën van Nederland?", "Indonesië en Suriname", "België en Duitsland", "Turkije en Marokko", "Indonesië werd vrij in 1949 en Suriname in 1975."],
+["Geschiedenis en geografie", "In welk jaar werd Suriname een vrij land?", "1975", "1949", "1945", "Indonesië werd in 1949 een vrij land."],
+["Geschiedenis en geografie", "Wat is de Holocaust?", "de moord op zes miljoen Joden in de Tweede Wereldoorlog", "het bombardement op Rotterdam", "de winter van 1944", "Discriminatie van Joden heet antisemitisme."],
+["Geschiedenis en geografie", "Hoe noemen we de winter van 1944 in Nederland?", "de Hongerwinter", "de Gouden Eeuw", "de Watersnood", "In die winter gingen veel mensen dood van de honger."],
+["Geschiedenis en geografie", "Wie waren de gastarbeiders?", "mensen uit bijvoorbeeld Turkije en Marokko die hier kwamen werken", "soldaten uit Canada", "toeristen uit Duitsland", "Rond 1970 waren er te weinig mensen voor al het werk."],
+["Staatsinrichting en rechtsstaat", "Wie zitten in de regering?", "de koning en de ministers", "de leden van de Tweede Kamer", "de rechters", "De regering is de uitvoerende macht."],
+["Staatsinrichting en rechtsstaat", "Wie zitten in het parlement?", "de leden van de Eerste en de Tweede Kamer", "de ministers", "de burgemeesters", "Het parlement controleert de regering."],
+["Staatsinrichting en rechtsstaat", "Wat gebeurt er op Prinsjesdag?", "de koning vertelt de plannen van de regering voor het nieuwe jaar", "de koning viert zijn verjaardag", "er zijn verkiezingen", "Prinsjesdag is op de derde dinsdag van september."],
+["Staatsinrichting en rechtsstaat", "Wie maken samen de wetten in Nederland?", "de regering en het parlement", "de rechters", "de burgemeesters", "Samen zijn zij de wetgevende macht."],
+["Staatsinrichting en rechtsstaat", "Wat is de rechterlijke macht?", "de rechters", "de ministers", "de politie", "Rechters beslissen onafhankelijk van de regering."],
+["Staatsinrichting en rechtsstaat", "Wat is een coalitie?", "partijen die samen een meerderheid hebben en samen gaan besturen", "de partijen die de verkiezingen verliezen", "één politieke partij", "Na de verkiezingen vormen partijen een coalitie."],
+["Staatsinrichting en rechtsstaat", "Wie leidt het bestuur van een provincie?", "de commissaris van de Koning", "de burgemeester", "de minister-president", "De Provinciale Staten beslissen over de plannen van de provincie."],
+["Staatsinrichting en rechtsstaat", "Wie stemmen over de plannen in een gemeente?", "de leden van de gemeenteraad", "de Provinciale Staten", "de Tweede Kamer", "Je kiest de gemeenteraad bij de gemeenteraadsverkiezingen."],
+["Staatsinrichting en rechtsstaat", "Wat is een rechtsstaat?", "een land waar iedereen zich aan de wet moet houden, ook de overheid", "een land waar de koning alles beslist", "een land zonder rechters", "In een rechtsstaat heeft iedereen dezelfde rechten."],
+["Staatsinrichting en rechtsstaat", "Wat betekent actief kiesrecht?", "je mag zelf stemmen", "je mag gekozen worden", "je moet stemmen", "Passief kiesrecht betekent dat mensen op jou kunnen stemmen."],
+["Staatsinrichting en rechtsstaat", "Wat is de NAVO?", "een groep landen die militair samenwerkt", "een groep landen met dezelfde munt", "een Nederlandse politieke partij", "Nederland is lid van de NAVO, de EU en de Verenigde Naties."],
+["Geschiedenis en geografie", "Wat was de Februaristaking van 1941?", "een staking in Amsterdam tegen de jodenvervolging", "een staking voor een hoger loon", "een staking tegen de koning", "In februari 1941 stopten veel Amsterdammers met werken. Zo protesteerden ze tegen de vervolging van de Joden door de Duitse bezetter."],
+["Geschiedenis en geografie", "Hoeveel Joden uit Nederland zijn in de Tweede Wereldoorlog vermoord?", "ongeveer 102.000", "ongeveer 10.000", "ongeveer 1 miljoen", "Van de ongeveer 140.000 Joden in Nederland zijn er ongeveer 102.000 vermoord, de meesten in kampen zoals Auschwitz en Sobibor."],
+["Geschiedenis en geografie", "Wat was kamp Westerbork in de Tweede Wereldoorlog?", "een doorgangskamp; van daar gingen treinen naar de vernietigingskampen", "een kamp voor Nederlandse soldaten", "een gevangenis voor Duitse soldaten", "Westerbork ligt in Drenthe. De Duitsers stuurden vanuit Westerbork bijna honderd treinen met Joden, Roma en Sinti naar kampen in het oosten."],
+["Geschiedenis en geografie", "Wat is antisemitisme?", "haat tegen Joden of discriminatie van Joden", "kritiek op een politieke partij", "een ander woord voor de Holocaust", "Antisemitisme is vijandigheid tegenover Joden. Het kan gaan om scheldwoorden, bedreigingen of vooroordelen. In Nederland is discriminatie verboden."],
+["Geschiedenis en geografie", "Iemand zegt dat de Holocaust nooit is gebeurd. Wat is dat?", "een vorm van antisemitisme", "een gewone mening over geschiedenis", "een nieuwe ontdekking van historici", "De Holocaust is echt gebeurd: zes miljoen Joden werden vermoord. De Holocaust ontkennen is een vorm van antisemitisme."],
+["Geschiedenis en geografie", "Waar staat het Anne Frank Huis?", "in Amsterdam", "in Rotterdam", "in Den Haag", "Anne Frank zat met haar familie ruim twee jaar ondergedoken in een huis aan de Prinsengracht in Amsterdam. Nu is het een museum."],
+["Geschiedenis en geografie", "Welke provincie ligt in het noorden van Nederland?", "Friesland", "Zeeland", "Limburg", "Friesland, Groningen en Drenthe liggen in het noorden. Zeeland ligt in het zuidwesten en Limburg in het zuiden."],
+["Geschiedenis en geografie", "Welke taal is naast het Nederlands een officiële taal in Friesland?", "het Fries", "het Duits", "het Engels", "In Friesland spreken veel mensen Fries. Het is een officiële taal in Nederland."],
+["Geschiedenis en geografie", "Welke stad heeft de grootste haven van Europa?", "Rotterdam", "Amsterdam", "Utrecht", "De haven van Rotterdam is de grootste haven van Europa. Er werken heel veel mensen."],
+["Geschiedenis en geografie", "Welke eilanden in de Caraïben horen bij het Koninkrijk der Nederlanden?", "onder andere Aruba, Curaçao en Bonaire", "Suriname en Indonesië", "Malta en Cyprus", "Aruba, Curaçao en Sint Maarten zijn landen in het Koninkrijk. Bonaire, Sint Eustatius en Saba horen bij Nederland."],
+["Geschiedenis en geografie", "In welk jaar schafte Nederland de slavernij af?", "in 1863", "in 1945", "in 1648", "Op 1 juli 1863 werd de slavernij in Suriname en op de Antillen afgeschaft. In Suriname moesten veel mensen daarna nog tien jaar verplicht doorwerken. Op 1 juli is Keti Koti."],
+["Omgangsvormen, waarden en normen", "Mag een vrouw in Nederland zelf kiezen of ze wil scheiden?", "ja, ze beslist zelf", "nee, haar man moet het goed vinden", "nee, haar familie beslist", "Vrouwen beslissen in Nederland zelf over hun leven: over werk, studie, trouwen en scheiden. Een scheiding regel je via een advocaat en de rechter."],
+["Omgangsvormen, waarden en normen", "Wie beslist met wie iemand trouwt?", "die persoon zelf", "de ouders", "de familie", "Iedereen kiest zelf of en met wie hij of zij trouwt. Iemand dwingen om te trouwen is in Nederland strafbaar."],
+["Omgangsvormen, waarden en normen", "Een religieuze regel zegt iets anders dan de Nederlandse wet. Wat geldt?", "de Nederlandse wet", "de religieuze regel", "dat kiest iedereen zelf", "Iedereen mag zijn eigen geloof hebben. Maar de wet gaat altijd boven religieuze en culturele regels."],
+["Omgangsvormen, waarden en normen", "Wat betekent lhbti?", "lesbisch, homo, biseksueel, transgender en intersekse", "een politieke partij", "een organisatie voor werklozen", "Lhbti'ers hebben in Nederland dezelfde rechten als iedereen. Discriminatie is verboden."],
+["Omgangsvormen, waarden en normen", "In welk jaar konden twee mannen of twee vrouwen in Nederland voor het eerst trouwen?", "in 2001", "in 1945", "in 2020", "Nederland was in 2001 het eerste land ter wereld waar twee mannen of twee vrouwen met elkaar konden trouwen."],
+["Omgangsvormen, waarden en normen", "Mag een werkgever iemand niet aannemen omdat hij homo is?", "nee, dat is discriminatie", "ja, dat mag de werkgever zelf weten", "alleen bij een klein bedrijf", "Discriminatie om seksuele voorkeur is verboden, net als discriminatie om geloof, afkomst of geslacht."],
+["Omgangsvormen, waarden en normen", "Wat betekent vrijheid van meningsuiting?", "je mag zeggen wat je denkt, maar je mag niet discrimineren of bedreigen", "je mag alles zeggen, ook bedreigingen", "alleen politici mogen hun mening geven", "Vrijheid van meningsuiting staat in de Grondwet. Er zijn grenzen: discrimineren, bedreigen en oproepen tot geweld mag niet."],
+["Omgangsvormen, waarden en normen", "Waar kun je discriminatie melden?", "bij een antidiscriminatievoorziening of bij de politie", "bij de huisarts", "bij de Belastingdienst", "Elke gemeente heeft een antidiscriminatievoorziening. Daar kun je discriminatie melden. Je kunt ook aangifte doen bij de politie."],
+["Omgangsvormen, waarden en normen", "Op een verjaardag feliciteren Nederlanders vaak ook de familie. Wat zeggen ze dan tegen de moeder van de jarige?", "gefeliciteerd met je zoon", "beterschap", "gecondoleerd", "Op een Nederlandse verjaardag feliciteer je de jarige, maar ook de familie: gefeliciteerd met je zoon, met je man, met je moeder."],
+["Gezondheid en gezondheidszorg", "Wat doet de praktijkondersteuner (POH) bij de huisarts?", "helpt bij een chronische ziekte of bij psychische klachten", "maakt de afspraken bij de balie", "opereert patiënten in het ziekenhuis", "De POH werkt in de huisartsenpraktijk. Je komt bij de POH voor controles bij bijvoorbeeld diabetes of astma, of als je veel stress hebt of somber bent."],
+["Gezondheid en gezondheidszorg", "Je voelt je al weken somber en gestrest. Bij wie kun je in de huisartsenpraktijk terecht?", "bij de POH-GGZ", "bij de apotheek", "bij de tandarts", "De POH-GGZ helpt bij psychische klachten. De huisarts verwijst je. Een gesprek met de POH kost geen eigen risico."],
+["Gezondheid en gezondheidszorg", "Betaal je eigen risico voor een bezoek aan de huisarts?", "nee, de huisarts valt niet onder het eigen risico", "ja, altijd", "alleen 's avonds en in het weekend", "Voor de huisarts betaal je geen eigen risico. Voor medicijnen of het ziekenhuis betaal je dat vaak wel."],
+["Instanties", "Je krijgt een e-mail: 'Log hier in met je DigiD.' De link ziet er vreemd uit. Wat is het veiligst?", "niet op de link klikken en zelf naar de website of de DigiD app gaan", "snel inloggen via de link", "je wachtwoord terugsturen per e-mail", "Dit kan phishing zijn: oplichters willen je gegevens. De overheid vraagt nooit per e-mail of sms om je wachtwoord."],
+["Instanties", "Hoe log je het veiligst in met DigiD?", "met de DigiD app", "met alleen je BSN", "met je bankpas", "Met de DigiD app log je veiliger in dan met alleen een gebruikersnaam en een wachtwoord."],
+["Instanties", "Wat is de Berichtenbox van MijnOverheid?", "een veilige brievenbus voor post van de overheid", "een app om met vrienden te chatten", "de brievenbus van de gemeente op straat", "In de Berichtenbox krijg je digitale post van bijvoorbeeld de Belastingdienst en de gemeente. Je logt in met DigiD."],
+["Instanties", "Mag een organisatie jouw persoonlijke gegevens zomaar aan anderen geven?", "nee, je gegevens zijn beschermd door de privacywet", "ja, dat mag altijd", "alleen als het een winkel is", "De privacywet (AVG) beschermt je persoonlijke gegevens, zoals je adres, je BSN en je medische gegevens."],
+["Staatsinrichting en rechtsstaat", "Wat doet de Eerste Kamer?", "ze controleert nieuwe wetten en stemt er als laatste over", "ze kiest de koning", "ze bestuurt de gemeenten", "Eerst stemt de Tweede Kamer over een nieuwe wet. Daarna stemt de Eerste Kamer. De Eerste Kamer kan een wet niet veranderen, alleen aannemen of verwerpen."],
+["Staatsinrichting en rechtsstaat", "Wat is de scheiding der machten?", "de wetgevende, de uitvoerende en de rechterlijke macht zijn gescheiden", "de provincie en de gemeente zijn gescheiden", "mannen en vrouwen werken apart", "Zo heeft niemand alle macht. De rechter is onafhankelijk van de regering."],
+["Staatsinrichting en rechtsstaat", "Wat betekent scheiding van kerk en staat?", "de overheid bemoeit zich niet met het geloof en het geloof niet met de overheid", "kerken zijn verboden", "de koning is de baas van de kerk", "Iedereen mag zijn eigen geloof hebben. De overheid kiest geen geloof."],
+["Staatsinrichting en rechtsstaat", "Mag je in Nederland demonstreren?", "ja, je meldt het meestal eerst bij de gemeente", "nee, dat is verboden", "alleen met toestemming van de koning", "Demonstreren is een grondrecht. De burgemeester kan regels geven, bijvoorbeeld over de plek en de tijd."],
+["Werk en inkomen", "Wat is het minimumloon?", "het laagste loon dat een werkgever volgens de wet mag betalen", "het loon na de belasting", "het loon van een stagiair", "Vanaf 21 jaar heb je recht op het volledige minimumloon. Jongeren krijgen een lager minimumloon."],
+["Werk en inkomen", "Hoeveel vakantiegeld krijg je meestal?", "minstens 8 procent van je brutoloon", "één week loon", "niets, dat is vrijwillig", "Vakantiegeld is minstens 8 procent van je brutoloon. Je krijgt het meestal in mei of juni."],
+["Werk en inkomen", "Aan wie betaal je inkomstenbelasting?", "aan de Belastingdienst", "aan de gemeente", "aan het UWV", "De Belastingdienst int de inkomstenbelasting. Vaak houdt je werkgever die al van je loon in."],
+["Wonen", "Je hebt een oude bank die weg moet. Wat doe je?", "je maakt een afspraak met de gemeente of brengt hem naar de milieustraat", "je zet hem naast de container", "je gooit hem in de papierbak", "Grote spullen heten grofvuil. De gemeente haalt ze op afspraak op, of je brengt ze zelf naar de milieustraat."],
+["Wonen", "Wat staat in een huurcontract?", "de huurprijs en de afspraken tussen huurder en verhuurder", "je salaris", "de namen van je buren", "In het huurcontract staan de huurprijs, de servicekosten en wie wat moet onderhouden."],
+["Onderwijs en opvoeding", "Waarvoor is de doorstroomtoets in groep 8?", "die helpt bij het advies voor de middelbare school", "het is het eindexamen van de middelbare school", "het is een toets voor het rijbewijs", "In groep 8 maken kinderen de doorstroomtoets. De leraar geeft een schooladvies; de toets kan het advies hoger maken."],
+["Onderwijs en opvoeding", "Hoe oud zijn kinderen meestal in groep 1?", "4 jaar", "6 jaar", "8 jaar", "Kinderen mogen naar de basisschool als ze 4 zijn. Vanaf 5 jaar is school verplicht."]
 ];
 const VO="de afspraak:een tijd die je afspreekt, bijvoorbeeld bij de dokter|de baan:het werk dat je hebt|de huur:het geld dat je elke maand voor je woning betaalt|de vertraging:de trein of bus komt later|de korting:je betaalt minder dan de normale prijs|het formulier:een papier met vragen dat je invult|de huisarts:de dokter waar je eerst naartoe gaat|de werkgever:het bedrijf of de persoon voor wie je werkt|de buurman:de man die naast je woont|het perron:de plaats op het station waar je op de trein wacht|de bon:het papiertje dat je krijgt als je betaalt|de handtekening:je naam die je zelf onder een brief zet|het recept:het briefje van de dokter voor medicijnen|het loon:het geld dat je voor je werk krijgt|de verwarming:die maakt je huis warm|overstappen:van de ene trein of bus naar de andere gaan|pinnen:betalen met je bankpas|invullen:je gegevens op een formulier schrijven|de pijn:het gevoel als je lichaam zeer doet|de collega:iemand met wie je samenwerkt|de sleutel:daarmee doe je de deur open en dicht|het kaartje:dat koop je om met de trein te reizen|de aanbieding:een product is tijdelijk goedkoper|aanvragen:officieel om iets vragen, bijvoorbeeld een paspoort|de koorts:je lichaam is te warm omdat je ziek bent|solliciteren:proberen een baan te krijgen|kapot:het werkt niet meer|de halte:de plaats waar de bus of tram stopt|duur:het kost veel geld|de belasting:geld dat je aan de overheid betaalt|verkouden:je hoest en je neus zit dicht|het contract:een papier met afspraken dat je tekent|de verdieping:een etage van een gebouw|linksaf:naar links gaan|goedkoop:het kost weinig geld|de toeslag:extra geld van de overheid, bijvoorbeeld voor de huur|de verzekering:je betaalt elke maand en krijgt hulp bij schade of ziekte|de vergadering:een bijeenkomst op het werk om te praten|de rekening:een brief waarop staat wat je moet betalen|rechtdoor:niet naar links en niet naar rechts|de kassa:de plaats in de winkel waar je betaalt|geldig:je mag het nog gebruiken, bijvoorbeeld een paspoort|de tandarts:de dokter voor je tanden|vrij:je hoeft niet te werken|de buurt:het deel van de stad waar je woont|de fietsenstalling:de plaats waar je je fiets neerzet|ruilen:iets terugbrengen en er iets anders voor krijgen|de brief:een tekst op papier die je met de post krijgt".split("|").map(x=>x.split(":"));
 const WR=[
@@ -748,55 +790,109 @@ const LZ=[
 ["Beste ouders van groep 4,\nIn de week van 10 tot 14 februari zijn de tienminutengesprekken. U praat dan tien minuten met de leerkracht over uw kind.\nKies zelf een tijd in de ouder-app. Dat kan tot 5 februari.\nKunt u niet in deze week? Stuur dan een bericht aan juf Anouk. Dan maken we samen een andere afspraak.\nUw kind hoeft niet mee te komen.\nMet vriendelijke groet,\nBasisschool De Regenboog",[["Hoe maakt u een afspraak?","in de ouder-app","met een brief aan de school","met een telefoontje naar juf Anouk"],["U kunt niet in die week. Wat doet u?","een bericht sturen aan juf Anouk","niets","uw kind alleen sturen"],["Wat is waar?","uw kind hoeft niet mee","het gesprek duurt een uur","u kunt tot 14 februari een tijd kiezen"]]],
 ["Weekmarkt op een andere plek\nVan 1 tot en met 30 november staat de weekmarkt niet op het Marktplein, maar op het parkeerterrein bij het station. Op het Marktplein wordt de straat gerepareerd.\nDe markt is zoals altijd op donderdag en zaterdag, van 9.00 tot 17.00 uur.\nIn november kunt u niet parkeren bij het station. Kom daarom met de fiets of met de bus.",[["Waar is de markt in november?","op het parkeerterrein bij het station","op het Marktplein","in een andere stad"],["Waarom komt u in november beter niet met de auto?","u kunt bij het station niet parkeren","de markt is alleen voor fietsers","de straat bij het station is kapot"]]],
 ["Buurthuis De Ster: programma\nmaandag 10.00 – 12.00 uur: koffieochtend voor iedereen (gratis)\ndinsdag 19.00 – 21.00 uur: naaicafé, repareer samen je kleren (€ 2)\ndonderdag 15.00 – 17.00 uur: huiswerkhulp voor kinderen van 8 tot 12 jaar (gratis)\nvrijdag 18.00 uur: samen eten (€ 5). Opgeven kan tot woensdag bij de bar.\nIedereen is welkom!",[["Uw zoon van 10 jaar heeft hulp nodig met zijn huiswerk. Wanneer gaat hij?","op donderdagmiddag","op maandagochtend","op dinsdagavond"],["U wilt vrijdag mee-eten. Wat moet u doen?","u geeft zich uiterlijk woensdag op bij de bar","u belt vrijdag het buurthuis","u hoeft niets te doen"],["Wat kost het naaicafé?","€ 2","€ 5","niets"]]],
-["Hoi Sanne,\nIk ga verhuizen! Op zaterdag 6 april breng ik al mijn spullen naar mijn nieuwe huis in Leiden. Kun jij me helpen? We beginnen om 9.00 uur bij mijn oude huis. Mijn broer rijdt de bus. Ik zorg voor koffie en lunch.\n's Avonds geef ik een klein feestje in het nieuwe huis. Je vriend is ook welkom.\nLaat je het weten?\nGroetjes, Fatima",[["Waarom schrijft Fatima?","ze vraagt hulp bij haar verhuizing","ze wil een bus huren","ze zoekt een huis in Leiden"],["Waar begint de verhuizing?","bij het oude huis van Fatima","in Leiden","bij Sanne thuis"],["Wie rijdt de bus?","de broer van Fatima","Sanne","Fatima"]]]
+["Hoi Sanne,\nIk ga verhuizen! Op zaterdag 6 april breng ik al mijn spullen naar mijn nieuwe huis in Leiden. Kun jij me helpen? We beginnen om 9.00 uur bij mijn oude huis. Mijn broer rijdt de bus. Ik zorg voor koffie en lunch.\n's Avonds geef ik een klein feestje in het nieuwe huis. Je vriend is ook welkom.\nLaat je het weten?\nGroetjes, Fatima",[["Waarom schrijft Fatima?","ze vraagt hulp bij haar verhuizing","ze wil een bus huren","ze zoekt een huis in Leiden"],["Waar begint de verhuizing?","bij het oude huis van Fatima","in Leiden","bij Sanne thuis"],["Wie rijdt de bus?","de broer van Fatima","Sanne","Fatima"]]],
+["Tandartspraktijk Glimlach\nNieuwe patiënten zijn welkom!\nOpen: maandag tot en met donderdag van 8.30 tot 17.00 uur\nVrijdag: alleen 's ochtends\nAfspraak maken: bel 020-5551234 of kijk op onze website.\nKunt u niet komen? Zeg uw afspraak minstens 24 uur van tevoren af. Doet u dat niet, dan betaalt u € 25.\nKinderen tot 18 jaar: de controle betaalt de zorgverzekering.",
+ [["Wanneer kunt u op vrijdag naar de tandarts?","alleen 's ochtends","de hele dag","niet, dan is de praktijk dicht"],["U zegt uw afspraak een uur van tevoren af. Wat gebeurt er?","u betaalt € 25","u betaalt niets","u krijgt een nieuwe afspraak op vrijdag"]]],
+["Van: Gemeente Zuidstad\nAan: R. Petrova\nOnderwerp: afspraak paspoort\n\nGeachte mevrouw Petrova,\nU hebt een afspraak gemaakt voor een nieuw paspoort op maandag 9 maart om 11.15 uur in het Stadskantoor, Marktplein 1.\nNeem mee: uw oude paspoort en een goede pasfoto. Betalen kan alleen met uw bankpas.\nUw nieuwe paspoort is na ongeveer een week klaar. U krijgt dan een sms. U haalt het zelf op; dat kan zonder afspraak.\nMet vriendelijke groet,\nGemeente Zuidstad",
+ [["Hoe betaalt mevrouw Petrova?","met haar bankpas","contant","met een rekening die ze thuis krijgt"],["Wanneer kan ze het nieuwe paspoort ophalen?","als ze een sms heeft gekregen","op maandag 9 maart","na een nieuwe afspraak"]]],
+["Gezocht: oppas voor twee kinderen\nWij zoeken een lieve oppas voor onze kinderen (3 en 6 jaar).\nWanneer? Elke woensdagmiddag van 12.00 tot 18.00 uur.\nWat ga je doen? De oudste ophalen van school, samen spelen en eten geven.\nWij betalen € 12 per uur.\nJe bent minimaal 18 jaar en je kunt fietsen.\nBel of app Esther: 06-23456789.",
+ [["Wat moet de oppas doen?","een kind van school halen","de kinderen naar bed brengen","het huis schoonmaken"],["Hoeveel verdient de oppas op een woensdag?","€ 72","€ 12","€ 36"]]],
+["Werkzaamheden in de Dorpsstraat\nVan 3 tot en met 21 juni werken we aan de riolering in de Dorpsstraat. De straat is dan dicht voor auto's. Fietsers en voetgangers kunnen er wel door.\nBus 7 stopt in deze weken niet bij de halte Dorpsstraat. Stap in of uit bij de halte Kerkplein.\nUw afval halen we op zoals altijd. Zet uw container wel aan het begin van de straat.\nVragen? Bel de gemeente: 14 0123.",
+ [["Wie kan in juni niet door de Dorpsstraat?","auto's","fietsers","voetgangers"],["Waar zet u in deze weken uw container?","aan het begin van de straat","bij de halte Kerkplein","voor uw huis, zoals altijd"],["Waar stapt u in de bus?","bij de halte Kerkplein","bij de halte Dorpsstraat","bij het gemeentehuis"]]],
+["Beste ouders,\nOp maandag 2 december komt de schoolarts op school. Zij kijkt naar de ogen, de oren, de lengte en het gewicht van de kinderen van groep 2. U mag erbij zijn. Het onderzoek duurt ongeveer twintig minuten.\nKunt u niet op maandag? Bel dan de GGD voor een andere afspraak: 088-1234567.\nNeem het groene boekje van uw kind mee als u komt.\nMet vriendelijke groet,\nJuf Anouk",
+ [["Wat doet de schoolarts?","ze onderzoekt de kinderen van groep 2","ze geeft de kinderen een prik","ze praat met de leraren"],["U kunt op 2 december niet. Wat doet u?","de GGD bellen","juf Anouk mailen","niets; uw kind gaat alleen"]]],
+["Zwemles voor volwassenen\nKunt u niet zwemmen? Bij Sportcentrum De Hoven kan het nog!\nWanneer: elke zaterdag van 9.00 tot 9.45 uur\nAantal lessen: 12\nPrijs: € 96 voor alle lessen\nAanmelden: aan de balie of via de website. U betaalt bij het aanmelden.\nWij hebben ook een les alleen voor vrouwen, op dinsdagavond.",
+ [["Hoeveel kost één les?","€ 8","€ 96","€ 12"],["Wanneer betaalt u?","als u zich aanmeldt","na de laatste les","elke zaterdag"]]],
+["Hoi Yusuf,\nIk ga morgen een week naar mijn zus in Groningen. Wil jij mijn planten water geven? Twee keer is genoeg: op dinsdag en op vrijdag. De sleutel ligt onder de bloempot naast de deur. De post mag je op de tafel leggen.\nIk ben zondagavond terug. Ik neem iets lekkers voor je mee!\nGroetjes, Marja",
+ [["Wat vraagt Marja?","of Yusuf haar planten water wil geven","of Yusuf mee wil naar Groningen","of Yusuf haar post wil wegbrengen"],["Waar is de sleutel?","onder de bloempot","bij de zus van Marja","op de tafel"]]],
+["Milieustraat Zuidstad\nmaandag t/m vrijdag: 8.00 – 16.30 uur\nzaterdag: 9.00 – 15.00 uur\nzondag: gesloten\n\nWat kunt u brengen?\nGratis: hout, metaal, papier en elektrische apparaten\nBetalen: bouwafval en tuinafval, € 10 per kuub\nNeem altijd uw pasje van de gemeente mee. Zonder pasje kunt u niet naar binnen.",
+ [["U brengt een kapotte wasmachine. Wat kost dat?","niets","€ 10","€ 10 per kuub"],["Wat moet u altijd meenemen?","het pasje van de gemeente","uw paspoort","geld"],["Wanneer kunt u op zaterdag komen?","tussen 9.00 en 15.00 uur","tussen 8.00 en 16.30 uur","niet; dan is het dicht"]]],
+["Geachte heer Kowalski,\nIn uw woning komt een nieuwe cv-ketel. Dat doen wij op woensdag 15 januari. De monteur komt tussen 8.00 en 12.00 uur. Hij is ongeveer vier uur bezig. In die tijd hebt u geen warm water en geen verwarming.\nWilt u zorgen dat er iemand thuis is? Kan dat niet, bel ons dan voor 10 januari.\nU hoeft niets te betalen.\nMet vriendelijke groet,\nWoningstichting Thuis",
+ [["Wat gebeurt er op 15 januari?","er komt een nieuwe cv-ketel","de huur gaat omhoog","er komt een nieuw raam"],["Wat moet de heer Kowalski doen?","zorgen dat er iemand thuis is","de monteur betalen","voor 8.00 uur warm water halen"]]],
+["Te huur: kamer in Leiden\nEen kamer van 14 m² op de eerste verdieping.\nHuur: € 450 per maand, inclusief gas, water en licht\nBorg: één maand huur\nDe keuken en de badkamer deel je met twee andere huurders.\nGeen huisdieren. Niet roken.\nVrij vanaf 1 september. Mail naar kamer.leiden@voorbeeld.nl.",
+ [["Wat betaalt u extra voor gas en licht?","niets","€ 450","één maand huur"],["Wat is waar?","u hebt geen eigen keuken","u mag een kat meenemen","de kamer is vrij in augustus"]]],
+["Apotheek De Brug\nUw medicijn: amoxicilline 500 mg\nGebruik: 3 keer per dag 1 capsule, 7 dagen lang\nNeem de capsule met een glas water, voor of na het eten.\nStop niet eerder, ook niet als u zich beter voelt.\nKrijgt u huiduitslag? Stop dan en bel uw huisarts.",
+ [["Hoeveel capsules neemt u in totaal?","21","7","3"],["U voelt zich na vier dagen beter. Wat doet u?","de capsules gewoon verder nemen","stoppen met de capsules","de huisarts bellen"]]],
+["Van: Basisschool De Regenboog\nAan: ouders van groep 7\nOnderwerp: schoolreisje\n\nBeste ouders,\nOp vrijdag 23 mei gaat groep 7 naar het Openluchtmuseum in Arnhem. We gaan met de bus en zijn rond 16.00 uur terug op school.\nDe kosten zijn € 22. U kunt betalen via de link in deze mail. Hebt u weinig geld? Praat dan met de directeur; de school helpt u.\nWij zoeken nog twee ouders die mee willen. Hebt u tijd? Stuur een mail aan meester Bas.\nGroeten, meester Bas",
+ [["Hoe laat zijn de kinderen terug op school?","rond 16.00 uur","rond 12.00 uur","om 23.00 uur"],["U hebt niet genoeg geld voor het schoolreisje. Wat doet u?","met de directeur praten","meester Bas mailen","uw kind thuis laten"],["Wat vraagt meester Bas?","of er ouders mee willen","of de ouders de bus willen betalen","of de kinderen eten meenemen"]]]
 ];
 // luisteren: gesproken tekst, vraag, goed, fout, fout
 const LS=[
 ["Goedemorgen, u spreekt met de assistente van dokter De Vries. U hebt morgen om tien uur een afspraak, maar de dokter is ziek. Kunt u donderdag om half drie komen?","Wanneer is de nieuwe afspraak?","donderdag om half drie","morgen om tien uur","donderdag om half twee"],
-["Dames en heren, de intercity naar Rotterdam van kwart over negen vertrekt vandaag van spoor zeven en niet van spoor vier. De trein heeft tien minuten vertraging.","Van welk spoor vertrekt de trein?","van spoor 7","van spoor 4","van spoor 10"],
+["Dames en heren, de intercity naar Rotterdam van kwart over negen vertrekt vandaag van spoor zeven en niet van spoor vier. De trein heeft tien minuten vertraging.","Van welk spoor vertrekt de trein?","van spoor 7","van spoor 4","van spoor 10","trein"],
 ["Hoi, met Lisa. Ik kan vanavond niet komen eten, want ik moet langer werken. Zullen we morgen afspreken? Ik ben om zes uur klaar.","Waarom komt Lisa vanavond niet?","ze moet langer werken","ze is ziek","ze heeft al gegeten"],
-["Goedemiddag. Ik heb vorige week deze schoenen gekocht, maar ze zijn te klein. Kan ik ze ruilen voor een grotere maat? Ik heb de bon bij me.","Wat wil de klant?","de schoenen ruilen","zijn geld terug","een nieuwe bon"],
+["Goedemiddag. Ik heb vorige week deze schoenen gekocht, maar ze zijn te klein. Kan ik ze ruilen voor een grotere maat? Ik heb de bon bij me.","Wat wil de klant?","de schoenen ruilen","zijn geld terug","een nieuwe bon","winkel"],
 ["Beste ouders, morgen is de school om twaalf uur uit, omdat de leraren een vergadering hebben. De kinderen hebben 's middags geen les.","Waarom zijn de kinderen morgenmiddag vrij?","de leraren hebben een vergadering","het is een feestdag","de juf is ziek"],
 ["U kunt uw pakket bij ons ophalen van maandag tot en met vrijdag, tussen negen en vijf uur. Neem altijd uw paspoort of rijbewijs mee.","Wat moet u meenemen?","een identiteitsbewijs","de bon","uw bankpas"],
 ["Het weer voor morgen. In de ochtend is het droog en zonnig. In de middag komt er regen en het gaat hard waaien. Het wordt ongeveer vijftien graden.","Wanneer gaat het regenen?","'s middags","'s ochtends","het blijft droog"],
 ["Hallo, ik bel over de woning in de Kerkstraat. Is die nog vrij? Ik wil graag weten hoeveel de huur is en of ik zaterdag kan komen kijken.","Wat wil de beller op zaterdag doen?","de woning bekijken","verhuizen","de huur betalen"],
 ["Jouw werktijden voor volgende week. Maandag en dinsdag werk je van zeven tot drie. Woensdag ben je vrij. Donderdag en vrijdag begin je om twaalf uur.","Op welke dag hoef je niet te werken?","op woensdag","op maandag","op vrijdag"],
-["Mevrouw, u moet deze tabletten drie keer per dag nemen, steeds na het eten. U mag er geen alcohol bij drinken. Na een week komt u terug voor controle.","Wanneer neemt u de tabletten?","na het eten","voor het eten","alleen voor het slapen"],
+["Mevrouw, u moet deze tabletten drie keer per dag nemen, steeds na het eten. U mag er geen alcohol bij drinken. Na een week komt u terug voor controle.","Wanneer neemt u de tabletten?","na het eten","voor het eten","alleen voor het slapen","pil"],
 ["Goedemiddag, u spreekt met de apotheek. Uw medicijnen liggen klaar. U kunt ze vandaag tot zes uur ophalen, of morgen vanaf half negen.","Wanneer kunt u de medicijnen morgen ophalen?","vanaf half negen","tot zes uur","vanaf half zes"],
-["Beste reizigers, de trein naar Amsterdam Centraal vertrekt vandaag niet van spoor vijf, maar van spoor acht.","Van welk spoor vertrekt de trein?","spoor acht","spoor vijf","spoor drie"],
+["Beste reizigers, de trein naar Amsterdam Centraal vertrekt vandaag niet van spoor vijf, maar van spoor acht.","Van welk spoor vertrekt de trein?","spoor acht","spoor vijf","spoor drie","trein"],
 ["Hoi, met Jan. Ik sta in de file. Ik ben er een half uur later. Begin maar vast met eten.","Wat moeten de anderen doen?","alvast gaan eten","op Jan wachten met eten","Jan terugbellen"],
 ["Welkom bij de gemeente. Wilt u een afspraak maken voor een paspoort of een identiteitskaart? Toets een. Hebt u een vraag over afval? Toets twee. Voor alle andere vragen: blijf aan de lijn.","U hebt een vraag over uw vuilnisbak. Wat doet u?","u toetst twee","u toetst een","u blijft aan de lijn"],
-["Dames en heren, over tien minuten gaat de winkel dicht. Wilt u naar de kassa gaan? Morgen zijn wij weer open vanaf acht uur.","Wat moeten de klanten doen?","naar de kassa gaan","morgen om tien uur terugkomen","tien minuten wachten"],
+["Dames en heren, over tien minuten gaat de winkel dicht. Wilt u naar de kassa gaan? Morgen zijn wij weer open vanaf acht uur.","Wat moeten de klanten doen?","naar de kassa gaan","morgen om tien uur terugkomen","tien minuten wachten","winkel"],
 ["Hallo, je spreekt met Karin van het uitzendbureau. Ik heb werk voor je in een magazijn. Je kunt maandag beginnen. Wil je me vandaag nog terugbellen?","Wat vraagt Karin?","of je vandaag terugbelt","of je vandaag naar het magazijn gaat","of je maandag belt"],
 ["Goedemorgen, dit is een bericht van de tandarts. Uw afspraak van donderdag om drie uur gaat niet door, want de tandarts is die dag op cursus. Wilt u ons bellen voor een nieuwe afspraak?","Waarom gaat de afspraak niet door?","de tandarts is op cursus","de tandarts is ziek","de praktijk is dicht voor vakantie"],
 ["Het weer voor het weekend. Zaterdag wordt het een mooie dag, met veel zon en twintig graden. Zondag gaat het regenen en er komt harde wind.","Wat voor weer wordt het op zondag?","regen en harde wind","zon en twintig graden","sneeuw"],
-["Let op, let op. De bus van lijn twaalf rijdt vandaag niet door het centrum, want er is markt. Stap uit bij de halte Stationsplein.","Waarom rijdt de bus niet door het centrum?","er is markt","er is een ongeluk","de weg is kapot"],
+["Let op, let op. De bus van lijn twaalf rijdt vandaag niet door het centrum, want er is markt. Stap uit bij de halte Stationsplein.","Waarom rijdt de bus niet door het centrum?","er is markt","er is een ongeluk","de weg is kapot","bus"],
 ["Hoi mam, met Daan. Ik ben mijn sleutel vergeten. Ik ben om vier uur thuis. Ben jij er dan, of moet ik naar de buren gaan?","Wat is het probleem van Daan?","hij heeft geen sleutel","hij komt te laat","hij is ziek"],
 ["Goedemiddag, u bent verbonden met de klantenservice. Alle medewerkers zijn in gesprek. U bent nummer vier in de wachtrij. Een moment geduld alstublieft.","Wat moet de beller doen?","wachten","later terugbellen","een e-mail sturen"],
 ["Beste collega's, de vergadering van morgen begint niet om negen uur, maar om tien uur. Hij is in kamer twee, op de eerste verdieping.","Hoe laat begint de vergadering?","om tien uur","om negen uur","om twee uur"],
-["Welkom bij het zwembad. Vanaf vandaag zijn we in de zomer ook op zondag open, van tien tot vijf. Kinderen tot vier jaar zwemmen gratis.","Wie mag gratis zwemmen?","kinderen tot vier jaar","kinderen tot tien jaar","iedereen op zondag"],
+["Welkom bij het zwembad. Vanaf vandaag zijn we in de zomer ook op zondag open, van tien tot vijf. Kinderen tot vier jaar zwemmen gratis.","Wie mag gratis zwemmen?","kinderen tot vier jaar","kinderen tot tien jaar","iedereen op zondag","zwemmen"],
 ["Goedemorgen, met de school van uw dochter. Uw dochter heeft buikpijn en ze wil graag naar huis. Kunt u haar komen halen?","Wat vraagt de school?","of u uw dochter komt halen","of u medicijnen brengt","of uw dochter morgen thuisblijft"],
 ["Hallo, u spreekt met de bezorgdienst. We hebben vandaag geprobeerd een pakket te bezorgen, maar u was niet thuis. Het pakket ligt nu bij uw buren op nummer twaalf.","Waar is het pakket nu?","bij de buren","op het postkantoor","bij de bezorgdienst"],
-["Dames en heren, door een storing rijden er geen treinen tussen Leiden en Den Haag. Er rijden bussen. Die vertrekken aan de voorkant van het station.","Waar vertrekken de bussen?","aan de voorkant van het station","van spoor een","in Den Haag"],
+["Dames en heren, door een storing rijden er geen treinen tussen Leiden en Den Haag. Er rijden bussen. Die vertrekken aan de voorkant van het station.","Waar vertrekken de bussen?","aan de voorkant van het station","van spoor een","in Den Haag","trein"],
 ["Hoi, met Sara. Zullen we zaterdag samen naar de markt gaan? Ik kan om tien uur bij je zijn. Stuur je even een berichtje?","Wat wil Sara zaterdag doen?","naar de markt gaan","bij jou eten","naar de film gaan"],
-["Goedemiddag, met de huisartsenpraktijk. De uitslag van uw bloedonderzoek is goed. U hoeft niet terug te komen.","Wat moet de patiënt doen?","niets","een nieuwe afspraak maken","opnieuw bloed laten prikken"],
-["Beste klanten, deze week zijn alle appels en peren in de aanbieding: twee kilo voor drie euro.","Wat kost twee kilo appels deze week?","drie euro","twee euro","vijf euro"],
+["Goedemiddag, met de huisartsenpraktijk. De uitslag van uw bloedonderzoek is goed. U hoeft niet terug te komen.","Wat moet de patiënt doen?","niets","een nieuwe afspraak maken","opnieuw bloed laten prikken","dokter"],
+["Beste klanten, deze week zijn alle appels en peren in de aanbieding: twee kilo voor drie euro.","Wat kost twee kilo appels deze week?","drie euro","twee euro","vijf euro","supermarkt"],
 ["Goedemorgen, u spreekt met de woningcorporatie. Morgen tussen acht en twaalf uur komt de monteur voor uw verwarming. Wilt u dan thuis zijn?","Waarom komt de monteur?","voor de verwarming","voor de keuken","voor de wasmachine"],
-["Hallo, met Peter van de voetbalclub. De training van woensdag gaat niet door, want het veld is te nat. Zaterdag spelen we wel de wedstrijd.","Wat gaat niet door?","de training op woensdag","de wedstrijd op zaterdag","de training op zaterdag"],
-["Welkom bij de bibliotheek. Boeken die u te laat terugbrengt, kosten twintig cent per dag. U kunt uw boeken ook online verlengen.","Wat kunt u online doen?","uw boeken verlengen","boeken kopen","lid worden"],
+["Hallo, met Peter van de voetbalclub. De training van woensdag gaat niet door, want het veld is te nat. Zaterdag spelen we wel de wedstrijd.","Wat gaat niet door?","de training op woensdag","de wedstrijd op zaterdag","de training op zaterdag","voetbal"],
+["Welkom bij de bibliotheek. Boeken die u te laat terugbrengt, kosten twintig cent per dag. U kunt uw boeken ook online verlengen.","Wat kunt u online doen?","uw boeken verlengen","boeken kopen","lid worden","boek"],
 ["Beste ouders, volgende week vrijdag gaan alle kinderen naar de dierentuin. Geef uw kind een lunchpakket en een flesje water mee. We zijn om drie uur terug op school.","Wat moet uw kind meenemen?","eten en drinken","geld voor de dierentuin","een jas en een paraplu"],
 ["U luistert naar Radio Stad. Vanavond is er een concert op het Marktplein. Het begint om acht uur en het is gratis.","Wat kost het concert?","niets","acht euro","tien euro"],
 ["Hoi, met Mohammed. Ik heb een nieuw telefoonnummer. Mijn oude nummer werkt vanaf morgen niet meer. Ik stuur je het nieuwe nummer in een bericht.","Waarom belt Mohammed?","hij heeft een nieuw telefoonnummer","zijn telefoon is kapot","hij wil morgen afspreken"],
 ["Goedemiddag, met de gemeente. Uw nieuwe paspoort is klaar. U kunt het komen ophalen. Neem uw oude paspoort mee.","Wat moet u meenemen?","uw oude paspoort","een pasfoto","uw bankpas"],
-["Dames en heren, onze supermarkt zoekt nieuwe medewerkers voor de zaterdag. Bent u zestien jaar of ouder? Vraag een formulier bij de servicebalie.","Waar vraagt u een formulier?","bij de servicebalie","bij de kassa","op de website"],
-["Hallo, met de fietsenmaker. Uw fiets is klaar. De reparatie kost vijfentwintig euro. U kunt hem vandaag tot zes uur ophalen.","Hoeveel kost de reparatie?","vijfentwintig euro","vijftien euro","zes euro"],
+["Dames en heren, onze supermarkt zoekt nieuwe medewerkers voor de zaterdag. Bent u zestien jaar of ouder? Vraag een formulier bij de servicebalie.","Waar vraagt u een formulier?","bij de servicebalie","bij de kassa","op de website","supermarkt"],
+["Hallo, met de fietsenmaker. Uw fiets is klaar. De reparatie kost vijfentwintig euro. U kunt hem vandaag tot zes uur ophalen.","Hoeveel kost de reparatie?","vijfentwintig euro","vijftien euro","zes euro","fietsenmaker"],
 ["Goedemorgen, met Linda van de kinderopvang. Uw zoon heeft een beetje koorts. Hij mag vandaag blijven, maar wilt u hem om drie uur ophalen in plaats van om zes uur?","Hoe laat moet u uw zoon ophalen?","om drie uur","om zes uur","nu meteen"],
 ["Dit is een bericht voor alle bewoners. Morgen is er in het hele gebouw geen water, van negen tot elf uur.","Wat gebeurt er morgen?","er is twee uur geen water","er is de hele dag geen stroom","de lift doet het niet"],
 ["Hoi, met Emma. Bedankt voor het mooie cadeau! De bloemen staan op tafel. Kom je volgende week een keer koffie drinken?","Wat vraagt Emma?","of je koffie komt drinken","of je bloemen wilt kopen","of je een cadeau wilt"],
 ["Let op: vanaf een januari mag het oud papier niet meer in de grijze container. Doe het oud papier in de blauwe container.","Waar doet u het oud papier vanaf januari?","in de blauwe container","in de grijze container","bij het grofvuil"],
 ["Goedemiddag, met de rijschool. Uw rijles van vrijdag gaat niet door. De les is nu op zaterdag, op dezelfde tijd.","Wanneer is de rijles nu?","zaterdag, op dezelfde tijd","vrijdag, op een andere tijd","zaterdag, op een andere tijd"],
 ["Beste reizigers, in deze trein kunt u geen kaartje kopen. Reist u zonder kaartje, dan krijgt u een boete.","Wat is waar?","u koopt het kaartje voor de reis","u kunt in de trein een kaartje kopen","in deze trein hebt u geen kaartje nodig"],
-["Hallo, met Tom, je nieuwe buurman. Ik geef zaterdagavond een feestje. Het wordt misschien een beetje lawaaierig. Je bent ook van harte welkom!","Waarom belt Tom?","hij geeft een feest en nodigt je uit","hij klaagt over lawaai","hij zoekt een nieuw huis"]
+["Hallo, met Tom, je nieuwe buurman. Ik geef zaterdagavond een feestje. Het wordt misschien een beetje lawaaierig. Je bent ook van harte welkom!","Waarom belt Tom?","hij geeft een feest en nodigt je uit","hij klaagt over lawaai","hij zoekt een nieuw huis"],
+["A: Huisartsenpraktijk De Linde, goedemorgen.\nB: Goedemorgen, met Ahmed Karimi. Mijn zoon heeft al drie dagen koorts. Kan hij vandaag bij de dokter komen?\nA: Vandaag is het helaas vol. Morgen om kwart over negen kan het.\nB: Goed, dat is prima.","Wanneer gaat de zoon naar de dokter?","morgen om kwart over negen","vandaag om kwart over negen","over drie dagen","bellen"],
+["A: Pardon, waar vind ik de rijst?\nB: In gang vier, naast de pasta. Maar de rijst uit de aanbieding is op.\nA: O, jammer. Komt er nog nieuwe?\nB: Ja, morgenochtend.","Wanneer is er weer rijst uit de aanbieding?","morgenochtend","vanmiddag","volgende week","supermarkt"],
+["A: Een kaartje naar Utrecht, alstublieft.\nB: Enkele reis of retour?\nA: Retour. Ik kom vanavond terug.\nB: Dat is twintig euro veertig. U kunt pinnen of met uw telefoon betalen.","Wat koopt de reiziger?","een retourtje naar Utrecht","een enkele reis naar Utrecht","een kaartje voor morgen","trein"],
+["A: Goedenavond. Hebt u gereserveerd?\nB: Ja, op naam van De Boer, voor vier personen.\nA: Klopt. Uw tafel is bij het raam. Wilt u eerst iets drinken?\nB: Graag. Twee keer water en twee keer cola.","Met hoeveel personen eten ze?","met vier","met twee","met zes","restaurant"],
+["A: Mijn achterband is lek. Kunt u hem vandaag maken?\nB: Vandaag lukt niet, het is heel druk. Morgen na twee uur is hij klaar.\nA: Wat kost dat?\nB: Een band plakken kost tien euro.","Wanneer is de fiets klaar?","morgen na twee uur","vandaag na twee uur","morgenochtend","lekkeband"],
+["A: Hoi Fatima, kun jij morgen mijn dienst overnemen? Ik moet naar de tandarts.\nB: Sorry, morgen werk ik zelf al tot drie uur. Donderdag kan ik wel.\nA: Dan vraag ik het aan Kees. Toch bedankt!","Waarom kan Fatima de dienst niet overnemen?","ze werkt morgen zelf al","ze moet naar de tandarts","ze is donderdag ziek"],
+["A: Ik kom mijn medicijnen ophalen. Mijn geboortedatum is twaalf maart negentienhonderdnegentig.\nB: Een moment. Ja, hier zijn ze. Neem één tablet per dag, 's avonds voor het slapen.\nA: Mag ik er iets bij drinken?\nB: Water wel, maar geen alcohol.","Wanneer neemt de klant de tablet?","'s avonds voor het slapen","'s ochtends bij het ontbijt","drie keer per dag","pil"],
+["Hoi Ilse, met Roel. Ik heb de bus gemist. De volgende bus gaat over twintig minuten, dus ik ben later op de les. Wil jij tegen de docent zeggen dat ik later kom?","Wat vraagt Roel aan Ilse?","dat ze de docent vertelt dat hij later komt","dat ze hem met de auto ophaalt","dat ze op hem wacht bij de bus","bus"],
+["A: Kan ik u helpen?\nB: Ja, hebt u deze blauwe jas ook in maat veertig?\nA: Nee, in het blauw is maat veertig uitverkocht. In het zwart hebben we hem nog wel.\nB: Ik wil hem graag in het blauw. Dan kom ik volgende week terug.","Waarom koopt de klant de jas vandaag niet?","de blauwe jas is er niet in haar maat","de jas is te duur","de winkel gaat zo dicht","winkel"],
+["A: Goedemorgen, ik kom mijn nieuwe adres doorgeven.\nB: Dat kan. Hebt u uw identiteitsbewijs bij u?\nA: Ja, hier is mijn paspoort.\nB: Dank u. En hebt u ook uw huurcontract?\nA: O nee, dat ligt thuis.\nB: Dan kunt u het vandaag nog op onze website zetten.","Wat moet de man nog doen?","zijn huurcontract op de website zetten","een nieuw paspoort aanvragen","een nieuwe afspraak maken"],
+["Het weer voor vandaag. Het is koud, maar droog. Vanavond gaat het vriezen, dus pas op: de wegen kunnen glad zijn. Morgen valt er sneeuw in het noorden van het land.","Waar valt morgen sneeuw?","in het noorden","in het hele land","in het zuiden","winter"],
+["A: Hoe laat begint de zwemles van mijn dochter?\nB: Normaal om half vier. Maar vandaag is het zwembad om drie uur dicht, door een storing.\nA: Krijgen we dan een nieuwe les?\nB: Ja, volgende week zaterdag om tien uur.","Wanneer is de nieuwe les?","volgende week zaterdag om tien uur","vandaag om half vier","vandaag om drie uur","zwemmen"],
+["Hallo ouders, met trainer Kevin. Zaterdag spelen we een uitwedstrijd in Zeist. We vertrekken om half negen bij de club. Ik zoek nog drie ouders met een auto die kunnen rijden. Stuur me even een berichtje.","Wat zoekt Kevin?","ouders die kunnen rijden","een nieuwe speler","een trainer voor zaterdag","voetbal"],
+["A: Wat eten we vanavond?\nB: Ik wilde soep maken, maar we hebben geen uien meer.\nA: Ik ga wel even naar de winkel. Moet ik nog iets anders halen?\nB: Ja, brood voor morgen.","Wat gaat de man halen?","uien en brood","soep en brood","alleen uien","koken"],
+["A: Goedemiddag, met Sanne van Hotel Zeezicht. U hebt gesolliciteerd als schoonmaker.\nB: Ja, dat klopt.\nA: We willen u graag uitnodigen voor een gesprek. Kunt u dinsdag om elf uur?\nB: Dinsdag heb ik taalles. Kan het ook woensdag?\nA: Woensdag om elf uur is ook goed.","Wanneer is het gesprek?","woensdag om elf uur","dinsdag om elf uur","woensdag om twee uur","bellen"],
+["A: Goedemorgen, met Olga. Ik ben ziek, ik heb hoge koorts. Ik kan vandaag niet komen werken.\nB: Vervelend voor je. Ga je naar de dokter?\nA: Ja, vanmiddag.\nB: Goed. Laat je morgen even weten hoe het gaat?","Wat vraagt de baas?","of Olga morgen laat weten hoe het gaat","of Olga vanmiddag toch komt werken","of Olga een briefje van de dokter brengt","ziek"],
+["A: Dat is dan zeventien euro vijftig.\nB: Kan ik met mijn creditcard betalen?\nA: Nee, sorry, alleen pinnen of contant.\nB: Dan pin ik.","Hoe betaalt de klant?","met de bankpas","met de creditcard","contant","pinnen"],
+["Goedemiddag, dit is een bericht van de bibliotheek. Het boek dat u hebt gereserveerd, ligt voor u klaar. U kunt het een week lang ophalen bij de balie. Neem uw bibliotheekpas mee.","Hoe lang ligt het boek klaar?","een week","een dag","een maand","boek"],
+["A: Ik heb al twee dagen hoofdpijn. Wat kan ik nemen?\nB: U kunt paracetamol nemen, maar niet meer dan zes tabletten per dag. Hebt u over drie dagen nog steeds hoofdpijn? Ga dan naar de huisarts.\nA: Dank u wel.","Wanneer moet de klant naar de huisarts?","als hij over drie dagen nog hoofdpijn heeft","meteen vandaag","als hij zes tabletten heeft genomen","hoofdpijn"],
+["Hoi, met Lotte. Het wordt morgen dertig graden! Zullen we naar het strand gaan? Ik neem de trein van half tien. Neem jij de handdoeken mee? Dan zorg ik voor eten en drinken.","Wat moet de luisteraar meenemen?","handdoeken","eten en drinken","een treinkaartje voor Lotte","strand"],
+["A: Juf, mag Noor morgen eerder weg? Ze moet naar de tandarts.\nB: Natuurlijk. Hoe laat komt u haar halen?\nA: Om kwart over twee.\nB: Goed, dan zorg ik dat ze klaarstaat.","Waarom gaat Noor morgen eerder weg?","ze moet naar de tandarts","ze is ziek","ze gaat op vakantie"],
+["A: Met Van Vliet, de verhuurder.\nB: Goedemorgen, met Maria Santos. De verwarming in mijn huis doet het niet.\nA: O, vervelend. Ik stuur morgen een monteur. Bent u om negen uur thuis?\nB: Nee, dan werk ik. Kan het na vijf uur?\nA: Ik vraag het aan de monteur en ik bel u terug.","Wat doet de verhuurder nu?","hij vraagt het aan de monteur en belt Maria terug","hij komt morgen om negen uur","hij repareert de verwarming zelf","bellen"],
+["Dames en heren, de sprinter naar Zwolle van tien over drie rijdt vandaag niet. Reizigers naar Zwolle kunnen de intercity nemen van vijf over half vier, van spoor twee.","Hoe laat vertrekt de intercity naar Zwolle?","om vijf over half vier","om tien over drie","om twee uur","trein"],
+["A: Goedemiddag, u bent de nieuwe buurvrouw, toch? Ik ben Henk.\nB: Ja, ik ben Amira. Leuk u te ontmoeten.\nA: Is dat uw hond? Hij blaft vaak als u weg bent.\nB: O, dat wist ik niet. Sorry! Ik ga er iets aan doen.","Wat vertelt Henk?","de hond blaft als Amira weg is","hij wil de hond uitlaten","hij woont ook net in de straat","hond"],
+["A: Ik wil me inschrijven voor de taalcursus.\nB: Op welke dag wilt u komen: maandagavond of donderdagochtend?\nA: Donderdagochtend, want 's avonds werk ik.\nB: Prima. De cursus begint op vier september en kost honderd euro.","Wanneer gaat de cursist naar de les?","op donderdagochtend","op maandagavond","op vier september 's avonds"],
+["Welkom bij de klantenservice. Hebt u een vraag over toeslagen? Toets een. Hebt u een vraag over uw belastingaangifte? Toets twee. Voor alle andere vragen blijft u aan de lijn.","U hebt een vraag over de zorgtoeslag. Wat doet u?","op een drukken","op twee drukken","aan de lijn blijven","bellen"],
+["A: Wat zijn uw klachten?\nB: Ik hoest al twee weken en ik ben steeds moe.\nA: Ik luister even naar uw longen. Die klinken goed. Drink veel water en rust goed uit. Bent u over een week niet beter, kom dan terug.","Wat moet de patiënt doen?","veel water drinken en goed uitrusten","medicijnen halen bij de apotheek","morgen terugkomen","dokter"],
+["Beste leden, de fietstocht van zondag gaat door, ook als het regent. We vertrekken om tien uur bij de kerk. De tocht is veertig kilometer. Onderweg drinken we koffie in Oudewater. Uw lunch neemt u zelf mee.","Wat neemt u zelf mee?","lunch","koffie","een fiets van de club","fietstocht"],
+["A: Dierenkliniek Noord, goedemiddag.\nB: Hallo, mijn kat eet al twee dagen niet. Kan ik langskomen?\nA: Vandaag om vijf uur is er nog plaats. Neem de kat mee in een mand.\nB: Goed, tot straks.","Wanneer gaat de kat naar de dierenarts?","vandaag om vijf uur","over twee dagen","morgen om vijf uur","kat"],
+["A: Ik ben vergeten uit te checken. Wat moet ik doen?\nB: Dat kunt u online regelen. Op de website vraagt u uw geld terug. Dat kan tot drie maanden na uw reis.","Wat kan de reiziger doen?","online het geld terugvragen","een nieuwe kaart kopen","niets; het geld is weg","trein"]
 ];
 const RU={};"zijn=быть|hebben=иметь|gaan=идти|komen=приходить|doen=делать|zien=видеть|zeggen=сказать|weten=знать|kunnen=мочь|willen=хотеть|moeten=быть должным|mogen=иметь разрешение|krijgen=получать|geven=давать|nemen=брать|staan=стоять|zitten=сидеть|liggen=лежать|blijven=оставаться|worden=становиться|vinden=находить|denken=думать|brengen=приносить|kopen=покупать|zoeken=искать|lezen=читать|schrijven=писать|spreken=говорить|eten=есть|drinken=пить|slapen=спать|lopen=ходить пешком|rijden=ехать|vliegen=лететь|beginnen=начинать|vergeten=забывать|begrijpen=понимать|helpen=помогать|vragen=спрашивать|dragen=носить|vallen=падать|laten=позволять, оставлять|houden=держать|roepen=звать|sterven=умирать|trekken=тянуть|sluiten=закрывать|kiezen=выбирать|verliezen=терять, проигрывать|winnen=выигрывать|zingen=петь|zwemmen=плавать|bieden=предлагать|breken=ломать|kijken=смотреть|snijden=резать|wassen=мыть|bakken=печь, жарить|lachen=смеяться|verkopen=продавать|werken=работать|wonen=жить (где-то)|maken=делать, изготовлять|leren=учить|praten=разговаривать|fietsen=ехать на велосипеде|betalen=платить|reizen=путешествовать|verhuizen=переезжать|luisteren=слушать|spelen=играть|koken=готовить|wachten=ждать|antwoorden=отвечать|gebeuren=случаться|stoppen=останавливать(ся)|huis=дом|kind=ребёнок|boek=книга|werk=работа|water=вода|brood=хлеб|meisje=девочка|jaar=год|ziekenhuis=больница|station=вокзал|geld=деньги|weer=погода|land=страна|raam=окно|bed=кровать|formulier=бланк|paspoort=паспорт|nummer=номер|kantoor=офис|ontbijt=завтрак|tafel=стол|man=мужчина|vrouw=женщина|auto=машина|fiets=велосипед|school=школа|straat=улица|stad=город|week=неделя|dag=день|kamer=комната|deur=дверь|keuken=кухня|trein=поезд|winkel=магазин|rekening=счёт|afspraak=встреча, запись|taal=язык|gemeente=муниципалитет|jongen=мальчик|ei=яйцо|brief=письмо|foto=фотография|de afspraak=запись на приём|de baan=работа, место|de huur=арендная плата|de vertraging=задержка|de korting=скидка|het formulier=бланк|de huisarts=семейный врач|de werkgever=работодатель|de buurman=сосед|het perron=платформа|de bon=чек|de handtekening=подпись|het recept=рецепт|het loon=зарплата|de verwarming=отопление|overstappen=пересаживаться|pinnen=платить картой|invullen=заполнять|de pijn=боль|de collega=коллега|de sleutel=ключ|het kaartje=билет|de aanbieding=акция|aanvragen=подавать заявление|de koorts=температура|solliciteren=устраиваться на работу|kapot=сломанный|de halte=остановка|duur=дорогой|de belasting=налог|verkouden=простуженный|het contract=договор|de verdieping=этаж|linksaf=налево|goedkoop=дешёвый|de toeslag=доплата, субсидия|de verzekering=страховка|de vergadering=совещание|de rekening=счёт|rechtdoor=прямо|de kassa=касса|geldig=действительный|de tandarts=стоматолог|vrij=свободный, выходной|de buurt=район|de fietsenstalling=велопарковка|ruilen=обменять|de brief=письмо".split("|").forEach(x=>{const[a,b]=x.split("=");RU[a]=b});
 const EX={lz:{t:"Proefexamen Lezen",n:25,min:65},ls:{t:"Proefexamen Luisteren",n:25,min:45},knm:{t:"Proefexamen KNM",n:40,min:45},wr:{t:"Proefexamen Schrijven",n:4,min:40},sp:{t:"Proefexamen Spreken",n:16,min:35}};
@@ -806,7 +902,7 @@ const SEC=[
 {id:"ls",t:"Luisteren",s:"Luister naar een bericht en kies het antwoord",n:5},
 {id:"wr",t:"Schrijven",s:"4 opdrachten in 40 minuten, één formulier",n:4,min:40},
 {id:"sp",t:"Spreken",s:"Vragen en plaatjes: spreek je antwoord in",n:5},
-{id:"knm",t:"KNM",s:"De 7 thema's van het nieuwe examen (sinds juli 2025)",n:10},
+{id:"knm",t:"KNM",s:"De 8 thema's van het examen (sinds juli 2025)",n:10},
 {id:"verb",t:"Werkwoordsvormen",s:"Imperfectum en perfectum",n:10},
 {id:"wo",t:"Woordvolgorde",s:"Maak een zin van de woorden",n:6},
 {id:"pr",t:"Tegenwoordige tijd",s:"Vervoeging, modale en scheidbare werkwoorden",n:10},
@@ -945,20 +1041,26 @@ WT.forEach(([t,list],ti)=>{const W=list.split("|").map(x=>x.split("="));
     ITEMS.push({sec:"vo",k:"wt|"+nl,ord:ord+1,type:"choice",label:"Hoe zeg je dit in het Nederlands?",big:ru,sub:t,right:nl,tts:nl,
       opts:()=>{const w=shuffle(o.slice()).slice(0,3).map(x=>x[0]);if(m)w[0]=(m[1]==="de"?"het ":"de ")+m[2];return shuffle([nl,...w])}})})});
 LZ.forEach((t,i)=>t[1].forEach((q,j)=>ITEMS.push({sec:"lz",k:"lz|"+i+"."+j,ord:j,type:"choice",label:"Lees de tekst",text:t[0],big:q[0],sub:"",right:q[1],opts:()=>shuffle(q.slice(1))})));
-LS.forEach((p,i)=>ITEMS.push({sec:"ls",k:"ls|"+i,ord:i/5|0,type:"choice",label:"Luister en kies het goede antwoord",say:p[0],big:p[1],sub:"",right:p[2],opts:()=>shuffle(p.slice(2)),note:"Tekst: "+p[0]}));
+const sayLines=t=>String(t).split("\n").filter(l=>l.trim()).map(l=>l.replace(/^[AB]: /,""));
+const sayHTML=t=>/^[AB]: /.test(t)?"Tekst:<br>"+sayLines(t).map(l=>"– "+l).join("<br>"):"Tekst: "+t;
+// Luisteren: [text, question, right, wrong, wrong, photo?]. A dialogue has one line per turn, "A: …" / "B: …",
+// read with two different voices; the photo (from /foto) sets the scene, like the video on the exam.
+LS.forEach((p,i)=>ITEMS.push({sec:"ls",k:"ls|"+i,ord:i/5|0,type:"choice",label:"Luister en kies het goede antwoord",say:p[0],big:p[1],sub:"",right:p[2],opts:()=>shuffle(p.slice(2,5)),pics:p[5]?[p[5]]:null,note:sayHTML(p[0])}));
 const genN={lz:0,ls:0};
 function addGenerated(){
   const g=S.gen||{}; let n=0;
   (g.lz||[]).slice(genN.lz).forEach((t,i0)=>{const i=genN.lz+i0;t[1].forEach((q,j)=>{n++;ITEMS.push({sec:"lz",k:"lz|g"+i+"."+j,ord:j,type:"choice",label:"Lees de tekst",text:t[0],big:q[0],sub:"",right:q[1],opts:()=>shuffle(q.slice(1))})})});
   genN.lz=(g.lz||[]).length;
-  (g.ls||[]).slice(genN.ls).forEach((p,i0)=>{const i=genN.ls+i0;n++;ITEMS.push({sec:"ls",k:"ls|g"+i,ord:1,type:"choice",label:"Luister en kies het goede antwoord",say:p[0],big:p[1],sub:"",right:p[2],opts:()=>shuffle(p.slice(2)),note:"Tekst: "+esc(p[0])})});
+  (g.ls||[]).slice(genN.ls).forEach((p,i0)=>{const i=genN.ls+i0;n++;ITEMS.push({sec:"ls",k:"ls|g"+i,ord:1,type:"choice",label:"Luister en kies het goede antwoord",say:p[0],big:p[1],sub:"",right:p[2],opts:()=>shuffle(p.slice(2,5)),note:sayHTML(esc(p[0]))})});
   genN.ls=(g.ls||[]).length;
   return n;
 }
 function errItems(){return(S.errs||[]).map(e=>({sec:"er",k:"er|"+e.r,ord:0,type:"choice",label:"Welke zin is goed?",big:"",sub:"",right:esc(e.r),opts:()=>shuffle([esc(e.r),esc(e.w)]),note:esc(e.y)}))}
 const canSpeak="speechSynthesis" in window&&typeof SpeechSynthesisUtterance!=="undefined";
 // Voice left unset so the phone uses the Dutch (nl-NL) voice picked in its settings
-function speak(t){try{const u=new SpeechSynthesisUtterance(t);u.lang="nl-NL";u.rate=.95;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}}
+// A dialogue ("A: …" / "B: …" lines) is read turn by turn; speaker B gets a higher pitch, so the two people sound different
+function speak(t){try{speechSynthesis.cancel();String(t).split("\n").forEach(l=>{const m=l.match(/^([AB]): (.*)$/);if(!l.trim())return;
+  const u=new SpeechSynthesisUtterance(m?m[2]:l);u.lang="nl-NL";u.rate=.95;if(m)u.pitch=m[1]==="B"?1.35:.9;speechSynthesis.speak(u)})}catch(e){}}
 let rec=null,recUrl=null;
 const hush=()=>{recEnd(false);if(recUrl){URL.revokeObjectURL(recUrl);recUrl=null}try{if(canSpeak)speechSynthesis.cancel()}catch(e){}};
 // Spreken: listen() puts one minute on the clock and either records the answer (mode "rec", to play it back)
@@ -1040,10 +1142,10 @@ async function spGrade(q,r){
     $("fb").innerHTML=`<b class="${ok?"good":"bad"}">${ok?"Goed zo! Voldoende":"Nog niet voldoende"}</b>
       <p class="note">${esc(res.verdict)}</p>
       ${errs.length?`<p class="ask">Fouten: ${errs.length}</p><ul class="errs">${errs.map(e=>`<li><s>${esc(e.wrong)}</s> <strong>${esc(e.right)}</strong><span>${esc(e.why)}</span></li>`).join("")}</ul>`:`<p class="note">Geen fouten gevonden.</p>`}
-      <p class="ask">Zo zeg je het goed</p><div class="sample">${esc(res.corrected)}</div>
+      <p class="ask">Zo zeg je het goed</p><div class="sample">${esc(res.corrected)}</div>${echoHTML("de verbeterde zinnen")}
       <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(q.right)}</div></details>
       <button class="btn wide" id="next">Verder</button>`;
-    $("next").onclick=()=>{pos++;show()};
+    $("next").onclick=()=>{pos++;show()}; echoBind(res.corrected);
   }catch(e){
     if(q!==queue[pos])return;
     const k=e&&e.code; b.disabled=false;
@@ -1119,7 +1221,7 @@ function home(){
   $("play").hidden=true;$("stats").hidden=true;$("lib").hidden=true;$("read").hidden=true;closePop();$("home").hidden=false;head();clock(0);hush();planId=null;drawPlan();
   const sec=id=>SEC.find(x=>x.id===id), go=t=>`<span class="go">${t} →</span>`;
   const inner=s=>{const p=ITEMS.filter(x=>x.sec===s.id),n=p.filter(x=>S.items[x.k]).length;
-    return`<span class="th"><b>${s.t}</b></span><span class="d">${s.s}</span><span class="bar"><i style="width:${p.length?n/p.length*100:0}%"></i></span><small>${n} van ${p.length} gedaan</small>`};
+    return`<span class="th"><b>${s.t}</b></span><span class="d">${s.s}</span><span class="bar"><i style="width:${p.length?n/p.length*100:0}%"></i></span><small>${n} van ${p.length} gedaan${((S.res||{})[s.id]||[]).length?` · proefexamen ${S.res[s.id][S.res[s.id].length-1].pc}%`:""}</small>`};
   const lb=Object.values(S.bk||{}).filter(b=>b.t).sort((a,b)=>b.at-a.at)[0];
   $("menu").innerHTML=`<h2>Examenonderdelen</h2><p class="sub">Oefen in je eigen tempo, of doe een proefexamen met tijd, zoals op het echte examen.</p><div class="blokken">`
     +["lz","ls","wr","sp","knm"].map(id=>`<div class="blok">${inner(sec(id))}<span class="ta"><button class="btn" data-s="${id}">Oefenen</button>${EX[id]?`<button class="ghost" data-e="${id}">Proefexamen, ${EX[id].min} min</button>`:`<span class="ghost" style="visibility:hidden" aria-hidden="true">Proefexamen</span>`}</span></div>`).join("")
@@ -1140,14 +1242,26 @@ function home(){
   window.scrollTo(0,0);
 }
 function startExam(e){
-  build("exam",{id:"exam",exam:1,keep:e==="lz",write:e==="wr",speak:e==="sp",...EX[e],pool:()=>{const a=shuffle(ITEMS.filter(x=>x.sec===e));
-    if(e==="knm"){const g={};a.forEach(q=>(g[q.label]=g[q.label]||[]).push(q));const G=Object.values(g),o=[]; // spread over the 7 themes
+  build("exam",{id:"exam",exam:1,part:e,keep:e==="lz",write:e==="wr",speak:e==="sp",...EX[e],pool:()=>{const a=shuffle(ITEMS.filter(x=>x.sec===e));
+    if(e==="knm"){const g={};a.forEach(q=>(g[q.label]=g[q.label]||[]).push(q));const G=Object.values(g),o=[]; // spread over the 8 themes
       for(let i=0;o.length<a.length;i++)G.forEach(x=>{if(x[i])o.push(x[i])});return o.slice(0,EX.knm.n)}
     return e==="wr"?a.filter(q=>q.fields).slice(0,1).concat(a.filter(q=>!q.fields).slice(0,3)):a}});
 }
 // Pass mark for the computer-marked parts: about 7 in 10 (e.g. 18 of 25 for Lezen, 28 of 40 for KNM); DUO sets it per exam version
 const PASS=.7, DUO="https://www.inburgeren.nl/examen-doen/oefenen.jsp",
   duoLink=`<p class="note">Oefen ook met de officiële oefenexamens van DUO: <a href="${DUO}" target="_blank" rel="noopener">inburgeren.nl ↗</a></p>`;
+// Proefexamen results per part (S.res, last 10): {at, pc}. Ready = the last two average 70% or more
+function keepRes(k,pc){if(k){S.res=S.res||{};S.res[k]=(S.res[k]||[]).concat({at:Date.now(),pc}).slice(-10)}save()}
+function ready(k){
+  const R=(S.res||{})[k]||[];
+  if(!R.length){let r=0,w=0;ITEMS.forEach(x=>{const it=x.sec===k&&S.items[x.k];if(it){r+=it.r||0;w+=it.w||0}});
+    const pc=r+w>=10?Math.round(r/(r+w)*100):null;
+    return{pc,st:"Nog geen proefexamen",cls:"",t:pc==null?"Oefen eerst een paar rondes, doe dan een proefexamen.":`Bij het oefenen ${pc}% goed. Doe een proefexamen: dan weet je of je klaar bent.`}}
+  const L=R.slice(-2),avg=Math.round(L.reduce((a,x)=>a+x.pc,0)/L.length),pc=R[R.length-1].pc;
+  const sure=avg>=80&&R.length>1;
+  return{pc,st:sure?"Klaar voor het examen":avg>=PASS*100?"Bijna klaar":"Nog niet klaar",cls:sure?"good":avg>=PASS*100?"":"bad",
+    t:`Laatste proefexamen ${pc}%${R.length>1?`, daarvoor ${R[R.length-2].pc}%`:". Doe er nog een: dan weet je het zeker"}. Nodig: ${PASS*100}%.`}
+}
 const PART={wr:"Schrijven",knm:"KNM",sp:"Spreken",ls:"Luisteren",lz:"Lezen"}, HELP={wr:["wo","verb"],sp:["pr","verb"],lz:["vo","dh"],ls:["vo","pr"],knm:[]};
 const dayOf=str=>{const[y,m,d]=str.split("-").map(Number),t=new Date(y,m-1,d);return Math.round((t.getTime()-t.getTimezoneOffset()*6e4)/864e5)};
 let planId=null;
@@ -1197,12 +1311,16 @@ function examsHTML(){
     <div class="tl"><i style="width:${at(d)}%"></i>${dates.map(ds=>`<u class="${cls(ds)}" style="left:${at(dayOf(ds))}%"></u>`).join("")}<em style="left:${at(d)}%"></em></div>
     ${dates.map((ds,i)=>{const x=at(dayOf(ds));
       return`<div class="tlb ${i%2?"up":"dn"}${x<15?" l":x>85?" r":""}${cls(ds)}" style="left:${x}%"><b>${gs[ds].join(" en ")}</b>${short(ds)}<br>${days(dayOf(ds)-d)}</div>`}).join("")}</div>`;
+  const order=Object.keys(PART).sort((a,b)=>(ex[a]?dayOf(ex[a]):1e9)-(ex[b]?dayOf(ex[b]):1e9));
+  const rdy=`<h2 class="gap">Ben je klaar?</h2><p class="sub">Je proefexamens laten zien hoe je ervoor staat. De streep is ${PASS*100}%: zoveel heb je nodig.</p>`
+    +order.map(k=>{const r=ready(k);return`<div class="stat"><div><b>${PART[k]}</b><span><em class="${r.cls}">${r.st}</em><br>${r.t}</span>${r.pc==null?"":`<div class="bar pass"><i style="width:${r.pc}%"></i></div>`}</div><button class="ghost" data-e="${k}">Proefexamen</button></div>`}).join("");
   return`<h2 class="gap">Mijn examens</h2>${rows||`<p class="sub">Nog geen examendata.</p>`}<button class="hint" id="editex">${dates.length?"Examendata wijzigen":"Examendata invullen"}</button>
-    <div id="exform" hidden>${Object.keys(PART).map(k=>`<label class="fld"><span>${PART[k]}</span><input type="date" data-k="${k}" value="${ex[k]||""}"></label>`).join("")}<button class="ghost wide" id="saveex">Bewaar</button></div>`;
+    <div id="exform" hidden>${Object.keys(PART).map(k=>`<label class="fld"><span>${PART[k]}</span><input type="date" data-k="${k}" value="${ex[k]||""}"></label>`).join("")}<button class="ghost wide" id="saveex">Bewaar</button></div>${rdy}`;
 }
 function drawPlan(){
   if(!S.plan0){S.plan0=today();localSave()}
   $("plan").innerHTML=planHTML(); $("exams").innerHTML=examsHTML();
+  document.querySelectorAll("#exams [data-e]").forEach(b=>b.onclick=()=>startExam(b.dataset.e));
   document.querySelectorAll("#plan [data-p]").forEach(b=>b.onclick=()=>{const id=b.dataset.p,[k,v]=id.split(":");
     if(k==="s")build(v);else if(k==="e")startExam(v);else build("custom",{id:"custom",t:"Mijn fouten",n:10,pool:()=>shuffle(errItems())});
     planId=id});
@@ -1247,8 +1365,8 @@ function show(){
   const q=queue[pos]; answered=false; $("mode").hidden=!q.canType; hush();
   let h=`<p class="ask">${q.label}</p>`;
   if(q.text)h+=docHTML(q.text);
-  if(q.say)h+=canSpeak?`<button class="btn wide" id="say">▶ Luister</button><p class="note">Je mag twee keer luisteren.</p>`:`<p class="note">Audio werkt hier niet. Lees de tekst.</p><div class="sample">${esc(q.say)}</div>`;
   if(q.pics)h+=picsHTML(q.pics);
+  if(q.say)h+=canSpeak?`<button class="btn wide" id="say">▶ Luister</button><p class="note">${cur.exam?"Je mag twee keer luisteren.":"Luister twee keer, zoals op het examen."}</p>`:`<p class="note">Audio werkt hier niet. Lees de tekst.</p><div class="sample">${esc(sayLines(q.say).map(l=>/^[AB]: /.test(q.say)?"– "+l:l).join("\n"))}</div>`;
   if(q.big)h+=`<div class="verb${q.big.length>22?" long":""}">${q.big}</div>`;
   h+=`<p class="ru">${q.sub||""}</p>`;
   if(q.tts&&canSpeak&&q.big===q.tts)h+=`<button class="hint" id="tts">▶ Uitspraak</button>`;
@@ -1264,13 +1382,15 @@ function show(){
   else{o=q.opts();h+=`<div class="opts${o.some(x=>x.length>14)?" one":""}">${o.map((x,i)=>`<button class="opt" data-n="${i}">${x}</button>`).join("")}</div>`}
   h+=`<div class="fb" id="fb"></div>`;
   $("card").innerHTML=h;
-  if($("say"))$("say").onclick=()=>speak(q.say);
+  document.querySelectorAll("#card [data-pic]").forEach(b=>b.onclick=()=>zoomPic(b.dataset.pic));
+  // Proefexamen: two plays, as on the exam; when practising you may listen as often as you like
+  if($("say")){let n=0;$("say").onclick=()=>{speak(q.say);n++;
+    if(cur.exam&&n>=2){$("say").disabled=true;$("say").textContent="Je hebt twee keer geluisterd"}else $("say").textContent="▶ Nog een keer luisteren"}}
   if($("tts"))$("tts").onclick=()=>speak(q.tts);
   if($("tr"))$("tr").onclick=()=>{$("tr").textContent=RU[q.big];$("tr").disabled=true};
   if(q.type==="order")return order(q);
   if(q.type==="write"){$("chk").onclick=()=>{if(cur.exam){cur.ans.push(grab(q));pos++;show()}else check(q)};return}
   if(q.type==="reveal"){
-    document.querySelectorAll("#card [data-pic]").forEach(b=>b.onclick=()=>zoomPic(b.dataset.pic));
     if($("sayq"))$("sayq").onclick=()=>speak(spoken(q.big));
     if(cur.exam){$("recb").onclick=()=>listen(SR?"say":"rec",r=>spNext(q,r));return}
     $("recb").onclick=()=>listen("rec",spTake); $("rev").onclick=()=>reveal(q);
@@ -1332,9 +1452,33 @@ function order(q){
 }
 function reveal(q){
   recEnd(!!rec&&rec.mode==="rec"); $("rev").hidden=true; if($("spchk"))$("spchk").hidden=true;
-  $("fb").innerHTML=`<div class="sample">${q.right}</div><div class="two"><button class="ghost" id="again">Later herhalen</button><button class="btn" id="got">Gelukt</button></div>`;
+  $("fb").innerHTML=`<div class="sample">${q.right}</div>${echoHTML("het voorbeeld")}<div class="two"><button class="ghost" id="again">Later herhalen</button><button class="btn" id="got">Gelukt</button></div>`;
   const go=ok=>{record(ok);pos++;show()};
-  $("again").onclick=()=>go(false); $("got").onclick=()=>go(true);
+  $("again").onclick=()=>go(false); $("got").onclick=()=>go(true); echoBind(q.right);
+}
+// Zeg het na: free pronunciation practice. The learner reads a model answer aloud, speech recognition writes it down,
+// and the words it did not catch are marked; tap one to hear it. Recognition is not an examiner, so this is a hint only.
+const NUM="nul een twee drie vier vijf zes zeven acht negen tien elf twaalf dertien veertien vijftien zestien zeventien achttien negentien twintig".split(" ");
+const WTOK=/([\p{L}\d]+(?:['’-][\p{L}\d]+)*)/u, norm=w=>w.toLowerCase().replace(/’/g,"'").replace(/\d+/g,d=>NUM[+d]||d);
+const echoHTML=what=>SR?`<div class="echo"><p class="ask">Uitspraak oefenen</p><p class="note">Lees ${what} hardop. De telefoon luistert mee en laat zien welke woorden hij verstond.</p><button class="ghost wide" id="echo">● Zeg het na</button><div id="echor"></div></div>`:"";
+function echoBind(target){
+  const b=$("echo"); if(!b)return;
+  b.onclick=()=>{$("echor").innerHTML="";listen("say",r=>echoDone(target,r));b.textContent="■ Stop";b.onclick=()=>recEnd(true)};
+}
+function echoDone(target,r){
+  const rb=$("recb"); rb.textContent="● Opnemen";rb.className="ghost wide";rb.onclick=()=>listen("rec",spTake);
+  $("recn").textContent=""; $("recp").innerHTML=""; echoBind(target); if($("echo"))$("echo").textContent="● Nog een keer";
+  const P=String(target).split(WTOK), T=P.filter((x,i)=>i%2).map(norm), H=r.text.split(WTOK).filter((x,i)=>i%2).map(norm), n=T.length, m=H.length;
+  if(!m){$("echor").innerHTML=`<p class="note">${r.fail?"Meeschrijven lukt hier niet.":"Ik heb niets verstaan. Spreek wat harder, of dichter bij de telefoon."}</p>`;return}
+  // longest common subsequence: which words of the model were heard, in order
+  const D=Array.from({length:n+1},()=>new Uint16Array(m+1)), ok=new Set();
+  for(let i=n-1;i>=0;i--)for(let j=m-1;j>=0;j--)D[i][j]=T[i]===H[j]?D[i+1][j+1]+1:Math.max(D[i+1][j],D[i][j+1]);
+  for(let i=0,j=0;i<n&&j<m;){if(T[i]===H[j]){ok.add(i);i++;j++}else if(D[i+1][j]>=D[i][j+1])i++;else j++}
+  let k=0; const html=P.map((x,i)=>i%2?(ok.has(k++)?esc(x):`<button class="miss" data-w="${esc(x)}">${esc(x)}</button>`):esc(x)).join("");
+  $("echor").innerHTML=`<p class="note"><strong class="${ok.size>=n*.9?"good":""}">${ok.size>=n*.9?"Heel duidelijk!":"De telefoon verstond "+ok.size+" van de "+n+" woorden."}</strong>
+    ${ok.size<n?"Tik op een rood woord om het te horen, en zeg het nog eens.":""}</p><div class="sample">${html}</div>
+    <p class="note">De telefoon is geen examinator: soms mist hij een woord dat je goed zegt.</p>`;
+  document.querySelectorAll("#echor .miss").forEach(b=>b.onclick=()=>speak(b.dataset.w));
 }
 // A Lezen text as a document. The first line is the title of a notice or advert;
 // "label: value" lines become a table; an e-mail gets its header (Van, Aan, Onderwerp) on top
@@ -1422,10 +1566,11 @@ async function nakijken(tasks,part){
 }
 function selfGrade(q,msg,doc){
   $("fb").innerHTML=`<p class="note">${msg}</p><p class="ask">Voorbeeld</p><div class="sample">${esc(q.right)}</div>
-    ${doc?docBtn:""}<div class="two"><button class="ghost" id="again">Later herhalen</button><button class="btn" id="got">Gelukt</button></div>`;
+    ${q.type==="reveal"?echoHTML("het voorbeeld"):""}${doc?docBtn:""}<div class="two"><button class="ghost" id="again">Later herhalen</button><button class="btn" id="got">Gelukt</button></div>`;
   const go=ok=>{record(ok);pos++;show()};
   $("again").onclick=()=>go(false); $("got").onclick=()=>go(true);
   if(doc)$("docx").onclick=()=>saveDocx([doc]);
+  if(q.type==="reveal")echoBind(q.right);
 }
 async function check(q){
   const text=$("txt").value.trim();
@@ -1475,7 +1620,7 @@ async function examWrite(){
         ${errs.length?`<ul class="errs">${errs.map(e=>`<li><s>${esc(e.wrong)}</s> <strong>${esc(e.right)}</strong><span>${esc(e.why)}</span></li>`).join("")}</ul>`:""}
         ${own(a)}<p class="ask">Verbeterde tekst</p><div class="sample">${esc(t.corrected)}</div>
         <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(a.q.right)}</div></details>`}).join("");
-    save();
+    keepRes(cur.part,Math.round(good/queue.length*100));
     card.innerHTML=`<div class="done"><p class="ask">${cur.t}: uitslag</p><div class="big">${good}/${A.length}</div><p class="ru">opdrachten voldoende</p></div>`+body+foot; bind();
   }catch(e){
     const c=e&&e.code;
@@ -1499,7 +1644,7 @@ async function examSpeak(){
         ${errs.length?`<ul class="errs">${errs.map(e=>`<li><s>${esc(e.wrong)}</s> <strong>${esc(e.right)}</strong><span>${esc(e.why)}</span></li>`).join("")}</ul>`:""}
         ${own(a)}${a.text?`<p class="ask">Zo zeg je het goed</p><div class="sample">${esc(t.corrected)}</div>`:""}
         <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(a.q.right)}</div></details>`}).join("");
-    save();
+    keepRes(cur.part,Math.round(good/queue.length*100));
     card.innerHTML=`<div class="done"><p class="ask">${cur.t}: uitslag</p><div class="big">${good}/${A.length}</div><p class="ru">antwoorden voldoende${A.length<queue.length?`; ${queue.length-A.length} van de ${queue.length} vragen niet beantwoord`:""}</p></div>`+body+foot; bind();
   }catch(e){
     const c=e&&e.code;
@@ -1524,6 +1669,8 @@ function mergeProgress(r){
   if(!Object.keys(S.exams||{}).length&&r.exams)S.exams=r.exams;
   const gl=g=>g?(g.lz||[]).length+(g.ls||[]).length:0; if(!gl(S.gen)&&gl(r.gen))S.gen=r.gen;
   if(r.plan0&&(!S.plan0||r.plan0<S.plan0))S.plan0=r.plan0;
+  S.res=S.res||{}; Object.entries(r.res||{}).forEach(([k,a])=>{if(!PART[k]||!Array.isArray(a))return;
+    S.res[k]=(S.res[k]||[]).concat(a.filter(x=>x&&x.at&&!(S.res[k]||[]).some(y=>y.at===x.at))).sort((x,y)=>x.at-y.at).slice(-10)});
   return n;
 }
 async function importProgress(e){
@@ -1567,7 +1714,7 @@ function finish(){
   if(cur.exam&&cur.write)return examWrite();
   if(cur.exam&&cur.speak)return examSpeak();
   if(cur.exam){
-    const pc=total?Math.round(right/total*100):0, need=Math.ceil(total*PASS), pass=right>=need, by={};
+    const pc=total?Math.round(right/total*100):0, need=Math.ceil(total*PASS), pass=right>=need, by={}; keepRes(cur.part,pc);
     // KNM: score per theme, weakest first
     cur.log.forEach(x=>{const t=x.l.replace(/^KNM: /,""),o=by[t]||(by[t]={r:0,n:0});o.n++;if(x.ok)o.r++});
     const themes=Object.keys(by).length>1?Object.keys(by).sort((a,b)=>by[a].r/by[a].n-by[b].r/by[b].n)
@@ -1986,6 +2133,10 @@ addGenerated();
 if((S.words||[]).some(x=>x.en))loadDict().catch(()=>{});
 home();
 restore().then(initCloud);
+// Offline (sw.js): the page, and every painting and photo, stay available without a connection
+if("serviceWorker" in navigator&&window.isSecureContext&&!window.claude)
+  navigator.serviceWorker.register("/sw.js").then(()=>navigator.serviceWorker.ready)
+    .then(r=>{if(r.active)r.active.postMessage({warm:ART.map(p=>"/art/"+p.f+".jpg").concat(Object.keys(FOTO).map(f=>"/foto/"+f+".jpg"))})}).catch(()=>{});
 </script>
 </body>
 </html>

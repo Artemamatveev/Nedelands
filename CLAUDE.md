@@ -52,7 +52,11 @@ order); `FOTO` holds a short Dutch description of each for screen readers. No em
 ## Progress
 
 Progress is per device: `localStorage` key `ww-v1`, mirrored to IndexedDB as a backup.
-There is no server. Don't change the stored shape without migrating old data.
+There is no server. `S.res` keeps the last 10 proefexamen scores per part (`{at, pc}`); "Ben je klaar?"
+under Mijn examens reads it (ready = the last two average 80% or more; the pass line is 70%).
+
+`sw.js` makes the app work offline: the page network-first (a push is live at once), paintings and
+photos from the cache (the page sends their list after loading), `api/` never cached. Don't change the stored shape without migrating old data.
 To move to another device, the learner saves progress as a JSON file (`S` as is) and loads it
 there; loading merges (per exercise the most practised version wins, words and mistakes are added).
 
@@ -60,7 +64,10 @@ there; loading merges (per exercise the most practised version wins, words and m
 
 Lezen texts are plain strings rendered as documents by `docHTML()`: the first line is the title
 (unless it is a letter or an e-mail), `label: value` lines become a table, `Van:` starts an
-e-mail header. Woordenschat has the definitions in `VO` and the themed A2 word list `WT`
+e-mail header. Luisteren items in `LS` are `[text, question, right, wrong, wrong, photo?]`; a dialogue has one line per
+turn (`A: …` / `B: …`), read with two pitches, and the optional photo from `foto/` sets the scene. In the
+proefexamen a text can be played twice. KNM follows the 8 official themes of the exam since 1 July 2025
+(40 questions, 45 minutes, 28 to pass). Woordenschat has the definitions in `VO` and the themed A2 word list `WT`
 (Dutch with de/het = Russian), practised both ways. Item keys (`lz|3.1`, `wn|de huis`) are
 stored progress: append new items, don't reorder or rename existing ones.
 
@@ -78,7 +85,8 @@ Spreken uses the same function with `{part:"sp", tasks:[{task, text}]}` (up to 1
 proefexamen). Claude can't take audio, so the phone writes the answer down first (Web Speech
 API, `nl-NL`). Recording (`MediaRecorder`, to play the answer back) and transcribing are
 separate takes, never at the same time: on iPhone they compete for the microphone. One
-minute per answer. Recordings and transcripts stay in memory only.
+minute per answer. Recordings and transcripts stay in memory only. "Zeg het na" (free, no Claude call):
+the learner reads the example or corrected answer aloud and the words speech recognition missed are marked.
 
 `api/generate.js` writes new Lezen and Luisteren material (same key, same Origin check);
 inside Claude the page uses `window.claude` instead. Generated items are kept in `S.gen`.
