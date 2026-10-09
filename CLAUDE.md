@@ -143,8 +143,10 @@ answered right once. Append chapters and questions; don't reorder or rename them
 
 ## Gesprekken (conversations)
 
-"Gesprekken" (a row under "Lezen, luisteren en spreken") are everyday role plays: calling the huisarts, work,
-the landlord, the school or the gemeente; the bakker, the apotheek, a café, the station, a new neighbour. Free and
+"Gesprekken" (a row under "Lezen, luisteren en spreken") are everyday role plays in four groups: on the phone
+(huisarts, work, landlord, school, gemeente, 112, a language school), work, school and the doctor (a job interview,
+a day off, the teacher, the GP's consulting room), in town (bakker, apotheek, café, station, exchanging a jumper,
+the bike repairer, the market, the library, asking the way) and the neighbours. Free and
 offline, no Claude (the user chose this over an AI conversation partner). Each one in `GP` in `index.html` is a script:
 the other person's line is read aloud (`speak()`), the learner answers out loud through `listen("say")` or types,
 and `gpFits()` checks the answer for keywords (`k`, groups of alternatives); a line marked `x` is skipped when the
