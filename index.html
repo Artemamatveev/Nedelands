@@ -130,14 +130,12 @@ a.it{text-decoration:none} .it.ext::after{content:none}
 /* kopje boven een groep: klein, kapitalen, zoals de vraag in een oefening */
 .lh{margin:26px 0 4px;color:var(--blue);font-size:13.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
 /* naar het examen: one short row per part, the bar with the 70% line, the score on the right */
-.rd{display:grid;grid-template-columns:86px minmax(0,1fr) 44px auto;align-items:center;column-gap:12px;width:100%;min-height:50px;padding:9px 0;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);color:var(--ink)}
+.rd{display:grid;grid-template-columns:86px minmax(0,1fr) 44px;align-items:center;column-gap:12px;width:100%;min-height:50px;padding:9px 0;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);color:var(--ink)}
 .rd b{font-size:17px;font-weight:600}
 .rd .bar{margin:0;height:8px}
 .rd small{text-align:right;font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--soft)}
 .rd small.good{color:var(--good)} .rd small.bad{color:var(--bad)}
-.rd::after{content:"›";grid-column:4;grid-row:1/span 2;align-self:center;font-size:26px;line-height:1;margin-top:-3px;color:var(--blue)}
 .rd .d{grid-column:1/4;margin-top:3px;color:var(--soft);font-size:14.5px;line-height:1.35}
-.rd:hover b{color:var(--blue)}
 /* proefexamens: een knop per onderdeel, met de tijd */
 .exb{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;margin:8px 0 12px}
 .exb .ghost{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:56px;padding:7px 4px;font-weight:600;line-height:1.25}
@@ -418,7 +416,7 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
     <section class="today tile" id="plan" data-tab="vandaag"></section>
     <section class="tile" id="exam" data-tab="examen"></section>
     <div class="duo" data-tab="oefenen">
-      <section class="tile" id="gram"></section>
+      <div><section class="tile" id="parts"></section><section class="tile" id="gram"></section></div>
       <section class="tile"><h2>Lezen, luisteren en spreken</h2><div class="list" id="books"></div></section>
     </div>
     <section class="tile" data-tab="herhalen"><h2>Herhalen</h2><p class="sub">Oefen wat je nog moeilijk vindt: je zwakke punten, je eigen fouten en de woorden die je hebt bewaard.</p><div class="list" id="mine"></div></section>
@@ -1758,15 +1756,16 @@ function home(){
   const sec=id=>SEC.find(x=>x.id===id);
   const row=id=>{const s=sec(id),p=ITEMS.filter(x=>x.sec===id),n=p.filter(x=>S.items[x.k]).length;
     return itHTML(`data-s="${id}"`,s.t,s.s,{n:n+" van "+p.length,bar:n?n/p.length*100:null,ic:id})};
-  // exam parts: how ready you are (from the proefexamens, else from practice); tap to practise
+  // exam parts: how ready you are (from the proefexamens, else from practice); practising them is on the Oefenen tab
   // one short row per part: the bar (proefexamen, else practice) with the 70% line; words only once there is a proefexamen
   const part=k=>{const r=ready(k),ex=((S.res||{})[k]||[]).length;
-    return`<button class="rd" data-s="${k}"><b>${PART[k]}</b><span class="bar pass"><i style="width:${r.pc||0}%"></i></span><small class="${ex?r.cls:""}">${r.pc==null?"–":r.pc+"%"}</small>${ex?`<span class="d">${r.st}. ${r.t}</span>`:""}</button>`};
+    return`<div class="rd"><b>${PART[k]}</b><span class="bar pass"><i style="width:${r.pc||0}%"></i></span><small class="${ex?r.cls:""}">${r.pc==null?"–":r.pc+"%"}</small>${ex?`<span class="d">${r.st}. ${r.t}</span>`:""}</div>`};
   const lb=Object.values(S.bk||{}).filter(b=>b.t).sort((a,b)=>b.at-a.at)[0];
   const hs=S.hs||{},lh=GS.filter(c=>hs[c.id]).sort((a,b)=>hs[b.id]-hs[a.id])[0],gsDone=GS.filter(c=>gsItems(c).every(x=>(S.items[x.k]||{}).r)).length;
-  $("exam").innerHTML=`<h2>Naar het examen</h2><p class="sub">Hoe ver ben je? De streep is ${PASS*100}%: zoveel heb je nodig. Tik op een onderdeel om te oefenen.</p><div class="list">${["lz","ls","wr","sp","knm"].map(part).join("")}</div>`
+  $("exam").innerHTML=`<h2>Naar het examen</h2><p class="sub">Hoe ver ben je? De streep is ${PASS*100}%: zoveel heb je nodig. Oefenen doe je bij Oefenen.</p><div class="list">${["lz","ls","wr","sp","knm"].map(part).join("")}</div>`
     +`<h3 class="lh">Proefexamen</h3><p class="sub">Met tijd, zoals op het echte examen. Zo zie je of je klaar bent.</p><div class="exb">${["lz","ls","wr","sp","knm"].map(id=>`<button class="ghost" data-e="${id}">${PART[id]}<small>${EX[id].min} min</small></button>`).join("")}</div>`
     +`<div class="list"><a class="it ext" href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens van DUO ↗</b><small>15</small></span><span class="d">De echte oefenexamens op inburgeren.nl, met echte stemmen. Doe er een als je hier klaar bent. Liefst op een computer.</span></span></a></div>`;
+  $("parts").innerHTML=`<h2>Examenonderdelen</h2><p class="sub">Oefen zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["lz","ls","wr","sp","knm"].map(row).join("")}</div>`;
   $("gram").innerHTML=`<h2>Grammatica en woorden</h2><p class="sub">Korte rondes van 10 vragen. Dit helpt bij alle onderdelen.</p><div class="list">${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`;
   $("books").innerHTML=itHTML(`data-x="books"`,"Boekenkast",lb?`Je leest nu: ${esc(lb.t)}, blz. ${lb.p+1}`:"Verhalen en je eigen e-books. Tik op een woord voor de betekenis.",{ic:"books"})
     +itHTML(`data-x="hist"`,"Geschiedenis van Nederland",lh?`Je was bij: ${lh.t}`:`Van de hunebedden tot nu, in ${GS.length} korte teksten met vragen.`,{n:`${gsDone} van ${GS.length}`,ic:"hist"})
@@ -1775,7 +1774,7 @@ function home(){
   $("mine").innerHTML=itHTML(`data-x="stats"`,"Mijn zwakke punten","Zie waar je de meeste fouten maakt en oefen precies dat.",{ic:"stats"})
     +((S.errs||[]).length?itHTML(`data-x="errs"`,"Mijn fouten","Oefen met fouten uit je eigen teksten en antwoorden.",{n:S.errs.length,ic:"errs"}):"")
     +((S.words||[]).length?itHTML(`data-x="words"`,"Mijn woorden","Oefen de woorden die je bij het lezen hebt bewaard.",{n:S.words.length,ic:"words"}):"");
-  document.querySelectorAll("#exam button,#gram button,#books button,#mine button").forEach(b=>b.onclick=()=>{const d=b.dataset;
+  document.querySelectorAll("#exam button,#parts button,#gram button,#books button,#mine button").forEach(b=>b.onclick=()=>{const d=b.dataset;
     if(d.s)build(d.s);
     else if(d.e)startExam(d.e);
     else if(d.x==="stats")stats();

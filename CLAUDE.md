@@ -19,7 +19,7 @@ generic "AI app" look.
   Always use the tokens on `:root`; every colour has a dark-mode value.
 - **Glass and tiles**: the page background is a Dutch landscape faintly seen through a frosted window: Ruisdael's
   windmill, pre-blurred in `art/molen-glass.jpg` (`body::before`), under a half-transparent wash (`--glass`). The content sits on plain white tiles with a soft shadow (`.tile`, `--card`, `--lift`), not
-  ceramic Delft tiles: on the home tabs one per block (today's lesson, Naar het examen, Grammatica en woorden, Lezen
+  ceramic Delft tiles: on the home tabs one per block (today's lesson, Naar het examen, Examenonderdelen, Grammatica en woorden, Lezen
   luisteren en spreken, Herhalen), and every inner screen is one tile. The museum label sits on the glass.
 - **Type**: the system font only (`-apple-system, system-ui`: SF Pro on iPhone), so the
   app reads like a native iPhone app. No web fonts; headings semibold (600–700), never 800.
@@ -52,9 +52,10 @@ you were on is kept (`tab`), so every back button returns to it and is named aft
 cobalt; no exam dates: the plan starts with the exam part that scores lowest, and Schrijven
 and KNM are in it every day) and Mix van de dag.
 - **Examen**: "Naar het examen" (one short row per exam part, `.rd`: the name, a bar with the 70% line and the score,
-from `ready()`; status and last proefexamens only appear once there is a proefexamen; then one "Proefexamen"
+from `ready()`; status only, not a button: practising a part is on Oefenen; status and last proefexamens only appear once there is a proefexamen; then one "Proefexamen"
 button per part with its time, and one row to DUO's 15 official oefenexamens ↗).
-- **Oefenen**: "Grammatica en woorden" and "Lezen, luisteren en spreken" (side by side on a computer).
+- **Oefenen**: "Examenonderdelen" (Lezen, Luisteren, Schrijven, Spreken, KNM: practice without the clock) and
+"Grammatica en woorden" under it, "Lezen, luisteren en spreken" beside them on a computer.
 - **Herhalen**: Mijn zwakke punten, Mijn fouten and Mijn woorden (the last two once there is something in them).
 
 Every section appears once; don't add a second entry point to the same exercise.
