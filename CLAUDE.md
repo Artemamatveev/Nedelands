@@ -80,7 +80,7 @@ Every section appears once; don't add a second entry point to the same exercise.
   (small capitals, cobalt). Every inner screen starts with a back button named after where it
   goes: the tab's name (Vandaag, Examen, Oefenen, Herhalen) for the home screen.
 - **Practising is a focus screen** (`#play`): no painting, one row with ✕ (back to where you came from; in a
-  proefexamen the first tap only asks "Stoppen?"), the progress bar, the count (3/10) and the clock. The main
+  proefexamen the first tap or swipe back only asks "Stoppen?" and the page springs back), the progress bar, the count (3/10) and the clock. The main
   button (`.act`), the exam buttons (`.exnav`) and the feedback stick to the bottom of the screen, under the thumb.
   The feedback is a sheet (`.fb.sheet`): a ✓ or ✕ as well as green or red, the right answer, why, and Verder.
   Options also show ✓ / ✕; three options stand in one column.

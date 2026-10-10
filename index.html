@@ -3206,6 +3206,7 @@ document.addEventListener("keydown",e=>{
 });
 // Swipe from left to right on any inner screen to go back, like on iPhone: it does what the screen's back button does.
 // In the reader a sideways swipe turns pages, so there only a swipe from the left edge (or on the first page) goes back.
+// In a proefexamen the first swipe only asks "Stoppen?" (like the first tap on ✕); a second swipe or tap stops.
 (()=>{
   const SCR=["play","stats","lib","read","media","story","hist","talk"];
   let x0=0,y0=0,el=null,on=false;
@@ -3221,8 +3222,10 @@ document.addEventListener("keydown",e=>{
   const end=e=>{
     if(!el)return; const t=el,dx=e.changedTouches[0].clientX-x0; el=null; if(!on)return;
     t.style.transition="transform .18s,opacity .18s";
-    if(e.type==="touchend"&&dx>90){const b=t.querySelector(".back");t.style.transform="translateX(100%)";t.style.opacity=0;setTimeout(()=>{reset(t);b.click()},170)}
-    else{t.style.transform="";t.style.opacity="";setTimeout(()=>reset(t),200)}};
+    const b=t.querySelector(".back"),go=e.type==="touchend"&&dx>90,
+      ask=go&&t.id==="play"&&cur.exam&&pos<queue.length&&!b.classList.contains("arm"); // a proefexamen first asks "Stoppen?": the page springs back, a second swipe stops
+    if(go&&!ask){t.style.transform="translateX(100%)";t.style.opacity=0;setTimeout(()=>{reset(t);b.click()},170)}
+    else{t.style.transform="";t.style.opacity="";setTimeout(()=>reset(t),200);if(ask)b.click()}};
   document.addEventListener("touchend",end); document.addEventListener("touchcancel",end);
 })();
 addGenerated();
