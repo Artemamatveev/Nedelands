@@ -48,9 +48,11 @@ with a finger (it grows and clears while held; where you let go is the tab that 
 shows on the four tabs; exercises and inner screens hide it and go back with their back button or a swipe. The tab
 you were on is kept (`tab`), so every back button returns to it and is named after it.
 
-- **Vandaag**: the painting and its label, then today's lesson (numbered steps; the next one is filled
-cobalt; no exam dates: the plan starts with the exam part that scores lowest, and Schrijven
-and KNM are in it every day) and Mix van de dag.
+- **Vandaag**: the painting and its label, then today's lesson (six numbered steps; the next one is filled
+cobalt; no exam dates): every exam part every day, the one that scores lowest first as a full round (every
+third day a proefexamen), the other four as short rounds (`SHORT`: one Lezen text, three Luisteren fragments,
+one Schrijven task, two Spreken questions, five KNM questions), weakest to strongest, and last a grammar round
+that helps the weakest part. Then Mix van de dag.
 - **Examen**: "Naar het examen" (one short row per exam part, `.rd`: the name, a bar with the 70% line and "76% goed",
 from `ready()`; status only, not a button: practising a part is on Oefenen. The number is the share of right answers,
 never a chance of passing; the intro and the line under it say where it comes from: the last proefexamen, else practice.

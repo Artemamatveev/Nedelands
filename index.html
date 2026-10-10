@@ -396,7 +396,7 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
   #home .tile{padding:24px 28px 20px}
   .tile,#play,#stats,#lib,#read,#media,#story,#hist,#talk{padding-left:28px;padding-right:28px}
   #card>.act,#card>.exnav,#card>.fb.sheet{margin-left:-28px;margin-right:-28px;padding-left:28px;padding-right:28px}
-  .steps{grid-template-columns:repeat(auto-fit,minmax(0,1fr))}
+  .steps{grid-template-columns:repeat(3,minmax(0,1fr))}
   #exam .list{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));column-gap:40px}
   .exb{grid-template-columns:repeat(5,1fr)}
   .duo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:16px;align-items:start}
@@ -1861,25 +1861,31 @@ function ready(k){
 }
 const PART={wr:"Schrijven",knm:"KNM",sp:"Spreken",ls:"Luisteren",lz:"Lezen"}, HELP={wr:["wo","verb"],sp:["pr","verb"],lz:["vo","dh"],ls:["vo","pr"],knm:[]};
 let planId=null;
-// Je les van vandaag, without exam dates: the weakest exam part first (lowest proefexamen or practice score;
-// a part not practised yet counts as 50%), every third day as a proefexamen once it has been practised;
-// then a grammar round that helps that part, and Schrijven and KNM every day (when one of them is already
-// step 1, another part in turn, so nothing is forgotten)
+// Short rounds for today's lesson: a little of every exam part each day, so nothing is forgotten
+const SHORT={lz:{n:6,s:"Eén tekst met vragen",pool:()=>{ // the questions of one text: due ones first, else the least-seen text
+    const g={},d=today();ITEMS.forEach(q=>{if(q.sec==="lz")(g[q.text]=g[q.text]||[]).push(q)});
+    const due=x=>x.some(q=>S.items[q.k]&&S.items[q.k].d<=d),T=shuffle(Object.values(g));
+    const t=T.find(due)||T.map(x=>[x,x.reduce((a,q)=>a+seenN(q),0)/x.length]).sort((a,b)=>a[1]-b[1])[0][0];
+    return t.sort((p,q)=>p.k<q.k?-1:1)},keep:1},
+  ls:{n:3,s:"Drie fragmenten"},wr:{n:1,min:10,s:"Eén opdracht in 10 minuten"},sp:{n:2,s:"Twee vragen: spreek je antwoord in"},knm:{n:5,s:"Vijf vragen"}};
+// Je les van vandaag, without exam dates: every exam part, the weakest first (lowest proefexamen or practice
+// score; a part not practised yet counts as 50%) as a full round, every third day as a proefexamen once it
+// has been practised; then the other four as short rounds, weakest to strongest; last a grammar round
+// that helps the weakest part
 function planTasks(){
   const d=today(),T=[],ks=["lz","ls","wr","sp","knm"],sec=id=>SEC.find(x=>x.id===id);
-  const sc=ks.map(k=>({k,r:ready(k)})), add=(id,t,s)=>{if(!T.some(x=>x.id===id))T.push({id,t,s})};
+  const sc=ks.map(k=>({k,r:ready(k)})), add=(id,t,s)=>T.push({id,t,s});
   sc.sort((a,b)=>(a.r.pc==null?50:a.r.pc)-(b.r.pc==null?50:b.r.pc)||ks.indexOf(a.k)-ks.indexOf(b.k));
   const k=sc[0].k;
   if(sc[0].r.pc!=null&&d%3===0)add("e:"+k,"Proefexamen "+PART[k],k==="wr"?"4 opdrachten in 40 minuten":EX[k].min+" minuten, zoals op het examen");
   else add("s:"+k,PART[k],sec(k).s);
+  sc.slice(1).forEach(x=>add("q:"+x.k,PART[x.k],SHORT[x.k].s));
   const help=HELP[k].length?HELP[k]:["verb","wo","vo"],h=help[d%help.length];add("s:"+h,sec(h).t,sec(h).s);
-  add("s:wr",PART.wr,sec("wr").s); add("s:knm",PART.knm,sec("knm").s);
-  if(T.length<4){const o=ks.filter(x=>!T.some(t=>t.id.endsWith(":"+x))),k2=o[d%o.length];add("s:"+k2,PART[k2],"Herhaling, zodat je niets vergeet")}
   return{T,k,pc:sc[0].r.pc};
 }
 function planHTML(){
   const d=today(),done=S.day&&S.day.d===d?S.day.done:[],P=planTasks(),steps=P.T,nx=steps.findIndex(t=>!done.includes(t.id));
-  const intro=(P.pc!=null?`Vandaag vooral ${PART[P.k]}: daar scoor je nu het laagst.`:`${["Twee","Drie","Vier","Vijf"][steps.length-2]||steps.length} korte stappen.`)
+  const intro=(P.pc!=null?`Vandaag vooral ${PART[P.k]}: daar scoor je nu het laagst.`:`${["Twee","Drie","Vier","Vijf","Zes"][steps.length-2]||steps.length} korte stappen: elk onderdeel van het examen een beetje.`)
     +(nx<0?" Alles van vandaag is klaar. Goed gedaan!":" Doe ze een voor een.");
   const date=new Date().toLocaleDateString("nl-NL",{weekday:"long",day:"numeric",month:"long"});
   return`<p class="ask">${date}</p><h2>Je les van vandaag</h2><p class="sub">${intro}</p>
@@ -1890,7 +1896,7 @@ function planHTML(){
 function drawPlan(){
   $("plan").innerHTML=planHTML();
   document.querySelectorAll("#plan [data-p]").forEach(b=>b.onclick=()=>{const id=b.dataset.p,[k,v]=id.split(":");
-    if(k==="s")build(v);else startExam(v);
+    if(k==="s")build(v);else if(k==="q")build(v,{...SEC.find(x=>x.id===v),...SHORT[v]});else startExam(v);
     planId=id});
 }
 const weak=q=>{const it=S.items[q.k];return it?(it.w||0)-(it.r||0):0};
@@ -1916,7 +1922,7 @@ function build(id,custom){
   let cand=due.slice(0,Math.ceil(cur.n*.7)).concat(fresh,due.slice(Math.ceil(cur.n*.7)));
   if(id==="mix"){const cnt={};cand=cand.filter(q=>(cnt[q.sec]=(cnt[q.sec]||0)+1)<=(q.sec==="verb"?3:q.sec==="sp"?1:2))}
   queue=cand.slice(0,cur.n);
-  if(id==="wr"){const f=cand.filter(q=>q.fields),o=cand.filter(q=>!q.fields);queue=f.slice(0,1).concat(o.slice(0,3))}
+  if(id==="wr"&&cur.n>=4){const f=cand.filter(q=>q.fields),o=cand.filter(q=>!q.fields);queue=f.slice(0,1).concat(o.slice(0,3))}
   if(cur.pool){const pl=cur.pool();queue=pl.slice(0,cur.n);cur.miss=[];cur.ans=[];cur.log=[];cur.plays={};
     cur.nav=cur.exam&&["lz","ls","knm","wr"].includes(cur.part);if(cur.nav){cur.pick=[];cur.op=[];cur.sent=false}
     if(cur.exam)cur.nw=queue.length?Math.round(queue.filter(q=>!seenN(q)).length/queue.length*100):0}
