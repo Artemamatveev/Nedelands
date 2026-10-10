@@ -130,10 +130,10 @@ a.it{text-decoration:none} .it.ext::after{content:none}
 /* kopje boven een groep: klein, kapitalen, zoals de vraag in een oefening */
 .lh{margin:26px 0 4px;color:var(--blue);font-size:13.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
 /* naar het examen: one short row per part, the bar with the 70% line, the score on the right */
-.rd{display:grid;grid-template-columns:86px minmax(0,1fr) 44px auto;align-items:center;column-gap:12px;width:100%;min-height:50px;padding:9px 0;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);color:var(--ink)}
+.rd{display:grid;grid-template-columns:84px minmax(0,1fr) 88px auto;align-items:center;column-gap:12px;width:100%;min-height:50px;padding:9px 0;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);color:var(--ink)}
 .rd b{font-size:17px;font-weight:600}
 .rd .bar{margin:0;height:8px}
-.rd small{text-align:right;font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--soft)}
+.rd small{text-align:right;white-space:nowrap;font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--soft)}
 .rd small.good{color:var(--good)} .rd small.bad{color:var(--bad)}
 .rd::after{content:"›";grid-column:4;grid-row:1/span 2;align-self:center;font-size:26px;line-height:1;margin-top:-3px;color:var(--blue)}
 .rd .d{grid-column:1/4;margin-top:3px;color:var(--soft);font-size:14.5px;line-height:1.35}
@@ -1760,11 +1760,12 @@ function home(){
     return itHTML(`data-s="${id}"`,s.t,s.s,{n:n+" van "+p.length,bar:n?n/p.length*100:null,ic:id})};
   // exam parts: how ready you are (from the proefexamens, else from practice); tap to practise
   // one short row per part: the bar (proefexamen, else practice) with the 70% line; words only once there is a proefexamen
+  // the number is the share of right answers (last proefexamen, else practice), not a chance of passing; the line under it says which
   const part=k=>{const r=ready(k),ex=((S.res||{})[k]||[]).length;
-    return`<button class="rd" data-s="${k}"><b>${PART[k]}</b><span class="bar pass"><i style="width:${r.pc||0}%"></i></span><small class="${ex?r.cls:""}">${r.pc==null?"–":r.pc+"%"}</small>${ex?`<span class="d">${r.st}. ${r.t}</span>`:""}</button>`};
+    return`<button class="rd" data-s="${k}"><b>${PART[k]}</b><span class="bar pass"><i style="width:${r.pc||0}%"></i></span><small class="${ex?r.cls:""}">${r.pc==null?"–":r.pc+"% goed"}</small>${ex?`<span class="d">${r.st}. ${r.t}</span>`:r.pc!=null?`<span class="d">Bij het oefenen. Nog geen proefexamen.</span>`:""}</button>`};
   const lb=Object.values(S.bk||{}).filter(b=>b.t).sort((a,b)=>b.at-a.at)[0];
   const hs=S.hs||{},lh=GS.filter(c=>hs[c.id]).sort((a,b)=>hs[b.id]-hs[a.id])[0],gsDone=GS.filter(c=>gsItems(c).every(x=>(S.items[x.k]||{}).r)).length;
-  $("exam").innerHTML=`<h2>Naar het examen</h2><p class="sub">Hoe ver ben je? De streep is ${PASS*100}%: zoveel heb je nodig. Tik op een onderdeel om te oefenen.</p><div class="list">${["lz","ls","wr","sp","knm"].map(part).join("")}</div>`
+  $("exam").innerHTML=`<h2>Naar het examen</h2><p class="sub">Het getal is hoeveel procent je goed had: bij je laatste proefexamen, of bij het oefenen. Om te slagen heb je ongeveer ${PASS*100}% nodig: dat is de streep. Tik op een onderdeel om te oefenen.</p><div class="list">${["lz","ls","wr","sp","knm"].map(part).join("")}</div>`
     +`<h3 class="lh">Proefexamen</h3><p class="sub">Met tijd, zoals op het echte examen. Zo zie je of je klaar bent.</p><div class="exb">${["lz","ls","wr","sp","knm"].map(id=>`<button class="ghost" data-e="${id}">${PART[id]}<small>${EX[id].min} min</small></button>`).join("")}</div>`
     +`<div class="list"><a class="it ext" href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens van DUO ↗</b><small>15</small></span><span class="d">De echte oefenexamens op inburgeren.nl, met echte stemmen. Doe er een als je hier klaar bent. Liefst op een computer.</span></span></a></div>`;
   $("gram").innerHTML=`<h2>Grammatica en woorden</h2><p class="sub">Korte rondes van 10 vragen. Dit helpt bij alle onderdelen.</p><div class="list">${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`;

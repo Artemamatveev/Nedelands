@@ -51,8 +51,9 @@ you were on is kept (`tab`), so every back button returns to it and is named aft
 - **Vandaag**: the painting and its label, then today's lesson (numbered steps; the next one is filled
 cobalt; no exam dates: the plan starts with the exam part that scores lowest, and Schrijven
 and KNM are in it every day) and Mix van de dag.
-- **Examen**: "Naar het examen" (one short row per exam part, `.rd`: the name, a bar with the 70% line and the score,
-from `ready()`; status and last proefexamens only appear once there is a proefexamen; then one "Proefexamen"
+- **Examen**: "Naar het examen" (one short row per exam part, `.rd`: the name, a bar with the 70% line and "76% goed",
+from `ready()`; the number is the share of right answers, never a chance of passing, and the intro and the line under
+it say where it comes from: the last proefexamen, else practice; then one "Proefexamen"
 button per part with its time, and one row to DUO's 15 official oefenexamens ↗).
 - **Oefenen**: "Grammatica en woorden" and "Lezen, luisteren en spreken" (side by side on a computer).
 - **Herhalen**: Mijn zwakke punten, Mijn fouten and Mijn woorden (the last two once there is something in them).
