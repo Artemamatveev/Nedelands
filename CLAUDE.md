@@ -1,6 +1,6 @@
-# Nederlands A2
+# Bittertalen
 
-A single-page study app for the Dutch A2 integration exam (inburgeringsexamen).
+Bittertalen (a pun on bitterballen: "bitter languages", self-irony about learning Dutch) is a single-page study app for the Dutch A2 integration exam (inburgeringsexamen).
 Everything lives in `index.html` (styles, data, logic). Paintings are in `art/`.
 Deployed on Vercel from `main`: every push to `main` goes live at https://nedelands.vercel.app.
 The app's UI language is Dutch; the user talks to Claude in Russian.
