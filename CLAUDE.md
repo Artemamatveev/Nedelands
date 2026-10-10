@@ -42,7 +42,9 @@ generic "AI app" look.
 ## Home screen
 
 Four tabs, switched by a floating glass bar at the bottom (`nav.tabs`, `setTab()`; like iOS 26 / Instagram:
-icons with names, the current one on a `--wash` lens, the names fold away while you scroll down). The bar only
+icons with names, the names fold away while you scroll down). The current tab sits under a lens (`.tabs .lens`):
+a drop of Liquid Glass that slides to the new tab with a little spring and stretch, and can be dragged along the bar
+with a finger (it grows and clears while held; where you let go is the tab that opens). The bar only
 shows on the four tabs; exercises and inner screens hide it and go back with their back button or a swipe. The tab
 you were on is kept (`tab`), so every back button returns to it and is named after it.
 

@@ -144,16 +144,28 @@ a.it{text-decoration:none} .it.ext::after{content:none}
 .exb small{color:var(--soft);font-size:13.5px;font-weight:500;font-variant-numeric:tabular-nums}
 /* tabbalk: vier plekken in zwevend glas onderaan, zoals in iOS 26 (Instagram). Alleen op de vier startschermen;
    in een oefening en op een binnenscherm verdwijnt hij, daar ga je terug met de knop of door te vegen */
-.tabs{position:fixed;z-index:8;left:50%;bottom:calc(10px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;gap:2px;padding:4px;border-radius:999px;
-  background:color-mix(in srgb,var(--card) 60%,transparent);-webkit-backdrop-filter:blur(18px) saturate(1.6);backdrop-filter:blur(18px) saturate(1.6);
-  border:1px solid color-mix(in srgb,var(--card) 75%,transparent);box-shadow:var(--lift)}
-.tabs button{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:74px;padding:6px 8px 5px;border:0;border-radius:999px;background:none;color:var(--ink);font-size:11px;font-weight:600;line-height:1.1;transition:background-color .2s,color .2s,min-width .2s,padding .2s;-webkit-tap-highlight-color:transparent}
-.tabs svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-.tabs [aria-current]{background:color-mix(in srgb,var(--wash) 75%,transparent);color:var(--blue)}
+.tabs{position:fixed;z-index:8;left:50%;bottom:calc(10px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;width:min(384px,calc(100vw - 24px));padding:5px;border-radius:999px;
+  background:color-mix(in srgb,var(--card) 55%,transparent);-webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8);
+  border:1px solid color-mix(in srgb,var(--card) 70%,transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),var(--lift);
+  touch-action:none;-webkit-user-select:none;user-select:none;transition:width .3s cubic-bezier(.3,1.2,.5,1)}
+.tabs button{position:relative;z-index:1;flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 4px 8px;border:0;border-radius:999px;background:none;color:var(--ink);font-size:12px;font-weight:600;line-height:1.1;transition:color .25s,padding .3s;-webkit-tap-highlight-color:transparent}
+.tabs svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.tabs [aria-current]{color:var(--blue)}
+/* the lens: a drop of glass over the current tab. It slides with a little spring and a stretch, and you can drag it
+   along the bar with your finger: it grows and clears while you hold it, like Liquid Glass */
+.tabs .lens{position:absolute;top:5px;bottom:5px;left:5px;width:calc((100% - 10px)/4);border-radius:999px;pointer-events:none;
+  background:color-mix(in srgb,var(--wash) 55%,transparent);-webkit-backdrop-filter:blur(4px) saturate(2);backdrop-filter:blur(4px) saturate(2);
+  box-shadow:inset 0 1px 1px rgba(255,255,255,.75),inset 0 -1px 1px rgba(255,255,255,.3),inset 0 0 0 .5px rgba(255,255,255,.4),0 2px 10px rgba(8,16,40,.12);
+  transform:translateX(calc(var(--i,0) * 100%));transition:transform .5s cubic-bezier(.3,1.35,.5,1),scale .3s cubic-bezier(.3,1.4,.5,1),background-color .3s}
+.tabs .lens.go{animation:goo .5s cubic-bezier(.3,1,.5,1)}
+@keyframes goo{35%{scale:1.22 .9}70%{scale:.97 1.03}}
+.tabs.drag .lens{transition:scale .3s cubic-bezier(.3,1.4,.5,1),background-color .3s;scale:1.14 1.2;background-color:color-mix(in srgb,var(--wash) 22%,transparent)}
+.tabs.drag button{color:var(--ink)} .tabs.drag button.on{color:var(--blue)}
 /* scroll down and the bar shrinks to its icons; scroll up and the names come back */
-.tabs.min button{min-width:54px;padding:8px} .tabs.min span{display:none}
+.tabs.min{width:min(264px,calc(100vw - 24px))}
+.tabs.min button{padding:10px 4px} .tabs.min span{display:none}
 body:has(#home[hidden]) .tabs{display:none}
-main:has(#home:not([hidden])){padding-bottom:100px}
+main:has(#home:not([hidden])){padding-bottom:116px}
 
 /* oefenen */
 .top{display:flex;justify-content:space-between;align-items:center;margin:14px 0 0}
@@ -392,7 +404,7 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
   #play,#stats,#lib,#read,#media,#story,#hist,#talk{max-width:720px;margin:16px auto 0}
   .book{font-size:20px}
 }
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}.tabs .lens.go{animation:none}}
 </style>
 </head>
 <body>
@@ -466,6 +478,7 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
   </div>
 </main>
 <nav class="tabs" id="tabs" aria-label="Onderdelen">
+  <i class="lens" aria-hidden="true"></i>
   <button data-t="vandaag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16V20H4z"/><path d="M4 10h16M8 3v4M16 3v4"/></svg><span>Vandaag</span></button>
   <button data-t="examen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h12v17H6z"/><path d="M9.5 4V2.8h5V4M9 12.5l2.2 2.2L15.5 10"/></svg><span>Examen</span></button>
   <button data-t="oefenen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c2.6-1 5.6-.8 9 1.3v13c-3.4-2.1-6.4-2.3-9-1.3zM21 5.5c-2.6-1-5.6-.8-9 1.3v13c3.4-2.1 6.4-2.3 9-1.3z"/></svg><span>Oefenen</span></button>
@@ -1779,15 +1792,37 @@ function home(){
 let tab="vandaag";
 const TABN={vandaag:"Vandaag",examen:"Examen",oefenen:"Oefenen",herhalen:"Herhalen"};
 const backHTML=()=>`<span aria-hidden="true">←</span>${TABN[tab]}`;
+const TABS=Object.keys(TABN);
 function setTab(t,top=true){
+  const L=$("tabs").querySelector(".lens");
+  if(t!==tab){L.classList.remove("go");void L.offsetWidth;L.classList.add("go")} // the lens stretches as it slides
+  $("tabs").style.setProperty("--i",TABS.indexOf(t));
   tab=t; document.querySelector("main").classList.toggle("big",t==="vandaag");
   document.querySelectorAll("#home [data-tab]").forEach(e=>e.hidden=e.dataset.tab!==t);
   document.querySelectorAll("#tabs button").forEach(b=>b.toggleAttribute("aria-current",b.dataset.t===t));
   ["sback","vback","lback"].forEach(id=>$(id).innerHTML=backHTML());
   $("tabs").classList.remove("min"); if(top)window.scrollTo(0,0);
 }
-document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>{
+let tabSkip=0;
+document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>{if(Date.now()<tabSkip)return;
   if(b.dataset.t===tab)window.scrollTo({top:0,behavior:"smooth"}); else setTab(b.dataset.t)});
+// Drag the lens along the bar, like on iPhone: it follows the finger, and where you let go is the tab you open
+(()=>{
+  const n=$("tabs"),L=n.querySelector(".lens"),B=[...n.querySelectorAll("button")];
+  let x0=null,id=null,drag=false,x=0,w=0,left=0;
+  const near=()=>Math.max(0,Math.min(B.length-1,Math.round(x/w)));
+  n.addEventListener("pointerdown",e=>{const r=n.getBoundingClientRect();x0=e.clientX;id=e.pointerId;drag=false;left=r.left+5;w=(r.width-10)/B.length});
+  n.addEventListener("pointermove",e=>{
+    if(x0==null||e.pointerId!==id)return;
+    if(!drag){if(Math.abs(e.clientX-x0)<8)return;drag=true;try{n.setPointerCapture(id)}catch(_){}n.classList.add("drag")}
+    x=Math.max(0,Math.min((B.length-1)*w,e.clientX-left-w/2));L.style.transform=`translateX(${x}px)`;
+    B.forEach((b,i)=>b.classList.toggle("on",i===near()))});
+  const up=()=>{
+    if(x0==null)return; x0=null; if(!drag)return; drag=false; tabSkip=Date.now()+350;
+    const t=B[near()].dataset.t; n.classList.remove("drag"); L.style.transform=""; B.forEach(b=>b.classList.remove("on"));
+    if(t!==tab)setTab(t)};
+  n.addEventListener("pointerup",up); n.addEventListener("pointercancel",up);
+})();
 (()=>{let y=0;addEventListener("scroll",()=>{const n=scrollY;if(Math.abs(n-y)<8)return;$("tabs").classList.toggle("min",n>y&&n>120);y=n},{passive:true})})();
 // How often a question was met before: practice answers (S.items) plus earlier proefexamens (S.xs).
 // The proefexamen takes the least-seen questions first, so its score is not just a memory test.
