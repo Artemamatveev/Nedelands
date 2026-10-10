@@ -17,19 +17,21 @@ generic "AI app" look.
   Always use the tokens on `:root`; every colour has a dark-mode value.
 - **Glass and tiles**: the page background is a Dutch landscape faintly seen through a frosted window: Ruisdael's
   windmill, pre-blurred in `art/molen-glass.jpg` (`body::before`), under a half-transparent wash (`--glass`). The content sits on plain white tiles with a soft shadow (`.tile`, `--card`, `--lift`), not
-  ceramic Delft tiles: on the home screen one per block (today's lesson, Naar het examen, Grammatica en woorden, Lezen
+  ceramic Delft tiles: on the home tabs one per block (today's lesson, Naar het examen, Grammatica en woorden, Lezen
   luisteren en spreken, Herhalen), and every inner screen is one tile. The museum label sits on the glass.
 - **Type**: the system font only (`-apple-system, system-ui`: SF Pro on iPhone), so the
   app reads like a native iPhone app. No web fonts; headings semibold (600–700), never 800.
   No handwriting or decorative fonts.
-- **Shapes**: square or nearly square corners (2–4px), solid 1px separators, flat buttons.
+- **Shapes**: square or nearly square corners (2–4px), solid 1px separators, flat buttons. The one exception is
+  the floating tab bar: a glass pill, like iOS 26 and Instagram (the user asked for it).
 - **Logo**: the name "Bittertalen" in the system font, with a bitterbal (`--oranje`, light crumbs) as the dot on
   the i, the size and place of a normal dot (`h1 .idot`). The app icon is a bitterbal too.
 - **Dutch motifs instead of decoration**:
   - Header: the painting of the day (`ART` + `paint()` in `index.html`), with a museum
     label underneath: artist, title, year, museum and one A2 sentence in Dutch (no
-    translation), all in one size (15px, no italics). Tapping the painting on the home screen opens its story
-    (`story()`); on other screens it shows the painting in full.
+    translation), all in one size (15px, no italics). The full painting and the label are on the Vandaag tab; the
+    other tabs and inner screens get the narrow strip (`main.big` is only set on Vandaag). Tapping the painting on a
+    home tab opens its story (`story()`); on inner screens it shows the painting in full.
   - Streak: a stamp, like on a Museumkaart.
 - **Never use**: cream or beige backgrounds, handwriting fonts, wobbly hand-drawn
   border-radius, dashed lines, highlighter underlines under headings, decorative SVG
@@ -37,12 +39,20 @@ generic "AI app" look.
 
 ## Home screen
 
-One clear path, top to bottom: today's lesson (numbered steps; the next one is filled
+Four tabs, switched by a floating glass bar at the bottom (`nav.tabs`, `setTab()`; like iOS 26 / Instagram:
+icons with names, the current one on a `--wash` lens, the names fold away while you scroll down). The bar only
+shows on the four tabs; exercises and inner screens hide it and go back with their back button or a swipe. The tab
+you were on is kept (`tab`), so every back button returns to it and is named after it.
+
+- **Vandaag**: the painting and its label, then today's lesson (numbered steps; the next one is filled
 cobalt; no exam dates: the plan starts with the exam part that scores lowest, and Schrijven
-and KNM are in it every day), then "Naar het examen" (one row per exam part with how ready you
+and KNM are in it every day) and Mix van de dag.
+- **Examen**: "Naar het examen" (one row per exam part with how ready you
 are, from `ready()`: status, last proefexamen and a bar with the 70% line; then one "Proefexamen"
-button per part with its time, and one row to DUO's 15 official oefenexamens ↗), then "Grammatica en woorden", "Lezen, luisteren en spreken" and
-"Herhalen" (weak points and own mistakes).
+button per part with its time, and one row to DUO's 15 official oefenexamens ↗).
+- **Oefenen**: "Grammatica en woorden" and "Lezen, luisteren en spreken" (side by side on a computer).
+- **Herhalen**: Mijn zwakke punten, Mijn fouten and Mijn woorden (the last two once there is something in them).
+
 Every section appears once; don't add a second entry point to the same exercise.
 
 ## Navigation: one action language
@@ -59,7 +69,7 @@ Every section appears once; don't add a second entry point to the same exercise.
   Text links `<a>` only for other websites, with ↗.
 - One `h2` (with the tile diamond) per section or screen; groups inside it get `h3.lh`
   (small capitals, cobalt). Every inner screen starts with a back button named after where it
-  goes: "Start" for the home screen.
+  goes: the tab's name (Vandaag, Examen, Oefenen, Herhalen) for the home screen.
 
 ## Paintings
 

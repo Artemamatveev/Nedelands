@@ -43,7 +43,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-vi
 
 /* het schilderij van vandaag */
 header{position:relative;height:220px;margin:0 -16px;overflow:hidden;background:#132A6E;transition:height .25s}
-main:has(#home[hidden]) header{height:88px}
+main:is(:not(.big),:has(#home[hidden])) header{height:88px}
 .art{position:absolute;inset:0;width:100%;padding:0;border:0;background:none;display:block}
 .art img{width:100%;height:100%;object-fit:cover;display:block}
 header::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(8,16,40,.8),rgba(8,16,40,0) 60%);pointer-events:none}
@@ -134,6 +134,18 @@ a.it{text-decoration:none} .it.ext::after{content:none}
 .exb{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;margin:8px 0 12px}
 .exb .ghost{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:56px;padding:7px 4px;font-weight:600;line-height:1.25}
 .exb small{color:var(--soft);font-size:13.5px;font-weight:500;font-variant-numeric:tabular-nums}
+/* tabbalk: vier plekken in zwevend glas onderaan, zoals in iOS 26 (Instagram). Alleen op de vier startschermen;
+   in een oefening en op een binnenscherm verdwijnt hij, daar ga je terug met de knop of door te vegen */
+.tabs{position:fixed;z-index:8;left:50%;bottom:calc(10px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;gap:2px;padding:4px;border-radius:999px;
+  background:color-mix(in srgb,var(--card) 60%,transparent);-webkit-backdrop-filter:blur(18px) saturate(1.6);backdrop-filter:blur(18px) saturate(1.6);
+  border:1px solid color-mix(in srgb,var(--card) 75%,transparent);box-shadow:var(--lift)}
+.tabs button{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:74px;padding:6px 8px 5px;border:0;border-radius:999px;background:none;color:var(--ink);font-size:11px;font-weight:600;line-height:1.1;transition:background-color .2s,color .2s,min-width .2s,padding .2s;-webkit-tap-highlight-color:transparent}
+.tabs svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.tabs [aria-current]{background:color-mix(in srgb,var(--wash) 75%,transparent);color:var(--blue)}
+/* scroll down and the bar shrinks to its icons; scroll up and the names come back */
+.tabs.min button{min-width:54px;padding:8px} .tabs.min span{display:none}
+body:has(#home[hidden]) .tabs{display:none}
+main:has(#home:not([hidden])){padding-bottom:100px}
 
 /* oefenen */
 .top{display:flex;justify-content:space-between;align-items:center;margin:14px 0 0}
@@ -331,13 +343,13 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
 @media (min-width:960px){
   main{max-width:1160px;padding:0 40px 64px}
   header{height:300px;margin:0 -40px}
-  main:has(#home[hidden]) header{height:96px}
+  main:is(:not(.big),:has(#home[hidden])) header{height:96px}
   header::after{display:none}
   .art{left:50%;right:auto;top:28px;bottom:28px;width:auto;transform:translateX(-50%);box-shadow:0 0 0 1px rgba(255,255,255,.18),0 10px 30px rgba(0,0,0,.35)}
-  main:has(#home[hidden]) .art{top:12px;bottom:12px}
+  main:is(:not(.big),:has(#home[hidden])) .art{top:12px;bottom:12px}
   .art img{width:auto;height:100%;object-fit:contain}
   h1{left:40px;bottom:28px;font-size:36px}
-  main:has(#home[hidden]) h1{bottom:30px;font-size:30px}
+  main:is(:not(.big),:has(#home[hidden])) h1{bottom:30px;font-size:30px}
   .streak{top:24px;right:40px;width:78px;height:78px;font-size:10.5px}
   .streak b{font-size:27px}
   #label{display:flex;align-items:baseline;gap:40px}
@@ -345,7 +357,7 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
   #home .tile{padding:24px 28px 20px}
   .tile,#play,#stats,#lib,#read,#media,#story,#hist,#talk{padding-left:28px;padding-right:28px}
   .steps{grid-template-columns:repeat(auto-fit,minmax(0,1fr))}
-  #menu .list{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));column-gap:40px}
+  #exam .list{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));column-gap:40px}
   .exb{grid-template-columns:repeat(5,1fr)}
   .duo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:16px;align-items:start}
   #play,#stats,#lib,#read,#media,#story,#hist,#talk{max-width:720px;margin:16px auto 0}
@@ -360,26 +372,27 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
     <button class="art" id="artbtn" aria-label="Bekijk het hele schilderij"><img id="artimg" alt=""></button>
     <h1><span class="sr-only">Bittertalen</span><span aria-hidden="true">B<span class="idot">ı<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="var(--oranje)"/><g fill="#fff" fill-opacity=".45"><circle cx="34" cy="36" r="6"/><circle cx="57" cy="29" r="5"/><circle cx="68" cy="50" r="6"/><circle cx="44" cy="56" r="5.2"/><circle cx="28" cy="63" r="4.6"/><circle cx="58" cy="71" r="5.6"/></g></svg></span>ttertalen</span></h1><span class="streak" id="streak"></span></header>
   <div id="home">
-    <div class="label" id="label"></div>
-    <section class="today tile" id="plan"></section>
-    <div id="menu"></div>
-    <div class="duo">
+    <div class="label" id="label" data-tab="vandaag"></div>
+    <section class="today tile" id="plan" data-tab="vandaag"></section>
+    <section class="tile" id="exam" data-tab="examen"></section>
+    <div class="duo" data-tab="oefenen">
+      <section class="tile" id="gram"></section>
       <section class="tile"><h2>Lezen, luisteren en spreken</h2><div class="list" id="books"></div></section>
-      <section class="tile"><h2>Herhalen</h2><div class="list" id="mine"></div></section>
     </div>
+    <section class="tile" data-tab="herhalen"><h2>Herhalen</h2><p class="sub">Oefen wat je nog moeilijk vindt: je zwakke punten, je eigen fouten en de woorden die je hebt bewaard.</p><div class="list" id="mine"></div></section>
   </div>
   <div id="story" hidden>
-    <button class="back" id="vback"><span aria-hidden="true">←</span>Start</button>
+    <button class="back" id="vback"><span aria-hidden="true">←</span>Vandaag</button>
     <div id="vbody"></div>
   </div>
   <div id="stats" hidden>
-    <button class="back" id="sback"><span aria-hidden="true">←</span>Start</button>
+    <button class="back" id="sback"><span aria-hidden="true">←</span>Vandaag</button>
     <h2>Mijn zwakke punten</h2>
     <p class="sub">De onderdelen met de meeste fouten staan bovenaan.</p>
     <div id="statlist"></div>
   </div>
   <div id="lib" hidden>
-    <button class="back" id="lback"><span aria-hidden="true">←</span>Start</button>
+    <button class="back" id="lback"><span aria-hidden="true">←</span>Vandaag</button>
     <h2>Boekenkast</h2>
     <p class="sub">Lees verhalen en je eigen boeken. Tik op een woord: je ziet de betekenis in het Engels.</p>
     <div id="shelf"></div>
@@ -414,7 +427,7 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
     <div id="hbody"></div>
   </div>
   <div id="play" hidden>
-    <div class="top"><button class="back" id="back"><span aria-hidden="true">←</span>Start</button><span id="timer"></span></div>
+    <div class="top"><button class="back" id="back"><span aria-hidden="true">←</span>Vandaag</button><span id="timer"></span></div>
     <div class="bar"><i id="bar"></i></div>
     <section class="card" id="card" aria-live="polite"></section>
     <div class="mode"><button id="mode"></button></div>
@@ -424,6 +437,12 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
     <div id="tbody"></div>
   </div>
 </main>
+<nav class="tabs" id="tabs" aria-label="Onderdelen">
+  <button data-t="vandaag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16V20H4z"/><path d="M4 10h16M8 3v4M16 3v4"/></svg><span>Vandaag</span></button>
+  <button data-t="examen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h12v17H6z"/><path d="M9.5 4V2.8h5V4M9 12.5l2.2 2.2L15.5 10"/></svg><span>Examen</span></button>
+  <button data-t="oefenen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c2.6-1 5.6-.8 9 1.3v13c-3.4-2.1-6.4-2.3-9-1.3zM21 5.5c-2.6-1-5.6-.8-9 1.3v13c3.4-2.1 6.4-2.3 9-1.3z"/></svg><span>Oefenen</span></button>
+  <button data-t="herhalen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12V9.5A3.5 3.5 0 0 1 7.5 6H19M16 3l3 3-3 3M20 12v2.5a3.5 3.5 0 0 1-3.5 3.5H5M8 21l-3-3 3-3"/></svg><span>Herhalen</span></button>
+</nav>
 <div class="zoom" id="zoom" hidden><img id="zimg" alt=""><p id="zcap"></p></div>
 <script>
 
@@ -1700,18 +1719,18 @@ function home(){
   const part=k=>{const r=ready(k);return itHTML(`data-s="${k}"`,PART[k],r.t,{n:`<span class="${r.cls}">${r.st}</span>`,bar:r.pc,pass:1,ic:k})};
   const lb=Object.values(S.bk||{}).filter(b=>b.t).sort((a,b)=>b.at-a.at)[0];
   const hs=S.hs||{},lh=GS.filter(c=>hs[c.id]).sort((a,b)=>hs[b.id]-hs[a.id])[0],gsDone=GS.filter(c=>gsItems(c).every(x=>(S.items[x.k]||{}).r)).length;
-  $("menu").innerHTML=`<section class="tile"><h2>Naar het examen</h2><p class="sub">Ben je klaar? Tik op een onderdeel om te oefenen. De streep is ${PASS*100}%: zoveel heb je nodig.</p><div class="list">${["lz","ls","wr","sp","knm"].map(part).join("")}</div>`
+  $("exam").innerHTML=`<h2>Naar het examen</h2><p class="sub">Ben je klaar? Tik op een onderdeel om te oefenen. De streep is ${PASS*100}%: zoveel heb je nodig.</p><div class="list">${["lz","ls","wr","sp","knm"].map(part).join("")}</div>`
     +`<h3 class="lh">Proefexamen</h3><p class="sub">Met tijd, zoals op het echte examen. Zo zie je of je klaar bent.</p><div class="exb">${["lz","ls","wr","sp","knm"].map(id=>`<button class="ghost" data-e="${id}">${PART[id]}<small>${EX[id].min} min</small></button>`).join("")}</div>`
-    +`<div class="list"><a class="it ext" href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens van DUO ↗</b><small>15</small></span><span class="d">De echte oefenexamens op inburgeren.nl, met echte stemmen. Doe er een als je hier klaar bent. Liefst op een computer.</span></span></a></div></section>`
-    +`<section class="tile"><h2>Grammatica en woorden</h2><p class="sub">Korte rondes van 10 vragen. Dit helpt bij alle onderdelen.</p><div class="list">${["verb","wo","pr","dh","vo"].map(row).join("")}</div></section>`;
+    +`<div class="list"><a class="it ext" href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens van DUO ↗</b><small>15</small></span><span class="d">De echte oefenexamens op inburgeren.nl, met echte stemmen. Doe er een als je hier klaar bent. Liefst op een computer.</span></span></a></div>`;
+  $("gram").innerHTML=`<h2>Grammatica en woorden</h2><p class="sub">Korte rondes van 10 vragen. Dit helpt bij alle onderdelen.</p><div class="list">${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`;
   $("books").innerHTML=itHTML(`data-x="books"`,"Boekenkast",lb?`Je leest nu: ${esc(lb.t)}, blz. ${lb.p+1}`:"Verhalen en je eigen e-books. Tik op een woord voor de betekenis.",{ic:"books"})
     +itHTML(`data-x="hist"`,"Geschiedenis van Nederland",lh?`Je was bij: ${lh.t}`:`Van de hunebedden tot nu, in ${GS.length} korte teksten met vragen.`,{n:`${gsDone} van ${GS.length}`,ic:"hist"})
     +itHTML(`data-x="media"`,"Luisteren en kijken","Echt Nederlands: nieuws, video's en podcasts.",{ic:"media"})
-    +itHTML(`data-x="talk"`,"Gesprekken","Bel de dokter, koop brood, praat met de buren: antwoord hardop.",{n:`${GP.filter(c=>(S.gp||{})[c.id]).length} van ${GP.length}`,ic:"talk"})
-    +((S.words||[]).length?itHTML(`data-x="words"`,"Mijn woorden","Oefen de woorden die je bij het lezen hebt bewaard.",{n:S.words.length,ic:"words"}):"");
+    +itHTML(`data-x="talk"`,"Gesprekken","Bel de dokter, koop brood, praat met de buren: antwoord hardop.",{n:`${GP.filter(c=>(S.gp||{})[c.id]).length} van ${GP.length}`,ic:"talk"});
   $("mine").innerHTML=itHTML(`data-x="stats"`,"Mijn zwakke punten","Zie waar je de meeste fouten maakt en oefen precies dat.",{ic:"stats"})
-    +((S.errs||[]).length?itHTML(`data-x="errs"`,"Mijn fouten","Oefen met fouten uit je eigen teksten en antwoorden.",{n:S.errs.length,ic:"errs"}):"");
-  document.querySelectorAll("#menu button,#books button,#mine button").forEach(b=>b.onclick=()=>{const d=b.dataset;
+    +((S.errs||[]).length?itHTML(`data-x="errs"`,"Mijn fouten","Oefen met fouten uit je eigen teksten en antwoorden.",{n:S.errs.length,ic:"errs"}):"")
+    +((S.words||[]).length?itHTML(`data-x="words"`,"Mijn woorden","Oefen de woorden die je bij het lezen hebt bewaard.",{n:S.words.length,ic:"words"}):"");
+  document.querySelectorAll("#exam button,#gram button,#books button,#mine button").forEach(b=>b.onclick=()=>{const d=b.dataset;
     if(d.s)build(d.s);
     else if(d.e)startExam(d.e);
     else if(d.x==="stats")stats();
@@ -1721,8 +1740,24 @@ function home(){
     else if(d.x==="talk")talks();
     else if(d.x==="words")practiseWords();
     else build("custom",{id:"custom",t:"Mijn fouten",n:10,pool:()=>shuffle(errItems())})});
-  window.scrollTo(0,0);
+  setTab(tab);
 }
+// The start screen is four tabs (Vandaag, Examen, Oefenen, Herhalen) with a floating glass bar at the bottom, like iOS 26.
+// The tab you were on is kept while you practise: every back button goes back to it and is named after it.
+// Only Vandaag has the big painting and its label; the other tabs get the narrow strip, like an inner screen.
+let tab="vandaag";
+const TABN={vandaag:"Vandaag",examen:"Examen",oefenen:"Oefenen",herhalen:"Herhalen"};
+const backHTML=()=>`<span aria-hidden="true">←</span>${TABN[tab]}`;
+function setTab(t,top=true){
+  tab=t; document.querySelector("main").classList.toggle("big",t==="vandaag");
+  document.querySelectorAll("#home [data-tab]").forEach(e=>e.hidden=e.dataset.tab!==t);
+  document.querySelectorAll("#tabs button").forEach(b=>b.toggleAttribute("aria-current",b.dataset.t===t));
+  ["back","sback","vback","lback"].forEach(id=>$(id).innerHTML=backHTML());
+  $("tabs").classList.remove("min"); if(top)window.scrollTo(0,0);
+}
+document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>{
+  if(b.dataset.t===tab)window.scrollTo({top:0,behavior:"smooth"}); else setTab(b.dataset.t)});
+(()=>{let y=0;addEventListener("scroll",()=>{const n=scrollY;if(Math.abs(n-y)<8)return;$("tabs").classList.toggle("min",n>y&&n>120);y=n},{passive:true})})();
 // How often a question was met before: practice answers (S.items) plus earlier proefexamens (S.xs).
 // The proefexamen takes the least-seen questions first, so its score is not just a memory test.
 const seenN=q=>{const it=S.items[q.k];return(it?(it.r||0)+(it.w||0)||1:0)+((S.xs||{})[q.k]||0)};
@@ -1823,7 +1858,7 @@ function build(id,custom){
   queue=queue.map(q=>({...q,retry:false}));
   pos=0;total=queue.length;right=0;clock(cur.min);
   ["home","stats","lib","read","media","story","hist","talk"].forEach(x=>$(x).hidden=true);closePop();stopMedia();$("play").hidden=false;window.scrollTo(0,0);
-  $("back").innerHTML=`<span aria-hidden="true">←</span>${cur.back?cur.back.t:"Start"}`;$("back").onclick=cur.back?cur.back.f:home;
+  $("back").innerHTML=`<span aria-hidden="true">←</span>${cur.back?cur.back.t:TABN[tab]}`;$("back").onclick=cur.back?cur.back.f:home;
   show();
 }
 function show(){
@@ -2540,7 +2575,7 @@ function hBack(t,f){$("hback").innerHTML=`<span aria-hidden="true">←</span>${t
 function hist(){
   closePop();hush();loadDict().catch(()=>{});
   $("home").hidden=true;$("play").hidden=true;$("hist").hidden=false;window.scrollTo(0,0);
-  hBack("Start",home);
+  hBack(TABN[tab],home);
   // a chapter is done when every question was answered right at least once
   const st=c=>{const q=gsItems(c),ok=q.filter(x=>(S.items[x.k]||{}).r).length;
     return ok===q.length?`<span class="good">Klaar</span>`:ok?`${ok} van ${q.length} goed`:(S.hs||{})[c.id]?"Gelezen":null};
@@ -2784,7 +2819,7 @@ function tBack(t,f){$("tback").innerHTML=`<span aria-hidden="true">←</span>${t
 function talks(){
   closePop();hush();TK=null;$("card").innerHTML=""; // the card may hold an old #rec, which listen() would find first
   $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;window.scrollTo(0,0);
-  tBack("Start",home);
+  tBack(TABN[tab],home);
   const st=c=>{const g=(S.gp||{})[c.id];return g?`<span class="good">Gelukt</span>`:null};
   let h=`<h2>Gesprekken</h2><p class="sub">Gesprekken uit het dagelijks leven: aan de telefoon, in de winkel, op straat. Je hoort wat de ander zegt en je antwoordt hardop${SR?"":" (of je typt)"}. Begrijpt de ander je, dan gaat het gesprek verder.</p>`;
   GP.forEach((c,i)=>{if(c.g)h+=(i?"</div>":"")+`<h3 class="lh">${c.g}</h3><div class="list">`;h+=itHTML(`data-t="${i}"`,c.t,c.s,{n:st(c)})});
@@ -2887,7 +2922,7 @@ function mBack(t,f){$("mback").innerHTML=`<span aria-hidden="true">←</span>${t
 function media(){
   hush();stopMedia();MS=null;
   $("home").hidden=true;$("media").hidden=false;window.scrollTo(0,0);
-  mBack("Start",home);
+  mBack(TABN[tab],home);
   const row=m=>itHTML(`data-m="${m.id}"`,m.t,LV[m.lv]+" · "+m.s);
   $("mbody").innerHTML=`<h2>Luisteren en kijken</h2><p class="sub">Echt Nederlands, zoals mensen het spreken. Begin met de makkelijke. Je hoeft niet alles te begrijpen: luister naar wat je herkent.</p>
     <h3 class="lh">Video's</h3><div class="list">${MEDIA.filter(m=>m.k==="v").map(row).join("")}</div>
