@@ -112,7 +112,8 @@ h2::before{content:"";flex:none;width:9px;height:9px;background:var(--blue);tran
 .list{display:grid;margin-top:8px;border-top:1px solid var(--line)}
 .it{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:11px 0 12px;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);color:var(--ink)}
 .it>span{flex:1;min-width:0}
-.it .ic{flex:none;position:relative;display:flex;align-items:center;justify-content:center;width:42px;height:42px;border:1px solid var(--wash);border-radius:3px;color:var(--blue);clip-path:inset(0 round 3px)}
+.it .ic{flex:none;position:relative;display:flex;align-items:center;justify-content:center;width:42px;height:42px;border:1px solid var(--wash);border-radius:3px;color:#fff;clip-path:inset(0 round 3px)}
+.it .ic svg{filter:drop-shadow(0 0 1.5px rgba(8,16,40,.45))}
 /* the frame is a small window onto the glass: the same background, pinned to the screen like the page's, clipped to the frame
    (clip-path also clips fixed children, which iPhone needs: it has no background-attachment:fixed) */
 .it .ic::before{content:"";position:fixed;inset:-24px;z-index:-1;background:linear-gradient(var(--glass),var(--glass)),url(/art/molen-glass.jpg) 70% 40%/cover}
