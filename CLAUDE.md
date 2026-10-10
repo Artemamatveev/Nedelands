@@ -15,6 +15,10 @@ generic "AI app" look.
 - **Colours**: tin-glaze white `--bg`, cobalt `--blue`, light wash `--wash`, and
   `--oranje` as the only accent (timer, selection, the streak stamp).
   Always use the tokens on `:root`; every colour has a dark-mode value.
+- **Glass and tiles**: the page background is a Dutch landscape faintly seen through a frosted window: Ruisdael's
+  windmill (`art/molen.jpg`) lightly blurred (`body::before`) under a half-transparent wash (`--glass`). The content sits on plain white tiles with a soft shadow (`.tile`, `--card`, `--lift`), not
+  ceramic Delft tiles: on the home screen one per block (today's lesson, Naar het examen, Grammatica en woorden, Lezen
+  luisteren en spreken, Herhalen), and every inner screen is one tile. The museum label sits on the glass.
 - **Type**: the system font only (`-apple-system, system-ui`: SF Pro on iPhone), so the
   app reads like a native iPhone app. No web fonts; headings semibold (600–700), never 800.
   No handwriting or decorative fonts.
@@ -24,8 +28,8 @@ generic "AI app" look.
 - **Dutch motifs instead of decoration**:
   - Header: the painting of the day (`ART` + `paint()` in `index.html`), with a museum
     label underneath: artist, title, year, museum and one A2 sentence in Dutch (no
-    translation), all in one size (15px, no italics). Tapping the painting shows it in full.
-  - Tiles: "Je les van vandaag" (the numbered steps of today's plan, at the top of the home screen) is a Delft tile with corner motifs.
+    translation), all in one size (15px, no italics). Tapping the painting on the home screen opens its story
+    (`story()`); on other screens it shows the painting in full.
   - Streak: a stamp, like on a Museumkaart.
 - **Never use**: cream or beige backgrounds, handwriting fonts, wobbly hand-drawn
   border-radius, dashed lines, highlighter underlines under headings, decorative SVG
@@ -63,9 +67,9 @@ resized to max 1000px and compressed (~100–150 KB each). Record every new imag
 `art/CREDITS.md`. To add one, append to `ART` with `f` (file name), `y` (vertical focus
 in % for the header crop), artist, title, year, museum and an A2 sentence. Check facts in the sentences; they double as KNM material.
 Each painting also has `v`, its story in A2 Dutch (who made it, what it shows, why it is famous; paragraphs
-split by `\n`), and `w`, three or four things you can really see on it (`de kan=jug|…`, English like the dictionary). Under the label one
-row, "Het verhaal van dit schilderij", opens `story()`: the painting, the story to read or hear (speech
-synthesis), and the words, each can be kept in Mijn woorden (`{w, en, p, s, f}`). Look at the painting
+split by `\n`), and `w`, three or four things you can really see on it (`de kan=jug|…`, English like the dictionary). Tapping the
+painting in the header on the home screen opens `story()` (no extra row under the label, to keep the home screen short): the
+painting (tap it to see it in full), the story to read or hear (speech synthesis), and the words, each can be kept in Mijn woorden (`{w, en, p, s, f}`). Look at the painting
 before writing `w`, and check every fact in `v`.
 
 
