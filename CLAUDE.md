@@ -2,7 +2,9 @@
 
 Bittertalen (a pun on bitterballen: "bitter languages", self-irony about learning Dutch) is a single-page study app for the Dutch A2 integration exam (inburgeringsexamen).
 Everything lives in `index.html` (styles, data, logic). Paintings are in `art/`.
-Deployed on Vercel from `main`: every push to `main` goes live at https://nedelands.vercel.app.
+Deployed on Vercel from `main`: every push to `main` goes live at https://bittertalen.vercel.app (Vercel project
+`nedelands`). The old address https://nedelands.vercel.app serves the same deployment but opens on the move screen
+(see Progress).
 The app's UI language is Dutch; the user talks to Claude in Russian.
 
 ## Design: Delfts blauw
@@ -85,7 +87,10 @@ whole texts.
 
 `sw.js` makes the app work offline: the page network-first (a push is live at once), paintings and
 photos from the cache (the page sends their list after loading), `api/` never cached. Don't change the stored shape without migrating old data.
-There is no way to move progress to another device (saving to a file was removed on purpose).
+Saving progress to a file was removed on purpose. The one exception is the move to the new address: progress lives per
+address (on iPhone per home-screen app), so on `OLDHOST` the app opens on `moveScreen()`, which copies a code
+(`BITTERTALEN1:` + gzip/base64 of `S`, `ww-media` and own books, `packProgress()`); on the new address "Voortgang
+overzetten" (a row under Herhalen while there is no progress yet, or `#overzetten`) pastes it (`importScreen()`).
 
 ## Content
 
