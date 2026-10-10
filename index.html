@@ -111,7 +111,7 @@ h2::before{content:"";flex:none;width:9px;height:9px;background:var(--blue);tran
 .list{display:grid;margin-top:8px;border-top:1px solid var(--line)}
 .it{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:11px 0 12px;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);color:var(--ink)}
 .it>span{flex:1;min-width:0}
-.it .ic{flex:none;display:flex;align-items:center;justify-content:center;width:42px;height:42px;background:var(--surface);color:var(--blue);border-radius:3px}
+.it .ic{flex:none;display:flex;align-items:center;justify-content:center;width:32px;height:42px;color:var(--blue)}
 .ic svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .ic text{fill:currentColor;stroke:none;font:600 12px -apple-system,system-ui,sans-serif}
 .it::after{content:"›";flex:none;font-size:26px;line-height:1;margin-top:-3px;color:var(--blue)}
@@ -1661,7 +1661,7 @@ function story(p){
     b.textContent="Bewaard";b.disabled=true});
 }
 // A list row: the whole row is the button, with › on the right. o.n = count or status on the right, o.bar = progress in %, o.pass = show the 70% line,
-// o.ic = a line icon from IC on the left, on a small tile
+// o.ic = a line icon from IC on the left, lines only (no tile behind it)
 // Line icons (24×24, drawn with the stroke in --blue): one per exercise or screen, chosen for its meaning
 const IC={
   lz:'<path d="M3 5.5c2.6-1 5.6-.8 9 1.3v13c-3.4-2.1-6.4-2.3-9-1.3zM21 5.5c-2.6-1-5.6-.8-9 1.3v13c3.4-2.1 6.4-2.3 9-1.3z"/>',
