@@ -33,7 +33,8 @@ html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--surface);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.5}
 main{max-width:720px;margin:0 auto;padding:0 16px 48px;overflow-x:clip}
 /* glass: a Dutch landscape (Ruisdael's windmill) faintly seen through a frosted window; the content sits on white tiles that stand out from it */
-body::before{content:"";position:fixed;inset:-24px;z-index:-2;background:url(/art/molen.jpg) 70% 40%/cover;filter:blur(5px)}
+/* art/molen-glass.jpg is the painting already blurred and small, so the page needs no live blur */
+body::before{content:"";position:fixed;inset:-24px;z-index:-2;background:url(/art/molen-glass.jpg) 70% 40%/cover}
 body::after{content:"";position:fixed;inset:0;z-index:-1;background:var(--glass)}
 .tile,#play,#stats,#lib,#read,#media,#story,#hist,#talk{background:var(--card);border-radius:4px;box-shadow:var(--lift);margin-top:16px;padding:4px 16px 20px}
 button{font:inherit;color:inherit;cursor:pointer}
@@ -111,7 +112,10 @@ h2::before{content:"";flex:none;width:9px;height:9px;background:var(--blue);tran
 .list{display:grid;margin-top:8px;border-top:1px solid var(--line)}
 .it{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:11px 0 12px;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);color:var(--ink)}
 .it>span{flex:1;min-width:0}
-.it .ic{flex:none;display:flex;align-items:center;justify-content:center;width:42px;height:42px;border:1px solid var(--wash);border-radius:3px;color:var(--blue)}
+.it .ic{flex:none;position:relative;display:flex;align-items:center;justify-content:center;width:42px;height:42px;border:1px solid var(--wash);border-radius:3px;color:var(--blue);clip-path:inset(0 round 3px)}
+/* the frame is a small window onto the glass: the same background, pinned to the screen like the page's, clipped to the frame
+   (clip-path also clips fixed children, which iPhone needs: it has no background-attachment:fixed) */
+.it .ic::before{content:"";position:fixed;inset:-24px;z-index:-1;background:linear-gradient(var(--glass),var(--glass)),url(/art/molen-glass.jpg) 70% 40%/cover}
 .ic svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .ic text{fill:currentColor;stroke:none;font:600 12px -apple-system,system-ui,sans-serif}
 .it::after{content:"›";flex:none;font-size:26px;line-height:1;margin-top:-3px;color:var(--blue)}
@@ -1661,7 +1665,7 @@ function story(p){
     b.textContent="Bewaard";b.disabled=true});
 }
 // A list row: the whole row is the button, with › on the right. o.n = count or status on the right, o.bar = progress in %, o.pass = show the 70% line,
-// o.ic = a line icon from IC on the left, in a thin frame with nothing behind it
+// o.ic = a line icon from IC on the left, in a thin frame that shows the glass behind the page
 // Line icons (24×24, drawn with the stroke in --blue): one per exercise or screen, chosen for its meaning
 const IC={
   lz:'<path d="M3 5.5c2.6-1 5.6-.8 9 1.3v13c-3.4-2.1-6.4-2.3-9-1.3zM21 5.5c-2.6-1-5.6-.8-9 1.3v13c3.4-2.1 6.4-2.3 9-1.3z"/>',

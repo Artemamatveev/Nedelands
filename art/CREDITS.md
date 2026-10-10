@@ -22,4 +22,6 @@ Ze zijn verkleind en gecomprimeerd voor de app (max. 1000 px).
 | `spinoza.jpg` | [Baruch Spinoza portrait HAB original.jpg](https://commons.wikimedia.org/wiki/File:Baruch_Spinoza_portrait_HAB_original.jpg) | Public domain |
 | `molen.jpg` | [De molen bij Wijk bij Duurstede, SK-C-211.jpg](https://commons.wikimedia.org/wiki/File:De_molen_bij_Wijk_bij_Duurstede,_SK-C-211.jpg) | Public domain |
 
+`molen-glass.jpg` is `molen.jpg`, kleiner en vervaagd: de achtergrond achter het glas van de app.
+
 `spinoza.jpg` is bijgesneden: de lijst en de kleurenkaart van het museum zijn weggehaald.

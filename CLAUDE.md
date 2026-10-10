@@ -16,7 +16,7 @@ generic "AI app" look.
   `--oranje` as the only accent (timer, selection, the streak stamp).
   Always use the tokens on `:root`; every colour has a dark-mode value.
 - **Glass and tiles**: the page background is a Dutch landscape faintly seen through a frosted window: Ruisdael's
-  windmill (`art/molen.jpg`) lightly blurred (`body::before`) under a half-transparent wash (`--glass`). The content sits on plain white tiles with a soft shadow (`.tile`, `--card`, `--lift`), not
+  windmill, pre-blurred in `art/molen-glass.jpg` (`body::before`), under a half-transparent wash (`--glass`). The content sits on plain white tiles with a soft shadow (`.tile`, `--card`, `--lift`), not
   ceramic Delft tiles: on the home screen one per block (today's lesson, Naar het examen, Grammatica en woorden, Lezen
   luisteren en spreken, Herhalen), and every inner screen is one tile. The museum label sits on the glass.
 - **Type**: the system font only (`-apple-system, system-ui`: SF Pro on iPhone), so the
@@ -49,7 +49,8 @@ Every section appears once; don't add a second entry point to the same exercise.
 
 - **Going somewhere** (an exercise, a screen, a book, a source) is a list row, `itHTML()`:
   the whole row is the button, title + grey description, a count on the right, `›` at the end.
-  On the home screen a row starts with a line icon (`IC`, drawn with `--blue`) in a thin `--wash` frame, transparent inside, not a picture.
+  On the home screen a row starts with a line icon (`IC`, drawn with `--blue`) in a thin `--wash` frame that is a window onto the glass
+  (`.it .ic::before`: the page background pinned to the screen, clipped to the frame), not a picture.
   No "Oefenen →" or "Openen →" text links, no cards with their own buttons.
 - **Filled cobalt `.btn`**: the one main action on a screen (the next step of today,
   Controleer, Volgende). **Outlined `.ghost`**: secondary actions (Proefexamen, Mix van de dag,
