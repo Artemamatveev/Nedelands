@@ -53,11 +53,11 @@ cobalt; no exam dates): every exam part every day, the one that scores lowest fi
 third day a proefexamen), the other four as short rounds (`SHORT`: one Lezen text, three Luisteren fragments,
 one Schrijven task, two Spreken questions, five KNM questions), weakest to strongest, and last a grammar round
 that helps the weakest part. Then Mix van de dag.
-- **Examen**: "Naar het examen": first one "Proefexamen" button per part with its time and the row to DUO's 15
-official oefenexamens ↗ (what you come to this tab for), then "Hoe ver ben je?" (`h3.lh`): one short row per exam
-part, `.rd`: the name, a bar with the 70% line and "76% goed", from `ready()`; status only, not a button: practising a
-part is on Oefenen. The number is the share of right answers, never a chance of passing; the intro and the line under
-it say where it comes from: the last proefexamen, else practice.
+- **Examen**: "Naar het examen": one row per exam part (`.rd`, from `ready()`), the whole row starts that part's
+proefexamen: the name with its time under it, a bar with the 70% line, "76% goed" and ›; once there is a proefexamen
+a line under it says the status and the last results. The number is the share of right answers (the last
+proefexamen, else practice), never a chance of passing; the intro says so. Under the rows one row to DUO's 15
+official oefenexamens ↗. Practising a part is on Oefenen.
 - **Oefenen**: "Examenonderdelen" (Lezen, Luisteren, Schrijven, Spreken, KNM: practice without the clock) and
 "Grammatica en woorden" under it, "Lezen, luisteren en spreken" beside them on a computer.
 - **Herhalen**: Mijn zwakke punten, Mijn fouten and Mijn woorden (the last two once there is something in them).
