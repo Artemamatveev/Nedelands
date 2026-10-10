@@ -47,8 +47,8 @@ you were on is kept (`tab`), so every back button returns to it and is named aft
 - **Vandaag**: the painting and its label, then today's lesson (numbered steps; the next one is filled
 cobalt; no exam dates: the plan starts with the exam part that scores lowest, and Schrijven
 and KNM are in it every day) and Mix van de dag.
-- **Examen**: "Naar het examen" (one row per exam part with how ready you
-are, from `ready()`: status, last proefexamen and a bar with the 70% line; then one "Proefexamen"
+- **Examen**: "Naar het examen" (one short row per exam part, `.rd`: the name, a bar with the 70% line and the score,
+from `ready()`; status and last proefexamens only appear once there is a proefexamen; then one "Proefexamen"
 button per part with its time, and one row to DUO's 15 official oefenexamens ↗).
 - **Oefenen**: "Grammatica en woorden" and "Lezen, luisteren en spreken" (side by side on a computer).
 - **Herhalen**: Mijn zwakke punten, Mijn fouten and Mijn woorden (the last two once there is something in them).
@@ -59,8 +59,8 @@ Every section appears once; don't add a second entry point to the same exercise.
 
 - **Going somewhere** (an exercise, a screen, a book, a source) is a list row, `itHTML()`:
   the whole row is the button, title + grey description, a count on the right, `›` at the end.
-  On the home screen a row starts with a white line icon (`IC`, a faint shadow so it reads on light glass) in a thin `--wash` frame that is a window onto the glass
-  (`.it .ic::before`: the page background pinned to the screen, clipped to the frame), not a picture.
+  On the home screen a row starts with a cobalt line icon (`IC`) on a flat light `--wash` square, the same on every
+  background, not a picture.
   No "Oefenen →" or "Openen →" text links, no cards with their own buttons.
 - **Filled cobalt `.btn`**: the one main action on a screen (the next step of today,
   Controleer, Volgende). **Outlined `.ghost`**: secondary actions (Proefexamen, Mix van de dag,
@@ -70,6 +70,11 @@ Every section appears once; don't add a second entry point to the same exercise.
 - One `h2` (with the tile diamond) per section or screen; groups inside it get `h3.lh`
   (small capitals, cobalt). Every inner screen starts with a back button named after where it
   goes: the tab's name (Vandaag, Examen, Oefenen, Herhalen) for the home screen.
+- **Practising is a focus screen** (`#play`): no painting, one row with ✕ (back to where you came from; in a
+  proefexamen the first tap only asks "Stoppen?"), the progress bar, the count (3/10) and the clock. The main
+  button (`.act`), the exam buttons (`.exnav`) and the feedback stick to the bottom of the screen, under the thumb.
+  The feedback is a sheet (`.fb.sheet`): a ✓ or ✕ as well as green or red, the right answer, why, and Verder.
+  Options also show ✓ / ✕; three options stand in one column.
 
 ## Paintings
 

@@ -112,11 +112,7 @@ h2::before{content:"";flex:none;width:9px;height:9px;background:var(--blue);tran
 .list{display:grid;margin-top:8px;border-top:1px solid var(--line)}
 .it{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:11px 0 12px;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);color:var(--ink)}
 .it>span{flex:1;min-width:0}
-.it .ic{flex:none;position:relative;display:flex;align-items:center;justify-content:center;width:42px;height:42px;border:1px solid var(--wash);border-radius:3px;color:#fff;clip-path:inset(0 round 3px)}
-.it .ic svg{filter:drop-shadow(0 0 1.5px rgba(8,16,40,.45))}
-/* the frame is a small window onto the glass: the same background, pinned to the screen like the page's, clipped to the frame
-   (clip-path also clips fixed children, which iPhone needs: it has no background-attachment:fixed) */
-.it .ic::before{content:"";position:fixed;inset:-24px;z-index:-1;background:linear-gradient(var(--glass),var(--glass)),url(/art/molen-glass.jpg) 70% 40%/cover}
+.it .ic{flex:none;display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:3px;background:color-mix(in srgb,var(--wash) 45%,transparent);color:var(--blue)}
 .ic svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .ic text{fill:currentColor;stroke:none;font:600 12px -apple-system,system-ui,sans-serif}
 .it::after{content:"›";flex:none;font-size:26px;line-height:1;margin-top:-3px;color:var(--blue)}
@@ -130,6 +126,15 @@ a.it{text-decoration:none} .it.ext::after{content:none}
 .itw{display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line)} .itw .it{border:0}
 /* kopje boven een groep: klein, kapitalen, zoals de vraag in een oefening */
 .lh{margin:26px 0 4px;color:var(--blue);font-size:13.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+/* naar het examen: one short row per part, the bar with the 70% line, the score on the right */
+.rd{display:grid;grid-template-columns:86px minmax(0,1fr) 44px auto;align-items:center;column-gap:12px;width:100%;min-height:50px;padding:9px 0;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);color:var(--ink)}
+.rd b{font-size:17px;font-weight:600}
+.rd .bar{margin:0;height:8px}
+.rd small{text-align:right;font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--soft)}
+.rd small.good{color:var(--good)} .rd small.bad{color:var(--bad)}
+.rd::after{content:"›";grid-column:4;grid-row:1/span 2;align-self:center;font-size:26px;line-height:1;margin-top:-3px;color:var(--blue)}
+.rd .d{grid-column:1/4;margin-top:3px;color:var(--soft);font-size:14.5px;line-height:1.35}
+.rd:hover b{color:var(--blue)}
 /* proefexamens: een knop per onderdeel, met de tijd */
 .exb{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;margin:8px 0 12px}
 .exb .ghost{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:56px;padding:7px 4px;font-weight:600;line-height:1.25}
@@ -168,6 +173,7 @@ main:has(#home:not([hidden])){padding-bottom:100px}
 .opts.one .opt{font-size:17px;font-weight:500;text-align:left;padding:11px 14px;min-height:0}
 .opt.ok{background:var(--good);border-color:var(--good);box-shadow:none;color:var(--on)}
 .opt.no{background:var(--bad);border-color:var(--bad);box-shadow:none;color:var(--on)}
+.opt.ok::before{content:"✓ "} .opt.no::before{content:"✕ "}
 .opt:disabled{cursor:default}
 .type{display:flex;gap:8px}
 input,textarea{font:inherit;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:3px}
@@ -188,8 +194,27 @@ textarea{display:block;width:100%;font-size:17px;line-height:1.5;padding:12px;ma
 .ovw{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;margin:12px 0 16px}
 .ovw button{min-height:46px;background:var(--bg);color:var(--ink);border:1.5px solid var(--line);border-radius:3px;font-weight:600;font-variant-numeric:tabular-nums}
 .ovw button.done{background:var(--wash);border-color:var(--wash)} .ovw button.now{border-color:var(--oranje)}
-.fb{margin-top:18px;min-height:86px}
+.fb{margin-top:18px}
 .fb b{font-size:19px}
+/* the answer stays under your thumb: the main button, the exam buttons and the feedback stick to the bottom of the screen
+   while the text scrolls under them */
+#card>.act,#card>.exnav,#card>.fb.sheet{position:sticky;bottom:0;z-index:2;background:var(--card);margin:16px -16px 0;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line)}
+#card>.act:has(>[hidden]){display:none}
+#card>.fb.ok{border-top:2px solid var(--good);background:color-mix(in srgb,var(--good) 12%,var(--card))}
+#card>.fb.no{border-top:2px solid var(--bad);background:color-mix(in srgb,var(--bad) 10%,var(--card))}
+.fbh{display:flex;align-items:center;gap:10px;margin:0 0 8px}
+.fbh i{flex:none;display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:2px;font-style:normal;font-weight:700;color:var(--on)}
+.ok .fbh i{background:var(--good)} .no .fbh i{background:var(--bad)}
+.fb.sheet .btn{margin-top:6px}
+/* focus while practising: no painting, only ✕, the progress and the clock */
+main:has(#play:not([hidden])) header{display:none}
+#play .top{gap:12px;margin:14px 0 22px}
+#play .top .bar{flex:1;margin:0;height:8px}
+.back.x{justify-content:center;min-width:44px;padding:5px 0;border-color:var(--line)}
+.back.x svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.back.x.arm{border-color:var(--oranje);color:var(--oranje);padding:5px 12px}
+#cnt{color:var(--soft);font-size:15px;font-weight:600;font-variant-numeric:tabular-nums}
+#cnt:empty{display:none}
 /* Spreken: neem je antwoord op, met één minuut op de klok */
 .rec .clk{display:flex;align-items:center;gap:10px;margin:0 0 12px}
 .rec .m{flex:1;height:6px;background:var(--surface);overflow:hidden}
@@ -356,6 +381,7 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
   #label{flex-wrap:wrap} #label .lab{flex:0 0 340px} #label .nl{flex:1;margin:0} #label .it{flex:0 0 100%}
   #home .tile{padding:24px 28px 20px}
   .tile,#play,#stats,#lib,#read,#media,#story,#hist,#talk{padding-left:28px;padding-right:28px}
+  #card>.act,#card>.exnav,#card>.fb.sheet{margin-left:-28px;margin-right:-28px;padding-left:28px;padding-right:28px}
   .steps{grid-template-columns:repeat(auto-fit,minmax(0,1fr))}
   #exam .list{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));column-gap:40px}
   .exb{grid-template-columns:repeat(5,1fr)}
@@ -427,8 +453,7 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
     <div id="hbody"></div>
   </div>
   <div id="play" hidden>
-    <div class="top"><button class="back" id="back"><span aria-hidden="true">←</span>Vandaag</button><span id="timer"></span></div>
-    <div class="bar"><i id="bar"></i></div>
+    <div class="top"><button class="back x" id="back" aria-label="Stoppen"></button><div class="bar"><i id="bar"></i></div><span id="cnt"></span><span id="timer"></span></div>
     <section class="card" id="card" aria-live="polite"></section>
     <div class="mode"><button id="mode"></button></div>
   </div>
@@ -1584,6 +1609,7 @@ function head(){
   $("streak").innerHTML=alive?`<b>${alive}</b>${alive===1?"dag":"dagen"}<br>op rij`:"";
   const done=cur&&cur.nav&&!cur.sent?queue.filter((q,i)=>picked(i)).length:pos;
   $("bar").style.width=(queue.length?Math.min(100,done/queue.length*100):0)+"%";
+  $("cnt").textContent=queue.length&&pos<queue.length?`${pos+1}/${queue.length}`:"";
   $("mode").textContent=S.typing?"Te moeilijk? Kies uit opties":"Te makkelijk? Typ het antwoord zelf";
 }
 // Schilderij van de dag: public-domain works, images in /art (from Wikimedia Commons).
@@ -1716,10 +1742,12 @@ function home(){
   const row=id=>{const s=sec(id),p=ITEMS.filter(x=>x.sec===id),n=p.filter(x=>S.items[x.k]).length;
     return itHTML(`data-s="${id}"`,s.t,s.s,{n:n+" van "+p.length,bar:n?n/p.length*100:null,ic:id})};
   // exam parts: how ready you are (from the proefexamens, else from practice); tap to practise
-  const part=k=>{const r=ready(k);return itHTML(`data-s="${k}"`,PART[k],r.t,{n:`<span class="${r.cls}">${r.st}</span>`,bar:r.pc,pass:1,ic:k})};
+  // one short row per part: the bar (proefexamen, else practice) with the 70% line; words only once there is a proefexamen
+  const part=k=>{const r=ready(k),ex=((S.res||{})[k]||[]).length;
+    return`<button class="rd" data-s="${k}"><b>${PART[k]}</b><span class="bar pass"><i style="width:${r.pc||0}%"></i></span><small class="${ex?r.cls:""}">${r.pc==null?"–":r.pc+"%"}</small>${ex?`<span class="d">${r.st}. ${r.t}</span>`:""}</button>`};
   const lb=Object.values(S.bk||{}).filter(b=>b.t).sort((a,b)=>b.at-a.at)[0];
   const hs=S.hs||{},lh=GS.filter(c=>hs[c.id]).sort((a,b)=>hs[b.id]-hs[a.id])[0],gsDone=GS.filter(c=>gsItems(c).every(x=>(S.items[x.k]||{}).r)).length;
-  $("exam").innerHTML=`<h2>Naar het examen</h2><p class="sub">Ben je klaar? Tik op een onderdeel om te oefenen. De streep is ${PASS*100}%: zoveel heb je nodig.</p><div class="list">${["lz","ls","wr","sp","knm"].map(part).join("")}</div>`
+  $("exam").innerHTML=`<h2>Naar het examen</h2><p class="sub">Hoe ver ben je? De streep is ${PASS*100}%: zoveel heb je nodig. Tik op een onderdeel om te oefenen.</p><div class="list">${["lz","ls","wr","sp","knm"].map(part).join("")}</div>`
     +`<h3 class="lh">Proefexamen</h3><p class="sub">Met tijd, zoals op het echte examen. Zo zie je of je klaar bent.</p><div class="exb">${["lz","ls","wr","sp","knm"].map(id=>`<button class="ghost" data-e="${id}">${PART[id]}<small>${EX[id].min} min</small></button>`).join("")}</div>`
     +`<div class="list"><a class="it ext" href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens van DUO ↗</b><small>15</small></span><span class="d">De echte oefenexamens op inburgeren.nl, met echte stemmen. Doe er een als je hier klaar bent. Liefst op een computer.</span></span></a></div>`;
   $("gram").innerHTML=`<h2>Grammatica en woorden</h2><p class="sub">Korte rondes van 10 vragen. Dit helpt bij alle onderdelen.</p><div class="list">${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`;
@@ -1752,7 +1780,7 @@ function setTab(t,top=true){
   tab=t; document.querySelector("main").classList.toggle("big",t==="vandaag");
   document.querySelectorAll("#home [data-tab]").forEach(e=>e.hidden=e.dataset.tab!==t);
   document.querySelectorAll("#tabs button").forEach(b=>b.toggleAttribute("aria-current",b.dataset.t===t));
-  ["back","sback","vback","lback"].forEach(id=>$(id).innerHTML=backHTML());
+  ["sback","vback","lback"].forEach(id=>$(id).innerHTML=backHTML());
   $("tabs").classList.remove("min"); if(top)window.scrollTo(0,0);
 }
 document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>{
@@ -1858,9 +1886,14 @@ function build(id,custom){
   queue=queue.map(q=>({...q,retry:false}));
   pos=0;total=queue.length;right=0;clock(cur.min);
   ["home","stats","lib","read","media","story","hist","talk"].forEach(x=>$(x).hidden=true);closePop();stopMedia();$("play").hidden=false;window.scrollTo(0,0);
-  $("back").innerHTML=`<span aria-hidden="true">←</span>${cur.back?cur.back.t:TABN[tab]}`;$("back").onclick=cur.back?cur.back.f:home;
+  const b=$("back"),leave=cur.back?cur.back.f:home,x=()=>{clearTimeout(b.t);b.classList.remove("arm");b.innerHTML=XSVG};
+  x(); b.setAttribute("aria-label","Stoppen, terug naar "+(cur.back?cur.back.t:TABN[tab]));
+  b.onclick=()=>{if(cur.exam&&pos<queue.length&&!b.classList.contains("arm")){b.classList.add("arm");b.textContent="Stoppen?";b.t=setTimeout(x,3000);return}
+    x();leave()};
   show();
 }
+// Practising is a focus screen: no painting, only ✕ (back to where you came from), the progress, the count and the clock
+const XSVG='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
 function show(){
   head(); if(pos>=queue.length)return finish();
   const q=queue[pos]; answered=false; $("mode").hidden=!q.canType; hush();
@@ -1873,16 +1906,16 @@ function show(){
   if(q.tts&&canSpeak&&q.big===q.tts)h+=`<button class="hint" id="tts">▶ Uitspraak</button>`;
   else if(RU[q.big]&&!q.tts)h+=`<button class="hint" id="tr">Vertaling</button>`;
   let o;
-  if(q.type==="order")h+=`<div class="line" id="line"></div><div class="pool" id="pool"></div><button class="btn wide" id="chk" disabled>Controleer</button>`;
+  if(q.type==="order")h+=`<div class="line" id="line"></div><div class="pool" id="pool"></div><div class="act"><button class="btn wide" id="chk" disabled>Controleer</button></div>`;
   else if(q.type==="write")h+=(q.fields?q.fields.map((f,i)=>`<label class="fld"><span>${f}</span><input id="f${i}" autocomplete="off" autocorrect="off" spellcheck="false"></label>`).join("")+`<p class="ask">${q.open}</p>`:"")+`<textarea id="txt" rows="7" placeholder="Schrijf hier je tekst…" aria-label="Je tekst" spellcheck="false" autocorrect="off" autocapitalize="sentences"></textarea>`
-    +(cur.nav?navHTML():`<button class="btn wide" id="chk">${cur.exam?"Volgende opdracht":"Controleer mijn tekst"}</button>`);
+    +(cur.nav?navHTML():`<div class="act"><button class="btn wide" id="chk">${cur.exam?"Volgende opdracht":"Controleer mijn tekst"}</button></div>`);
   else if(q.type==="reveal")h+=(canSpeak?`<button class="hint" id="sayq">▶ Luister naar de vraag</button>`:"")
     +`<div class="rec" id="rec"><div class="clk"><span class="t" id="rect">${mmss(SPK)}</span><div class="m"><i id="recm"></i></div></div><div id="recp"></div>
     <button class="btn wide" id="recb">${cur.exam?"● Antwoord geven":"● Opnemen"}</button><p class="note" id="recn">${cur.exam?"Je hebt één minuut per vraag.":"Je hebt één minuut. Daarna kun je jezelf terugluisteren."}</p></div>
     ${cur.exam?"":`${SR?`<button class="ghost wide" id="spchk" style="margin-bottom:10px">Spreek in en laat nakijken</button>`:""}<button class="ghost wide" id="rev">Toon voorbeeld</button>`}`;
   else if(S.typing&&q.canType)h+=`<div class="type"><input id="inp" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Je antwoord"><button class="btn" id="chk">Controleer</button></div>`;
   else{const nv=cur.nav&&q.type==="choice";o=nv?cur.op[pos]=cur.op[pos]||q.opts():q.opts();
-    h+=`<div class="opts${o.some(x=>x.length>14)?" one":""}">${o.map((x,i)=>`<button class="opt${nv&&cur.pick[pos]===x?" sel":""}" data-n="${i}"${nv?` aria-pressed="${cur.pick[pos]===x}"`:""}>${x}</button>`).join("")}</div>`;
+    h+=`<div class="opts${o.length===3||o.some(x=>x.length>14)?" one":""}">${o.map((x,i)=>`<button class="opt${nv&&cur.pick[pos]===x?" sel":""}" data-n="${i}"${nv?` aria-pressed="${cur.pick[pos]===x}"`:""}>${x}</button>`).join("")}</div>`;
     if(nv)h+=navHTML()}
   h+=`<div class="fb" id="fb"></div>`;
   $("card").innerHTML=h;
@@ -1926,9 +1959,11 @@ function complete(){
   if(planId){if(!S.day||S.day.d!==d)S.day={d,done:[]};if(!S.day.done.includes(planId))S.day.done.push(planId);planId=null}
   save();
 }
+// Right or wrong slides up as a sheet at the bottom of the screen, with a sign as well as a colour, the right answer and why
 function feedback(ok,q){
-  $("fb").innerHTML=`<b class="${ok?"good":"bad"}">${ok?"Goed zo!":"Goed is: "+q.right}</b>
-    ${q.note?(q.sec==="verb"?q.note:`<div class="note">${q.note}</div>`):"<div class='row'></div>"}
+  $("fb").className="fb sheet "+(ok?"ok":"no");
+  $("fb").innerHTML=`<p class="fbh"><i aria-hidden="true">${ok?"✓":"✕"}</i><b class="${ok?"good":"bad"}">${ok?"Goed zo!":"Goed is: "+q.right}</b></p>
+    ${q.note?(q.sec==="verb"?q.note:`<div class="note">${q.note}</div>`):""}
     <button class="btn wide" id="next">Verder</button>`;
   $("next").onclick=()=>{pos++;show()}; $("next").focus();
   if(q.tts&&q.big!==q.tts&&canSpeak)speak(q.tts); // Russian → Dutch: hear the Dutch word
