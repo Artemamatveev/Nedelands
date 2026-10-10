@@ -17,6 +17,8 @@ generic "AI app" look.
   app reads like a native iPhone app. No web fonts; headings semibold (600–700), never 800.
   No handwriting or decorative fonts.
 - **Shapes**: square or nearly square corners (2–4px), solid 1px separators, flat buttons.
+- **Logo**: the name "Bittertalen" in the system font, with a bitterbal (`--oranje`, light crumbs) as the dot on
+  the i, the size and place of a normal dot (`h1 .idot`). The app icon is a bitterbal too.
 - **Dutch motifs instead of decoration**:
   - Header: the painting of the day (`ART` + `paint()` in `index.html`), with a museum
     label underneath: artist, title, year, museum and one A2 sentence in Dutch (no
