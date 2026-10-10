@@ -151,15 +151,16 @@ a.it{text-decoration:none} .it.ext::after{content:none}
 .tabs button{position:relative;z-index:1;flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 4px 8px;border:0;border-radius:999px;background:none;color:var(--ink);font-size:12px;font-weight:600;line-height:1.1;transition:color .25s,padding .3s;-webkit-tap-highlight-color:transparent}
 .tabs svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .tabs [aria-current]{color:var(--blue)}
-/* the lens: a drop of glass over the current tab. It slides with a little spring and a stretch, and you can drag it
+/* the lens: a drop of glass over the current tab. It glides over and settles without overshooting (so it never leaves
+   the bar), with a slight stretch on the way, and you can drag it
    along the bar with your finger: it grows and clears while you hold it, like Liquid Glass */
 .tabs .lens{position:absolute;top:5px;bottom:5px;left:5px;width:calc((100% - 10px)/4);border-radius:999px;pointer-events:none;
   background:color-mix(in srgb,var(--wash) 55%,transparent);-webkit-backdrop-filter:blur(4px) saturate(2);backdrop-filter:blur(4px) saturate(2);
   box-shadow:inset 0 1px 1px rgba(255,255,255,.75),inset 0 -1px 1px rgba(255,255,255,.3),inset 0 0 0 .5px rgba(255,255,255,.4),0 2px 10px rgba(8,16,40,.12);
-  transform:translateX(calc(var(--i,0) * 100%));transition:transform .5s cubic-bezier(.3,1.35,.5,1),scale .3s cubic-bezier(.3,1.4,.5,1),background-color .3s}
-.tabs .lens.go{animation:goo .5s cubic-bezier(.3,1,.5,1)}
-@keyframes goo{35%{scale:1.22 .9}70%{scale:.97 1.03}}
-.tabs.drag .lens{transition:scale .3s cubic-bezier(.3,1.4,.5,1),background-color .3s;scale:1.14 1.2;background-color:color-mix(in srgb,var(--wash) 22%,transparent)}
+  transform:translateX(calc(var(--i,0) * 100%));transition:transform .38s cubic-bezier(.22,1,.36,1),scale .3s cubic-bezier(.22,1,.36,1),background-color .3s}
+.tabs .lens.go{animation:goo .38s ease-out}
+@keyframes goo{40%{scale:1.06 .96}}
+.tabs.drag .lens{transition:scale .25s cubic-bezier(.22,1,.36,1),background-color .3s;scale:1.03 1.14;background-color:color-mix(in srgb,var(--wash) 22%,transparent)}
 .tabs.drag button{color:var(--ink)} .tabs.drag button.on{color:var(--blue)}
 /* scroll down and the bar shrinks to its icons; scroll up and the names come back */
 .tabs.min{width:min(264px,calc(100vw - 24px))}
