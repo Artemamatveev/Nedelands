@@ -3117,11 +3117,15 @@ async function packProgress(){
   if("CompressionStream" in window)return CODE+"z"+b64(new Uint8Array(await new Response(new Blob([json]).stream().pipeThrough(new CompressionStream("gzip"))).arrayBuffer()));
   return CODE+"j"+b64(new TextEncoder().encode(json));
 }
-async function unpackProgress(code){
-  code=code.replace(/\s+/g,""); if(!code.startsWith(CODE))throw 0;
-  const k=code[CODE.length], u=unb64(code.slice(CODE.length+1));
-  const d=JSON.parse(k==="z"?await new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream("gzip"))).text():new TextDecoder().decode(u));
-  if(!d||!d.s||!d.s.items)throw 0; return d;
+// The code may arrive with other text around it (a shared note adds a title) or broken over lines: find it anywhere.
+// Throws "geen" (no code), "oud" (this browser can't unzip) or "kapot" (incomplete or changed)
+async function unpackProgress(txt){
+  const m=String(txt).replace(/\s+/g,"").match(/BITTERTALEN1:([jz])([A-Za-z0-9+\/_-]+=*)/); if(!m)throw"geen";
+  let b=m[2].replace(/-/g,"+").replace(/_/g,"/"); while(b.length%4)b+="=";
+  if(m[1]==="z"&&!("DecompressionStream" in window))throw"oud";
+  try{const u=unb64(b),d=JSON.parse(m[1]==="z"?await new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream("gzip"))).text():new TextDecoder().decode(u));
+    if(d&&d.s&&d.s.items)return d}catch(e){}
+  throw"kapot";
 }
 function moveShow(){paint();["home","stats","lib","read","media","story","hist","talk","play"].forEach(x=>$(x).hidden=true);closePop();stopMedia();hush();clock(0);$("move").hidden=false;window.scrollTo(0,0)}
 function moveScreen(){
@@ -3133,7 +3137,7 @@ function moveScreen(){
     <p class="note" id="mvok" aria-live="polite"></p>
     <button class="ghost wide" id="mvshare" hidden>Deel de code (bijvoorbeeld naar Notities)</button>
     <p class="note">Lukt kopiëren niet? Tik in het vak hieronder, kies Selecteer alles en dan Kopieer.</p>
-    <textarea id="mvcode" rows="4" readonly aria-label="Je code"></textarea>
+    <textarea id="mvcode" rows="4" readonly aria-label="Je code"></textarea><p class="note" id="mvlen"></p>
     <h3 class="lh">2. Open de nieuwe app</h3>
     <div class="list"><a class="it ext" href="${NEWURL}" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.move}</svg></i><span><span class="th"><b>bittertalen.vercel.app ↗</b></span><span class="d">Zet de app op je beginscherm: Deel, dan Zet op beginscherm. Open hem daarna via het nieuwe icoon.</span></span></a></div>
     <h3 class="lh">3. Plak de code</h3>
@@ -3143,11 +3147,11 @@ function moveScreen(){
   // Copy: the Clipboard API, else the old execCommand on a selected text field; the code is also shown and can be shared
   const sel=()=>{const t=$("mvcode");t.focus();t.setSelectionRange(0,t.value.length)};
   const legacy=()=>{sel();let ok=false;try{ok=document.execCommand("copy")}catch(e){}return ok};
-  within(ready$,3000).then(packProgress).then(c=>{code=c;$("mvcode").value=c;$("mvcode").onclick=sel;const b=$("mvcopy");b.disabled=false;b.textContent="Kopieer mijn voortgang";
+  within(ready$,3000).then(packProgress).then(c=>{code=c;$("mvcode").value=c;$("mvlen").textContent=`De code heeft ${c.length} tekens.`;$("mvcode").onclick=sel;const b=$("mvcopy");b.disabled=false;b.textContent="Kopieer mijn voortgang";
     const done=ok=>{b.textContent=ok?"Gekopieerd ✓":"Kopieer mijn voortgang";$("mvok").textContent=ok?"Klaar. Ga nu naar stap 2.":"Kopiëren lukte niet. Gebruik Deel, of kopieer de code uit het vak hieronder."};
     b.onclick=()=>{let p;try{p=navigator.clipboard&&navigator.clipboard.writeText(code)}catch(e){}
       if(p)p.then(()=>done(true),()=>done(legacy()));else done(legacy())};
-    if(navigator.share){$("mvshare").hidden=false;$("mvshare").onclick=()=>navigator.share({title:"Bittertalen",text:code}).catch(()=>{})}})
+    if(navigator.share){$("mvshare").hidden=false;$("mvshare").onclick=()=>navigator.share({text:code}).catch(()=>{})}})
     .catch(()=>{$("mvcopy").textContent="Er ging iets mis. Probeer het opnieuw.";$("mvcopy").disabled=false;$("mvcopy").onclick=moveScreen});
 }
 function importScreen(){
@@ -3162,7 +3166,10 @@ function importScreen(){
   $("mvback").onclick=()=>{if(location.hash)history.replaceState(null,"",location.pathname);home()};
   if(navigator.clipboard&&navigator.clipboard.readText){$("mvpaste").hidden=false;$("mvpaste").onclick=()=>navigator.clipboard.readText().then(t=>{$("mvin").value=t},()=>{$("mvnote").textContent="Plakken lukte niet. Houd je vinger in het vak en kies Plak."})}
   $("mvgo").onclick=async()=>{const b=$("mvgo"),n=$("mvnote");let d;
-    try{d=await unpackProgress($("mvin").value)}catch(e){n.textContent="Dit is geen goede code. Kopieer hem opnieuw op het oude adres en plak hem hier helemaal.";return}
+    const v=$("mvin").value;
+    try{d=await unpackProgress(v)}catch(e){n.textContent=e==="oud"?"Deze telefoon kan de code niet openen. Zet de nieuwste iOS erop en probeer het opnieuw."
+      :e==="geen"?"Ik vind geen code. De code begint met BITTERTALEN1: — kopieer hem opnieuw op het oude adres."
+      :`De code is niet compleet of veranderd (${v.replace(/\s+/g,"").length} tekens geplakt). Kopieer hem opnieuw, helemaal.`;return}
     if(Object.keys(S.items).length&&!b.dataset.ok){b.dataset.ok=1;b.textContent="Ja, vervang mijn voortgang";n.textContent="Je hebt hier al voortgang. Die wordt vervangen door de code.";return}
     b.disabled=true;b.textContent="Bezig…";
     S=Object.assign(S,d.s);S.t=Date.now();const j=JSON.stringify(S);try{localStorage.setItem(KEY,j)}catch(e){}await idbPut(j);
