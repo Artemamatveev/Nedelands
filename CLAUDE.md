@@ -13,7 +13,9 @@ The design should also teach Dutch culture. Keep it recognisably Dutch and avoid
 generic "AI app" look.
 
 - **Colours**: tin-glaze white `--bg`, cobalt `--blue`, light wash `--wash`, and
-  `--oranje` as the only accent (timer, selection, the streak stamp).
+  `--oranje` as the only accent (timer, selection, the streak stamp). Filled cobalt surfaces (`.btn`, the next step
+  of today, chosen word tokens, photo numbers) use `--fill` with `--on-fill` text: in dark mode that stays a deep
+  cobalt with white text (5.3:1), because the light `--blue` read as a highlight rather than the main action.
   Always use the tokens on `:root`; every colour has a dark-mode value.
 - **Glass and tiles**: the page background is a Dutch landscape faintly seen through a frosted window: Ruisdael's
   windmill, pre-blurred in `art/molen-glass.jpg` (`body::before`), under a half-transparent wash (`--glass`). The content sits on plain white tiles with a soft shadow (`.tile`, `--card`, `--lift`), not

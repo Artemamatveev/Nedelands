@@ -16,16 +16,19 @@
 :root{
   --bg:#FBFCFE; --surface:#EEF2FA; --wash:#C9D6F2; --ink:#14213D; --soft:#56617C; --line:#D6DDEB;
   --blue:#1F3C96; --deep:#132A6E; --oranje:#C8500C; --good:#2E7D4B; --bad:#C0392B; --on:#FFFFFF;
+  --fill:#1F3C96; --fill-press:#132A6E; --on-fill:#FFFFFF;
   --card:#FFFFFF; --glass:rgba(240,244,252,.5); --lift:0 1px 2px rgba(8,16,40,.06),0 8px 24px rgba(8,16,40,.10);
   box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
 }
 @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
   --bg:#0B1430; --surface:#14204A; --wash:#2A3D7A; --ink:#E8EEFA; --soft:#A6B2CF; --line:#24346A;
   --blue:#8EADF5; --deep:#B9CCF8; --oranje:#FF8A3D; --good:#7CCB93; --bad:#FF8A7A; --on:#0B1430;
+  --fill:#3D63D6; --fill-press:#2F51B8; --on-fill:#FFFFFF;
   --card:#111C42; --glass:rgba(8,14,36,.6); --lift:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.4); } }
 :root[data-theme="dark"]{
   --bg:#0B1430; --surface:#14204A; --wash:#2A3D7A; --ink:#E8EEFA; --soft:#A6B2CF; --line:#24346A;
   --blue:#8EADF5; --deep:#B9CCF8; --oranje:#FF8A3D; --good:#7CCB93; --bad:#FF8A7A; --on:#0B1430;
+  --fill:#3D63D6; --fill-press:#2F51B8; --on-fill:#FFFFFF;
   --card:#111C42; --glass:rgba(8,14,36,.6); --lift:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.4); }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -102,10 +105,10 @@ h2::before{content:"";flex:none;width:9px;height:9px;background:var(--blue);tran
 .step em{grid-column:3;grid-row:1/3;font-style:normal;font-weight:600;font-size:15px;color:var(--blue);white-space:nowrap}
 .step em.c{font-size:26px;font-weight:400;line-height:1}
 .step:hover{border-color:var(--blue)}
-.step.next{background:var(--blue);border-color:var(--blue);color:var(--on)}
-.step.next i{border-color:var(--on);color:var(--on)}
-.step.next span,.step.next em{color:var(--on)}
-.step.next:active{background:var(--deep)}
+.step.next{background:var(--fill);border-color:var(--fill);color:var(--on-fill)}
+.step.next i{border-color:var(--on-fill);color:var(--on-fill)}
+.step.next span,.step.next em{color:var(--on-fill)}
+.step.next:active{background:var(--fill-press)}
 .step.ok i{background:var(--good);border-color:var(--good);color:var(--on)}
 .step.ok b{color:var(--soft)} .step.ok em{color:var(--soft)}
 /* lijsten: één rij = één scherm of oefening. De hele rij is de knop, met › rechts. */
@@ -183,8 +186,8 @@ textarea{display:block;width:100%;font-size:17px;line-height:1.5;padding:12px;ma
 .fld{display:block;margin-bottom:8px}
 .fld span{display:block;font-size:14.5px;color:var(--soft)}
 .fld input{width:100%;font-size:17px;font-weight:400;padding:7px 10px}
-.btn{background:var(--blue);color:var(--on);border:0;border-radius:3px;padding:14px 20px;font-weight:600;font-size:18px}
-.btn:active{background:var(--deep)}
+.btn{background:var(--fill);color:var(--on-fill);border:0;border-radius:3px;padding:14px 20px;font-weight:600;font-size:18px}
+.btn:active{background:var(--fill-press)}
 .btn:disabled{opacity:.4;cursor:default}
 .ghost{background:none;border:1.5px solid var(--blue);color:var(--blue);border-radius:3px;padding:11px 12px;font-weight:700}
 .wide{width:100%}
@@ -229,7 +232,7 @@ main:has(#play:not([hidden])) header{display:none}
 .pool{min-height:52px;margin-bottom:14px}
 .line,.pool{display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start}
 .tok{background:var(--bg);color:var(--ink);border:1.5px solid var(--line);border-radius:3px;box-shadow:0 2px 0 var(--line);padding:6px 12px;font-size:18px;font-weight:700}
-.line .tok{background:var(--blue);color:var(--on);border-color:var(--blue);box-shadow:none}
+.line .tok{background:var(--fill);color:var(--on-fill);border-color:var(--fill);box-shadow:none}
 .sample{white-space:pre-line;background:var(--surface);border-left:3px solid var(--blue);padding:12px 14px;margin:4px 0 14px}
 .card .sample{font-size:16.5px}
 /* Lezen: the text as the document it is (letter, e-mail, advert, notice), like on the exam */
@@ -246,7 +249,7 @@ main:has(#play:not([hidden])) header{display:none}
 .pics.n1 figure{aspect-ratio:16/9}
 .pics button{display:block;width:100%;height:100%;padding:0;border:0;background:none}
 .pics img{display:block;width:100%;height:100%;object-fit:cover}
-.pics span{pointer-events:none;position:absolute;left:0;top:0;background:var(--blue);color:var(--on);font-weight:700;font-size:14px;line-height:1;padding:5px 7px}
+.pics span{pointer-events:none;position:absolute;left:0;top:0;background:var(--fill);color:var(--on-fill);font-weight:700;font-size:14px;line-height:1;padding:5px 7px}
 .doc .mail{background:var(--surface);margin:0 -16px 12px;padding:8px 16px}
 .doc .mail dl{margin:0}
 .errs{list-style:none;padding:0;margin:4px 0 14px}
