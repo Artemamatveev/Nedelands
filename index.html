@@ -91,7 +91,7 @@ h2::before{content:"";flex:none;width:9px;height:9px;background:var(--blue);tran
 
 /* startscherm: eerst de les van vandaag, dan zelf kiezen, dan je voortgang */
 #home .tile{padding:20px 16px 16px} #home .tile>h2{margin:0 0 4px}
-.tile>.list:last-child>.it:last-child{border-bottom:0;padding-bottom:0}
+.tile>.list:last-child>.it:last-child,.tile>.list:last-child>.rd:last-child{border-bottom:0;padding-bottom:0}
 /* de les van vandaag: the first tile */
 .today h2{font-size:24px;font-weight:700;color:var(--blue);margin:4px 0 4px}
 .today .sub{color:var(--ink);margin:0}
@@ -1763,9 +1763,9 @@ function home(){
     return`<div class="rd"><b>${PART[k]}</b><span class="bar pass"><i style="width:${r.pc||0}%"></i></span><small class="${ex?r.cls:""}">${r.pc==null?"–":r.pc+"% goed"}</small>${ex?`<span class="d">${r.st}. ${r.t}</span>`:r.pc!=null?`<span class="d">Bij het oefenen. Nog geen proefexamen.</span>`:""}</div>`};
   const lb=Object.values(S.bk||{}).filter(b=>b.t).sort((a,b)=>b.at-a.at)[0];
   const hs=S.hs||{},lh=GS.filter(c=>hs[c.id]).sort((a,b)=>hs[b.id]-hs[a.id])[0],gsDone=GS.filter(c=>gsItems(c).every(x=>(S.items[x.k]||{}).r)).length;
-  $("exam").innerHTML=`<h2>Naar het examen</h2><p class="sub">Het getal is hoeveel procent je goed had: bij je laatste proefexamen, of bij het oefenen. Om te slagen heb je ongeveer ${PASS*100}% nodig: dat is de streep. Oefenen doe je bij Oefenen.</p><div class="list">${["lz","ls","wr","sp","knm"].map(part).join("")}</div>`
-    +`<h3 class="lh">Proefexamen</h3><p class="sub">Met tijd, zoals op het echte examen. Zo zie je of je klaar bent.</p><div class="exb">${["lz","ls","wr","sp","knm"].map(id=>`<button class="ghost" data-e="${id}">${PART[id]}<small>${EX[id].min} min</small></button>`).join("")}</div>`
-    +`<div class="list"><a class="it ext" href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens van DUO ↗</b><small>15</small></span><span class="d">De echte oefenexamens op inburgeren.nl, met echte stemmen. Doe er een als je hier klaar bent. Liefst op een computer.</span></span></a></div>`;
+  // first what you came for, a proefexamen; then how far you are
+  $("exam").innerHTML=`<h2>Naar het examen</h2><p class="sub">Doe een proefexamen: met tijd, zoals op het echte examen. Zo zie je of je klaar bent.</p><div class="exb">${["lz","ls","wr","sp","knm"].map(id=>`<button class="ghost" data-e="${id}">${PART[id]}<small>${EX[id].min} min</small></button>`).join("")}</div><div class="list"><a class="it ext" href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens van DUO ↗</b><small>15</small></span><span class="d">De echte oefenexamens op inburgeren.nl, met echte stemmen. Doe er een als je hier klaar bent. Liefst op een computer.</span></span></a></div>`
+    +`<h3 class="lh">Hoe ver ben je?</h3><p class="sub">Het getal is hoeveel procent je goed had: bij je laatste proefexamen, of bij het oefenen. Om te slagen heb je ongeveer ${PASS*100}% nodig: dat is de streep. Oefenen doe je bij Oefenen.</p><div class="list">${["lz","ls","wr","sp","knm"].map(part).join("")}</div>`;
   $("parts").innerHTML=`<h2>Examenonderdelen</h2><p class="sub">Oefen zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["lz","ls","wr","sp","knm"].map(row).join("")}</div>`;
   $("gram").innerHTML=`<h2>Grammatica en woorden</h2><p class="sub">Korte rondes van 10 vragen. Dit helpt bij alle onderdelen.</p><div class="list">${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`;
   $("books").innerHTML=itHTML(`data-x="books"`,"Boekenkast",lb?`Je leest nu: ${esc(lb.t)}, blz. ${lb.p+1}`:"Verhalen en je eigen e-books. Tik op een woord voor de betekenis.",{ic:"books"})
