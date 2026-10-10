@@ -3108,9 +3108,11 @@ document.addEventListener("keydown",e=>{
 const OLDHOST="nedelands.vercel.app", NEWURL="https://bittertalen.vercel.app/", CODE="BITTERTALEN1:";
 const b64=u=>{let t="";for(let i=0;i<u.length;i+=32768)t+=String.fromCharCode.apply(null,u.subarray(i,i+32768));return btoa(t)};
 const unb64=t=>Uint8Array.from(atob(t),c=>c.charCodeAt(0));
+// IndexedDB can hang on iPhone: never wait for it longer than a few seconds
+const within=(p,ms,v)=>Promise.race([p,new Promise(ok=>setTimeout(()=>ok(v),ms))]);
 async function packProgress(){
-  const mine=await kvGet("books")||[], b=[];
-  for(const m of mine)b.push({m,t:await kvGet("book:"+m.id)});
+  const mine=await within(kvGet("books"),3000,null)||[], b=[];
+  for(const m of mine)b.push({m,t:await within(kvGet("book:"+m.id),3000,null)});
   const json=JSON.stringify({s:S,m:mGet(),b});
   if("CompressionStream" in window)return CODE+"z"+b64(new Uint8Array(await new Response(new Blob([json]).stream().pipeThrough(new CompressionStream("gzip"))).arrayBuffer()));
   return CODE+"j"+b64(new TextEncoder().encode(json));
@@ -3128,16 +3130,24 @@ function moveScreen(){
     <p class="sub">De app heeft een nieuw adres: <b>bittertalen.vercel.app</b>. Neem je voortgang mee: je resultaten, je woorden en je boeken.</p>
     <h3 class="lh">1. Kopieer je voortgang</h3>
     <button class="btn wide" id="mvcopy" disabled>Even wachten…</button>
-    <div id="mvman" hidden><p class="note">Kopiëren lukt hier niet vanzelf. Houd je vinger op de code, kies Alles selecteren en dan Kopieer.</p><textarea id="mvcode" rows="4" readonly aria-label="Je code"></textarea></div>
+    <p class="note" id="mvok" aria-live="polite"></p>
+    <button class="ghost wide" id="mvshare" hidden>Deel de code (bijvoorbeeld naar Notities)</button>
+    <p class="note">Lukt kopiëren niet? Tik in het vak hieronder, kies Selecteer alles en dan Kopieer.</p>
+    <textarea id="mvcode" rows="4" readonly aria-label="Je code"></textarea>
     <h3 class="lh">2. Open de nieuwe app</h3>
     <div class="list"><a class="it ext" href="${NEWURL}" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.move}</svg></i><span><span class="th"><b>bittertalen.vercel.app ↗</b></span><span class="d">Zet de app op je beginscherm: Deel, dan Zet op beginscherm. Open hem daarna via het nieuwe icoon.</span></span></a></div>
     <h3 class="lh">3. Plak de code</h3>
     <p class="note">Tik in de nieuwe app op Voortgang overzetten en plak de code. Werkt alles? Dan kun je dit oude icoon verwijderen.</p>
     <button class="ghost wide" id="mvstay">Toch hier verder</button>`;
   $("mvstay").onclick=home;
-  ready$.then(packProgress).then(c=>{code=c;$("mvcode").value=c;const b=$("mvcopy");b.disabled=false;b.textContent="Kopieer mijn voortgang";
-    b.onclick=()=>{const ok=()=>{b.textContent="Gekopieerd ✓"},man=()=>{$("mvman").hidden=false;$("mvcode").focus();$("mvcode").select()};
-      try{navigator.clipboard.writeText(code).then(ok,man)}catch(e){man()}}})
+  // Copy: the Clipboard API, else the old execCommand on a selected text field; the code is also shown and can be shared
+  const sel=()=>{const t=$("mvcode");t.focus();t.setSelectionRange(0,t.value.length)};
+  const legacy=()=>{sel();let ok=false;try{ok=document.execCommand("copy")}catch(e){}return ok};
+  within(ready$,3000).then(packProgress).then(c=>{code=c;$("mvcode").value=c;$("mvcode").onclick=sel;const b=$("mvcopy");b.disabled=false;b.textContent="Kopieer mijn voortgang";
+    const done=ok=>{b.textContent=ok?"Gekopieerd ✓":"Kopieer mijn voortgang";$("mvok").textContent=ok?"Klaar. Ga nu naar stap 2.":"Kopiëren lukte niet. Gebruik Deel, of kopieer de code uit het vak hieronder."};
+    b.onclick=()=>{let p;try{p=navigator.clipboard&&navigator.clipboard.writeText(code)}catch(e){}
+      if(p)p.then(()=>done(true),()=>done(legacy()));else done(legacy())};
+    if(navigator.share){$("mvshare").hidden=false;$("mvshare").onclick=()=>navigator.share({title:"Bittertalen",text:code}).catch(()=>{})}})
     .catch(()=>{$("mvcopy").textContent="Er ging iets mis. Probeer het opnieuw.";$("mvcopy").disabled=false;$("mvcopy").onclick=moveScreen});
 }
 function importScreen(){
@@ -3146,9 +3156,11 @@ function importScreen(){
     <h2>Voortgang overzetten</h2>
     <p class="sub">Kopieer je voortgang op het oude adres (nedelands.vercel.app) en plak de code hier.</p>
     <textarea id="mvin" rows="5" placeholder="BITTERTALEN1:…" aria-label="Je code" autocapitalize="off" autocorrect="off" spellcheck="false"></textarea>
+    <button class="ghost wide" id="mvpaste" hidden>Plak uit het klembord</button>
     <p class="note" id="mvnote"></p>
     <button class="btn wide" id="mvgo">Zet over</button>`;
   $("mvback").onclick=()=>{if(location.hash)history.replaceState(null,"",location.pathname);home()};
+  if(navigator.clipboard&&navigator.clipboard.readText){$("mvpaste").hidden=false;$("mvpaste").onclick=()=>navigator.clipboard.readText().then(t=>{$("mvin").value=t},()=>{$("mvnote").textContent="Plakken lukte niet. Houd je vinger in het vak en kies Plak."})}
   $("mvgo").onclick=async()=>{const b=$("mvgo"),n=$("mvnote");let d;
     try{d=await unpackProgress($("mvin").value)}catch(e){n.textContent="Dit is geen goede code. Kopieer hem opnieuw op het oude adres en plak hem hier helemaal.";return}
     if(Object.keys(S.items).length&&!b.dataset.ok){b.dataset.ok=1;b.textContent="Ja, vervang mijn voortgang";n.textContent="Je hebt hier al voortgang. Die wordt vervangen door de code.";return}
