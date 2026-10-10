@@ -35,7 +35,7 @@ main{max-width:720px;margin:0 auto;padding:0 16px 48px;overflow-x:clip}
 /* glass: a Dutch landscape (Ruisdael's windmill) faintly seen through a frosted window; the content sits on white tiles that stand out from it */
 body::before{content:"";position:fixed;inset:-24px;z-index:-2;background:url(/art/molen.jpg) 70% 40%/cover;filter:blur(5px)}
 body::after{content:"";position:fixed;inset:0;z-index:-1;background:var(--glass)}
-.tile,#play,#stats,#lib,#read,#media,#story,#hist,#talk,#move{background:var(--card);border-radius:4px;box-shadow:var(--lift);margin-top:16px;padding:4px 16px 20px}
+.tile,#play,#stats,#lib,#read,#media,#story,#hist,#talk{background:var(--card);border-radius:4px;box-shadow:var(--lift);margin-top:16px;padding:4px 16px 20px}
 button{font:inherit;color:inherit;cursor:pointer}
 a{color:var(--blue)}
 button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid var(--oranje);outline-offset:2px}
@@ -338,12 +338,12 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
   #label{display:flex;align-items:baseline;gap:40px}
   #label{flex-wrap:wrap} #label .lab{flex:0 0 340px} #label .nl{flex:1;margin:0} #label .it{flex:0 0 100%}
   #home .tile{padding:24px 28px 20px}
-  .tile,#play,#stats,#lib,#read,#media,#story,#hist,#talk,#move{padding-left:28px;padding-right:28px}
+  .tile,#play,#stats,#lib,#read,#media,#story,#hist,#talk{padding-left:28px;padding-right:28px}
   .steps{grid-template-columns:repeat(auto-fit,minmax(0,1fr))}
   #menu .list{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));column-gap:40px}
   .exb{grid-template-columns:repeat(5,1fr)}
   .duo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:16px;align-items:start}
-  #play,#stats,#lib,#read,#media,#story,#hist,#talk,#move{max-width:720px;margin:16px auto 0}
+  #play,#stats,#lib,#read,#media,#story,#hist,#talk{max-width:720px;margin:16px auto 0}
   .book{font-size:20px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -363,7 +363,6 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
       <section class="tile"><h2>Herhalen</h2><div class="list" id="mine"></div></section>
     </div>
   </div>
-  <div id="move" hidden></div>
   <div id="story" hidden>
     <button class="back" id="vback"><span aria-hidden="true">←</span>Start</button>
     <div id="vbody"></div>
@@ -1682,14 +1681,13 @@ const IC={
   errs:'<path d="M4 7h16M4 12h9M4 17h6M15 14l5 5M20 14l-5 5"/>',
   hist:'<path d="M7 3h10M7 21h10M8 3v2.5c0 2.5 4 4 4 6.5s-4 4-4 6.5V21M16 3v2.5c0 2.5-4 4-4 6.5s4 4 4 6.5V21"/>',
   talk:'<path d="M3 4h11v8H8l-3 3v-3H3z"/><path d="M14 8h7v8h-2v3l-3-3h-6v-4"/>',
-  move:'<path d="M4 12h11M11 8l4 4-4 4"/><path d="M14 4h6v16h-6"/>',
   duo:'<path d="M6 4h12v17H6z"/><path d="M9.5 4V2.8h5V4M9 12.5l2.2 2.2L15.5 10"/>'};
 function itHTML(attr,t,d,o={}){
   return`<button class="it" ${attr}>${o.ic?`<i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC[o.ic]}</svg></i>`:""}<span><span class="th"><b>${t}</b>${o.n!=null?`<small>${o.n}</small>`:""}</span>${d?`<span class="d">${d}</span>`:""}${o.bar!=null?`<span class="bar${o.pass?" pass":""}"><i style="width:${o.bar}%"></i></span>`:""}</span></button>`;
 }
 function home(){
   paint();
-  $("play").hidden=true;$("stats").hidden=true;$("lib").hidden=true;$("read").hidden=true;$("media").hidden=true;$("story").hidden=true;$("hist").hidden=true;$("talk").hidden=true;$("move").hidden=true;stopMedia();closePop();$("home").hidden=false;head();clock(0);hush();planId=null;drawPlan();
+  $("play").hidden=true;$("stats").hidden=true;$("lib").hidden=true;$("read").hidden=true;$("media").hidden=true;$("story").hidden=true;$("hist").hidden=true;$("talk").hidden=true;stopMedia();closePop();$("home").hidden=false;head();clock(0);hush();planId=null;drawPlan();
   const sec=id=>SEC.find(x=>x.id===id);
   const row=id=>{const s=sec(id),p=ITEMS.filter(x=>x.sec===id),n=p.filter(x=>S.items[x.k]).length;
     return itHTML(`data-s="${id}"`,s.t,s.s,{n:n+" van "+p.length,bar:n?n/p.length*100:null,ic:id})};
@@ -1707,8 +1705,7 @@ function home(){
     +itHTML(`data-x="talk"`,"Gesprekken","Bel de dokter, koop brood, praat met de buren: antwoord hardop.",{n:`${GP.filter(c=>(S.gp||{})[c.id]).length} van ${GP.length}`,ic:"talk"})
     +((S.words||[]).length?itHTML(`data-x="words"`,"Mijn woorden","Oefen de woorden die je bij het lezen hebt bewaard.",{n:S.words.length,ic:"words"}):"");
   $("mine").innerHTML=itHTML(`data-x="stats"`,"Mijn zwakke punten","Zie waar je de meeste fouten maakt en oefen precies dat.",{ic:"stats"})
-    +((S.errs||[]).length?itHTML(`data-x="errs"`,"Mijn fouten","Oefen met fouten uit je eigen teksten en antwoorden.",{n:S.errs.length,ic:"errs"}):"")
-    +(location.hostname!==OLDHOST&&!Object.keys(S.items).length?itHTML(`data-x="import"`,"Voortgang overzetten","Had je Bittertalen al op het oude adres? Plak hier je code.",{ic:"move"}):"");
+    +((S.errs||[]).length?itHTML(`data-x="errs"`,"Mijn fouten","Oefen met fouten uit je eigen teksten en antwoorden.",{n:S.errs.length,ic:"errs"}):"");
   document.querySelectorAll("#menu button,#books button,#mine button").forEach(b=>b.onclick=()=>{const d=b.dataset;
     if(d.s)build(d.s);
     else if(d.e)startExam(d.e);
@@ -1718,7 +1715,6 @@ function home(){
     else if(d.x==="hist")hist();
     else if(d.x==="talk")talks();
     else if(d.x==="words")practiseWords();
-    else if(d.x==="import")importScreen();
     else build("custom",{id:"custom",t:"Mijn fouten",n:10,pool:()=>shuffle(errItems())})});
   window.scrollTo(0,0);
 }
@@ -1821,7 +1817,7 @@ function build(id,custom){
   if(!cur.keep)shuffle(queue);
   queue=queue.map(q=>({...q,retry:false}));
   pos=0;total=queue.length;right=0;clock(cur.min);
-  ["home","stats","lib","read","media","story","hist","talk","move"].forEach(x=>$(x).hidden=true);closePop();stopMedia();$("play").hidden=false;window.scrollTo(0,0);
+  ["home","stats","lib","read","media","story","hist","talk"].forEach(x=>$(x).hidden=true);closePop();stopMedia();$("play").hidden=false;window.scrollTo(0,0);
   $("back").innerHTML=`<span aria-hidden="true">←</span>${cur.back?cur.back.t:"Start"}`;$("back").onclick=cur.back?cur.back.f:home;
   show();
 }
@@ -3093,7 +3089,7 @@ document.addEventListener("keydown",e=>{
 // Swipe from left to right on any inner screen to go back, like on iPhone: it does what the screen's back button does.
 // In the reader a sideways swipe turns pages, so there only a swipe from the left edge (or on the first page) goes back.
 (()=>{
-  const SCR=["play","stats","lib","read","media","story","hist","talk","move"];
+  const SCR=["play","stats","lib","read","media","story","hist","talk"];
   let x0=0,y0=0,el=null,on=false;
   const reset=t=>{t.style.transition=t.style.transform=t.style.opacity=""};
   document.addEventListener("touchstart",e=>{
@@ -3111,93 +3107,12 @@ document.addEventListener("keydown",e=>{
     else{t.style.transform="";t.style.opacity="";setTimeout(()=>reset(t),200)}};
   document.addEventListener("touchend",end); document.addEventListener("touchcancel",end);
 })();
-// Bittertalen moved from nedelands.vercel.app to bittertalen.vercel.app. Progress lives per address (and on iPhone per
-// home-screen app), so it moves as a code: copied on the old address (which opens on this screen), pasted on the new one.
-// The code holds S, the podcast places ("ww-media") and own books; gzip + base64 when the browser can compress.
-const OLDHOST="nedelands.vercel.app", NEWURL="https://bittertalen.vercel.app/", CODE="BITTERTALEN1:";
-const b64=u=>{let t="";for(let i=0;i<u.length;i+=32768)t+=String.fromCharCode.apply(null,u.subarray(i,i+32768));return btoa(t)};
-const unb64=t=>Uint8Array.from(atob(t),c=>c.charCodeAt(0));
-// What a code holds, in words: shown on both screens so you can see that everything came along
-const packSum=d=>{const s=d.s||d,res=Object.values(s.res||{}).reduce((a,x)=>a+x.length,0),bk=(d.b||[]).length;
-  return `${Object.keys(s.items||{}).length} antwoorden, ${res} proefexamens, ${(s.words||[]).length} woorden${bk?`, ${bk} eigen boeken`:""}, ${s.streak||0} dagen op rij`};
-// IndexedDB can hang on iPhone: never wait for it longer than a few seconds
-const within=(p,ms,v)=>Promise.race([p,new Promise(ok=>setTimeout(()=>ok(v),ms))]);
-async function packProgress(){
-  const mine=await within(kvGet("books"),3000,null)||[], b=[];
-  for(const m of mine)b.push({m,t:await within(kvGet("book:"+m.id),3000,null)});
-  const json=JSON.stringify({s:S,m:mGet(),b});
-  if("CompressionStream" in window)return CODE+"z"+b64(new Uint8Array(await new Response(new Blob([json]).stream().pipeThrough(new CompressionStream("gzip"))).arrayBuffer()));
-  return CODE+"j"+b64(new TextEncoder().encode(json));
-}
-// The code may arrive with other text around it (a shared note adds a title) or broken over lines: find it anywhere.
-// Throws "geen" (no code), "oud" (this browser can't unzip) or "kapot" (incomplete or changed)
-async function unpackProgress(txt){
-  const m=String(txt).replace(/\s+/g,"").match(/BITTERTALEN1:([jz])([A-Za-z0-9+\/_-]+=*)/); if(!m)throw"geen";
-  let b=m[2].replace(/-/g,"+").replace(/_/g,"/"); while(b.length%4)b+="=";
-  if(m[1]==="z"&&!("DecompressionStream" in window))throw"oud";
-  try{const u=unb64(b),d=JSON.parse(m[1]==="z"?await new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream("gzip"))).text():new TextDecoder().decode(u));
-    if(d&&d.s&&d.s.items)return d}catch(e){}
-  throw"kapot";
-}
-function moveShow(){paint();["home","stats","lib","read","media","story","hist","talk","play"].forEach(x=>$(x).hidden=true);closePop();stopMedia();hush();clock(0);$("move").hidden=false;window.scrollTo(0,0)}
-function moveScreen(){
-  moveShow(); let code="";
-  $("move").innerHTML=`<h2>Bittertalen verhuist</h2>
-    <p class="sub">De app heeft een nieuw adres: <b>bittertalen.vercel.app</b>. Neem je voortgang mee: je resultaten, je woorden en je boeken.</p>
-    <h3 class="lh">1. Kopieer je voortgang</h3>
-    <button class="btn wide" id="mvcopy" disabled>Even wachten…</button>
-    <p class="note" id="mvok" aria-live="polite"></p>
-    <button class="ghost wide" id="mvshare" hidden>Deel de code (bijvoorbeeld naar Notities)</button>
-    <p class="note">Lukt kopiëren niet? Tik in het vak hieronder, kies Selecteer alles en dan Kopieer.</p>
-    <textarea id="mvcode" rows="4" readonly aria-label="Je code"></textarea><p class="note" id="mvlen"></p>
-    <h3 class="lh">2. Open de nieuwe app</h3>
-    <div class="list"><a class="it ext" href="${NEWURL}" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.move}</svg></i><span><span class="th"><b>bittertalen.vercel.app ↗</b></span><span class="d">Zet de app op je beginscherm: Deel, dan Zet op beginscherm. Open hem daarna via het nieuwe icoon.</span></span></a></div>
-    <h3 class="lh">3. Plak de code</h3>
-    <p class="note">Tik in de nieuwe app op Voortgang overzetten en plak de code. Werkt alles? Dan kun je dit oude icoon verwijderen.</p>
-    <button class="ghost wide" id="mvstay">Toch hier verder</button>`;
-  $("mvstay").onclick=home;
-  // Copy: the Clipboard API, else the old execCommand on a selected text field; the code is also shown and can be shared
-  const sel=()=>{const t=$("mvcode");t.focus();t.setSelectionRange(0,t.value.length)};
-  const legacy=()=>{sel();let ok=false;try{ok=document.execCommand("copy")}catch(e){}return ok};
-  within(ready$,3000).then(packProgress).then(c=>{code=c;$("mvcode").value=c;unpackProgress(c).then(d=>{$("mvlen").textContent=`In de code: ${packSum(d)}. De code heeft ${c.length} tekens.`}).catch(()=>{$("mvlen").textContent=`De code heeft ${c.length} tekens.`});$("mvcode").onclick=sel;const b=$("mvcopy");b.disabled=false;b.textContent="Kopieer mijn voortgang";
-    const done=ok=>{b.textContent=ok?"Gekopieerd ✓":"Kopieer mijn voortgang";$("mvok").textContent=ok?"Klaar. Ga nu naar stap 2.":"Kopiëren lukte niet. Gebruik Deel, of kopieer de code uit het vak hieronder."};
-    b.onclick=()=>{let p;try{p=navigator.clipboard&&navigator.clipboard.writeText(code)}catch(e){}
-      if(p)p.then(()=>done(true),()=>done(legacy()));else done(legacy())};
-    if(navigator.share){$("mvshare").hidden=false;$("mvshare").onclick=()=>navigator.share({text:code}).catch(()=>{})}})
-    .catch(()=>{$("mvcopy").textContent="Er ging iets mis. Probeer het opnieuw.";$("mvcopy").disabled=false;$("mvcopy").onclick=moveScreen});
-}
-function importScreen(){
-  moveShow();
-  $("move").innerHTML=`<button class="back" id="mvback"><span aria-hidden="true">←</span>Start</button>
-    <h2>Voortgang overzetten</h2>
-    <p class="sub">Kopieer je voortgang op het oude adres (nedelands.vercel.app) en plak de code hier.</p>
-    <textarea id="mvin" rows="5" placeholder="BITTERTALEN1:…" aria-label="Je code" autocapitalize="off" autocorrect="off" spellcheck="false"></textarea>
-    <button class="ghost wide" id="mvpaste" hidden>Plak uit het klembord</button>
-    <p class="note" id="mvnote"></p>
-    <button class="btn wide" id="mvgo">Zet over</button>`;
-  $("mvback").onclick=()=>{if(location.hash)history.replaceState(null,"",location.pathname);home()};
-  if(navigator.clipboard&&navigator.clipboard.readText){$("mvpaste").hidden=false;$("mvpaste").onclick=()=>navigator.clipboard.readText().then(t=>{$("mvin").value=t},()=>{$("mvnote").textContent="Plakken lukte niet. Houd je vinger in het vak en kies Plak."})}
-  $("mvgo").onclick=async()=>{const b=$("mvgo"),n=$("mvnote");let d;
-    const v=$("mvin").value;
-    try{d=await unpackProgress(v)}catch(e){n.textContent=e==="oud"?"Deze telefoon kan de code niet openen. Zet de nieuwste iOS erop en probeer het opnieuw."
-      :e==="geen"?"Ik vind geen code. De code begint met BITTERTALEN1: — kopieer hem opnieuw op het oude adres."
-      :`De code is niet compleet of veranderd (${v.replace(/\s+/g,"").length} tekens geplakt). Kopieer hem opnieuw, helemaal.`;return}
-    if(Object.keys(S.items).length&&!b.dataset.ok){b.dataset.ok=1;b.textContent="Ja, vervang mijn voortgang";n.textContent="Je hebt hier al voortgang. Die wordt vervangen door de code.";return}
-    b.disabled=true;b.textContent="Bezig…";
-    S=Object.assign(S,d.s);S.t=Date.now();const j=JSON.stringify(S);try{localStorage.setItem(KEY,j)}catch(e){}await idbPut(j);
-    mSet(d.m||{});
-    if(d.b&&d.b.length){const mine=await kvGet("books")||[];for(const x of d.b){if(x.t!=null)await kvSet("book:"+x.m.id,x.t).catch(()=>{});if(!mine.some(y=>y.id===x.m.id))mine.push(x.m)}await kvSet("books",mine).catch(()=>{})}
-    history.replaceState(null,"",location.pathname);
-    $("move").innerHTML=`<h2>Je voortgang is overgezet</h2><p class="sub">Overgezet: ${packSum(d)}.</p>
-      <p class="note">${navigator.standalone===false?"Let op: je zit nu in Safari, niet in de app op je beginscherm. Die heeft een eigen geheugen. Open de app via het icoon en plak de code daar nog een keer.":"Klopt dit met wat je op het oude adres zag? Dan kun je het oude icoon verwijderen."}</p>
-      <button class="btn wide" id="mvdone">Naar Start</button>`;
-    $("mvdone").onclick=()=>location.reload()};
-}
 addGenerated();
 // saved book words show up in the Mix; their wrong options come from the dictionary
 if((S.words||[]).some(x=>x.en))loadDict().catch(()=>{});
-const ready$=restore(); ready$.then(initCloud);
-if(location.hostname===OLDHOST)moveScreen(); else if(location.hash==="#overzetten")importScreen(); else home();
+// The app moved from nedelands.vercel.app; that address still serves it, so send it on to the new one
+if(location.hostname==="nedelands.vercel.app")location.replace("https://bittertalen.vercel.app/"); else home();
+restore().then(initCloud);
 // Offline (sw.js): the page, and every painting and photo, stay available without a connection
 if("serviceWorker" in navigator&&window.isSecureContext&&!window.claude)
   navigator.serviceWorker.register("/sw.js").then(()=>navigator.serviceWorker.ready)
