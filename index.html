@@ -107,7 +107,7 @@ h2::before{content:"";flex:none;width:9px;height:9px;background:var(--blue);tran
 .step.next span,.step.next em{color:var(--on)}
 .step.next:active{background:var(--deep)}
 .step.ok i{background:var(--good);border-color:var(--good);color:var(--on)}
-.step.ok b{color:var(--soft)} .step.ok em{color:var(--good)}
+.step.ok b{color:var(--soft)} .step.ok em{color:var(--soft)}
 /* lijsten: één rij = één scherm of oefening. De hele rij is de knop, met › rechts. */
 .list{display:grid;margin-top:8px;border-top:1px solid var(--line)}
 .it{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:11px 0 12px;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);color:var(--ink)}
@@ -1782,7 +1782,7 @@ function planHTML(){
   const date=new Date().toLocaleDateString("nl-NL",{weekday:"long",day:"numeric",month:"long"});
   return`<p class="ask">${date}</p><h2>Je les van vandaag</h2><p class="sub">${intro}</p>
     <ol class="steps">${steps.map((t,i)=>{const ok=done.includes(t.id);
-      return`<li><button class="step${ok?" ok":i===nx?" next":""}" data-p="${t.id}"><i>${ok?"✓":i+1}</i><b>${t.t}</b><span>${t.s}</span><em${ok||i===nx?"":` class="c"`}>${ok?"Klaar":i===nx?"Begin":"›"}</em></button></li>`}).join("")}</ol>
+      return`<li><button class="step${ok?" ok":i===nx?" next":""}" data-p="${t.id}"><i>${ok?"✓":i+1}</i><b>${t.t}</b><span>${t.s}</span><em${i===nx&&!ok?"":` class="c"`}>${i===nx&&!ok?"Begin":"›"}</em></button></li>`}).join("")}</ol>
     <button class="ghost wide" data-p="s:mix">Meer tijd? Mix van de dag</button>`;
 }
 function drawPlan(){
