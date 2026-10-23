@@ -135,7 +135,8 @@ them, questions kept together. In the Lezen, Luisteren, KNM and Schrijven proefe
 selected (`cur.pick`, option order kept in `cur.op`; for Schrijven `{f, t}`, the form fields and the text), "Overzicht" shows every question, and everything is marked when
 handed in (`submitExam()`, also when the time runs out). KNM follows the 8 official themes of the exam since 1 July 2025
 (40 questions, 45 minutes, 28 to pass). The questions from `KNMS` on are situations with a person in them, as on the exam; the KNM proefexamen takes three
-of them per theme first. Wrong options must be plausible (real instanties, real numbers) and about as long as the right one, so the
+of them per theme first and keeps each theme together, as DUO's voorbeeldexamens do; every KNM question has
+'▶ Lees voor', because the exam reads the questions aloud. DUO's voorbeeldexamens are copyrighted: never copy their questions. Wrong options must be plausible (real instanties, real numbers) and about as long as the right one, so the
 longest answer is not a giveaway. Woordenschat has the definitions in `VO` and the themed A2 word list `WT`
 (Dutch with de/het = a short Dutch description; small words get a gap sentence with ___, numbers the digits), practised three
 ways: word → description, description → word, and by ear (`wl|`: the word is only spoken, `hear`). Description → word can also be
