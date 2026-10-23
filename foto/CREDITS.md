@@ -1,4 +1,4 @@
-# Bronnen van de foto's (Spreken en Geschiedenis)
+# Bronnen van de foto's (Spreken, Geschiedenis en KNM)
 
 Alle foto's komen van Wikimedia Commons en zijn publiek domein of CC0.
 Ze zijn verkleind (max. 640 px breed) en gecomprimeerd voor de app.
@@ -58,3 +58,9 @@ De hoofdstukken in Geschiedenis gebruiken ook `art/oranje.jpg` en `art/aardappel
 | `indonesie.jpg` | [Soevereiniteitsoverdracht Indonesië. Koningin Juliana tekent de akte, Bestanddeelnr 934-5295.jpg](https://commons.wikimedia.org/wiki/File:Soevereiniteitsoverdracht_Indonesi%C3%AB._Koningin_Juliana_tekent_de_akte,_Bestanddeelnr_934-5295.jpg) | Joop van Bilsen / Anefo (Nationaal Archief) | CC0 |
 | `watersnood.jpg` | [Watersnood 1953, Bestanddeelnr 059-1000.jpg](https://commons.wikimedia.org/wiki/File:Watersnood_1953,_Bestanddeelnr_059-1000.jpg) | Anefo (Nationaal Archief) | CC0 |
 | `gastarbeiders.jpg` | [Italiaanse gastarbeiders in Twente lezen Nederlandse kranten, Bestanddeelnr 121-0419.jpg](https://commons.wikimedia.org/wiki/File:Italiaanse_gastarbeiders_in_Twente_lezen_Nederlandse_kranten,_Bestanddeelnr_121-0419.jpg) | Anefo (Nationaal Archief) | CC0 |
+| `deltawerken.jpg` | [Bouw stormvloedkering Oosterschelde (werkeiland Neeltje Jans ) overzicht van pi, Bestanddeelnr 253-8654.jpg](https://commons.wikimedia.org/wiki/File:Bouw_stormvloedkering_Oosterschelde_(werkeiland_Neeltje_Jans_)_overzicht_van_pi,_Bestanddeelnr_253-8654.jpg) | Rob Croes / Anefo (Nationaal Archief) | CC0 |
+| `afsluitdijk.jpg` | [Auto's op de Afsluitdijk, Bestanddeelnr 254-5159.jpg](https://commons.wikimedia.org/wiki/File:Auto%27s_op_de_Afsluitdijk,_Bestanddeelnr_254-5159.jpg) | Willem van de Poll / Anefo (Nationaal Archief) | CC0 |
+| `binnenhof.jpg` | [Overzicht Binnenhof Den Haag , ext. nr 10 l. Ridderzaal en r. Tweede Kamer, nr., Bestanddeelnr 922-7427.jpg](https://commons.wikimedia.org/wiki/File:Overzicht_Binnenhof_Den_Haag_,_ext._nr_10_l._Ridderzaal_en_r._Tweede_Kamer,_nr.,_Bestanddeelnr_922-7427.jpg) | Joost Evers / Anefo (Nationaal Archief) | CC0 |
+| `annefrank.jpg` | [Huis van Anne Frank, Bestanddeelnr 908-4126.jpg](https://commons.wikimedia.org/wiki/File:Huis_van_Anne_Frank,_Bestanddeelnr_908-4126.jpg) | Wim van Rossem / Anefo (Nationaal Archief) | CC0 |
+| `stemmen.jpg` | [Tweede Kamer verkiezingen 1981 grote opkomst bij de stembureaus vanmorgen, Bestanddeelnr 931-5089.jpg](https://commons.wikimedia.org/wiki/File:Tweede_Kamer_verkiezingen_1981_grote_opkomst_bij_de_stembureaus_vanmorgen,_Bestanddeelnr_931-5089.jpg) | Rob Croes / Anefo (Nationaal Archief) | CC0 |
+| `prinsjesdag.jpg` | [Prinsjesdag 1976, Gouden Koets rijdt langs menigte, Bestanddeelnr 928-7928.jpg](https://commons.wikimedia.org/wiki/File:Prinsjesdag_1976,_Gouden_Koets_rijdt_langs_menigte,_Bestanddeelnr_928-7928.jpg) | Hans Peters / Anefo (Nationaal Archief) | CC0 |

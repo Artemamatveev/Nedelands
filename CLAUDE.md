@@ -125,18 +125,20 @@ progress code was removed once the move was done).
 
 ## Content
 
-Lezen texts are plain strings rendered as documents by `docHTML()`: the first line is the title
+Lezen texts (`LZ`: `[text, questions, intro?]`) are plain strings rendered as documents by `docHTML()`: the first line is the title
 (unless it is a letter or an e-mail), `label: value` lines become a table, `Van:` starts an
 e-mail header. Luisteren items in `LS` are `[text, question, right, wrong, wrong, photo?]`; a dialogue has one line per
 turn (`A: …` / `B: …`), read with two pitches, and the optional photo from `foto/` sets the scene. In the
 proefexamen a fragment can be played twice (counted per fragment). `LSM` holds longer fragments with two or three
-questions (`[text, photo, [[q, right, wrong, wrong], …]]`, keys `ls|m<i>.<j>`); each Luisteren proefexamen has two of
-them, questions kept together. In the Lezen, Luisteren, KNM and Schrijven proefexamens you can go back: an answer is only
+questions (`[text, photo, [[q, right, wrong, wrong], …], intro?]`, keys `ls|m<i>.<j>`); each Luisteren proefexamen takes up to
+eight of them, questions kept together, as DUO's oefenexamens are almost all long fragments with two or three questions.
+The intro (who reads or hears what, e.g. 'Yusuf belt de woningcorporatie.') is shown above, as on the exam. In the Lezen, Luisteren, KNM and Schrijven proefexamens you can go back: an answer is only
 selected (`cur.pick`, option order kept in `cur.op`; for Schrijven `{f, t}`, the form fields and the text), "Overzicht" shows every question, and everything is marked when
 handed in (`submitExam()`, also when the time runs out). KNM follows the 8 official themes of the exam since 1 July 2025
 (40 questions, 45 minutes, 28 to pass). The questions from `KNMS` on are situations with a person in them, as on the exam; the KNM proefexamen takes three
 of them per theme first and keeps each theme together, as DUO's voorbeeldexamens do; every KNM question has
-'▶ Lees voor', because the exam reads the questions aloud. DUO's voorbeeldexamens are copyrighted: never copy their questions. Wrong options must be plausible (real instanties, real numbers) and about as long as the right one, so the
+'▶ Lees voor' (Luisteren too), because the exam reads the questions aloud. A KNM row can have a photo from `foto/`
+as a 7th field, as every exam question has one. DUO's voorbeeldexamens are copyrighted: never copy their questions. Wrong options must be plausible (real instanties, real numbers) and about as long as the right one, so the
 longest answer is not a giveaway. Woordenschat has the definitions in `VO` and the themed A2 word list `WT`
 (Dutch with de/het = a short Dutch description; small words get a gap sentence with ___, numbers the digits), practised three
 ways: word → description, description → word, and by ear (`wl|`: the word is only spoken, `hear`). Description → word can also be
