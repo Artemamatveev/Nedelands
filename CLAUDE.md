@@ -138,7 +138,8 @@ handed in (`submitExam()`, also when the time runs out). KNM follows the 8 offic
 of them per theme first. Wrong options must be plausible (real instanties, real numbers) and about as long as the right one, so the
 longest answer is not a giveaway. Woordenschat has the definitions in `VO` and the themed A2 word list `WT`
 (Dutch with de/het = a short Dutch description; small words get a gap sentence with ___, numbers the digits), practised three
-ways: word → description, description → word, and by ear (`wl|`: the word is only spoken, `hear`). `BET` holds the Dutch meaning of a word (from `WT`, `VO` and a few more), for the Betekenis hint on verbs and de/het. Item keys (`lz|3.1`, `wn|de huis`) are
+ways: word → description, description → word, and by ear (`wl|`: the word is only spoken, `hear`). Description → word can also be
+typed (the 'Typ het antwoord zelf' mode, with de/het). `BET` holds the Dutch meaning of a word (from `WT`, `VO` and a few more), for the Betekenis hint on verbs and de/het. Item keys (`lz|3.1`, `wn|de huis`) are
 stored progress: append new items, don't reorder or rename existing ones.
 
 ## Writing and speaking check (Schrijven, Spreken)
