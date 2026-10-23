@@ -117,7 +117,9 @@ whole texts.
 
 `sw.js` makes the app work offline: the page network-first (a push is live at once), paintings and
 photos from the cache (the page sends their list after loading), `api/` never cached. Don't change the stored shape without migrating old data.
-Saving progress to a file was removed on purpose. The app moved from https://nedelands.vercel.app; that address
+Saving progress to a file was removed on purpose. On an iPhone in Safari a tile on Vandaag (`drawA2hs()`)
+asks to put the app on the home screen, because Safari can wipe a site's storage after a week without a visit; the
+home-screen app has its own storage, so the progress goes along by the clipboard (Kopieer / Plak mijn voortgang). The app moved from https://nedelands.vercel.app; that address
 still serves the same deployment, and the page there sends you on to the new address (the one-time move screen with a
 progress code was removed once the move was done).
 
@@ -135,8 +137,8 @@ handed in (`submitExam()`, also when the time runs out). KNM follows the 8 offic
 (40 questions, 45 minutes, 28 to pass). The questions from `KNMS` on are situations with a person in them, as on the exam; the KNM proefexamen takes three
 of them per theme first. Wrong options must be plausible (real instanties, real numbers) and about as long as the right one, so the
 longest answer is not a giveaway. Woordenschat has the definitions in `VO` and the themed A2 word list `WT`
-(Dutch with de/het = a short Dutch description; small words get a gap sentence with ___, numbers the digits), practised both
-ways. `BET` holds the Dutch meaning of a word (from `WT`, `VO` and a few more), for the Betekenis hint on verbs and de/het. Item keys (`lz|3.1`, `wn|de huis`) are
+(Dutch with de/het = a short Dutch description; small words get a gap sentence with ___, numbers the digits), practised three
+ways: word → description, description → word, and by ear (`wl|`: the word is only spoken, `hear`). `BET` holds the Dutch meaning of a word (from `WT`, `VO` and a few more), for the Betekenis hint on verbs and de/het. Item keys (`lz|3.1`, `wn|de huis`) are
 stored progress: append new items, don't reorder or rename existing ones.
 
 ## Writing and speaking check (Schrijven, Spreken)

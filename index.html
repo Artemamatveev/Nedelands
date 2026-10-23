@@ -97,6 +97,9 @@ h2::before{content:"";flex:none;width:9px;height:9px;background:var(--blue);tran
 .today .sub{color:var(--ink);margin:0}
 .today .hint{margin:12px 0 0}
 .today>.ghost{margin-top:14px}
+#a2hs:empty{display:none}
+#hear{margin:10px 0 4px}
+#a2hs ol{margin:10px 0 0;padding-left:22px}#a2hs .two{margin-top:14px}
 .steps{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:8px}
 .step{display:grid;grid-template-columns:30px minmax(0,1fr) auto;column-gap:12px;align-items:center;width:100%;height:100%;text-align:left;background:var(--bg);border:1.5px solid var(--line);border-radius:3px;padding:12px 14px}
 .step i{grid-row:1/3;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:700;font-size:15px;border:1.5px solid var(--blue);border-radius:2px;color:var(--blue)}
@@ -412,6 +415,7 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
   <div id="home">
     <div class="label" id="label" data-tab="vandaag"></div>
     <section class="today tile" id="plan" data-tab="vandaag"></section>
+    <section class="today tile" id="a2hs" data-tab="vandaag"></section>
     <section class="tile" id="exam" data-tab="examen"></section>
     <div class="duo" data-tab="oefenen">
       <div><section class="tile" id="parts"></section><section class="tile" id="gram"></section></div>
@@ -522,7 +526,37 @@ const V=[
 ["verhuizen","","verhuisde","verhuisden","verhuisd","zijn"],["luisteren","","luisterde","luisterden","geluisterd","hebben"],
 ["spelen","","speelde","speelden","gespeeld","hebben"],["koken","","kookte","kookten","gekookt","hebben"],
 ["wachten","","wachtte","wachtten","gewacht","hebben"],["antwoorden","","antwoordde","antwoordden","geantwoord","hebben"],
-["gebeuren","","gebeurde","gebeurden","gebeurd","zijn"],["stoppen","","stopte","stopten","gestopt",null]
+["gebeuren","","gebeurde","gebeurden","gebeurd","zijn"],["stoppen","","stopte","stopten","gestopt",null],
+["verbieden","","verbood","verboden","verboden","hebben"],["vertrekken","","vertrok","vertrokken","vertrokken","zijn"],
+["ontvangen","","ontving","ontvingen","ontvangen","hebben"],["onthouden","","onthield","onthielden","onthouden","hebben"],
+["vriezen","","vroor","vroren","gevroren","hebben"],["schijnen","","scheen","schenen","geschenen","hebben"],
+["wegen","","woog","wogen","gewogen","hebben"],["zwijgen","","zweeg","zwegen","gezwegen","hebben"],
+["blijken","","bleek","bleken","gebleken","zijn"],["verdwijnen","","verdween","verdwenen","verdwenen","zijn"],
+["springen","","sprong","sprongen","gesprongen",null],["stijgen","","steeg","stegen","gestegen","zijn"],
+["schieten","","schoot","schoten","geschoten","hebben"],["genieten","","genoot","genoten","genoten","hebben"],
+["wijzen","","wees","wezen","gewezen","hebben"],["bewijzen","","bewees","bewezen","bewezen","hebben"],
+["lijken","","leek","leken","geleken","hebben"],["glijden","","gleed","gleden","gegleden",null],
+["schrikken","","schrok","schrokken","geschrokken","zijn"],["treffen","","trof","troffen","getroffen","hebben"],
+["stelen","","stal","stalen","gestolen","hebben"],["bidden","","bad","baden","gebeden","hebben"],
+["meten","","mat","maten","gemeten","hebben"],["schenken","","schonk","schonken","geschonken","hebben"],
+["vechten","","vocht","vochten","gevochten","hebben"],["hangen","","hing","hingen","gehangen","hebben"],
+["vangen","","ving","vingen","gevangen","hebben"],["slaan","","sloeg","sloegen","geslagen","hebben"],
+["varen","","voer","voeren","gevaren",null],["kruipen","","kroop","kropen","gekropen",null],
+["heten","","heette","heetten","geheten","hebben"],["vouwen","","vouwde","vouwden","gevouwen","hebben"],
+["raden","","raadde","raadden","geraden","hebben"],["leggen","","legde","legden","gelegd","hebben"],
+["zetten","","zette","zetten","gezet","hebben"],["bellen","","belde","belden","gebeld","hebben"],
+["wandelen","","wandelde","wandelden","gewandeld",null],["studeren","","studeerde","studeerden","gestudeerd","hebben"],
+["parkeren","","parkeerde","parkeerden","geparkeerd","hebben"],["dansen","","danste","dansten","gedanst","hebben"],
+["pakken","","pakte","pakten","gepakt","hebben"],["missen","","miste","misten","gemist","hebben"],
+["hopen","","hoopte","hoopten","gehoopt","hebben"],["rusten","","rustte","rustten","gerust","hebben"],
+["leven","","leefde","leefden","geleefd","hebben"],["geloven","","geloofde","geloofden","geloofd","hebben"],
+["huren","","huurde","huurden","gehuurd","hebben"],["sturen","","stuurde","stuurden","gestuurd","hebben"],
+["poetsen","","poetste","poetsten","gepoetst","hebben"],["regenen","","regende","regenden","geregend","hebben"],
+["verdienen","","verdiende","verdienden","verdiend","hebben"],["bestellen","","bestelde","bestelden","besteld","hebben"],
+["vertellen","","vertelde","vertelden","verteld","hebben"],["proberen","","probeerde","probeerden","geprobeerd","hebben"],
+["veranderen","","veranderde","veranderden","veranderd",null],["trouwen","","trouwde","trouwden","getrouwd",null],
+["groeien","","groeide","groeiden","gegroeid","zijn"],["slagen","","slaagde","slaagden","geslaagd","zijn"],
+["zakken","","zakte","zakten","gezakt","zijn"]
 ];
 
 const TYPES={past:"Imperfectum: gisteren … ik / hij",pastpl:"Imperfectum: gisteren … wij / zij",pp:"Perfectum: voltooid deelwoord",aux:"Perfectum: hebben of zijn?"};
@@ -549,7 +583,87 @@ const WO=[
 ["Na het eten kijken wij televisie.","","Inversie: het werkwoord staat voor het onderwerp."],
 ["Ik blijf thuis omdat het regent.","","Na 'omdat' staat het werkwoord aan het eind."],
 ["Als het regent neem ik de bus.","","De bijzin staat vooraan, dus inversie in de hoofdzin."],
-["Toen ik klein was woonde ik in een dorp.","","Na 'toen' staat het werkwoord aan het eind; daarna inversie."]
+["Toen ik klein was woonde ik in een dorp.","","Na 'toen' staat het werkwoord aan het eind; daarna inversie."],
+["Vandaag kan ik niet naar mijn werk komen.","","Inversie: het werkwoord op plaats twee. 'Niet' staat voor 'naar mijn werk'."],
+["Mijn zoon is sinds gisteren ziek.","","Het werkwoord staat op plaats twee, na het onderwerp."],
+["Ik heb gisteren een afspraak gemaakt.","","Perfectum: 'heb' op plaats twee, 'gemaakt' aan het eind."],
+["Kan ik morgen om tien uur langskomen?","","Een ja/nee-vraag begint met het werkwoord. 'Langskomen' staat aan het eind."],
+["De dokter zegt dat ik veel water moet drinken.","","Na 'dat' staan de werkwoorden aan het eind."],
+["Ik neem elke ochtend een pil in.","","Scheidbaar werkwoord: 'in' gaat naar het eind."],
+["Waarom bent u gisteren niet gekomen?","","Vraagwoord, dan het werkwoord. 'Niet' staat voor het voltooid deelwoord."],
+["Ik wil me graag ziek melden.","","'Wil' op plaats twee, 'melden' aan het eind."],
+["Morgen heb ik een sollicitatiegesprek bij een bank.","","Inversie na 'morgen': eerst het werkwoord, dan het onderwerp."],
+["Ik werk sinds twee jaar in een supermarkt.","","Eerst de tijd, dan de plaats."],
+["Ik zoek een baan omdat ik meer geld wil verdienen.","","Na 'omdat' staan de werkwoorden aan het eind."],
+["Hij heeft het contract nog niet getekend.","","'Nog niet' staat voor het voltooid deelwoord."],
+["Mijn baas vraagt of ik zaterdag kan werken.","","Na 'of' (indirecte vraag) staan de werkwoorden aan het eind."],
+["Volgende maand begint mijn nieuwe baan.","","Inversie: 'begint' op plaats twee, het onderwerp erna."],
+["Ik heb geen ervaring met dit werk.","","'Geen' staat voor een zelfstandig naamwoord."],
+["Kunt u mij uitleggen hoe het werkt?","","In de bijzin met 'hoe' staat het werkwoord aan het eind."],
+["Ik ben vorige week verhuisd.","","Perfectum met 'zijn': 'verhuisd' aan het eind."],
+["Wij zoeken een woning met drie slaapkamers.","","Onderwerp, werkwoord, dan de rest."],
+["De verwarming in de woonkamer doet het niet.","","'Niet' staat aan het eind van de zin."],
+["Wanneer kunt u de lekkage komen repareren?","","Twee infinitieven aan het eind: 'komen repareren'."],
+["Ik moet mijn nieuwe adres doorgeven.","","Het modale werkwoord op plaats twee, 'doorgeven' aan het eind."],
+["Onze buren maken elke avond veel lawaai.","","Het werkwoord op plaats twee, dan de tijd."],
+["Ik wil weten hoeveel de huur per maand is.","","Na 'hoeveel' (indirecte vraag) staat het werkwoord aan het eind."],
+["Het afval wordt op dinsdag opgehaald.","","Passief: 'wordt' op plaats twee, 'opgehaald' aan het eind."],
+["Mijn dochter gaat elke dag met de fiets naar school.","","Tijd, manier, plaats: elke dag, met de fiets, naar school."],
+["De les begint om half negen.","","Het werkwoord op plaats twee."],
+["Mijn zoon heeft zijn huiswerk nog niet gemaakt.","","'Nog niet' staat voor het voltooid deelwoord."],
+["Ik wil graag met de juf praten.","","'Wil' op plaats twee, 'praten' aan het eind."],
+["Na school gaat hij naar de sportclub.","","Inversie na 'na school'."],
+["Wie kan mijn kind vandaag ophalen?","","Vraagwoord, werkwoord; 'ophalen' aan het eind."],
+["Ik weet niet wanneer de vakantie begint.","","Na 'wanneer' (indirecte vraag) staat het werkwoord aan het eind."],
+["Hoe laat vertrekt de trein naar Utrecht?","","Eerst het vraagwoord, dan het werkwoord."],
+["Ik moet in Amersfoort overstappen.","","'Moet' op plaats twee, 'overstappen' aan het eind."],
+["De trein heeft twintig minuten vertraging.","","Onderwerp, werkwoord, dan de rest."],
+["Vergeet niet in te checken!","","'Te' staat voor de infinitief; 'in' staat voor 'te'."],
+["Ik ga meestal met de bus naar mijn werk.","","Tijd, manier, plaats: meestal, met de bus, naar mijn werk."],
+["Waar moet ik uitstappen voor het ziekenhuis?","","Vraagwoord, werkwoord, onderwerp; 'uitstappen' aan het eind."],
+["Gisteren heb ik mijn fiets laten repareren.","","Inversie; twee infinitieven aan het eind: 'laten repareren'."],
+["Heeft u deze jas ook in een grotere maat?","","Ja/nee-vraag: het werkwoord eerst."],
+["Ik wil deze broek ruilen.","","'Wil' op plaats twee, 'ruilen' aan het eind."],
+["Kan ik hier met mijn pinpas betalen?","","Ja/nee-vraag; 'betalen' aan het eind."],
+["Ik heb de bon niet meer.","","'Niet meer' staat na het lijdend voorwerp."],
+["Ik heb vorige week een pakket besteld.","","Perfectum: 'besteld' aan het eind."],
+["Op zaterdag doen wij boodschappen.","","Inversie na 'op zaterdag': eerst het werkwoord, dan het onderwerp."],
+["Ik heb een nieuw paspoort nodig.","","'Nodig' staat aan het eind."],
+["U moet dit formulier invullen en ondertekenen.","","Twee infinitieven met 'en' aan het eind."],
+["Ik heb een brief van de Belastingdienst gekregen.","","Perfectum: 'gekregen' aan het eind."],
+["Ik begrijp niet wat ik moet doen.","","Na 'wat' (indirecte vraag) staan de werkwoorden aan het eind."],
+["Waar kan ik huurtoeslag aanvragen?","","Vraagwoord, werkwoord, onderwerp; 'aanvragen' aan het eind."],
+["Ik ben het er niet mee eens.","","'Het er niet mee eens zijn': 'niet' staat tussen 'er' en 'mee'."],
+["Ik heb mijn DigiD-wachtwoord vergeten.","","Perfectum: 'vergeten' aan het eind."],
+["Mag ik u iets vragen?","","Ja/nee-vraag; 'vragen' aan het eind."],
+["Ik ben blij dat je er bent.","","Na 'dat' staat het werkwoord aan het eind."],
+["Zaterdag geef ik een feest voor mijn verjaardag.","","Inversie na 'zaterdag'."],
+["Heb je zin om mee te gaan?","","'Om … te' met een scheidbaar werkwoord: 'mee te gaan'."],
+["Ik kom later omdat de bus niet reed.","","Na 'omdat' staat het werkwoord aan het eind."],
+["Wij gaan in de zomer naar Spanje.","","Eerst de tijd, dan de plaats."],
+["Ik had geen tijd om te koken.","","'Om te' + infinitief aan het eind."],
+["Als ik tijd heb, bel ik je.","","De bijzin staat vooraan: 'heb' aan het eind, dan inversie 'bel ik'."],
+["Toen ik in Nederland kwam, sprak ik geen Nederlands.","","Bijzin met 'toen' vooraan; daarna inversie."],
+["Omdat het hard regent, blijven we binnen.","","Bijzin vooraan: daarna komt eerst het werkwoord."],
+["Ik hoop dat het morgen mooi weer wordt.","","Na 'dat' staat het werkwoord aan het eind."],
+["Het is belangrijk om elke dag Nederlands te oefenen.","","'Om … te' + infinitief aan het eind."],
+["Ik zou graag een kopje koffie willen.","","'Zou' op plaats twee, 'willen' aan het eind."],
+["Hij vertelt dat hij een nieuwe baan heeft.","","Na 'dat' staat het werkwoord aan het eind."],
+["De man die naast mij woont, heet Peter.","","Na 'die' staat het werkwoord aan het eind van de bijzin."],
+["Het boek dat ik lees, is erg spannend.","","In de bijzin met 'dat' staat 'lees' aan het eind."],
+["Ik ben gisteren om elf uur naar bed gegaan.","","Perfectum met 'zijn': 'gegaan' aan het eind."],
+["Wij hebben het hele weekend in de tuin gewerkt.","","Perfectum: 'gewerkt' aan het eind."],
+["Mijn moeder belt mij elke zondag op.","","Scheidbaar werkwoord: 'op' gaat naar het eind."],
+["Wanneer komt de monteur de wasmachine maken?","","Vraagwoord, werkwoord, onderwerp; 'maken' aan het eind."],
+["Daarna heb ik nog een uur gewandeld.","","Inversie na 'daarna'; 'gewandeld' aan het eind."],
+["Eerst ga ik douchen en dan eet ik.","","Na 'eerst' en 'dan': inversie."],
+["Ik kan vandaag niet komen, want ik ben ziek.","","Na 'want' blijft de gewone volgorde: onderwerp, werkwoord."],
+["Ik weet niet of ik morgen kan komen.","","Na 'of' (indirecte vraag) staan de werkwoorden aan het eind."],
+["Hoeveel kost een kaartje naar Rotterdam?","","Eerst het vraagwoord, dan het werkwoord."],
+["Ik woon al vijf jaar in Nederland.","","'Al vijf jaar' staat direct na het werkwoord."],
+["Sinds een jaar leer ik Nederlands.","","Inversie na 'sinds een jaar'."],
+["Ik heb je bericht te laat gelezen.","","Perfectum: 'gelezen' aan het eind."],
+["Wil je de deur even dichtdoen?","","Ja/nee-vraag; 'dichtdoen' aan het eind."]
 ];
 
 const PR=[
@@ -577,7 +691,58 @@ const PR=[
 ["Ik ben vroeg ___.","opstaan","opgestaan","geopstaan","opstaan"],
 ["Ik wil je ___.","uitnodigen (met een modaal werkwoord blijft het één woord)","uitnodigen","nodigen uit","uit nodig"],
 ["Ik doe het licht ___.","uitdoen","Ik doe het licht uit.","Ik uitdoe het licht.","Ik doe uit het licht."],
-["Morgen ___ ik het huis schoon.","schoonmaken","maak","schoonmaak","maakt"]
+["Morgen ___ ik het huis schoon.","schoonmaken","maak","schoonmaak","maakt"],
+["Jij ___ in Utrecht.","wonen","woont","woon","wonen"],
+["___ jij in Utrecht?","wonen (na inversie: jij zonder -t)","Woon","Woont","Wonen"],
+["Hij ___ morgen naar Amsterdam.","verhuizen","verhuist","verhuizt","verhuis"],
+["Ik ___ in een klein dorp.","leven","leef","leev","leeft"],
+["Het ___ steeds kouder.","worden","wordt","word","worden"],
+["Ik ___ dat een goed idee.","vinden","vind","vindt","vinde"],
+["Hij ___ niet op mijn vraag.","antwoorden","antwoordt","antwoord","antwoordet"],
+["Wat ___ u?","zeggen","zegt","zeg","zeggen"],
+["U ___ hier niet parkeren.","mogen","mag","moogt","mogen"],
+["Jullie ___ morgen vrij.","zijn","zijn","zijt","is"],
+["Zij (meer mensen) ___ in de tuin.","zitten","zitten","zit","zitte"],
+["Mijn ouders ___ een nieuwe auto.","kopen","kopen","koopt","koop"],
+["Hij staat elke dag vroeg ___.","opstaan","Hij staat elke dag vroeg op.","Hij opstaat elke dag vroeg.","Hij staat op elke dag vroeg."],
+["Wij halen de kinderen ___.","ophalen","Wij halen de kinderen op.","Wij ophalen de kinderen.","Wij halen op de kinderen."],
+["Ik heb mijn moeder ___.","opbellen","opgebeld","geopbeld","opbelt"],
+["Wij hebben de buren ___.","uitnodigen","uitgenodigd","geuitnodigd","uitnodigd"],
+["Heb je je paraplu ___?","meenemen","meegenomen","gemeenomen","meegenemen"],
+["Ik heb gisteren tot zes uur ___.","werken","gewerkt","gewerkd","werkt"],
+["Wij hebben een uur op de bus ___.","wachten","gewacht","gewachtt","gewachten"],
+["Wat is er ___?","gebeuren","gebeurd","gebeurt","gegebeurd"],
+["Ik ben vorig jaar ___.","verhuizen","verhuisd","verhuist","geverhuisd"],
+["Zij heeft haar vriendin ___.","bellen","gebeld","gebelt","beld"],
+["Ik heb het formulier al ___.","versturen","verstuurd","verstuurt","geverstuurd"],
+["Hij heeft de rekening nog niet ___.","betalen","betaald","betaalt","gebetaald"],
+["Gisteren ___ ik de hele dag.","werken (imperfectum)","werkte","werkde","werken"],
+["Vroeger ___ wij in Rotterdam.","wonen (imperfectum)","woonden","woonten","woonde"],
+["Zij ___ gisteren een taart.","bakken (imperfectum)","bakte","bakde","bakten"],
+["Ik ___ vorige week naar de dokter.","gaan (imperfectum)","ging","gaande","gingen"],
+["Wij ___ gisteren pizza.","eten (imperfectum)","aten","at","eetten"],
+["Hij ___ een brief aan de gemeente.","schrijven (imperfectum)","schreef","schrijfde","schreven"],
+["Ik kan mijn sleutels niet ___.","vinden","vinden","vind","vindt"],
+["___ ik u iets vragen?","mogen","Mag","Mogen","Mocht"],
+["Wij ___ morgen naar de markt gaan.","zullen","zullen","zal","zult"],
+["Ik ___ graag een kopje thee willen.","zullen (beleefd)","zou","zal","zouden"],
+["Ik ___ me elke ochtend.","zich wassen","was","wast","wassen"],
+["Wij moeten ___ haasten.","zich haasten","ons","zich","me"],
+["Jij moet ___ goed voorbereiden.","zich voorbereiden","je","zich","jou"],
+["Hij voelt ___ niet goed.","zich voelen","zich","hem","zijn"],
+["Kun je ___ helpen?","ik (als voorwerp)","me","ik","mijn"],
+["Ik geef ___ het boek.","hij (als voorwerp)","hem","hij","zijn"],
+["Dit is de fiets van mijn zus. Het is ___ fiets.","van haar","haar","zijn","hun"],
+["Wij hebben een hond. Het is ___ hond.","van ons (de hond)","onze","ons","hun"],
+["Wij hebben een huis. Het is ___ huis.","van ons (het huis)","ons","onze","uw"],
+["Is dit ___ jas, meneer?","van u","uw","jouw","zijn"],
+["Mijn broer is ___ dan ik.","oud (vergelijken)","ouder","oudst","meer oud"],
+["Dit is de ___ winkel van de stad.","goed (de top)","beste","betere","goedste"],
+["Amsterdam is ___ dan Utrecht.","groot (vergelijken)","groter","grotere","meer groot"],
+["Het weer is vandaag ___ dan gisteren.","slecht (vergelijken)","slechter","slechtst","meer slecht"],
+["Ik heb ___ tijd dan jij.","veel (vergelijken)","meer","veeler","meest"],
+["Er staat een ___ fiets voor de deur.","nieuw","nieuwe","nieuw","nieuws"],
+["Ik heb een ___ huis gekocht.","oud","oud","oude","ouds"]
 ];
 const HET="huis,kind,boek,werk,water,brood,meisje,jaar,ziekenhuis,station,geld,weer,land,raam,bed,formulier,paspoort,nummer,kantoor,ontbijt".split(",");
 const DE="tafel,man,vrouw,auto,fiets,school,straat,stad,week,dag,kamer,deur,keuken,trein,winkel,rekening,afspraak,taal,gemeente,jongen".split(",");
@@ -1479,7 +1644,7 @@ function stem(inf){
 }
 function options(v,t){
   const right=answer(v,t); if(t==="aux")return["hebben","zijn"];
-  const st=stem(v[0]), pre=!v[4].startsWith("ge")||v[0]==="gebeuren"; let c;
+  const st=stem(v[0]), pre=!v[4].startsWith("ge")||v[0].startsWith("ge"); let c;
   if(t==="past")c=[st+"te",st+"de",pre?v[4]:v[4].slice(2)];
   else if(t==="pastpl")c=[st+"ten",st+"den",v[2]+"en",v[2]+"den"];
   else c=pre?[st+"t",st+"d","ge"+v[4],v[0]]:["ge"+st+"t","ge"+st+"d","ge"+v[0],"ge"+v[2]];
@@ -1531,8 +1696,8 @@ NG.forEach((p,i)=>ch("dh","n"+i,i/2|0,"Niet of geen?",p[0],"",p[1],[p[1]==="niet
 const KNMS=235,kc={};KNM.forEach((p,i)=>{kc[p[0]]=(kc[p[0]]||0)+1;ch("knm",i,kc[p[0]]/2|0,"KNM: "+p[0],p[1],"",p[2],[p[3],p[4]],p[5]);if(i>=KNMS)ITEMS[ITEMS.length-1].sit=1});
 VO.forEach((p,i)=>ITEMS.push({sec:"vo",k:"vo|"+p[0],ord:i/6|0,type:"choice",label:"Wat betekent dit woord?",big:p[0],sub:"",right:p[1],
   opts:()=>shuffle([p[1],...shuffle(VO.filter(x=>x!==p)).slice(0,3).map(x=>x[1])])}));
-// Woorden per thema: A2 words for the exam topics with a short Dutch description, both ways (word → description,
-// description → word). Small words are described with a gap sentence (___), numbers with the digits.
+// Woorden per thema: A2 words for the exam topics with a short Dutch description, three ways (word → description,
+// description → word, and by ear: hear the word, choose the description). Small words are described with a gap sentence (___), numbers with the digits.
 // The wrong options come from the same theme; for a noun, one of them is the word with the other article.
 const WT=[
 ["Gezondheid","de huisarts=de dokter waar je eerst naartoe gaat|het ziekenhuis=een groot gebouw waar zieke mensen liggen en geopereerd worden|de apotheek=de winkel waar je medicijnen met een recept haalt|het recept=het briefje van de dokter voor medicijnen|het medicijn=dat neem je in als je ziek bent, bijvoorbeeld een pil|de pijn=het gevoel als je lichaam zeer doet|de hoofdpijn=je hoofd doet zeer|de buikpijn=je buik doet zeer|de koorts=je lichaam is te warm omdat je ziek bent|hoesten=lucht hard uit je keel duwen als je verkouden bent|ziek=niet gezond; je voelt je niet goed|beter worden=na een ziekte weer gezond worden|de tandarts=de dokter voor je tanden|de verpleegkundige=iemand die in het ziekenhuis voor de patiënten zorgt|de specialist=een dokter in het ziekenhuis die veel weet van één deel van het lichaam|het bloed=de rode vloeistof in je lichaam|de uitslag=wat de dokter na een onderzoek of test weet|de zorgverzekering=die betaalt je dokter en je medicijnen; hij is verplicht|het eigen risico=het bedrag voor zorg dat je eerst zelf betaalt|de huisartsenpost=de dokter voor spoed in de avond, de nacht en het weekend|de ambulance=de auto die zieke of gewonde mensen snel naar het ziekenhuis brengt|het spreekuur=de tijd waarop je bij de dokter terechtkunt|de griep=een ziekte met koorts, hoofdpijn en spierpijn, vaak in de winter|het been=daarmee loop je; je hebt er twee|de arm=die zit tussen je schouder en je hand|de rug=de achterkant van je lichaam|de keel=die zit binnen in je hals; daar gaat het eten door|gezond=niet ziek; je voelt je goed|de patiënt=iemand die door een dokter geholpen wordt|de wond=een plek waar je huid kapot is en waar bloed uit komt|de pleister=een klein stukje dat je op een kleine wond plakt|het verband=een lange strook stof om een wond heen|de allergie=je lichaam reageert slecht op iets, bijvoorbeeld op noten of katten|de pijnstiller=een medicijn tegen pijn, bijvoorbeeld paracetamol|zwanger=er groeit een baby in haar buik|de verloskundige=zij helpt vrouwen tijdens de zwangerschap en de bevalling|de bril=die draag je op je neus om beter te zien|de oogarts=de dokter voor je ogen|de fysiotherapeut=hij helpt je met oefeningen als je rug of knie pijn doet|de spoedeisende hulp=de afdeling van het ziekenhuis voor ongelukken en spoed|ongezond=niet goed voor je lichaam, bijvoorbeeld roken|duizelig=alles draait en je kunt bijna niet staan|misselijk=je voelt je slecht in je maag en moet misschien overgeven|moe=je wilt rusten of slapen|de hoest=je moet steeds hoesten|de wachtkamer=de kamer waar je wacht tot de dokter je roept|de behandeling=wat de dokter doet om je beter te maken|de operatie=de dokter maakt je lichaam open om iets te repareren|onderzoeken=goed kijken en testen wat er aan de hand is|de prik=een injectie met een naald|de vaccinatie=een prik die je beschermt tegen een ziekte"],
@@ -1564,9 +1729,12 @@ WT.forEach(([t,list],ti)=>{const W=list.split("|").map(x=>x.split("="));
     ITEMS.push({sec:"vo",k:"wn|"+nl,ord,type:"choice",label:"Wat betekent dit woord?",big:nl,sub:t,right:d,tts:nl,
       opts:()=>shuffle([d,...shuffle(o.slice()).slice(0,3).map(x=>x[1])])});
     ITEMS.push({sec:"vo",k:"wt|"+nl,ord:ord+1,type:"choice",label:"Welk woord past hierbij?",big:d,sub:t,right:nl,tts:nl,
-      opts:()=>{const w=shuffle(o.slice()).slice(0,3).map(x=>x[0]);if(m)w[0]=(m[1]==="de"?"het ":"de ")+m[2];return shuffle([nl,...w])}})})});
+      opts:()=>{const w=shuffle(o.slice()).slice(0,3).map(x=>x[0]);if(m)w[0]=(m[1]==="de"?"het ":"de ")+m[2];return shuffle([nl,...w])}});
+    // by ear: you only hear the word, as in Luisteren
+    ITEMS.push({sec:"vo",k:"wl|"+nl,ord:ord+2,type:"choice",label:"Luister: wat betekent dit woord?",hear:nl,sub:t,right:d,note:"<b>"+nl+"</b>",
+      opts:()=>shuffle([d,...shuffle(o.slice()).slice(0,3).map(x=>x[1])])})})});
 // Betekenis: the Dutch description of a word, for the hint on verbs and de/het words (from WT and VO, plus a few more)
-const BET={};[...VO,...WT.flatMap(([t,l])=>l.split("|").map(x=>x.split("="))),..."vallen=naar beneden gaan zonder dat je het wilt|laten=toestaan dat iets gebeurt; ook: iets niet meenemen|houden=iets vasthebben en niet loslaten|roepen=hard iemands naam zeggen|sterven=doodgaan|trekken=iets naar je toe halen|sluiten=dichtdoen|winnen=de beste zijn in een spel of wedstrijd|bieden=iets geven of voorstellen, bijvoorbeeld hulp|breken=iets in stukken laten gaan|reizen=naar andere plaatsen of landen gaan|het boek=daarin lees je een verhaal; het heeft veel bladzijden|het werk=wat je doet om geld te verdienen|het water=dat drink je; het komt uit de kraan|het meisje=een jong kind dat later een vrouw wordt|de kamer=een ruimte in een huis, met muren en een deur|de taal=daarmee praat je, bijvoorbeeld Nederlands of Arabisch|de jongen=een jong kind dat later een man wordt".split("|").map(x=>x.split("="))]
+const BET={};[...VO,...WT.flatMap(([t,l])=>l.split("|").map(x=>x.split("="))),..."vallen=naar beneden gaan zonder dat je het wilt|laten=toestaan dat iets gebeurt; ook: iets niet meenemen|houden=iets vasthebben en niet loslaten|roepen=hard iemands naam zeggen|sterven=doodgaan|trekken=iets naar je toe halen|sluiten=dichtdoen|winnen=de beste zijn in een spel of wedstrijd|bieden=iets geven of voorstellen, bijvoorbeeld hulp|breken=iets in stukken laten gaan|reizen=naar andere plaatsen of landen gaan|het boek=daarin lees je een verhaal; het heeft veel bladzijden|het werk=wat je doet om geld te verdienen|het water=dat drink je; het komt uit de kraan|het meisje=een jong kind dat later een vrouw wordt|de kamer=een ruimte in een huis, met muren en een deur|de taal=daarmee praat je, bijvoorbeeld Nederlands of Arabisch|de jongen=een jong kind dat later een man wordt|verbieden=zeggen dat iets niet mag|vertrekken=weggaan, bijvoorbeeld met de trein|ontvangen=iets krijgen, bijvoorbeeld een brief|vriezen=het is zo koud dat water ijs wordt|schijnen=licht geven, zoals de zon|wegen=kijken hoeveel kilo iets is|zwijgen=niets zeggen|blijken=later duidelijk worden|verdwijnen=weggaan zodat je het niet meer ziet|springen=met je benen omhoog of ver weg gaan|stijgen=omhooggaan, bijvoorbeeld een vliegtuig of de prijs|schieten=een kogel of een bal hard wegsturen|genieten=iets heel fijn vinden|wijzen=met je vinger laten zien waar iets is|bewijzen=laten zien dat iets waar is|lijken=bijna hetzelfde zijn als iets anders|glijden=vallen of bewegen over iets dat glad is|schrikken=plotseling bang worden|treffen=iemand toevallig zien; ook: raken|stelen=iets pakken dat niet van jou is|bidden=praten met God|meten=kijken hoe lang of groot iets is|schenken=drinken in een glas doen; ook: geven|vechten=elkaar slaan|hangen=aan iets vastzitten, niet op de grond|vangen=iets pakken dat beweegt, bijvoorbeeld een bal|slaan=iemand hard raken met je hand|varen=met een boot gaan|kruipen=op je handen en knieën gaan, zoals een baby|heten=een naam hebben|vouwen=papier of kleren dubbel doen|raden=een antwoord zeggen als je het niet zeker weet|wandelen=lopen voor je plezier|studeren=leren aan een hogeschool of universiteit|parkeren=je auto ergens neerzetten|dansen=bewegen op muziek|pakken=iets in je hand nemen|missen=te laat zijn voor de bus; ook: iemand niet bij je hebben|rusten=even niets doen|huren=betalen om iets te gebruiken dat niet van jou is|poetsen=schoonmaken met een borstel, bijvoorbeeld je tanden|regenen=er valt water uit de lucht|verdienen=geld krijgen voor je werk|bestellen=vragen of een winkel iets voor je stuurt|trouwen=met iemand een huwelijk sluiten|groeien=groter worden|slagen=een examen halen|zakken=een examen niet halen".split("|").map(x=>x.split("="))]
   .forEach(([w,d])=>{BET[w]=d;const m=w.match(/^(de|het) (.+)$/);if(m&&!BET[m[2]])BET[m[2]]=d});
 LZ.forEach((t,i)=>t[1].forEach((q,j)=>ITEMS.push({sec:"lz",k:"lz|"+i+"."+j,ord:j,type:"choice",label:"Lees de tekst",text:t[0],big:q[0],sub:"",right:q[1],opts:()=>shuffle(q.slice(1))})));
 const sayLines=t=>String(t).split("\n").filter(l=>l.trim()).map(l=>l.replace(/^[AB]: /,""));
@@ -1834,7 +2002,7 @@ function itHTML(attr,t,d,o={}){
 }
 function home(){
   paint();
-  $("play").hidden=true;$("stats").hidden=true;$("lib").hidden=true;$("read").hidden=true;$("media").hidden=true;$("story").hidden=true;$("hist").hidden=true;$("talk").hidden=true;stopMedia();closePop();$("home").hidden=false;head();clock(0);hush();planId=null;drawPlan();
+  $("play").hidden=true;$("stats").hidden=true;$("lib").hidden=true;$("read").hidden=true;$("media").hidden=true;$("story").hidden=true;$("hist").hidden=true;$("talk").hidden=true;stopMedia();closePop();$("home").hidden=false;head();clock(0);hush();planId=null;drawPlan();drawA2hs();
   const sec=id=>SEC.find(x=>x.id===id);
   const row=id=>{const s=sec(id),p=ITEMS.filter(x=>x.sec===id),n=p.filter(x=>S.items[x.k]).length;
     return itHTML(`data-s="${id}"`,s.t,s.s,{n:n+" van "+p.length,bar:n?n/p.length*100:null,ic:id})};
@@ -1976,6 +2144,23 @@ function planHTML(){
       return`<li><button class="step${ok?" ok":i===nx?" next":""}" data-p="${t.id}"><i>${ok?"✓":i+1}</i><b>${t.t}</b><span>${t.s}</span><em${i===nx&&!ok?"":` class="c"`}>${i===nx&&!ok?"Begin":"›"}</em></button></li>`}).join("")}</ol>
     <button class="ghost wide" data-p="s:mix">Meer tijd? Mix van de dag</button>`;
 }
+// iPhone: Safari can wipe a site's storage after a week without a visit; on the home screen the app keeps it.
+// The home-screen app has its own storage, so the progress goes along by the clipboard (Kopieer / Plak).
+const A2K="ww-a2hs",a2Get=()=>{try{return localStorage.getItem(A2K)}catch(e){return"1"}},a2Set=()=>{try{localStorage.setItem(A2K,"1")}catch(e){}};
+function drawA2hs(){
+  const el=$("a2hs"),has=Object.keys(S.items).length>0,ios=/iPhone|iPad|iPod/.test(navigator.userAgent)&&!window.claude;
+  let h="";
+  if(ios&&navigator.standalone===false&&!a2Get())h=`<h2>Zet Bittertalen op je beginscherm</h2><p class="sub">In Safari kan je voortgang verdwijnen als je de site een week niet opent. Op het beginscherm blijft hij bewaard.</p><ol>${has?"<li>Tik op <b>Kopieer mijn voortgang</b>.</li>":""}<li>Tik onderaan op <b>Deel</b> en dan op <b>Zet op beginscherm</b>.</li><li>Open Bittertalen met het nieuwe icoon${has?" en tik op <b>Plak mijn voortgang</b>":""}.</li></ol><div class="two">${has?`<button class="ghost" id="a2cp">Kopieer mijn voortgang</button>`:""}<button class="ghost" id="a2ok">Begrepen</button></div>`;
+  else if(ios&&navigator.standalone===true&&!has&&!a2Get())h=`<h2>Al geoefend in Safari?</h2><p class="sub">Kopieer je voortgang in Safari en plak hem hier. Dan ga je verder waar je was.</p><div class="two"><button class="ghost" id="a2ps">Plak mijn voortgang</button><button class="ghost" id="a2ok">Nee, ik begin nieuw</button></div>`;
+  el.innerHTML=h;
+  if($("a2ok"))$("a2ok").onclick=()=>{a2Set();el.innerHTML=""};
+  if($("a2cp"))$("a2cp").onclick=async()=>{const t="bittertalen:"+JSON.stringify(S);
+    try{await navigator.clipboard.writeText(t);$("a2cp").textContent="Gekopieerd ✓"}catch(e){$("a2cp").textContent="Kopiëren lukt niet"}};
+  if($("a2ps"))$("a2ps").onclick=async()=>{let r=null;
+    try{const t=await navigator.clipboard.readText();if(t.startsWith("bittertalen:"))r=JSON.parse(t.slice(12))}catch(e){}
+    if(!r||!r.items){$("a2ps").textContent="Niets gevonden. Kopieer eerst in Safari.";return}
+    S=Object.assign(S,r);save();a2Set();home()};
+}
 function drawPlan(){
   $("plan").innerHTML=planHTML();
   document.querySelectorAll("#plan [data-p]").forEach(b=>b.onclick=()=>{const id=b.dataset.p,[k,v]=id.split(":");
@@ -2029,6 +2214,7 @@ function show(){
   if(q.text)h+=docHTML(q.text);
   if(q.pics)h+=picsHTML(q.pics);
   if(q.say)h+=canSpeak?`<button class="btn wide" id="say">▶ Luister</button><p class="note">${cur.exam?"Je mag twee keer luisteren.":"Luister twee keer, zoals op het examen."}</p>`:`<p class="note">Audio werkt hier niet. Lees de tekst.</p><div class="sample">${esc(sayLines(q.say).map(l=>/^[AB]: /.test(q.say)?"– "+l:l).join("\n"))}</div>`;
+  if(q.hear)h+=canSpeak?`<button class="btn wide" id="hear">▶ Luister</button>`:`<div class="verb">${q.hear}</div>`;
   if(q.big)h+=`<div class="verb${q.big.length>22?" long":""}">${q.big}</div>`;
   h+=`<p class="ru">${q.sub||""}</p>`;
   if(q.tts&&canSpeak&&q.big===q.tts)h+=`<button class="hint" id="tts">▶ Uitspraak</button>`;
@@ -2053,6 +2239,7 @@ function show(){
     if(cur.exam&&n>=2){$("say").disabled=true;$("say").textContent="Je hebt twee keer geluisterd"}else $("say").textContent="▶ Nog een keer luisteren"};
     if(cur.exam&&P[q.say]>=2){$("say").disabled=true;$("say").textContent="Je hebt twee keer geluisterd"}else if(P[q.say])$("say").textContent="▶ Nog een keer luisteren"}
   if($("tts"))$("tts").onclick=()=>speak(q.tts);
+  if($("hear")){$("hear").onclick=()=>speak(q.hear);speak(q.hear)}
   if($("tr"))$("tr").onclick=()=>{$("tr").textContent=BET[q.big];$("tr").disabled=true};
   if(q.type==="order")return order(q);
   if(q.type==="write"&&cur.nav){const w=cur.pick[pos]||{f:[],t:""},keep=()=>{cur.pick[pos]={f:(q.fields||[]).map((f,i)=>$("f"+i).value),t:$("txt").value};head()};
