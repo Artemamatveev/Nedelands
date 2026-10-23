@@ -13,6 +13,7 @@ def addform(f,l,p):
 def clean(g):
     g=g.split("\n")[0].strip().rstrip(".:;")
     g=re.sub(r"\s+"," ",g)
+    g=re.sub(r"\s*[\u0400-\u04ff][\u0400-\u04ff\u0301]*(\s*\([^)]*\))?","",g).replace(" ,",",") # no Cyrillic in the app
     return g if len(g)<=80 else g[:77].rsplit(" ",1)[0]+"…"
 for line in gzip.open(src,"rt"):
     e=json.loads(line)

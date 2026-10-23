@@ -5,7 +5,8 @@ Everything lives in `index.html` (styles, data, logic). Paintings are in `art/`.
 Deployed on Vercel from `main`: every push to `main` goes live at https://bittertalen.vercel.app (Vercel project
 `nedelands`). The old address https://nedelands.vercel.app serves the same deployment and sends you on
 to the new address (see Progress).
-The app's UI language is Dutch; the user talks to Claude in Russian.
+The app's UI language is Dutch; the user talks to Claude in Russian. There is no Russian anywhere in the app: a word's meaning is
+a short Dutch description (A2), or English from the dictionary.
 
 ## Design: Delfts blauw
 
@@ -74,7 +75,7 @@ Every section appears once; don't add a second entry point to the same exercise.
 - **Filled cobalt `.btn`**: the one main action on a screen (the next step of today,
   Controleer, Volgende). **Outlined `.ghost`**: secondary actions (Proefexamen, Mix van de dag,
   Wis).
-- **Underlined `.hint`**: only small in-place toggles (Vertaling, Uitspraak).
+- **Underlined `.hint`**: only small in-place toggles (Betekenis, Uitspraak).
   Text links `<a>` only for other websites, with ↗.
 - One `h2` (with the tile diamond) per section or screen; groups inside it get `h3.lh`
   (small capitals, cobalt). Every inner screen starts with a back button named after where it
@@ -134,7 +135,8 @@ handed in (`submitExam()`, also when the time runs out). KNM follows the 8 offic
 (40 questions, 45 minutes, 28 to pass). The questions from `KNMS` on are situations with a person in them, as on the exam; the KNM proefexamen takes three
 of them per theme first. Wrong options must be plausible (real instanties, real numbers) and about as long as the right one, so the
 longest answer is not a giveaway. Woordenschat has the definitions in `VO` and the themed A2 word list `WT`
-(Dutch with de/het = Russian), practised both ways. Item keys (`lz|3.1`, `wn|de huis`) are
+(Dutch with de/het = a short Dutch description; small words get a gap sentence with ___, numbers the digits), practised both
+ways. `BET` holds the Dutch meaning of a word (from `WT`, `VO` and a few more), for the Betekenis hint on verbs and de/het. Item keys (`lz|3.1`, `wn|de huis`) are
 stored progress: append new items, don't reorder or rename existing ones.
 
 ## Writing and speaking check (Schrijven, Spreken)
@@ -167,13 +169,13 @@ Built-in A2 stories live in `BOOKS` in `index.html` (original texts; check facts
 as KNM material). Readers can add their own books (.epub without DRM, .txt, pasted text);
 those are stored only in IndexedDB (`books` list, `book:<id>` text), never in `ww-v1`.
 `S.bk` keeps reading positions and `S.words` the saved words (`{w, en, p, s, f}`; a few early
-ones have `ru` instead of `en`), practised as `bw|…` items, also in the Mix.
+ones had `ru`, which `enWords()` replaces with English from the dictionary), practised as `bw|…` items, also in the Mix.
 
 Tapping a word looks it up in `dict/nl-en.txt`, a free offline Dutch–English dictionary built
 from English Wiktionary by `dict/build.py` (kaikki.org extract, CC BY-SA 4.0; keep the credit
 line on the Boekenkast screen). It is loaded once, when the shelf opens. The popup shows the
 lemma, de/het, plural or verb forms (perfectum aux from `V`), and finds separable verbs
-(bel … op → opbellen). Meanings are in English; the rest of the app stays in Russian.
+(bel … op → opbellen). Meanings are in English.
 No Claude calls in the reader: whole sentences go to Google Translate via a link.
 
 ## Geschiedenis van Nederland
