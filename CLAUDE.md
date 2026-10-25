@@ -42,11 +42,11 @@ generic "AI app" look.
 
 ## Home screen
 
-Four tabs, switched by a floating glass bar at the bottom (`nav.tabs`, `setTab()`; like iOS 26 / Instagram:
+Five tabs, switched by a floating glass bar at the bottom (`nav.tabs`, `setTab()`; like iOS 26 / Instagram:
 icons with names, the names fold away while you scroll down). The current tab sits under a lens (`.tabs .lens`):
 a drop of Liquid Glass that slides to the new tab with a little spring and stretch, and can be dragged along the bar
 with a finger (it grows and clears while held; where you let go is the tab that opens). The bar only
-shows on the four tabs; exercises and inner screens hide it and go back with their back button or a swipe. The tab
+shows on the five tabs; exercises and inner screens hide it and go back with their back button or a swipe. The tab
 you were on is kept (`tab`), so every back button returns to it and is named after it.
 
 - **Vandaag**: the painting and its label, then today's lesson (six numbered steps; the next one is filled
@@ -62,6 +62,8 @@ official oefenexamens ↗. Practising a part is on Oefenen.
 - **Oefenen**: "Examenonderdelen" (Lezen, Luisteren, Schrijven, Spreken, KNM: practice without the clock) and
 "Grammatica en woorden" under it, "Lezen, luisteren en spreken" beside them on a computer.
 - **Herhalen**: Mijn zwakke punten, Mijn fouten and Mijn woorden (the last two once there is something in them).
+- **Profiel**: name and exam date (`S.me`, so they sync; the countdown is only here, never on Vandaag), the account
+(see Accounts) and "Mijn resultaten": every proefexamen with its date and score against the pass line, and a few counts.
 
 Every section appears once; don't add a second entry point to the same exercise.
 
@@ -108,8 +110,8 @@ order); `FOTO` holds a short Dutch description of each for screen readers. No em
 
 ## Progress
 
-Progress is per device: `localStorage` key `ww-v1`, mirrored to IndexedDB as a backup.
-There is no server. `S.res` keeps the last 10 proefexamen scores per part (`{at, pc, nw}`, `nw` = % of new
+Progress is per device: `localStorage` key `ww-v1`, mirrored to IndexedDB as a backup, and to the account when
+someone is logged in (see Accounts). `S.res` keeps the last 10 proefexamen scores per part (`{at, pc, nw}`, `nw` = % of new
 questions; older results have none); the rows in "Naar het examen" read it through `ready()` (ready = the last two
 average 80% or more and not both mostly known questions; the pass line is `passOf()`: 76% for Lezen and Luisteren, 70%
 for the rest). The proefexamen takes the least-seen
@@ -123,6 +125,26 @@ asks to put the app on the home screen, because Safari can wipe a site's storage
 home-screen app has its own storage, so the progress goes along by the clipboard (Kopieer / Plak mijn voortgang). The app moved from https://nedelands.vercel.app; that address
 still serves the same deployment, and the page there sends you on to the new address (the one-time move screen with a
 progress code was removed once the move was done).
+
+## Accounts (optional)
+
+Logging in is optional; everything works without it except Claude's grading. Supabase (connected to the Vercel project
+through the Marketplace: `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`); the tables, row level
+security and `use_checks()` are in `supabase/schema.sql` (run it in the SQL editor). Without those env vars
+`/api/config` returns `{}` and the app behaves as before. The page loads `lib/supabase-2.117.3.js` (the UMD build,
+vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one coming back from Google/Apple.
+- Login: Google and Apple show when they are on in Supabase; the e-mail code (`signInWithOtp` + `verifyOtp`, a 6-digit
+  code, so an iPhone home-screen app never has to open a link) only with `LOGIN_EMAIL=1`, because Supabase's own mail
+  only reaches the project's team (it needs custom SMTP); passkeys (experimental in Supabase) only with
+  `LOGIN_PASSKEY=1`, and a passkey is added after logging in another way.
+- Sync: `progress` holds the same JSON as `ww-v1`, one row per user, written by the page itself (RLS). The first time a
+  device joins an account both sides are merged (`mergeS()`); after that the newer `S.t` wins, pulled when the app comes
+  back to the foreground, pushed 3 s after a change. `ww-acc` remembers which account this device was joined with.
+- Grading: with accounts on, `/api/check` needs the user's access token and takes checks from `CHECK_LIMIT` a day
+  (default 20, Amsterdam days, `check_usage`): one task 1, a Schrijven proefexamen 2, a Spreken proefexamen 6
+  (`checkCost()`; the page's `examGate()` uses the same numbers and warns before such a proefexamen). A failed grading
+  gives them back. The answer has `left`.
+- `/api/account` (DELETE) deletes the user and, by cascade, their rows; the progress on the device stays.
 
 ## Content
 
@@ -155,7 +177,7 @@ the prompt is built on the server, so the page can't send arbitrary prompts. Sch
 beoordelingsmodel: inhoud 0–3, woorden 0–2, grammatica 0–2, spelling 0–2, samenhang 0–1 (inhoud 0 makes everything 0;
 the prompt counts errors: 0–2 = 2, 3–5 = 1, 6+ = 0). `passed` is set by the server from the points (inhoud 2+ and 7 of 10),
 not by Claude, and the Schrijven proefexamen score is points of all 4 tasks against the 70% line. It only
-accepts requests whose Origin is the site itself. It needs `ANTHROPIC_API_KEY` in the
+accepts requests whose Origin is the site itself, and with accounts on only from a logged-in user (see Accounts). It needs `ANTHROPIC_API_KEY` in the
 Vercel project's environment variables (the user adds it in the dashboard; never handle
 the key in chat). Without it the page falls back to showing the example answer.
 

@@ -6,7 +6,10 @@
 // scores {inhoud 0–3, woorden 0–2, grammatica 0–2, samenhang 0–1}: the parts of DUO's Spreken criteria that can be
 // judged from a transcript (pronunciation and fluency can't)
 // Needs ANTHROPIC_API_KEY in the Vercel project's environment variables.
+// With accounts set up (Supabase, see _supa.js) only a signed-in user may grade, CHECK_LIMIT checks a day;
+// the answer then also has `left`, the checks left today.
 import Anthropic from "@anthropic-ai/sdk";
+import { accounts, caller, checkCost, useChecks, LIMIT, sameOrigin } from "./_supa.js";
 
 // Created only when the key is set, so a missing key gives a clear error instead of a crash
 // (trimmed: a key pasted into the dashboard with a trailing newline breaks the request header)
@@ -98,14 +101,25 @@ const str = (v, max) => (typeof v === "string" ? v.slice(0, max) : "");
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "method_not_allowed" });
   // Only accept calls from this site's own pages
-  let host = "";
-  try { host = new URL(req.headers.origin).host; } catch {}
-  if (host !== req.headers.host) return res.status(403).json({ error: "forbidden" });
+  if (!sameOrigin(req)) return res.status(403).json({ error: "forbidden" });
   if (!client) return res.status(503).json({ error: "not_configured" });
 
   const sp = req.body?.part === "sp";
   const input = Array.isArray(req.body?.tasks) ? req.body.tasks.slice(0, sp ? 16 : 4) : [];
   if (!input.length) return res.status(400).json({ error: "no_tasks" });
+
+  // Accounts: who is asking, and take the checks before calling Claude (given back if grading fails)
+  let uid = null, left;
+  const cost = checkCost(input.length);
+  if (accounts) {
+    const user = await caller(req).catch(() => null);
+    if (!user) return res.status(401).json({ error: "login" });
+    uid = user.id;
+    left = await useChecks(uid, cost).catch(() => null);
+    if (left == null) return res.status(502).json({ error: "failed" });
+    if (left < 0) return res.status(429).json({ error: "limit", limit: LIMIT });
+  }
+  const giveBack = () => (uid ? useChecks(uid, -cost).catch(() => {}) : null);
   const tasks = input.map((t) => ({ task: str(t?.task, 1200), form: sp ? "" : str(t?.form, 1500), text: str(t?.text, 2500) }));
   const max = !sp ? 8 : tasks.length === 1 ? 8 : tasks.length <= 4 ? 5 : 3;
   const prompt = sp
@@ -131,18 +145,20 @@ export default async function handler(req, res) {
       system: sp ? SYSTEM_SP : SYSTEM,
       messages: [{ role: "user", content: prompt }],
     });
-    if (response.stop_reason === "refusal") return res.status(422).json({ error: "refused" });
-    if (response.stop_reason === "max_tokens") return res.status(502).json({ error: "failed" });
+    if (response.stop_reason === "refusal") { await giveBack(); return res.status(422).json({ error: "refused" }); }
+    if (response.stop_reason === "max_tokens") { await giveBack(); return res.status(502).json({ error: "failed" }); }
     const text = response.content.find((b) => b.type === "text")?.text;
     const result = JSON.parse(text);
     const out = result.tasks.slice(0, tasks.length);
     return res.status(200).json({
+      left,
       tasks: out.map((t) => {
         const scores = clampScores(t.scores, sp ? SCORES_SP : SCORES_WR);
         return { ...t, scores, passed: sp ? t.passed : wrPassed(scores) };
       }),
     });
   } catch (error) {
+    await giveBack();
     if (error instanceof Anthropic.AuthenticationError) return res.status(503).json({ error: "not_configured" });
     if (error instanceof Anthropic.RateLimitError) return res.status(429).json({ error: "rate_limited" });
     if (error instanceof Anthropic.APIError) {

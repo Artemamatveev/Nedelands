@@ -145,7 +145,7 @@ a.it{text-decoration:none} .it.ext::after{content:none}
 .rd .d{grid-column:1/4;margin-top:3px;color:var(--soft);font-size:14.5px;line-height:1.35}
 /* tabbalk: vier plekken in zwevend glas onderaan, zoals in iOS 26 (Instagram). Alleen op de vier startschermen;
    in een oefening en op een binnenscherm verdwijnt hij, daar ga je terug met de knop of door te vegen */
-.tabs{position:fixed;z-index:8;left:50%;bottom:calc(10px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;width:min(384px,calc(100vw - 24px));padding:5px;border-radius:999px;
+.tabs{position:fixed;z-index:8;left:50%;bottom:calc(10px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;width:min(410px,calc(100vw - 24px));padding:5px;border-radius:999px;
   background:color-mix(in srgb,var(--card) 55%,transparent);-webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8);
   border:1px solid color-mix(in srgb,var(--card) 70%,transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),var(--lift);
   touch-action:none;-webkit-user-select:none;user-select:none;transition:width .3s cubic-bezier(.3,1.2,.5,1)}
@@ -155,7 +155,7 @@ a.it{text-decoration:none} .it.ext::after{content:none}
 /* the lens: a drop of glass over the current tab. It glides over and settles without overshooting (so it never leaves
    the bar), with a slight stretch on the way, and you can drag it
    along the bar with your finger: it grows and clears while you hold it, like Liquid Glass */
-.tabs .lens{position:absolute;top:5px;bottom:5px;left:5px;width:calc((100% - 10px)/4);border-radius:999px;pointer-events:none;
+.tabs .lens{position:absolute;top:5px;bottom:5px;left:5px;width:calc((100% - 10px)/5);border-radius:999px;pointer-events:none;
   background:color-mix(in srgb,var(--wash) 55%,transparent);-webkit-backdrop-filter:blur(4px) saturate(2);backdrop-filter:blur(4px) saturate(2);
   box-shadow:inset 0 1px 1px rgba(255,255,255,.75),inset 0 -1px 1px rgba(255,255,255,.3),inset 0 0 0 .5px rgba(255,255,255,.4),0 2px 10px rgba(8,16,40,.12);
   transform:translateX(calc(var(--i,0) * 100%));transition:transform .38s cubic-bezier(.22,1,.36,1),scale .3s cubic-bezier(.22,1,.36,1),background-color .3s}
@@ -164,7 +164,8 @@ a.it{text-decoration:none} .it.ext::after{content:none}
 .tabs.drag .lens{transition:scale .25s cubic-bezier(.22,1,.36,1),background-color .3s;scale:1.03 1.14;background-color:color-mix(in srgb,var(--wash) 22%,transparent)}
 .tabs.drag button{color:var(--ink)} .tabs.drag button.on{color:var(--blue)}
 /* scroll down and the bar shrinks to its icons; scroll up and the names come back */
-.tabs.min{width:min(264px,calc(100vw - 24px))}
+.tabs.min{width:min(300px,calc(100vw - 24px))}
+.gate{padding:2px 0 12px} #acct .ghost.wide{margin-bottom:8px}
 .tabs.min button{padding:10px 4px} .tabs.min span{display:none}
 body:has(#home[hidden]) .tabs{display:none}
 main:has(#home:not([hidden])){padding-bottom:116px}
@@ -270,6 +271,8 @@ main:has(#play:not([hidden])) header{display:none}
 .errs li{padding:8px 0;border-bottom:1px solid var(--line)}
 .errs s{color:var(--bad)} .errs strong{color:var(--good)}
 .errs span{display:block;color:var(--soft);font-size:15px}
+.errs.kv li{display:flex;justify-content:space-between;gap:12px} .errs.kv span{display:inline;color:var(--ink);font-size:inherit;font-weight:600}
+.errs.kv span.good{color:var(--good)} .errs.kv span.bad{color:var(--bad)}
 details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:700;padding:6px 0}
 .card h2{margin-top:24px}
 .done .big{font-size:72px;font-weight:700;letter-spacing:0;line-height:1;margin:8px 0;color:var(--blue)}
@@ -422,6 +425,12 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
       <div><section class="tile" id="parts"></section><section class="tile" id="gram"></section></div>
       <section class="tile"><h2>Lezen, luisteren en spreken</h2><div class="list" id="books"></div></section>
     </div>
+    <section class="tile" id="prof" data-tab="profiel"><h2>Profiel</h2>
+      <label class="fld"><span>Naam</span><input id="pname" autocomplete="given-name" maxlength="40"></label>
+      <label class="fld"><span>Examendatum</span><input id="pexam" type="date"></label>
+      <div id="acct"></div>
+    </section>
+    <section class="tile" id="myres" data-tab="profiel"></section>
     <section class="tile" data-tab="herhalen"><h2>Herhalen</h2><p class="sub">Oefen wat je nog moeilijk vindt: je zwakke punten, je eigen fouten en de woorden die je hebt bewaard.</p><div class="list" id="mine"></div></section>
   </div>
   <div id="story" hidden>
@@ -485,6 +494,7 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
   <button data-t="examen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h12v17H6z"/><path d="M9.5 4V2.8h5V4M9 12.5l2.2 2.2L15.5 10"/></svg><span>Examen</span></button>
   <button data-t="oefenen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c2.6-1 5.6-.8 9 1.3v13c-3.4-2.1-6.4-2.3-9-1.3zM21 5.5c-2.6-1-5.6-.8-9 1.3v13c3.4-2.1 6.4-2.3 9-1.3z"/></svg><span>Oefenen</span></button>
   <button data-t="herhalen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12V9.5A3.5 3.5 0 0 1 7.5 6H19M16 3l3 3-3 3M20 12v2.5a3.5 3.5 0 0 1-3.5 3.5H5M8 21l-3-3 3-3"/></svg><span>Herhalen</span></button>
+  <button data-t="profiel"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c1.2-3.6 4-5.5 7.5-5.5s6.3 1.9 7.5 5.5"/></svg><span>Profiel</span></button>
 </nav>
 <div class="zoom" id="zoom" hidden><img id="zimg" alt=""><p id="zcap"></p></div>
 <script>
@@ -1893,25 +1903,138 @@ async function restore(){
   try{const r=JSON.parse(await idbGet());restored=true;if(r&&r.items&&(r.t||0)>(S.t||0)){S=Object.assign(S,r);addGenerated();if(!$("home").hidden)home()}}catch(e){restored=true}
   localSave();
 }
+// cloud: where the progress is mirrored, {set(S)}: the account (Supabase, below) or the claude.ai runtime
 let cloud=null,busy=false,dirty=false,pushT=null;
 function push(){
+  clearTimeout(pushT);pushT=null;
   if(!cloud)return; if(busy){dirty=true;return} busy=true;
-  cloud.set({json:JSON.stringify(S),t:S.t||0}).catch(()=>{}).then(()=>{busy=false;if(dirty){dirty=false;push()}});
+  cloud.set(S).catch(()=>{}).then(()=>{busy=false;if(dirty){dirty=false;push()}});
 }
 const save=()=>{S.t=Date.now();localSave();if(cloud){clearTimeout(pushT);pushT=setTimeout(push,3000)}};
+const refresh=()=>{if(!$("home").hidden)home()};
 async function initCloud(){
   try{
-    if(!window.claude)return;
+    if(!window.claude)return initAccount();
     const[db,user]=await Promise.all([window.claude.use("db"),window.claude.use("user")]);
     if(!db||!user)return; const id=await user.id(); if(!id)return;
-    cloud=db.doc("data/users/"+id+"/progress");
-    const snap=await cloud.get(); let rem=null;
+    const doc=db.doc("data/users/"+id+"/progress");
+    const snap=await doc.get(); let rem=null;
     if(snap.exists){try{rem=JSON.parse(snap.data().json)}catch(e){}}
-    if(rem&&rem.items&&(rem.t||0)>(S.t||0)){S=Object.assign(S,rem);localSave();addGenerated();if(!$("home").hidden)home()}
+    cloud={set:o=>doc.set({json:JSON.stringify(o),t:o.t||0})};
+    if(rem&&rem.items&&(rem.t||0)>(S.t||0)){S=Object.assign(S,rem);localSave();addGenerated();refresh()}
     else if(Object.keys(S.items).length&&(!rem||(S.t||0)>(rem.t||0))){if(!S.t)S.t=Date.now();push()}
-    $("sync").textContent="Je voortgang wordt bewaard in je account en werkt op al je apparaten.";
   }catch(e){cloud=null}
 }
+// Optional account (Supabase): the progress on every device, and Claude's checks for signed-in users, a few a day.
+// /api/config says whether accounts are set up and which ways to log in are on; without it the app works as before,
+// on this device only. The library (lib/) only loads when there is, or may be, a session.
+const acc={cfg:null,sb:null,user:null,left:null,saved:0,msg:"",step:null,mail:"",load:null};
+const ACFG="ww-acc-cfg",ALINK="ww-acc"; // the config, and which account this device's progress was last joined with
+const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
+const lsSet=(k,v)=>{try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}};
+const amsDay=()=>new Intl.DateTimeFormat("en-CA",{timeZone:"Europe/Amsterdam"}).format(new Date()); // the day the limit counts
+function loadSb(){
+  if(acc.sb)return Promise.resolve(acc.sb);
+  return acc.load||(acc.load=new Promise((ok,no)=>{const t=document.createElement("script");t.src="/lib/supabase-2.117.3.js";t.onload=ok;t.onerror=no;document.head.appendChild(t)})
+    .then(()=>{
+      acc.sb=supabase.createClient(acc.cfg.url,acc.cfg.anon,{auth:{flowType:"pkce",detectSessionInUrl:true,persistSession:true,autoRefreshToken:true}});
+      // no Supabase calls inside this callback (they would wait on it): hand over to setUser
+      acc.sb.auth.onAuthStateChange((ev,ses)=>{const u=ses&&ses.user||null;if((u&&u.id)!==(acc.user&&acc.user.id))setTimeout(()=>setUser(u))});
+      return acc.sb})
+    .catch(e=>{acc.load=null;throw e}));
+}
+async function initAccount(){
+  let cfg=null; try{cfg=JSON.parse(lsGet(ACFG))}catch(e){}
+  const fresh=fetch("/api/config").then(r=>r.ok?r.json():null).catch(()=>null).then(c=>{if(c)lsSet(ACFG,JSON.stringify(c));return c});
+  if(!cfg)cfg=await fresh;
+  else fresh.then(c=>{if(c&&(c.url||!acc.user)){acc.cfg=c.url?c:null;drawProfile()}});
+  acc.cfg=cfg&&cfg.url?cfg:null; drawProfile();
+  if(!acc.cfg)return;
+  const q=new URLSearchParams(location.search),back=q.has("code")||q.has("error");
+  let has=false; try{has=Object.keys(localStorage).some(k=>/^sb-.+-auth-token$/.test(k))}catch(e){}
+  if(back||has)try{await loadSb();const{data}=await acc.sb.auth.getSession();if(!acc.user)await setUser(data.session&&data.session.user||null)}catch(e){}
+  if(back){ // back from Google or Apple
+    if(q.get("error"))acc.msg="Inloggen is niet gelukt. Probeer het nog een keer.";
+    history.replaceState(null,"",location.pathname); setTab("profiel"); drawProfile()}
+}
+async function setUser(u){
+  acc.user=u; acc.left=null; acc.step=null;
+  if(!u){cloud=null;return drawProfile()}
+  const uid=u.id;
+  cloud={set:o=>acc.sb.from("progress").upsert({user_id:uid,data:o,t:o.t||0,updated_at:new Date().toISOString()})
+    .then(r=>{if(r.error)throw r.error;acc.saved=Date.now();drawProfile()})};
+  drawProfile(); await pull().catch(()=>{}); usage();
+}
+// The first time a device joins an account both sides are merged; after that the newer one wins (S.t),
+// so something deleted on one device stays deleted
+async function pull(){
+  if(!acc.user||!acc.sb)return; const uid=acc.user.id;
+  const{data,error}=await acc.sb.from("progress").select("data,t").eq("user_id",uid).maybeSingle();
+  if(error||!acc.user||acc.user.id!==uid)return;
+  const rem=data&&data.data&&data.data.items?data.data:null, mine=Object.keys(S.items).length>0;
+  if(!rem){if(mine){S.t=S.t||Date.now();push()}}
+  else if(lsGet(ALINK)!==uid){S=mine?mergeS(S,rem):Object.assign(S,rem);if(mine)S.t=Date.now();localSave();addGenerated();if(mine)push();refresh()}
+  else if((rem.t||0)>(S.t||0)){S=Object.assign(S,rem);localSave();addGenerated();refresh()}
+  else if((S.t||0)>(rem.t||0))push();
+  lsSet(ALINK,uid); if(!acc.saved)acc.saved=Date.now(); drawProfile();
+}
+function mergeS(a,b){
+  const o=Object.assign({},b,a), n=it=>(it.r||0)+(it.w||0);
+  const by=(x,y,f)=>{const m=Object.assign({},x||{});for(const k in y||{})m[k]=k in m?f(m[k],y[k]):y[k];return m};
+  const uni=(x,y,k)=>{const h=new Set((x||[]).map(k));return(x||[]).concat((y||[]).filter(e=>!h.has(k(e))))};
+  o.items=by(a.items,b.items,(x,y)=>n(y)>n(x)||n(y)===n(x)&&(y.d||0)>(x.d||0)?y:x);
+  o.xs=by(a.xs,b.xs,Math.max); o.hs=by(a.hs,b.hs,Math.max);
+  o.gp=by(a.gp,b.gp,(x,y)=>({n:Math.max(x.n||0,y.n||0),b:Math.max(x.b||0,y.b||0),at:Math.max(x.at||0,y.at||0)}));
+  o.bk=by(a.bk,b.bk,(x,y)=>(y.at||0)>(x.at||0)?y:x);
+  o.res=by(a.res,b.res,(x,y)=>{const m={};x.concat(y).forEach(r=>m[r.at]=r);return Object.values(m).sort((p,q)=>p.at-q.at).slice(-10)});
+  o.errs=uni(a.errs,b.errs,e=>e.r); o.words=uni(a.words,b.words,w=>w.w);
+  const ga=a.gen||{},gb=b.gen||{}; o.gen={lz:uni(ga.lz,gb.lz,JSON.stringify),ls:uni(ga.ls,gb.ls,JSON.stringify)};
+  const[p,q]=(a.last||0)>=(b.last||0)?[a,b]:[b,a]; o.last=p.last||0; o.streak=p.last===q.last?Math.max(p.streak||0,q.streak||0):p.streak||0;
+  o.day=a.day&&b.day&&a.day.d===b.day.d?{d:a.day.d,done:uni(a.day.done,b.day.done,x=>x)}:a.day&&b.day?(a.day.d>b.day.d?a.day:b.day):a.day||b.day;
+  const ma=a.me||{},mb=b.me||{}; o.me={name:ma.name||mb.name||"",exam:ma.exam||mb.exam||""};
+  o.t=Math.max(a.t||0,b.t||0);
+  return o;
+}
+async function usage(){
+  if(!acc.user||!acc.cfg)return;
+  const{data,error}=await acc.sb.from("check_usage").select("n").eq("user_id",acc.user.id).eq("day",amsDay()).maybeSingle();
+  if(!error){acc.left=acc.cfg.limit-((data&&data.n)||0);drawProfile()}
+}
+// Another device may have practised in between: look again when the app comes back; send what is waiting when it goes
+document.addEventListener("visibilitychange",()=>{if(!acc.user)return;if(document.visibilityState==="visible"){pull().catch(()=>{});usage()}else if(pushT)push()});
+const loginErr=e=>{const m=String(e&&(e.message||e.name)||"");
+  return/NotAllowed|abort|cancel/i.test(m)?"Inloggen is gestopt.":/rate|too many|seconds/i.test(m)?"Te veel pogingen. Probeer het over een paar minuten opnieuw."
+    :/expired|invalid|otp|token/i.test(m)?"Deze code klopt niet of is verlopen. Vraag een nieuwe code.":/webauthn|passkey|credential/i.test(m)?"Inloggen met een passkey lukt niet. Heb je er al een gemaakt? Log dan eerst op een andere manier in.":"Inloggen is niet gelukt. Probeer het opnieuw."};
+async function login(p){
+  acc.msg=""; drawProfile();
+  try{await loadSb();
+    const{error}=p==="passkey"?await acc.sb.auth.signInWithPasskey():await acc.sb.auth.signInWithOAuth({provider:p,options:{redirectTo:location.origin+"/"}});
+    if(error)throw error;
+  }catch(e){acc.msg=loginErr(e);drawProfile()}
+}
+async function mailCode(){
+  const m=($("amail").value||"").trim(); if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(m)){acc.msg="Vul een goed e-mailadres in.";return drawProfile()}
+  acc.msg=""; $("asend").disabled=true;
+  try{await loadSb();const{error}=await acc.sb.auth.signInWithOtp({email:m,options:{shouldCreateUser:true}});if(error)throw error;acc.mail=m;acc.step="code"}
+  catch(e){acc.msg=loginErr(e)}
+  drawProfile(); if($("acode"))$("acode").focus();
+}
+async function mailVerify(){
+  const c=($("acode").value||"").replace(/\D/g,""); if(c.length<6){acc.msg="Vul de code uit de e-mail in.";return drawProfile()}
+  acc.msg=""; $("averify").disabled=true;
+  try{const{error}=await acc.sb.auth.verifyOtp({email:acc.mail,token:c,type:"email"});if(error)throw error}
+  catch(e){acc.msg=loginErr(e);drawProfile()}
+}
+// The token for /api/check; with accounts on, grading needs a login
+async function authHead(){
+  if(!acc.cfg)return{};
+  if(!acc.user)throw{code:"login"};
+  const{data}=await acc.sb.auth.getSession(),t=data.session&&data.session.access_token;
+  if(!t)throw{code:"login"};
+  return{Authorization:"Bearer "+t};
+}
+// Why Claude can't grade now, or null
+const noCheck=c=>c==="login"?"Log in bij Profiel om dit door Claude te laten nakijken.":c==="limit"?`Je hebt vandaag al ${acc.cfg?acc.cfg.limit+" keer":"vaak"} laten nakijken. Morgen kan het weer.`:null;
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const answer=(v,t)=>t==="past"?v[2]:t==="pastpl"?v[3]:t==="pp"?v[4]:v[5];
 
@@ -2135,7 +2258,7 @@ async function spGrade(q,r){
     const k=e&&e.code; b.disabled=false;
     if(k==="rate_limited"){c.hidden=false;c.disabled=false;$("fb").innerHTML=`<p class="note">Te veel verzoeken achter elkaar. Wacht een minuut en probeer het opnieuw.</p>`;return}
     $("rev").hidden=true;
-    selfGrade(q,k==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je antwoord met het voorbeeld.":"Het nakijken is niet gelukt. Vergelijk je antwoord met het voorbeeld.");
+    selfGrade(q,noCheck(k)?noCheck(k)+" Vergelijk je antwoord nu met het voorbeeld.":k==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je antwoord met het voorbeeld.":"Het nakijken is niet gelukt. Vergelijk je antwoord met het voorbeeld.");
   }
 }
 // Proefexamen: one answer per question, no second try; graded together at the end
@@ -2317,13 +2440,14 @@ function home(){
     else if(d.x==="talk")talks();
     else if(d.x==="words")practiseWords();
     else build("custom",{id:"custom",t:"Mijn fouten",n:10,pool:()=>shuffle(errItems())})});
+  drawProfile();
   setTab(tab);
 }
-// The start screen is four tabs (Vandaag, Examen, Oefenen, Herhalen) with a floating glass bar at the bottom, like iOS 26.
+// The start screen is five tabs (Vandaag, Examen, Oefenen, Herhalen, Profiel) with a floating glass bar at the bottom, like iOS 26.
 // The tab you were on is kept while you practise: every back button goes back to it and is named after it.
 // Only Vandaag has the big painting and its label; the other tabs get the narrow strip, like an inner screen.
 let tab="vandaag";
-const TABN={vandaag:"Vandaag",examen:"Examen",oefenen:"Oefenen",herhalen:"Herhalen"};
+const TABN={vandaag:"Vandaag",examen:"Examen",oefenen:"Oefenen",herhalen:"Herhalen",profiel:"Profiel"};
 const backHTML=()=>`<span aria-hidden="true">←</span>${TABN[tab]}`;
 const TABS=Object.keys(TABN);
 function setTab(t,top=true){
@@ -2362,7 +2486,10 @@ document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>{if(Date.now(
 const seenN=q=>{const it=S.items[q.k];return(it?(it.r||0)+(it.w||0)||1:0)+((S.xs||{})[q.k]||0)};
 const SPDEEL=["beantwoord de vraag","vertel wat je op de foto ziet en beantwoord de vraag","kies een van de twee foto's en vertel waarom","vertel wat er gebeurt op de drie foto's, in de goede volgorde"];
 const byFresh=a=>a.map(q=>[q,seenN(q)]).sort((x,y)=>x[1]-y[1]).map(x=>x[0]);
-function startExam(e){
+// Schrijven and Spreken are graded by Claude: without a login, or with too few checks left today, say so first
+function startExam(e,go){
+  const cost=e==="wr"?2:e==="sp"?6:0; // as checkCost() in api/_supa.js
+  if(cost&&acc.cfg&&!go&&(!acc.user||acc.left!=null&&acc.left<cost))return examGate(e,cost);
   build("exam",{id:"exam",exam:1,part:e,keep:["lz","ls","sp"].includes(e),write:e==="wr",speak:e==="sp",...EX[e],pool:()=>{const a=byFresh(shuffle(ITEMS.filter(x=>x.sec===e)));
     if(e==="lz"||e==="ls"){const g={};a.forEach(q=>{const t=q.text||q.say;(g[t]=g[t]||[]).push(q)}); // whole texts and fragments, as on the exam; the least-seen first
       let T=shuffle(Object.values(g)).map(x=>[x.sort((p,q)=>p.k<q.k?-1:1),x.reduce((s,q)=>s+seenN(q),0)/x.length]).sort((x,y)=>x[1]-y[1]).map(x=>x[0]);
@@ -2446,6 +2573,65 @@ function drawA2hs(){
     if(!r||!r.items){$("a2ps").textContent="Niets gevonden. Kopieer eerst in Safari.";return}
     S=Object.assign(S,r);save();a2Set();home()};
 }
+// Profiel: your name and exam date (kept in the progress, so they go along to your other devices), the account and your results.
+// Only #acct is redrawn when the account changes, so typing in the fields is never interrupted.
+function drawProfile(){
+  if(!$("acct"))return;
+  const me=S.me||{},n=$("pname"),x=$("pexam");
+  if(document.activeElement!==n)n.value=me.name||""; if(document.activeElement!==x)x.value=me.exam||"";
+  n.onchange=x.onchange=()=>{S.me={name:n.value.trim().slice(0,40),exam:x.value};save();drawResults()};
+  const c=acc.cfg,u=acc.user,L=c?c.login||[]:[],mail=$("amail")?$("amail").value:"",el=$("acct");
+  let h="";
+  if(c){
+    h=`<h3 class="lh">Account</h3>`;
+    if(u){
+      const nm=u.email||(u.user_metadata||{}).full_name||"";
+      h+=`<p class="sub">Ingelogd${nm?` als <b>${esc(nm)}</b>`:""}. Je voortgang staat in je account en is hetzelfde op al je apparaten.${acc.saved?` Laatst bewaard om ${new Date(acc.saved).toLocaleTimeString("nl-NL",{hour:"2-digit",minute:"2-digit"})}.`:""}</p>
+        <p class="sub">Nakijken door Claude vandaag: ${acc.left==null?"…":`nog ${Math.max(0,acc.left)} van de ${c.limit}`}. Een proefexamen Schrijven telt als 2, Spreken als 6.</p>
+        <div class="two">${L.includes("passkey")?`<button class="ghost" id="apk">Passkey toevoegen</button>`:""}<button class="ghost" id="aout">Uitloggen</button></div>
+        <button class="ghost wide" id="adel">Account verwijderen</button>`;
+    }else{
+      const nm={google:"Doorgaan met Google",apple:"Doorgaan met Apple",passkey:"Inloggen met passkey"};
+      h+=`<p class="sub">Log in om je voortgang op al je apparaten te hebben en je teksten en antwoorden door Claude te laten nakijken (${c.limit} keer per dag). Zonder account werkt alles op dit apparaat, behalve het nakijken.</p>`
+        +L.filter(p=>nm[p]).map(p=>`<button class="ghost wide" data-login="${p}">${nm[p]}</button>`).join("");
+      if(L.includes("email"))h+=acc.step==="code"
+        ?`<label class="fld"><span>Code uit de e-mail aan ${esc(acc.mail)}</span><input id="acode" inputmode="numeric" autocomplete="one-time-code" maxlength="10"></label>
+          <div class="two"><button class="ghost" id="aagain">Ander e-mailadres</button><button class="btn" id="averify">Inloggen</button></div>`
+        :`<label class="fld"><span>Of met een code per e-mail</span><input id="amail" type="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="naam@voorbeeld.nl"></label>
+          <button class="btn wide" id="asend">Stuur een code</button>`;
+      if(!L.length)h+=`<p class="note">Inloggen is nog niet ingesteld.</p>`;
+    }
+    if(acc.msg)h+=`<p class="note">${esc(acc.msg)}</p>`;
+  }
+  el.innerHTML=h;
+  if($("amail")){$("amail").value=mail;$("amail").onkeydown=e=>{if(e.key==="Enter")mailCode()};$("asend").onclick=mailCode}
+  if($("acode")){$("acode").onkeydown=e=>{if(e.key==="Enter")mailVerify()};$("averify").onclick=mailVerify;$("aagain").onclick=()=>{acc.step=null;acc.msg="";drawProfile()}}
+  el.querySelectorAll("[data-login]").forEach(b=>b.onclick=()=>login(b.dataset.login));
+  if($("apk"))$("apk").onclick=async()=>{
+    try{const{error}=await acc.sb.auth.registerPasskey();if(error)throw error;acc.msg="Je passkey is gemaakt. Nu kun je ook met Face ID, Touch ID of je vingerafdruk inloggen."}
+    catch(e){acc.msg=/NotAllowed|abort|cancel/i.test(String(e&&(e.message||e.name)))?"Gestopt.":"Een passkey maken lukt hier niet."}
+    drawProfile()};
+  if($("aout"))$("aout").onclick=async()=>{if(pushT)push();acc.msg="";try{await acc.sb.auth.signOut()}catch(e){}setUser(null)};
+  if($("adel"))$("adel").onclick=async()=>{const b=$("adel");
+    if(!b.dataset.ok){b.dataset.ok=1;b.textContent="Tik nog een keer: je account en alles erin worden gewist";return}
+    b.disabled=true;
+    try{const r=await fetch("/api/account",{method:"DELETE",headers:await authHead()});if(!r.ok)throw 0;
+      lsSet(ALINK,null);cloud=null;try{await acc.sb.auth.signOut({scope:"local"})}catch(e){}
+      acc.msg="Je account is verwijderd. Je voortgang op dit apparaat blijft.";setUser(null)}
+    catch(e){acc.msg="Verwijderen is niet gelukt. Probeer het later opnieuw.";drawProfile()}};
+  drawResults();
+}
+function drawResults(){
+  const el=$("myres"); if(!el)return;
+  const me=S.me||{},R=S.res||{},d=me.exam?Math.round((new Date(me.exam+"T12:00")-Date.now())/864e5):-1;
+  const day=t=>new Date(t).toLocaleDateString("nl-NL",{day:"numeric",month:"long"}),ks=["lz","ls","wr","sp","knm"].filter(k=>(R[k]||[]).length);
+  el.innerHTML=`<h2>Mijn resultaten</h2>`
+    +(d>=0?`<p class="sub">${d===0?"Vandaag is je examen. Succes!":`Nog ${d} ${d===1?"dag":"dagen"} tot je examen.`}</p>`:"")
+    +(ks.length?ks.map(k=>`<h3 class="lh">${PART[k]}</h3><ul class="errs kv">${R[k].slice().reverse().map(r=>`<li>Proefexamen ${day(r.at)}<span class="${r.pc>=passPc(k)?"good":"bad"}">${r.pc}%</span></li>`).join("")}</ul>`).join("")
+      :`<p class="sub">Nog geen proefexamen gedaan. Je uitslagen komen hier.</p>`)
+    +`<h3 class="lh">Geoefend</h3><ul class="errs kv"><li>Dagen op rij<span>${S.last>=today()-1?S.streak:0}</span></li><li>Vragen geoefend<span>${Object.keys(S.items).length}</span></li>`
+    +`<li>Bewaarde woorden<span>${(S.words||[]).length}</span></li><li>Gesprekken gevoerd<span>${Object.keys(S.gp||{}).length}</span></li></ul>`;
+}
 function drawPlan(){
   $("plan").innerHTML=planHTML();
   document.querySelectorAll("#plan [data-p]").forEach(b=>b.onclick=()=>{const id=b.dataset.p,[k,v]=id.split(":");
@@ -2509,11 +2695,12 @@ function show(){
   let o;
   if(q.type==="order")h+=`<div class="line" id="line"></div><div class="pool" id="pool"></div><div class="act"><button class="btn wide" id="chk" disabled>Controleer</button></div>`;
   else if(q.type==="write")h+=(q.fields?q.fields.map((f,i)=>`<label class="fld"><span>${f}</span><input id="f${i}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></label>`).join("")+`<p class="ask">${q.open}</p>`:"")+`<textarea id="txt" rows="7" placeholder="Schrijf hier je tekst…" aria-label="Je tekst" spellcheck="false" autocorrect="off" autocapitalize="off"></textarea>`
+    +(!cur.exam&&acc.cfg&&!acc.user?`<p class="note">Claude kijkt je tekst na als je bent ingelogd (Profiel).</p>`:"")
     +(cur.nav?navHTML():`<div class="act"><button class="btn wide" id="chk">${cur.exam?"Volgende opdracht":"Controleer mijn tekst"}</button></div>`);
   else if(q.type==="reveal")h+=(canSpeak?`<button class="hint" id="sayq">▶ Luister naar de vraag</button>`:"")
     +`<div class="rec" id="rec"><div class="clk"><span class="t" id="rect">${mmss(SPK)}</span><div class="m"><i id="recm"></i></div></div><div id="recp"></div>
     <button class="btn wide" id="recb">${cur.exam?"● Antwoord geven":"● Opnemen"}</button><p class="note" id="recn">${cur.exam?"Je hebt één minuut per vraag.":"Je hebt één minuut. Daarna kun je jezelf terugluisteren."}</p></div>
-    ${cur.exam?"":`${SR?`<button class="ghost wide" id="spchk" style="margin-bottom:10px">Spreek in en laat nakijken</button>`:""}<button class="ghost wide" id="rev">Toon voorbeeld</button>`}`;
+    ${cur.exam?"":`${SR?`<button class="ghost wide" id="spchk" style="margin-bottom:10px">Spreek in en laat nakijken</button>${acc.cfg&&!acc.user?`<p class="note">Nakijken kan als je bent ingelogd (Profiel).</p>`:""}`:""}<button class="ghost wide" id="rev">Toon voorbeeld</button>`}`;
   else if(S.typing&&q.canType)h+=`<div class="type"><input id="inp" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Je antwoord"><button class="btn" id="chk">Controleer</button></div>`;
   else{const nv=cur.nav&&q.type==="choice";o=nv?cur.op[pos]=cur.op[pos]||q.opts():q.opts();
     h+=`<div class="opts${o.length===3||o.some(x=>x.length>14)?" one":""}">${o.map((x,i)=>`<button class="opt${nv&&cur.pick[pos]===x?" sel":""}" data-n="${i}"${nv?` aria-pressed="${cur.pick[pos]===x}"`:""}>${x}</button>`).join("")}</div>`;
@@ -2570,6 +2757,17 @@ function feedback(ok,q){
     <button class="btn wide" id="next">Verder</button>`;
   $("next").onclick=()=>{pos++;show()}; $("next").focus();
   if(q.tts&&q.big!==q.tts&&canSpeak)speak(q.tts); // description → word: hear the Dutch word
+}
+function examGate(e,cost){
+  if(tab!=="examen")setTab("examen");
+  document.querySelectorAll("#exam .gate").forEach(x=>x.remove());
+  const row=document.querySelector(`#exam [data-e="${e}"]`),d=document.createElement("div"); d.className="gate";
+  d.innerHTML=`<p class="note">${acc.user?`Je kunt vandaag nog ${Math.max(0,acc.left)} keer laten nakijken, en dit proefexamen telt als ${cost}. Zonder nakijken zie je aan het eind alleen de voorbeeldantwoorden.`
+    :"Je bent niet ingelogd. Dan kijkt Claude je antwoorden niet na, en zie je aan het eind alleen de voorbeeldantwoorden."}</p>
+    <div class="two">${acc.user?"":`<button class="btn" id="glog">Inloggen</button>`}<button class="ghost" id="ggo">Toch beginnen</button></div>`;
+  row.after(d); d.scrollIntoView({block:"nearest",behavior:"smooth"});
+  if($("glog"))$("glog").onclick=()=>setTab("profiel");
+  $("ggo").onclick=()=>startExam(e,1);
 }
 // Proefexamen Lezen, Luisteren, KNM and Schrijven: go back to any question or task, as on the exam; marked when handed in
 const picked=i=>{const p=cur.pick[i];return p!=null&&(typeof p!=="object"||!!(p.t.trim()||p.f.some(x=>x.trim())))};
@@ -2731,8 +2929,10 @@ function keepErrs(errs){
   S.errs=S.errs.slice(0,40);
 }
 async function nakijken(tasks,part){
-  const r=await fetch("/api/check",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(part?{part,tasks}:{tasks})});
+  const h=await authHead();
+  const r=await fetch("/api/check",{method:"POST",headers:{"Content-Type":"application/json",...h},body:JSON.stringify(part?{part,tasks}:{tasks})});
   const j=await r.json().catch(()=>({}));
+  if(typeof j.left==="number")acc.left=j.left; else if(j.error==="limit")acc.left=0;
   if(!r.ok||!Array.isArray(j.tasks))throw{code:j.error||"failed"};
   return j.tasks;
 }
@@ -2767,7 +2967,7 @@ async function check(q){
     const c=e&&e.code;
     if(c==="rate_limited"){btn.disabled=false;$("txt").readOnly=false;$("fb").innerHTML=`<p class="note">Te veel verzoeken achter elkaar. Wacht een minuut en probeer het opnieuw.</p>`;return}
     btn.hidden=true;
-    selfGrade(q,c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je tekst met het voorbeeld.":"Het nakijken is niet gelukt. Vergelijk je tekst met het voorbeeld.",{task,form,text});
+    selfGrade(q,noCheck(c)?noCheck(c)+" Vergelijk je tekst nu met het voorbeeld.":c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je tekst met het voorbeeld.":"Het nakijken is niet gelukt. Vergelijk je tekst met het voorbeeld.",{task,form,text});
   }
 }
 function grab(q){
@@ -2800,7 +3000,7 @@ async function examWrite(){
       <p class="note">Je hebt ongeveer ${PASS*100}% van de punten nodig${scored?`: hier ${Math.ceil(max*PASS)} van ${max}`:""}. Punten verlies je ook door fouten in grammatica en spelling.</p>`+body+foot; bind();
   }catch(e){
     const c=e&&e.code;
-    fallback(c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je teksten met de voorbeelden.":c==="rate_limited"?"Te veel verzoeken achter elkaar. Probeer het over een minuut opnieuw.":"Het nakijken is niet gelukt. Vergelijk je teksten met de voorbeelden.");
+    fallback(noCheck(c)?noCheck(c)+" Vergelijk je teksten nu met de voorbeelden.":c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je teksten met de voorbeelden.":c==="rate_limited"?"Te veel verzoeken achter elkaar. Probeer het over een minuut opnieuw.":"Het nakijken is niet gelukt. Vergelijk je teksten met de voorbeelden.");
   }
 }
 async function examSpeak(){
@@ -2828,7 +3028,7 @@ async function examSpeak(){
       <p class="note">Je hebt ongeveer ${PASS*100}% van de punten nodig${scored?`: hier ${Math.ceil(SPMAX*queue.length*PASS)} van ${SPMAX*queue.length}`:""}. Uitspraak en vloeiendheid tellen op het examen ook mee; die kan ik niet horen.</p>`+body+foot; bind();
   }catch(e){
     const c=e&&e.code;
-    plain(c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je antwoorden met de voorbeelden.":c==="rate_limited"?"Te veel verzoeken achter elkaar. Probeer het over een minuut opnieuw.":"Het nakijken is niet gelukt. Vergelijk je antwoorden met de voorbeelden.");
+    plain(noCheck(c)?noCheck(c)+" Vergelijk je antwoorden nu met de voorbeelden.":c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je antwoorden met de voorbeelden.":c==="rate_limited"?"Te veel verzoeken achter elkaar. Probeer het over een minuut opnieuw.":"Het nakijken is niet gelukt. Vergelijk je antwoorden met de voorbeelden.");
   }
 }
 function finish(){
