@@ -285,7 +285,7 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
 .forms mark{background:none;color:var(--blue);font-weight:700}
 .echo{border-top:1px solid var(--line);padding-top:12px;margin:4px 0 14px}
 .miss{font:inherit;color:var(--bad);background:none;border:0;border-bottom:2px solid var(--bad);padding:0;margin:0;cursor:pointer}
-.bar.pass{position:relative} .bar.pass::after{content:"";position:absolute;left:70%;top:0;bottom:0;width:2px;background:var(--ink)}
+.bar.pass{position:relative} .bar.pass::after{content:"";position:absolute;left:var(--pass,70%);top:0;bottom:0;width:2px;background:var(--ink)}
 #stats .back,#lib .back{margin-top:14px}
 #stats h2,#lib h2{margin-top:18px}
 /* boekenkast */
@@ -2059,7 +2059,7 @@ const scoreHTML=sc=>{if(!sc)return""; const wr="spelling" in sc;
 const spoken=t=>String(t).replace(/[\p{Extended_Pictographic}←-⇿️‍]/gu,"").replace(/\s+/g," ").trim();
 const saidText=r=>r.said.concat(r.part).join(" ").replace(/\s+/g," ").trim();
 async function listen(mode,done){
-  const box=$("rec"),b=$("recb"); recEnd(false); b.disabled=true;
+  const box=$("rec"),b=$("recb"); recEnd(false); b.disabled=true; try{if(canSpeak)speechSynthesis.cancel()}catch(e){} // never record the question
   if(recUrl){URL.revokeObjectURL(recUrl);recUrl=null} $("recp").innerHTML="";
   const r={box,mode,done,stream:null,mr:null,sr:null,chunks:[],said:[],part:"",keep:false,fin:false};
   if(mode==="rec"&&canRec){
@@ -2292,11 +2292,11 @@ function home(){
   // one short row per part: the bar (proefexamen, else practice) with the 70% line; words only once there is a proefexamen
   // the number is the share of right answers (last proefexamen, else practice), not a chance of passing; the line under it says which
   const part=k=>{const r=ready(k),ex=((S.res||{})[k]||[]).length;
-    return`<button class="rd" data-e="${k}"><b>${PART[k]}<small>${EX[k].min} min</small></b><span class="bar pass"><i style="width:${r.pc||0}%"></i></span><small class="${ex?r.cls:""}">${r.pc==null?"–":r.pc+"% goed"}</small>${ex?`<span class="d">${r.st}. ${r.t}</span>`:r.pc!=null?`<span class="d">Bij het oefenen. Nog geen proefexamen.</span>`:""}</button>`};
+    return`<button class="rd" data-e="${k}"><b>${PART[k]}<small>${EX[k].min} min</small></b><span class="bar pass" style="--pass:${passPc(k)}%"><i style="width:${r.pc||0}%"></i></span><small class="${ex?r.cls:""}">${r.pc==null?"–":r.pc+"% goed"}</small>${ex?`<span class="d">${r.st}. ${r.t}</span>`:r.pc!=null?`<span class="d">Bij het oefenen. Nog geen proefexamen.</span>`:""}</button>`};
   const lb=Object.values(S.bk||{}).filter(b=>b.t).sort((a,b)=>b.at-a.at)[0];
   const hs=S.hs||{},lh=GS.filter(c=>hs[c.id]).sort((a,b)=>hs[b.id]-hs[a.id])[0],gsDone=GS.filter(c=>gsItems(c).every(x=>(S.items[x.k]||{}).r)).length;
   // one row per part: tap it for a proefexamen; on the right how far you are
-  $("exam").innerHTML=`<h2>Naar het examen</h2><p class="sub">Tik op een onderdeel voor een proefexamen, met tijd zoals op het echte examen. Rechts: hoeveel procent je goed had, bij je laatste proefexamen of bij het oefenen. Om te slagen heb je ongeveer ${PASS*100}% nodig: de streep.</p><div class="list">${["lz","ls","wr","sp","knm"].map(part).join("")}</div>`
+  $("exam").innerHTML=`<h2>Naar het examen</h2><p class="sub">Tik op een onderdeel voor een proefexamen, met tijd zoals op het echte examen. Rechts: hoeveel procent je goed had, bij je laatste proefexamen of bij het oefenen. Om te slagen heb je ongeveer ${PASS*100}% nodig, bij Lezen en Luisteren ${passPc("lz")}% (19 van de 25): de streep.</p><div class="list">${["lz","ls","wr","sp","knm"].map(part).join("")}</div>`
     +`<div class="list"><a class="it ext" href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens van DUO ↗</b><small>15</small></span><span class="d">De echte oefenexamens op inburgeren.nl, met echte stemmen. Doe er een als je hier klaar bent. Liefst op een computer.</span></span></a></div>`;
   $("parts").innerHTML=`<h2>Examenonderdelen</h2><p class="sub">Oefen zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["lz","ls","wr","sp","knm"].map(row).join("")}</div>`;
   $("gram").innerHTML=`<h2>Grammatica en woorden</h2><p class="sub">Korte rondes van 10 vragen. Dit helpt bij alle onderdelen.</p><div class="list">${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`;
@@ -2378,20 +2378,22 @@ function startExam(e){
 }
 // Pass mark for the computer-marked parts: about 7 in 10 (e.g. 18 of 25 for Lezen, 28 of 40 for KNM); DUO sets it per exam version
 const PASS=.7;
+// Lezen and Luisteren: most sources give 19 of 25 (DUO puts the line on the result, not on a public page); KNM 28 of 40
+const PASSP={lz:19/25,ls:19/25,knm:28/40}, passOf=k=>PASSP[k]||PASS, passPc=k=>Math.round(passOf(k)*100);
 // Proefexamen results per part (S.res, last 10): {at, pc, nw}, nw = % of the questions that were new (missing in older results).
 // Ready = the last two average 80% or more, and at least one of them was mostly new questions
 function keepRes(k,pc){if(k){S.res=S.res||{};S.res[k]=(S.res[k]||[]).concat({at:Date.now(),pc,nw:cur.nw}).slice(-10)}save()}
 function ready(k){
-  const R=(S.res||{})[k]||[];
+  const R=(S.res||{})[k]||[],P=passPc(k);
   if(!R.length){let r=0,w=0;ITEMS.forEach(x=>{const it=x.sec===k&&S.items[x.k];if(it){r+=it.r||0;w+=it.w||0}});
     const pc=r+w>=10?Math.round(r/(r+w)*100):null;
     return{pc,st:"Nog geen proefexamen",cls:"",t:pc==null?"Nog weinig geoefend":`Bij het oefenen ${pc}% goed`}}
   const L=R.slice(-2),avg=Math.round(L.reduce((a,x)=>a+x.pc,0)/L.length),pc=R[R.length-1].pc;
   // known: the last proefexamens were mostly questions you had seen before, so a high score may be memory
   const known=L.every(x=>x.nw!=null&&x.nw<50), sure=avg>=80&&R.length>1&&!known;
-  return{pc,st:sure?"Klaar voor het examen":avg>=PASS*100?"Bijna klaar":"Nog niet klaar",cls:sure?"good":avg>=PASS*100?"":"bad",
+  return{pc,st:sure?"Klaar voor het examen":avg>=P?"Bijna klaar":"Nog niet klaar",cls:sure?"good":avg>=P?"":"bad",
     t:`Laatste proefexamen ${pc}%${R.length>1?`, daarvoor ${R[R.length-2].pc}%`:""}`
-      +(known&&avg>=PASS*100?". Je kende de meeste vragen al: doe ook een oefenexamen van DUO":"")}
+      +(known&&avg>=P?". Je kende de meeste vragen al: doe ook een oefenexamen van DUO":"")}
 }
 const PART={wr:"Schrijven",knm:"KNM",sp:"Spreken",ls:"Luisteren",lz:"Lezen"}, HELP={wr:["wo","verb"],sp:["pr","verb"],lz:["vo","dh"],ls:["vo","pr"],knm:[]};
 let planId=null;
@@ -2506,7 +2508,7 @@ function show(){
   else if((q.sec==="verb"||q.sec==="dh")&&BET[q.big])h+=`<button class="hint" id="tr">Betekenis</button>`;
   let o;
   if(q.type==="order")h+=`<div class="line" id="line"></div><div class="pool" id="pool"></div><div class="act"><button class="btn wide" id="chk" disabled>Controleer</button></div>`;
-  else if(q.type==="write")h+=(q.fields?q.fields.map((f,i)=>`<label class="fld"><span>${f}</span><input id="f${i}" autocomplete="off" autocorrect="off" spellcheck="false"></label>`).join("")+`<p class="ask">${q.open}</p>`:"")+`<textarea id="txt" rows="7" placeholder="Schrijf hier je tekst…" aria-label="Je tekst" spellcheck="false" autocorrect="off" autocapitalize="sentences"></textarea>`
+  else if(q.type==="write")h+=(q.fields?q.fields.map((f,i)=>`<label class="fld"><span>${f}</span><input id="f${i}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></label>`).join("")+`<p class="ask">${q.open}</p>`:"")+`<textarea id="txt" rows="7" placeholder="Schrijf hier je tekst…" aria-label="Je tekst" spellcheck="false" autocorrect="off" autocapitalize="off"></textarea>`
     +(cur.nav?navHTML():`<div class="act"><button class="btn wide" id="chk">${cur.exam?"Volgende opdracht":"Controleer mijn tekst"}</button></div>`);
   else if(q.type==="reveal")h+=(canSpeak?`<button class="hint" id="sayq">▶ Luister naar de vraag</button>`:"")
     +`<div class="rec" id="rec"><div class="clk"><span class="t" id="rect">${mmss(SPK)}</span><div class="m"><i id="recm"></i></div></div><div id="recp"></div>
@@ -2533,7 +2535,7 @@ function show(){
   if(q.type==="write"){$("chk").onclick=()=>{if(cur.exam){cur.ans.push(grab(q));pos++;show()}else check(q)};return}
   if(q.type==="reveal"){
     if($("sayq"))$("sayq").onclick=()=>speak(spoken(q.big));
-    if(cur.exam){$("recb").onclick=()=>listen(SR?"say":"rec",r=>spNext(q,r));return}
+    if(cur.exam){$("recb").onclick=()=>listen(SR?"say":"rec",r=>spNext(q,r));if(canSpeak)speak(spoken(q.big));return} // the exam asks the question aloud
     $("recb").onclick=()=>listen("rec",spTake); $("rev").onclick=()=>reveal(q);
     if($("spchk"))$("spchk").onclick=()=>{$("spchk").disabled=true;listen("say",r=>spGrade(q,r))};
     return}
@@ -2821,7 +2823,9 @@ async function examSpeak(){
     // score: points of all 16 questions (an unanswered one counts 0); without points (older server) the share of good answers
     const pc=scored?Math.round(pts/(SPMAX*queue.length)*100):Math.round(good/queue.length*100);
     keepRes(cur.part,pc);
-    card.innerHTML=`<div class="done"><p class="ask">${cur.t}: uitslag</p><div class="big">${pc}%</div><p class="ru">${scored?`${pts} van ${SPMAX*queue.length} punten, `:""}${good} van ${queue.length} antwoorden voldoende${A.length<queue.length?`; ${queue.length-A.length} vragen niet beantwoord`:""}</p></div>`+body+foot; bind();
+    card.innerHTML=`<div class="done"><p class="ask">${cur.t}: uitslag</p><div class="big">${pc}%</div><p class="ru">${scored?`${pts} van ${SPMAX*queue.length} punten, `:""}${good} van ${queue.length} antwoorden voldoende${A.length<queue.length?`; ${queue.length-A.length} vragen niet beantwoord`:""}</p></div>
+      <p><b class="${pc>=PASS*100?"good":"bad"}">${pc>=PASS*100?"Geslaagd":"Nog niet geslaagd"}</b></p>
+      <p class="note">Je hebt ongeveer ${PASS*100}% van de punten nodig${scored?`: hier ${Math.ceil(SPMAX*queue.length*PASS)} van ${SPMAX*queue.length}`:""}. Uitspraak en vloeiendheid tellen op het examen ook mee; die kan ik niet horen.</p>`+body+foot; bind();
   }catch(e){
     const c=e&&e.code;
     plain(c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je antwoorden met de voorbeelden.":c==="rate_limited"?"Te veel verzoeken achter elkaar. Probeer het over een minuut opnieuw.":"Het nakijken is niet gelukt. Vergelijk je antwoorden met de voorbeelden.");
@@ -2834,14 +2838,14 @@ function finish(){
   if(cur.exam&&cur.write)return examWrite();
   if(cur.exam&&cur.speak)return examSpeak();
   if(cur.exam){
-    const pc=total?Math.round(right/total*100):0, need=Math.ceil(total*PASS), pass=right>=need, by={}; keepRes(cur.part,pc);
+    const pc=total?Math.round(right/total*100):0, need=Math.ceil(total*passOf(cur.part)-1e-9), pass=right>=need, by={}; keepRes(cur.part,pc);
     // KNM: score per theme, weakest first
     cur.log.forEach(x=>{const t=x.l.replace(/^KNM: /,""),o=by[t]||(by[t]={r:0,n:0});o.n++;if(x.ok)o.r++});
     const themes=Object.keys(by).length>1?Object.keys(by).sort((a,b)=>by[a].r/by[a].n-by[b].r/by[b].n)
       .map(t=>`<li>${t}<span>${by[t].r} van ${by[t].n} goed</span></li>`).join(""):"";
     $("card").innerHTML=`<div class="done"><p class="ask">${cur.t}: uitslag</p><div class="big">${pc}%</div><p class="ru">${right} van ${total} goed</p></div>
       <p><b class="${pass?"good":"bad"}">${pass?"Geslaagd":"Nog niet geslaagd"}</b></p>
-      <p class="note">Op het examen heb je ongeveer 7 van de 10 vragen goed nodig. Hier is dat ${need} van ${total}.</p>
+      <p class="note">${cur.part==="lz"||cur.part==="ls"?"Op het examen heb je waarschijnlijk 19 van de 25 vragen goed nodig. DUO zet de grens op je uitslag.":cur.part==="knm"?"Op het examen heb je 28 van de 40 vragen goed nodig.":"Op het examen heb je ongeveer 7 van de 10 vragen goed nodig."} Hier is dat ${need} van ${total}.</p>
       ${themes?`<p class="ask">Per thema</p><ul class="errs">${themes}</ul>`:""}
       ${cur.miss.length?`<p class="ask">Fout beantwoord</p><ul class="errs">${cur.miss.slice(0,20).map(m=>`<li>${m.q}<span>Goed is: ${m.r}</span></li>`).join("")}</ul>`:""}
       <div class="two"><button class="ghost" id="tohome">Alle onderdelen</button><button class="btn" id="more">Nog een keer</button></div>`;

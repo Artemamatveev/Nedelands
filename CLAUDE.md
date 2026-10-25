@@ -55,7 +55,7 @@ third day a proefexamen), the other four as short rounds (`SHORT`: one Lezen tex
 one Schrijven task, two Spreken questions, five KNM questions), weakest to strongest, and last a grammar round
 that helps the weakest part. Then Mix van de dag.
 - **Examen**: "Naar het examen": one row per exam part (`.rd`, from `ready()`), the whole row starts that part's
-proefexamen: the name with its time under it, a bar with the 70% line, "76% goed" and ›; once there is a proefexamen
+proefexamen: the name with its time under it, a bar with the pass line (`passOf()`: Lezen and Luisteren 19 of 25, KNM 28 of 40, the rest 70%), "76% goed" and ›; once there is a proefexamen
 a line under it says the status and the last results. The number is the share of right answers (the last
 proefexamen, else practice), never a chance of passing; the intro says so. Under the rows one row to DUO's 15
 official oefenexamens ↗. Practising a part is on Oefenen.
@@ -111,7 +111,8 @@ order); `FOTO` holds a short Dutch description of each for screen readers. No em
 Progress is per device: `localStorage` key `ww-v1`, mirrored to IndexedDB as a backup.
 There is no server. `S.res` keeps the last 10 proefexamen scores per part (`{at, pc, nw}`, `nw` = % of new
 questions; older results have none); the rows in "Naar het examen" read it through `ready()` (ready = the last two
-average 80% or more and not both mostly known questions; the pass line is 70%). The proefexamen takes the least-seen
+average 80% or more and not both mostly known questions; the pass line is `passOf()`: 76% for Lezen and Luisteren, 70%
+for the rest). The proefexamen takes the least-seen
 questions first (`seenN()`: practice answers plus `S.xs`, how often a question was in a proefexamen); Lezen takes
 whole texts.
 
@@ -163,7 +164,8 @@ proefexamen); `task` also says what the photos show (`spTask()`, from `FOTO`). E
 (inhoud 0–3, woorden 0–2, grammatica 0–2, samenhang 0–1: DUO's criteria as far as a transcript shows them; pronunciation
 and fluency can't be judged), clamped on the server; the Spreken proefexamen score is points of all 16 questions.
 The Spreken proefexamen has DUO's four parts of four (since March 2025): a question, one photo (describe and answer),
-two photos (choose and explain), three photos (tell in order); `SP` items fall into a part by their number of photos. Claude can't take audio, so the phone writes the answer down first (Web Speech
+two photos (choose and explain), three photos (tell in order); the proefexamen reads each question aloud, like the
+video on the exam, and speech stops before the microphone opens; `SP` items fall into a part by their number of photos. Claude can't take audio, so the phone writes the answer down first (Web Speech
 API, `nl-NL`). Recording (`MediaRecorder`, to play the answer back) and transcribing are
 separate takes, never at the same time: on iPhone they compete for the microphone. One
 minute per answer. Recordings and transcripts stay in memory only. "Zeg het na" (free, no Claude call):
