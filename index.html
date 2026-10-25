@@ -2051,9 +2051,11 @@ const mmss=s=>Math.floor(s/60)+":"+String(s%60).padStart(2,"0");
 // The question as it is read aloud and sent for grading: without the picture emoji
 // What Claude gets for a Spreken task: the question, and what the photos show (it can't see them)
 const spTask=q=>spoken(q.big)+(q.pics?` (Op de foto${q.pics.length>1?"'s":""}: ${q.pics.map((f,i)=>(q.pics.length>1?i+1+". ":"")+(FOTO[f]||f)).join("; ")})`:"");
-// Points as in DUO's Spreken criteria, as far as a transcript shows them (max 8 of DUO's 12: pronunciation and fluency need sound)
-const SPMAX=8, spPts=t=>t&&t.scores?Object.values(t.scores).reduce((a,b)=>a+(+b||0),0):null;
-const scoreHTML=sc=>sc?`<p class="note">Punten: inhoud ${sc.inhoud}/3 · woorden ${sc.woorden}/2 · grammatica ${sc.grammatica}/2 · samenhang ${sc.samenhang}/1 = <b>${spPts({scores:sc})} van ${SPMAX}</b>. Uitspraak en vloeiendheid kan ik niet horen: oefen die met Zeg het na.</p>`:"";
+// Points as in DUO's Spreken criteria, as far as a transcript shows them (max 8 of DUO's 12: pronunciation and fluency need sound);
+// Schrijven has DUO's criteria with spelling (max 10; voldoende: inhoud 2 or more and 7 points, decided by api/check.js)
+const SCMAX={inhoud:3,woorden:2,grammatica:2,spelling:2,samenhang:1}, SPMAX=8, WRMAX=10, spPts=t=>t&&t.scores?Object.values(t.scores).reduce((a,b)=>a+(+b||0),0):null;
+const scoreHTML=sc=>{if(!sc)return""; const wr="spelling" in sc;
+  return`<p class="note">Punten: ${Object.keys(SCMAX).filter(k=>k in sc).map(k=>`${k} ${sc[k]}/${SCMAX[k]}`).join(" · ")} = <b>${spPts({scores:sc})} van ${wr?WRMAX:SPMAX}</b>. ${wr?"Voldoende is 7 punten, met inhoud minstens 2.":"Uitspraak en vloeiendheid kan ik niet horen: oefen die met Zeg het na."}</p>`};
 const spoken=t=>String(t).replace(/[\p{Extended_Pictographic}←-⇿️‍]/gu,"").replace(/\s+/g," ").trim();
 const saidText=r=>r.said.concat(r.part).join(" ").replace(/\s+/g," ").trim();
 async function listen(mode,done){
@@ -2752,7 +2754,7 @@ async function check(q){
     btn.hidden=true; const ok=!!res.passed;
     keepErrs(errs); record(ok);
     $("fb").innerHTML=`<b class="${ok?"good":"bad"}">${ok?"Goed zo! Voldoende":"Nog niet voldoende"}</b>
-      <p class="note">${esc(res.verdict)}</p>
+      <p class="note">${esc(res.verdict)}</p>${scoreHTML(res.scores)}
       ${errs.length?`<p class="ask">Fouten: ${errs.length}</p><ul class="errs">${errs.map(e=>`<li><s>${esc(e.wrong)}</s> <strong>${esc(e.right)}</strong><span>${esc(e.why)}</span></li>`).join("")}</ul>`:`<p class="note">Geen fouten gevonden.</p>`}
       <p class="ask">Verbeterde tekst</p><div class="sample">${esc(res.corrected)}</div>
       <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(q.right)}</div></details>
@@ -2781,15 +2783,19 @@ async function examWrite(){
   card.innerHTML=`<p class="note">Ik kijk je ${A.length} teksten na… Dit duurt ongeveer een minuut.</p>`;
   try{
     const T=await nakijken(A.map(a=>({task:a.q.big+(a.q.open?" "+a.q.open:""),form:a.form,text:a.text})));
-    let good=0;
-    const body=A.map((a,i)=>{const t=T[i]||{},errs=Array.isArray(t.errors)?t.errors:[];if(t.passed)good++;
+    let good=0,pts=0,scored=0;
+    const body=A.map((a,i)=>{const t=T[i]||{},errs=Array.isArray(t.errors)?t.errors:[],pt=spPts(t);if(t.passed)good++;if(pt!=null){pts+=pt;scored++}
       keepErrs(errs);
-      return`<h2>Opdracht ${queue.indexOf(a.q)+1}: <span class="${t.passed?"good":"bad"}">${t.passed?"voldoende":"nog niet voldoende"}</span></h2><p class="note">${a.q.big}</p><p class="note">${esc(t.verdict)}</p>
+      return`<h2>Opdracht ${queue.indexOf(a.q)+1}: <span class="${t.passed?"good":"bad"}">${t.passed?"voldoende":"nog niet voldoende"}</span></h2><p class="note">${a.q.big}</p><p class="note">${esc(t.verdict)}</p>${scoreHTML(t.scores)}
         ${errs.length?`<ul class="errs">${errs.map(e=>`<li><s>${esc(e.wrong)}</s> <strong>${esc(e.right)}</strong><span>${esc(e.why)}</span></li>`).join("")}</ul>`:""}
         ${own(a)}<p class="ask">Verbeterde tekst</p><div class="sample">${esc(t.corrected)}</div>
         <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(a.q.right)}</div></details>`}).join("");
-    keepRes(cur.part,Math.round(good/queue.length*100));
-    card.innerHTML=`<div class="done"><p class="ask">${cur.t}: uitslag</p><div class="big">${good}/${queue.length}</div><p class="ru">opdrachten voldoende${A.length<queue.length?`; ${queue.length-A.length} niet gemaakt`:""}</p></div>`+body+foot; bind();
+    // score: points of all tasks, as DUO counts them (a task not made counts 0); without points (older server) the share of good tasks
+    const max=WRMAX*queue.length, pc=scored?Math.round(pts/max*100):Math.round(good/queue.length*100), pass=pc>=PASS*100;
+    keepRes(cur.part,pc);
+    card.innerHTML=`<div class="done"><p class="ask">${cur.t}: uitslag</p><div class="big">${pc}%</div><p class="ru">${scored?`${pts} van ${max} punten, `:""}${good} van ${queue.length} opdrachten voldoende${A.length<queue.length?`; ${queue.length-A.length} niet gemaakt`:""}</p></div>
+      <p><b class="${pass?"good":"bad"}">${pass?"Geslaagd":"Nog niet geslaagd"}</b></p>
+      <p class="note">Je hebt ongeveer ${PASS*100}% van de punten nodig${scored?`: hier ${Math.ceil(max*PASS)} van ${max}`:""}. Punten verlies je ook door fouten in grammatica en spelling.</p>`+body+foot; bind();
   }catch(e){
     const c=e&&e.code;
     fallback(c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je teksten met de voorbeelden.":c==="rate_limited"?"Te veel verzoeken achter elkaar. Probeer het over een minuut opnieuw.":"Het nakijken is niet gelukt. Vergelijk je teksten met de voorbeelden.");

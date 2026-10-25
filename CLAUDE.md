@@ -149,8 +149,11 @@ stored progress: append new items, don't reorder or rename existing ones.
 
 `api/check.js` is a Vercel function that grades writing with Claude (`claude-opus-5-5`,
 structured JSON output, server-side refusal fallback). The page posts
-`{tasks:[{task, form, text}]}` and gets `{tasks:[{passed, verdict, corrected, errors}]}`;
-the prompt is built on the server, so the page can't send arbitrary prompts. It only
+`{tasks:[{task, form, text}]}` and gets `{tasks:[{passed, verdict, corrected, errors, scores}]}`;
+the prompt is built on the server, so the page can't send arbitrary prompts. Schrijven is scored on DUO's
+beoordelingsmodel: inhoud 0–3, woorden 0–2, grammatica 0–2, spelling 0–2, samenhang 0–1 (inhoud 0 makes everything 0;
+the prompt counts errors: 0–2 = 2, 3–5 = 1, 6+ = 0). `passed` is set by the server from the points (inhoud 2+ and 7 of 10),
+not by Claude, and the Schrijven proefexamen score is points of all 4 tasks against the 70% line. It only
 accepts requests whose Origin is the site itself. It needs `ANTHROPIC_API_KEY` in the
 Vercel project's environment variables (the user adds it in the dashboard; never handle
 the key in chat). Without it the page falls back to showing the example answer.
