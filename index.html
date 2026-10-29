@@ -1946,7 +1946,7 @@ function loadSb(){
 async function initAccount(){
   let cfg=null; try{cfg=JSON.parse(lsGet(ACFG))}catch(e){}
   const fresh=fetch("/api/config").then(r=>r.ok?r.json():null).catch(()=>null).then(c=>{if(c)lsSet(ACFG,JSON.stringify(c));return c});
-  if(!cfg)cfg=await fresh;
+  if(!cfg||!cfg.url)cfg=await fresh; // a cached "off" is asked again: accounts may have been switched on since
   else fresh.then(c=>{if(c&&(c.url||!acc.user)){acc.cfg=c.url?c:null;drawProfile()}});
   acc.cfg=cfg&&cfg.url?cfg:null; drawProfile();
   if(!acc.cfg)return;
