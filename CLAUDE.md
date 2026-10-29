@@ -62,7 +62,8 @@ official oefenexamens ↗. Practising a part is on Oefenen.
 - **Oefenen**: "Examenonderdelen" (Lezen, Luisteren, Schrijven, Spreken, KNM: practice without the clock) and
 "Grammatica en woorden" under it, "Lezen, luisteren en spreken" beside them on a computer.
 - **Herhalen**: Mijn zwakke punten, Mijn fouten and Mijn woorden (the last two once there is something in them).
-- **Profiel**: name and exam date (`S.me`, so they sync; the countdown is only here, never on Vandaag), the account
+- **Profiel**: first and last name and exam date (`S.me` `{name, last, exam}`, so they sync, and the names also go to the
+account's `user_metadata` by `syncMeta()`; the countdown is only here, never on Vandaag), the account
 (see Accounts) and "Mijn resultaten": every proefexamen with its date and score against the pass line, and a few counts.
 
 Every section appears once; don't add a second entry point to the same exercise.
@@ -144,6 +145,9 @@ vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one comin
   (default 20, Amsterdam days, `check_usage`): one task 1, a Schrijven proefexamen 2, a Spreken proefexamen 6
   (`checkCost()`; the page's `examGate()` uses the same numbers and warns before such a proefexamen). A failed grading
   gives them back. The answer has `left`.
+- Welcome screen (`#welcome`, `drawWelcome()`): the first time the app opens with accounts on and nobody logged in,
+  it asks for first name, last name and e-mail (or the other logins), or "Eerst rondkijken"; answered once per device
+  (`ww-welcome`), also shown once to people who already had progress.
 - `/api/account` (DELETE) deletes the user and, by cascade, their rows; the progress on the device stays.
 
 ## Content

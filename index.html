@@ -39,7 +39,7 @@ main{max-width:720px;margin:0 auto;padding:0 16px 48px;overflow-x:clip}
 /* art/molen-glass.jpg is the painting already blurred and small, so the page needs no live blur */
 body::before{content:"";position:fixed;inset:-24px;z-index:-2;background:url(/art/molen-glass.jpg) 70% 40%/cover}
 body::after{content:"";position:fixed;inset:0;z-index:-1;background:var(--glass)}
-.tile,#play,#stats,#lib,#read,#media,#story,#hist,#talk{background:var(--card);border-radius:4px;box-shadow:var(--lift);margin-top:16px;padding:4px 16px 20px}
+.tile,#play,#stats,#lib,#read,#media,#story,#hist,#talk,#welcome{background:var(--card);border-radius:4px;box-shadow:var(--lift);margin-top:16px;padding:4px 16px 20px}
 button{font:inherit;color:inherit;cursor:pointer}
 a{color:var(--blue)}
 button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid var(--oranje);outline-offset:2px}
@@ -165,7 +165,7 @@ a.it{text-decoration:none} .it.ext::after{content:none}
 .tabs.drag button{color:var(--ink)} .tabs.drag button.on{color:var(--blue)}
 /* scroll down and the bar shrinks to its icons; scroll up and the names come back */
 .tabs.min{width:min(300px,calc(100vw - 24px))}
-.gate{padding:2px 0 12px} #acct .ghost.wide{margin-bottom:8px}
+.gate{padding:2px 0 12px} #acct .ghost.wide,#welcome .wide,#welcome .two{margin-bottom:8px}
 .tabs.min button{padding:10px 4px} .tabs.min span{display:none}
 body:has(#home[hidden]) .tabs{display:none}
 main:has(#home:not([hidden])){padding-bottom:116px}
@@ -290,7 +290,7 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
 .miss{font:inherit;color:var(--bad);background:none;border:0;border-bottom:2px solid var(--bad);padding:0;margin:0;cursor:pointer}
 .bar.pass{position:relative} .bar.pass::after{content:"";position:absolute;left:var(--pass,70%);top:0;bottom:0;width:2px;background:var(--ink)}
 #stats .back,#lib .back{margin-top:14px}
-#stats h2,#lib h2{margin-top:18px}
+#stats h2,#lib h2,#welcome h2{margin-top:18px}
 /* boekenkast */
 .file{display:flex;align-items:center;justify-content:center;text-align:center;cursor:pointer}
 .file:focus-within{outline:3px solid var(--oranje);outline-offset:2px}
@@ -400,12 +400,12 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
   #label{display:flex;align-items:baseline;gap:40px}
   #label{flex-wrap:wrap} #label .lab{flex:0 0 340px} #label .nl{flex:1;margin:0} #label .it{flex:0 0 100%}
   #home .tile{padding:24px 28px 20px}
-  .tile,#play,#stats,#lib,#read,#media,#story,#hist,#talk{padding-left:28px;padding-right:28px}
+  .tile,#play,#stats,#lib,#read,#media,#story,#hist,#talk,#welcome{padding-left:28px;padding-right:28px}
   #card>.act,#card>.exnav,#card>.fb.sheet{margin-left:-28px;margin-right:-28px;padding-left:28px;padding-right:28px}
   .steps{grid-template-columns:repeat(3,minmax(0,1fr))}
   #exam .list{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));column-gap:40px}
   .duo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:16px;align-items:start}
-  #play,#stats,#lib,#read,#media,#story,#hist,#talk{max-width:720px;margin:16px auto 0}
+  #play,#stats,#lib,#read,#media,#story,#hist,#talk,#welcome{max-width:720px;margin:16px auto 0}
   .book{font-size:20px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}.tabs .lens.go{animation:none}}
@@ -426,13 +426,15 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
       <section class="tile"><h2>Lezen, luisteren en spreken</h2><div class="list" id="books"></div></section>
     </div>
     <section class="tile" id="prof" data-tab="profiel"><h2>Profiel</h2>
-      <label class="fld"><span>Naam</span><input id="pname" autocomplete="given-name" maxlength="40"></label>
+      <label class="fld"><span>Voornaam</span><input id="pname" autocomplete="given-name" maxlength="40"></label>
+      <label class="fld"><span>Achternaam</span><input id="plast" autocomplete="family-name" maxlength="60"></label>
       <label class="fld"><span>Examendatum</span><input id="pexam" type="date"></label>
       <div id="acct"></div>
     </section>
     <section class="tile" id="myres" data-tab="profiel"></section>
     <section class="tile" data-tab="herhalen"><h2>Herhalen</h2><p class="sub">Oefen wat je nog moeilijk vindt: je zwakke punten, je eigen fouten en de woorden die je hebt bewaard.</p><div class="list" id="mine"></div></section>
   </div>
+  <div id="welcome" hidden></div>
   <div id="story" hidden>
     <button class="back" id="vback"><span aria-hidden="true">←</span>Vandaag</button>
     <div id="vbody"></div>
@@ -1956,6 +1958,7 @@ async function initAccount(){
   if(back){ // back from Google or Apple
     if(q.get("error"))acc.msg="Inloggen is niet gelukt. Probeer het nog een keer.";
     history.replaceState(null,"",location.pathname); setTab("profiel"); drawProfile()}
+  if(!acc.user&&!back&&!lsGet(WEL)&&!$("home").hidden&&(acc.cfg.login||[]).length)welcome();
 }
 async function setUser(u){
   acc.user=u; acc.left=null; acc.step=null;
@@ -1963,7 +1966,8 @@ async function setUser(u){
   const uid=u.id;
   cloud={set:o=>acc.sb.from("progress").upsert({user_id:uid,data:o,t:o.t||0,updated_at:new Date().toISOString()})
     .then(r=>{if(r.error)throw r.error;acc.saved=Date.now();drawProfile()})};
-  drawProfile(); await pull().catch(()=>{}); usage();
+  drawProfile(); await pull().catch(()=>{}); usage(); syncMeta();
+  if(!$("welcome").hidden){lsSet(WEL,"1");acc.msg="";home();setTab("vandaag")}
 }
 // The first time a device joins an account both sides are merged; after that the newer one wins (S.t),
 // so something deleted on one device stays deleted
@@ -1991,7 +1995,7 @@ function mergeS(a,b){
   const ga=a.gen||{},gb=b.gen||{}; o.gen={lz:uni(ga.lz,gb.lz,JSON.stringify),ls:uni(ga.ls,gb.ls,JSON.stringify)};
   const[p,q]=(a.last||0)>=(b.last||0)?[a,b]:[b,a]; o.last=p.last||0; o.streak=p.last===q.last?Math.max(p.streak||0,q.streak||0):p.streak||0;
   o.day=a.day&&b.day&&a.day.d===b.day.d?{d:a.day.d,done:uni(a.day.done,b.day.done,x=>x)}:a.day&&b.day?(a.day.d>b.day.d?a.day:b.day):a.day||b.day;
-  const ma=a.me||{},mb=b.me||{}; o.me={name:ma.name||mb.name||"",exam:ma.exam||mb.exam||""};
+  const ma=a.me||{},mb=b.me||{}; o.me={name:ma.name||mb.name||"",last:ma.last||mb.last||"",exam:ma.exam||mb.exam||""};
   o.t=Math.max(a.t||0,b.t||0);
   return o;
 }
@@ -2006,24 +2010,63 @@ const loginErr=e=>{const m=String(e&&(e.message||e.name)||"");
   return/NotAllowed|abort|cancel/i.test(m)?"Inloggen is gestopt.":/rate|too many|seconds/i.test(m)?"Te veel pogingen. Probeer het over een paar minuten opnieuw."
     :/expired|invalid|otp|token/i.test(m)?"Deze code klopt niet of is verlopen. Vraag een nieuwe code.":/webauthn|passkey|credential/i.test(m)?"Inloggen met een passkey lukt niet. Heb je er al een gemaakt? Log dan eerst op een andere manier in.":"Inloggen is niet gelukt. Probeer het opnieuw."};
 async function login(p){
-  acc.msg=""; drawProfile();
+  acc.msg=""; redraw();
   try{await loadSb();
     const{error}=p==="passkey"?await acc.sb.auth.signInWithPasskey():await acc.sb.auth.signInWithOAuth({provider:p,options:{redirectTo:location.origin+"/"}});
     if(error)throw error;
-  }catch(e){acc.msg=loginErr(e);drawProfile()}
+  }catch(e){acc.msg=loginErr(e);redraw()}
 }
-async function mailCode(){
-  const m=($("amail").value||"").trim(); if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(m)){acc.msg="Vul een goed e-mailadres in.";return drawProfile()}
-  acc.msg=""; $("asend").disabled=true;
-  try{await loadSb();const{error}=await acc.sb.auth.signInWithOtp({email:m,options:{shouldCreateUser:true}});if(error)throw error;acc.mail=m;acc.step="code"}
+// Logging in happens on Profiel and on the welcome screen; both show the same state
+const redraw=()=>{drawProfile();if(!$("welcome").hidden)drawWelcome()};
+async function mailCode(m,btn){
+  m=(m||"").trim(); if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(m)){acc.msg="Vul een goed e-mailadres in.";return redraw()}
+  acc.msg=""; if(btn)btn.disabled=true;
+  const me=S.me||{}; // a new account gets the name at once (user_metadata), so it shows in Supabase
+  try{await loadSb();const{error}=await acc.sb.auth.signInWithOtp({email:m,options:{shouldCreateUser:true,data:{first_name:me.name||"",last_name:me.last||""}}});if(error)throw error;acc.mail=m;acc.step="code"}
   catch(e){acc.msg=loginErr(e)}
-  drawProfile(); if($("acode"))$("acode").focus();
+  redraw(); const f=$("welcome").hidden?$("acode"):$("wcode"); if(f)f.focus();
 }
-async function mailVerify(){
-  const c=($("acode").value||"").replace(/\D/g,""); if(c.length<6){acc.msg="Vul de code uit de e-mail in.";return drawProfile()}
-  acc.msg=""; $("averify").disabled=true;
+async function mailVerify(c,btn){
+  c=(c||"").replace(/\D/g,""); if(c.length<6){acc.msg="Vul de code uit de e-mail in.";return redraw()}
+  acc.msg=""; if(btn)btn.disabled=true;
   try{const{error}=await acc.sb.auth.verifyOtp({email:acc.mail,token:c,type:"email"});if(error)throw error}
-  catch(e){acc.msg=loginErr(e);drawProfile()}
+  catch(e){acc.msg=loginErr(e);redraw()}
+}
+// The name lives in the progress (S.me) and in the account (user_metadata): fill whichever is empty
+function syncMeta(){
+  if(!acc.user||!acc.sb)return;
+  const me=S.me||{},m=acc.user.user_metadata||{};
+  if(me.name){if(m.first_name!==me.name||(m.last_name||"")!==(me.last||""))acc.sb.auth.updateUser({data:{first_name:me.name,last_name:me.last||""}}).catch(()=>{})}
+  else{const full=String(m.full_name||m.name||"").trim().split(/\s+/),f=m.first_name||m.given_name||full[0]||"";
+    if(f){S.me={...me,name:f,last:m.last_name||m.family_name||full.slice(1).join(" ")};save();drawProfile()}}
+}
+// The first time the app opens with accounts on: make an account (first name, last name, e-mail) or look around first
+const WEL="ww-welcome";
+function welcome(){$("home").hidden=true;$("welcome").hidden=false;window.scrollTo(0,0);drawWelcome()}
+function drawWelcome(){
+  const el=$("welcome"),me=S.me||{},L=acc.cfg?acc.cfg.login||[]:[],nm={google:"Doorgaan met Google",apple:"Doorgaan met Apple",passkey:"Inloggen met passkey"};
+  const v=id=>$(id)?$(id).value:null,keep={f:v("wfirst")??me.name??"",l:v("wlast")??me.last??"",m:v("wmail")??acc.mail??""};
+  let h=`<h2>Welkom bij Bittertalen</h2><p class="sub">Maak een account. Dan blijft je voortgang bewaard, ook op je andere apparaten, en kijkt Claude je teksten en antwoorden na.</p>`;
+  if(acc.step==="code")h+=`<label class="fld"><span>Code uit de e-mail aan ${esc(acc.mail)}</span><input id="wcode" inputmode="numeric" autocomplete="one-time-code" maxlength="10"></label>
+    <div class="two"><button class="ghost" id="wagain">Ander adres</button><button class="btn" id="wverify">Bevestig</button></div>`;
+  else h+=`<label class="fld"><span>Voornaam</span><input id="wfirst" autocomplete="given-name" maxlength="40"></label>
+    <label class="fld"><span>Achternaam</span><input id="wlast" autocomplete="family-name" maxlength="60"></label>`
+    +(L.includes("email")?`<label class="fld"><span>E-mail</span><input id="wmail" type="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="naam@voorbeeld.nl"></label>
+    <button class="btn wide" id="wsend">Stuur een code</button>`:"")
+    +L.filter(p=>nm[p]).map(p=>`<button class="ghost wide" data-wlogin="${p}">${nm[p]}</button>`).join("");
+  if(acc.msg)h+=`<p class="note">${esc(acc.msg)}</p>`;
+  el.innerHTML=h+`<button class="ghost wide" id="wlater">Eerst rondkijken</button>`;
+  if($("wfirst")){$("wfirst").value=keep.f;$("wlast").value=keep.l}
+  if($("wmail"))$("wmail").value=keep.m;
+  // the name is kept before logging in, so it is there whichever way the login goes
+  const names=()=>{const f=$("wfirst").value.trim().slice(0,40),l=$("wlast").value.trim().slice(0,60);
+    if(!f){acc.msg="Vul je voornaam in.";drawWelcome();return false}
+    S.me={...(S.me||{}),name:f,last:l};save();drawProfile();return true};
+  if($("wsend")){const go=()=>{if(names())mailCode($("wmail").value,$("wsend"))};$("wsend").onclick=go;$("wmail").onkeydown=e=>{if(e.key==="Enter")go()}}
+  el.querySelectorAll("[data-wlogin]").forEach(b=>b.onclick=()=>{if(names())login(b.dataset.wlogin)});
+  if($("wcode")){$("wverify").onclick=()=>mailVerify($("wcode").value,$("wverify"));$("wcode").onkeydown=e=>{if(e.key==="Enter")mailVerify($("wcode").value,$("wverify"))};
+    $("wagain").onclick=()=>{acc.step=null;acc.msg="";drawWelcome()}}
+  $("wlater").onclick=()=>{lsSet(WEL,"1");acc.msg="";acc.step=null;home()};
 }
 // The token for /api/check; with accounts on, grading needs a login
 async function authHead(){
@@ -2407,7 +2450,7 @@ function itHTML(attr,t,d,o={}){
 }
 function home(){
   paint();
-  $("play").hidden=true;$("stats").hidden=true;$("lib").hidden=true;$("read").hidden=true;$("media").hidden=true;$("story").hidden=true;$("hist").hidden=true;$("talk").hidden=true;stopMedia();closePop();$("home").hidden=false;head();clock(0);hush();planId=null;drawPlan();drawA2hs();
+  $("play").hidden=true;$("welcome").hidden=true;$("stats").hidden=true;$("lib").hidden=true;$("read").hidden=true;$("media").hidden=true;$("story").hidden=true;$("hist").hidden=true;$("talk").hidden=true;stopMedia();closePop();$("home").hidden=false;head();clock(0);hush();planId=null;drawPlan();drawA2hs();
   const sec=id=>SEC.find(x=>x.id===id);
   const row=id=>{const s=sec(id),p=ITEMS.filter(x=>x.sec===id),n=p.filter(x=>S.items[x.k]).length;
     return itHTML(`data-s="${id}"`,s.t,s.s,{n:n+" van "+p.length,bar:n?n/p.length*100:null,ic:id})};
@@ -2577,16 +2620,15 @@ function drawA2hs(){
 // Only #acct is redrawn when the account changes, so typing in the fields is never interrupted.
 function drawProfile(){
   if(!$("acct"))return;
-  const me=S.me||{},n=$("pname"),x=$("pexam");
-  if(document.activeElement!==n)n.value=me.name||""; if(document.activeElement!==x)x.value=me.exam||"";
-  n.onchange=x.onchange=()=>{S.me={name:n.value.trim().slice(0,40),exam:x.value};save();drawResults()};
+  const me=S.me||{},n=$("pname"),l=$("plast"),x=$("pexam");
+  if(document.activeElement!==n)n.value=me.name||""; if(document.activeElement!==l)l.value=me.last||""; if(document.activeElement!==x)x.value=me.exam||"";
+  n.onchange=l.onchange=x.onchange=()=>{S.me={name:n.value.trim().slice(0,40),last:l.value.trim().slice(0,60),exam:x.value};save();drawResults();syncMeta()};
   const c=acc.cfg,u=acc.user,L=c?c.login||[]:[],mail=$("amail")?$("amail").value:"",el=$("acct");
   let h="";
   if(c){
     h=`<h3 class="lh">Account</h3>`;
     if(u){
-      const nm=u.email||(u.user_metadata||{}).full_name||"";
-      h+=`<p class="sub">Ingelogd${nm?` als <b>${esc(nm)}</b>`:""}. Je voortgang staat in je account en is hetzelfde op al je apparaten.${acc.saved?` Laatst bewaard om ${new Date(acc.saved).toLocaleTimeString("nl-NL",{hour:"2-digit",minute:"2-digit"})}.`:""}</p>
+      h+=`<p class="sub">Ingelogd${u.email?` als <b>${esc(u.email)}</b>`:""}. Je voortgang staat in je account en is hetzelfde op al je apparaten.${acc.saved?` Laatst bewaard om ${new Date(acc.saved).toLocaleTimeString("nl-NL",{hour:"2-digit",minute:"2-digit"})}.`:""}</p>
         <p class="sub">Nakijken door Claude vandaag: ${acc.left==null?"…":`nog ${Math.max(0,acc.left)} van de ${c.limit}`}. Een proefexamen Schrijven telt als 2, Spreken als 6.</p>
         <div class="two">${L.includes("passkey")?`<button class="ghost" id="apk">Passkey toevoegen</button>`:""}<button class="ghost" id="aout">Uitloggen</button></div>
         <button class="ghost wide" id="adel">Account verwijderen</button>`;
@@ -2596,16 +2638,16 @@ function drawProfile(){
         +L.filter(p=>nm[p]).map(p=>`<button class="ghost wide" data-login="${p}">${nm[p]}</button>`).join("");
       if(L.includes("email"))h+=acc.step==="code"
         ?`<label class="fld"><span>Code uit de e-mail aan ${esc(acc.mail)}</span><input id="acode" inputmode="numeric" autocomplete="one-time-code" maxlength="10"></label>
-          <div class="two"><button class="ghost" id="aagain">Ander e-mailadres</button><button class="btn" id="averify">Inloggen</button></div>`
-        :`<label class="fld"><span>Of met een code per e-mail</span><input id="amail" type="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="naam@voorbeeld.nl"></label>
+          <div class="two"><button class="ghost" id="aagain">Ander adres</button><button class="btn" id="averify">Inloggen</button></div>`
+        :`<label class="fld"><span>${L.some(p=>nm[p])?"Of met een code per e-mail":"E-mail"}</span><input id="amail" type="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="naam@voorbeeld.nl"></label>
           <button class="btn wide" id="asend">Stuur een code</button>`;
       if(!L.length)h+=`<p class="note">Inloggen is nog niet ingesteld.</p>`;
     }
     if(acc.msg)h+=`<p class="note">${esc(acc.msg)}</p>`;
   }
   el.innerHTML=h;
-  if($("amail")){$("amail").value=mail;$("amail").onkeydown=e=>{if(e.key==="Enter")mailCode()};$("asend").onclick=mailCode}
-  if($("acode")){$("acode").onkeydown=e=>{if(e.key==="Enter")mailVerify()};$("averify").onclick=mailVerify;$("aagain").onclick=()=>{acc.step=null;acc.msg="";drawProfile()}}
+  if($("amail")){$("amail").value=mail;$("amail").onkeydown=e=>{if(e.key==="Enter")mailCode($("amail").value,$("asend"))};$("asend").onclick=()=>mailCode($("amail").value,$("asend"))}
+  if($("acode")){$("acode").onkeydown=e=>{if(e.key==="Enter")mailVerify($("acode").value,$("averify"))};$("averify").onclick=()=>mailVerify($("acode").value,$("averify"));$("aagain").onclick=()=>{acc.step=null;acc.msg="";drawProfile()}}
   el.querySelectorAll("[data-login]").forEach(b=>b.onclick=()=>login(b.dataset.login));
   if($("apk"))$("apk").onclick=async()=>{
     try{const{error}=await acc.sb.auth.registerPasskey();if(error)throw error;acc.msg="Je passkey is gemaakt. Nu kun je ook met Face ID, Touch ID of je vingerafdruk inloggen."}
