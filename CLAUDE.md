@@ -6,6 +6,9 @@ Deployed on Vercel from `main`: every push to `main` goes live at https://bitter
 `nedelands`; the domain is registered at TransIP with Vercel's nameservers, so its DNS records are in Vercel, including
 Resend's). The old addresses https://bittertalen.vercel.app and https://nedelands.vercel.app serve the same deployment
 (see Progress for the move).
+Search: `robots.txt`, `sitemap.xml` (only https://bittertalen.nl/), a canonical link to bittertalen.nl, Open Graph tags
+with `art/og-delft.jpg`, JSON-LD (`WebApplication`) and a `<noscript>` line; the old addresses send `X-Robots-Tag: noindex`
+(`vercel.json`), and search engines don't get the welcome screen.
 The app's UI language is Dutch; the user talks to Claude in Russian. There is no Russian anywhere in the app: a word's meaning is
 a short Dutch description (A2), or English from the dictionary.
 

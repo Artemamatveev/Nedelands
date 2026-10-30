@@ -9,7 +9,26 @@
 <link rel="manifest" href="/manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Bittertalen — Nederlands A2 voor het inburgeringsexamen</title>
-<meta name="description" content="Bittertalen: elke dag een beetje beter. Gratis oefenen voor het inburgeringsexamen A2: lezen, luisteren, schrijven, spreken en KNM.">
+<meta name="description" content="Gratis oefenen voor het inburgeringsexamen A2: lezen, luisteren, schrijven, spreken en KNM, met proefexamens zoals bij DUO en feedback op je teksten. Elke dag een beetje beter.">
+<link rel="canonical" href="https://bittertalen.nl/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Bittertalen">
+<meta property="og:locale" content="nl_NL">
+<meta property="og:url" content="https://bittertalen.nl/">
+<meta property="og:title" content="Bittertalen — oefenen voor het inburgeringsexamen A2">
+<meta property="og:description" content="Gratis oefenen voor lezen, luisteren, schrijven, spreken en KNM, met proefexamens zoals bij DUO.">
+<meta property="og:image" content="https://bittertalen.nl/art/og-delft.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Gezicht op Delft, Johannes Vermeer">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Bittertalen","url":"https://bittertalen.nl/",
+"applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":"nl",
+"description":"Gratis oefenen voor het inburgeringsexamen A2: lezen, luisteren, schrijven, spreken en Kennis van de Nederlandse Maatschappij (KNM), met proefexamens zoals bij DUO, woordenschat, grammatica en Nederlandse geschiedenis.",
+"educationalLevel":"A2","teaches":["Nederlands als tweede taal","Kennis van de Nederlandse Maatschappij"],
+"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}
+</script>
 <style>
 /* Delfts blauw: tin-glaze white, cobalt, and oranje as the one accent.
    Type: the phone's own system font (SF Pro on iPhone), so it reads like a native app. */
@@ -412,6 +431,8 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
 </style>
 </head>
 <body>
+<noscript><p style="padding:16px">Bittertalen: gratis oefenen voor het inburgeringsexamen A2. Lezen, luisteren, schrijven, spreken en
+KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript aan om te oefenen.</p></noscript>
 <main>
   <header>
     <button class="art" id="artbtn" aria-label="Bekijk het hele schilderij"><img id="artimg" alt=""></button>
@@ -1959,7 +1980,7 @@ async function initAccount(){
   if(back){ // back from Google or Apple
     if(q.get("error"))acc.msg="Inloggen is niet gelukt. Probeer het nog een keer.";
     history.replaceState(null,"",location.pathname); setTab("profiel"); drawProfile()}
-  if(!acc.user&&!back&&!lsGet(WEL)&&!$("home").hidden&&(acc.cfg.login||[]).length)welcome();
+  if(!acc.user&&!back&&!lsGet(WEL)&&!$("home").hidden&&(acc.cfg.login||[]).length&&!/bot|crawl|spider|slurp|lighthouse/i.test(navigator.userAgent))welcome();
 }
 async function setUser(u){
   acc.user=u; acc.left=null; acc.step=null;

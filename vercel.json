@@ -3,5 +3,17 @@
     "api/check.js": {
       "maxDuration": 120
     }
-  }
+  },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "bittertalen.vercel.app" }],
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }]
+    },
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "nedelands.vercel.app" }],
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }]
+    }
+  ]
 }

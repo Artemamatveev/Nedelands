@@ -7,6 +7,7 @@ Ze zijn verkleind en gecomprimeerd voor de app (max. 1000 px).
 |---|---|---|
 | `melkmeisje.jpg` | [Johannes Vermeer - Het melkmeisje - Google Art Project.jpg](https://commons.wikimedia.org/wiki/File:Johannes_Vermeer_-_Het_melkmeisje_-_Google_Art_Project.jpg) | Public domain |
 | `delft.jpg` | [Johannes Vermeer - View of Delft - 92 - Mauritshuis.jpg](https://commons.wikimedia.org/wiki/File:Johannes_Vermeer_-_View_of_Delft_-_92_-_Mauritshuis.jpg) | Public domain |
+| `og-delft.jpg` | crop of `delft.jpg` (same source), 1200×630, the preview image when the site is shared | Public domain |
 | `parel.jpg` | [1665 Girl with a Pearl Earring.jpg](https://commons.wikimedia.org/wiki/File:1665_Girl_with_a_Pearl_Earring.jpg) | Public domain |
 | `brief.jpg` | [Brieflezende vrouw Rijksmuseum SK-C-251.jpeg](https://commons.wikimedia.org/wiki/File:Brieflezende_vrouw_Rijksmuseum_SK-C-251.jpeg) | Public domain |
 | `nachtwacht.jpg` | [The Nightwatch by Rembrandt - Rijksmuseum.jpg](https://commons.wikimedia.org/wiki/File:The_Nightwatch_by_Rembrandt_-_Rijksmuseum.jpg) | Public domain |

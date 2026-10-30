@@ -1,0 +1,5 @@
+# Bittertalen: everything may be indexed except the api; the old addresses send X-Robots-Tag: noindex (vercel.json)
+User-agent: *
+Disallow: /api/
+
+Sitemap: https://bittertalen.nl/sitemap.xml
