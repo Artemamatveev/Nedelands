@@ -140,7 +140,8 @@ through the Marketplace: `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_
 security and `use_checks()` are in `supabase/schema.sql` (run it in the SQL editor). Without those env vars
 `/api/config` returns `{}` and the app behaves as before. The page loads `lib/supabase-2.117.3.js` (the UMD build,
 vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one coming back from Google/Apple.
-- Login: Google and Apple show when they are on in Supabase; the e-mail code (`signInWithOtp` + `verifyOtp`, a 6-digit
+- Login: Google and Apple show when they are on in Supabase, except in an iPhone home-screen app (`logins()`: iOS opens
+  their page in a separate Safari window and the login would stay there); the e-mail code (`signInWithOtp` + `verifyOtp`, a 6-digit
   code, so an iPhone home-screen app never has to open a link) only with `LOGIN_EMAIL=1`, because Supabase's own mail
   only reaches the project's team (it needs custom SMTP); passkeys (experimental in Supabase) only with
   `LOGIN_PASSKEY=1`, and a passkey is added after logging in another way.

@@ -2043,9 +2043,12 @@ function syncMeta(){
 }
 // The first time the app opens with accounts on: make an account (first name, last name, e-mail) or look around first
 const WEL="ww-welcome";
+// The logins that work here: an iPhone home-screen app opens Google's and Apple's page in a separate Safari window,
+// and the login would stay there, so it only offers the e-mail code (and passkeys)
+const logins=()=>(acc.cfg&&acc.cfg.login||[]).filter(p=>!(navigator.standalone===true&&(p==="google"||p==="apple")));
 function welcome(){$("home").hidden=true;$("welcome").hidden=false;window.scrollTo(0,0);drawWelcome()}
 function drawWelcome(){
-  const el=$("welcome"),me=S.me||{},L=acc.cfg?acc.cfg.login||[]:[],nm={google:"Doorgaan met Google",apple:"Doorgaan met Apple",passkey:"Inloggen met passkey"};
+  const el=$("welcome"),me=S.me||{},L=logins(),nm={google:"Doorgaan met Google",apple:"Doorgaan met Apple",passkey:"Inloggen met passkey"};
   const v=id=>$(id)?$(id).value:null,keep={f:v("wfirst")??me.name??"",l:v("wlast")??me.last??"",m:v("wmail")??acc.mail??""};
   let h=`<h2>Welkom bij Bittertalen</h2><p class="sub">Maak een account. Dan blijft je voortgang bewaard, ook op je andere apparaten, en kijkt Claude je teksten en antwoorden na.</p>`;
   if(acc.step==="code")h+=`<label class="fld"><span>Code uit de e-mail aan ${esc(acc.mail)}</span><input id="wcode" inputmode="numeric" autocomplete="one-time-code" maxlength="10"></label>
@@ -2624,7 +2627,7 @@ function drawProfile(){
   const me=S.me||{},n=$("pname"),l=$("plast"),x=$("pexam");
   if(document.activeElement!==n)n.value=me.name||""; if(document.activeElement!==l)l.value=me.last||""; if(document.activeElement!==x)x.value=me.exam||"";
   n.onchange=l.onchange=x.onchange=()=>{S.me={name:n.value.trim().slice(0,40),last:l.value.trim().slice(0,60),exam:x.value};save();drawResults();syncMeta()};
-  const c=acc.cfg,u=acc.user,L=c?c.login||[]:[],mail=$("amail")?$("amail").value:"",el=$("acct");
+  const c=acc.cfg,u=acc.user,L=logins(),mail=$("amail")?$("amail").value:"",el=$("acct");
   let h="";
   if(c){
     h=`<h3 class="lh">Account</h3>`;
