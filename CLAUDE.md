@@ -2,9 +2,10 @@
 
 Bittertalen (a pun on bitterballen: "bitter languages", self-irony about learning Dutch) is a single-page study app for the Dutch A2 integration exam (inburgeringsexamen).
 Everything lives in `index.html` (styles, data, logic). Paintings are in `art/`.
-Deployed on Vercel from `main`: every push to `main` goes live at https://bittertalen.vercel.app (Vercel project
-`nedelands`). The old address https://nedelands.vercel.app serves the same deployment and sends you on
-to the new address (see Progress).
+Deployed on Vercel from `main`: every push to `main` goes live at https://bittertalen.nl (Vercel project
+`nedelands`; the domain is registered at TransIP with Vercel's nameservers, so its DNS records are in Vercel, including
+Resend's). The old addresses https://bittertalen.vercel.app and https://nedelands.vercel.app serve the same deployment
+(see Progress for the move).
 The app's UI language is Dutch; the user talks to Claude in Russian. There is no Russian anywhere in the app: a word's meaning is
 a short Dutch description (A2), or English from the dictionary.
 
@@ -123,9 +124,14 @@ whole texts.
 photos from the cache (the page sends their list after loading), `api/` never cached. Don't change the stored shape without migrating old data.
 Saving progress to a file was removed on purpose. On an iPhone in Safari a tile on Vandaag (`drawA2hs()`)
 asks to put the app on the home screen, because Safari can wipe a site's storage after a week without a visit; the
-home-screen app has its own storage, so the progress goes along by the clipboard (Kopieer / Plak mijn voortgang). The app moved from https://nedelands.vercel.app; that address
-still serves the same deployment, and the page there sends you on to the new address (the one-time move screen with a
-progress code was removed once the move was done).
+home-screen app has its own storage, so the progress goes along by the clipboard (Kopieer / Plak mijn voortgang).
+The app moved to https://bittertalen.nl. Storage is per address, so on bittertalen.vercel.app a move screen
+(`moveScreen()`) takes the progress along: in a browser it packs `S`, `ww-media` and own books (gzip, base64url,
+`BITTERTALEN2:`, books dropped if the link would pass 60 000 characters) into the link `bittertalen.nl/#verhuis=…`,
+and `arrive()` there merges it in (`mergeS()`; the fragment never reaches a server). A home-screen app can't carry its
+memory to another address, so it is told to log in, reinstall from bittertalen.nl and log in there. With nothing to
+move, the old address forwards at once; https://nedelands.vercel.app (the address before, moved in October) always
+forwards. Remove the move screen once nobody uses the old address any more.
 
 ## Accounts (optional)
 
