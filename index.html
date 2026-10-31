@@ -451,6 +451,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
       <label class="fld"><span>Achternaam</span><input id="plast" autocomplete="family-name" maxlength="60"></label>
       <label class="fld"><span>Examendatum</span><input id="pexam" type="date"></label>
       <div id="acct"></div>
+      <div class="list" id="plinks"></div>
     </section>
     <section class="tile" id="myres" data-tab="profiel"></section>
     <section class="tile" data-tab="herhalen"><h2>Herhalen</h2><p class="sub">Oefen wat je nog moeilijk vindt: je zwakke punten, je eigen fouten en de woorden die je hebt bewaard.</p><div class="list" id="mine"></div></section>
@@ -2080,7 +2081,8 @@ function drawWelcome(){
     <button class="btn wide" id="wsend">Stuur een code</button>`:"")
     +L.filter(p=>nm[p]).map(p=>`<button class="ghost wide" data-wlogin="${p}">${nm[p]}</button>`).join("");
   if(acc.msg)h+=`<p class="note">${esc(acc.msg)}</p>`;
-  el.innerHTML=h+`<button class="ghost wide" id="wlater">Eerst rondkijken</button>`;
+  el.innerHTML=h+`<button class="ghost wide" id="wlater">Eerst rondkijken</button>
+    <p class="note">Wat we met je e-mailadres en je voortgang doen: <a href="/privacy" target="_blank" rel="noopener">privacyverklaring ↗</a></p>`;
   if($("wfirst")){$("wfirst").value=keep.f;$("wlast").value=keep.l}
   if($("wmail"))$("wmail").value=keep.m;
   // the name is kept before logging in, so it is there whichever way the login goes
@@ -2469,6 +2471,7 @@ const IC={
   errs:'<path d="M4 7h16M4 12h9M4 17h6M15 14l5 5M20 14l-5 5"/>',
   hist:'<path d="M7 3h10M7 21h10M8 3v2.5c0 2.5 4 4 4 6.5s-4 4-4 6.5V21M16 3v2.5c0 2.5-4 4-4 6.5s4 4 4 6.5V21"/>',
   talk:'<path d="M3 4h11v8H8l-3 3v-3H3z"/><path d="M14 8h7v8h-2v3l-3-3h-6v-4"/>',
+  privacy:'<path d="M12 3l7 3v5c0 4.6-3 8.2-7 10-4-1.8-7-5.4-7-10V6z"/><path d="M9 12l2 2 4-4"/>',
   duo:'<path d="M6 4h12v17H6z"/><path d="M9.5 4V2.8h5V4M9 12.5l2.2 2.2L15.5 10"/>'};
 function itHTML(attr,t,d,o={}){
   return`<button class="it" ${attr}>${o.ic?`<i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC[o.ic]}</svg></i>`:""}<span><span class="th"><b>${t}</b>${o.n!=null?`<small>${o.n}</small>`:""}</span>${d?`<span class="d">${d}</span>`:""}${o.bar!=null?`<span class="bar${o.pass?" pass":""}"><i style="width:${o.bar}%"></i></span>`:""}</span></button>`;
@@ -2686,6 +2689,8 @@ function drawProfile(){
       lsSet(ALINK,null);cloud=null;try{await acc.sb.auth.signOut({scope:"local"})}catch(e){}
       acc.msg="Je account is verwijderd. Je voortgang op dit apparaat blijft.";setUser(null)}
     catch(e){acc.msg="Verwijderen is niet gelukt. Probeer het later opnieuw.";drawProfile()}};
+  $("plinks").innerHTML=itHTML(`data-x="privacy"`,"Privacyverklaring","Welke gegevens Bittertalen gebruikt, waarom en waar ze staan.",{ic:"privacy"});
+  $("plinks").querySelector("button").onclick=()=>{location.href="/privacy"};
   drawResults();
 }
 function drawResults(){

@@ -1,5 +1,6 @@
 // Offline: the app keeps working without a connection (on the train, abroad).
-// The page itself: network first, so a push to main is live at once; the cached copy only when offline.
+// The page itself: network first, so a push to main is live at once; the cached copy only when offline. Other pages
+// (privacy.html) are cached under their own address, never as "/".
 // Paintings, photos and icons: from the cache, refreshed in the background. The dictionary (7 MB): cache only.
 // api/ (grading, new texts) always goes to the network.
 const CACHE = "nl-a2-v1", CORE = ["/", "/manifest.json", "/apple-touch-icon.png"];
@@ -20,7 +21,16 @@ self.addEventListener("message", e => {
 self.addEventListener("fetch", e => {
   const r = e.request, u = new URL(r.url);
   if (r.method !== "GET" || u.origin !== location.origin || u.pathname.startsWith("/api/")) return;
-  if (r.mode === "navigate" || u.pathname === "/" || u.pathname === "/index.html") {
+  const app = u.pathname === "/" || u.pathname === "/index.html";
+  // Another page of the site (the privacy statement): network first, kept under its own address for offline
+  if (r.mode === "navigate" && !app) {
+    e.respondWith(fetch(r).then(res => {
+      if (res.ok) { const copy = res.clone(); caches.open(CACHE).then(c => c.put(r, copy)) }
+      return res;
+    }).catch(() => caches.match(r).then(hit => hit || caches.match("/"))));
+    return;
+  }
+  if (r.mode === "navigate" || app) {
     e.respondWith(fetch(r).then(res => {
       if (res.ok) { const copy = res.clone(); caches.open(CACHE).then(c => c.put("/", copy)) }
       return res;
