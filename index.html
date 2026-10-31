@@ -220,6 +220,8 @@ textarea{display:block;width:100%;font-size:17px;line-height:1.5;padding:12px;ma
 .fld{display:block;margin-bottom:8px}
 .fld span{display:block;font-size:14.5px;color:var(--soft)}
 .fld input{width:100%;font-size:17px;font-weight:400;padding:7px 10px}
+.fld input[type=date]{display:block;max-width:100%;min-height:42px;-webkit-appearance:none;appearance:none;text-align:left}
+.fld input[type=date]::-webkit-date-and-time-value{text-align:left}
 .btn{background:var(--fill);color:var(--on-fill);border:0;border-radius:3px;padding:14px 20px;font-weight:600;font-size:18px}
 .btn:active{background:var(--fill-press)}
 .btn:disabled{opacity:.4;cursor:default}
@@ -2656,13 +2658,13 @@ function drawProfile(){
   if(c){
     h=`<h3 class="lh">Account</h3>`;
     if(u){
-      h+=`<p class="sub">Ingelogd${u.email?` als <b>${esc(u.email)}</b>`:""}. Je voortgang staat in je account en is hetzelfde op al je apparaten.${acc.saved?` Laatst bewaard om ${new Date(acc.saved).toLocaleTimeString("nl-NL",{hour:"2-digit",minute:"2-digit"})}.`:""}</p>
-        <p class="sub">Nakijken door Claude vandaag: ${acc.left==null?"…":`nog ${Math.max(0,acc.left)} van de ${c.limit}`}. Een proefexamen Schrijven telt als 2, Spreken als 6.</p>
-        <div class="two">${L.includes("passkey")?`<button class="ghost" id="apk">Passkey toevoegen</button>`:""}<button class="ghost" id="aout">Uitloggen</button></div>
+      h+=`<p class="sub">Ingelogd${u.email?` als <b>${esc(u.email)}</b>`:""}<br>Nakijken vandaag: ${acc.left==null?"…":`nog ${Math.max(0,acc.left)} van de ${c.limit}`}</p>
+        ${L.includes("passkey")?`<button class="ghost wide" id="apk">Passkey toevoegen</button>`:""}
+        <button class="ghost wide" id="aout">Uitloggen</button>
         <button class="ghost wide" id="adel">Account verwijderen</button>`;
     }else{
       const nm={google:"Doorgaan met Google",apple:"Doorgaan met Apple",passkey:"Inloggen met passkey"};
-      h+=`<p class="sub">Log in om je voortgang op al je apparaten te hebben en je teksten en antwoorden door Claude te laten nakijken (${c.limit} keer per dag). Zonder account werkt alles op dit apparaat, behalve het nakijken.</p>`
+      h+=`<p class="sub">Log in om je voortgang op al je apparaten te hebben en je teksten te laten nakijken.</p>`
         +L.filter(p=>nm[p]).map(p=>`<button class="ghost wide" data-login="${p}">${nm[p]}</button>`).join("");
       if(L.includes("email"))h+=acc.step==="code"
         ?`<label class="fld"><span>Code uit de e-mail aan ${esc(acc.mail)}</span><input id="acode" inputmode="numeric" autocomplete="one-time-code" maxlength="10"></label>
