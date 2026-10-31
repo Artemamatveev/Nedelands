@@ -220,8 +220,6 @@ textarea{display:block;width:100%;font-size:17px;line-height:1.5;padding:12px;ma
 .fld{display:block;margin-bottom:8px}
 .fld span{display:block;font-size:14.5px;color:var(--soft)}
 .fld input{width:100%;font-size:17px;font-weight:400;padding:7px 10px}
-.fld input[type=date]{display:block;max-width:100%;min-height:42px;-webkit-appearance:none;appearance:none;text-align:left}
-.fld input[type=date]::-webkit-date-and-time-value{text-align:left}
 .btn{background:var(--fill);color:var(--on-fill);border:0;border-radius:3px;padding:14px 20px;font-weight:600;font-size:18px}
 .btn:active{background:var(--fill-press)}
 .btn:disabled{opacity:.4;cursor:default}
@@ -451,7 +449,6 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
     <section class="tile" id="prof" data-tab="profiel"><h2>Profiel</h2>
       <label class="fld"><span>Voornaam</span><input id="pname" autocomplete="given-name" maxlength="40"></label>
       <label class="fld"><span>Achternaam</span><input id="plast" autocomplete="family-name" maxlength="60"></label>
-      <label class="fld"><span>Examendatum</span><input id="pexam" type="date"></label>
       <div id="acct"></div>
       <div class="list" id="plinks"></div>
     </section>
@@ -2650,9 +2647,9 @@ function drawA2hs(){
 // Only #acct is redrawn when the account changes, so typing in the fields is never interrupted.
 function drawProfile(){
   if(!$("acct"))return;
-  const me=S.me||{},n=$("pname"),l=$("plast"),x=$("pexam");
-  if(document.activeElement!==n)n.value=me.name||""; if(document.activeElement!==l)l.value=me.last||""; if(document.activeElement!==x)x.value=me.exam||"";
-  n.onchange=l.onchange=x.onchange=()=>{S.me={name:n.value.trim().slice(0,40),last:l.value.trim().slice(0,60),exam:x.value};save();drawResults();syncMeta()};
+  const me=S.me||{},n=$("pname"),l=$("plast");
+  if(document.activeElement!==n)n.value=me.name||""; if(document.activeElement!==l)l.value=me.last||"";
+  n.onchange=l.onchange=()=>{S.me={...(S.me||{}),name:n.value.trim().slice(0,40),last:l.value.trim().slice(0,60)};save();syncMeta()};
   const c=acc.cfg,u=acc.user,L=logins(),mail=$("amail")?$("amail").value:"",el=$("acct");
   let h="";
   if(c){
@@ -2697,10 +2694,9 @@ function drawProfile(){
 }
 function drawResults(){
   const el=$("myres"); if(!el)return;
-  const me=S.me||{},R=S.res||{},d=me.exam?Math.round((new Date(me.exam+"T12:00")-Date.now())/864e5):-1;
+  const R=S.res||{};
   const day=t=>new Date(t).toLocaleDateString("nl-NL",{day:"numeric",month:"long"}),ks=["lz","ls","wr","sp","knm"].filter(k=>(R[k]||[]).length);
   el.innerHTML=`<h2>Mijn resultaten</h2>`
-    +(d>=0?`<p class="sub">${d===0?"Vandaag is je examen. Succes!":`Nog ${d} ${d===1?"dag":"dagen"} tot je examen.`}</p>`:"")
     +(ks.length?ks.map(k=>`<h3 class="lh">${PART[k]}</h3><ul class="errs kv">${R[k].slice().reverse().map(r=>`<li>Proefexamen ${day(r.at)}<span class="${r.pc>=passPc(k)?"good":"bad"}">${r.pc}%</span></li>`).join("")}</ul>`).join("")
       :`<p class="sub">Nog geen proefexamen gedaan. Je uitslagen komen hier.</p>`)
     +`<h3 class="lh">Geoefend</h3><ul class="errs kv"><li>Dagen op rij<span>${S.last>=today()-1?S.streak:0}</span></li><li>Vragen geoefend<span>${Object.keys(S.items).length}</span></li>`

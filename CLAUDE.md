@@ -72,8 +72,9 @@ official oefenexamens ↗. Practising a part is on Oefenen.
 - **Oefenen**: "Examenonderdelen" (Lezen, Luisteren, Schrijven, Spreken, KNM: practice without the clock) and
 "Grammatica en woorden" under it, "Lezen, luisteren en spreken" beside them on a computer.
 - **Herhalen**: Mijn zwakke punten, Mijn fouten and Mijn woorden (the last two once there is something in them).
-- **Profiel**: first and last name and exam date (`S.me` `{name, last, exam}`, so they sync, and the names also go to the
-account's `user_metadata` by `syncMeta()`; the countdown is only here, never on Vandaag), the account
+- **Profiel**: first and last name (`S.me` `{name, last}`, so they sync, and they also go to the account's
+`user_metadata` by `syncMeta()`; an exam date was asked here once and removed at the user's wish, an old `exam` field is
+kept as it is but not shown), the account
 (see Accounts) and "Mijn resultaten": every proefexamen with its date and score against the pass line, and a few counts.
 
 Every section appears once; don't add a second entry point to the same exercise.
