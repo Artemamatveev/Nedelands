@@ -340,6 +340,8 @@ video or audio, level 1–3, a Dutch description). `api/feed.js` fetches the lat
 the whitelisted feeds (YouTube channel RSS, podcast RSS; no key, cached by Vercel's CDN for 30 min)
 and returns `{link, items:[{t, d, s, v|a, n}]}`; to add a source, add it to both `MEDIA` and `FEEDS`.
 Only free sources whose episodes are entirely in Dutch. Videos play in the YouTube embed
-(`youtube-nocookie.com`, Dutch captions on), podcasts in `<audio>` with 10 s back and 0.75/1/1.25×.
+(`youtube-nocookie.com`, Dutch captions on; a Short, `sh` from the feed's /shorts/ link, gets an upright 9:16 box;
+"Volledig scherm" uses the browser's fullscreen, or on an iPhone, which has none for a page element, lets the box cover the
+screen with a ✕, `vFull()`), podcasts in `<audio>` with 10 s back and 0.75/1/1.25×.
 What was opened, where a podcast stopped and the chosen speed stay in `localStorage` `ww-media`,
 not in `ww-v1`.

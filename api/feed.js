@@ -1,6 +1,6 @@
 // Latest episodes for "Luisteren en kijken": Dutch YouTube channels and podcasts.
 // GET /api/feed?id=jj -> {link, items:[{t, d, s, v} | {t, d, s, a, n}]}
-// t title, d date (ms), s short summary in Dutch, v YouTube video id, a audio URL, n length in seconds.
+// t title, d date (ms), s short summary in Dutch, v YouTube video id (sh: 1 for a Short), a audio URL, n length in seconds.
 // Only the feeds listed here, so the page can't make the server fetch other URLs. No key needed.
 const YT = "https://www.youtube.com/feeds/videos.xml?channel_id=";
 const FEEDS = {
@@ -74,6 +74,7 @@ function parseItems(xml) {
       d: Date.parse(tag(e, "published")) || 0,
       s: paragraphs(tag(e, "media:description")),
       v: tag(e, "yt:videoId"),
+      ...(/\/shorts\//.test(attr(e, "link", "href")) ? { sh: 1 } : {}), // a Short: upright, 9:16
     }));
   return xml.split(/<item[\s>]/).slice(1)
     .map((e) => ({
