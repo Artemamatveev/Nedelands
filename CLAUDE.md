@@ -194,9 +194,11 @@ stored progress: append new items, don't reorder or rename existing ones.
 Being built part by part: Lezen, Luisteren and Schrijven so far. The level is `S.lvl` ("A2" by default, "B1"; it syncs with the progress), chosen
 under "Ik oefen voor" in Profiel and on the welcome screen (`.seg`, two halves of one outlined button, the chosen one
 filled). `parts()` gives the exam parts of the level: at B1 `l1` replaces `lz`, `lb` replaces `ls` and `wb` replaces `wr`, and Spreken stays
-at A2 until its B1 version comes; KNM belongs to both routes. At B1 Examen and Oefenen show Lezen B1, Luisteren B1, Schrijven B1 and KNM first (with
-a row to the official oefenexamens NT2 ↗), then "Nog op A2-niveau"; at A2 they show A2 first and a small B1 group under
-it. Today's lesson uses `parts()`; the Mix leaves out the other level's reading and listening.
+at A2 until its B1 version comes; KNM belongs to both routes. Examen and Oefenen have two tabs at the top (`.seg.lvt`, "Inburgering A2" |
+"Staatsexamen B1"), showing one level at a time; they open on the level you practise for, and the tab you pick (`exV`,
+not stored) stays until the level changes. The B1 tab shows Lezen B1, Luisteren B1, Schrijven B1 and KNM (with a row to
+the official oefenexamens NT2 ↗), then Spreken under "Nog op A2-niveau"; looking at the other level's tab says which
+level today's lesson follows. Today's lesson uses `parts()`; the Mix leaves out the other level's reading and listening.
 - Lezen B1: `LZ1` (`[text, questions, intro]`, the same shape as `LZ`), section `l1`, keys `l1|<text>.<question>`,
   label "Lees de tekst (B1)". Six questions per text with three options; question types like the exam: main point,
   purpose, details, the writer's opinion, a word or phrase in context, what you should do. The proefexamen (`EX.l1`) is

@@ -191,7 +191,7 @@ a.it{text-decoration:none} .it.ext::after{content:none}
 .seg{display:grid;grid-template-columns:1fr 1fr;border:1.5px solid var(--blue);border-radius:3px;overflow:hidden;margin-top:2px}
 .seg button{border:0;background:none;color:var(--blue);font-weight:700;font-size:16px;padding:10px 6px;min-height:44px}
 .seg button+button{border-left:1.5px solid var(--blue)}
-.seg button[aria-pressed="true"]{background:var(--fill);color:var(--on-fill)} #acct .ghost.wide,#welcome .wide,#welcome .two,#move .wide{margin-bottom:8px}
+.seg button[aria-pressed="true"]{background:var(--fill);color:var(--on-fill)} .seg.lvt{margin:4px 0 12px} #acct .ghost.wide,#welcome .wide,#welcome .two,#move .wide{margin-bottom:8px}
 .tabs.min button{padding:10px 4px} .tabs.min span{display:none}
 body:has(#home[hidden]) .tabs{display:none}
 main:has(#home:not([hidden])){padding-bottom:116px}
@@ -2076,7 +2076,7 @@ function syncMeta(){
 // The first time the app opens with accounts on: make an account (first name, last name, e-mail) or look around first
 const WEL="ww-welcome";
 const segHTML=()=>["A2","B1"].map(v=>`<button type="button" data-lvl="${v}" aria-pressed="${lvl()===v}">${LVL[v]}</button>`).join("");
-const setLvl=v=>{if(v===lvl())return;S.lvl=v;save()};
+const setLvl=v=>{if(v===lvl())return;S.lvl=v;exV=null;save()};
 // The logins that work here: an iPhone home-screen app opens Google's and Apple's page in a separate Safari window,
 // and the login would stay there, so it only offers the e-mail code (and passkeys)
 const logins=()=>(acc.cfg&&acc.cfg.login||[]).filter(p=>!(navigator.standalone===true&&(p==="google"||p==="apple")));
@@ -2742,18 +2742,20 @@ function home(){
   const hs=S.hs||{},lh=GS.filter(c=>hs[c.id]).sort((a,b)=>hs[b.id]-hs[a.id])[0],gsDone=GS.filter(c=>gsItems(c).every(x=>(S.items[x.k]||{}).r)).length;
   // one row per part: tap it for a proefexamen; on the right how far you are
   // Examen and Oefenen follow the level: its parts first; at B1 the parts that have no B1 version yet come after, at A2
-  if(lvl()==="B1"){
-    $("exam").innerHTML=`<h2>Naar het examen</h2><p class="sub">Staatsexamen Nederlands als tweede taal, programma I (B1), en KNM. Tik op een onderdeel voor een proefexamen, met tijd zoals op het echte examen. Bij het Staatsexamen heb je een score van 500 nodig: mik op ${PASS*100}%, bij Schrijven op ${passPc("wb")}% (ongeveer 25 van de 47 punten): de streep.</p><div class="list">${["l1","lb","wb","knm"].map(part).join("")}</div>`
+  // Examen and Oefenen: A2 and B1 as two tabs (.seg), one at a time; it opens on the level you practise for (exV: the tab
+  // you picked since). B1 parts without a B1 version yet are listed under it at A2 level.
+  const v=exV||lvl(),seg=`<div class="seg lvt" role="group" aria-label="Niveau">${["A2","B1"].map(x=>`<button data-v="${x}" aria-pressed="${x===v}">${LVL[x]}</button>`).join("")}</div>`,
+    other=v!==lvl()?`<p class="note">Je oefent nu voor ${LVL[lvl()]}: je les van vandaag gaat daarover. Dit kies je in Profiel.</p>`:"";
+  if(v==="B1"){
+    $("exam").innerHTML=`<h2>Naar het examen</h2>${seg}${other}<p class="sub">Staatsexamen Nederlands als tweede taal, programma I (B1), en KNM. Tik op een onderdeel voor een proefexamen, met tijd zoals op het echte examen. Bij het Staatsexamen heb je een score van 500 nodig: mik op ${PASS*100}%, bij Schrijven op ${passPc("wb")}% (ongeveer 25 van de 47 punten): de streep.</p><div class="list">${["l1","lb","wb","knm"].map(part).join("")}</div>`
       +`<div class="list"><a class="it ext" href="https://oefenexamensnt2.nl" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens Staatsexamen NT2 ↗</b></span><span class="d">De officiële oefenexamens voor programma I. Liefst op een computer.</span></span></a></div>`
-      +`<h3 class="lh">Nog op A2-niveau</h3><p class="sub">Spreken op B1 komt later. Tot dan oefen je het hier op A2-niveau.</p><div class="list">${["sp","lz","ls","wr"].map(part).join("")}</div>`;
-    $("parts").innerHTML=`<h2>Examenonderdelen</h2><p class="sub">Oefen zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["l1","lb","wb","knm"].map(row).join("")}</div>
-      <h3 class="lh">Nog op A2-niveau</h3><div class="list">${["sp","lz","ls","wr"].map(row).join("")}</div>`;
+      +`<h3 class="lh">Nog op A2-niveau</h3><p class="sub">Spreken op B1 komt later. Tot dan oefen je het hier op A2-niveau.</p><div class="list">${part("sp")}</div>`;
+    $("parts").innerHTML=`<h2>Examenonderdelen</h2>${seg}<p class="sub">Oefen zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["l1","lb","wb","knm"].map(row).join("")}</div>
+      <h3 class="lh">Nog op A2-niveau</h3><div class="list">${row("sp")}</div>`;
   }else{
-    $("exam").innerHTML=`<h2>Naar het examen</h2><p class="sub">Tik op een onderdeel voor een proefexamen, met tijd zoals op het echte examen. Rechts: hoeveel procent je goed had, bij je laatste proefexamen of bij het oefenen. Om te slagen heb je ongeveer ${PASS*100}% nodig, bij Lezen en Luisteren ${passPc("lz")}% (19 van de 25): de streep.</p><div class="list">${["lz","ls","wr","sp","knm"].map(part).join("")}</div>`
-      +`<div class="list"><a class="it ext" href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens van DUO ↗</b><small>15</small></span><span class="d">De echte oefenexamens op inburgeren.nl, met echte stemmen. Doe er een als je hier klaar bent. Liefst op een computer.</span></span></a></div>`
-      +`<h3 class="lh">Staatsexamen NT2 · B1</h3><p class="sub">Voor het Staatsexamen Nederlands als tweede taal, programma I. Nu: Lezen, Luisteren en Schrijven. Kies B1 in Profiel om daarvoor te oefenen.</p><div class="list">${["l1","lb","wb"].map(part).join("")}</div>`;
-    $("parts").innerHTML=`<h2>Examenonderdelen</h2><p class="sub">Oefen zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["lz","ls","wr","sp","knm"].map(row).join("")}</div>
-      <h3 class="lh">B1 · Staatsexamen NT2</h3><div class="list">${["l1","lb","wb"].map(row).join("")}</div>`;
+    $("exam").innerHTML=`<h2>Naar het examen</h2>${seg}${other}<p class="sub">Tik op een onderdeel voor een proefexamen, met tijd zoals op het echte examen. Rechts: hoeveel procent je goed had, bij je laatste proefexamen of bij het oefenen. Om te slagen heb je ongeveer ${PASS*100}% nodig, bij Lezen en Luisteren ${passPc("lz")}% (19 van de 25): de streep.</p><div class="list">${["lz","ls","wr","sp","knm"].map(part).join("")}</div>`
+      +`<div class="list"><a class="it ext" href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens van DUO ↗</b><small>15</small></span><span class="d">De echte oefenexamens op inburgeren.nl, met echte stemmen. Doe er een als je hier klaar bent. Liefst op een computer.</span></span></a></div>`;
+    $("parts").innerHTML=`<h2>Examenonderdelen</h2>${seg}<p class="sub">Oefen zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["lz","ls","wr","sp","knm"].map(row).join("")}</div>`;
   }
   $("gram").innerHTML=`<h2>Grammatica en woorden</h2><p class="sub">Korte rondes van 10 vragen. Dit helpt bij alle onderdelen.</p><div class="list">${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`;
   $("books").innerHTML=itHTML(`data-x="books"`,"Boekenkast",lb?`Je leest nu: ${esc(lb.t)}, blz. ${lb.p+1}`:"Verhalen en je eigen e-books. Tik op een woord voor de betekenis.",{ic:"books"})
@@ -2766,6 +2768,7 @@ function home(){
   document.querySelectorAll("#exam button,#parts button,#gram button,#books button,#mine button").forEach(b=>b.onclick=()=>{const d=b.dataset;
     if(d.s)build(d.s);
     else if(d.e)startExam(d.e);
+    else if(d.v){exV=d.v;const y=scrollY;home();scrollTo(0,y)}
     else if(d.x==="stats")stats();
     else if(d.x==="books")library();
     else if(d.x==="media")media();
@@ -2867,6 +2870,7 @@ let planId=null;
 // The level you practise for (Profiel, welcome screen): A2 = the inburgeringsexamen, B1 = Staatsexamen NT2 programma I.
 // B1 has Lezen, Luisteren and Schrijven so far: Spreken is practised at A2 until it comes; KNM belongs to both routes.
 const lvl=()=>S.lvl==="B1"?"B1":"A2", LVL={A2:"Inburgering A2",B1:"Staatsexamen B1"};
+let exV=null; // the A2/B1 tab picked on Examen and Oefenen; null = the level you practise for
 const parts=()=>lvl()==="B1"?["l1","lb","wb","sp","knm"]:["lz","ls","wr","sp","knm"];
 // the questions of k whole texts (or fragments): due ones first, then the least-seen
 const someTexts=(sec,k)=>()=>{
