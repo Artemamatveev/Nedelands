@@ -189,6 +189,17 @@ ways: word → description, description → word, and by ear (`wl|`: the word is
 typed (the 'Typ het antwoord zelf' mode, with de/het). `BET` holds the Dutch meaning of a word (from `WT`, `VO` and a few more), for the Betekenis hint on verbs and de/het. Item keys (`lz|3.1`, `wn|de huis`) are
 stored progress: append new items, don't reorder or rename existing ones.
 
+## B1 (Staatsexamen NT2, programma I)
+
+Being built part by part; Lezen first. On Examen a group "Staatsexamen NT2 · B1" under the A2 rows, on Oefenen a group
+"B1 · Staatsexamen NT2" under Examenonderdelen. Not in today's lesson or the Mix (those are A2).
+- Lezen B1: `LZ1` (`[text, questions, intro]`, the same shape as `LZ`), section `l1`, keys `l1|<text>.<question>`,
+  label "Lees de tekst (B1)". Six questions per text with three options; question types like the exam: main point,
+  purpose, details, the writer's opinion, a word or phrase in context, what you should do. The proefexamen (`EX.l1`) is
+  6 whole texts, 36 questions, 110 minutes, with Overzicht and going back, like Lezen A2. DUO publishes no raw pass mark
+  (a scaled 500), so the pass line is the default 70%. Places, organisations and people are made up; facts about the
+  Netherlands in the texts are real. The exam's texts are longer than the first eight here: new ones may be longer.
+
 ## Writing and speaking check (Schrijven, Spreken)
 
 `api/check.js` is a Vercel function that grades writing with Claude (`claude-opus-5-5`,
