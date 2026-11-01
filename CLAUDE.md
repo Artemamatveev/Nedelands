@@ -228,7 +228,8 @@ A2-niveau", and today's grammar step helps with a B1 round. The page title, desc
   8 zinsopdrachten, a form, an e-mail about two photos and two other e-mails, 47 points, with Overzicht; it costs 4
   checks. The pass line is 25 of 47 (`PASSP.wb`): the public exams of 2023–2025 needed about that. Practice is three
   zinsopdrachten and one longer task, each checked on its own; today's short round alternates three zinsopdrachten and
-  one longer task. `wrTask()` builds the full task text for Claude (and the Word file) from all these fields.
+  one longer task; zinsopdrachten that follow each other in practice are checked together in one call (`checkZ()`,
+  `cur.zs`: one check instead of three). `wrTask()` builds the full task text for Claude (and the Word file) from all these fields.
 - Spreken B1: `SPB` (objects: `k` kind, `t` situation and task, `f` photos, `d` a short text, `m` example), section
   `sb`, keys `sb|<i>`, type `reveal` like Spreken A2 but with `spk`, the seconds to speak (`listen(mode, done, lim)`).
   Two kinds, as on the exam: korte opdracht (`k`, 20 seconds: asking, choosing, explaining, apologising; inhoud 0–2,
@@ -236,7 +237,13 @@ A2-niveau", and today's grammar step helps with a B1 round. The page title, desc
   opinion with reasons, comparing two photos and choosing, a story about three photos in order; inhoud 0–3, woorden
   0–1, grammatica 0–2, samenhang 0–1) (`SBMAX`, `SCORES_SB` in `api/check.js`, `part:"sb"`, its own B1 prompt;
   voldoende is inhoud 2 and 60% of the points). The proefexamen (`EX.sb`, `sbTasks(8,8)`) is 8 short and 8 medium
-  tasks, 80 points, 25 minutes, costs 6 checks; pass line the default 70% (DUO publishes no raw mark).
+  tasks, 80 points, 25 minutes, costs 6 checks; pass line the default 70% (DUO publishes no raw mark). In the
+  proefexamen the question is read aloud, then the thinking time (`prep`: 15 s for a medium task, 5 for a short one with
+  a photo) counts down and the answer starts by itself (`prepThen()`); if the phone won't open the microphone without
+  a tap, the take is dropped and the button asks for one.
+- Elsewhere at B1: six B1 conversations in Gesprekken (`b1:1`, listed first at B1), two B1 stories in the Boekenkast
+  (`zorg`, `molen`), and two harder questions per history chapter (`GSB`, keys `gb|<id>.<n>`, sec `gs`, only at B1:
+  `gsItems()` and `lv()` in `build()` leave them out at A2).
 
 ## Writing and speaking check (Schrijven, Spreken)
 
@@ -285,8 +292,9 @@ No Claude calls in the reader: whole sentences go to Google Translate via a link
 
 "Geschiedenis van Nederland" (a row under "Lezen en luisteren") is a timeline of short A2 chapters in
 `GS` in `index.html`, from the hunebedden to now, grouped by period (`g`). Each chapter has years, a text
-(one paragraph per line, tap a word for the dictionary popup, like in the reader), an optional picture
-(`foto/` or `art/`, same rules as the photos, credited in `foto/CREDITS.md`) and three questions, stored as
+(one paragraph per line, tap a word for the dictionary popup, like in the reader), an optional picture at the top
+(`foto/` or `art/`, same rules as the photos, credited in `foto/CREDITS.md`), more historical paintings, prints and
+photos between the paragraphs (`f`: `[file, caption, after paragraph n]`, shown whole, tap to enlarge) and three questions, stored as
 `gs|<id>.<n>` items (also in the Mix and in "Mijn zwakke punten"). Original texts: check facts, they double as
 KNM material. `S.hs` keeps when a chapter was last opened; a chapter is "Klaar" when every question was
 answered right once. Append chapters and questions; don't reorder or rename them.
