@@ -191,18 +191,24 @@ stored progress: append new items, don't reorder or rename existing ones.
 
 ## B1 (Staatsexamen NT2, programma I)
 
-Being built part by part; Lezen first. The level is `S.lvl` ("A2" by default, "B1"; it syncs with the progress), chosen
+Being built part by part: Lezen and Luisteren so far. The level is `S.lvl` ("A2" by default, "B1"; it syncs with the progress), chosen
 under "Ik oefen voor" in Profiel and on the welcome screen (`.seg`, two halves of one outlined button, the chosen one
-filled). `parts()` gives the exam parts of the level: at B1 `l1` replaces `lz`, and Luisteren, Schrijven and Spreken stay
-at A2 until their B1 versions come; KNM belongs to both routes. At B1 Examen and Oefenen show Lezen B1 and KNM first (with
+filled). `parts()` gives the exam parts of the level: at B1 `l1` replaces `lz` and `lb` replaces `ls`, and Schrijven and Spreken stay
+at A2 until their B1 versions come; KNM belongs to both routes. At B1 Examen and Oefenen show Lezen B1, Luisteren B1 and KNM first (with
 a row to the official oefenexamens NT2 ↗), then "Nog op A2-niveau"; at A2 they show A2 first and a small B1 group under
-it. Today's lesson uses `parts()`; the Mix leaves out the other level's reading.
+it. Today's lesson uses `parts()`; the Mix leaves out the other level's reading and listening.
 - Lezen B1: `LZ1` (`[text, questions, intro]`, the same shape as `LZ`), section `l1`, keys `l1|<text>.<question>`,
   label "Lees de tekst (B1)". Six questions per text with three options; question types like the exam: main point,
   purpose, details, the writer's opinion, a word or phrase in context, what you should do. The proefexamen (`EX.l1`) is
   6 whole texts, 36 questions, 110 minutes, with Overzicht and going back, like Lezen A2. DUO publishes no raw pass mark
   (a scaled 500), so the pass line is the default 70%. Places, organisations and people are made up; facts about the
   Netherlands in the texts are real. The exam's texts are longer than the first eight here: new ones may be longer.
+- Luisteren B1: `LSB` (`[text, photo|null, [[q, right, wrong, wrong], …], intro]`, like `LSM`), section `lb`, keys
+  `lb|<fragment>.<question>`. Radio, news, podcasts, voicemail, phone calls, talks and conversations of about 140–210
+  words, three or four questions each (main point, details, an opinion, what to do). The proefexamen (`EX.lb`) takes
+  whole fragments up to 39 questions in 90 minutes, with Overzicht; each fragment is heard once (A2: twice), and before
+  listening the screen lists every question of the fragment (`qs`), like the reading time on the exam. Practice takes
+  two whole fragments (`someTexts()`) and may replay. Pass line the default 70%.
 
 ## Writing and speaking check (Schrijven, Spreken)
 

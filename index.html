@@ -118,6 +118,7 @@ h2::before{content:"";flex:none;width:9px;height:9px;background:var(--blue);tran
 .today>.ghost{margin-top:14px}
 #a2hs:empty{display:none}
 .intro{margin:6px 0 12px;font-weight:600}
+.qs{margin:0 0 14px;padding-left:22px;color:var(--soft)} .qs li{margin:0 0 4px} .qs li.on{color:var(--ink);font-weight:600}
 #hear{margin:10px 0 4px}
 #a2hs ol{margin:10px 0 0;padding-left:22px}#a2hs .two{margin-top:14px}
 .steps{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:8px}
@@ -1901,11 +1902,12 @@ const LSM=[
 ["A: Voetbalvereniging SV Oost, met Peter.\nB: Hallo, met Aisha. Mijn zoon is acht jaar en hij wil graag voetballen. Kan hij lid worden?\nA: Zeker. Hij kan eerst drie keer gratis meetrainen. De jongens van zijn leeftijd trainen op woensdagmiddag om vier uur.\nB: En de wedstrijden?\nA: Die zijn op zaterdagochtend. Ouders rijden om de beurt naar uitwedstrijden.\nB: Wat kost het?\nA: Honderdveertig euro per jaar. Heeft u een laag inkomen? Dan kan het Jeugdfonds Sport helpen met de contributie.", "voetbal", [["Hoe vaak mag de zoon gratis meetrainen?", "drie keer", "één keer", "een maand lang"], ["Wanneer zijn de wedstrijden?", "op zaterdagochtend", "op woensdagmiddag", "op zondagmiddag"], ["Wie kan helpen met de contributie?", "het Jeugdfonds Sport", "de school van haar zoon", "de trainer van de club"]], "Aisha belt een voetbalclub."],
 ["A: Goedemorgen, wat mag het zijn?\nB: Een kilo tomaten en een komkommer, alstublieft.\nA: Alstublieft. Verder nog iets?\nB: Hoeveel kosten de aardbeien?\nA: Vier euro per bakje, twee bakjes voor zeven euro.\nB: Doe maar twee bakjes.\nA: Dat is dan bij elkaar elf euro vijftig.\nB: Kan ik met mijn telefoon betalen?\nA: Ja hoor. Houd hem maar hier tegen het apparaat.", "", [["Wat koopt de klant niet?", "paprika's", "tomaten", "aardbeien"], ["Hoeveel kosten twee bakjes aardbeien?", "zeven euro", "acht euro", "vier euro"], ["Hoe betaalt de klant?", "met haar telefoon", "contant", "met een cadeaubon"]], "Een vrouw koopt groente en fruit op de markt."]
 ];
-const EX={l1:{t:"Proefexamen Lezen B1",n:36,min:110},lz:{t:"Proefexamen Lezen",n:25,min:65},ls:{t:"Proefexamen Luisteren",n:25,min:45},knm:{t:"Proefexamen KNM",n:40,min:45},wr:{t:"Proefexamen Schrijven",n:4,min:40},sp:{t:"Proefexamen Spreken",n:16,min:35}};
+const EX={l1:{t:"Proefexamen Lezen B1",n:36,min:110},lb:{t:"Proefexamen Luisteren B1",n:39,min:90},lz:{t:"Proefexamen Lezen",n:25,min:65},ls:{t:"Proefexamen Luisteren",n:25,min:45},knm:{t:"Proefexamen KNM",n:40,min:45},wr:{t:"Proefexamen Schrijven",n:4,min:40},sp:{t:"Proefexamen Spreken",n:16,min:35}};
 const SEC=[
 {id:"mix",t:"Mix van de dag",s:"10 vragen uit alle onderdelen",n:10},
 {id:"lz",t:"Lezen",s:"Korte teksten met vragen, zoals op het examen",n:6},
 {id:"l1",t:"Lezen B1",s:"Langere teksten met zes vragen, zoals bij het Staatsexamen NT2",n:6},
+{id:"lb",t:"Luisteren B1",s:"Gesprekken, radio en uitleg, met drie of vier vragen per fragment",n:8,keep:1,pool:()=>someTexts("lb",2)()},
 {id:"ls",t:"Luisteren",s:"Luister naar een bericht en kies het antwoord",n:5},
 {id:"wr",t:"Schrijven",s:"4 opdrachten in 40 minuten, één formulier",n:4,min:40},
 {id:"sp",t:"Spreken",s:"Vragen en plaatjes: spreek je antwoord in",n:5},
@@ -2288,6 +2290,91 @@ const LZ1=[
   ["Hoe kunnen ouders hun kind onder schooltijd dringend bereiken?","door de administratie te bellen","door een bericht in het ouderportaal te sturen","door de mentor een e-mail te sturen"]],
  "Je zoon zit in klas 2B. Je krijgt deze e-mail van zijn mentor."]
 ];
+// Luisteren B1 (Staatsexamen NT2, programma I): longer fragments, heard once in the proefexamen, three options.
+// [text, photo|null, [[question, right, wrong, wrong], …], intro]; keys lb|<fragment>.<question>: append only.
+// Places, organisations and people are made up; facts about the Netherlands are real.
+const LSB=[
+["A: Welkom terug bij Radio Bredeveen. Aan tafel zit Marloes Dekker. Marloes, jij bent twee jaar geleden begonnen met een buurttuin. Hoe kwam je op dat idee?\nB: Achter onze flat lag een stuk grond waar alleen onkruid groeide. Er stonden af en toe kapotte fietsen. Ik dacht: daar kunnen we samen iets moois van maken. Ik heb een brief bij alle buren in de bus gedaan, en op de eerste avond kwamen er al vijftien mensen.\nA: En de gemeente? Die is de eigenaar van de grond.\nB: Die was meteen positief. We mochten de grond gratis gebruiken, op één voorwaarde: dat we hem zelf netjes houden. De gemeente heeft ook de eerste zakken aarde betaald.\nA: Wat groeit er nu?\nB: Tomaten, bonen, sla, kruiden en heel veel bloemen voor de bijen. Maar eerlijk gezegd: de groente is niet het belangrijkste. Het belangrijkste is dat de buren elkaar nu kennen. Vroeger groette niemand elkaar in de lift. Nu drinken we op zaterdag samen koffie in de tuin.\nA: Kan iedereen meedoen?\nB: Ja. Je hoeft niets te betalen en je hoeft ook niets van tuinieren te weten. We vragen wel of je één keer per maand een ochtend komt helpen.",null,
+ [["Hoe is Marloes met de buurttuin begonnen?","Ze deed een brief bij alle buren in de bus.","Ze vroeg de gemeente om een stuk grond.","Ze zette een bericht op een buurtwebsite."],
+  ["Wat moet de buurt doen van de gemeente?","de grond zelf netjes houden","elk jaar huur voor de grond betalen","de aarde voor de tuin zelf betalen"],
+  ["Wat vindt Marloes het belangrijkste van de tuin?","dat de buren elkaar nu kennen","dat er veel verse groente groeit","dat de bijen er bloemen vinden"],
+  ["Wat vraagt de buurttuin van mensen die meedoen?","één ochtend per maand helpen","een kleine bijdrage per maand","eerst een cursus tuinieren volgen"]],
+ "Je luistert naar een radioprogramma. Marloes vertelt over de tuin in haar buurt."],
+["Goedemiddag, u spreekt met Jeroen Smit van Verhoef Logistiek. U hebt gesolliciteerd op de functie van planner, en we willen u graag uitnodigen voor een gesprek. We hadden gedacht aan donderdag de veertiende, om half elf. Het gesprek duurt ongeveer een uur. U praat dan met mij en met Annemiek de Wit, de teamleider van de planning. In het tweede deel van het gesprek krijgt u een korte opdracht op de computer: u maakt dan een planning voor één dag. Daarvoor hoeft u niets voor te bereiden. Wilt u wel uw diploma's en een geldig identiteitsbewijs meenemen? Ons kantoor ligt op het industrieterrein. Met de bus is het lastig te bereiken, maar er is genoeg gratis parkeerplaats voor de deur. Wilt u mij laten weten of donderdag u uitkomt? U kunt mij bellen of mailen. Mijn gegevens staan onder de vacature. Tot ziens.","sollicitatie",
+ [["Waarom belt Jeroen Smit?","om u uit te nodigen voor een gesprek","om te zeggen dat u de baan hebt","om uw sollicitatiebrief te bespreken"],
+  ["Wat gebeurt er in het tweede deel van het gesprek?","U maakt een planning op de computer.","U praat alleen met de teamleider.","U krijgt een rondleiding door het bedrijf."],
+  ["Wat zegt Jeroen over de reis naar het kantoor?","Met de auto is het makkelijker dan met de bus.","Er rijdt een bus tot vlak voor de deur.","Parkeren kost geld, maar het is dichtbij."]],
+ "Je hebt gesolliciteerd bij een bedrijf. Je hoort een bericht op je voicemail."],
+["Het nieuws van negen uur. De gemeente Bredeveen gaat het afval anders ophalen. Vanaf 1 maart komt de vuilniswagen voor restafval nog maar één keer in de vier weken langs, in plaats van elke twee weken. Groente-, fruit- en tuinafval en plastic worden juist vaker opgehaald. De gemeente wil zo dat inwoners hun afval beter scheiden. Wethouder Karin Bosman zegt dat het meeste restafval nu nog uit gft en plastic bestaat, en dat recyclen veel goedkoper is dan verbranden. Volgens de wethouder kan de afvalstoffenheffing daardoor volgend jaar gelijk blijven. Niet iedereen is blij. Een bewonersgroep uit de wijk Oosterpark is bang voor stank en voor vuilniszakken op straat, vooral in de zomer. Gezinnen met kleine kinderen in de luiers kunnen gratis een extra container aanvragen. Dat geldt ook voor mensen die door een ziekte veel afval hebben.","afval",
+ [["Wat verandert er vanaf 1 maart?","Restafval wordt minder vaak opgehaald.","Plastic wordt minder vaak opgehaald.","Restafval wordt elke week opgehaald."],
+  ["Waarom doet de gemeente dit?","Ze wil dat mensen hun afval beter scheiden.","Ze heeft te weinig vuilniswagens en chauffeurs.","Ze wil de afvalstoffenheffing kunnen verhogen."],
+  ["Waar is de bewonersgroep bang voor?","voor stank en vuilniszakken op straat","voor hogere kosten voor het afval","voor meer vuilniswagens in de straat"],
+  ["Wie kan gratis een extra container krijgen?","een gezin met een baby in de luiers","een gezin met een grote tuin","een gezin dat in een flat woont"]],
+ "Je luistert naar het nieuws op de radio."],
+["A: Hé Dennis, heb je even? Ik moet iets met je overleggen over het rooster.\nB: Tuurlijk. Wat is er?\nA: Ik sta zaterdag de vierentwintigste op het rooster, maar mijn zus gaat die dag trouwen. Ik was het helemaal vergeten toen ik mijn vrije dagen doorgaf.\nB: Gefeliciteerd voor je zus! En nu wil je ruilen?\nA: Graag. Jij werkt toch op dinsdag de twintigste? Die dienst kan ik van je overnemen.\nB: Hm, op dinsdag werk ik eigenlijk graag, want dan is het rustig in de winkel. En zaterdag de vierentwintigste... wacht, dan heb ik 's avonds een verjaardag. Hoe laat is jouw dienst?\nA: Van acht tot half vijf.\nB: O, dat gaat prima. Het feest begint pas om acht uur. Oké, ik doe het. Maar geef het dan wel zelf door aan Petra. Zij maakt het rooster, en ze wil dat ruilen altijd via haar gaat.\nA: Natuurlijk, ik stuur haar vandaag nog een mail. Dank je wel, Dennis!","supermarkt",
+ [["Waarom wil de vrouw haar dienst ruilen?","Haar zus trouwt op die zaterdag.","Ze heeft die zaterdag een verjaardag.","Ze wil die week op vakantie gaan."],
+  ["Wat vindt Dennis van werken op dinsdag?","Hij vindt het prettig, want het is dan rustig.","Hij vindt het vervelend, want het is dan druk.","Hij werkt op dinsdag liever 's avonds."],
+  ["Waarom kan Dennis de zaterdag toch werken?","Zijn feest begint pas na zijn dienst.","Zijn verjaardag is op een andere dag.","Petra geeft hem die avond vrij."],
+  ["Wat moet de vrouw nog doen?","de ruil zelf aan Petra doorgeven","het nieuwe rooster zelf maken","met de bedrijfsleider gaan praten"]],
+ "Twee collega's in een supermarkt praten over het rooster."],
+["Goedenavond allemaal, welkom bij deze informatieavond in het Taalhuis. Ik ben Fatima, en ik help als vrijwilliger op het spreekuur voor geldzaken. Vanavond gaat het over de zorgverzekering. In Nederland moet iedereen die hier woont of werkt een basisverzekering hebben. Dat is verplicht. Doe je dat niet, dan krijg je na een tijd een boete. Voor kinderen tot achttien jaar betaal je geen premie: zij zijn gratis verzekerd bij een van de ouders. Dan het eigen risico. Veel mensen vinden dat ingewikkeld. Het betekent dit: de eerste 385 euro aan zorgkosten per jaar betaal je zelf. Pas daarna betaalt de verzekeraar. Maar let op: voor de huisarts betaal je geen eigen risico. Ga je naar het ziekenhuis, of haal je medicijnen bij de apotheek, dan meestal wel. Heb je een laag inkomen? Dan kun je zorgtoeslag krijgen. Dat is geld van de overheid voor je premie. Je vraagt het aan bij de Belastingdienst. Mijn advies: kijk elk jaar in november en december of je verzekering nog bij je past. Tot het einde van het jaar kun je je verzekering opzeggen en overstappen naar een andere.","apotheek",
+ [["Wat wil Fatima vooral uitleggen?","hoe de zorgverzekering in Nederland werkt","hoe je in Nederland een huisarts kiest","hoe je zelf je belastingaangifte doet"],
+  ["Wanneer betaal je géén eigen risico?","als je naar de huisarts gaat","als je medicijnen bij de apotheek haalt","als je naar het ziekenhuis gaat"],
+  ["Wat is zorgtoeslag?","geld van de overheid voor je premie","een korting van je zorgverzekeraar","geld terug van je eigen risico"],
+  ["Wat raadt Fatima aan?","elk jaar aan het eind van het jaar je verzekering bekijken","altijd de goedkoopste zorgverzekering kiezen","je kinderen bij een aparte verzekeraar verzekeren"]],
+ "Je bent op een informatieavond. Fatima vertelt over de zorgverzekering."],
+["A: Gemeente Bredeveen, met Ruud. Waarmee kan ik u helpen?\nB: Goedemorgen, met Olga Kowalska. Ik ben vorige maand verhuisd naar de Molenstraat, en nu heb ik een bon gekregen voor mijn auto. Ik dacht dat ik daar gewoon mocht parkeren.\nA: In de Molenstraat mag u alleen parkeren met een vergunning. Hebt u die al aangevraagd?\nB: Nee, ik wist niet dat dat nodig was. Er stond niets over in de brief van de gemeente.\nA: Dat begrijp ik. U kunt de vergunning online aanvragen met uw DigiD. Is het uw eigen auto, of een auto van de zaak?\nB: Een auto van mijn werkgever.\nA: Dan moet u ook een verklaring van uw werkgever uploaden. Daarin staat dat u de auto ook privé mag gebruiken. Zonder die verklaring kunnen we de aanvraag niet behandelen.\nB: En die bon? Moet ik die betalen?\nA: Ja, die moet u helaas betalen. Maar u kunt binnen zes weken bezwaar maken. Schrijf dan dat u net verhuisd bent. Ik kan niet beloven dat het lukt, maar het is het proberen waard.\nB: Hoe lang duurt het voordat ik de vergunning heb?\nA: Meestal vijf werkdagen. Tot die tijd kunt u het beste in de garage bij het station parkeren. Daar betaalt u per uur.","auto",
+ [["Waarom belt Olga naar de gemeente?","Ze heeft een parkeerbon gekregen.","Ze wil haar nieuwe adres doorgeven.","Haar auto is weggesleept."],
+  ["Wat moet Olga extra meesturen met haar aanvraag?","een verklaring van haar werkgever","de brief van de gemeente over de verhuizing","een kopie van haar huurcontract"],
+  ["Wat zegt Ruud over de bon?","Ze moet hem betalen, maar ze kan bezwaar maken.","Hij vervalt, omdat ze net verhuisd is.","Ze hoeft hem pas na zes weken te betalen."],
+  ["Waar kan Olga parkeren tot ze de vergunning heeft?","in de garage bij het station","gratis in de Molenstraat","op het parkeerterrein van haar werk"]],
+ "Olga belt naar de gemeente."],
+["Sinds 2024 mogen leerlingen op de meeste middelbare scholen in Nederland hun telefoon niet meer in de les gebruiken. Ik ben docent Nederlands, en toen ik dit hoorde, was ik eerlijk gezegd bang dat het veel ruzie zou geven. Pubers en hun telefoon: dat is een sterke vriendschap. Maar nu moet ik toegeven dat ik me heb vergist. Mijn leerlingen letten beter op, en in de pauze zie ik ze weer met elkaar praten in plaats van naar een scherm te kijken. Toch ben ik niet helemaal tevreden. Thuis zitten veel kinderen nog uren op hun telefoon, soms tot diep in de nacht. Daar kan de school weinig aan doen. Dat is een taak voor de ouders. Ik wil ouders daarom vragen: maak thuis duidelijke afspraken. Bijvoorbeeld dat de telefoon 's nachts niet op de slaapkamer ligt. En geef zelf het goede voorbeeld. Want eerlijk is eerlijk: wie van ons kijkt niet zelf te vaak op zijn scherm?",null,
+ [["Wat dacht Hanneke eerst van de nieuwe regel?","Ze dacht dat het veel problemen zou geven.","Ze dacht dat leerlingen beter zouden opletten.","Ze dacht dat de regel niet nodig was."],
+  ["Wat is er volgens Hanneke veranderd op school?","Leerlingen praten in de pauze weer met elkaar.","Leerlingen halen hogere cijfers voor Nederlands.","Leerlingen nemen hun telefoon niet meer mee."],
+  ["Wie moet volgens Hanneke iets doen aan telefoons thuis?","de ouders","de school","de leerlingen zelf"],
+  ["Waarom vertelt Hanneke dit?","Ze wil ouders vragen thuis afspraken te maken.","Ze wil uitleggen waarom de regel weg moet.","Ze wil leerlingen waarschuwen voor straf."]],
+ "Je luistert naar een column op de radio. Hanneke is docent op een middelbare school."],
+["Goedemorgen, dames en heren. We rijden nu over de Afsluitdijk. Deze dijk is ongeveer tweeëndertig kilometer lang en verbindt Noord-Holland met Friesland. Hij werd in 1932 gesloten. Voor die tijd was hier geen meer, maar een zee: de Zuiderzee. Die zee zorgde vaak voor overstromingen. Na een zware overstroming in 1916 besloot de regering de zee af te sluiten. Het plan was al veel ouder: het kwam van de ingenieur Cornelis Lely. Door de dijk werd de Zuiderzee een zoetwatermeer: het IJsselmeer. Voor de vissers in de dorpen langs de oude zee was dat een ramp. De zeevis verdween, en veel vissers moesten ander werk zoeken. Over ongeveer tien minuten stoppen we bij het monument, op de plek waar de dijk in 1932 werd gesloten. U hebt daar een halfuur. Er is een café met toiletten, en vanaf de uitkijktoren hebt u een prachtig uitzicht. Let op: het waait daar bijna altijd hard, dus neem uw jas mee.","afsluitdijk",
+ [["Waarom werd de Afsluitdijk gebouwd?","om het land te beschermen tegen overstromingen","om een snellere weg naar Friesland te maken","om schepen een kortere route te geven"],
+  ["Wat betekende de dijk voor de vissers?","Veel vissers raakten hun werk kwijt.","Ze konden meer vis vangen in het meer.","Ze kregen een nieuwe haven aan de dijk."],
+  ["Wat raadt de gids aan?","een jas mee naar buiten nemen","een tafel in het café reserveren","een kaartje voor de toren kopen"]],
+ "Je maakt een busreis. De gids vertelt iets over de Afsluitdijk."],
+["A: Zo, meneer Yilmaz, hoe gaat het met uw knie?\nB: Nog steeds niet goed, dokter. Het is nu drie weken geleden dat ik ben gevallen bij het voetballen. Lopen gaat wel, maar traplopen doet echt pijn.\nA: Ik heb de foto uit het ziekenhuis bekeken. Er is niets gebroken. Ik denk dat er een band in uw knie is overrekt. Dat geneest meestal vanzelf, maar het kan zes tot acht weken duren.\nB: Zo lang? Ik werk in de bouw. Ik sta de hele dag op ladders.\nA: Dan zou ik met uw werkgever praten over ander werk voor een paar weken. En ik verwijs u door naar een fysiotherapeut. Die geeft u oefeningen om de spieren rond uw knie sterker te maken.\nB: Wordt dat vergoed?\nA: Dat hangt af van uw aanvullende verzekering. Fysiotherapie zit voor volwassenen meestal niet in de basisverzekering. Kijk dat dus even na.\nB: En voetballen?\nA: Daar moet u voorlopig mee stoppen. Als de fysiotherapeut zegt dat uw knie sterk genoeg is, kunt u rustig weer beginnen. Is de pijn over twee weken niet minder, maak dan een nieuwe afspraak.","dokter",
+ [["Wat is er met de knie van meneer Yilmaz?","Een band in zijn knie is overrekt.","Er is een bot in zijn knie gebroken.","Zijn knie moet geopereerd worden."],
+  ["Wat raadt de huisarts aan over zijn werk?","met zijn werkgever over ander werk praten","een paar weken helemaal thuisblijven","gewoon doorwerken met een brace om"],
+  ["Wat moet meneer Yilmaz nakijken?","of zijn aanvullende verzekering fysiotherapie betaalt","of zijn basisverzekering de foto uit het ziekenhuis betaalt","of de fysiotherapeut deze week nog een plek heeft"],
+  ["Wanneer moet hij terugkomen bij de huisarts?","als de pijn over twee weken niet minder is","over zes tot acht weken, voor controle","als hij weer wil gaan voetballen"]],
+ "Meneer Yilmaz is bij de huisarts."],
+["A: In deze aflevering praten we over iets waar veel luisteraars vragen over hebben: een huurwoning vinden. Ik zit hier met Bas van der Meer. Hij werkt bij een woningcorporatie. Bas, waarom duurt het zo lang?\nB: Er zijn in Nederland gewoon te weinig woningen, en vooral te weinig betaalbare. In de grote steden wachten mensen soms tien jaar of langer op een sociale huurwoning.\nA: Tien jaar! Wat kun je dan doen?\nB: Mijn eerste tip: schrijf je zo vroeg mogelijk in als woningzoekende, ook als je nu nog niet wilt verhuizen. Je inschrijftijd telt namelijk. Hoe langer je ingeschreven staat, hoe meer kans je hebt.\nA: En kijk je alleen in je eigen stad?\nB: Nee, dat is mijn tweede tip. Kijk ook in dorpen en kleinere steden in de buurt. Daar zijn de wachttijden vaak veel korter. En reageer ook op woningen die worden verloot. Daar maakt je inschrijftijd niet uit: iedereen heeft dezelfde kans.\nA: Er zijn ook mensen die met voorrang een woning krijgen, toch?\nB: Ja, dat heet urgentie. Bijvoorbeeld als je huis door een brand onbewoonbaar is geworden. Maar de regels zijn streng. Alleen omdat je huis te klein is, krijg je meestal geen urgentie.","flat",
+ [["Waarom moeten mensen zo lang wachten op een huurwoning?","Er zijn te weinig betaalbare woningen.","De woningcorporaties werken te langzaam.","Veel mensen schrijven zich te laat in."],
+  ["Waarom moet je je volgens Bas vroeg inschrijven?","Hoe langer je ingeschreven staat, hoe meer kans je hebt.","Later kun je je niet meer als woningzoekende inschrijven.","Met een vroege inschrijving krijg je sneller urgentie."],
+  ["Wat is bijzonder aan een woning die wordt verloot?","Iedereen heeft evenveel kans.","Je krijgt hem alleen met urgentie.","Je moet er lang voor ingeschreven staan."],
+  ["Wanneer krijg je bijvoorbeeld urgentie?","als je huis na een brand niet meer bewoonbaar is","als je huis te klein is voor je hele gezin","als je al tien jaar ingeschreven staat"]],
+ "Je luistert naar een podcast over wonen."],
+["A: Klantenservice van NetSnel, u spreekt met Mila.\nB: Hallo, ik heb sinds gisteravond geen internet. De lampjes op het modem knipperen oranje.\nA: Vervelend. Ik zie dat er in uw wijk een storing is door werkzaamheden aan de kabel. Onze monteurs zijn ermee bezig. We verwachten dat het morgen rond twaalf uur is opgelost.\nB: Pas morgen? Ik werk thuis, en ik heb morgenochtend een belangrijke videovergadering.\nA: Dat begrijp ik. U kunt de hotspot van uw telefoon gebruiken. Omdat het een storing bij ons is, krijgt u deze week tien gigabyte extra mobiele data, gratis. Die zet ik nu voor u aan.\nB: Fijn. En krijg ik ook geld terug voor de dagen zonder internet?\nA: Ja. Als een storing langer duurt dan twaalf uur, krijgt u automatisch een vergoeding op uw volgende rekening. Daar hoeft u niets voor te doen.\nB: Moet ik nog iets met het modem doen?\nA: Als het morgen weer werkt, hoeft u niets te doen. Ziet u om één uur nog steeds oranje lampjes, haal dan de stekker tien seconden uit het modem en doe hem er weer in.","laptop",
+ [["Waardoor heeft de man geen internet?","door werkzaamheden aan de kabel in de wijk","door een kapot modem bij hem thuis","door een rekening die hij niet heeft betaald"],
+  ["Hoe helpt Mila hem voor de vergadering van morgen?","Ze geeft hem gratis extra mobiele data.","Ze stuurt morgenvroeg een monteur langs.","Ze stuurt hem meteen een nieuw modem."],
+  ["Wat moet de man doen om geld terug te krijgen?","niets, dat gaat vanzelf","een formulier op de website invullen","nog een keer bellen als het weer werkt"],
+  ["Wat moet hij doen als het modem om één uur nog oranje knippert?","de stekker even uit het modem halen","de klantenservice nog een keer bellen","een afspraak met een monteur maken"]],
+ "Een man belt naar de klantenservice van zijn internetbedrijf."],
+["Goedemiddag. Ik ben Joke van het Vrijwilligerspunt. Vrijwilligerswerk is werk waar je geen salaris voor krijgt. In Nederland doen heel veel mensen het: bij de sportclub, in de bibliotheek, bij de voedselbank of in een verzorgingshuis. Waarom zou je dat doen, als je er niets voor krijgt? Nou, je krijgt er wel iets voor. Je oefent elke week Nederlands met echte mensen. Je leert hoe werken in Nederland gaat. En je bouwt een netwerk op: veel mensen vinden via hun vrijwilligerswerk later een betaalde baan. Op je cv staat het ook goed. Hebt u een uitkering? Dan mag u meestal vrijwilligerswerk doen, maar u moet het wel eerst melden bij de gemeente. Sommige organisaties geven een kleine vergoeding, bijvoorbeeld voor je reiskosten. Wilt u weten wat bij u past? Kom dan naar ons spreekuur, elke woensdagmiddag in de bibliotheek. We kijken samen wat u leuk vindt en hoeveel tijd u hebt. Een paar uur per week is al genoeg.",null,
+ [["Wat is volgens Joke een voordeel van vrijwilligerswerk?","Je oefent elke week Nederlands.","Je krijgt er een klein salaris voor.","Je hoeft daarna geen cv meer te maken."],
+  ["Wat moet je doen als je een uitkering hebt?","het eerst melden bij de gemeente","eerst stoppen met je uitkering","minstens tien uur per week werken"],
+  ["Wat gebeurt er op het spreekuur?","Je kijkt samen welk werk bij je past.","Je krijgt meteen een plek bij de voedselbank.","Je oefent een gesprek voor een betaalde baan."]],
+ "Je bent bij een bijeenkomst in de bibliotheek. Joke vertelt over vrijwilligerswerk."],
+["A: Heb je die brief van de gemeente gelezen, Ingrid? Over het grasveld achter de school?\nB: Ja, ze willen er een appartementengebouw neerzetten. Zes verdiepingen. Ik ben er eerlijk gezegd blij mee.\nA: Blij? Dan verdwijnt het enige stukje groen in de buurt! Waar moeten de kinderen dan voetballen?\nB: Dat snap ik. Maar mijn dochter zoekt al drie jaar een woning. Ze woont nog steeds bij ons, op haar zevenentwintigste. Er moeten gewoon meer huizen komen.\nA: Natuurlijk moeten er meer huizen komen. Maar waarom hier? Het oude fabrieksterrein aan de rivier staat al jaren leeg.\nB: Daar heb je eigenlijk wel gelijk in. Weet je wat? Volgende week dinsdag is er een inspraakavond in het buurthuis. Laten we er samen heen gaan. Dan kun jij je idee over het fabrieksterrein vertellen.\nA: Goed idee. Ik moet me wel aanmelden, staat in de brief. Vóór vrijdag.","stad",
+ [["Wat vindt Ingrid van het plan van de gemeente?","Ze is er blij mee, want er zijn huizen nodig.","Ze is ertegen, want het grasveld verdwijnt.","Ze vindt zes verdiepingen veel te hoog."],
+  ["Wat stelt de buurman voor?","bouwen op het oude fabrieksterrein","een kleiner gebouw op het grasveld","een nieuw voetbalveld achter de school"],
+  ["Wat gaan Ingrid en de buurman doen?","samen naar een inspraakavond gaan","samen een brief aan de gemeente schrijven","handtekeningen verzamelen in de buurt"]],
+ "Twee buren praten over een plan van de gemeente."],
+["Welkom bij Bakkerij Van Dijk. Ik ben Henk, en ik ben verantwoordelijk voor de veiligheid. Voordat je vandaag begint, wil ik een paar dingen met je doornemen. Eerst je kleding. In de bakkerij draag je altijd schone werkkleding en een haarnetje, ook als je kort haar hebt. Sieraden, zoals ringen en horloges, doe je af voordat je de bakkerij in gaat. Die kunnen in het deeg vallen, en er zitten veel bacteriën op. Voor je spullen heb je een kluisje in de kleedkamer. Dan de machines. De deegmachine mag je pas gebruiken als je daar een training voor hebt gehad. Die training krijg je in je tweede week. Tot die tijd help je bij het verpakken en in de winkel. Als je je brandt of snijdt, ga je meteen naar de EHBO-post naast de kantine. Daar is altijd iemand met een EHBO-diploma. En meld het daarna altijd bij mij, ook als het klein lijkt. Wij moeten elk ongeluk opschrijven. Tot slot: als het brandalarm gaat, laat je alles staan en ga je via de dichtstbijzijnde nooduitgang naar buiten. We verzamelen op de parkeerplaats.","bakker",
+ [["Waarom moet je je sieraden afdoen?","Ze kunnen in het deeg vallen en zijn niet schoon.","Ze kunnen in de machines blijven hangen.","Ze kunnen in de kleedkamer gestolen worden."],
+  ["Wat doet een nieuwe medewerker in de eerste week?","helpen met verpakken en in de winkel","zelfstandig werken met de deegmachine","een training voor het EHBO-diploma volgen"],
+  ["Wat moet je doen nadat je bij de EHBO-post bent geweest?","het ongeluk melden bij Henk","meteen naar de huisarts gaan","naar huis gaan en rusten"],
+  ["Waar ga je heen als het brandalarm gaat?","naar de parkeerplaats","naar de kantine","naar de kleedkamer"]],
+ "Je eerste werkdag bij een bakkerij. Henk vertelt wat je moet weten."]
+];
 LZ.forEach((t,i)=>t[1].forEach((q,j)=>ITEMS.push({sec:"lz",k:"lz|"+i+"."+j,ord:j,type:"choice",label:"Lees de tekst",intro:t[2],text:t[0],big:q[0],sub:"",right:q[1],opts:()=>shuffle(q.slice(1))})));
 LZ1.forEach((t,i)=>t[1].forEach((q,j)=>ITEMS.push({sec:"l1",k:"l1|"+i+"."+j,ord:j,type:"choice",label:"Lees de tekst (B1)",intro:t[2],text:t[0],big:q[0],sub:"",right:q[1],opts:()=>shuffle(q.slice(1))})));
 const sayLines=t=>String(t).split("\n").filter(l=>l.trim()).map(l=>l.replace(/^[AB]: /,""));
@@ -2296,6 +2383,8 @@ const sayHTML=t=>/^[AB]: /.test(t)?"Tekst:<br>"+sayLines(t).map(l=>"– "+l).joi
 // read with two different voices; the photo (from /foto) sets the scene, like the video on the exam.
 LSM.forEach((p,i)=>p[2].forEach((q,j)=>ITEMS.push({sec:"ls",k:"ls|m"+i+"."+j,ord:j,type:"choice",label:`Luister en kies het goede antwoord (vraag ${j+1} van ${p[2].length} bij dit fragment)`,intro:p[3],say:p[0],big:q[0],sub:"",right:q[1],opts:()=>shuffle(q.slice(1)),pics:p[1]?[p[1]]:null,note:sayHTML(p[0])})));
 LS.forEach((p,i)=>ITEMS.push({sec:"ls",k:"ls|"+i,ord:i/5|0,type:"choice",label:"Luister en kies het goede antwoord",say:p[0],big:p[1],sub:"",right:p[2],opts:()=>shuffle(p.slice(2,5)),pics:p[5]?[p[5]]:null,note:sayHTML(p[0])}));
+// Luisteren B1: qs = every question of the fragment, shown before listening in the proefexamen (you hear it once)
+LSB.forEach((p,i)=>p[2].forEach((q,j)=>ITEMS.push({sec:"lb",k:"lb|"+i+"."+j,ord:j,type:"choice",label:`Luister en kies het goede antwoord (vraag ${j+1} van ${p[2].length} bij dit fragment)`,intro:p[3],say:p[0],big:q[0],sub:"",right:q[1],opts:()=>shuffle(q.slice(1)),pics:p[1]?[p[1]]:null,note:sayHTML(p[0]),qs:p[2].map(x=>x[0])})));
 const genN={lz:0,ls:0};
 function addGenerated(){
   const g=S.gen||{}; let n=0;
@@ -2553,7 +2642,7 @@ const IC={
   talk:'<path d="M3 4h11v8H8l-3 3v-3H3z"/><path d="M14 8h7v8h-2v3l-3-3h-6v-4"/>',
   privacy:'<path d="M12 3l7 3v5c0 4.6-3 8.2-7 10-4-1.8-7-5.4-7-10V6z"/><path d="M9 12l2 2 4-4"/>',
   duo:'<path d="M6 4h12v17H6z"/><path d="M9.5 4V2.8h5V4M9 12.5l2.2 2.2L15.5 10"/>'};
-IC.l1=IC.lz;
+IC.l1=IC.lz;IC.lb=IC.ls;
 function itHTML(attr,t,d,o={}){
   return`<button class="it" ${attr}>${o.ic?`<i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC[o.ic]}</svg></i>`:""}<span><span class="th"><b>${t}</b>${o.n!=null?`<small>${o.n}</small>`:""}</span>${d?`<span class="d">${d}</span>`:""}${o.bar!=null?`<span class="bar${o.pass?" pass":""}"><i style="width:${o.bar}%"></i></span>`:""}</span></button>`;
 }
@@ -2573,17 +2662,17 @@ function home(){
   // one row per part: tap it for a proefexamen; on the right how far you are
   // Examen and Oefenen follow the level: its parts first; at B1 the parts that have no B1 version yet come after, at A2
   if(lvl()==="B1"){
-    $("exam").innerHTML=`<h2>Naar het examen</h2><p class="sub">Staatsexamen Nederlands als tweede taal, programma I (B1), en KNM. Tik op een onderdeel voor een proefexamen, met tijd zoals op het echte examen. Bij het Staatsexamen heb je een score van 500 nodig: mik op ${PASS*100}%, de streep.</p><div class="list">${["l1","knm"].map(part).join("")}</div>`
+    $("exam").innerHTML=`<h2>Naar het examen</h2><p class="sub">Staatsexamen Nederlands als tweede taal, programma I (B1), en KNM. Tik op een onderdeel voor een proefexamen, met tijd zoals op het echte examen. Bij het Staatsexamen heb je een score van 500 nodig: mik op ${PASS*100}%, de streep.</p><div class="list">${["l1","lb","knm"].map(part).join("")}</div>`
       +`<div class="list"><a class="it ext" href="https://oefenexamensnt2.nl" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens Staatsexamen NT2 ↗</b></span><span class="d">De officiële oefenexamens voor programma I. Liefst op een computer.</span></span></a></div>`
-      +`<h3 class="lh">Nog op A2-niveau</h3><p class="sub">Luisteren, Schrijven en Spreken op B1 komen later. Tot dan oefen je ze hier op A2-niveau.</p><div class="list">${["ls","wr","sp","lz"].map(part).join("")}</div>`;
-    $("parts").innerHTML=`<h2>Examenonderdelen</h2><p class="sub">Oefen zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["l1","knm"].map(row).join("")}</div>
-      <h3 class="lh">Nog op A2-niveau</h3><div class="list">${["ls","wr","sp","lz"].map(row).join("")}</div>`;
+      +`<h3 class="lh">Nog op A2-niveau</h3><p class="sub">Schrijven en Spreken op B1 komen later. Tot dan oefen je ze hier op A2-niveau.</p><div class="list">${["wr","sp","lz","ls"].map(part).join("")}</div>`;
+    $("parts").innerHTML=`<h2>Examenonderdelen</h2><p class="sub">Oefen zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["l1","lb","knm"].map(row).join("")}</div>
+      <h3 class="lh">Nog op A2-niveau</h3><div class="list">${["wr","sp","lz","ls"].map(row).join("")}</div>`;
   }else{
     $("exam").innerHTML=`<h2>Naar het examen</h2><p class="sub">Tik op een onderdeel voor een proefexamen, met tijd zoals op het echte examen. Rechts: hoeveel procent je goed had, bij je laatste proefexamen of bij het oefenen. Om te slagen heb je ongeveer ${PASS*100}% nodig, bij Lezen en Luisteren ${passPc("lz")}% (19 van de 25): de streep.</p><div class="list">${["lz","ls","wr","sp","knm"].map(part).join("")}</div>`
       +`<div class="list"><a class="it ext" href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens van DUO ↗</b><small>15</small></span><span class="d">De echte oefenexamens op inburgeren.nl, met echte stemmen. Doe er een als je hier klaar bent. Liefst op een computer.</span></span></a></div>`
-      +`<h3 class="lh">Staatsexamen NT2 · B1</h3><p class="sub">Voor het Staatsexamen Nederlands als tweede taal, programma I. Nu: Lezen. Kies B1 in Profiel om daarvoor te oefenen.</p><div class="list">${part("l1")}</div>`;
+      +`<h3 class="lh">Staatsexamen NT2 · B1</h3><p class="sub">Voor het Staatsexamen Nederlands als tweede taal, programma I. Nu: Lezen en Luisteren. Kies B1 in Profiel om daarvoor te oefenen.</p><div class="list">${part("l1")+part("lb")}</div>`;
     $("parts").innerHTML=`<h2>Examenonderdelen</h2><p class="sub">Oefen zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["lz","ls","wr","sp","knm"].map(row).join("")}</div>
-      <h3 class="lh">B1 · Staatsexamen NT2</h3><div class="list">${row("l1")}</div>`;
+      <h3 class="lh">B1 · Staatsexamen NT2</h3><div class="list">${row("l1")+row("lb")}</div>`;
   }
   $("gram").innerHTML=`<h2>Grammatica en woorden</h2><p class="sub">Korte rondes van 10 vragen. Dit helpt bij alle onderdelen.</p><div class="list">${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`;
   $("books").innerHTML=itHTML(`data-x="books"`,"Boekenkast",lb?`Je leest nu: ${esc(lb.t)}, blz. ${lb.p+1}`:"Verhalen en je eigen e-books. Tik op een woord voor de betekenis.",{ic:"books"})
@@ -2653,8 +2742,8 @@ const byFresh=a=>a.map(q=>[q,seenN(q)]).sort((x,y)=>x[1]-y[1]).map(x=>x[0]);
 function startExam(e,go){
   const cost=e==="wr"?2:e==="sp"?6:0; // as checkCost() in api/_supa.js
   if(cost&&acc.cfg&&!go&&(!acc.user||acc.left!=null&&acc.left<cost))return examGate(e,cost);
-  build("exam",{id:"exam",exam:1,part:e,keep:["lz","l1","ls","sp"].includes(e),write:e==="wr",speak:e==="sp",...EX[e],pool:()=>{const a=byFresh(shuffle(ITEMS.filter(x=>x.sec===e)));
-    if(e==="lz"||e==="l1"||e==="ls"){const g={};a.forEach(q=>{const t=q.text||q.say;(g[t]=g[t]||[]).push(q)}); // whole texts and fragments, as on the exam; the least-seen first
+  build("exam",{id:"exam",exam:1,part:e,keep:["lz","l1","ls","lb","sp"].includes(e),write:e==="wr",speak:e==="sp",...EX[e],pool:()=>{const a=byFresh(shuffle(ITEMS.filter(x=>x.sec===e)));
+    if(["lz","l1","ls","lb"].includes(e)){const g={};a.forEach(q=>{const t=q.text||q.say;(g[t]=g[t]||[]).push(q)}); // whole texts and fragments, as on the exam; the least-seen first
       let T=shuffle(Object.values(g)).map(x=>[x.sort((p,q)=>p.k<q.k?-1:1),x.reduce((s,q)=>s+seenN(q),0)/x.length]).sort((x,y)=>x[1]-y[1]).map(x=>x[0]);
       if(e==="ls"){const M=T.filter(x=>x.length>1).slice(0,8);T=M.concat(T.filter(x=>!M.includes(x)))} // mostly longer fragments with two or three questions, as on the exam
       const sel=[];let n=0;T.forEach(x=>{if(n+x.length<=EX[e].n){sel.push(x);n+=x.length}});return shuffle(sel).flat()}
@@ -2685,20 +2774,21 @@ function ready(k){
     t:`Laatste proefexamen ${pc}%${R.length>1?`, daarvoor ${R[R.length-2].pc}%`:""}`
       +(known&&avg>=P?". Je kende de meeste vragen al: doe ook een oefenexamen van DUO":"")}
 }
-const PART={wr:"Schrijven",knm:"KNM",sp:"Spreken",ls:"Luisteren",lz:"Lezen",l1:"Lezen B1"}, HELP={wr:["wo","verb"],sp:["pr","verb"],lz:["vo","dh"],l1:["vo","dh"],ls:["vo","pr"],knm:[]};
+const PART={wr:"Schrijven",knm:"KNM",sp:"Spreken",ls:"Luisteren",lz:"Lezen",l1:"Lezen B1",lb:"Luisteren B1"}, HELP={wr:["wo","verb"],sp:["pr","verb"],lz:["vo","dh"],l1:["vo","dh"],ls:["vo","pr"],lb:["vo","pr"],knm:[]};
 let planId=null;
 // Short rounds for today's lesson: a little of every exam part each day, so nothing is forgotten
 // The level you practise for (Profiel, welcome screen): A2 = the inburgeringsexamen, B1 = Staatsexamen NT2 programma I.
-// B1 has only Lezen so far: its other parts are practised at A2 until they come; KNM belongs to both routes.
+// B1 has Lezen and Luisteren so far: Schrijven and Spreken are practised at A2 until they come; KNM belongs to both routes.
 const lvl=()=>S.lvl==="B1"?"B1":"A2", LVL={A2:"Inburgering A2",B1:"Staatsexamen B1"};
-const parts=()=>lvl()==="B1"?["l1","ls","wr","sp","knm"]:["lz","ls","wr","sp","knm"];
-// the questions of one text: due ones first, else the least-seen text
-const oneText=sec=>()=>{
-  const g={},d=today();ITEMS.forEach(q=>{if(q.sec===sec)(g[q.text]=g[q.text]||[]).push(q)});
-  const due=x=>x.some(q=>S.items[q.k]&&S.items[q.k].d<=d),T=shuffle(Object.values(g));
-  const t=T.find(due)||T.map(x=>[x,x.reduce((a,q)=>a+seenN(q),0)/x.length]).sort((a,b)=>a[1]-b[1])[0][0];
-  return t.sort((p,q)=>p.k<q.k?-1:1)};
-const SHORT={lz:{n:6,s:"Eén tekst met vragen",pool:oneText("lz"),keep:1},l1:{n:6,s:"Eén lange tekst met zes vragen",pool:oneText("l1"),keep:1},
+const parts=()=>lvl()==="B1"?["l1","lb","wr","sp","knm"]:["lz","ls","wr","sp","knm"];
+// the questions of k whole texts (or fragments): due ones first, then the least-seen
+const someTexts=(sec,k)=>()=>{
+  const g={},d=today();ITEMS.forEach(q=>{const t=q.text||q.say;if(q.sec===sec)(g[t]=g[t]||[]).push(q)});
+  const due=x=>x.some(q=>S.items[q.k]&&S.items[q.k].d<=d)?0:1;
+  return shuffle(Object.values(g)).map(x=>[x,due(x),x.reduce((a,q)=>a+seenN(q),0)/x.length]).sort((a,b)=>a[1]-b[1]||a[2]-b[2])
+    .slice(0,k).flatMap(x=>x[0].sort((p,q)=>p.k<q.k?-1:1))};
+const oneText=sec=>someTexts(sec,1);
+const SHORT={lz:{n:6,s:"Eén tekst met vragen",pool:oneText("lz"),keep:1},l1:{n:6,s:"Eén lange tekst met zes vragen",pool:oneText("l1"),keep:1},lb:{n:4,s:"Eén fragment met vragen",pool:oneText("lb"),keep:1},
   ls:{n:3,s:"Drie fragmenten"},wr:{n:1,min:10,s:"Eén opdracht in 10 minuten"},sp:{n:2,s:"Twee vragen: spreek je antwoord in"},knm:{n:5,s:"Vijf vragen"}};
 // Je les van vandaag, without exam dates: every exam part, the weakest first (lowest proefexamen or practice
 // score; a part not practised yet counts as 50%) as a full round, every third day as a proefexamen once it
@@ -2795,7 +2885,7 @@ function drawProfile(){
 function drawResults(){
   const el=$("myres"); if(!el)return;
   const R=S.res||{};
-  const day=t=>new Date(t).toLocaleDateString("nl-NL",{day:"numeric",month:"long"}),ks=["lz","ls","wr","sp","knm","l1"].filter(k=>(R[k]||[]).length);
+  const day=t=>new Date(t).toLocaleDateString("nl-NL",{day:"numeric",month:"long"}),ks=["lz","ls","wr","sp","knm","l1","lb"].filter(k=>(R[k]||[]).length);
   el.innerHTML=`<h2>Mijn resultaten</h2>`
     +(ks.length?ks.map(k=>`<h3 class="lh">${PART[k]}</h3><ul class="errs kv">${R[k].slice().reverse().map(r=>`<li>Proefexamen ${day(r.at)}<span class="${r.pc>=passPc(k)?"good":"bad"}">${r.pc}%</span></li>`).join("")}</ul>`).join("")
       :`<p class="sub">Nog geen proefexamen gedaan. Je uitslagen komen hier.</p>`)
@@ -2824,7 +2914,7 @@ function stats(){
 }
 function build(id,custom){
   cur=custom||SEC.find(s=>s.id===id); const d=today(), due=[],fresh=[];
-  const pool=id==="mix"?ITEMS.filter(x=>x.sec!=="wr"&&x.sec!==(lvl()==="B1"?"lz":"l1")).concat(wordItems()):ITEMS.filter(x=>x.sec===id);
+  const pool=id==="mix"?ITEMS.filter(x=>x.sec!=="wr"&&!(lvl()==="B1"?["lz","ls"]:["l1","lb"]).includes(x.sec)).concat(wordItems()):ITEMS.filter(x=>x.sec===id);
   shuffle(pool.slice()).forEach(q=>{const it=S.items[q.k];if(!it)fresh.push(q);else if(it.d<=d)due.push(q)});
   due.sort((a,b)=>S.items[a.k].b-S.items[b.k].b);
   fresh.sort((a,b)=>a.ord-b.ord);
@@ -2833,7 +2923,7 @@ function build(id,custom){
   queue=cand.slice(0,cur.n);
   if(id==="wr"&&cur.n>=4){const f=cand.filter(q=>q.fields),o=cand.filter(q=>!q.fields);queue=f.slice(0,1).concat(o.slice(0,3))}
   if(cur.pool){const pl=cur.pool();queue=pl.slice(0,cur.n);cur.miss=[];cur.ans=[];cur.log=[];cur.plays={};
-    cur.nav=cur.exam&&["lz","l1","ls","knm","wr"].includes(cur.part);if(cur.nav){cur.pick=[];cur.op=[];cur.sent=false}
+    cur.nav=cur.exam&&["lz","l1","ls","lb","knm","wr"].includes(cur.part);if(cur.nav){cur.pick=[];cur.op=[];cur.sent=false}
     if(cur.exam)cur.nw=queue.length?Math.round(queue.filter(q=>!seenN(q)).length/queue.length*100):0}
   if(!queue.length)queue=shuffle(pool.slice()).slice(0,cur.n);
   if(!cur.keep)shuffle(queue);
@@ -2855,12 +2945,13 @@ function show(){
   if(q.intro)h+=`<p class="intro">${q.intro}</p>`; // as on the exam: who reads or hears what
   if(q.text)h+=docHTML(q.text);
   if(q.pics)h+=picsHTML(q.pics);
-  if(q.say)h+=canSpeak?`<button class="btn wide" id="say">▶ Luister</button><p class="note">${cur.exam?"Je mag twee keer luisteren.":"Luister twee keer, zoals op het examen."}</p>`:`<p class="note">Audio werkt hier niet. Lees de tekst.</p><div class="sample">${esc(sayLines(q.say).map(l=>/^[AB]: /.test(q.say)?"– "+l:l).join("\n"))}</div>`;
+  if(q.qs&&cur.exam)h+=`<p class="note">Lees eerst de vragen bij dit fragment:</p><ol class="qs">${q.qs.map(x=>`<li${x===q.big?' class="on"':""}>${x}</li>`).join("")}</ol>`;
+  if(q.say)h+=canSpeak?`<button class="btn wide" id="say">▶ Luister</button><p class="note">${q.sec==="lb"?cur.exam?"Je hoort het fragment één keer, zoals op het Staatsexamen.":"Op het Staatsexamen hoor je het fragment maar één keer.":cur.exam?"Je mag twee keer luisteren.":"Luister twee keer, zoals op het examen."}</p>`:`<p class="note">Audio werkt hier niet. Lees de tekst.</p><div class="sample">${esc(sayLines(q.say).map(l=>/^[AB]: /.test(q.say)?"– "+l:l).join("\n"))}</div>`;
   if(q.hear)h+=canSpeak?`<button class="btn wide" id="hear">▶ Luister</button>`:`<div class="verb">${q.hear}</div>`;
   if(q.big)h+=`<div class="verb${q.big.length>22?" long":""}">${q.big}</div>`;
   h+=`<p class="ru">${q.sub||""}</p>`;
   if(q.tts&&canSpeak&&q.big===q.tts)h+=`<button class="hint" id="tts">▶ Uitspraak</button>`;
-  else if((q.sec==="knm"||q.sec==="ls")&&canSpeak)h+=`<button class="hint" id="rd">▶ Lees voor</button>`; // the exam reads every question aloud
+  else if(["knm","ls","lb"].includes(q.sec)&&canSpeak)h+=`<button class="hint" id="rd">▶ Lees voor</button>`; // the exam reads every question aloud
   else if((q.sec==="verb"||q.sec==="dh")&&BET[q.big])h+=`<button class="hint" id="tr">Betekenis</button>`;
   let o;
   if(q.type==="order")h+=`<div class="line" id="line"></div><div class="pool" id="pool"></div><div class="act"><button class="btn wide" id="chk" disabled>Controleer</button></div>`;
@@ -2878,10 +2969,10 @@ function show(){
   h+=`<div class="fb" id="fb"></div>`;
   $("card").innerHTML=h;
   document.querySelectorAll("#card [data-pic]").forEach(b=>b.onclick=()=>zoomPic(b.dataset.pic));
-  // Proefexamen: two plays, as on the exam; when practising you may listen as often as you like
-  if($("say")){const P=cur.plays=cur.plays||{};$("say").onclick=()=>{speak(q.say);const n=P[q.say]=(P[q.say]||0)+1;
-    if(cur.exam&&n>=2){$("say").disabled=true;$("say").textContent="Je hebt twee keer geluisterd"}else $("say").textContent="▶ Nog een keer luisteren"};
-    if(cur.exam&&P[q.say]>=2){$("say").disabled=true;$("say").textContent="Je hebt twee keer geluisterd"}else if(P[q.say])$("say").textContent="▶ Nog een keer luisteren"}
+  // Proefexamen: two plays at A2, one at B1 (Staatsexamen), counted per fragment; when practising you may listen as often as you like
+  if($("say")){const P=cur.plays=cur.plays||{},max=q.sec==="lb"?1:2,done=()=>{$("say").disabled=true;$("say").textContent=max>1?"Je hebt twee keer geluisterd":"Je hebt het fragment gehoord"};
+    $("say").onclick=()=>{speak(q.say);const n=P[q.say]=(P[q.say]||0)+1;if(cur.exam&&n>=max)done();else $("say").textContent="▶ Nog een keer luisteren"};
+    if(cur.exam&&P[q.say]>=max)done();else if(P[q.say])$("say").textContent="▶ Nog een keer luisteren"}
   if($("tts"))$("tts").onclick=()=>speak(q.tts);
   if($("rd"))$("rd").onclick=()=>speak([q.big,...[...document.querySelectorAll("#card .opt")].map(b=>b.textContent)].join("\n"));
   if($("hear")){$("hear").onclick=()=>speak(q.hear);speak(q.hear)}
@@ -3211,11 +3302,11 @@ function finish(){
     const pc=total?Math.round(right/total*100):0, need=Math.ceil(total*passOf(cur.part)-1e-9), pass=right>=need, by={}; keepRes(cur.part,pc);
     // KNM: score per theme, weakest first
     cur.log.forEach(x=>{const t=x.l.replace(/^KNM: /,""),o=by[t]||(by[t]={r:0,n:0});o.n++;if(x.ok)o.r++});
-    const themes=Object.keys(by).length>1?Object.keys(by).sort((a,b)=>by[a].r/by[a].n-by[b].r/by[b].n)
+    const themes=cur.part==="knm"&&Object.keys(by).length>1?Object.keys(by).sort((a,b)=>by[a].r/by[a].n-by[b].r/by[b].n)
       .map(t=>`<li>${t}<span>${by[t].r} van ${by[t].n} goed</span></li>`).join(""):"";
     $("card").innerHTML=`<div class="done"><p class="ask">${cur.t}: uitslag</p><div class="big">${pc}%</div><p class="ru">${right} van ${total} goed</p></div>
       <p><b class="${pass?"good":"bad"}">${pass?"Geslaagd":"Nog niet geslaagd"}</b></p>
-      <p class="note">${cur.part==="l1"?"Bij het Staatsexamen heb je een score van 500 nodig. Hoeveel vragen dat zijn, maakt DUO niet bekend: mik op 7 van de 10.":cur.part==="lz"||cur.part==="ls"?"Op het examen heb je waarschijnlijk 19 van de 25 vragen goed nodig. DUO zet de grens op je uitslag.":cur.part==="knm"?"Op het examen heb je 28 van de 40 vragen goed nodig.":"Op het examen heb je ongeveer 7 van de 10 vragen goed nodig."} Hier is dat ${need} van ${total}.</p>
+      <p class="note">${cur.part==="l1"||cur.part==="lb"?"Bij het Staatsexamen heb je een score van 500 nodig. Hoeveel vragen dat zijn, maakt DUO niet bekend: mik op 7 van de 10.":cur.part==="lz"||cur.part==="ls"?"Op het examen heb je waarschijnlijk 19 van de 25 vragen goed nodig. DUO zet de grens op je uitslag.":cur.part==="knm"?"Op het examen heb je 28 van de 40 vragen goed nodig.":"Op het examen heb je ongeveer 7 van de 10 vragen goed nodig."} Hier is dat ${need} van ${total}.</p>
       ${themes?`<p class="ask">Per thema</p><ul class="errs">${themes}</ul>`:""}
       ${cur.miss.length?`<p class="ask">Fout beantwoord</p><ul class="errs">${cur.miss.slice(0,20).map(m=>`<li>${m.q}<span>Goed is: ${m.r}</span></li>`).join("")}</ul>`:""}
       <div class="two"><button class="ghost" id="tohome">Alle onderdelen</button><button class="btn" id="more">Nog een keer</button></div>`;
