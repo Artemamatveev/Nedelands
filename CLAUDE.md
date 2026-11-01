@@ -198,13 +198,21 @@ belongs to both routes. Examen and Oefenen have two tabs at the top (`.seg.lvt`,
 "Staatsexamen B1"), showing one level at a time; they open on the level you practise for, and the tab you pick (`exV`,
 not stored) stays until the level changes. The B1 tab shows Lezen B1, Luisteren B1, Schrijven B1, Spreken B1 and KNM (with a
 row to the official oefenexamens NT2 ↗); looking at the other level's tab says which
-level today's lesson follows. Today's lesson uses `parts()`; the Mix leaves out the other level's reading and listening.
+level today's lesson follows. At B1 the Grammatica tile shows the B1 rounds first and the A2 ones under "Herhalen op
+A2-niveau", and today's grammar step helps with a B1 round. The page title, description, Open Graph tags, JSON-LD and
+`manifest.json` name both levels.
+- Grammatica B1: `G1` (`[topic, sentence with ___, right, wrong, wrong, why]`, section `g1`, keys `g1|<i>`): die/dat/
+  wat/waar, zou en als, passief, er, voegwoorden, om … te, vaste voorzetsels, wederkerend, tijden, vergelijken. A wrong
+  option must never also be correct Dutch. `WO1` (section `w1`, like `WO`): long sentences with bijzinnen, more verbs
+  and the passive. `VO1` (section `v1`, `word:description` split by `|`, no colon inside a description): B1 words, asked
+  both ways (`v1|`, `v1r|`), and added to `BET`. Not in the Mix at A2. Today's lesson uses `parts()`; the Mix leaves out the other level's reading and listening.
 - Lezen B1: `LZ1` (`[text, questions, intro]`, the same shape as `LZ`), section `l1`, keys `l1|<text>.<question>`,
   label "Lees de tekst (B1)". Six questions per text with three options; question types like the exam: main point,
   purpose, details, the writer's opinion, a word or phrase in context, what you should do. The proefexamen (`EX.l1`) is
   6 whole texts, 36 questions, 110 minutes, with Overzicht and going back, like Lezen A2. DUO publishes no raw pass mark
   (a scaled 500), so the pass line is the default 70%. Places, organisations and people are made up; facts about the
-  Netherlands in the texts are real. The exam's texts are longer than the first eight here: new ones may be longer.
+  Netherlands in the texts are real. The first eight texts are about 220 words, the later ones about 300; the exam's
+  texts are longer still, so new ones may be longer.
 - Luisteren B1: `LSB` (`[text, photo|null, [[q, right, wrong, wrong], …], intro]`, like `LSM`), section `lb`, keys
   `lb|<fragment>.<question>`. Radio, news, podcasts, voicemail, phone calls, talks and conversations of about 140–210
   words, three or four questions each (main point, details, an opinion, what to do). The proefexamen (`EX.lb`) takes
