@@ -2841,12 +2841,50 @@ function addGenerated(){
 }
 function errItems(){return(S.errs||[]).map(e=>({sec:"er",k:"er|"+e.r,ord:0,type:"choice",label:"Welke zin is goed?",big:"",sub:"",right:esc(e.r),opts:()=>shuffle([esc(e.r),esc(e.w)]),note:esc(e.y)}))}
 const canSpeak="speechSynthesis" in window&&typeof SpeechSynthesisUtterance!=="undefined";
-// Voice left unset so the phone uses the Dutch (nl-NL) voice picked in its settings
-// A dialogue ("A: …" / "B: …" lines) is read turn by turn; speaker B gets a higher pitch, so the two people sound different
-function speak(t){try{speechSynthesis.cancel();String(t).split("\n").forEach(l=>{const m=l.match(/^([AB]): (.*)$/);if(!l.trim())return;
-  const u=new SpeechSynthesisUtterance(m?m[2]:l);u.lang="nl-NL";u.rate=.95;if(m)u.pitch=m[1]==="B"?1.35:.9;speechSynthesis.speak(u)})}catch(e){}}
+// Speech: every line the app says itself is recorded in audio/ (audio/build.mjs, Google's Chirp 3 HD voices), one file
+// per line, named by sayKeys(); audio/index.json lists them. Anything else (own books, Claude's corrections, a
+// word from the dictionary) falls back to the phone's Dutch voice. speak() stays synchronous, so the first line starts
+// inside the tap (iPhone only plays sound from a tap); the next lines follow on the same audio element.
+let VOICE=null,sayN=0,sayOn=false;const sayA=new Audio();
+fetch("/audio/index.json").then(r=>r.ok?r.json():[]).then(a=>{VOICE=new Set(a)}).catch(()=>{});
+function vkey(s){let a=0xdeadbeef,b=0x41c6ce57;for(let i=0,c;i<s.length;i++){c=s.charCodeAt(i);a=Math.imul(a^c,2654435761);b=Math.imul(b^c,1597334677)}
+  a=Math.imul(a^a>>>16,2246822507)^Math.imul(b^b>>>13,3266489909);b=Math.imul(b^b>>>16,2246822507)^Math.imul(a^a>>>13,3266489909);
+  return(4294967296*(2097151&b)+(a>>>0)).toString(36)}
+// A dialogue's lines are keyed by the whole dialogue (the same "Goedemorgen." is a man in one and a woman in another),
+// other lines on their own (the options read aloud come in any order)
+function sayKeys(L){const d=L.some(l=>/^[A-C]: /.test(l)),t=L.join("\n");return L.map((l,i)=>vkey(d?t+"\n#"+i:l))}
+const speaking=()=>sayOn||(canSpeak&&speechSynthesis.speaking);
+function stopSpeak(){sayN++;sayOn=false;sayA.pause();try{if(canSpeak)speechSynthesis.cancel()}catch(e){}}
+// The phone's voice: left unset, so the phone uses the Dutch (nl-NL) voice picked in its settings;
+// in a dialogue ("A: …" / "B: …" lines) speaker B gets a higher pitch, so the two people sound different
+function utter(l,done){const m=l.match(/^([A-C]): (.*)$/),u=new SpeechSynthesisUtterance(m?m[2]:l);u.lang="nl-NL";u.rate=.95;if(m)u.pitch={A:.9,B:1.35,C:1.1}[m[1]];
+  if(done)u.onend=u.onerror=done;speechSynthesis.speak(u)}
+function speak(t){stopSpeak();const n=sayN,L=String(t).split("\n").map(l=>l.trim()).filter(Boolean),K=sayKeys(L),has=i=>!!VOICE&&VOICE.has(K[i]);
+  try{if(!L.some((l,i)=>has(i))){if(canSpeak)L.forEach(l=>utter(l));return}}catch(e){return}
+  sayOn=true;
+  const next=i=>{if(n!==sayN)return;if(i>=L.length){sayOn=false;return}const l=L[i],go=()=>next(i+1),miss=()=>{if(n!==sayN)return;try{canSpeak?utter(l,go):go()}catch(e){go()}};
+    if(!has(i))return miss();
+    sayA.onended=()=>setTimeout(go,250);sayA.onerror=miss;sayA.src="/audio/"+K[i]+".mp3";sayA.play().catch(miss)};
+  next(0)}
+// Every text speak() gets from the app's own material, for audio/build.mjs: {t, k} with k the kind of speech,
+// which picks the voice: ls a fragment to listen to, q a question or option read aloud, sp a Spreken question,
+// w a word, r reading aloud (a painting's story, a history chapter), gp a line of the other person in a Gesprek
+// (g: who), gpm an example answer of the learner
+function voiceTexts(){
+  const out=[],seen=new Set(),add=(t,k,g)=>{t=String(t||"").trim();if(t&&!seen.has(k+t)){seen.add(k+t);out.push(g?{t,k,g}:{t,k})}},
+    plain=s=>{const d=document.createElement("div");d.innerHTML=s;return d.textContent};
+  ITEMS.forEach(q=>{
+    if(q.say)add(q.say,"ls");
+    if(q.tts)add(q.tts,"w");
+    if(q.hear)add(q.hear,"w");
+    if(q.type==="reveal")add(spoken(q.big),"sp");
+    if(["knm","ls","lb"].includes(q.sec)&&q.type==="choice"){add(q.big,"q");q.opts().forEach(o=>add(plain(o),"q"))}});
+  ART.forEach(p=>{(p.v||"").split("\n").forEach(l=>add(l,"r"));(p.w||"").split("|").filter(Boolean).forEach(x=>add(x.split("=")[0],"w"))});
+  GS.forEach(c=>c.x.split("\n").forEach(l=>add(l,"r")));
+  GP.forEach(c=>{c.d.forEach(s=>{add(s.a,"gp",c.w);add(s.r||GPNO,"gp",c.w);add(s.m.replace(/\[|\]/g,""),"gpm",c.w)});add(c.e,"gp",c.w)});
+  return out}
 let rec=null,recUrl=null;
-const hush=()=>{recEnd(false);if(recUrl){URL.revokeObjectURL(recUrl);recUrl=null}try{if(canSpeak)speechSynthesis.cancel()}catch(e){}};
+const hush=()=>{recEnd(false);if(recUrl){URL.revokeObjectURL(recUrl);recUrl=null}stopSpeak()};
 // Spreken: listen() puts one minute on the clock and either records the answer (mode "rec", to play it back)
 // or lets the phone write it down (mode "say", Web Speech API) so Claude can grade the text.
 // Never both at once: on iPhone the recorder and speech recognition compete for the microphone.
@@ -2867,7 +2905,7 @@ const scoreHTML=(sc,M)=>{if(!sc)return""; const wr="spelling" in sc,X=M||SCMAX,n
 const spoken=t=>String(t).replace(/[\p{Extended_Pictographic}←-⇿️‍]/gu,"").replace(/\s+/g," ").trim();
 const saidText=r=>r.said.concat(r.part).join(" ").replace(/\s+/g," ").trim();
 async function listen(mode,done,lim=SPK){
-  const box=$("rec"),b=$("recb"); recEnd(false); b.disabled=true; try{if(canSpeak)speechSynthesis.cancel()}catch(e){} // never record the question
+  const box=$("rec"),b=$("recb"); recEnd(false); b.disabled=true; stopSpeak(); // never record the question
   if(recUrl){URL.revokeObjectURL(recUrl);recUrl=null} $("recp").innerHTML="";
   const r={box,mode,done,lim,stream:null,mr:null,sr:null,chunks:[],said:[],part:"",keep:false,fin:false};
   if(mode==="rec"&&canRec){
@@ -3068,8 +3106,8 @@ function story(p){
   $("vart").onclick=()=>{$("zoom").hidden=false};
   if($("vsay"))$("vsay").onclick=()=>{const b=$("vsay");
     if(b.dataset.on){hush();b.textContent="▶ Luister";delete b.dataset.on;return}
-    speak(p.v.replace(/\n/g," "));b.textContent="■ Stop";b.dataset.on=1;
-    try{const t=setInterval(()=>{if(!speechSynthesis.speaking){clearInterval(t);b.textContent="▶ Luister";delete b.dataset.on}},500)}catch(e){}};
+    speak(p.v);b.textContent="■ Stop";b.dataset.on=1;
+    try{const t=setInterval(()=>{if(!speaking()){clearInterval(t);b.textContent="▶ Luister";delete b.dataset.on}},500)}catch(e){}};
   document.querySelectorAll("#vbody .say").forEach(b=>b.onclick=()=>speak(W[b.dataset.i][0]));
   document.querySelectorAll("#vbody [data-k]").forEach(b=>b.onclick=()=>{const[w,en]=W[b.dataset.k];
     if(!has(w)){S.words=S.words||[];S.words.unshift({w,en,p:/^(de|het) /.test(w)?"n":"a",s:p.t+" ("+p.a+")",f:[]});save()}
@@ -4430,6 +4468,7 @@ function tDraw(){
   document.querySelectorAll("#tlog .say").forEach(b=>b.onclick=()=>speak(TK.log[b.dataset.j].t));
 }
 // The other person speaks; then it is the learner's turn
+const GPNO="Sorry, dat begrijp ik niet. Kunt u het nog een keer zeggen?";
 function tSay(line){
   TK.log.push({t:line}); tDraw(); speak(line);
   const s=TK.c.d[TK.n];
@@ -4449,7 +4488,7 @@ function tHint(s){
   $("thv").innerHTML=`<p class="ask">Je kunt zeggen</p><div class="sample">${esc(s.m)}</div><button class="ghost wide" id="tuse">Zeg het zo en ga verder</button>`;
   $("tuse").onclick=()=>tAnswer(s.m);
 }
-function tRec(){try{if(canSpeak)speechSynthesis.cancel()}catch(e){} listen("say",tHeard)}
+function tRec(){stopSpeak(); listen("say",tHeard)}
 function tHeard(r){
   const b=$("recb"); if(!b||!TK)return;
   b.textContent="● Antwoord";b.className="btn wide";b.onclick=tRec; $("recp").innerHTML="";
@@ -4458,7 +4497,7 @@ function tHeard(r){
 }
 function tAnswer(said){
   const c=TK.c,s=c.d[TK.n];
-  if(!gpFits(s.k,said)){TK.log.push({me:1,t:said,no:1});TK.miss++;return tSay(s.r||"Sorry, dat begrijp ik niet. Kunt u het nog een keer zeggen?")}
+  if(!gpFits(s.k,said)){TK.log.push({me:1,t:said,no:1});TK.miss++;return tSay(s.r||GPNO)}
   const own=!TK.hint; TK.log.push({me:1,t:said}); if(own)TK.self++;
   TK.n++; TK.miss=0; TK.hint=false;
   // an answer that already said what the next question asks: skip that question

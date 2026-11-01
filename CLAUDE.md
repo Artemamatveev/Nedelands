@@ -109,7 +109,7 @@ in % for the header crop), artist, title, year, museum and an A2 sentence. Check
 Each painting also has `v`, its story in A2 Dutch (who made it, what it shows, why it is famous; paragraphs
 split by `\n`), and `w`, three or four things you can really see on it (`de kan=jug|…`, English like the dictionary). Tapping the
 painting in the header on the home screen opens `story()` (no extra row under the label, to keep the home screen short): the
-painting (tap it to see it in full), the story to read or hear (speech synthesis), and the words, each can be kept in Mijn woorden (`{w, en, p, s, f}`). Look at the painting
+painting (tap it to see it in full), the story to read or hear (recorded, see Voices), and the words, each can be kept in Mijn woorden (`{w, en, p, s, f}`). Look at the painting
 before writing `w`, and check every fact in `v`.
 
 
@@ -290,6 +290,27 @@ No Claude calls in the reader: whole sentences go to Google Translate via a link
 `gs|<id>.<n>` items (also in the Mix and in "Mijn zwakke punten"). Original texts: check facts, they double as
 KNM material. `S.hs` keeps when a chapter was last opened; a chapter is "Klaar" when every question was
 answered right once. Append chapters and questions; don't reorder or rename them.
+
+## Voices (speech)
+
+Everything the app says from its own material is recorded: `audio/<key>.mp3`, one file per line, made once with Google
+Cloud Text-to-Speech, Chirp 3 HD voices (chosen by ear: Vindemiatrix for women, Charon for men; Aoede and Orus only
+when two women or two men talk together). `speak(t)` keeps its old interface (lines split by `\n`, `A: …` / `B: …` /
+`C: …` for a dialogue) and plays each line's file if `audio/index.json` lists its key (`sayKeys()`: a dialogue's lines
+are keyed by the whole dialogue, other lines on their own), else the phone's Dutch voice (`utter()`), as for own books,
+Claude's corrections and dictionary words. The first line starts inside the tap, the rest follow on the same audio
+element (iPhone only plays sound from a tap). `stopSpeak()` stops both; `speaking()` says whether either still runs.
+`sw.js` keeps each file after its first play and answers the byte ranges Safari asks for.
+
+`node audio/build.mjs` records what is new or changed and deletes what no line uses any more (`--dry` only counts,
+`--dry --who` shows who says what). It reads the texts from the page itself in headless Chrome (`voiceTexts()`: every
+text the app passes to `speak()`, with its kind), so after adding or changing Luisteren, KNM, Spreken, Gesprekken,
+words, paintings or history, run it and commit `audio/`. Who speaks: dialogue people by how they introduce themselves
+(names and titles in `FEMALE` / `MALE` in the script; add new names there), the KNM, Luisteren and Spreken questions by
+Charon (as the voice on the exam), words and reading aloud by Vindemiatrix, Gesprekken by the role (`GP .w`) and the
+learner's example answers by the other voice. The Google key is in `~/.config/bittertalen/tts.env` (`GOOGLE_TTS_KEY`, a
+key restricted to the Text-to-Speech API in the user's Google Cloud project); never put it in the repository or the chat.
+The whole app is about 240 000 characters, inside Google's free million per month.
 
 ## Gesprekken (conversations)
 

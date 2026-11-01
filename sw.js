@@ -2,7 +2,7 @@
 // The page itself: network first, so a push to main is live at once; the cached copy only when offline. Other pages
 // (privacy.html) are cached under their own address, never as "/".
 // Paintings, photos and icons: from the cache, refreshed in the background. The dictionary (7 MB): cache only.
-// api/ (grading, new texts) always goes to the network.
+// Recorded voices (audio/): cached on first play. api/ (grading, new texts) always goes to the network.
 const CACHE = "nl-a2-v1", CORE = ["/", "/manifest.json", "/apple-touch-icon.png"];
 
 self.addEventListener("install", e => {
@@ -37,9 +37,25 @@ self.addEventListener("fetch", e => {
     }).catch(() => caches.match("/")));
     return;
   }
+  // Recorded voices: kept after the first play (a file never changes, its name is the hash of its line). The audio
+  // element asks for byte ranges (Safari won't play without them), answered from the whole file.
+  if (u.pathname.startsWith("/audio/") && u.pathname.endsWith(".mp3")) {
+    e.respondWith(caches.open(CACHE).then(c => c.match(u.pathname).then(hit => hit ||
+      fetch(u.pathname).then(res => { if (res.ok) c.put(u.pathname, res.clone()); return res })))
+      .then(res => ranged(r, res)));
+    return;
+  }
   e.respondWith(caches.open(CACHE).then(c => c.match(r).then(hit => {
     const net = fetch(r).then(res => { if (res.ok) c.put(r, res.clone()); return res });
     if (hit) { if (!u.pathname.startsWith("/dict/")) e.waitUntil(net.catch(() => {})); return hit }
     return net;
   })));
 });
+async function ranged(r, res) {
+  const m = /^bytes=(\d+)-(\d*)$/.exec(r.headers.get("range") || "");
+  if (!m || res.status !== 200) return res;
+  const b = await res.arrayBuffer(), s = +m[1], end = m[2] ? Math.min(+m[2], b.byteLength - 1) : b.byteLength - 1;
+  if (s >= b.byteLength) return new Response(null, { status: 416, headers: { "Content-Range": `bytes */${b.byteLength}` } });
+  return new Response(b.slice(s, end + 1), { status: 206, headers: { "Content-Type": "audio/mpeg",
+    "Content-Range": `bytes ${s}-${end}/${b.byteLength}`, "Content-Length": String(end - s + 1), "Accept-Ranges": "bytes" } });
+}
