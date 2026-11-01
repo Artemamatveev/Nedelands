@@ -72,7 +72,7 @@ official oefenexamens ↗. Practising a part is on Oefenen.
 - **Oefenen**: "Examenonderdelen" (Lezen, Luisteren, Schrijven, Spreken, KNM: practice without the clock) and
 "Grammatica en woorden" under it, "Lezen, luisteren en spreken" beside them on a computer.
 - **Herhalen**: Mijn zwakke punten, Mijn fouten and Mijn woorden (the last two once there is something in them).
-- **Profiel**: first and last name (`S.me` `{name, last}`, so they sync, and they also go to the account's
+- **Profiel**: first and last name, the level (A2 or B1, see B1) (`S.me` `{name, last}`, so they sync, and they also go to the account's
 `user_metadata` by `syncMeta()`; an exam date was asked here once and removed at the user's wish, an old `exam` field is
 kept as it is but not shown), the account
 (see Accounts) and "Mijn resultaten": every proefexamen with its date and score against the pass line, and a few counts.
@@ -191,8 +191,12 @@ stored progress: append new items, don't reorder or rename existing ones.
 
 ## B1 (Staatsexamen NT2, programma I)
 
-Being built part by part; Lezen first. On Examen a group "Staatsexamen NT2 · B1" under the A2 rows, on Oefenen a group
-"B1 · Staatsexamen NT2" under Examenonderdelen. Not in today's lesson or the Mix (those are A2).
+Being built part by part; Lezen first. The level is `S.lvl` ("A2" by default, "B1"; it syncs with the progress), chosen
+under "Ik oefen voor" in Profiel and on the welcome screen (`.seg`, two halves of one outlined button, the chosen one
+filled). `parts()` gives the exam parts of the level: at B1 `l1` replaces `lz`, and Luisteren, Schrijven and Spreken stay
+at A2 until their B1 versions come; KNM belongs to both routes. At B1 Examen and Oefenen show Lezen B1 and KNM first (with
+a row to the official oefenexamens NT2 ↗), then "Nog op A2-niveau"; at A2 they show A2 first and a small B1 group under
+it. Today's lesson uses `parts()`; the Mix leaves out the other level's reading.
 - Lezen B1: `LZ1` (`[text, questions, intro]`, the same shape as `LZ`), section `l1`, keys `l1|<text>.<question>`,
   label "Lees de tekst (B1)". Six questions per text with three options; question types like the exam: main point,
   purpose, details, the writer's opinion, a word or phrase in context, what you should do. The proefexamen (`EX.l1`) is
