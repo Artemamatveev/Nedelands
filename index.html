@@ -2880,7 +2880,7 @@ function vkey(s){let a=0xdeadbeef,b=0x41c6ce57;for(let i=0,c;i<s.length;i++){c=s
 // A dialogue's lines are keyed by the whole dialogue (the same "Goedemorgen." is a man in one and a woman in another),
 // other lines on their own (the options read aloud come in any order)
 function sayKeys(L){const d=L.some(l=>/^[A-C]: /.test(l)),t=L.join("\n");return L.map((l,i)=>vkey(d?t+"\n#"+i:l))}
-const speaking=()=>sayOn||(canSpeak&&speechSynthesis.speaking);
+const speaking=()=>sayOn||(canSpeak&&(speechSynthesis.speaking||speechSynthesis.pending));
 function stopSpeak(){sayN++;sayOn=false;sayA.pause();try{if(canSpeak)speechSynthesis.cancel()}catch(e){}}
 // The phone's voice: left unset, so the phone uses the Dutch (nl-NL) voice picked in its settings;
 // in a dialogue ("A: …" / "B: …" lines) speaker B gets a higher pitch, so the two people sound different
@@ -3023,7 +3023,7 @@ function prepThen(q,go){
     $("rect").textContent=mmss(q.spk);$("recn").textContent="Tik op Antwoord geven om te beginnen."},1500)};
   prepT=setInterval(()=>{
     if(box!==$("rec")||rec)return stopPrep();
-    if(!end){if(canSpeak&&(speechSynthesis.speaking||speechSynthesis.pending))return;end=Date.now()+P*1e3}
+    if(!end){if(speaking())return;end=Date.now()+P*1e3}
     const ms=Math.max(0,end-Date.now());
     if(P){$("rect").textContent=mmss(Math.ceil(ms/1e3));$("recm").style.width=ms/P/10+"%";$("recn").textContent="Denk na. Daarna begint je antwoord vanzelf."}
     if(!ms){stopPrep();$("rect").textContent=mmss(q.spk);$("recm").style.width="100%";auto()}
