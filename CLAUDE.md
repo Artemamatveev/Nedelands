@@ -191,13 +191,13 @@ stored progress: append new items, don't reorder or rename existing ones.
 
 ## B1 (Staatsexamen NT2, programma I)
 
-Being built part by part: Lezen, Luisteren and Schrijven so far. The level is `S.lvl` ("A2" by default, "B1"; it syncs with the progress), chosen
+Built part by part: Lezen, Luisteren, Schrijven and Spreken. The level is `S.lvl` ("A2" by default, "B1"; it syncs with the progress), chosen
 under "Ik oefen voor" in Profiel and on the welcome screen (`.seg`, two halves of one outlined button, the chosen one
-filled). `parts()` gives the exam parts of the level: at B1 `l1` replaces `lz`, `lb` replaces `ls` and `wb` replaces `wr`, and Spreken stays
-at A2 until its B1 version comes; KNM belongs to both routes. Examen and Oefenen have two tabs at the top (`.seg.lvt`, "Inburgering A2" |
+filled). `parts()` gives the exam parts of the level: at B1 `l1` replaces `lz`, `lb` replaces `ls`, `wb` replaces `wr` and `sb` replaces `sp`; KNM
+belongs to both routes. Examen and Oefenen have two tabs at the top (`.seg.lvt`, "Inburgering A2" |
 "Staatsexamen B1"), showing one level at a time; they open on the level you practise for, and the tab you pick (`exV`,
-not stored) stays until the level changes. The B1 tab shows Lezen B1, Luisteren B1, Schrijven B1 and KNM (with a row to
-the official oefenexamens NT2 ↗), then Spreken under "Nog op A2-niveau"; looking at the other level's tab says which
+not stored) stays until the level changes. The B1 tab shows Lezen B1, Luisteren B1, Schrijven B1, Spreken B1 and KNM (with a
+row to the official oefenexamens NT2 ↗); looking at the other level's tab says which
 level today's lesson follows. Today's lesson uses `parts()`; the Mix leaves out the other level's reading and listening.
 - Lezen B1: `LZ1` (`[text, questions, intro]`, the same shape as `LZ`), section `l1`, keys `l1|<text>.<question>`,
   label "Lees de tekst (B1)". Six questions per text with three options; question types like the exam: main point,
@@ -221,6 +221,14 @@ level today's lesson follows. Today's lesson uses `parts()`; the Mix leaves out 
   checks. The pass line is 25 of 47 (`PASSP.wb`): the public exams of 2023–2025 needed about that. Practice is three
   zinsopdrachten and one longer task, each checked on its own; today's short round alternates three zinsopdrachten and
   one longer task. `wrTask()` builds the full task text for Claude (and the Word file) from all these fields.
+- Spreken B1: `SPB` (objects: `k` kind, `t` situation and task, `f` photos, `d` a short text, `m` example), section
+  `sb`, keys `sb|<i>`, type `reveal` like Spreken A2 but with `spk`, the seconds to speak (`listen(mode, done, lim)`).
+  Two kinds, as on the exam: korte opdracht (`k`, 20 seconds: asking, choosing, explaining, apologising; inhoud 0–2,
+  grammatica 0–1) and middellange opdracht (`m`, 15 seconds to think, which is only said, and 30 to speak: advice, an
+  opinion with reasons, comparing two photos and choosing, a story about three photos in order; inhoud 0–3, woorden
+  0–1, grammatica 0–2, samenhang 0–1) (`SBMAX`, `SCORES_SB` in `api/check.js`, `part:"sb"`, its own B1 prompt;
+  voldoende is inhoud 2 and 60% of the points). The proefexamen (`EX.sb`, `sbTasks(8,8)`) is 8 short and 8 medium
+  tasks, 80 points, 25 minutes, costs 6 checks; pass line the default 70% (DUO publishes no raw mark).
 
 ## Writing and speaking check (Schrijven, Spreken)
 

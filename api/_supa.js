@@ -10,7 +10,7 @@ export const supaUrl = URL_;
 export const anonKey = ANON;
 // Claude checks per person per day; a proefexamen costs more than one task (see checkCost)
 export const LIMIT = Math.max(1, parseInt(process.env.CHECK_LIMIT, 10) || 20);
-// One task is 1; a proefexamen Schrijven (4 tasks) 2, Schrijven B1 (12) 4, Spreken (16 answers) 6: roughly what they cost in tokens
+// One task is 1; a proefexamen Schrijven (4 tasks) 2, Schrijven B1 (12) 4, Spreken A2 or B1 (16 answers) 6: roughly what they cost in tokens
 export const checkCost = (tasks) => Math.max(1, Math.ceil(tasks / 3));
 
 // The user behind "Authorization: Bearer <access token>", or null
