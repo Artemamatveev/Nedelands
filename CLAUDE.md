@@ -343,5 +343,9 @@ Only free sources whose episodes are entirely in Dutch. Videos play in the YouTu
 (`youtube-nocookie.com`, Dutch captions on; a Short, `sh` from the feed's /shorts/ link, gets an upright 9:16 box;
 "Volledig scherm" uses the browser's fullscreen, or on an iPhone, which has none for a page element, lets the box cover the
 screen with a ✕, `vFull()`), podcasts in `<audio>` with 10 s back and 0.75/1/1.25×.
+Thumbnails come through `api/thumb.js` (`/api/thumb?v=<id>`, only i.ytimg.com's mqdefault, CDN-cached a week), so
+Google sees nobody until a video is opened. YouTube's developer policies: keep the player as it is (no overlays, ads
+and branding intact), never put the videos behind a paywall, and privacy.html links YouTube's Terms and Google's
+privacy policy.
 What was opened, where a podcast stopped and the chosen speed stay in `localStorage` `ww-media`,
 not in `ww-v1`.

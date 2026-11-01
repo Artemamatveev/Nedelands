@@ -4798,7 +4798,7 @@ function drawEps(){
   $("mlist").innerHTML=(MS.items.length?`<ul class="eps">${MS.items.map((x,i)=>{const k=epKey(x),meta=[when(x.d)];
     if(x.n)meta.push(x.n<60?x.n+" s":Math.round(x.n/60)+" min");
     if(pos[k])meta.push("verder bij "+mmss(pos[k]));else if(seen.has(k))meta.push("✓");
-    return`<li><button class="ep${i===MS.i?" on":""}" data-i="${i}">${x.v?`<img src="https://i.ytimg.com/vi/${encodeURIComponent(x.v)}/mqdefault.jpg" alt="" loading="lazy">`:""}<span><b>${esc(x.t)}</b><small>${meta.join(" · ")}</small></span></button></li>`}).join("")}</ul>`
+    return`<li><button class="ep${i===MS.i?" on":""}" data-i="${i}">${x.v?`<img src="/api/thumb?v=${encodeURIComponent(x.v)}" alt="" loading="lazy">`:""}<span><b>${esc(x.t)}</b><small>${meta.join(" · ")}</small></span></button></li>`}).join("")}</ul>`
     :`<p class="note">Nog geen afleveringen.</p>`)
     +(MS.link?`<p class="note" style="margin-top:14px">Bron: <a href="${esc(MS.link)}" target="_blank" rel="noopener">${esc(MS.m.t)} ↗</a></p>`:"");
   document.querySelectorAll("#mlist .ep").forEach(b=>b.onclick=()=>playEp(+b.dataset.i));
