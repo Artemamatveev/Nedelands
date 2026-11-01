@@ -118,6 +118,7 @@ h2::before{content:"";flex:none;width:9px;height:9px;background:var(--blue);tran
 .today>.ghost{margin-top:14px}
 #a2hs:empty{display:none}
 .intro{margin:6px 0 12px;font-weight:600}
+.pts{margin:0 0 14px;padding-left:22px} .pts li{margin:0 0 4px} .gapw{color:var(--blue)}
 .qs{margin:0 0 14px;padding-left:22px;color:var(--soft)} .qs li{margin:0 0 4px} .qs li.on{color:var(--ink);font-weight:600}
 #hear{margin:10px 0 4px}
 #a2hs ol{margin:10px 0 0;padding-left:22px}#a2hs .two{margin-top:14px}
@@ -1902,7 +1903,7 @@ const LSM=[
 ["A: Voetbalvereniging SV Oost, met Peter.\nB: Hallo, met Aisha. Mijn zoon is acht jaar en hij wil graag voetballen. Kan hij lid worden?\nA: Zeker. Hij kan eerst drie keer gratis meetrainen. De jongens van zijn leeftijd trainen op woensdagmiddag om vier uur.\nB: En de wedstrijden?\nA: Die zijn op zaterdagochtend. Ouders rijden om de beurt naar uitwedstrijden.\nB: Wat kost het?\nA: Honderdveertig euro per jaar. Heeft u een laag inkomen? Dan kan het Jeugdfonds Sport helpen met de contributie.", "voetbal", [["Hoe vaak mag de zoon gratis meetrainen?", "drie keer", "één keer", "een maand lang"], ["Wanneer zijn de wedstrijden?", "op zaterdagochtend", "op woensdagmiddag", "op zondagmiddag"], ["Wie kan helpen met de contributie?", "het Jeugdfonds Sport", "de school van haar zoon", "de trainer van de club"]], "Aisha belt een voetbalclub."],
 ["A: Goedemorgen, wat mag het zijn?\nB: Een kilo tomaten en een komkommer, alstublieft.\nA: Alstublieft. Verder nog iets?\nB: Hoeveel kosten de aardbeien?\nA: Vier euro per bakje, twee bakjes voor zeven euro.\nB: Doe maar twee bakjes.\nA: Dat is dan bij elkaar elf euro vijftig.\nB: Kan ik met mijn telefoon betalen?\nA: Ja hoor. Houd hem maar hier tegen het apparaat.", "", [["Wat koopt de klant niet?", "paprika's", "tomaten", "aardbeien"], ["Hoeveel kosten twee bakjes aardbeien?", "zeven euro", "acht euro", "vier euro"], ["Hoe betaalt de klant?", "met haar telefoon", "contant", "met een cadeaubon"]], "Een vrouw koopt groente en fruit op de markt."]
 ];
-const EX={l1:{t:"Proefexamen Lezen B1",n:36,min:110},lb:{t:"Proefexamen Luisteren B1",n:39,min:90},lz:{t:"Proefexamen Lezen",n:25,min:65},ls:{t:"Proefexamen Luisteren",n:25,min:45},knm:{t:"Proefexamen KNM",n:40,min:45},wr:{t:"Proefexamen Schrijven",n:4,min:40},sp:{t:"Proefexamen Spreken",n:16,min:35}};
+const EX={l1:{t:"Proefexamen Lezen B1",n:36,min:110},lb:{t:"Proefexamen Luisteren B1",n:39,min:90},wb:{t:"Proefexamen Schrijven B1",n:12,min:100},lz:{t:"Proefexamen Lezen",n:25,min:65},ls:{t:"Proefexamen Luisteren",n:25,min:45},knm:{t:"Proefexamen KNM",n:40,min:45},wr:{t:"Proefexamen Schrijven",n:4,min:40},sp:{t:"Proefexamen Spreken",n:16,min:35}};
 const SEC=[
 {id:"mix",t:"Mix van de dag",s:"10 vragen uit alle onderdelen",n:10},
 {id:"lz",t:"Lezen",s:"Korte teksten met vragen, zoals op het examen",n:6},
@@ -1910,6 +1911,7 @@ const SEC=[
 {id:"lb",t:"Luisteren B1",s:"Gesprekken, radio en uitleg, met drie of vier vragen per fragment",n:8,keep:1,pool:()=>someTexts("lb",2)()},
 {id:"ls",t:"Luisteren",s:"Luister naar een bericht en kies het antwoord",n:5},
 {id:"wr",t:"Schrijven",s:"4 opdrachten in 40 minuten, één formulier",n:4,min:40},
+{id:"wb",t:"Schrijven B1",s:"Zinnen afmaken, een formulier en e-mails, zoals bij het Staatsexamen NT2",n:4,keep:1,pool:()=>wbTasks(3,1)},
 {id:"sp",t:"Spreken",s:"Vragen en plaatjes: spreek je antwoord in",n:5},
 {id:"knm",t:"KNM",s:"De 8 thema's van het examen (sinds juli 2025)",n:10},
 {id:"verb",t:"Werkwoordsvormen",s:"Imperfectum en perfectum",n:10},
@@ -2375,6 +2377,77 @@ const LSB=[
   ["Waar ga je heen als het brandalarm gaat?","naar de parkeerplaats","naar de kantine","naar de kleedkamer"]],
  "Je eerste werkdag bij een bakkerij. Henk vertelt wat je moet weten."]
 ];
+// Schrijven B1 (Staatsexamen NT2, programma I): 12 tasks in 100 minutes, 47 points. k = kind:
+// z = zinsopdracht (finish a sentence, c ends with …, or fill the open place ___ in c; or one or two sentences),
+// f = formulier (fl = questions, o = the open question), m = e-mail (i = situation, d = information as in docHTML,
+// f = photos, p = the points to write about). t = task, m = example answer. Keys wb|<i>: append only.
+// Places, organisations and people are made up; facts about the Netherlands are real.
+const WRB=[
+{k:"z",t:"Je kunt morgen niet naar de Nederlandse les. Je stuurt je docent een bericht. Maak de zin af.",c:"Morgen kan ik helaas niet naar de les komen, omdat …",m:"Morgen kan ik helaas niet naar de les komen, omdat mijn dochter ziek is en ik thuis bij haar moet blijven."},
+{k:"z",t:"Je collega Mark vraagt of jij zaterdag zijn dienst wilt overnemen. Dat kun je niet. Schrijf Mark een bericht terug: zeg dat je niet kunt en geef hem een andere oplossing. Schrijf één of twee zinnen.",m:"Sorry Mark, zaterdag kan ik niet, want dan ben ik op een bruiloft. Misschien kun je het aan Yvonne vragen, want zij heeft dat weekend vrij."},
+{k:"z",t:"Je hangt een briefje op voor je buren. Schrijf op de open plek één zin: zeg sorry voor het lawaai dat er misschien komt.",c:"Beste buren,\nVolgende week zaterdag vier ik mijn verjaardag met een feest in de tuin. ___\nAls het toch te druk wordt, mag u altijd bij mij aanbellen.\nVriendelijke groet,\nSandra (nummer 12)",m:"Het kan 's avonds wat lawaaiig worden, en daarvoor bied ik alvast mijn excuses aan."},
+{k:"z",t:"Je fiets is gestolen. Je doet online aangifte bij de politie. Bij 'Beschrijving van de fiets' schrijf je één of twee zinnen: hoe ziet je fiets eruit?",m:"Het is een zwarte damesfiets met een bruin zadel en een mand voorop. Op het spatbord zit een sticker van een bloem."},
+{k:"z",t:"Je vraagt je leidinggevende of je vakantie een week eerder kan beginnen. Maak de zin af.",c:"Ik wil mijn vakantie graag een week eerder laten beginnen, zodat …",m:"Ik wil mijn vakantie graag een week eerder laten beginnen, zodat ik op tijd ben voor de bruiloft van mijn broer."},
+{k:"z",t:"De wasmachine in de gezamenlijke wasruimte van je flat is kapot. Je hangt een briefje op voor de andere bewoners. Schrijf één of twee zinnen: wat is er aan de hand en wat moeten ze doen?",m:"Let op: de wasmachine is kapot, dus gebruik hem alstublieft niet. De beheerder komt hem donderdag repareren."},
+{k:"z",t:"Je stuurt een e-mail aan de leraar van je zoon. Schrijf op de open plek één zin: vraag of de leraar de spullen wil bewaren.",c:"Beste meneer De Groot,\nMijn zoon Amir heeft vandaag zijn gymspullen op school laten liggen. ___ Ik kan ze morgenochtend om half negen ophalen.\nMet vriendelijke groet,\nFatma Yilmaz",m:"Wilt u ze misschien voor hem bewaren tot ik ze kom halen?"},
+{k:"z",t:"Op de website van je taalcursus schrijven cursisten wat ze zouden doen met meer vrije tijd. Maak de zin af.",c:"Als ik meer vrije tijd had, …",m:"Als ik meer vrije tijd had, zou ik graag gitaar leren spelen."},
+{k:"z",t:"Je hebt een pakketje aangenomen voor je buurman, maar hij is niet thuis. Schrijf een briefje voor zijn deur: zeg waar het pakketje is en wanneer hij het kan ophalen. Schrijf één of twee zinnen.",m:"Beste buurman, ik heb vanmiddag een pakketje voor u aangenomen. U kunt het vanavond na zeven uur bij mij ophalen op nummer 8."},
+{k:"z",t:"Je schrijft een korte beoordeling van je sportschool op internet. Maak de zin af.",c:"Ik raad deze sportschool iedereen aan, want …",m:"Ik raad deze sportschool iedereen aan, want de trainers zijn vriendelijk en je kunt er tot elf uur 's avonds sporten."},
+{k:"z",t:"Je schrijft een bericht in de groepsapp van je team. Schrijf op de open plek één zin: vertel welk plan je hebt voor een cadeau.",c:"Hoi allemaal,\nVrijdag is de laatste werkdag van Kees. Hij gaat na 25 jaar met pensioen. ___\nWie doet er mee? Stuur me voor woensdag een berichtje.\nGroetjes, Noor",m:"Ik wil samen met jullie een cadeaubon voor een mooi restaurant voor hem kopen, en iedereen kan vijf euro geven."},
+{k:"z",t:"Je buurvrouw vraagt in de buurtapp of iemand een goede kapper weet. Schrijf haar een tip in één of twee zinnen.",m:"Ik ga altijd naar Kapsalon Rosa in de Dorpsstraat. Ze knippen er goed en je hoeft bijna nooit lang te wachten."},
+{k:"z",t:"De gemeente vraagt in een enquête wat er beter kan aan de bus in je wijk. Maak de zin af.",c:"De bus in onze wijk zou vaker moeten rijden, omdat …",m:"De bus in onze wijk zou vaker moeten rijden, omdat veel ouderen geen auto hebben en nu soms een uur moeten wachten."},
+{k:"z",t:"Je hebt vanochtend een sollicitatiegesprek gehad. Je stuurt de werkgever een kort bericht om te bedanken. Schrijf één of twee zinnen.",m:"Hartelijk dank voor het prettige gesprek van vanochtend. Ik heb nu nog meer zin gekregen om bij uw bedrijf te werken."},
+{k:"z",t:"Je stuurt een e-mail aan een webwinkel. Schrijf op de open plek één zin: wat is er mis met de jas?",c:"Geachte heer, mevrouw,\nIk heb vorige week bij uw webwinkel een winterjas besteld (bestelnummer 40871). ___\nKunt u mij laten weten wat ik nu moet doen?\nMet vriendelijke groet,\nJoanna Nowak",m:"De jas is gisteren bezorgd, maar hij is twee maten te klein en de rits is kapot."},
+{k:"z",t:"Je schrijft een vriendin over je dagje uit. Maak de zin af.",c:"Hoewel het de hele dag regende, …",m:"Hoewel het de hele dag regende, hebben we een mooie wandeling door het bos gemaakt."},
+{k:"z",t:"Je dochter gaat op schoolreis. De juf vraagt of zij ergens rekening mee moet houden. Schrijf één of twee zinnen.",m:"Mijn dochter is allergisch voor noten, dus ze mag geen koekjes of snoep van andere kinderen eten. Ik geef haar zelf eten en drinken mee."},
+{k:"z",t:"Je hebt een week een vakantiehuisje gehuurd. Schrijf een korte beoordeling voor andere gasten: één zin over iets wat goed was en één zin over iets wat beter kan.",m:"Het huisje was schoon en lag vlak bij het strand. Jammer genoeg werkte de wifi bijna nooit, dus daar moet de eigenaar iets aan doen."},
+{k:"f",t:"Je wilt bij het Taalhuis in je stad de cursus 'Nederlands voor de zorg' volgen. Vul het aanmeldformulier in. Je mag de gegevens zelf verzinnen. Schrijf bij elke vraag een hele zin.",
+ fl:["Naam","Op welke dagen en tijden kunt u naar de cursus komen?","Welke ervaring hebt u met werken in de zorg?","Hoe hebt u over deze cursus gehoord?"],o:"Waarom wilt u deze cursus volgen? Schrijf twee of drie zinnen.",
+ m:"Ik kan op dinsdag- en donderdagavond, van zeven tot negen uur.\nIk heb in mijn eigen land twee jaar in een verpleeghuis gewerkt.\nIk heb een folder over de cursus gezien in de bibliotheek.\n\nIk wil graag in Nederland in de zorg werken, omdat ik het fijn vind om mensen te helpen. Op de cursus leer ik de woorden die je in de zorg nodig hebt. Daarna wil ik een opleiding tot verzorgende doen."},
+{k:"f",t:"Je hebt al weken last van geluid van je bovenburen. Je vult het meldingsformulier van je woningcorporatie in. Je mag de gegevens zelf verzinnen. Schrijf bij elke vraag een hele zin.",
+ fl:["Naam en adres","Wat voor geluid hoort u, en wanneer?","Sinds wanneer hebt u dit probleem?","Hebt u al met uw buren gepraat? Wat was het resultaat?"],o:"Wat wilt u dat de woningcorporatie doet? Schrijf twee of drie zinnen.",
+ m:"Karim Haddad, Lindelaan 14-2, Zwolle\nIk hoor bijna elke nacht harde muziek en mensen die over de vloer lopen, vaak tot twee uur.\nIk heb dit probleem sinds half januari, toen de nieuwe buren kwamen.\nIk heb twee keer aangebeld, maar ze zeiden alleen dat ze zachter zouden doen en er veranderde niets.\n\nIk wil graag dat u met mijn buren gaat praten. Misschien kunt u ook een gesprek met ons allebei organiseren, met iemand die bemiddelt. Ik slaap slecht en moet 's ochtends vroeg naar mijn werk."},
+{k:"f",t:"Het buurthuis in je wijk zoekt vrijwilligers. Je vult het formulier in. Je mag de gegevens zelf verzinnen. Schrijf bij elke vraag een hele zin.",
+ fl:["Naam","Hoeveel uur per week kunt u helpen, en op welke dagen?","Wat voor werk wilt u het liefst doen?","Welke talen spreekt u?"],o:"Waarom wilt u vrijwilliger worden? Schrijf twee of drie zinnen.",
+ m:"Leyla Ahmadi\nIk kan ongeveer vier uur per week helpen, op maandag- en woensdagmiddag.\nIk wil het liefst helpen bij de huiswerkklas voor kinderen.\nIk spreek Farsi, Engels en een beetje Nederlands.\n\nIk wil vrijwilliger worden, omdat ik meer mensen in mijn wijk wil leren kennen. Bovendien kan ik zo elke week Nederlands oefenen. Ik vind het ook leuk om iets terug te doen voor de buurt."},
+{k:"f",t:"Je zoon gaat na de zomer naar groep 1 van een nieuwe basisschool. Je vult het intakeformulier van de school in. Je mag de gegevens zelf verzinnen. Schrijf bij elke vraag een hele zin.",
+ fl:["Naam en geboortedatum van uw kind","Welke talen spreekt uw kind thuis?","Waar ging uw kind hiervoor naartoe?","Moet de school rekening houden met de gezondheid van uw kind?"],o:"Wat vindt uw kind leuk om te doen, en wat vindt het nog moeilijk? Schrijf twee of drie zinnen.",
+ m:"Daniel Kowalski, 14 augustus 2022\nThuis spreekt hij Pools en een beetje Nederlands.\nHij ging drie dagen per week naar de kinderopvang in onze straat.\nHij heeft astma, dus hij heeft soms een puffer nodig als hij veel rent.\n\nDaniel speelt graag buiten en hij bouwt graag met blokken. Hij vindt het nog moeilijk om in het Nederlands te vertellen wat hij wil. Ook is hij in een nieuwe groep eerst een beetje verlegen."},
+{k:"m",i:"Je bent met je taalcursus een dag naar zee geweest. Je medecursist Ahmed was ziek en kon niet mee.",f:["strand","fietstocht"],t:"Schrijf Ahmed een e-mail. In je e-mail:",
+ p:["vertel je wat jullie 's ochtends deden (foto 1) en 's middags (foto 2)","vertel je wat jij het leukst vond, en waarom","doe je een voorstel waar de groep de volgende keer naartoe kan gaan"],
+ m:"Hoi Ahmed,\nWat jammer dat je ziek was! We hebben een heel leuke dag gehad. 's Ochtends zijn we naar het strand gegaan. Het was nog rustig, dus we hebben een lange wandeling langs de zee gemaakt. 's Middags hebben we fietsen gehuurd en een fietstocht door het stadje gemaakt. Overal zaten mensen op een terras.\nIk vond het fietsen het leukst, omdat je zo veel van de natuur ziet. Bovendien was het lekker weer.\nVolgende keer wil ik graag met de groep naar Amsterdam gaan, want daar kunnen we een rondvaart maken en een museum bezoeken. Dan ben je er hopelijk ook bij!\nBeterschap en tot snel,\nNina"},
+{k:"m",i:"Je team heeft een workshop koken gedaan en daarna samen gegeten. Je leidinggevende Ellen kon er niet bij zijn.",f:["koken","restaurant"],t:"Schrijf Ellen een e-mail. In je e-mail:",
+ p:["vertel je wat jullie eerst deden (foto 1) en daarna (foto 2)","vertel je wat je van de dag vond","doe je een voorstel voor het volgende teamuitje en zeg waarom"],
+ m:"Beste Ellen,\nGisteren hebben we met het team een workshop koken gedaan. Eerst hebben we in kleine groepjes samen een driegangenmenu gekookt. De kok legde alles goed uit. Daarna hebben we met z'n allen in het restaurant gegeten wat we zelf gemaakt hadden.\nIk vond het een erg geslaagde dag. Ik heb collega's beter leren kennen met wie ik normaal weinig praat.\nVoor het volgende teamuitje stel ik een fietstocht voor, omdat we dan lekker buiten zijn en het niet duur is.\nMet vriendelijke groet,\nTomasz"},
+{k:"m",i:"Je hebt bij webwinkel ElektroDirect een wasmachine besteld. Je hebt deze bevestiging gekregen. Het is nu vrijdag 7 maart en de wasmachine is nog steeds niet bezorgd. Je hebt al twee keer gebeld, maar niemand kon je helpen.",
+ d:"Van: ElektroDirect\nOnderwerp: Bevestiging van uw bestelling\nBestelnummer: 228104\nProduct: wasmachine Wasko 7 kg\nPrijs: € 449,- (betaald)\nBezorging: dinsdag 4 maart, tussen 8.00 en 13.00 uur",t:"Schrijf een e-mail aan de klantenservice. In je e-mail:",
+ p:["vertel je wat je hebt besteld en wanneer het bezorgd zou worden","vertel je wat er daarna is gebeurd","leg je uit waarom dit een probleem voor je is","noem je twee mogelijke oplossingen en zeg welke jij het beste vindt"],
+ m:"Geachte heer, mevrouw,\nOp 25 februari heb ik bij u een wasmachine Wasko 7 kg besteld en betaald (bestelnummer 228104). Volgens uw bevestiging zou de wasmachine op dinsdag 4 maart tussen acht en één uur bezorgd worden.\nIk ben die ochtend thuisgebleven, maar er is niemand gekomen. Daarna heb ik twee keer gebeld, maar niemand kon mij vertellen waar de wasmachine is.\nDit is een groot probleem voor mij, want ik heb drie kleine kinderen en mijn oude wasmachine is kapot. Nu moet ik elke dag naar de wasserette.\nIk zie twee oplossingen: u bezorgt de wasmachine uiterlijk volgende week dinsdag, of u betaalt mij het geld terug. Ik heb het liefst dat u de wasmachine zo snel mogelijk bezorgt, want ik heb hem echt nodig.\nIk hoop dat u snel reageert.\nMet vriendelijke groet,\nMaria Santos"},
+{k:"m",i:"Je wilt samen met je vriendin Lieke gaan sporten. Je hebt informatie gevonden over drie sportclubs.",
+ d:"Sporten in de buurt\nFit4All: fitness · € 29 per maand · elke dag open, 7.00–23.00 uur · 10 minuten fietsen\nZwembad De Golf: banen zwemmen · € 6 per keer · maandag, woensdag en zaterdag, 7.00–12.00 uur · 5 minuten lopen\nSportclub Oost: yoga en dansen in een groep · € 35 per maand · lessen op dinsdag- en donderdagavond · 20 minuten met de bus",
+ t:"Schrijf Lieke een e-mail. In je e-mail:",p:["vergelijk je de drie clubs op minstens twee punten","kies je de club die jij het beste vindt en geef je twee redenen","stel je voor wanneer jullie samen gaan kijken"],
+ m:"Hoi Lieke,\nIk heb drie sportclubs gevonden. Fit4All is een fitnessclub die elke dag tot elf uur 's avonds open is; het kost € 29 per maand. Zwembad De Golf is het dichtstbij, maar je kunt er alleen 's ochtends zwemmen en je betaalt € 6 per keer. Sportclub Oost is het duurst, € 35 per maand, en je moet er twintig minuten met de bus naartoe.\nIk kies voor Fit4All. Ten eerste kunnen we daar elke dag sporten, ook na ons werk. Ten tweede is het niet duur en kunnen we er makkelijk naartoe fietsen.\nZullen we zaterdagochtend samen gaan kijken? Dan kunnen we misschien meteen een proefles doen.\nGroetjes,\nSara"},
+{k:"m",i:"Je werkt een paar maanden in een supermarkt. Je leidinggevende Peter vraagt de medewerkers om ideeën: hoe kunnen nieuwe collega's beter beginnen?",t:"Schrijf Peter een e-mail. In je e-mail:",
+ p:["vertel je hoe jouw eerste werkdag ging","noem je twee dingen die moeilijk waren voor jou als nieuwe medewerker","geef je voor allebei een idee om het beter te maken"],
+ m:"Beste Peter,\nJe vroeg om ideeën voor nieuwe collega's. Mijn eerste werkdag was spannend. Iedereen was vriendelijk, maar het was erg druk, dus ik moest veel zelf uitzoeken.\nTwee dingen vond ik moeilijk. Ten eerste wist ik niet waar alle producten in het magazijn stonden. Daarom heb ik veel tijd verloren met zoeken. Ten tweede begreep ik de kassa in het begin niet goed.\nMijn eerste idee is een plattegrond van het magazijn voor nieuwe medewerkers. Mijn tweede idee is dat iedere nieuwe collega de eerste week samenwerkt met een ervaren collega, die alles kan uitleggen.\nIk hoop dat je hier iets aan hebt.\nGroeten,\nAlina"},
+{k:"m",i:"Je krijgt een brief van de gemeente over een plan voor jouw straat. De gemeente wil de mening van de bewoners weten.",
+ d:"Plan voor de Lindelaan\nWat: 20 parkeerplaatsen gaan weg; er komen bomen, bankjes en een speelplek\nWanneer: vanaf september\nWaar parkeren: in de nieuwe parkeergarage bij het station, 400 meter verderop\nReageren: voor 1 juni, per e-mail aan de gemeente",
+ t:"Schrijf een e-mail aan de gemeente. In je e-mail:",p:["zeg je wat je van het plan vindt en geef je twee redenen","noem je een probleem dat het plan voor sommige bewoners kan geven","doe je een voorstel om dat probleem op te lossen"],
+ m:"Geachte heer, mevrouw,\nIk woon op de Lindelaan en heb uw brief over het nieuwe plan gelezen. Ik vind het een goed plan. Ten eerste wordt de straat met bomen en bankjes veel gezelliger. Ten tweede kunnen de kinderen straks veilig buiten spelen, omdat er minder auto's rijden.\nWel kan het plan een probleem geven voor oudere bewoners en mensen die slecht lopen. Voor hen is 400 meter naar de parkeergarage erg ver, zeker met zware boodschappen.\nDaarom stel ik voor om een paar parkeerplaatsen te houden voor mensen met een gehandicaptenparkeerkaart. Misschien kan er ook een plek komen waar je even kort kunt stoppen om iets uit te laden.\nMet vriendelijke groet,\nHasan Demir, Lindelaan 31"},
+{k:"m",i:"Je cursus Nederlands is bijna afgelopen. Je organiseert met de groep een etentje om je docent te bedanken.",t:"Schrijf een e-mail aan de andere cursisten. In je e-mail:",
+ p:["vertel je wanneer en waar het etentje is","vertel je wat het ongeveer kost","leg je uit wat iedereen moet doen en voor wanneer","vraag je om ideeën voor een cadeau voor de docent"],
+ m:"Hallo allemaal,\nOnze cursus is bijna afgelopen, en daarom wil ik graag met z'n allen gaan eten om onze docent Marja te bedanken. Het etentje is op vrijdag 20 juni om half zeven, in het Turkse restaurant Anatolia tegenover het station.\nHet kost ongeveer 25 euro per persoon, inclusief drinken.\nWil je me voor 13 juni laten weten of je komt? Dan kan ik een tafel reserveren. Neem op de avond zelf contant geld mee, dan kunnen we makkelijk betalen.\nWe willen Marja ook een cadeau geven. Heeft iemand een goed idee? Stuur het me maar, dan kiezen we samen.\nTot vrijdag in de les!\nGroetjes,\nDiego"},
+{k:"m",i:"Je hebt deze vacature gezien op de website van een bedrijf.",
+ d:"Vacature\nWij zoeken een medewerker klantenservice (24 uur per week)\nWat ga je doen: klanten helpen via telefoon, chat en e-mail\nWat vragen wij: goed Nederlands en Engels, ervaring met klanten, flexibel\nWanneer: maandag tot en met zaterdag, in overleg\nReageren: per e-mail aan Zonnig Energie, afdeling Personeel",
+ t:"Schrijf een e-mail aan het bedrijf. In je e-mail:",p:["zeg je voor welke vacature je schrijft en waar je hem hebt gezien","vertel je over je werkervaring","leg je met twee redenen uit waarom je geschikt bent","vertel je wanneer je kunt beginnen en wanneer je tijd hebt voor een gesprek"],
+ m:"Geachte heer, mevrouw,\nOp uw website heb ik gelezen dat u een medewerker klantenservice zoekt voor 24 uur per week. Ik wil graag op deze vacature reageren.\nIk heb drie jaar bij een telefoonwinkel gewerkt. Daar hielp ik elke dag klanten met vragen over hun abonnement, in de winkel en aan de telefoon.\nIk denk dat ik geschikt ben voor deze baan. Ten eerste spreek ik goed Nederlands en Engels. Ten tweede blijf ik rustig als een klant boos is, en ik zoek graag samen met de klant naar een oplossing.\nIk kan op 1 mei beginnen. Voor een gesprek heb ik elke ochtend tijd, behalve op woensdag.\nIk hoop van u te horen.\nMet vriendelijke groet,\nPriya Sharma"},
+{k:"m",i:"In de badkamer van je huurhuis zit al drie maanden schimmel. Je hebt in januari al gebeld met de woningcorporatie, maar er is niets gebeurd.",t:"Schrijf een e-mail aan de woningcorporatie. In je e-mail:",
+ p:["beschrijf je het probleem en zeg je sinds wanneer je het hebt","vertel je wat je zelf al hebt gedaan","leg je uit wat de gevolgen zijn voor jou en je gezin","zeg je wat de woningcorporatie moet doen en voor wanneer"],
+ m:"Geachte heer, mevrouw,\nIn de badkamer van mijn woning aan de Parkstraat 8 zit sinds december zwarte schimmel op het plafond en op de muren. Het wordt elke week erger.\nIk heb de badkamer al vaak schoongemaakt met een speciaal middel en ik zet na het douchen altijd het raam open. Toch komt de schimmel steeds terug. In januari heb ik u gebeld, maar daarna heb ik niets meer gehoord.\nIk maak me zorgen, want mijn zoontje heeft astma en hij hoest de laatste tijd veel. De huisarts zegt dat schimmel slecht is voor zijn longen.\nIk wil graag dat u binnen twee weken iemand stuurt om het probleem te onderzoeken en op te lossen. Misschien is er een betere ventilatie nodig.\nMet vriendelijke groet,\nAmina Boukhari"},
+{k:"m",i:"Je vriend Karim komt over twee maanden in Nederland wonen. Hij vraagt je hoe hij snel Nederlands kan leren.",t:"Schrijf Karim een e-mail. In je e-mail:",
+ p:["geef je hem minstens twee tips","vertel je wat jou zelf het meest heeft geholpen","zeg je wat hij beter niet kan doen, en waarom","nodig je hem uit om iets samen te doen als hij er is"],
+ m:"Hoi Karim,\nLeuk dat je naar Nederland komt! Ik heb een paar tips. Ten eerste: begin nu al met een app, dan ken je straks de belangrijkste woorden. Ten tweede: kijk Nederlandse series met Nederlandse ondertiteling.\nMij heeft vrijwilligerswerk het meest geholpen. Ik werkte elke zaterdag in een kringloopwinkel en moest daar de hele dag Nederlands praten.\nWat je beter niet kunt doen, is meteen Engels praten als je iets niet begrijpt. Veel Nederlanders schakelen dan over, en dan leer je niets. Vraag liever of ze langzamer willen praten.\nAls je er bent, gaan we samen naar de markt. Dan kun je meteen oefenen!\nTot gauw,\nYoussef"}
+];
 LZ.forEach((t,i)=>t[1].forEach((q,j)=>ITEMS.push({sec:"lz",k:"lz|"+i+"."+j,ord:j,type:"choice",label:"Lees de tekst",intro:t[2],text:t[0],big:q[0],sub:"",right:q[1],opts:()=>shuffle(q.slice(1))})));
 LZ1.forEach((t,i)=>t[1].forEach((q,j)=>ITEMS.push({sec:"l1",k:"l1|"+i+"."+j,ord:j,type:"choice",label:"Lees de tekst (B1)",intro:t[2],text:t[0],big:q[0],sub:"",right:q[1],opts:()=>shuffle(q.slice(1))})));
 const sayLines=t=>String(t).split("\n").filter(l=>l.trim()).map(l=>l.replace(/^[AB]: /,""));
@@ -2416,8 +2489,9 @@ const spTask=q=>spoken(q.big)+(q.pics?` (Op de foto${q.pics.length>1?"'s":""}: $
 // Points as in DUO's Spreken criteria, as far as a transcript shows them (max 8 of DUO's 12: pronunciation and fluency need sound);
 // Schrijven has DUO's criteria with spelling (max 10; voldoende: inhoud 2 or more and 7 points, decided by api/check.js)
 const SCMAX={inhoud:3,woorden:2,grammatica:2,spelling:2,samenhang:1}, SPMAX=8, WRMAX=10, spPts=t=>t&&t.scores?Object.values(t.scores).reduce((a,b)=>a+(+b||0),0):null;
-const scoreHTML=sc=>{if(!sc)return""; const wr="spelling" in sc;
-  return`<p class="note">Punten: ${Object.keys(SCMAX).filter(k=>k in sc).map(k=>`${k} ${sc[k]}/${SCMAX[k]}`).join(" · ")} = <b>${spPts({scores:sc})} van ${wr?WRMAX:SPMAX}</b>. ${wr?"Voldoende is 7 punten, met inhoud minstens 2.":"Uitspraak en vloeiendheid kan ik niet horen: oefen die met Zeg het na."}</p>`};
+const mxPts=M=>Object.values(M).reduce((a,b)=>a+b,0);
+const scoreHTML=(sc,M)=>{if(!sc)return""; const wr="spelling" in sc,X=M||SCMAX,n=M?mxPts(M):wr?WRMAX:SPMAX;
+  return`<p class="note">Punten: ${Object.keys(X).filter(k=>k in sc).map(k=>`${k} ${sc[k]}/${X[k]}`).join(" · ")} = <b>${spPts({scores:sc})} van ${n}</b>. ${M?M.spelling?`Voldoende is ${Math.ceil(n*.7)} punten, met inhoud minstens 2.`:"Eén punt voor de inhoud, één voor de grammatica. Past de inhoud niet, dan telt de grammatica ook niet.":wr?"Voldoende is 7 punten, met inhoud minstens 2.":"Uitspraak en vloeiendheid kan ik niet horen: oefen die met Zeg het na."}</p>`};
 const spoken=t=>String(t).replace(/[\p{Extended_Pictographic}←-⇿️‍]/gu,"").replace(/\s+/g," ").trim();
 const saidText=r=>r.said.concat(r.part).join(" ").replace(/\s+/g," ").trim();
 async function listen(mode,done){
@@ -2486,7 +2560,7 @@ async function spGrade(q,r){
     const errs=Array.isArray(res.errors)?res.errors:[], ok=!!res.passed;
     b.disabled=false; $("rev").hidden=true; keepErrs(errs); record(ok);
     $("fb").innerHTML=`<b class="${ok?"good":"bad"}">${ok?"Goed zo! Voldoende":"Nog niet voldoende"}</b>
-      <p class="note">${esc(res.verdict)}</p>${scoreHTML(res.scores)}
+      <p class="note">${esc(res.verdict)}</p>${scoreHTML(res.scores,q.mx)}
       ${errs.length?`<p class="ask">Fouten: ${errs.length}</p><ul class="errs">${errs.map(e=>`<li><s>${esc(e.wrong)}</s> <strong>${esc(e.right)}</strong><span>${esc(e.why)}</span></li>`).join("")}</ul>`:`<p class="note">Geen fouten gevonden.</p>`}
       <p class="ask">Zo zeg je het goed</p><div class="sample">${esc(res.corrected)}</div>${echoHTML("de verbeterde zinnen")}
       <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(q.right)}</div></details>
@@ -2510,6 +2584,13 @@ let tmr=null,tEnd=0;
 function tick(){const s=Math.max(0,Math.round((tEnd-Date.now())/1000));$("timer").textContent=tEnd?Math.floor(s/60)+":"+String(s%60).padStart(2,"0"):"";if(tEnd&&s<=0&&cur&&cur.exam){if(cur.nav)return submitExam();const q=queue[pos];if(q&&q.type==="write"&&cur.ans.length===pos)cur.ans.push(grab(q));pos=queue.length;finish()}}
 function clock(min){clearInterval(tmr);tmr=null;tEnd=min?Date.now()+min*6e4:0;tick();if(min)tmr=setInterval(tick,1000)}
 WR.forEach((p,i)=>ITEMS.push({sec:"wr",k:"wr|"+i,ord:i,type:"write",label:p[2]?"Schrijfopdracht: formulier":"Schrijfopdracht",big:p[0],sub:"",right:p[1],fields:p[2],open:p[3]}));
+// Schrijven B1: mx = the points per criterion of this kind of task (as api/check.js scores them), 47 in a proefexamen of 8 + 1 + 3
+const WBMAX={z:{inhoud:1,grammatica:1},f:{inhoud:3,woorden:1,grammatica:2,spelling:1},m:{inhoud:3,woorden:1,grammatica:2,spelling:1,samenhang:1}},WBL={z:"Zinsopdracht",f:"Formulier",m:"E-mail"};
+WRB.forEach((p,i)=>ITEMS.push({sec:"wb",k:"wb|"+i,ord:p.k==="z"?0:1,type:"write",kind:p.k,label:WBL[p.k]+" (B1)",intro:p.i,text:p.d,pics:p.f,big:p.t,ctx:p.c,pts:p.p,fields:p.fl,open:p.o,sub:"",right:p.m,mx:WBMAX[p.k]}));
+// the whole task as Claude needs it, with the sentence to finish, the points, the information and the photos
+const wrTask=q=>q.big+(q.open?" "+q.open:"")+(q.ctx?(/___/.test(q.ctx)?"\nTekst met een open plek (___); de cursist schrijft alleen wat op de open plek komt:\n":"\nDe cursist maakt deze zin af: ")+q.ctx:"")
+  +(q.pts?"\n"+q.pts.map(x=>"– "+x).join("\n"):"")+(q.text?"\nInformatie bij de opdracht:\n"+q.text:"")
+  +(q.pics&&q.sec==="wb"?"\nDe foto's (die gaan niet mee met de e-mail): "+q.pics.map((f,i)=>i+1+". "+(FOTO[f]||f)).join("; "):"")+(q.intro?"\nSituatie: "+q.intro:"");
 SP.forEach((p,i)=>ITEMS.push({sec:"sp",k:"sp|"+i,ord:i/5|0,type:"reveal",label:"Antwoord hardop in twee of drie zinnen",big:p[0],sub:p[1],right:p[2],pics:p[3]}));
 
 let cur,queue=[],pos=0,total=0,right=0,answered=false;
@@ -2642,7 +2723,7 @@ const IC={
   talk:'<path d="M3 4h11v8H8l-3 3v-3H3z"/><path d="M14 8h7v8h-2v3l-3-3h-6v-4"/>',
   privacy:'<path d="M12 3l7 3v5c0 4.6-3 8.2-7 10-4-1.8-7-5.4-7-10V6z"/><path d="M9 12l2 2 4-4"/>',
   duo:'<path d="M6 4h12v17H6z"/><path d="M9.5 4V2.8h5V4M9 12.5l2.2 2.2L15.5 10"/>'};
-IC.l1=IC.lz;IC.lb=IC.ls;
+IC.l1=IC.lz;IC.lb=IC.ls;IC.wb=IC.wr;
 function itHTML(attr,t,d,o={}){
   return`<button class="it" ${attr}>${o.ic?`<i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC[o.ic]}</svg></i>`:""}<span><span class="th"><b>${t}</b>${o.n!=null?`<small>${o.n}</small>`:""}</span>${d?`<span class="d">${d}</span>`:""}${o.bar!=null?`<span class="bar${o.pass?" pass":""}"><i style="width:${o.bar}%"></i></span>`:""}</span></button>`;
 }
@@ -2662,17 +2743,17 @@ function home(){
   // one row per part: tap it for a proefexamen; on the right how far you are
   // Examen and Oefenen follow the level: its parts first; at B1 the parts that have no B1 version yet come after, at A2
   if(lvl()==="B1"){
-    $("exam").innerHTML=`<h2>Naar het examen</h2><p class="sub">Staatsexamen Nederlands als tweede taal, programma I (B1), en KNM. Tik op een onderdeel voor een proefexamen, met tijd zoals op het echte examen. Bij het Staatsexamen heb je een score van 500 nodig: mik op ${PASS*100}%, de streep.</p><div class="list">${["l1","lb","knm"].map(part).join("")}</div>`
+    $("exam").innerHTML=`<h2>Naar het examen</h2><p class="sub">Staatsexamen Nederlands als tweede taal, programma I (B1), en KNM. Tik op een onderdeel voor een proefexamen, met tijd zoals op het echte examen. Bij het Staatsexamen heb je een score van 500 nodig: mik op ${PASS*100}%, bij Schrijven op ${passPc("wb")}% (ongeveer 25 van de 47 punten): de streep.</p><div class="list">${["l1","lb","wb","knm"].map(part).join("")}</div>`
       +`<div class="list"><a class="it ext" href="https://oefenexamensnt2.nl" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens Staatsexamen NT2 ↗</b></span><span class="d">De officiële oefenexamens voor programma I. Liefst op een computer.</span></span></a></div>`
-      +`<h3 class="lh">Nog op A2-niveau</h3><p class="sub">Schrijven en Spreken op B1 komen later. Tot dan oefen je ze hier op A2-niveau.</p><div class="list">${["wr","sp","lz","ls"].map(part).join("")}</div>`;
-    $("parts").innerHTML=`<h2>Examenonderdelen</h2><p class="sub">Oefen zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["l1","lb","knm"].map(row).join("")}</div>
-      <h3 class="lh">Nog op A2-niveau</h3><div class="list">${["wr","sp","lz","ls"].map(row).join("")}</div>`;
+      +`<h3 class="lh">Nog op A2-niveau</h3><p class="sub">Spreken op B1 komt later. Tot dan oefen je het hier op A2-niveau.</p><div class="list">${["sp","lz","ls","wr"].map(part).join("")}</div>`;
+    $("parts").innerHTML=`<h2>Examenonderdelen</h2><p class="sub">Oefen zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["l1","lb","wb","knm"].map(row).join("")}</div>
+      <h3 class="lh">Nog op A2-niveau</h3><div class="list">${["sp","lz","ls","wr"].map(row).join("")}</div>`;
   }else{
     $("exam").innerHTML=`<h2>Naar het examen</h2><p class="sub">Tik op een onderdeel voor een proefexamen, met tijd zoals op het echte examen. Rechts: hoeveel procent je goed had, bij je laatste proefexamen of bij het oefenen. Om te slagen heb je ongeveer ${PASS*100}% nodig, bij Lezen en Luisteren ${passPc("lz")}% (19 van de 25): de streep.</p><div class="list">${["lz","ls","wr","sp","knm"].map(part).join("")}</div>`
       +`<div class="list"><a class="it ext" href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens van DUO ↗</b><small>15</small></span><span class="d">De echte oefenexamens op inburgeren.nl, met echte stemmen. Doe er een als je hier klaar bent. Liefst op een computer.</span></span></a></div>`
-      +`<h3 class="lh">Staatsexamen NT2 · B1</h3><p class="sub">Voor het Staatsexamen Nederlands als tweede taal, programma I. Nu: Lezen en Luisteren. Kies B1 in Profiel om daarvoor te oefenen.</p><div class="list">${part("l1")+part("lb")}</div>`;
+      +`<h3 class="lh">Staatsexamen NT2 · B1</h3><p class="sub">Voor het Staatsexamen Nederlands als tweede taal, programma I. Nu: Lezen, Luisteren en Schrijven. Kies B1 in Profiel om daarvoor te oefenen.</p><div class="list">${["l1","lb","wb"].map(part).join("")}</div>`;
     $("parts").innerHTML=`<h2>Examenonderdelen</h2><p class="sub">Oefen zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["lz","ls","wr","sp","knm"].map(row).join("")}</div>
-      <h3 class="lh">B1 · Staatsexamen NT2</h3><div class="list">${row("l1")+row("lb")}</div>`;
+      <h3 class="lh">B1 · Staatsexamen NT2</h3><div class="list">${["l1","lb","wb"].map(row).join("")}</div>`;
   }
   $("gram").innerHTML=`<h2>Grammatica en woorden</h2><p class="sub">Korte rondes van 10 vragen. Dit helpt bij alle onderdelen.</p><div class="list">${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`;
   $("books").innerHTML=itHTML(`data-x="books"`,"Boekenkast",lb?`Je leest nu: ${esc(lb.t)}, blz. ${lb.p+1}`:"Verhalen en je eigen e-books. Tik op een woord voor de betekenis.",{ic:"books"})
@@ -2737,12 +2818,18 @@ document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>{if(Date.now(
 // The proefexamen takes the least-seen questions first, so its score is not just a memory test.
 const seenN=q=>{const it=S.items[q.k];return(it?(it.r||0)+(it.w||0)||1:0)+((S.xs||{})[q.k]||0)};
 const SPDEEL=["beantwoord de vraag","vertel wat je op de foto ziet en beantwoord de vraag","kies een van de twee foto's en vertel waarom","vertel wat er gebeurt op de drie foto's, in de goede volgorde"];
+const isWr=p=>p==="wr"||p==="wb";
+// Schrijven B1: nz zinsopdrachten, then no longer tasks, the least-seen first; with no=3 as on the exam (8 + 1 + 3 = 47 points):
+// the zinsopdrachten, a form, an e-mail about two photos and two other e-mails
+const wbTasks=(nz,no)=>{const a=byFresh(shuffle(ITEMS.filter(x=>x.sec==="wb"))),z=a.filter(q=>q.kind==="z").slice(0,nz);
+  if(no<3)return z.concat(a.filter(q=>q.kind!=="z").slice(0,no));
+  const m=a.filter(q=>q.kind==="m"),p=m.find(q=>q.pics);return z.concat(a.find(q=>q.kind==="f"),p,m.filter(q=>!q.pics).slice(0,2))};
 const byFresh=a=>a.map(q=>[q,seenN(q)]).sort((x,y)=>x[1]-y[1]).map(x=>x[0]);
 // Schrijven and Spreken are graded by Claude: without a login, or with too few checks left today, say so first
 function startExam(e,go){
-  const cost=e==="wr"?2:e==="sp"?6:0; // as checkCost() in api/_supa.js
+  const cost=e==="wr"?2:e==="wb"?4:e==="sp"?6:0; // as checkCost() in api/_supa.js
   if(cost&&acc.cfg&&!go&&(!acc.user||acc.left!=null&&acc.left<cost))return examGate(e,cost);
-  build("exam",{id:"exam",exam:1,part:e,keep:["lz","l1","ls","lb","sp"].includes(e),write:e==="wr",speak:e==="sp",...EX[e],pool:()=>{const a=byFresh(shuffle(ITEMS.filter(x=>x.sec===e)));
+  build("exam",{id:"exam",exam:1,part:e,keep:["lz","l1","ls","lb","sp","wb"].includes(e),write:isWr(e),speak:e==="sp",...EX[e],pool:()=>{if(e==="wb")return wbTasks(8,3);const a=byFresh(shuffle(ITEMS.filter(x=>x.sec===e)));
     if(["lz","l1","ls","lb"].includes(e)){const g={};a.forEach(q=>{const t=q.text||q.say;(g[t]=g[t]||[]).push(q)}); // whole texts and fragments, as on the exam; the least-seen first
       let T=shuffle(Object.values(g)).map(x=>[x.sort((p,q)=>p.k<q.k?-1:1),x.reduce((s,q)=>s+seenN(q),0)/x.length]).sort((x,y)=>x[1]-y[1]).map(x=>x[0]);
       if(e==="ls"){const M=T.filter(x=>x.length>1).slice(0,8);T=M.concat(T.filter(x=>!M.includes(x)))} // mostly longer fragments with two or three questions, as on the exam
@@ -2758,7 +2845,7 @@ function startExam(e,go){
 // Pass mark for the computer-marked parts: about 7 in 10 (e.g. 18 of 25 for Lezen, 28 of 40 for KNM); DUO sets it per exam version
 const PASS=.7;
 // Lezen and Luisteren: most sources give 19 of 25 (DUO puts the line on the result, not on a public page); KNM 28 of 40
-const PASSP={lz:19/25,ls:19/25,knm:28/40}, passOf=k=>PASSP[k]||PASS, passPc=k=>Math.round(passOf(k)*100);
+const PASSP={lz:19/25,ls:19/25,knm:28/40,wb:25/47}, passOf=k=>PASSP[k]||PASS, passPc=k=>Math.round(passOf(k)*100);
 // Proefexamen results per part (S.res, last 10): {at, pc, nw}, nw = % of the questions that were new (missing in older results).
 // Ready = the last two average 80% or more, and at least one of them was mostly new questions
 function keepRes(k,pc){if(k){S.res=S.res||{};S.res[k]=(S.res[k]||[]).concat({at:Date.now(),pc,nw:cur.nw}).slice(-10)}save()}
@@ -2774,13 +2861,13 @@ function ready(k){
     t:`Laatste proefexamen ${pc}%${R.length>1?`, daarvoor ${R[R.length-2].pc}%`:""}`
       +(known&&avg>=P?". Je kende de meeste vragen al: doe ook een oefenexamen van DUO":"")}
 }
-const PART={wr:"Schrijven",knm:"KNM",sp:"Spreken",ls:"Luisteren",lz:"Lezen",l1:"Lezen B1",lb:"Luisteren B1"}, HELP={wr:["wo","verb"],sp:["pr","verb"],lz:["vo","dh"],l1:["vo","dh"],ls:["vo","pr"],lb:["vo","pr"],knm:[]};
+const PART={wr:"Schrijven",knm:"KNM",sp:"Spreken",ls:"Luisteren",lz:"Lezen",l1:"Lezen B1",lb:"Luisteren B1",wb:"Schrijven B1"}, HELP={wr:["wo","verb"],wb:["wo","verb"],sp:["pr","verb"],lz:["vo","dh"],l1:["vo","dh"],ls:["vo","pr"],lb:["vo","pr"],knm:[]};
 let planId=null;
 // Short rounds for today's lesson: a little of every exam part each day, so nothing is forgotten
 // The level you practise for (Profiel, welcome screen): A2 = the inburgeringsexamen, B1 = Staatsexamen NT2 programma I.
-// B1 has Lezen and Luisteren so far: Schrijven and Spreken are practised at A2 until they come; KNM belongs to both routes.
+// B1 has Lezen, Luisteren and Schrijven so far: Spreken is practised at A2 until it comes; KNM belongs to both routes.
 const lvl=()=>S.lvl==="B1"?"B1":"A2", LVL={A2:"Inburgering A2",B1:"Staatsexamen B1"};
-const parts=()=>lvl()==="B1"?["l1","lb","wr","sp","knm"]:["lz","ls","wr","sp","knm"];
+const parts=()=>lvl()==="B1"?["l1","lb","wb","sp","knm"]:["lz","ls","wr","sp","knm"];
 // the questions of k whole texts (or fragments): due ones first, then the least-seen
 const someTexts=(sec,k)=>()=>{
   const g={},d=today();ITEMS.forEach(q=>{const t=q.text||q.say;if(q.sec===sec)(g[t]=g[t]||[]).push(q)});
@@ -2789,7 +2876,7 @@ const someTexts=(sec,k)=>()=>{
     .slice(0,k).flatMap(x=>x[0].sort((p,q)=>p.k<q.k?-1:1))};
 const oneText=sec=>someTexts(sec,1);
 const SHORT={lz:{n:6,s:"Eén tekst met vragen",pool:oneText("lz"),keep:1},l1:{n:6,s:"Eén lange tekst met zes vragen",pool:oneText("l1"),keep:1},lb:{n:4,s:"Eén fragment met vragen",pool:oneText("lb"),keep:1},
-  ls:{n:3,s:"Drie fragmenten"},wr:{n:1,min:10,s:"Eén opdracht in 10 minuten"},sp:{n:2,s:"Twee vragen: spreek je antwoord in"},knm:{n:5,s:"Vijf vragen"}};
+  ls:{n:3,s:"Drie fragmenten"},wr:{n:1,min:10,s:"Eén opdracht in 10 minuten"},wb:{n:3,min:15,keep:1,s:"Drie zinsopdrachten of één langere opdracht, in 15 minuten",pool:()=>today()%2?wbTasks(3,0):wbTasks(0,1)},sp:{n:2,s:"Twee vragen: spreek je antwoord in"},knm:{n:5,s:"Vijf vragen"}};
 // Je les van vandaag, without exam dates: every exam part, the weakest first (lowest proefexamen or practice
 // score; a part not practised yet counts as 50%) as a full round, every third day as a proefexamen once it
 // has been practised; then the other four as short rounds, weakest to strongest; last a grammar round
@@ -2799,7 +2886,7 @@ function planTasks(){
   const sc=ks.map(k=>({k,r:ready(k)})), add=(id,t,s)=>T.push({id,t,s});
   sc.sort((a,b)=>(a.r.pc==null?50:a.r.pc)-(b.r.pc==null?50:b.r.pc)||ks.indexOf(a.k)-ks.indexOf(b.k));
   const k=sc[0].k;
-  if(sc[0].r.pc!=null&&d%3===0)add("e:"+k,"Proefexamen "+PART[k],k==="wr"?"4 opdrachten in 40 minuten":EX[k].min+" minuten, zoals op het examen");
+  if(sc[0].r.pc!=null&&d%3===0)add("e:"+k,"Proefexamen "+PART[k],k==="wr"?"4 opdrachten in 40 minuten":k==="wb"?"12 opdrachten in 100 minuten":EX[k].min+" minuten, zoals op het examen");
   else add("s:"+k,PART[k],sec(k).s);
   sc.slice(1).forEach(x=>add("q:"+x.k,PART[x.k],SHORT[x.k].s));
   const help=HELP[k].length?HELP[k]:["verb","wo","vo"],h=help[d%help.length];add("s:"+h,sec(h).t,sec(h).s);
@@ -2885,7 +2972,7 @@ function drawProfile(){
 function drawResults(){
   const el=$("myres"); if(!el)return;
   const R=S.res||{};
-  const day=t=>new Date(t).toLocaleDateString("nl-NL",{day:"numeric",month:"long"}),ks=["lz","ls","wr","sp","knm","l1","lb"].filter(k=>(R[k]||[]).length);
+  const day=t=>new Date(t).toLocaleDateString("nl-NL",{day:"numeric",month:"long"}),ks=["lz","ls","wr","sp","knm","l1","lb","wb"].filter(k=>(R[k]||[]).length);
   el.innerHTML=`<h2>Mijn resultaten</h2>`
     +(ks.length?ks.map(k=>`<h3 class="lh">${PART[k]}</h3><ul class="errs kv">${R[k].slice().reverse().map(r=>`<li>Proefexamen ${day(r.at)}<span class="${r.pc>=passPc(k)?"good":"bad"}">${r.pc}%</span></li>`).join("")}</ul>`).join("")
       :`<p class="sub">Nog geen proefexamen gedaan. Je uitslagen komen hier.</p>`)
@@ -2914,7 +3001,7 @@ function stats(){
 }
 function build(id,custom){
   cur=custom||SEC.find(s=>s.id===id); const d=today(), due=[],fresh=[];
-  const pool=id==="mix"?ITEMS.filter(x=>x.sec!=="wr"&&!(lvl()==="B1"?["lz","ls"]:["l1","lb"]).includes(x.sec)).concat(wordItems()):ITEMS.filter(x=>x.sec===id);
+  const pool=id==="mix"?ITEMS.filter(x=>!isWr(x.sec)&&!(lvl()==="B1"?["lz","ls"]:["l1","lb"]).includes(x.sec)).concat(wordItems()):ITEMS.filter(x=>x.sec===id);
   shuffle(pool.slice()).forEach(q=>{const it=S.items[q.k];if(!it)fresh.push(q);else if(it.d<=d)due.push(q)});
   due.sort((a,b)=>S.items[a.k].b-S.items[b.k].b);
   fresh.sort((a,b)=>a.ord-b.ord);
@@ -2923,7 +3010,7 @@ function build(id,custom){
   queue=cand.slice(0,cur.n);
   if(id==="wr"&&cur.n>=4){const f=cand.filter(q=>q.fields),o=cand.filter(q=>!q.fields);queue=f.slice(0,1).concat(o.slice(0,3))}
   if(cur.pool){const pl=cur.pool();queue=pl.slice(0,cur.n);cur.miss=[];cur.ans=[];cur.log=[];cur.plays={};
-    cur.nav=cur.exam&&["lz","l1","ls","lb","knm","wr"].includes(cur.part);if(cur.nav){cur.pick=[];cur.op=[];cur.sent=false}
+    cur.nav=cur.exam&&["lz","l1","ls","lb","knm","wr","wb"].includes(cur.part);if(cur.nav){cur.pick=[];cur.op=[];cur.sent=false}
     if(cur.exam)cur.nw=queue.length?Math.round(queue.filter(q=>!seenN(q)).length/queue.length*100):0}
   if(!queue.length)queue=shuffle(pool.slice()).slice(0,cur.n);
   if(!cur.keep)shuffle(queue);
@@ -2955,7 +3042,8 @@ function show(){
   else if((q.sec==="verb"||q.sec==="dh")&&BET[q.big])h+=`<button class="hint" id="tr">Betekenis</button>`;
   let o;
   if(q.type==="order")h+=`<div class="line" id="line"></div><div class="pool" id="pool"></div><div class="act"><button class="btn wide" id="chk" disabled>Controleer</button></div>`;
-  else if(q.type==="write")h+=(q.fields?q.fields.map((f,i)=>`<label class="fld"><span>${f}</span><input id="f${i}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></label>`).join("")+`<p class="ask">${q.open}</p>`:"")+`<textarea id="txt" rows="7" placeholder="Schrijf hier je tekst…" aria-label="Je tekst" spellcheck="false" autocorrect="off" autocapitalize="off"></textarea>`
+  else if(q.type==="write")h+=(q.pts?`<ul class="pts">${q.pts.map(x=>`<li>${x}</li>`).join("")}</ul>`:"")
+    +(q.ctx?`<div class="sample">${esc(q.ctx).replace("___",'<b class="gapw">______</b>')}</div>`:"")+(q.fields?q.fields.map((f,i)=>`<label class="fld"><span>${f}</span><input id="f${i}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></label>`).join("")+`<p class="ask">${q.open}</p>`:"")+`<textarea id="txt" rows="${q.kind==="z"?3:7}" placeholder="${q.kind==="z"?q.ctx&&!/___/.test(q.ctx)?"Schrijf hier het einde van de zin…":"Schrijf hier je zin…":"Schrijf hier je tekst…"}" aria-label="Je tekst" spellcheck="false" autocorrect="off" autocapitalize="off"></textarea>`
     +(!cur.exam&&acc.cfg&&!acc.user?`<p class="note">Claude kijkt je tekst na als je bent ingelogd (Profiel).</p>`:"")
     +(cur.nav?navHTML():`<div class="act"><button class="btn wide" id="chk">${cur.exam?"Volgende opdracht":"Controleer mijn tekst"}</button></div>`);
   else if(q.type==="reveal")h+=(canSpeak?`<button class="hint" id="sayq">▶ Luister naar de vraag</button>`:"")
@@ -3035,7 +3123,7 @@ const picked=i=>{const p=cur.pick[i];return p!=null&&(typeof p!=="object"||!!(p.
 const navHTML=()=>`<div class="exnav"><button class="ghost" id="prv"${pos?"":" disabled"}>← Vorige</button><button class="ghost" id="ovw">Overzicht</button><button class="btn" id="nxt">${pos<queue.length-1?"Volgende →":"Klaar"}</button></div>`;
 function navBind(){$("prv").onclick=()=>{pos--;show()}; $("ovw").onclick=overview; $("nxt").onclick=()=>{if(pos<queue.length-1){pos++;show()}else overview()}}
 function overview(){
-  hush(); const n=queue.length,open=queue.filter((q,i)=>!picked(i)).length,wr=cur.part==="wr",V=wr?["opdracht","opdrachten"]:["vraag","vragen"]; head();
+  hush(); const n=queue.length,open=queue.filter((q,i)=>!picked(i)).length,wr=isWr(cur.part),V=wr?["opdracht","opdrachten"]:["vraag","vragen"]; head();
   $("card").innerHTML=`<p class="ask">Overzicht</p><p class="note">${n-open} van ${n} ${V[1]} ${wr?"gemaakt":"beantwoord"}. Tik op een nummer om naar die ${V[0]} te gaan.</p>
     <div class="ovw">${queue.map((q,i)=>`<button class="${picked(i)?"done":""}${i===pos?" now":""}" data-i="${i}" aria-label="${wr?"Opdracht":"Vraag"} ${i+1}${picked(i)?", klaar":""}">${i+1}</button>`).join("")}</div>
     ${open?`<p class="note">Nog ${open} ${open===1?V[0]:V[1]} zonder antwoord. ${wr?"Een lege opdracht is onvoldoende.":"Een open vraag telt als fout."}</p>`:""}
@@ -3047,7 +3135,7 @@ function overview(){
 function submitExam(){
   if(cur.sent)return; cur.sent=true;
   // Schrijven: the written tasks go to Claude; an empty task is not sent and counts as not passed
-  if(cur.part==="wr"){cur.ans=queue.map((q,i)=>{const w=cur.pick[i]||{f:[],t:""};return{q,form:q.fields?q.fields.map((f,j)=>f+": "+(w.f[j]||"").trim()).join("\n"):"",text:w.t.trim()}}).filter((a,i)=>picked(i));pos=queue.length;return finish()}
+  if(isWr(cur.part)){cur.ans=queue.map((q,i)=>{const w=cur.pick[i]||{f:[],t:""};return{q,form:q.fields?q.fields.map((f,j)=>f+": "+(w.f[j]||"").trim()).join("\n"):"",text:w.t.trim()}}).filter((a,i)=>picked(i));pos=queue.length;return finish()}
   queue.forEach((q,i)=>{const ok=cur.pick[i]===q.right;record(ok,q);cur.log.push({l:q.label,ok});if(!ok)cur.miss.push({q:q.big,r:q.right})});
   pos=queue.length; finish();
 }
@@ -3207,17 +3295,17 @@ function selfGrade(q,msg,doc){
 }
 async function check(q){
   const text=$("txt").value.trim();
-  if(text.split(/\s+/).length<5){$("fb").innerHTML=`<p class="note">Schrijf minimaal een paar zinnen.</p>`;return}
+  if(text.split(/\s+/).length<(q.kind==="z"?3:5)){$("fb").innerHTML=`<p class="note">${q.kind==="z"?"Schrijf een hele zin.":"Schrijf minimaal een paar zinnen."}</p>`;return}
   const form=q.fields?q.fields.map((f,i)=>f+": "+$("f"+i).value.trim()).join("\n"):"";
-  const task=q.big+(q.open?" "+q.open:""), btn=$("chk"); btn.disabled=true; $("txt").readOnly=true;
+  const task=wrTask(q), btn=$("chk"); btn.disabled=true; $("txt").readOnly=true;
   $("fb").innerHTML=`<p class="note">Ik kijk je tekst na… Dit duurt meestal minder dan een minuut.</p>`;
   try{
-    const res=(await nakijken([{task,form,text}]))[0];
+    const res=(await nakijken([{kind:q.kind,task,form,text}],q.sec==="wb"?"wb":undefined))[0];
     const errs=Array.isArray(res.errors)?res.errors:[];
     btn.hidden=true; const ok=!!res.passed;
     keepErrs(errs); record(ok);
     $("fb").innerHTML=`<b class="${ok?"good":"bad"}">${ok?"Goed zo! Voldoende":"Nog niet voldoende"}</b>
-      <p class="note">${esc(res.verdict)}</p>${scoreHTML(res.scores)}
+      <p class="note">${esc(res.verdict)}</p>${scoreHTML(res.scores,q.mx)}
       ${errs.length?`<p class="ask">Fouten: ${errs.length}</p><ul class="errs">${errs.map(e=>`<li><s>${esc(e.wrong)}</s> <strong>${esc(e.right)}</strong><span>${esc(e.why)}</span></li>`).join("")}</ul>`:`<p class="note">Geen fouten gevonden.</p>`}
       <p class="ask">Verbeterde tekst</p><div class="sample">${esc(res.corrected)}</div>
       <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(q.right)}</div></details>
@@ -3237,7 +3325,7 @@ function grab(q){
 }
 async function examWrite(){
   const A=cur.ans, card=$("card");
-  const doc=A.map(a=>({task:a.q.big+(a.q.open?" "+a.q.open:""),form:a.form,text:a.text}));
+  const doc=A.map(a=>({task:wrTask(a.q),form:a.form,text:a.text}));
   const foot=`${A.length?docBtn:""}<div class="two"><button class="ghost" id="tohome">Alle onderdelen</button><button class="btn" id="more">Nog een keer</button></div>`;
   const bind=()=>{$("more").onclick=()=>build(cur.id,cur);$("tohome").onclick=home;if($("docx"))$("docx").onclick=()=>saveDocx(doc)};
   const own=a=>`<p class="ask">Jouw tekst</p><div class="sample">${esc((a.form?a.form+"\n\n":"")+a.text)||"(niets geschreven)"}</div>`;
@@ -3245,20 +3333,20 @@ async function examWrite(){
   if(!A.length){card.innerHTML=`<p class="note">Je hebt geen opdracht gemaakt.</p>`+foot;return bind()}
   card.innerHTML=`<p class="note">Ik kijk je ${A.length} teksten na… Dit duurt ongeveer een minuut.</p>`;
   try{
-    const T=await nakijken(A.map(a=>({task:a.q.big+(a.q.open?" "+a.q.open:""),form:a.form,text:a.text})));
+    const T=await nakijken(A.map(a=>({kind:a.q.kind,task:wrTask(a.q),form:a.form,text:a.text})),cur.part==="wb"?"wb":undefined);
     let good=0,pts=0,scored=0;
     const body=A.map((a,i)=>{const t=T[i]||{},errs=Array.isArray(t.errors)?t.errors:[],pt=spPts(t);if(t.passed)good++;if(pt!=null){pts+=pt;scored++}
       keepErrs(errs);
-      return`<h2>Opdracht ${queue.indexOf(a.q)+1}: <span class="${t.passed?"good":"bad"}">${t.passed?"voldoende":"nog niet voldoende"}</span></h2><p class="note">${a.q.big}</p><p class="note">${esc(t.verdict)}</p>${scoreHTML(t.scores)}
+      return`<h2>Opdracht ${queue.indexOf(a.q)+1}: <span class="${t.passed?"good":"bad"}">${t.passed?"voldoende":"nog niet voldoende"}</span></h2><p class="note">${a.q.big}</p><p class="note">${esc(t.verdict)}</p>${scoreHTML(t.scores,a.q.mx)}
         ${errs.length?`<ul class="errs">${errs.map(e=>`<li><s>${esc(e.wrong)}</s> <strong>${esc(e.right)}</strong><span>${esc(e.why)}</span></li>`).join("")}</ul>`:""}
         ${own(a)}<p class="ask">Verbeterde tekst</p><div class="sample">${esc(t.corrected)}</div>
         <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(a.q.right)}</div></details>`}).join("");
     // score: points of all tasks, as DUO counts them (a task not made counts 0); without points (older server) the share of good tasks
-    const max=WRMAX*queue.length, pc=scored?Math.round(pts/max*100):Math.round(good/queue.length*100), pass=pc>=PASS*100;
+    const max=queue.reduce((s,q)=>s+(q.mx?mxPts(q.mx):WRMAX),0), pc=scored?Math.round(pts/max*100):Math.round(good/queue.length*100), pass=pc>=passPc(cur.part);
     keepRes(cur.part,pc);
     card.innerHTML=`<div class="done"><p class="ask">${cur.t}: uitslag</p><div class="big">${pc}%</div><p class="ru">${scored?`${pts} van ${max} punten, `:""}${good} van ${queue.length} opdrachten voldoende${A.length<queue.length?`; ${queue.length-A.length} niet gemaakt`:""}</p></div>
       <p><b class="${pass?"good":"bad"}">${pass?"Geslaagd":"Nog niet geslaagd"}</b></p>
-      <p class="note">Je hebt ongeveer ${PASS*100}% van de punten nodig${scored?`: hier ${Math.ceil(max*PASS)} van ${max}`:""}. Punten verlies je ook door fouten in grammatica en spelling.</p>`+body+foot; bind();
+      <p class="note">${cur.part==="wb"?"Bij het Staatsexamen heb je een score van 500 nodig. Bij de openbare examens van de laatste jaren was dat ongeveer 25 van de 47 punten":`Je hebt ongeveer ${PASS*100}% van de punten nodig`}${scored&&cur.part!=="wb"?`: hier ${Math.ceil(max*passOf(cur.part)-1e-9)} van ${max}`:""}. Punten verlies je ook door fouten in grammatica en spelling.</p>`+body+foot; bind();
   }catch(e){
     const c=e&&e.code;
     fallback(noCheck(c)?noCheck(c)+" Vergelijk je teksten nu met de voorbeelden.":c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je teksten met de voorbeelden.":c==="rate_limited"?"Te veel verzoeken achter elkaar. Probeer het over een minuut opnieuw.":"Het nakijken is niet gelukt. Vergelijk je teksten met de voorbeelden.");
@@ -3277,7 +3365,7 @@ async function examSpeak(){
     const T=await nakijken(A.map(a=>({task:spTask(a.q),text:a.text})),"sp");
     let good=0,pts=0,scored=0;
     const body=A.map((a,i)=>{const t=T[i]||{},errs=Array.isArray(t.errors)?t.errors:[],pt=spPts(t);if(t.passed)good++;if(pt!=null){pts+=pt;scored++}keepErrs(errs);
-      return`<h2>Vraag ${i+1}: <span class="${t.passed?"good":"bad"}">${t.passed?"voldoende":"nog niet voldoende"}</span></h2><p class="note">${esc(a.q.label)}</p><p class="note">${a.q.big}</p><p class="note">${esc(t.verdict)}</p>${scoreHTML(t.scores)}
+      return`<h2>Vraag ${i+1}: <span class="${t.passed?"good":"bad"}">${t.passed?"voldoende":"nog niet voldoende"}</span></h2><p class="note">${esc(a.q.label)}</p><p class="note">${a.q.big}</p><p class="note">${esc(t.verdict)}</p>${scoreHTML(t.scores,a.q.mx)}
         ${errs.length?`<ul class="errs">${errs.map(e=>`<li><s>${esc(e.wrong)}</s> <strong>${esc(e.right)}</strong><span>${esc(e.why)}</span></li>`).join("")}</ul>`:""}
         ${own(a)}${a.text?`<p class="ask">Zo zeg je het goed</p><div class="sample">${esc(t.corrected)}</div>`:""}
         <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(a.q.right)}</div></details>`}).join("");

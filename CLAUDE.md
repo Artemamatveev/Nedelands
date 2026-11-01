@@ -159,7 +159,7 @@ vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one comin
   device joins an account both sides are merged (`mergeS()`); after that the newer `S.t` wins, pulled when the app comes
   back to the foreground, pushed 3 s after a change. `ww-acc` remembers which account this device was joined with.
 - Grading: with accounts on, `/api/check` needs the user's access token and takes checks from `CHECK_LIMIT` a day
-  (default 20, Amsterdam days, `check_usage`): one task 1, a Schrijven proefexamen 2, a Spreken proefexamen 6
+  (default 20, Amsterdam days, `check_usage`): one task 1, a Schrijven proefexamen 2, Schrijven B1 4, a Spreken proefexamen 6
   (`checkCost()`; the page's `examGate()` uses the same numbers and warns before such a proefexamen). A failed grading
   gives them back. The answer has `left`.
 - Welcome screen (`#welcome`, `drawWelcome()`): the first time the app opens with accounts on and nobody logged in,
@@ -191,10 +191,10 @@ stored progress: append new items, don't reorder or rename existing ones.
 
 ## B1 (Staatsexamen NT2, programma I)
 
-Being built part by part: Lezen and Luisteren so far. The level is `S.lvl` ("A2" by default, "B1"; it syncs with the progress), chosen
+Being built part by part: Lezen, Luisteren and Schrijven so far. The level is `S.lvl` ("A2" by default, "B1"; it syncs with the progress), chosen
 under "Ik oefen voor" in Profiel and on the welcome screen (`.seg`, two halves of one outlined button, the chosen one
-filled). `parts()` gives the exam parts of the level: at B1 `l1` replaces `lz` and `lb` replaces `ls`, and Schrijven and Spreken stay
-at A2 until their B1 versions come; KNM belongs to both routes. At B1 Examen and Oefenen show Lezen B1, Luisteren B1 and KNM first (with
+filled). `parts()` gives the exam parts of the level: at B1 `l1` replaces `lz`, `lb` replaces `ls` and `wb` replaces `wr`, and Spreken stays
+at A2 until its B1 version comes; KNM belongs to both routes. At B1 Examen and Oefenen show Lezen B1, Luisteren B1, Schrijven B1 and KNM first (with
 a row to the official oefenexamens NT2 ↗), then "Nog op A2-niveau"; at A2 they show A2 first and a small B1 group under
 it. Today's lesson uses `parts()`; the Mix leaves out the other level's reading and listening.
 - Lezen B1: `LZ1` (`[text, questions, intro]`, the same shape as `LZ`), section `l1`, keys `l1|<text>.<question>`,
@@ -209,6 +209,16 @@ it. Today's lesson uses `parts()`; the Mix leaves out the other level's reading 
   whole fragments up to 39 questions in 90 minutes, with Overzicht; each fragment is heard once (A2: twice), and before
   listening the screen lists every question of the fragment (`qs`), like the reading time on the exam. Practice takes
   two whole fragments (`someTexts()`) and may replay. Pass line the default 70%.
+- Schrijven B1: `WRB` (objects: `k` kind, `t` task, `m` example; `c` the sentence to finish (ends with …) or a text with
+  an open place `___`; `fl`/`o` form questions; `i` situation, `d` information rendered by `docHTML()`, `f` photos, `p`
+  the points to write about), section `wb`, keys `wb|<i>`. Three kinds, as on the exam: zinsopdracht (`z`, 2 points:
+  inhoud 0–1, grammatica 0–1), formulier (`f`, 7: inhoud 3, woorden 1, grammatica 2, spelling 1) and e-mail (`m`, 8:
+  the same plus samenhang 1) (`WBMAX`, and `SCORES_WB` in `api/check.js`, which grades them with `part:"wb"` and its own
+  B1 prompt and sets `passed` from the points). The proefexamen (`EX.wb`, `wbTasks(8,3)`) is 12 tasks in 100 minutes:
+  8 zinsopdrachten, a form, an e-mail about two photos and two other e-mails, 47 points, with Overzicht; it costs 4
+  checks. The pass line is 25 of 47 (`PASSP.wb`): the public exams of 2023–2025 needed about that. Practice is three
+  zinsopdrachten and one longer task, each checked on its own; today's short round alternates three zinsopdrachten and
+  one longer task. `wrTask()` builds the full task text for Claude (and the Word file) from all these fields.
 
 ## Writing and speaking check (Schrijven, Spreken)
 
