@@ -35,9 +35,12 @@ generic "AI app" look.
 - **Type**: the system font only (`-apple-system, system-ui`: SF Pro on iPhone), so the
   app reads like a native iPhone app. No web fonts; headings semibold (600–700), never 800.
   No handwriting or decorative fonts.
-- **Shapes**: square or nearly square corners (2–4px), solid 1px separators, flat buttons. Two exceptions, both
-  the user's wish: the floating tab bar (a glass pill, like iOS 26 and Instagram) and the login window (`#welcome`, a
-  rounded card like Yandex ID).
+- **Shapes**: round corners, as in the login window the user liked (it looks livelier): tokens on `:root`, `--r` 20px
+  for tiles and inner screens, `--rc` 14px for controls (buttons, fields, options, steps, the level switch, documents,
+  photos), `--rs` 10px for small things (icon squares, word tokens, small buttons), 8px for the tiniest (numbers, the
+  timer); bars are pills, the feedback sheet has round top corners. Use the tokens, not new numbers. Solid 1px
+  separators, flat buttons. The floating tab bar is a glass pill (like iOS 26 and Instagram); the login window
+  (`#welcome`) is a card like Yandex ID (24px).
 - **Logo**: the name "Bittertalen" in the system font, with a bitterbal (`--oranje`, light crumbs) as the dot on
   the i, the size and place of a normal dot (`h1 .idot`). The app icon is a bitterbal too.
 - **Dutch motifs instead of decoration**:
@@ -47,7 +50,7 @@ generic "AI app" look.
     other tabs and inner screens get the narrow strip (`main.big` is only set on Vandaag). Tapping the painting on a
     home tab opens its story (`story()`); on inner screens it shows the painting in full.
   - Streak: a stamp, like on a Museumkaart.
-- **Never use**: cream or beige backgrounds, handwriting fonts, wobbly hand-drawn
+- **Never use**: cream or beige backgrounds, handwriting fonts, wobbly hand-drawn (uneven)
   border-radius, dashed lines, highlighter underlines under headings, decorative SVG
   squiggles, emoji as decoration.
 
