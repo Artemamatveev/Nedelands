@@ -3718,18 +3718,15 @@ function complete(){
 // Trillen: a short tap for a right answer, two for a wrong one. Android: navigator.vibrate. iPhone has no vibrate for
 // websites, but Safari (iOS 18+) gives the switch's own tap when an <input switch> is toggled inside a tap, so a hidden
 // one is toggled. Off in Profiel per device (ww-tril).
-let hapL=null;
+// iPhone: a fresh <label><input switch></label>, not shown, clicked inside the tap and removed again: Safari (iOS 18+)
+// gives the switch's tap for it (as the ios-haptics package does; a hidden switch kept in the page gave nothing)
+const tapIOS=()=>{const l=document.createElement("label"),i=document.createElement("input");l.setAttribute("aria-hidden","true");l.style.display="none";
+  i.type="checkbox";i.setAttribute("switch","");l.appendChild(i);document.head.appendChild(l);l.click();l.remove()};
 const canBuzz=()=>!!navigator.vibrate||/iP(hone|ad|od)/.test(navigator.userAgent)||navigator.maxTouchPoints>1&&/Mac/.test(navigator.platform);
 function buzz(k){
   if(lsGet("ww-tril")==="0")return;
   try{if(navigator.vibrate){navigator.vibrate(k==="bad"?[25,60,25]:k==="tick"?8:12);return}}catch(e){}
-  if(navigator.userActivation&&!navigator.userActivation.isActive)return;
-  try{if(!hapL){const i=document.createElement("input");i.type="checkbox";i.setAttribute("switch","");i.id="hapt";i.tabIndex=-1;
-      hapL=document.createElement("label");hapL.htmlFor="hapt";hapL.setAttribute("aria-hidden","true");
-      hapL.style.cssText="position:fixed;left:-100px;top:0;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none";
-      hapL.append(i);document.body.append(hapL)}
-    const a=document.activeElement;hapL.click();if(a&&a.focus)a.focus({preventScroll:true});
-    if(k==="bad")setTimeout(()=>hapL.click(),110)}catch(e){}
+  try{tapIOS();if(k==="bad")setTimeout(()=>{try{tapIOS()}catch(e){}},120)}catch(e){}
 }
 function feedback(ok,q){
   buzz(ok?"good":"bad");
