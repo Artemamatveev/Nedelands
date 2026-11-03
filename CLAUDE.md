@@ -24,8 +24,8 @@ The design should also teach Dutch culture. Keep it recognisably Dutch and avoid
 generic "AI app" look.
 
 - **Colours**: tin-glaze white `--bg`, cobalt `--blue`, light wash `--wash`, and
-  `--oranje` as the only accent (timer, selection, the streak stamp). Filled cobalt surfaces (`.btn`, the next step
-  of today, chosen word tokens, photo numbers) use `--fill` with `--on-fill` text: in dark mode that stays a deep
+  `--oranje` as the only accent (timer, selection, the streak stamp). Filled cobalt surfaces (`.btn`, the icon squares,
+  chosen word tokens, photo numbers) use `--fill` with `--on-fill` text: in dark mode that stays a deep
   cobalt with white text (5.3:1), because the light `--blue` read as a highlight rather than the main action.
   Always use the tokens on `:root`; every colour has a dark-mode value.
 - **Glass and tiles**: the page background is a Dutch landscape faintly seen through a frosted window: Ruisdael's
@@ -36,7 +36,7 @@ generic "AI app" look.
   app reads like a native iPhone app. No web fonts; headings semibold (600–700), never 800.
   No handwriting or decorative fonts.
 - **The login window's look, everywhere** (the user liked its type and colours): headings in `--ink`, semibold (600),
-  no diamond; small labels (`h3.lh`, `.ask`) in `--soft`; cobalt only on the main action (`.btn`, the next step) and
+  no diamond; small labels (`h3.lh`, `.ask`) in `--soft`; cobalt only on the main action (`.btn`) and
   in icons; secondary buttons (`.ghost`, `.back`) are neutral: 1px `--line` border, `--ink` text; chevrons › in
   `--soft`; fields have a 1.5px `--ink` border, 52px high; the level switch (`.seg`) is a grey track with a white
   thumb, like iOS.
@@ -106,8 +106,8 @@ Every section appears once; don't add a second entry point to the same exercise.
   generated) and not painting details (tried, the user didn't like them). Counts on the right only once something
   was done (no "0 van 225").
   No "Oefenen →" or "Openen →" text links, no cards with their own buttons.
-- **Filled cobalt `.btn`**: the one main action on a screen (the next step of today,
-  Controleer, Volgende). **Outlined `.ghost`** (neutral grey border): secondary actions (Proefexamen, Mix van de dag,
+- **Filled cobalt `.btn`**: the one main action on a screen (Controleer,
+  Volgende). **Outlined `.ghost`** (neutral grey border): secondary actions (Proefexamen, Mix van de dag,
   Wis).
 - **Underlined `.hint`**: only small in-place toggles (Betekenis, Uitspraak).
   Text links `<a>` only for other websites, with ↗.
