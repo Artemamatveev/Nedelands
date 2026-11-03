@@ -172,8 +172,8 @@ before writing `w`, and check every fact in `v`.
 
 The picture tasks in Spreken use real photos in `foto/`, by the same rules as the paintings:
 public domain or CC0 from Wikimedia Commons, max 640px wide (~30–100 KB), each recorded in
-`foto/CREDITS.md`. An `SP` item lists its photos in `p[3]` (two to choose from, or three in
-order); `FOTO` holds a short Dutch description of each for screen readers. No emoji as pictures.
+`foto/CREDITS.md`. An `SP` item lists its photos in `p[3]` (two to choose from, or three, in order if the
+question says so); `FOTO` holds a short Dutch description of each for screen readers. No emoji as pictures.
 
 ## Progress
 
@@ -360,7 +360,8 @@ proefexamen); `task` also says what the photos show (`spTask()`, from `FOTO`). E
 (inhoud 0–3, woorden 0–2, grammatica 0–2, samenhang 0–1: DUO's criteria as far as a transcript shows them; pronunciation
 and fluency can't be judged), clamped on the server; the Spreken proefexamen score is points of all 16 questions.
 The Spreken proefexamen has DUO's four parts of four (since March 2025): a question, one photo (describe and answer),
-two photos (choose and explain), three photos (tell in order); the proefexamen reads each question aloud, like the
+two photos (choose and explain), three photos (a story in order, or three separate things to say something about: learners
+remembered both kinds from the real exam, so the part's label leaves the order to the question); the proefexamen reads each question aloud, like the
 video on the exam, and speech stops before the microphone opens; `SP` items fall into a part by their number of photos. Claude can't take audio, so the phone writes the answer down first (Web Speech
 API, `nl-NL`). Recording (`MediaRecorder`, to play the answer back) and transcribing are
 separate takes, never at the same time: on iPhone they compete for the microphone. One
