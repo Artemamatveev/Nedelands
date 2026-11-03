@@ -12,7 +12,8 @@ screen. Until the public launch every address sends `X-Robots-Tag: noindex` (`ve
 launch, limit that rule to the old addresses (`"has": [{"type": "host", "value": "bittertalen.vercel.app"}]`, and the
 same for nedelands.vercel.app) and add bittertalen.nl to Google Search Console.
 Privacy: `privacy.html` (served as /privacy, `cleanUrls` in `vercel.json`) is the privacy statement in Dutch, in the same
-Delfts blauw; controller Artem Matveev, contact privacy@bittertalen.nl. Linked from Profiel (a list row) and the welcome
+Delfts blauw; controller Artem Matveev, contact privacy@bittertalen.nl (an iCloud+ custom-domain mailbox of the user's, catch-all on;
+its MX, SPF, DKIM and apple-domain records are in Vercel DNS next to Resend's). Linked from Profiel (a list row) and the welcome
 screen. Keep it true: when data goes somewhere new (a new service, a new field in the account, analytics), update it
 and its date. `sw.js` caches other pages under their own address, never as "/".
 The app's UI language is Dutch; the user talks to Claude in Russian. There is no Russian anywhere in the app: a word's meaning is
