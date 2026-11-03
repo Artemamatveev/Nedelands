@@ -3390,14 +3390,15 @@ function home(){
   // you picked since).
   const v=exV||lvl(),seg=`<div class="seg lvt" role="group" aria-label="Niveau">${["A2","B1"].map(x=>`<button data-v="${x}" aria-pressed="${x===v}">${LVL[x]}</button>`).join("")}</div>`,
     other=v!==lvl()?`<p class="note">Je les van vandaag is voor ${LVL[lvl()]} (kies in Profiel).</p>`:"";
+  // ONA and the participatieverklaring: on both levels (with the Staatsexamen you still do them apart)
+  const onaRow=`<div class="list">${itHTML(`data-x="ona"`,"ONA en participatieverklaring","Niet voor iedereen: kijk of jij ze nodig hebt.",{ic:"ona",n:(n=>n?`${n} van 4`:null)(GP.filter(c=>c.ona&&(S.gp||{})[c.id]).length)})}</div>`;
   if(v==="B1"){
     $("exam").innerHTML=`<h2>Naar het examen</h2>${seg}${other}<p class="sub">Proefexamens met tijd, zoals het Staatsexamen. Het percentage is hoeveel je goed had, het streepje ongeveer wat je nodig hebt.</p><div class="list">${["l1","lb","wb","sb","knm"].map(part).join("")}</div>`
-      +`<div class="list"><a class="it ext" href="https://oefenexamensnt2.nl" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens Staatsexamen NT2 ↗</b></span><span class="d">Officieel, voor programma I. Liefst op een computer.</span></span></a></div>`;
+      +`<div class="list"><a class="it ext" href="https://oefenexamensnt2.nl" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens Staatsexamen NT2 ↗</b></span><span class="d">Officieel, voor programma I. Liefst op een computer.</span></span></a></div>`+onaRow;
     $("parts").innerHTML=`<h2>Examenonderdelen</h2>${seg}<p class="sub">Zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["l1","lb","wb","sb","knm"].map(row).join("")}</div>`;
   }else{
     $("exam").innerHTML=`<h2>Naar het examen</h2>${seg}${other}<p class="sub">Proefexamens met tijd, zoals bij DUO. Het percentage is hoeveel je goed had, het streepje wat je nodig hebt om te slagen.</p><div class="list">${["lz","ls","wr","sp","knm"].map(part).join("")}</div>`
-      +`<div class="list"><a class="it ext" href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens van DUO ↗</b><small>15</small></span><span class="d">De echte, met echte stemmen. Liefst op een computer.</span></span></a></div>`
-      +`<div class="list">${itHTML(`data-x="ona"`,"ONA en participatieverklaring","Niet voor iedereen: kijk of jij ze nodig hebt.",{ic:"ona",n:(n=>n?`${n} van 4`:null)(GP.filter(c=>c.ona&&(S.gp||{})[c.id]).length)})}</div>`;
+      +`<div class="list"><a class="it ext" href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens van DUO ↗</b><small>15</small></span><span class="d">De echte, met echte stemmen. Liefst op een computer.</span></span></a></div>`+onaRow;
     $("parts").innerHTML=`<h2>Examenonderdelen</h2>${seg}<p class="sub">Zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["lz","ls","wr","sp","knm"].map(row).join("")}</div>`;
   }
   $("gram").innerHTML=`<h2>Grammatica en woorden</h2><p class="sub">Rondes van 10 vragen.</p>`+(lvl()==="B1"
@@ -4912,6 +4913,7 @@ function onaScreen(){
   $("tbody").innerHTML=`<h2>ONA en participatieverklaring</h2><p class="sub">Twee onderdelen van inburgeren die niet iedereen hoeft te doen.</p>
     <h3 class="lh">Wat is ONA?</h3><p>ONA betekent Oriëntatie op de Nederlandse Arbeidsmarkt. Je laat zien dat je weet welk werk bij je past, en hoe je in Nederland werk vindt.</p>
     <h3 class="lh">Wie doet ONA?</h3><p>Mensen die inburgeren volgens de wet van 2013, en mensen die vrijwillig inburgeren, bijvoorbeeld om Nederlander te worden. Inburger je volgens de wet van 2021? Dan doe je geen ONA, maar de MAP bij je gemeente.</p>
+    <p>Doe je het Staatsexamen NT2? Dat telt voor de taalexamens. KNM, ONA (of de MAP) en de participatieverklaring doe je dan apart.</p>
     <h3 class="lh">Vrijstelling</h3><p>Heb je in de laatste 12 maanden minstens 6 maanden gewerkt in loondienst, minstens 48 uur per maand? Dan kun je vrijstelling vragen in Mijn Inburgering. Voor zelfstandigen is er een eigen formulier.</p>
     <h3 class="lh">Zo gaat het</h3><ol class="ona"><li>Je kiest drie beroepen, en daarna één beroep dat je wilt doen.</li><li>Je vult acht resultaatkaarten in, allemaal over dat beroep. Samen is dat je portfolio.</li><li>Je stuurt je portfolio naar DUO, via Mijn Inburgering.</li><li>Je hebt een eindgesprek bij DUO over je portfolio. Of je volgt een ONA-cursus van minstens 64 uur bij een school met het keurmerk Blik op Werk: dan is er geen eindgesprek.</li></ol>
     <h3 class="lh">De acht resultaatkaarten</h3><ol class="ona">${K.map(k=>`<li>${k}</li>`).join("")}</ol>
