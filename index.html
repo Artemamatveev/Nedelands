@@ -35,6 +35,8 @@
 :root{
   /* round corners, as in the login window (the user's wish): tiles, controls (buttons, fields, options), small things */
   --r:20px; --rc:14px; --rs:10px;
+  /* type, the iOS text styles: caption 12, footnote 13, subhead 15, body 17, title 3 20, title 2 22, title 1 28 */
+  --fs-xs:12px; --fs-s:13px; --fs-m:15px; --fs-b:17px; --fs-l:20px; --fs-xl:22px; --fs-xxl:28px;
   --bg:#FBFCFE; --surface:#EEF2FA; --wash:#C9D6F2; --ink:#14213D; --soft:#56617C; --line:#D6DDEB;
   --blue:#1F3C96; --deep:#132A6E; --oranje:#C8500C; --good:#2E7D4B; --bad:#C0392B; --on:#FFFFFF;
   --fill:#1F3C96; --fill-press:#132A6E; --on-fill:#FFFFFF;
@@ -54,7 +56,7 @@
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--surface);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.5}
+body{margin:0;background:var(--surface);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,sans-serif;font-size:var(--fs-b);line-height:1.47;-webkit-text-size-adjust:100%;text-size-adjust:100%;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased}
 main{max-width:720px;margin:0 auto;padding:0 16px 48px;overflow-x:clip}
 /* glass: a Dutch landscape (Ruisdael's windmill) faintly seen through a frosted window; the content sits on white tiles that stand out from it */
 /* art/molen-glass.jpg is the painting already blurred and small, so the page needs no live blur */
@@ -83,7 +85,7 @@ h1 .idot,.wlogo .idot{position:relative} h1 .idot svg,.wlogo .idot svg{position:
 /* museumbordje */
 .label{margin:0;padding:14px 0 0}
 /* one size for the whole label: the name in ink, the facts in grey, then the A2 sentence in ink */
-.lab,.label .nl{margin:0;font-size:15px;line-height:1.45}
+.lab,.label .nl{margin:0;font-size:var(--fs-m);line-height:1.45}
 .lab{color:var(--soft)}
 .lab b{color:var(--ink);font-weight:600}
 .label .nl{margin-top:8px;color:var(--ink)}
@@ -91,29 +93,29 @@ h1 .idot,.wlogo .idot{position:relative} h1 .idot svg,.wlogo .idot svg{position:
 /* het verhaal van het schilderij: lezen en luisteren */
 #story .back{margin-top:14px}
 #story h2{margin-top:18px}
-#story .lab{margin:0 0 14px;font-size:15px;color:var(--soft)} #story .lab b{color:var(--ink);font-weight:600}
+#story .lab{margin:0 0 14px;font-size:var(--fs-m);color:var(--soft)} #story .lab b{color:var(--ink);font-weight:600}
 .sart{display:block;width:100%;margin:14px 0 4px;padding:0;border:0;background:#060C1E}
 .sart img{display:block;border-radius:var(--rc);width:100%;max-height:60vh;object-fit:contain}
 #story .book{margin-top:14px}
 .sw{list-style:none;margin:8px 0 0;padding:0}
-.sw li{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:17px}
+.sw li{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:var(--fs-b)}
 .sw li>span{flex:1;min-width:0}
-.sw .say{flex:none;background:none;border:0;color:var(--blue);font-size:15px;padding:6px 4px}
-.sw .ghost{flex:none;padding:6px 12px;font-size:15px}
+.sw .say{flex:none;background:none;border:0;color:var(--blue);font-size:var(--fs-m);padding:6px 4px}
+.sw .ghost{flex:none;padding:6px 12px;font-size:var(--fs-m)}
 .sw .ghost:disabled{opacity:.5;cursor:default}
 .zoom{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 16px calc(20px + env(safe-area-inset-bottom,0px));background:#060C1E;color:#D9E2F5;text-align:center}
 .zoom img{max-width:100%;max-height:72vh;object-fit:contain}
-.zoom p{max-width:440px;margin:14px 0 0;font-size:15px}
+.zoom p{max-width:440px;margin:14px 0 0;font-size:var(--fs-m)}
 .zoom b{color:#fff}
 
-h2{display:flex;align-items:center;gap:10px;font-size:21px;font-weight:600;line-height:1.2;margin:0 0 4px}
-.sub,.note{color:var(--soft);font-size:15px;margin:0 0 12px}
+h2{display:flex;align-items:center;gap:10px;font-size:var(--fs-xl);font-weight:600;line-height:1.2;letter-spacing:-.01em;margin:0 0 4px}
+.sub,.note{color:var(--soft);font-size:var(--fs-m);margin:0 0 12px}
 
 /* startscherm: eerst de les van vandaag, dan zelf kiezen, dan je voortgang */
 #home .tile{padding:20px 16px 16px} #home .tile>h2{margin:0 0 4px}
 .tile>.list:last-child>.it:last-child,.tile>.list:last-child>.rd:last-child{border-bottom:0;padding-bottom:0}
 /* de les van vandaag: the first tile */
-.today h2{font-size:24px;font-weight:600;margin:4px 0 4px}
+.today h2{font-size:var(--fs-xxl);font-weight:600;letter-spacing:-.02em;margin:4px 0 4px}
 .today .sub{color:var(--ink);margin:0}
 .today .hint{margin:12px 0 0}
 .today>.ghost{margin-top:14px}
@@ -125,10 +127,10 @@ h2{display:flex;align-items:center;gap:10px;font-size:21px;font-weight:600;line-
 #a2hs ol{margin:10px 0 0;padding-left:22px}#a2hs .two{margin-top:14px}
 .steps{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:8px}
 .step{display:grid;grid-template-columns:30px minmax(0,1fr) auto;column-gap:12px;align-items:center;width:100%;height:100%;text-align:left;background:var(--bg);border:1.5px solid var(--line);border-radius:var(--rc);padding:12px 14px}
-.step i{grid-row:1/3;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:600;font-size:15px;border:1.5px solid var(--line);border-radius:8px;color:var(--ink)}
-.step b{font-size:17px;font-weight:600;line-height:1.3}
-.step span{grid-column:2;color:var(--soft);font-size:14.5px;line-height:1.35}
-.step em{grid-column:3;grid-row:1/3;font-style:normal;font-weight:600;font-size:15px;color:var(--blue);white-space:nowrap}
+.step i{grid-row:1/3;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:600;font-size:var(--fs-m);border:1.5px solid var(--line);border-radius:8px;color:var(--ink)}
+.step b{font-size:var(--fs-b);font-weight:600;line-height:1.3}
+.step span{grid-column:2;color:var(--soft);font-size:var(--fs-m);line-height:1.35}
+.step em{grid-column:3;grid-row:1/3;font-style:normal;font-weight:600;font-size:var(--fs-m);color:var(--blue);white-space:nowrap}
 .step em.c{font-size:26px;font-weight:400;line-height:1;color:var(--soft)}
 .step:hover{border-color:var(--blue)}
 .step.next{background:var(--fill);border-color:var(--fill);color:var(--on-fill)}
@@ -147,31 +149,31 @@ h2{display:flex;align-items:center;gap:10px;font-size:21px;font-weight:600;line-
 .it::after{content:"›";flex:none;font-size:26px;line-height:1;margin-top:-3px;color:var(--soft)}
 a.it{text-decoration:none} .it.ext::after{content:none}
 .it .th{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
-.it b{font-size:17px;font-weight:600;line-height:1.3}
-.it small{flex:none;color:var(--soft);font-size:14px;font-variant-numeric:tabular-nums}
-.it .d{display:block;margin-top:1px;color:var(--soft);font-size:14.5px;line-height:1.35}
+.it b{font-size:var(--fs-b);font-weight:600;line-height:1.3}
+.it small{flex:none;color:var(--soft);font-size:var(--fs-s);font-variant-numeric:tabular-nums}
+.it .d{display:block;margin-top:1px;color:var(--soft);font-size:var(--fs-m);line-height:1.35}
 .it .bar{display:block;height:3px;margin:8px 0 2px}
 .it:hover b{color:var(--blue)}
 .itw{display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line)} .itw .it{border:0}
 /* kopje boven een groep: klein, kapitalen, zoals de vraag in een oefening */
-.lh{margin:26px 0 4px;color:var(--soft);font-size:13.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.lh{margin:26px 0 4px;color:var(--soft);font-size:var(--fs-s);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
 /* naar het examen: one row per part starts its proefexamen; the name and time, the bar with the 70% line, the score, › */
 .rd{display:grid;grid-template-columns:84px minmax(0,1fr) 88px auto;align-items:center;column-gap:12px;width:100%;min-height:50px;padding:9px 0;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);color:var(--ink)}
-.rd b{font-size:17px;font-weight:600;line-height:1.25}
-.rd b small{display:block;text-align:left;font-size:13.5px;font-weight:500;color:var(--soft)}
+.rd b{font-size:var(--fs-b);font-weight:600;line-height:1.25}
+.rd b small{display:block;text-align:left;font-size:var(--fs-s);font-weight:500;color:var(--soft)}
 .rd .bar{margin:0;height:8px}
-.rd small{text-align:right;white-space:nowrap;font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--soft)}
+.rd small{text-align:right;white-space:nowrap;font-size:var(--fs-m);font-weight:600;font-variant-numeric:tabular-nums;color:var(--soft)}
 .rd small.good{color:var(--good)} .rd small.bad{color:var(--bad)}
 .rd::after{content:"›";grid-column:4;grid-row:1/span 2;align-self:center;font-size:26px;line-height:1;margin-top:-3px;color:var(--soft)}
 .rd:hover>b{color:var(--blue)}
-.rd .d{grid-column:1/4;margin-top:3px;color:var(--soft);font-size:14.5px;line-height:1.35}
+.rd .d{grid-column:1/4;margin-top:3px;color:var(--soft);font-size:var(--fs-m);line-height:1.35}
 /* tabbalk: vier plekken in zwevend glas onderaan, zoals in iOS 26 (Instagram). Alleen op de vier startschermen;
    in een oefening en op een binnenscherm verdwijnt hij, daar ga je terug met de knop of door te vegen */
 .tabs{position:fixed;z-index:8;left:50%;bottom:calc(10px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;width:min(410px,calc(100vw - 24px));padding:5px;border-radius:999px;
   background:color-mix(in srgb,var(--card) 55%,transparent);-webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8);
   border:1px solid color-mix(in srgb,var(--card) 70%,transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),var(--lift);
   touch-action:none;-webkit-user-select:none;user-select:none;transition:width .3s cubic-bezier(.3,1.2,.5,1)}
-.tabs button{position:relative;z-index:1;flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 4px 8px;border:0;border-radius:999px;background:none;color:var(--ink);font-size:12px;font-weight:600;line-height:1.1;transition:color .25s,padding .3s;-webkit-tap-highlight-color:transparent}
+.tabs button{position:relative;z-index:1;flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 4px 8px;border:0;border-radius:999px;background:none;color:var(--ink);font-size:var(--fs-xs);font-weight:600;line-height:1.1;transition:color .25s,padding .3s;-webkit-tap-highlight-color:transparent}
 .tabs svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .tabs [aria-current]{color:var(--blue)}
 /* the lens: a drop of glass over the current tab. It glides over and settles without overshooting (so it never leaves
@@ -190,31 +192,31 @@ a.it{text-decoration:none} .it.ext::after{content:none}
 .gate{padding:2px 0 12px}
 /* the level: two halves of one outlined button, the chosen one filled */
 .seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;background:color-mix(in srgb,var(--ink) 8%,var(--card));border-radius:var(--rc);margin-top:2px}
-.seg button{border:0;border-radius:10px;background:none;color:var(--soft);font-weight:600;font-size:15px;padding:8px 6px;min-height:40px}
-.seg button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:0 1px 4px rgba(8,16,40,.18)} .seg.lvt{margin:4px 0 12px} #acct .wide,#welcome .wide,#welcome .two,#move .wide{margin-bottom:8px}
+.seg button{border:0;border-radius:10px;background:none;color:var(--soft);font-weight:600;font-size:var(--fs-m);padding:8px 6px;min-height:40px}
+.seg button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:0 1px 4px rgba(8,16,40,.18)} .seg.lvt{margin:12px 0 14px} #acct .wide,#welcome .wide,#welcome .two,#move .wide{margin-bottom:8px}
 .tabs.min button{padding:10px 4px} .tabs.min span{display:none}
 body:has(#home[hidden]) .tabs{display:none}
 main:has(#home:not([hidden])){padding-bottom:116px}
 
 /* oefenen */
 .top{display:flex;justify-content:space-between;align-items:center;margin:14px 0 0}
-.back{display:inline-flex;align-items:center;gap:6px;min-height:44px;background:none;border:1px solid var(--line);color:var(--ink);font-weight:600;font-size:16px;padding:5px 14px 6px 10px;border-radius:var(--rc)}
+.back{display:inline-flex;align-items:center;gap:6px;min-height:44px;background:none;border:1px solid var(--line);color:var(--ink);font-weight:600;font-size:var(--fs-b);padding:5px 14px 6px 10px;border-radius:var(--rc)}
 .back span{font-size:20px;line-height:1}
 #timer,.rec .t{font-weight:700;font-variant-numeric:tabular-nums;color:var(--oranje);border:1.5px solid var(--oranje);padding:2px 9px;border-radius:8px}
 #timer:empty{display:none}
 .bar{height:6px;background:var(--surface);overflow:hidden;border-radius:999px;margin:14px 0 22px}
 .bar i{display:block;height:100%;width:0;transition:width .3s;background:var(--blue)}
-.ask{color:var(--soft);font-size:13.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin:0}
-.verb{font-size:44px;font-weight:700;letter-spacing:0;line-height:1.08;margin:6px 0 2px;word-break:break-word}
-.verb.long{font-size:22px;font-weight:600;line-height:1.35;letter-spacing:0;margin:8px 0 10px}
+.ask{color:var(--soft);font-size:var(--fs-s);font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin:0}
+.verb{font-size:44px;font-weight:700;letter-spacing:-.02em;line-height:1.08;margin:6px 0 2px;word-break:break-word}
+.verb.long{font-size:var(--fs-l);font-weight:600;line-height:1.35;letter-spacing:-.01em;margin:8px 0 12px}
 .ru{color:var(--soft);margin:0 0 18px}
-.hint{display:block;background:none;border:0;color:var(--soft);text-decoration:underline;font-size:14.5px;padding:4px 0;margin:-12px 0 12px;text-align:left}
-.hint:disabled{text-decoration:none;color:var(--ink);font-size:16px}
+.hint{display:block;background:none;border:0;color:var(--soft);text-decoration:underline;font-size:var(--fs-m);padding:4px 0;margin:-12px 0 12px;text-align:left}
+.hint:disabled{text-decoration:none;color:var(--ink);font-size:var(--fs-m)}
 .opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.opt{background:var(--bg);color:var(--ink);border:1.5px solid var(--line);border-radius:var(--rc);box-shadow:0 2px 0 var(--line);padding:14px 8px;font-size:20px;font-weight:600;min-height:60px;word-break:break-word}
+.opt{background:var(--bg);color:var(--ink);border:1.5px solid var(--line);border-radius:var(--rc);box-shadow:0 2px 0 var(--line);padding:14px 8px;font-size:var(--fs-l);font-weight:600;min-height:60px;word-break:break-word}
 .opt:active{border-color:var(--blue)}
 .opts.one{grid-template-columns:1fr}
-.opts.one .opt{font-size:17px;font-weight:500;text-align:left;padding:11px 14px;min-height:0}
+.opts.one .opt{font-size:var(--fs-b);font-weight:500;text-align:left;padding:11px 14px;min-height:0}
 .opt.ok{background:var(--good);border-color:var(--good);box-shadow:none;color:var(--on)}
 .opt.no{background:var(--bad);border-color:var(--bad);box-shadow:none;color:var(--on)}
 .opt.ok::before{content:"✓ "} .opt.no::before{content:"✕ "}
@@ -222,17 +224,17 @@ main:has(#home:not([hidden])){padding-bottom:116px}
 .type{display:flex;gap:8px}
 input,textarea{font:inherit;color:var(--ink);background:var(--card);border:1.5px solid var(--ink);border-radius:var(--rc)}
 input:focus,textarea:focus{border-color:var(--blue);outline:0}
-input{flex:1;min-width:0;font-size:21px;font-weight:700;padding:9px 12px}
-textarea{display:block;width:100%;font-size:17px;line-height:1.5;padding:12px;margin-bottom:12px;resize:vertical}
-.fld{display:block;margin-bottom:8px}
+input{flex:1;min-width:0;font-size:var(--fs-l);font-weight:600;padding:9px 12px}
+textarea{display:block;width:100%;font-size:var(--fs-b);line-height:1.5;padding:12px;margin-bottom:12px;resize:vertical}
+.fld{display:block;margin-bottom:14px} h2+.fld{margin-top:14px}
 /* The login window, like Yandex ID at the user's wish; the rest of the app took its look */
 #welcome{position:fixed;inset:0;z-index:30;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:calc(env(safe-area-inset-top) + 20px) 16px calc(env(safe-area-inset-bottom) + 20px);background:#0E1B45 var(--wbg) 50% 40%/cover no-repeat}
 #welcome[hidden]{display:none}
 #welcome::before{content:"";position:fixed;inset:0;background:rgba(8,16,40,.32);z-index:-1}
 .wcard{width:100%;max-width:400px;margin-top:auto;background:var(--card);border-radius:24px;padding:26px 22px 14px;box-shadow:0 14px 44px rgba(0,0,0,.3);text-align:center}
 .wlogo{font-size:30px;font-weight:700;letter-spacing:-.01em;margin:0 0 6px;color:var(--ink)}
-.wcard h2{display:block;text-align:center;font-size:21px;font-weight:600;margin:0 0 18px} .wcard h2::before{display:none}
-.wcard .wlv{font-size:14px;color:var(--soft);margin:0 0 6px}
+.wcard h2{display:block;text-align:center;font-size:var(--fs-xl);font-weight:600;margin:0 0 18px} .wcard h2::before{display:none}
+.wcard .wlv{font-size:var(--fs-m);color:var(--soft);margin:0 0 6px}
 .wcard .seg{margin:0 0 14px}
 .wcard .fld{margin-bottom:0} .wcard .fld input{height:54px}
 .wcard .btn,.wcard .ghost{min-height:54px;padding:10px 14px;margin:0 0 10px}
@@ -240,19 +242,19 @@ textarea{display:block;width:100%;font-size:17px;line-height:1.5;padding:12px;ma
 .wcard .prov svg{width:28px;height:28px}
 .wcard .sub,.wcard .note{text-align:left}
 .wcard .fld+.btn{margin-top:14px}
-.wfoot{max-width:400px;margin:16px 0 auto;text-align:center;color:#fff;font-size:15px;text-shadow:0 1px 6px rgba(0,0,0,.5)}
-.wfoot p{margin:0 0 6px} .wfoot a{color:#fff;font-weight:600} .wfoot .wart{font-size:13px;opacity:.85;margin-top:10px}
+.wfoot{max-width:400px;margin:16px 0 auto;text-align:center;color:#fff;font-size:var(--fs-m);text-shadow:0 1px 6px rgba(0,0,0,.5)}
+.wfoot p{margin:0 0 6px} .wfoot a{color:#fff;font-weight:600} .wfoot .wart{font-size:var(--fs-s);opacity:.85;margin-top:10px}
 .login .prov{display:flex;justify-content:center;gap:10px;margin:6px 0 14px}
 .login .prov button{flex:1;max-width:76px;height:48px;display:flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--line);border-radius:var(--rc);cursor:pointer}
 .login .prov button:active{background:var(--wash)} .login .prov svg{width:24px;height:24px} .login .prov .mono{fill:var(--ink)}
 .login .pk{display:flex;align-items:center;justify-content:center;gap:10px}
 .login .pk svg{width:26px;height:26px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.fld span{display:block;font-size:14.5px;color:var(--soft)}
-.fld input{width:100%;height:52px;font-size:17px;font-weight:400;padding:0 16px}
-.btn{background:var(--fill);color:var(--on-fill);border:0;border-radius:var(--rc);padding:14px 20px;min-height:52px;font-weight:600;font-size:17px}
+.fld span{display:block;font-size:var(--fs-m);color:var(--soft);margin-bottom:6px}
+.fld input{width:100%;height:52px;font-size:var(--fs-b);font-weight:400;padding:0 16px}
+.btn{background:var(--fill);color:var(--on-fill);border:0;border-radius:var(--rc);padding:14px 20px;min-height:52px;font-weight:600;font-size:var(--fs-b)}
 .btn:active{background:var(--fill-press)}
 .btn:disabled{opacity:.4;cursor:default}
-.ghost{background:none;border:1px solid var(--line);color:var(--ink);border-radius:var(--rc);padding:11px 12px;min-height:50px;font-weight:600;font-size:17px}
+.ghost{background:none;border:1px solid var(--line);color:var(--ink);border-radius:var(--rc);padding:11px 12px;min-height:50px;font-weight:600;font-size:var(--fs-b)}
 .ghost:active,.back:active{background:var(--surface)}
 .wide{width:100%}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -262,7 +264,7 @@ textarea{display:block;width:100%;font-size:17px;line-height:1.5;padding:12px;ma
 .ovw button{min-height:46px;background:var(--bg);color:var(--ink);border:1.5px solid var(--line);border-radius:var(--rs);font-weight:600;font-variant-numeric:tabular-nums}
 .ovw button.done{background:var(--wash);border-color:var(--wash)} .ovw button.now{border-color:var(--oranje)}
 .fb{margin-top:18px}
-.fb b{font-size:19px}
+.fb b{font-size:var(--fs-l)}
 /* the answer stays under your thumb: the main button, the exam buttons and the feedback stick to the bottom of the screen
    while the text scrolls under them */
 #card>.act,#card>.exnav,#card>.fb.sheet{position:sticky;bottom:0;z-index:2;background:var(--card);margin:16px -16px 0;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line)}
@@ -280,7 +282,7 @@ main:has(#play:not([hidden])) header{display:none}
 .back.x{justify-content:center;min-width:44px;padding:5px 0;border-color:var(--line)}
 .back.x svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
 .back.x.arm{border-color:var(--oranje);color:var(--oranje);padding:5px 12px}
-#cnt{color:var(--soft);font-size:15px;font-weight:600;font-variant-numeric:tabular-nums}
+#cnt{color:var(--soft);font-size:var(--fs-m);font-weight:600;font-variant-numeric:tabular-nums}
 #cnt:empty{display:none}
 /* Spreken: neem je antwoord op, met één minuut op de klok */
 .rec .clk{display:flex;align-items:center;gap:10px;margin:0 0 12px}
@@ -289,20 +291,20 @@ main:has(#play:not([hidden])) header{display:none}
 .card audio{display:block;width:100%;margin:0 0 12px}
 .rec .note{margin:8px 0 14px}
 .good{color:var(--good)} .bad{color:var(--bad)}
-.row{margin:4px 0 12px;font-size:18px;font-weight:700}
+.row{margin:4px 0 12px;font-size:var(--fs-b);font-weight:600}
 .mode{display:flex;justify-content:center;margin:18px 0 0}
-.mode button{background:none;border:0;color:var(--soft);text-decoration:underline;font-size:15px;padding:8px}
+.mode button{background:none;border:0;color:var(--soft);text-decoration:underline;font-size:var(--fs-m);padding:8px}
 .line{min-height:58px;border-bottom:2px solid var(--blue);padding:8px 0;margin-bottom:14px}
 .pool{min-height:52px;margin-bottom:14px}
 .line,.pool{display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start}
-.tok{background:var(--bg);color:var(--ink);border:1.5px solid var(--line);border-radius:var(--rs);box-shadow:0 2px 0 var(--line);padding:6px 12px;font-size:18px;font-weight:700}
+.tok{background:var(--bg);color:var(--ink);border:1.5px solid var(--line);border-radius:var(--rs);box-shadow:0 2px 0 var(--line);padding:6px 12px;font-size:var(--fs-b);font-weight:600}
 .line .tok{background:var(--fill);color:var(--on-fill);border-color:var(--fill);box-shadow:none}
 .sample{white-space:pre-line;background:var(--surface);border-left:3px solid var(--blue);border-radius:0 var(--rs) var(--rs) 0;padding:12px 14px;margin:4px 0 14px}
-.card .sample{font-size:16.5px}
+.card .sample{font-size:var(--fs-b)}
 /* Lezen: the text as the document it is (letter, e-mail, advert, notice), like on the exam */
-.doc{background:var(--bg);border:1px solid var(--line);border-top:3px solid var(--blue);border-radius:var(--rc);padding:0 16px 12px;margin:4px 0 16px;font-size:16.5px}
-.doc .kind{font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);padding:8px 0 7px;border-bottom:1px solid var(--line);margin-bottom:10px}
-.doc h3{font-size:19px;font-weight:700;margin:0 0 8px;line-height:1.3}
+.doc{background:var(--bg);border:1px solid var(--line);border-top:3px solid var(--blue);border-radius:var(--rc);padding:0 16px 12px;margin:4px 0 16px;font-size:var(--fs-b)}
+.doc .kind{font-size:var(--fs-s);font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--soft);padding:8px 0 7px;border-bottom:1px solid var(--line);margin-bottom:10px}
+.doc h3{font-size:var(--fs-l);font-weight:600;margin:0 0 8px;line-height:1.3}
 .doc p{margin:0 0 6px}
 .doc .gap{height:8px}
 .doc dl{display:grid;grid-template-columns:fit-content(42%) 1fr;gap:3px 12px;margin:0 0 6px}
@@ -313,13 +315,13 @@ main:has(#play:not([hidden])) header{display:none}
 .pics.n1 figure{aspect-ratio:16/9}
 .pics button{display:block;width:100%;height:100%;padding:0;border:0;background:none}
 .pics img{display:block;width:100%;height:100%;object-fit:cover}
-.pics span{pointer-events:none;position:absolute;left:0;top:0;border-radius:0 0 8px 0;background:var(--fill);color:var(--on-fill);font-weight:700;font-size:14px;line-height:1;padding:5px 7px}
+.pics span{pointer-events:none;position:absolute;left:0;top:0;border-radius:0 0 8px 0;background:var(--fill);color:var(--on-fill);font-weight:600;font-size:var(--fs-s);line-height:1;padding:5px 7px}
 .doc .mail{background:var(--surface);margin:0 -16px 12px;padding:8px 16px}
 .doc .mail dl{margin:0}
 .errs{list-style:none;padding:0;margin:4px 0 14px}
 .errs li{padding:8px 0;border-bottom:1px solid var(--line)}
 .errs s{color:var(--bad)} .errs strong{color:var(--good)}
-.errs span{display:block;color:var(--soft);font-size:15px}
+.errs span{display:block;color:var(--soft);font-size:var(--fs-m)}
 .errs.kv li{display:flex;justify-content:space-between;gap:12px} .errs.kv span{display:inline;color:var(--ink);font-size:inherit;font-weight:600}
 .errs.kv span.good{color:var(--good)} .errs.kv span.bad{color:var(--bad)}
 details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:700;padding:6px 0}
@@ -329,7 +331,7 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
 /* onderaan het startscherm */
 .note:empty{display:none}
 .forms{display:grid;grid-template-columns:auto 1fr;gap:0 14px;margin:4px 0 12px;align-items:baseline}
-.forms dt{grid-column:1/-1;color:var(--blue);font-size:13.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-top:10px}
+.forms dt{grid-column:1/-1;color:var(--soft);font-size:var(--fs-s);font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-top:10px}
 .forms dt:first-child{margin-top:0}
 .forms dd{margin:0}
 .forms dd.w{grid-column:1/-1}
@@ -344,7 +346,7 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
 .file{display:flex;align-items:center;justify-content:center;text-align:center;cursor:pointer}
 .file:focus-within{outline:3px solid var(--oranje);outline-offset:2px}
 #pasteform{margin-top:12px}
-.errs .x{float:right;background:none;border:0;color:var(--soft);font-size:15px;text-decoration:underline;padding:0 0 4px 12px}
+.errs .x{float:right;background:none;border:0;color:var(--soft);font-size:var(--fs-m);text-decoration:underline;padding:0 0 4px 12px}
 /* luisteren en kijken */
 #media .back{margin-top:14px}
 #media h2{margin-top:18px}
@@ -352,8 +354,8 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
 .eps{list-style:none;margin:8px 0 0;padding:0}
 .ep{display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:10px 0;color:var(--ink)}
 .ep img{flex:none;width:112px;aspect-ratio:16/9;object-fit:cover;border-radius:8px;background:var(--surface)}
-.ep b{display:block;font-size:16.5px;font-weight:600;line-height:1.3}
-.ep small{display:block;color:var(--soft);font-size:13.5px;margin-top:3px;font-variant-numeric:tabular-nums}
+.ep b{display:block;font-size:var(--fs-b);font-weight:600;line-height:1.3}
+.ep small{display:block;color:var(--soft);font-size:var(--fs-s);margin-top:3px;font-variant-numeric:tabular-nums}
 .ep.on b{color:var(--oranje)}
 #mplay:not(:empty){padding-bottom:14px;border-bottom:1.5px solid var(--blue);margin-bottom:4px}
 .vid{position:relative;aspect-ratio:16/9;background:#000;margin-top:14px}
@@ -366,12 +368,12 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
 .vid.full iframe,.vid:fullscreen iframe{top:calc(env(safe-area-inset-top) + 56px);left:env(safe-area-inset-left);width:calc(100% - env(safe-area-inset-left) - env(safe-area-inset-right));height:calc(100% - env(safe-area-inset-top) - 56px - env(safe-area-inset-bottom))}
 .vid.full .vx,.vid:fullscreen .vx{display:flex;position:absolute;top:calc(env(safe-area-inset-top) + 6px);right:calc(env(safe-area-inset-right) + 10px);width:44px;height:44px;align-items:center;justify-content:center;background:none;border:1.5px solid #fff;border-radius:var(--rs);color:#fff;font-size:20px}
 body.vfull{overflow:hidden}
-.mt{font-size:19px;font-weight:600;line-height:1.3;margin:14px 0 10px}
+.mt{font-size:var(--fs-l);font-weight:600;line-height:1.3;margin:14px 0 10px}
 #aud{display:block;width:100%;margin:0 0 10px}
 .mctl{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:8px}
-.mctl .ghost{min-height:44px;padding:6px 4px;font-size:15px;font-variant-numeric:tabular-nums}
+.mctl .ghost{min-height:44px;padding:6px 4px;font-size:var(--fs-m);font-variant-numeric:tabular-nums}
 .mctl .rate.on{border-color:var(--oranje);color:var(--oranje)}
-.msum{margin-top:14px;font-size:17px;line-height:1.55}
+.msum{margin-top:14px;font-size:var(--fs-b);line-height:1.55}
 .msum p{margin:0 0 10px}
 /* geschiedenis */
 #hist{position:relative}
@@ -381,7 +383,7 @@ body.vfull{overflow:hidden}
 .hfig{margin:14px 0 18px}
 .hfig button{display:block;width:100%;padding:0;border:0;background:var(--surface)}
 .hfig img{display:block;border-radius:var(--rc);width:100%;aspect-ratio:3/2;max-height:400px;object-fit:cover}
-.hfig figcaption{margin-top:6px;color:var(--soft);font-size:14px;line-height:1.4}
+.hfig figcaption{margin-top:6px;color:var(--soft);font-size:var(--fs-s);line-height:1.4}
 .hfig.in{margin:4px 0 22px}
 .hfig.in button{background:none}
 .hfig.in img{width:auto;max-width:100%;height:auto;max-height:440px;aspect-ratio:auto;margin:0 auto;object-fit:contain}
@@ -395,34 +397,34 @@ body.vfull{overflow:hidden}
 .talk:empty{display:none}
 .tl{padding:9px 0 10px;border-bottom:1px solid var(--line)}
 .tl p{margin:0}
-.tl .ask{display:flex;align-items:center;gap:6px;font-size:12.5px}
-.tl .say{background:none;border:0;color:var(--blue);font-size:13px;padding:2px 6px;margin:-2px 0}
+.tl .ask{display:flex;align-items:center;gap:6px;font-size:var(--fs-xs)}
+.tl .say{background:none;border:0;color:var(--blue);font-size:var(--fs-s);padding:2px 6px;margin:-2px 0}
 .tl.me{padding-left:28px}
 .tl.me .ask{color:var(--soft)}
 .tl.no p:last-child{color:var(--soft)}
-.tl small{display:block;color:var(--bad);font-size:14px}
+.tl small{display:block;color:var(--bad);font-size:var(--fs-s)}
 #tctl{margin-top:16px}
 #tctl .rec{margin-bottom:10px}
 #tctl .type{margin-bottom:6px}
-#tctl .type input{font-size:17px;font-weight:400}
+#tctl .type input{font-size:var(--fs-b);font-weight:400}
 #tctl .hint{margin:4px 0 8px}
 #thv .ghost{margin-bottom:8px}
-.tend b{font-size:19px}
+.tend b{font-size:var(--fs-l)}
 .tsum{list-style:none;margin:6px 0 18px;padding:0;border-top:1px solid var(--line)}
 .tsum li{padding:9px 0 6px;border-bottom:1px solid var(--line)}
-.tsum span{display:block;color:var(--soft);font-size:15px}
+.tsum span{display:block;color:var(--soft);font-size:var(--fs-m)}
 .tsum b{display:block;font-weight:600}
 .tsum .hint{margin:2px 0 0}
 #tre{margin-top:10px}
 /* lezen: tik op een woord */
-.pg{color:var(--soft);font-size:15px;font-variant-numeric:tabular-nums}
+.pg{color:var(--soft);font-size:var(--fs-m);font-variant-numeric:tabular-nums}
 .rt{display:flex;align-items:center;gap:6px}
 .rt .pg{margin-left:6px}
-.fs{min-width:44px;min-height:40px;padding:0 8px;background:none;border:1.5px solid var(--line);border-radius:var(--rs);color:var(--blue);font-size:16px;font-weight:600}
+.fs{min-width:44px;min-height:40px;padding:0 8px;background:none;border:1.5px solid var(--line);border-radius:var(--rs);color:var(--blue);font-size:var(--fs-m);font-weight:600}
 .fs:disabled{opacity:.35;cursor:default}
 .book{font-size:19px;line-height:1.65}
 .book p{margin:0 0 14px}
-.book h3{font-size:22px;font-weight:600;line-height:1.3;color:var(--blue);margin:0 0 14px}
+.book h3{font-size:var(--fs-xl);font-weight:600;line-height:1.3;color:var(--blue);margin:0 0 14px}
 .w{cursor:pointer;border-radius:2px;-webkit-tap-highlight-color:transparent}
 .w.kw{background:color-mix(in srgb,var(--wash) 55%,transparent)}
 .w.sel{background:var(--oranje);color:var(--on)}
@@ -431,17 +433,17 @@ body.vfull{overflow:hidden}
 #read{position:relative}
 .pop{position:absolute;z-index:9;left:8px;top:0;width:min(340px,calc(100vw - 16px));background:var(--bg);border:1.5px solid var(--blue);border-radius:16px;box-shadow:0 8px 28px rgba(8,16,40,.22);padding:10px 14px 12px}
 .pop .ph{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.pop .ph b{font-size:22px;font-weight:700;word-break:break-word}
-.pop .say{flex:none;min-width:44px;min-height:40px;background:none;border:1.5px solid var(--blue);color:var(--blue);border-radius:var(--rs);font-size:15px}
-.pop .pm{margin:0;color:var(--soft);font-size:14.5px}
-.pop .pt{margin:2px 0 0;font-size:16.5px;font-weight:500;color:var(--blue)}
+.pop .ph b{font-size:var(--fs-xl);font-weight:600;word-break:break-word}
+.pop .say{flex:none;min-width:44px;min-height:40px;background:none;border:1.5px solid var(--blue);color:var(--blue);border-radius:var(--rs);font-size:var(--fs-m)}
+.pop .pm{margin:0;color:var(--soft);font-size:var(--fs-m)}
+.pop .pt{margin:2px 0 0;font-size:var(--fs-b);font-weight:500;color:var(--blue)}
 .pop .pe{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--line)}
 .pop .pe>div{flex:1;min-width:0}
-.pop .pe .ghost{flex:none;padding:6px 10px;font-size:15px}
+.pop .pe .ghost{flex:none;padding:6px 10px;font-size:var(--fs-m)}
 .pop .pe .ghost:disabled{opacity:.5}
-.pop .pw{margin:0;font-size:17px}
+.pop .pw{margin:0;font-size:var(--fs-b)}
 .pop .pw b{font-weight:600}
-.pop .pw small{color:var(--soft);font-size:13.5px}
+.pop .pw small{color:var(--soft);font-size:var(--fs-s)}
 .pop .pa{padding-top:8px;border-top:1px solid var(--line)}
 .pop .pa .hint{margin:0}
 /* computer: het schilderij hangt aan een blauwe museummuur; startscherm in twee kolommen */

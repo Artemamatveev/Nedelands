@@ -40,6 +40,11 @@ generic "AI app" look.
   in icons; secondary buttons (`.ghost`, `.back`) are neutral: 1px `--line` border, `--ink` text; chevrons › in
   `--soft`; fields have a 1.5px `--ink` border, 52px high; the level switch (`.seg`) is a grey track with a white
   thumb, like iOS.
+- **Type**: one scale, the iOS text styles, as tokens on `:root`: `--fs-xs` 12 (tab names), `--fs-s` 13 (small capitals
+  labels, meta), `--fs-m` 15 (descriptions, notes, field labels, small buttons), `--fs-b` 17 (body, list titles,
+  buttons, fields, documents), `--fs-l` 20 (options, long questions, feedback), `--fs-xl` 22 (h2), `--fs-xxl` 28 (today's
+  lesson). Only display sizes stay their own (the logo, the big word 44, the score 72, the stamp, the reader). Weights
+  600, 700 only for the logo, the big word and the score. Headings a little tighter (-.01em to -.02em).
 - **Shapes**: round corners, as in the login window the user liked (it looks livelier): tokens on `:root`, `--r` 20px
   for tiles and inner screens, `--rc` 14px for controls (buttons, fields, options, steps, the level switch, documents,
   photos), `--rs` 10px for small things (icon squares, word tokens, small buttons), 8px for the tiniest (numbers, the
