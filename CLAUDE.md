@@ -24,7 +24,7 @@ The design should also teach Dutch culture. Keep it recognisably Dutch and avoid
 generic "AI app" look.
 
 - **Colours**: tin-glaze white `--bg`, cobalt `--blue`, light wash `--wash`, and
-  `--oranje` as the only accent (timer, selection, the streak stamp). Filled cobalt surfaces (`.btn`, the icon squares,
+  `--oranje` as the only accent (timer, selection). Filled cobalt surfaces (`.btn`, the icon squares,
   chosen word tokens, photo numbers) use `--fill` with `--on-fill` text: in dark mode that stays a deep
   cobalt with white text (5.3:1), because the light `--blue` read as a highlight rather than the main action.
   Always use the tokens on `:root`; every colour has a dark-mode value.
@@ -43,7 +43,7 @@ generic "AI app" look.
 - **Type**: one scale, the iOS text styles, as tokens on `:root`: `--fs-xs` 12 (tab names), `--fs-s` 13 (small capitals
   labels, meta), `--fs-m` 15 (descriptions, notes, field labels, small buttons), `--fs-b` 17 (body, list titles,
   buttons, fields, documents), `--fs-l` 20 (options, long questions, feedback), `--fs-xl` 22 (h2), `--fs-xxl` 28 (today's
-  lesson). Only display sizes stay their own (the logo, the big word 44, the score 72, the stamp, the reader). Weights
+  lesson). Only display sizes stay their own (the logo, the big word 44, the score 72, the streak ribbon, the reader). Weights
   600, 700 only for the logo, the big word and the score. Headings a little tighter (-.01em to -.02em).
 - **Shapes**: round corners, as in the login window the user liked (it looks livelier): tokens on `:root`, `--r` 20px
   for tiles and inner screens, `--rc` 14px for controls (buttons, fields, options, steps, the level switch, documents,
@@ -59,7 +59,9 @@ generic "AI app" look.
     translation), all in one size (15px, no italics). The full painting and the label are on the Vandaag tab; the
     other tabs and inner screens get the narrow strip (`main.big` is only set on Vandaag). Tapping the painting on a
     home tab opens its story (`story()`); on inner screens it shows the painting in full.
-  - Streak: a stamp, like on a Museumkaart.
+  - Streak: a ribbon in the Dutch flag (rood, wit, blauw, horizontal like the flag: `#AE1C28`, white, `#21468B`)
+    hanging from the top of the painting, the number on the white band and "dagen op rij" under it (`.streak .lint`).
+    The user chose it from 16 designs (a round stamp, glass pills, an enamel house number, turfjes, a spaarkaart…).
 - **Never use**: cream or beige backgrounds, handwriting fonts, wobbly hand-drawn (uneven)
   border-radius, dashed lines, highlighter underlines under headings, decorative SVG
   squiggles, emoji as decoration.
@@ -74,7 +76,7 @@ shows on the five tabs; exercises and inner screens hide it and go back with the
 you were on is kept (`tab`), so every back button returns to it and is named after it.
 
 - **Vandaag**: the painting and its label, then today's lesson: how far you are today (a bar of six pills, "2 van 6
-klaar"), one short line, and the steps: all alike: its icon, title, a short line and ›, a done one a green check; no exam dates. When all are done the streak stamp is put down once that day (`ww-stamp`) with a tap of the
+klaar"), one short line, and the steps: all alike: its icon, title, a short line and ›, a done one a green check; no exam dates. When all are done the streak ribbon drops down once that day (`ww-stamp`) with a tap of the
 phone. The lesson: every exam part every day, the one that scores lowest first as a full round (every
 third day a proefexamen), the other four as short rounds (`SHORT`: one Lezen text, three Luisteren fragments,
 one Schrijven task, two Spreken questions, five KNM questions), weakest to strongest, and last a grammar round
@@ -128,9 +130,9 @@ Every section appears once; don't add a second entry point to the same exercise.
 - **Short words**: no explaining paragraph under every heading; a description says what is in it in a few words
   ("Korte teksten met vragen"). Text wraps balanced (`text-wrap`), units with a non-breaking space (`10&nbsp;min`).
 - **Motion**: short and quiet, like iOS: a screen or tab comes in (`rise`), buttons give a little when pressed, a right
-  option pops, a wrong one shakes, the feedback sheet slides up, the stamp is put down. All off with
+  option pops, a wrong one shakes, the feedback sheet slides up, the streak ribbon drops down. All off with
   `prefers-reduced-motion`.
-- **Trillen, no sound** (the user's choice): `buzz("good"|"bad")` at every right or wrong answer and at the stamp:
+- **Trillen, no sound** (the user's choice): `buzz("good"|"bad")` at every right or wrong answer and when the ribbon drops:
   Android `navigator.vibrate`; iPhone has none for websites, so a hidden `<input type="checkbox" switch>` is
   toggled inside the tap (Safari 18+ gives the switch's own tap). A switch in Profiel turns it off per device
   (`ww-tril`); it shows only on phones that can do it.

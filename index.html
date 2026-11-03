@@ -86,9 +86,14 @@ h1{position:absolute;left:16px;bottom:12px;z-index:1;margin:0;font-size:28px;fon
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 h1 .idot,.wlogo .idot{position:relative} h1 .idot svg,.wlogo .idot svg{position:absolute;left:50%;top:-.06em;width:.42em;height:.42em;transform:translateX(-50%)}
 /* stempel op de museumkaart */
-.streak{position:absolute;top:10px;right:14px;z-index:1;width:66px;height:66px;border-radius:50%;background:#FFF7EF;color:#B5470A;border:2px solid #B5470A;box-shadow:inset 0 0 0 3px #FFF7EF,inset 0 0 0 4px #B5470A;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(-9deg);font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;line-height:1.15;text-align:center;pointer-events:none}
-.streak b{font-size:23px;font-weight:700;letter-spacing:0}
+/* the streak: a ribbon in the Dutch flag (rood, wit, blauw: horizontal, as the flag) hanging from the top of the
+   painting, the number on the white band, "dagen op rij" under it */
+.streak{position:absolute;top:0;right:20px;z-index:1;display:flex;flex-direction:column;align-items:center;pointer-events:none;transform-origin:top center}
+.streak .lint{width:42px;height:64px;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(#AE1C28 0 33.34%,#fff 33.34% 66.67%,#21468B 66.67%);clip-path:polygon(0 0,100% 0,100% 100%,50% 85%,0 100%);
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,.3))}
+.streak .lint b{font-size:19px;font-weight:700;line-height:1;color:#21468B;font-variant-numeric:tabular-nums}
+.streak small{margin-top:3px;color:#fff;font-size:11px;font-weight:600;white-space:nowrap;text-shadow:0 1px 4px rgba(0,0,0,.75)}
 .streak:empty{display:none}
 /* museumbordje */
 .label{margin:0;padding:14px 0 0}
@@ -483,8 +488,7 @@ body.vfull{overflow:hidden}
   .art img{width:auto;height:100%;object-fit:contain}
   h1{left:40px;bottom:28px;font-size:36px}
   main:is(:not(.big),:has(#home[hidden])) h1{bottom:30px;font-size:30px}
-  .streak{top:24px;right:40px;width:78px;height:78px;font-size:10.5px}
-  .streak b{font-size:27px}
+  .streak{right:44px} .streak .lint{width:50px;height:76px} .streak .lint b{font-size:22px} .streak small{font-size:12px}
   #label{display:flex;align-items:baseline;gap:40px}
   #label{flex-wrap:wrap} #label .lab{flex:0 0 340px} #label .nl{flex:1;margin:0} #label .it{flex:0 0 100%}
   #home .tile{padding:24px 28px 20px}
@@ -501,7 +505,7 @@ body.vfull{overflow:hidden}
 @keyframes pop{40%{transform:scale(1.03)}}
 @keyframes shake{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
 @keyframes sheet{from{transform:translateY(24px);opacity:0}}
-@keyframes stamp{0%{transform:rotate(-9deg) scale(2.2);opacity:0}60%{transform:rotate(-9deg) scale(.92);opacity:1}100%{transform:rotate(-9deg) scale(1)}}
+@keyframes stamp{0%{transform:translateY(-100%)}65%{transform:translateY(6px)}85%{transform:translateY(-2px)}100%{transform:none}}
 #card.in,#home .in,#stats:not([hidden]),#lib:not([hidden]),#media:not([hidden]),#hist:not([hidden]),#talk:not([hidden]),#story:not([hidden]){animation:rise .24s cubic-bezier(.2,.8,.2,1)}
 .opt.ok{animation:pop .3s ease} .opt.no{animation:shake .32s ease}
 #card>.fb.sheet{animation:sheet .26s cubic-bezier(.2,.8,.2,1)}
@@ -3174,7 +3178,7 @@ SP.forEach((p,i)=>ITEMS.push({sec:"sp",k:"sp|"+i,ord:i/5|0,type:"reveal",label:"
 let cur,queue=[],pos=0,total=0,right=0,answered=false;
 function head(){
   const d=today(), alive=S.last>=d-1?S.streak:0;
-  $("streak").innerHTML=alive?`<b>${alive}</b>${alive===1?"dag":"dagen"}<br>op rij`:"";
+  $("streak").innerHTML=alive?`<span class="lint"><b>${alive}</b></span><small>${alive===1?"dag":"dagen"} op rij</small>`:"";
   const done=cur&&cur.nav&&!cur.sent?queue.filter((q,i)=>picked(i)).length:pos;
   $("bar").style.width=(queue.length?Math.min(100,done/queue.length*100):0)+"%";
   $("cnt").textContent=queue.length&&pos<queue.length?`${pos+1}/${queue.length}`:"";
