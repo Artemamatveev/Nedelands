@@ -3691,7 +3691,8 @@ function show(){
     if($("spchk"))$("spchk").onclick=()=>{$("spchk").disabled=true;listen("say",r=>spGrade(q,r),q.spk)};
     return}
   if(cur.nav&&q.type==="choice"){
-    document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{cur.pick[pos]=o[b.dataset.n];
+    // in a proefexamen an answer is only chosen (marked at the end), so one light tap that says nothing about right or wrong
+    document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{cur.pick[pos]=o[b.dataset.n];buzz("tick");
       document.querySelectorAll(".opt").forEach(x=>{const on=x===b;x.classList.toggle("sel",on);x.setAttribute("aria-pressed",on)});head()});
     navBind();return}
   const inp=$("inp"); if(inp){inp.focus();$("chk").onclick=()=>grade(inp.value.trim().toLowerCase())}
@@ -3721,7 +3722,7 @@ let hapL=null;
 const canBuzz=()=>!!navigator.vibrate||/iP(hone|ad|od)/.test(navigator.userAgent)||navigator.maxTouchPoints>1&&/Mac/.test(navigator.platform);
 function buzz(k){
   if(lsGet("ww-tril")==="0")return;
-  try{if(navigator.vibrate){navigator.vibrate(k==="bad"?[25,60,25]:12);return}}catch(e){}
+  try{if(navigator.vibrate){navigator.vibrate(k==="bad"?[25,60,25]:k==="tick"?8:12);return}}catch(e){}
   if(navigator.userActivation&&!navigator.userActivation.isActive)return;
   try{if(!hapL){const i=document.createElement("input");i.type="checkbox";i.setAttribute("switch","");i.id="hapt";i.tabIndex=-1;
       hapL=document.createElement("label");hapL.htmlFor="hapt";hapL.setAttribute("aria-hidden","true");

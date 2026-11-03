@@ -139,7 +139,8 @@ Every section appears once; don't add a second entry point to the same exercise.
 - **Motion**: short and quiet, like iOS: a screen or tab comes in (`rise`), buttons give a little when pressed, a right
   option pops, a wrong one shakes, the feedback sheet slides up, the streak ribbon drops down. All off with
   `prefers-reduced-motion`.
-- **Trillen, no sound** (the user's choice): `buzz("good"|"bad")` at every right or wrong answer and when the ribbon drops:
+- **Trillen, no sound** (the user's choice): `buzz("good"|"bad")` at every right or wrong answer and when the ribbon drops, `buzz("tick")` when an
+  answer is chosen in a proefexamen (marked only at the end, so the tap says nothing about right or wrong):
   Android `navigator.vibrate`; iPhone has none for websites, so a hidden `<input type="checkbox" switch>` is
   toggled inside the tap (Safari 18+ gives the switch's own tap). A switch in Profiel turns it off per device
   (`ww-tril`); it shows only on phones that can do it.
