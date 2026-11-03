@@ -344,6 +344,13 @@ with the total, then the learner's own text with every error marked where it is 
 `ownHTML()`: Claude's `wrong` is looked up in the text; one it can't find is only in the list), the numbered list of
 errors (`errsHTML()`: wrong → right, why) and the corrected text.
 
+"Schrijf het nog een keer" (`redo()`, practice in Schrijven and Schrijven B1, not in a proefexamen or Spreken, and only when
+the corrected text differs): the learner gets their own text back to correct, without the corrected text on screen (the
+errors are in a fold), and "Vergelijk" marks it against Claude's corrected text on the phone (`diffHTML()`: struck through
+= take out, green = add; capitals and punctuation count; a word in the wrong place counts as one). No Claude call, so it
+costs no check, works offline and changes nothing in `S`. A sentence to finish comes back whole (`zWhole()`), because
+`corrected` is the whole sentence. A B1 form has none: its `corrected` also holds the form's answers.
+
 `api/check.js` is a Vercel function that grades writing with Claude (`claude-opus-5-5`,
 structured JSON output, server-side refusal fallback). The page posts
 `{tasks:[{task, form, text}]}` and gets `{tasks:[{passed, verdict, corrected, errors, scores}]}`;

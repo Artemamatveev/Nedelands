@@ -348,6 +348,7 @@ main:has(#play:not([hidden])) header{display:none}
 .errs span{display:block;color:var(--soft);font-size:var(--fs-m)}
 /* errors: marked in your own text and numbered like the list */
 .sample.own{border-left-color:var(--line)}
+.diff s{color:var(--bad)} .diff ins{color:var(--good);font-weight:600}
 mark.err{background:color-mix(in srgb,var(--bad) 16%,transparent);color:inherit;border-radius:4px;padding:0 2px;box-shadow:inset 0 -2px 0 color-mix(in srgb,var(--bad) 55%,transparent)}
 mark.err sup{font-size:11px;font-weight:700;color:var(--bad);margin-left:1px}
 .errs.fixes{counter-reset:fx} .errs.fixes li{counter-increment:fx;position:relative;padding-left:28px}
@@ -3852,14 +3853,16 @@ function echoBind(target){
   const b=$("echo"); if(!b)return;
   b.onclick=()=>{$("echor").innerHTML="";listen("say",r=>echoDone(target,r));b.textContent="■ Stop";b.onclick=()=>recEnd(true)};
 }
+const lcs=(T,H)=>{const D=Array.from({length:T.length+1},()=>new Uint16Array(H.length+1));
+  for(let i=T.length-1;i>=0;i--)for(let j=H.length-1;j>=0;j--)D[i][j]=T[i]===H[j]?D[i+1][j+1]+1:Math.max(D[i+1][j],D[i][j+1]);
+  return D};
 function echoDone(target,r){
   const rb=$("recb"); rb.textContent="● Opnemen";rb.className="ghost wide";rb.onclick=()=>listen("rec",spTake);
   $("recn").textContent=""; $("recp").innerHTML=""; echoBind(target); if($("echo"))$("echo").textContent="● Nog een keer";
   const P=String(target).split(WTOK), T=P.filter((x,i)=>i%2).map(norm), H=r.text.split(WTOK).filter((x,i)=>i%2).map(norm), n=T.length, m=H.length;
   if(!m){$("echor").innerHTML=`<p class="note">${r.fail?"Meeschrijven lukt hier niet.":"Ik heb niets verstaan. Spreek wat harder, of dichter bij de telefoon."}</p>`;return}
   // longest common subsequence: which words of the model were heard, in order
-  const D=Array.from({length:n+1},()=>new Uint16Array(m+1)), ok=new Set();
-  for(let i=n-1;i>=0;i--)for(let j=m-1;j>=0;j--)D[i][j]=T[i]===H[j]?D[i+1][j+1]+1:Math.max(D[i+1][j],D[i][j+1]);
+  const D=lcs(T,H), ok=new Set();
   for(let i=0,j=0;i<n&&j<m;){if(T[i]===H[j]){ok.add(i);i++;j++}else if(D[i+1][j]>=D[i][j+1])i++;else j++}
   let k=0; const html=P.map((x,i)=>i%2?(ok.has(k++)?esc(x):`<button class="miss" data-w="${esc(x)}">${esc(x)}</button>`):esc(x)).join("");
   $("echor").innerHTML=`<p class="note"><strong class="${ok.size>=n*.9?"good":""}">${ok.size>=n*.9?"Heel duidelijk!":"De telefoon verstond "+ok.size+" van de "+n+" woorden."}</strong>
@@ -3965,6 +3968,51 @@ function selfGrade(q,msg,doc){
   if(doc)$("docx").onclick=()=>saveDocx([doc]);
   if(q.type==="reveal")echoBind(q.right);
 }
+// Schrijf het nog een keer: after the check the learner corrects their own text, and the phone compares it with Claude's
+// corrected text (no call, so no check is used, and it works offline). Spelling counts: capitals and punctuation are compared too.
+const RTOK=/([\p{L}\d]+(?:['’-][\p{L}\d]+)*|[.,!?;:])/u, rtok=x=>x.replace(/’/g,"'"), rtoks=t=>String(t).split(RTOK).filter((x,i)=>i%2).map(rtok);
+const redoable=(own,right)=>!!right&&rtoks(own).join(" ")!==rtoks(right).join(" ");
+const redoBtn=`<button class="ghost wide" id="redo">Schrijf het nog een keer</button><p class="note">Dit kost geen nakijkbeurt.</p>`;
+// what is wrong with own against right: words to take out struck through, words to add in green; n = the places that differ
+function diffHTML(own,right){
+  const P=String(right).split(RTOK),A=P.filter((x,i)=>i%2).map(rtok),G=P.filter((x,i)=>!(i%2)),B=rtoks(own),D=lcs(A,B);
+  let h="",i=0,j=0,sep=-1,n=0,same=true; const out=[],moved=[];
+  const gap=()=>{if(sep<i){h+=esc(G[i]);sep=i}};
+  while(i<A.length||j<B.length){gap();
+    if(i<A.length&&j<B.length&&A[i]===B[j]){h+=esc(P[2*i+1]);i++;j++;same=true;continue}
+    if(same)n++; same=false;
+    if(j<B.length&&(i>=A.length||D[i][j+1]>=D[i+1][j])){h+=`<s>${esc(B[j])}</s> `;out.push(B[j]);j++}
+    else{const k=out.indexOf(A[i]);if(k>=0){out.splice(k,1);moved.push(A[i])}h+=`<ins>${esc(P[2*i+1])}</ins>`;i++}
+  }
+  gap();
+  // a word in the wrong place is struck through once and added once: that is one mistake, not two
+  return{h,n:n&&Math.max(1,n-moved.length)};
+}
+// items: {own, right, errs, l (the task, for a sentence), ctx (a text with an open place)}
+function redo(items){
+  const what=items.length>1?"zinnen":items[0].l?"zin":"tekst";
+  $("card").innerHTML=`<p class="ask">Schrijf het nog een keer</p><p class="note">Verbeter je eigen ${what}, zonder naar de verbeterde ${what} te kijken.</p>`
+    +items.map((x,i)=>`${x.l?`<p class="note">${x.l}</p>`:""}${x.ctx?`<div class="sample">${esc(x.ctx).replace("___",'<b class="gapw">______</b>')}</div>`:""}
+      <textarea id="rw${i}" rows="${x.l?3:Math.max(7,x.own.split("\n").length+2)}" aria-label="Je ${x.l?"zin":"tekst"}" spellcheck="false" autocorrect="off" autocapitalize="off"></textarea>
+      ${x.errs.length?`<details><summary>Kijk nog even naar de fouten</summary>${errsHTML(x.errs)}</details>`:""}<div id="rwd${i}"></div>`).join("")
+    +`<p class="note" id="rwn" hidden>Doorgestreept moet weg, groen moet erbij. De telefoon vergelijkt alleen: een ander woord kan ook goed zijn.</p>
+      <div class="two"><button class="ghost" id="rwgo">Verder</button><button class="btn" id="rwchk">Vergelijk</button></div>`;
+  items.forEach((x,i)=>$("rw"+i).value=x.own);
+  window.scrollTo(0,0);
+  $("rwgo").onclick=()=>{pos++;show()};
+  $("rwchk").onclick=()=>{
+    const R=items.map((x,i)=>{const t=$("rw"+i).value.trim(),d=diffHTML(t,x.right);
+      $("rwd"+i).innerHTML=d.n?`<p class="ask">Nog ${d.n} ${d.n===1?"verschil":"verschillen"}</p><div class="sample diff">${d.h}</div>`:`<p class="note"><b class="good">✓ Precies goed!</b></p>`;
+      return d.n});
+    const all=R.every(n=>!n);
+    $("rwn").hidden=all; $("rwchk").textContent="Vergelijk opnieuw";
+    $("rwgo").className=all?"btn":"ghost"; $("rwchk").className=all?"ghost":"btn";
+    if(all)buzz("good");
+    $("rwd"+R.findIndex((n,i)=>n||i===R.length-1)).scrollIntoView({block:"nearest",behavior:"smooth"});
+  };
+}
+// a sentence to finish: the corrected text is the whole sentence, so the learner gets the whole sentence to correct
+const zWhole=z=>{const c=z.q.ctx,b=c&&!/___/.test(c)?c.replace(/[….\s]+$/,""):"";return b&&!z.text.startsWith(b)?b+" "+z.text:z.text};
 async function check(q){
   const text=$("txt").value.trim();
   if(text.split(/\s+/).length<(q.kind==="z"?3:5)){$("fb").innerHTML=`<p class="note">${q.kind==="z"?"Schrijf een hele zin.":"Schrijf minimaal een paar zinnen."}</p>`;return}
@@ -3975,14 +4023,17 @@ async function check(q){
     const res=(await nakijken([{kind:q.kind,task,form,text}],q.sec==="wb"?"wb":undefined))[0];
     const errs=Array.isArray(res.errors)?res.errors:[];
     btn.hidden=true; const ok=!!res.passed;
+    // a B1 form: the corrected text also has the form's answers, so it can't be compared with the open answer alone
+    const canRedo=redoable(text,res.corrected)&&!(q.sec==="wb"&&q.fields);
     keepErrs(errs); record(ok);
     $("fb").innerHTML=`<b class="${ok?"good":"bad"}">${ok?"Goed zo! Voldoende":"Nog niet voldoende"}</b>
       <p class="note">${esc(res.verdict)}</p>${scoreHTML(res.scores,q.mx)}
       ${ownHTML(text,errs)}${errsHTML(errs)}${freeNote()}
       <p class="ask">Verbeterde tekst</p><div class="sample">${esc(res.corrected)}</div>
       <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(q.right)}</div></details>
-      ${docBtn}<button class="btn wide" id="next">Verder</button>`;
+      ${canRedo?redoBtn:""}${docBtn}<button class="btn wide" id="next">Verder</button>`;
     $("next").onclick=()=>{pos++;show()};
+    if(canRedo)$("redo").onclick=()=>redo([{own:text,right:res.corrected,errs}]);
     $("docx").onclick=()=>saveDocx([{task,form,text}]);
   }catch(e){
     const c=e&&e.code;
@@ -4004,13 +4055,15 @@ async function checkZ(q){
   try{
     const T=await nakijken(Z.map(z=>({kind:"z",task:z.task,form:"",text:z.text})),"wb");
     btn.hidden=true;
+    const RD=Z.map((z,i)=>{const t=T[i]||{};return{own:zWhole(z),right:t.corrected,errs:Array.isArray(t.errors)?t.errors:[],l:z.q.big,ctx:/___/.test(z.q.ctx||"")?z.q.ctx:""}}).filter(x=>redoable(x.own,x.right));
     $("fb").innerHTML=Z.map((z,i)=>{const t=T[i]||{},errs=Array.isArray(t.errors)?t.errors:[],ok=!!t.passed; keepErrs(errs); record(ok,z.q);
       return`<p class="ask">${Z.length>1?`Zin ${i+1}: `:""}<span class="${ok?"good":"bad"}">${ok?"voldoende":"nog niet voldoende"}</span></p>${Z.length>1?`<p class="note">${z.q.big}</p>`:""}
         <p class="note">${esc(t.verdict)}</p>${scoreHTML(t.scores,z.q.mx)}
         ${ownHTML(z.text,errs,"Jouw zin")}${errs.length?errsHTML(errs):""}
         <p class="ask">Verbeterd</p><div class="sample">${esc(t.corrected||z.text)}</div><details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(z.q.right)}</div></details>`}).join("")
-      +`${freeNote()}${docBtn}<button class="btn wide" id="next">Verder</button>`;
+      +`${freeNote()}${RD.length?redoBtn:""}${docBtn}<button class="btn wide" id="next">Verder</button>`;
     $("next").onclick=()=>{pos++;show()}; $("docx").onclick=()=>saveDocx(doc);
+    if(RD.length)$("redo").onclick=()=>redo(RD);
   }catch(e){
     const c=e&&e.code;
     if(c==="rate_limited"){cur.zs=Z.slice(0,-1);btn.disabled=false;$("txt").readOnly=false;$("fb").innerHTML=`<p class="note">Te veel verzoeken achter elkaar. Wacht een minuut en probeer het opnieuw.</p>`;return}
