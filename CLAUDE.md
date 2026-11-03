@@ -170,8 +170,12 @@ for the rest). The proefexamen takes the least-seen
 questions first (`seenN()`: practice answers plus `S.xs`, how often a question was in a proefexamen); Lezen takes
 whole texts.
 
-`sw.js` makes the app work offline: the page network-first (a push is live at once), but after 3.5 s without an
-answer the cached copy (`netFirst()`: a bad connection once left the app white), paintings and
+`sw.js` makes the app work offline and start at once: the page cache-first (`cacheFirst()`: on a slow connection
+people waited for ~300 KB), fetched again in the background; when it changed (another ETag) the open page gets
+`{fresh:true}`, and because a page that is still starting can miss that, the time of the change is also kept at
+`/__changed`, which the page asks after 4 and 15 s and when it comes back (`freshCheck()`); then a glass bar above the
+tab bar says "Er is een nieuwe versie van Bittertalen" with "Vernieuwen" (`showFresh()`). So a push shows on the next
+start, or at once after Vernieuwen. Paintings and
 photos from the cache (the page sends their list after loading), `api/` never cached. Don't change the stored shape without migrating old data.
 Saving progress to a file was removed on purpose. On an iPhone in Safari a tile on Vandaag (`drawA2hs()`)
 asks to put the app on the home screen, because Safari can wipe a site's storage after a week without a visit; the

@@ -9,6 +9,8 @@ d.setAttribute("role","alert");d.style.cssText="position:fixed;left:16px;right:1
 d.innerHTML='<b>Bittertalen kon niet starten.</b><p style="font-size:13px;color:#56617C;word-break:break-word">'+String(m).replace(/</g,"&lt;").slice(0,300)+'</p><button style="width:100%;min-height:50px;border:0;border-radius:14px;background:#1F3C96;color:#fff;font:600 17px -apple-system,system-ui" onclick="location.reload()">Opnieuw laden</button>';
 document.body.appendChild(d)};document.body?put():addEventListener("DOMContentLoaded",put)}
 addEventListener("error",function(e){say((e.message||"fout")+(e.lineno?" (regel "+e.lineno+")":""))});})();
+// sw.js shows the cached page at once and says {fresh:true} when a newer one has been fetched; listen from the start
+if(navigator.serviceWorker){navigator.serviceWorker.addEventListener("message",function(e){if(e.data&&e.data.fresh){window.__fresh=1;dispatchEvent(new Event("fresh"))}});if(navigator.serviceWorker.startMessages)navigator.serviceWorker.startMessages()}
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-title" content="Bittertalen">
@@ -513,6 +515,11 @@ body.vfull{overflow:hidden}
 .btn,.ghost,.back,.opt,.tok,.step,.it,.rd,.seg button,.login .prov button{transition:transform .12s ease,background-color .15s ease,border-color .15s ease}
 .btn:active,.ghost:active,.back:active,.opt:active,.tok:active,.step:active,.seg button:active,.login .prov button:active{transform:scale(.97)}
 .it:active,.rd:active{transform:scale(.99)}
+/* a newer version is ready: a glass bar above the tab bar */
+#fresh{position:fixed;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 86px);z-index:40;max-width:520px;margin:0 auto;display:flex;align-items:center;gap:12px;
+  padding:10px 10px 10px 16px;border-radius:var(--rc);background:color-mix(in srgb,var(--card) 82%,transparent);backdrop-filter:blur(18px) saturate(1.6);-webkit-backdrop-filter:blur(18px) saturate(1.6);
+  box-shadow:var(--lift);border:1px solid var(--line);font-size:var(--fs-m);animation:sheet .26s cubic-bezier(.2,.8,.2,1)}
+#fresh span{flex:1} #fresh .btn{min-height:40px;padding:8px 14px;font-size:var(--fs-m)}
 /* Profiel: the trillen switch */
 .tog{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;margin:0 0 6px;font-size:var(--fs-b)}
 .tog input{flex:none;appearance:none;-webkit-appearance:none;width:51px;height:31px;margin:0;padding:0;border:0;border-radius:999px;background:var(--line);position:relative;cursor:pointer;transition:background-color .2s}
@@ -5221,6 +5228,16 @@ async function arrive(){
 const OLD=location.hostname, ready$=restore();
 if(OLD==="nedelands.vercel.app")location.replace(NEWURL); else if(OLD==="bittertalen.vercel.app")moveScreen(); else home();
 ready$.then(()=>location.hash.startsWith("#verhuis=")?arrive():0).then(initCloud).finally(()=>{window.__up=1});
+// A newer version was fetched in the background: offer it (a reload takes it from the cache, so it is quick)
+function showFresh(){if($("fresh"))return;const d=document.createElement("div");d.id="fresh";d.setAttribute("role","status");
+  d.innerHTML=`<span>Er is een nieuwe versie van Bittertalen.</span><button class="btn" type="button">Vernieuwen</button>`;
+  d.querySelector("button").onclick=()=>location.reload();document.body.appendChild(d)}
+if(window.__fresh)showFresh(); addEventListener("fresh",showFresh);
+// the message can come before the page listens: ask sw.js when the page last changed, after the start and on return
+const freshCheck=()=>{if(!navigator.serviceWorker||!navigator.serviceWorker.controller)return;
+  fetch("/__changed").then(r=>r.text()).then(t=>{if(+t>performance.timeOrigin)showFresh()}).catch(()=>{})};
+setTimeout(freshCheck,4000);setTimeout(freshCheck,15000);
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")setTimeout(freshCheck,3000)});
 // Offline (sw.js): the page, and every painting and photo, stay available without a connection
 if("serviceWorker" in navigator&&window.isSecureContext&&!window.claude)
   navigator.serviceWorker.register("/sw.js").then(()=>navigator.serviceWorker.ready)
