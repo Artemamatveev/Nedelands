@@ -2,6 +2,14 @@
 <html lang="nl">
 <head>
 <meta charset="utf-8">
+<script>
+// If the app breaks while it starts, say so on the screen (with the error, for a screenshot) instead of staying empty
+(function(){var shown=0;function say(m){if(window.__up||shown)return;shown=1;var put=function(){var d=document.createElement("div");
+d.setAttribute("role","alert");d.style.cssText="position:fixed;left:16px;right:16px;top:40%;z-index:99;background:#fff;color:#14213D;border-radius:20px;padding:20px;box-shadow:0 14px 44px rgba(0,0,0,.3);font:17px/1.4 -apple-system,system-ui,sans-serif";
+d.innerHTML='<b>Bittertalen kon niet starten.</b><p style="font-size:13px;color:#56617C;word-break:break-word">'+String(m).replace(/</g,"&lt;").slice(0,300)+'</p><button style="width:100%;min-height:50px;border:0;border-radius:14px;background:#1F3C96;color:#fff;font:600 17px -apple-system,system-ui" onclick="location.reload()">Opnieuw laden</button>';
+document.body.appendChild(d)};document.body?put():addEventListener("DOMContentLoaded",put)}
+addEventListener("error",function(e){say((e.message||"fout")+(e.lineno?" (regel "+e.lineno+")":""))});})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-title" content="Bittertalen">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -5174,7 +5182,7 @@ async function arrive(){
 }
 const OLD=location.hostname, ready$=restore();
 if(OLD==="nedelands.vercel.app")location.replace(NEWURL); else if(OLD==="bittertalen.vercel.app")moveScreen(); else home();
-ready$.then(()=>location.hash.startsWith("#verhuis=")?arrive():0).then(initCloud);
+ready$.then(()=>location.hash.startsWith("#verhuis=")?arrive():0).then(initCloud).finally(()=>{window.__up=1});
 // Offline (sw.js): the page, and every painting and photo, stay available without a connection
 if("serviceWorker" in navigator&&window.isSecureContext&&!window.claude)
   navigator.serviceWorker.register("/sw.js").then(()=>navigator.serviceWorker.ready)
