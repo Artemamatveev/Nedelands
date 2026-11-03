@@ -123,7 +123,8 @@ Every section appears once; don't add a second entry point to the same exercise.
 ## Words, motion, touch
 
 - **Short words**: no explaining paragraph under every heading; a description says what is in it in a few words
-  ("Korte teksten met vragen"). Text wraps balanced (`text-wrap`), units with a non-breaking space (`10&nbsp;min`).
+  ("Korte teksten met vragen"). Units with a non-breaking space (`10&nbsp;min`). No `text-wrap: balance/pretty` and no `text-rendering:
+  optimizeLegibility`: with them the iPhone app stayed white on start (November 2026).
 - **Motion**: short and quiet, like iOS: a screen or tab comes in (`rise`), buttons give a little when pressed, a right
   option pops, a wrong one shakes, the feedback sheet slides up, the stamp is put down. All off with
   `prefers-reduced-motion`.

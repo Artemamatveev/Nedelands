@@ -64,7 +64,7 @@ addEventListener("error",function(e){say((e.message||"fout")+(e.lineno?" (regel 
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--surface);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,sans-serif;font-size:var(--fs-b);line-height:1.47;-webkit-text-size-adjust:100%;text-size-adjust:100%;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased}
+body{margin:0;background:var(--surface);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,sans-serif;font-size:var(--fs-b);line-height:1.47;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 main{max-width:720px;margin:0 auto;padding:0 16px 48px;overflow-x:clip}
 /* glass: a Dutch landscape (Ruisdael's windmill) faintly seen through a frosted window; the content sits on white tiles that stand out from it */
 /* art/molen-glass.jpg is the painting already blurred and small, so the page needs no live blur */
@@ -505,8 +505,6 @@ body.vfull{overflow:hidden}
 .step.next{grid-template-columns:56px minmax(0,1fr) auto;column-gap:14px;padding:16px} .step.next b{font-size:var(--fs-l)}
 .step.next .pic{grid-row:1/3;width:56px;height:56px;border:0;border-radius:var(--rs);background:center/cover no-repeat;box-shadow:0 0 0 2px rgba(255,255,255,.3)}
 .step:not(.next){padding:10px 14px}
-/* longer lines break in better places */
-h2,h3,.verb,.step b,.it b{text-wrap:balance} p,.d,.sub,.note{text-wrap:pretty}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.tabs .lens.go{animation:none}}
 </style>
 </head>
@@ -3666,6 +3664,7 @@ const canBuzz=()=>!!navigator.vibrate||/iP(hone|ad|od)/.test(navigator.userAgent
 function buzz(k){
   if(lsGet("ww-tril")==="0")return;
   try{if(navigator.vibrate){navigator.vibrate(k==="bad"?[25,60,25]:12);return}}catch(e){}
+  if(navigator.userActivation&&!navigator.userActivation.isActive)return;
   try{if(!hapL){const i=document.createElement("input");i.type="checkbox";i.setAttribute("switch","");i.id="hapt";i.tabIndex=-1;
       hapL=document.createElement("label");hapL.htmlFor="hapt";hapL.setAttribute("aria-hidden","true");
       hapL.style.cssText="position:fixed;left:-100px;top:0;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none";
