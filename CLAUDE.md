@@ -18,11 +18,19 @@ screen. Keep it true: when data goes somewhere new (a new service, a new field i
 and its date. `sw.js` caches other pages under their own address, never as "/".
 The app's UI language is Dutch; the user talks to Claude in Russian. There is no Russian anywhere in the app: a word's meaning is
 a short Dutch description (A2), or English from the dictionary. For beginners the menus and navigation can switch to
-English (the NL/EN pill top left on the painting and on the login card, where the user wanted it; `ww-ui` per
-device): `UI` (exact Dutch string → English) and `UIR` (patterns: "2 van 6 klaar", dates, "nodig: 76%"…) translate text
+English, Arabic, Turkish, Hindi or simplified Chinese (the groups CBS counts most among inburgeraars, plus the user's choice of
+Hindi and Chinese; the language pill top left on the painting and on the login card, where the user wanted it: a native
+`<select>` over the pill, `langHTML()`; `ww-ui` per device, Dutch by default): `UI` (exact Dutch string → `[en, ar, tr, hi, zh]`, the
+order of `LCODE`) and `UIR` (patterns: "2 van 6 klaar", dates, "nodig: 76%"…) translate text
 nodes, `aria-label` and `placeholder` after every render (a MutationObserver; the Dutch original is kept in `UIO`, so
 switching back restores it). Never inside `#play` (exercises) or `#read` (the reader), and not content: texts, stories,
-chapter titles, museum labels and questions stay Dutch. A new menu string needs its English in `UI`.
+chapter titles, museum labels and questions stay Dutch. A new menu string needs all five translations in `UI`. The
+translations were made by Claude and not yet checked by native speakers.
+Arabic runs right to left (`<html dir="rtl">`, set by `applyLang()`): use logical CSS (`padding-inline-start`,
+`inset-inline-start`, `text-align:var(--ta)` and `var(--te)` for left and right), not physical sides, for anything in the menus. Dutch
+content stays left to right (`#play`, `#read`, the header, `.label`, `.book`, `.doc`, `.sample`, `.msum`, `.tl`, in one CSS rule). In Arabic the
+tab bar, its lens and the swipe back are mirrored; `unicode-bidi:plaintext` keeps Dutch titles readable in a right-to-left list.
+No letter spacing in Arabic, Hindi or Chinese: it breaks joined letters.
 
 ## Design: Delfts blauw
 

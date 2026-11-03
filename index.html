@@ -139,10 +139,10 @@ h2{display:flex;align-items:center;gap:10px;font-size:var(--fs-xl);font-weight:6
 .pts{margin:0 0 14px;padding-left:22px} .pts li{margin:0 0 4px} .gapw{color:var(--blue)}
 .qs{margin:0 0 14px;padding-left:22px;color:var(--soft)} .qs li{margin:0 0 4px} .qs li.on{color:var(--ink);font-weight:600}
 #hear{margin:10px 0 4px}
-#a2hs ol{margin:10px 0 0;padding-left:22px}#a2hs .two{margin-top:14px}
+#a2hs ol{margin:10px 0 0;padding-inline-start:22px}#a2hs .two{margin-top:14px}
 .steps{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:8px}
-.ona{margin:0 0 12px;padding-left:22px}.ona li{margin:0 0 6px}
-.step{display:grid;grid-template-columns:36px minmax(0,1fr) 36px;column-gap:14px;align-items:center;width:100%;height:100%;text-align:left;background:var(--bg);border:1.5px solid var(--line);border-radius:var(--rc);padding:12px 14px}
+.ona{margin:0 0 12px;padding-inline-start:22px}.ona li{margin:0 0 6px}
+.step{display:grid;grid-template-columns:36px minmax(0,1fr) 36px;column-gap:14px;align-items:center;width:100%;height:100%;text-align:var(--ta);background:var(--bg);border:1.5px solid var(--line);border-radius:var(--rc);padding:12px 14px}
 /* every step: its icon on a cobalt square (the next one: cobalt on white, a done one: a green check), title, line, › or ▶ */
 .step .sic{grid-row:1/3;width:36px;height:36px;border-radius:9px;background:var(--fill);color:#fff;display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:600;font-size:var(--fs-m)}
 .step .sic svg{width:20px;height:20px}
@@ -155,7 +155,7 @@ h2{display:flex;align-items:center;gap:10px;font-size:var(--fs-xl);font-weight:6
 .step.ok b{color:var(--soft)} .step.ok em{color:var(--soft)}
 /* lijsten: één rij = één scherm of oefening. De hele rij is de knop, met › rechts. */
 .list{display:grid;margin-top:8px;border-top:1px solid var(--line)}
-.it{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:11px 0 12px;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);color:var(--ink)}
+.it{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:11px 0 12px;text-align:var(--ta);background:none;border:0;border-bottom:1px solid var(--line);color:var(--ink)}
 .it>span{flex:1;min-width:0}
 .it .ic,.rd .ic{flex:none;display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;background:var(--fill);color:#fff}
 .ic svg,.sic svg{width:20px;height:20px;fill:currentColor;stroke:none}
@@ -173,14 +173,14 @@ a.it{text-decoration:none} .it.ext::after{content:none}
 /* kopje boven een groep: klein, kapitalen, zoals de vraag in een oefening */
 .lh{margin:26px 0 4px;color:var(--soft);font-size:var(--fs-s);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
 /* naar het examen: one row per part starts its proefexamen; the name and time, the bar with the 70% line, the score, › */
-.rd{display:grid;grid-template-columns:34px minmax(0,1fr) auto 14px;column-gap:12px;row-gap:7px;align-items:center;width:100%;padding:13px 0;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);color:var(--ink)}
+.rd{display:grid;grid-template-columns:34px minmax(0,1fr) auto 14px;column-gap:12px;row-gap:7px;align-items:center;width:100%;padding:13px 0;text-align:var(--ta);background:none;border:0;border-bottom:1px solid var(--line);color:var(--ink)}
 /* a part: its icon, the name and minutes, the score on the right; under it the bar with the pass line and the status */
 .rd>.ic{grid-row:1/4;align-self:start}
 .rd .rm{grid-column:2;min-width:0} .rd .rm b{display:block;font-size:var(--fs-b);font-weight:600;line-height:1.25}
 .rd .rm small{display:block;font-size:var(--fs-s);color:var(--soft)}
 .rd .rp{grid-column:3;font-size:var(--fs-l);font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
 .rd .rp.none{color:var(--soft);font-weight:400}
-.rd .rp{text-align:right;line-height:1.1} .rd .rp small{display:block;font-size:var(--fs-xs);font-weight:500;color:var(--soft);letter-spacing:0}
+.rd .rp{text-align:var(--te);line-height:1.1} .rd .rp small{display:block;font-size:var(--fs-xs);font-weight:500;color:var(--soft);letter-spacing:0}
 .rd .bar{grid-column:2/4;margin:0;height:6px}
 .rd .st{grid-column:2/4;display:flex;align-items:center;gap:7px;font-size:var(--fs-s);color:var(--soft);line-height:1.35}
 .rd .st i{flex:none;width:8px;height:8px;border-radius:50%;background:var(--line)}
@@ -224,7 +224,7 @@ main:has(#home:not([hidden])){padding-bottom:116px}
 
 /* oefenen */
 .top{display:flex;justify-content:space-between;align-items:center;margin:14px 0 0}
-.back{display:inline-flex;align-items:center;gap:6px;min-height:44px;background:none;border:1px solid var(--line);color:var(--ink);font-weight:600;font-size:var(--fs-b);padding:5px 14px 6px 10px;border-radius:var(--rc)}
+.back{display:inline-flex;align-items:center;gap:6px;min-height:44px;background:none;border:1px solid var(--line);color:var(--ink);font-weight:600;font-size:var(--fs-b);padding-block:5px 6px;padding-inline:10px 14px;border-radius:var(--rc)}
 .back span{font-size:20px;line-height:1}
 #timer,.rec .t{font-weight:700;font-variant-numeric:tabular-nums;color:var(--oranje);border:1.5px solid var(--oranje);padding:2px 9px;border-radius:8px}
 #timer:empty{display:none}
@@ -234,13 +234,13 @@ main:has(#home:not([hidden])){padding-bottom:116px}
 .verb{font-size:44px;font-weight:700;letter-spacing:-.02em;line-height:1.08;margin:6px 0 2px;word-break:break-word}
 .verb.long{font-size:var(--fs-l);font-weight:600;line-height:1.35;letter-spacing:-.01em;margin:8px 0 12px}
 .ru{color:var(--soft);margin:0 0 18px}
-.hint{display:block;background:none;border:0;color:var(--soft);text-decoration:underline;font-size:var(--fs-m);padding:4px 0;margin:-12px 0 12px;text-align:left}
+.hint{display:block;background:none;border:0;color:var(--soft);text-decoration:underline;font-size:var(--fs-m);padding:4px 0;margin:-12px 0 12px;text-align:var(--ta)}
 .hint:disabled{text-decoration:none;color:var(--ink);font-size:var(--fs-m)}
 .opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .opt{background:var(--bg);color:var(--ink);border:1.5px solid var(--line);border-radius:var(--rc);box-shadow:0 2px 0 var(--line);padding:14px 8px;font-size:var(--fs-l);font-weight:600;min-height:60px;word-break:break-word}
 .opt:active{border-color:var(--blue)}
 .opts.one{grid-template-columns:1fr}
-.opts.one .opt{font-size:var(--fs-b);font-weight:500;text-align:left;padding:11px 14px;min-height:0}
+.opts.one .opt{font-size:var(--fs-b);font-weight:500;text-align:var(--ta);padding:11px 14px;min-height:0}
 .opt.ok{background:var(--good);border-color:var(--good);box-shadow:none;color:var(--on)}
 .opt.no{background:var(--bad);border-color:var(--bad);box-shadow:none;color:var(--on)}
 .opt.ok::before{content:"✓ "} .opt.no::before{content:"✕ "}
@@ -264,7 +264,7 @@ textarea{display:block;width:100%;font-size:var(--fs-b);line-height:1.5;padding:
 .wcard .btn,.wcard .ghost{min-height:54px;padding:10px 14px;margin:0 0 10px}
 .wcard .login .prov{gap:6px;margin:14px 0} .wcard .login .prov button{border:0;background:none;height:44px;max-width:52px}
 .wcard .prov svg{width:28px;height:28px}
-.wcard .sub,.wcard .note{text-align:left}
+.wcard .sub,.wcard .note{text-align:var(--ta)}
 .wcard .fld+.btn{margin-top:14px}
 .wfoot{max-width:400px;margin:16px 0 auto;text-align:center;color:#fff;font-size:var(--fs-m);text-shadow:0 1px 6px rgba(0,0,0,.5)}
 .wfoot p{margin:0 0 6px} .wfoot a{color:#fff;font-weight:600} .wfoot .wart{font-size:var(--fs-s);opacity:.85;margin-top:10px}
@@ -358,7 +358,7 @@ mark.err sup{font-size:11px;font-weight:700;color:var(--bad);margin-left:1px}
 .pt{display:grid;grid-template-columns:96px minmax(0,1fr) 34px;align-items:center;gap:10px;font-size:var(--fs-m)}
 .pt i{height:8px;border-radius:999px;background:var(--surface);overflow:hidden} .pt b{display:block;height:100%;border-radius:999px}
 .pt b.full{background:var(--good)} .pt b.some{background:var(--oranje)} .pt b.none{background:var(--bad)}
-.pt em{font-style:normal;font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+.pt em{font-style:normal;font-weight:600;text-align:var(--te);font-variant-numeric:tabular-nums}
 .ptt{margin:2px 0 0;font-size:var(--fs-m);color:var(--soft)} .ptt b{color:var(--ink)}
 .errs.kv li{display:flex;justify-content:space-between;gap:12px} .errs.kv span{display:inline;color:var(--ink);font-size:inherit;font-weight:600}
 .errs.kv span.good{color:var(--good)} .errs.kv span.bad{color:var(--bad)}
@@ -377,7 +377,7 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
 .forms mark{background:none;color:var(--blue);font-weight:700}
 .echo{border-top:1px solid var(--line);padding-top:12px;margin:4px 0 14px}
 .miss{font:inherit;color:var(--bad);background:none;border:0;border-bottom:2px solid var(--bad);padding:0;margin:0;cursor:pointer}
-.bar.pass{position:relative} .bar.pass::after{content:"";position:absolute;left:var(--pass,70%);top:0;bottom:0;width:2px;background:var(--ink)}
+.bar.pass{position:relative} .bar.pass::after{content:"";position:absolute;inset-inline-start:var(--pass,70%);top:0;bottom:0;width:2px;background:var(--ink)}
 #stats .back,#lib .back{margin-top:14px}
 #stats h2,#lib h2,#move h2{margin-top:18px}
 /* boekenkast */
@@ -390,7 +390,7 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
 #media h2{margin-top:18px}
 #mbody>.ask{margin-top:20px} #mbody>.ask+h2{margin-top:4px}
 .eps{list-style:none;margin:8px 0 0;padding:0}
-.ep{display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:10px 0;color:var(--ink)}
+.ep{display:flex;gap:12px;align-items:center;width:100%;text-align:var(--ta);background:none;border:0;border-bottom:1px solid var(--line);padding:10px 0;color:var(--ink)}
 .ep img{flex:none;width:112px;aspect-ratio:16/9;object-fit:cover;border-radius:8px;background:var(--surface)}
 .ep b{display:block;font-size:var(--fs-b);font-weight:600;line-height:1.3}
 .ep small{display:block;color:var(--soft);font-size:var(--fs-s);margin-top:3px;font-variant-numeric:tabular-nums}
@@ -525,11 +525,24 @@ body.vfull{overflow:hidden}
   padding:10px 10px 10px 16px;border-radius:var(--rc);background:color-mix(in srgb,var(--card) 82%,transparent);backdrop-filter:blur(18px) saturate(1.6);-webkit-backdrop-filter:blur(18px) saturate(1.6);
   box-shadow:var(--lift);border:1px solid var(--line);font-size:var(--fs-m);animation:sheet .26s cubic-bezier(.2,.8,.2,1)}
 #fresh span{flex:1} #fresh .btn{min-height:40px;padding:8px 14px;font-size:var(--fs-m)}
-/* NL / EN for the menus: a small glass pill top left on the painting (and on the login card) */
-.lang{position:absolute;top:10px;left:14px;z-index:3;min-width:44px;height:30px;padding:0 10px;border-radius:999px;border:1px solid rgba(255,255,255,.4);
+/* The language of the menus: a small glass pill top left on the painting (and on the login card), a native list over it */
+.lang{position:absolute;top:10px;left:14px;z-index:3;display:flex;align-items:center;justify-content:center;gap:4px;min-width:44px;height:30px;padding:0 9px;border-radius:999px;border:1px solid rgba(255,255,255,.4);
   background:rgba(255,255,255,.2);backdrop-filter:blur(12px) saturate(1.5);-webkit-backdrop-filter:blur(12px) saturate(1.5);color:#fff;font-size:var(--fs-s);font-weight:700;letter-spacing:.04em}
 main:is(:not(.big),:has(#home[hidden])) .lang{top:6px;height:26px;min-width:40px;font-size:12px} /* the narrow strip: clear of the logo */
 .wcard{position:relative} .wcard .lang{top:14px;left:14px;border-color:var(--line);background:var(--surface);color:var(--ink);backdrop-filter:none;-webkit-backdrop-filter:none}
+.lang svg{flex:none;width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.8}
+.lang select{position:absolute;inset:0;width:100%;height:100%;opacity:0;font-size:16px;border:0}
+.lang:focus-within{outline:2px solid var(--oranje);outline-offset:2px}
+/* Arabic: the menus run right to left. Dutch content (exercises, the reader, documents, the label, the painting) stays left to right */
+:root{--ta:left;--te:right}
+:root[dir=rtl]{--ta:right;--te:left}
+:root[dir=rtl] body{text-align:right}
+:root[dir=rtl] :is(p,h2,h3,b,small,li,.d){unicode-bidi:plaintext}
+:root[dir=rtl] :is(header,#play,#read,.label,.book,.doc,.sample,.msum,.tl,input[type=email]){direction:ltr;text-align:left;--ta:left;--te:right}
+:root[dir=rtl] .tabs .lens{left:auto;right:5px;transform:translateX(calc(var(--i,0) * -100%))}
+:root[dir=rtl] :not(#read *).back>span{display:inline-block;transform:scaleX(-1)}
+/* spacing between letters breaks joined Arabic and Devanagari */
+:root:is([lang=ar],[lang=hi],[lang=zh-Hans]) *{letter-spacing:0!important}
 /* Profiel: the trillen switch */
 .tog{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;margin:0 0 6px;font-size:var(--fs-b)}
 .tog input{flex:none;appearance:none;-webkit-appearance:none;width:51px;height:31px;margin:0;padding:0;border:0;border-radius:999px;background:var(--line);position:relative;cursor:pointer;transition:background-color .2s}
@@ -550,11 +563,11 @@ h2,h3,.verb,.step b,.it b{text-wrap:balance} p,.d,.sub,.note{text-wrap:pretty}
 KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript aan om te oefenen.</p></noscript>
 <main>
   <header>
-    <button type="button" class="lang" data-lang aria-label="English">EN</button>
+    <label class="lang"><span>NL</span></label>
     <button class="art" id="artbtn" aria-label="Bekijk het hele schilderij"><img id="artimg" alt=""></button>
     <h1><span class="sr-only">Bittertalen</span><span aria-hidden="true">B<span class="idot">ı<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="var(--oranje)"/><g fill="#fff" fill-opacity=".45"><circle cx="34" cy="36" r="6"/><circle cx="57" cy="29" r="5"/><circle cx="68" cy="50" r="6"/><circle cx="44" cy="56" r="5.2"/><circle cx="28" cy="63" r="4.6"/><circle cx="58" cy="71" r="5.6"/></g></svg></span>ttertalen</span></h1><span class="streak" id="streak"></span></header>
   <div id="home">
-    <div class="label" id="label" data-tab="vandaag"></div>
+    <div class="label" id="label" data-tab="vandaag" lang="nl"></div>
     <section class="today tile" id="plan" data-tab="vandaag"></section>
     <section class="today tile" id="a2hs" data-tab="vandaag"></section>
     <section class="tile" id="exam" data-tab="examen"></section>
@@ -605,7 +618,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
     <div id="wlist"></div>
     <p class="note" style="margin-top:22px">Woordenboek: <a href="https://en.wiktionary.org">Wiktionary</a> (via <a href="https://kaikki.org">kaikki.org</a>), licentie <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.</p>
   </div>
-  <div id="read" hidden>
+  <div id="read" lang="nl" hidden>
     <div class="top"><button class="back" id="rback"><span aria-hidden="true">←</span>Boekenkast</button><span class="rt"><button class="fs" id="fsm" aria-label="Kleinere letters">A−</button><button class="fs" id="fsp" aria-label="Grotere letters">A+</button><span class="pg" id="pg"></span></span></div>
     <div class="bar"><i id="rbar"></i></div>
     <p class="ask" id="rtitle"></p>
@@ -621,7 +634,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
     <button class="back" id="hback"></button>
     <div id="hbody"></div>
   </div>
-  <div id="play" hidden>
+  <div id="play" lang="nl" hidden>
     <div class="top"><button class="back x" id="back" aria-label="Stoppen"></button><div class="bar"><i id="bar"></i></div><span id="cnt"></span><span id="timer"></span></div>
     <section class="card" id="card" aria-live="polite"></section>
     <div class="mode"><button id="mode"></button></div>
@@ -3481,13 +3494,13 @@ document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>{if(Date.now(
 // Drag the lens along the bar, like on iPhone: it follows the finger, and where you let go is the tab you open
 (()=>{
   const n=$("tabs"),L=n.querySelector(".lens"),B=[...n.querySelectorAll("button")];
-  let x0=null,id=null,drag=false,x=0,w=0,left=0;
+  let x0=null,id=null,drag=false,x=0,w=0,left=0,sg=1;
   const near=()=>Math.max(0,Math.min(B.length-1,Math.round(x/w)));
-  n.addEventListener("pointerdown",e=>{const r=n.getBoundingClientRect();x0=e.clientX;id=e.pointerId;drag=false;left=r.left+5;w=(r.width-10)/B.length});
+  n.addEventListener("pointerdown",e=>{const r=n.getBoundingClientRect();x0=e.clientX;id=e.pointerId;drag=false;sg=document.documentElement.dir==="rtl"?-1:1;left=sg<0?r.right-5:r.left+5;w=(r.width-10)/B.length});
   n.addEventListener("pointermove",e=>{
     if(x0==null||e.pointerId!==id)return;
     if(!drag){if(Math.abs(e.clientX-x0)<8)return;drag=true;try{n.setPointerCapture(id)}catch(_){}n.classList.add("drag")}
-    x=Math.max(0,Math.min((B.length-1)*w,e.clientX-left-w/2));L.style.transform=`translateX(${x}px)`;
+    x=Math.max(0,Math.min((B.length-1)*w,(e.clientX-left)*sg-w/2));L.style.transform=`translateX(${x*sg}px)`;
     B.forEach((b,i)=>b.classList.toggle("on",i===near()))});
   const up=()=>{
     if(x0==null)return; x0=null; if(!drag)return; drag=false; tabSkip=Date.now()+350;
@@ -5271,22 +5284,22 @@ document.addEventListener("keydown",e=>{
 // In a proefexamen the first swipe only asks "Stoppen?" (like the first tap on ✕); a second swipe or tap stops.
 (()=>{
   const SCR=["play","stats","lib","read","media","story","hist","talk"];
-  let x0=0,y0=0,el=null,on=false;
+  let x0=0,y0=0,el=null,on=false,sg=1;
   const reset=t=>{t.style.transition=t.style.transform=t.style.opacity=""};
   document.addEventListener("touchstart",e=>{
-    const id=SCR.find(x=>!$(x).hidden); el=id?$(id):null;
+    const id=SCR.find(x=>!$(x).hidden); el=id?$(id):null; sg=document.documentElement.dir==="rtl"&&id!=="play"&&id!=="read"?-1:1;
     x0=e.touches[0].clientX;y0=e.touches[0].clientY;on=false;
     if(!el||!el.querySelector(".back")||!$("zoom").hidden||e.touches.length>1||e.target.closest("input,textarea,audio,video")||id==="read"&&x0>40&&R.p>0)el=null},{passive:true});
   document.addEventListener("touchmove",e=>{
-    if(!el)return; const dx=e.touches[0].clientX-x0,dy=e.touches[0].clientY-y0;
+    if(!el)return; const dx=(e.touches[0].clientX-x0)*sg,dy=e.touches[0].clientY-y0;
     if(!on){if(Math.abs(dy)>12&&Math.abs(dy)>Math.abs(dx)||dx<-12){el=null;return} if(dx>12)on=true}
-    if(on){const d=Math.max(0,dx);el.style.transition="none";el.style.transform=`translateX(${d*.6}px)`;el.style.opacity=1-Math.min(.5,d/600)}},{passive:true});
+    if(on){const d=Math.max(0,dx);el.style.transition="none";el.style.transform=`translateX(${d*.6*sg}px)`;el.style.opacity=1-Math.min(.5,d/600)}},{passive:true});
   const end=e=>{
-    if(!el)return; const t=el,dx=e.changedTouches[0].clientX-x0; el=null; if(!on)return;
+    if(!el)return; const t=el,dx=(e.changedTouches[0].clientX-x0)*sg; el=null; if(!on)return;
     t.style.transition="transform .18s,opacity .18s";
     const b=t.querySelector(".back"),go=e.type==="touchend"&&dx>90,
       ask=go&&t.id==="play"&&cur.exam&&pos<queue.length&&!b.classList.contains("arm"); // a proefexamen first asks "Stoppen?": the page springs back, a second swipe stops
-    if(go&&!ask){t.style.transform="translateX(100%)";t.style.opacity=0;setTimeout(()=>{reset(t);b.click()},170)}
+    if(go&&!ask){t.style.transform=`translateX(${sg*100}%)`;t.style.opacity=0;setTimeout(()=>{reset(t);b.click()},170)}
     else{t.style.transform="";t.style.opacity="";setTimeout(()=>reset(t),200);if(ask)b.click()}};
   document.addEventListener("touchend",end); document.addEventListener("touchcancel",end);
 })();
@@ -5367,104 +5380,225 @@ async function arrive(){
 }
 const OLD=location.hostname, ready$=restore();
 if(OLD==="nedelands.vercel.app")location.replace(NEWURL); else if(OLD==="bittertalen.vercel.app")moveScreen(); else home();
-// English for the menus and navigation, for beginners (the NL/EN switch in the header and on the login window).
+// The menus and navigation in other languages, for beginners (the language pill in the header and on the login window).
 // Exercises, texts, stories and questions stay Dutch: only text nodes and labels that match a menu string are
 // translated, never inside #play (the exercises) or #read (the book reader). A text node keeps its Dutch original
-// (UIO), so switching back restores it; a MutationObserver translates what later renders draw.
+// (UIO), so switching restores it; a MutationObserver translates what later renders draw.
+const LANGS={nl:{n:"Nederlands",s:"NL",c:"nl"},en:{n:"English",s:"EN",c:"en"},ar:{n:"العربية",s:"عربي",c:"ar"},tr:{n:"Türkçe",s:"TR",c:"tr"},hi:{n:"हिन्दी",s:"हिं",c:"hi"},zh:{n:"中文",s:"中文",c:"zh-Hans"}};
+const LCODE=["en","ar","tr","hi","zh"]; // the order of the translations in every row of UI and UIR
 const UI={
-"Vandaag":"Today","Examen":"Exam","Oefenen":"Practise","Herhalen":"Review","Profiel":"Profile","Onderdelen":"Sections",
-"Je les van vandaag":"Today's lesson","Van elk onderdeel een beetje.":"A little of every part.","Alles is klaar. Tot morgen!":"All done. See you tomorrow!",
-"Meer tijd? Mix van de dag":"More time? Mix of the day",
-"Lezen":"Reading","Luisteren":"Listening","Schrijven":"Writing","Spreken":"Speaking","KNM":"KNM (Dutch society)",
-"Lezen B1":"Reading B1","Luisteren B1":"Listening B1","Schrijven B1":"Writing B1","Spreken B1":"Speaking B1",
-"Woordenschat":"Vocabulary","Woordenschat B1":"Vocabulary B1","Grammatica B1":"Grammar B1","Woordvolgorde B1":"Word order B1",
-"Korte teksten met vragen":"Short texts with questions","Drie fragmenten":"Three fragments","Eén opdracht in 10 minuten":"One task in 10 minutes",
-"Twee vragen: spreek je antwoord in":"Two questions: speak your answer","Vijf vragen":"Five questions","Eén tekst met vragen":"One text with questions",
-"Ruim 1000 woorden in 23 thema's":"Over 1000 words in 23 themes","Eén lange tekst met zes vragen":"One long text with six questions","Eén fragment met vragen":"One fragment with questions",
-"10 vragen uit alles":"10 questions from everything","Mix van de dag":"Mix of the day",
-"Naar het examen":"To the exam","Inburgering A2":"Integration A2","Staatsexamen B1":"State exam B1","Niveau":"Level",
-"Proefexamens met tijd, zoals bij DUO. Het percentage is hoeveel je goed had, het streepje wat je nodig hebt om te slagen.":"Timed practice exams, like at DUO. The percentage is how much you got right, the line what you need to pass.",
-"Proefexamens met tijd, zoals het Staatsexamen. Het percentage is hoeveel je goed had, het streepje ongeveer wat je nodig hebt.":"Timed practice exams, like the State exam. The percentage is how much you got right, the line about what you need.",
-"goed":"right","Klaar voor het examen":"Ready for the exam","Bijna klaar":"Almost ready","Nog niet klaar":"Not ready yet",
-"Bij het oefenen":"While practising","Nog niet geoefend":"Not practised yet","je kende de meeste vragen al":"you knew most questions already",
-"Oefenexamens van DUO ↗":"DUO's practice exams ↗","De echte, met echte stemmen. Liefst op een computer.":"The real ones, with real voices. Best on a computer.",
-"Oefenexamens Staatsexamen NT2 ↗":"State exam NT2 practice exams ↗","Officieel, voor programma I. Liefst op een computer.":"Official, for programme I. Best on a computer.",
-"Examenonderdelen":"Exam parts","Zonder tijd, met uitleg bij elk antwoord.":"No clock, with an explanation for every answer.",
-"Berichten en gesprekken":"Messages and conversations","Berichten, e-mails en een formulier":"Messages, e-mails and a form","Vragen en foto's, hardop":"Questions and photos, out loud",
-"De 8 thema's van het examen":"The 8 themes of the exam","Lange teksten, zes vragen per tekst":"Long texts, six questions each","Radio, gesprekken en uitleg":"Radio, conversations and talks",
-"Zinnen, een formulier en e-mails":"Sentences, a form and e-mails","Korte en middellange opdrachten":"Short and medium tasks",
-"Grammatica en woorden":"Grammar and words","Rondes van 10 vragen.":"Rounds of 10 questions.","Herhalen op A2-niveau":"Review at A2 level",
-"Werkwoordsvormen":"Verb forms","Imperfectum en perfectum":"Past simple and present perfect","Woordvolgorde":"Word order","Maak een zin van de woorden":"Make a sentence from the words",
-"Tegenwoordige tijd":"Present tense","Vervoeging, modale en scheidbare werkwoorden":"Conjugation, modal and separable verbs","De, het en uitgangen":"De, het and endings",
-"Lidwoorden, meervoud, niet en geen":"Articles, plurals, niet and geen","Die en dat, zou, het passief, er, voegwoorden":"Die and dat, zou, the passive, er, conjunctions",
-"Lange zinnen met bijzinnen":"Long sentences with subordinate clauses","Werk, geld, gezondheid, wonen":"Work, money, health, housing",
-"Lezen, luisteren en spreken":"Reading, listening and speaking","Boekenkast":"Bookshelf","Verhalen en je eigen e-books.":"Stories and your own e-books.",
-"Geschiedenis van Nederland":"History of the Netherlands","Van de hunebedden tot nu.":"From the hunebeds to now.","Luisteren en kijken":"Listen and watch",
-"Nieuws, video's en podcasts.":"News, videos and podcasts.","Gesprekken":"Conversations","Bel de dokter, koop brood, praat met de buren.":"Call the doctor, buy bread, talk to the neighbours.",
-"Mijn zwakke punten":"My weak points","Oefen waar je de meeste fouten maakt.":"Practise where you make the most mistakes.","Mijn fouten":"My mistakes",
-"Uit je eigen teksten en antwoorden.":"From your own texts and answers.","Mijn woorden":"My words","Die je bij het lezen hebt bewaard.":"The ones you saved while reading.",
-"Voornaam":"First name","Achternaam":"Last name","Ik oefen voor":"I practise for","Trillen bij een antwoord":"Vibrate on an answer","Account":"Account",
-"Bewaar je voortgang en laat je teksten nakijken.":"Keep your progress and get your texts checked.","Inloggen of account maken":"Log in or create an account",
-"Uitloggen":"Log out","Account verwijderen":"Delete account","Passkey toevoegen":"Add a passkey","Ingelogd als":"Logged in as",
-"Over Bittertalen":"About Bittertalen","Wie het maakt, waarom, en wat erin zit.":"Who makes it, why, and what is in it.","Privacyverklaring":"Privacy statement",
-"Welke gegevens Bittertalen gebruikt, waarom en waar ze staan.":"What data Bittertalen uses, why and where it is kept.",
-"Mijn resultaten":"My results","Nog geen proefexamens.":"No practice exams yet.","Geoefend":"Practised","Dagen op rij":"Days in a row","Vragen geoefend":"Questions practised",
-"Bewaarde woorden":"Saved words","Gesprekken gevoerd":"Conversations held","uit het geheugen van je telefoon":"from your phone's memory",
-"De onderdelen met de meeste fouten staan bovenaan.":"The parts with the most mistakes are at the top.",
-"Nog te weinig antwoorden. Maak eerst een paar rondes; daarna zie je hier je zwakke punten.":"Not enough answers yet. Do a few rounds first; then your weak points show here.",
-"Tik op een woord voor de betekenis.":"Tap a word for its meaning.","Boek toevoegen":"Add a book","Bestand kiezen":"Choose a file","Tekst plakken":"Paste text",
-"Een e-book (.epub, zonder kopieerbeveiliging), een tekstbestand (.txt) of een tekst die je plakt. Het boek blijft op dit apparaat.":"An e-book (.epub, without copy protection), a text file (.txt) or text you paste. The book stays on this device.",
-"Nog geen woorden. Tik bij het lezen op een woord en dan op Bewaar.":"No words yet. While reading, tap a word and then Bewaar (save).",
-"Echt Nederlands. Je hoeft niet alles te begrijpen.":"Real Dutch. You don't need to understand everything.","Video's":"Videos","Podcasts":"Podcasts",
-"Makkelijk":"Easy","Gemiddeld":"Medium","Moeilijk":"Hard","Herhaal de vragen van alle hoofdstukken":"Review the questions of all chapters",
-"E-mailadres":"E-mail address","Volgende":"Next","Terug":"Back","Eerst rondkijken":"Look around first","Face ID of vingerafdruk":"Face ID or fingerprint",
-"Vul de code in":"Enter the code","ONA en participatieverklaring":"ONA and participation statement","Niet voor iedereen: kijk of jij ze nodig hebt.":"Not for everyone: check whether you need them.","ONA":"ONA","Inloggen is niet gelukt":"Logging in did not work","Je bent ingelogd":"You are logged in","Ga terug naar Bittertalen op je beginscherm. Daar ben je nu ook ingelogd.":"Go back to Bittertalen on your home screen. You are logged in there too.","Ga terug naar Bittertalen op je beginscherm en probeer het nog een keer, of log in met je e-mailadres.":"Go back to Bittertalen on your home screen and try again, or log in with your e-mail address.","Inloggen is nog niet ingesteld.":"Logging in is not set up yet.","Inloggen":"Log in","Ander e-mailadres":"Another e-mail address","Code van 6 cijfers":"6-digit code",
-"Met een account blijft je voortgang bewaard, ook op je andere apparaten, en kijkt Claude je teksten en antwoorden na.":"With an account your progress is kept, also on your other devices, and Claude checks your texts and answers.",
-"Er is een nieuwe versie van Bittertalen.":"There is a new version of Bittertalen.","Vernieuwen":"Refresh",
-"Zet Bittertalen op je beginscherm":"Put Bittertalen on your home screen","Al geoefend in Safari?":"Already practised in Safari?",
-"Kopieer mijn voortgang":"Copy my progress","Plak mijn voortgang":"Paste my progress","Begrepen":"Got it","Nee, ik begin nieuw":"No, I'm starting fresh",
-"Toch beginnen":"Start anyway","Verhaal op A2-niveau":"Story at A2 level","Verhaal op B1-niveau":"Story at B1 level","nog niet gelezen":"not read yet",
-"Klaar":"Done","dagen op rij":"days in a row","dag op rij":"day in a row","Het verhaal van dit schilderij":"The story of this painting",
-"Bekijk het hele schilderij":"See the whole painting"};
-const MON={januari:"January",februari:"February",maart:"March",april:"April",mei:"May",juni:"June",juli:"July",augustus:"August",september:"September",oktober:"October",november:"November",december:"December"};
-const DAYS={maandag:"Monday",dinsdag:"Tuesday",woensdag:"Wednesday",donderdag:"Thursday",vrijdag:"Friday",zaterdag:"Saturday",zondag:"Sunday"};
+"Vandaag":["Today","اليوم","Bugün","आज","今天"],
+"Examen":["Exam","الامتحان","Sınav","परीक्षा","考试"],
+"Oefenen":["Practise","التدرّب","Alıştırma","अभ्यास","练习"],
+"Herhalen":["Review","المراجعة","Tekrar","दोहराएँ","复习"],
+"Profiel":["Profile","ملفي","Profil","प्रोफ़ाइल","我的"],
+"Onderdelen":["Sections","الأقسام","Bölümler","भाग","部分"],
+"Je les van vandaag":["Today's lesson","درس اليوم","Bugünkü dersin","आज का पाठ","今天的课程"],
+"Van elk onderdeel een beetje.":["A little of every part.","القليل من كل قسم.","Her bölümden biraz.","हर भाग से थोड़ा-थोड़ा।","每个部分都练一点。"],
+"Alles is klaar. Tot morgen!":["All done. See you tomorrow!","تم كل شيء. إلى الغد!","Hepsi tamam. Yarın görüşürüz!","सब पूरा हुआ। कल मिलते हैं!","全部完成。明天见！"],
+"Meer tijd? Mix van de dag":["More time? Mix of the day","لديك وقت إضافي؟ مزيج اليوم","Daha fazla vaktin mi var? Günün karması","और समय है? आज का मिक्स","还有时间？今日混合练习"],
+"Lezen":["Reading","القراءة","Okuma","पढ़ना","阅读"],
+"Luisteren":["Listening","الاستماع","Dinleme","सुनना","听力"],
+"Schrijven":["Writing","الكتابة","Yazma","लिखना","写作"],
+"Spreken":["Speaking","المحادثة","Konuşma","बोलना","口语"],
+"KNM":["KNM (Dutch society)","KNM (المجتمع الهولندي)","KNM (Hollanda toplumu)","KNM (डच समाज)","KNM（荷兰社会）"],
+"Lezen B1":["Reading B1","القراءة B1","Okuma B1","पढ़ना B1","阅读 B1"],
+"Luisteren B1":["Listening B1","الاستماع B1","Dinleme B1","सुनना B1","听力 B1"],
+"Schrijven B1":["Writing B1","الكتابة B1","Yazma B1","लिखना B1","写作 B1"],
+"Spreken B1":["Speaking B1","المحادثة B1","Konuşma B1","बोलना B1","口语 B1"],
+"Woordenschat":["Vocabulary","المفردات","Kelime bilgisi","शब्दावली","词汇"],
+"Woordenschat B1":["Vocabulary B1","المفردات B1","Kelime bilgisi B1","शब्दावली B1","词汇 B1"],
+"Grammatica B1":["Grammar B1","القواعد B1","Dil bilgisi B1","व्याकरण B1","语法 B1"],
+"Woordvolgorde B1":["Word order B1","ترتيب الكلمات B1","Kelime sırası B1","शब्द क्रम B1","语序 B1"],
+"Korte teksten met vragen":["Short texts with questions","نصوص قصيرة مع أسئلة","Sorulu kısa metinler","प्रश्नों वाले छोटे पाठ","带问题的短文"],
+"Drie fragmenten":["Three fragments","ثلاثة مقاطع","Üç kayıt","तीन अंश","三段录音"],
+"Eén opdracht in 10 minuten":["One task in 10 minutes","مهمة واحدة في 10 دقائق","10 dakikada bir görev","10 मिनट में एक कार्य","10 分钟一个任务"],
+"Twee vragen: spreek je antwoord in":["Two questions: speak your answer","سؤالان: سجّل إجابتك بصوتك","İki soru: cevabını sesli söyle","दो प्रश्न: अपना उत्तर बोलकर दें","两个问题：说出你的回答"],
+"Vijf vragen":["Five questions","خمسة أسئلة","Beş soru","पाँच प्रश्न","五个问题"],
+"Eén tekst met vragen":["One text with questions","نص واحد مع أسئلة","Sorulu bir metin","प्रश्नों वाला एक पाठ","一篇文章和问题"],
+"Ruim 1000 woorden in 23 thema's":["Over 1000 words in 23 themes","أكثر من 1000 كلمة في 23 موضوعًا","23 konuda 1000'den fazla kelime","23 विषयों में 1000 से ज़्यादा शब्द","23 个主题，1000 多个单词"],
+"Eén lange tekst met zes vragen":["One long text with six questions","نص طويل مع ستة أسئلة","Altı sorulu uzun bir metin","छह प्रश्नों वाला एक लंबा पाठ","一篇长文和六个问题"],
+"Eén fragment met vragen":["One fragment with questions","مقطع واحد مع أسئلة","Sorulu bir kayıt","प्रश्नों वाला एक अंश","一段录音和问题"],
+"10 vragen uit alles":["10 questions from everything","10 أسئلة من كل شيء","Her konudan 10 soru","हर विषय से 10 प्रश्न","全部内容中的 10 个问题"],
+"Mix van de dag":["Mix of the day","مزيج اليوم","Günün karması","आज का मिक्स","今日混合练习"],
+"Naar het examen":["To the exam","نحو الامتحان","Sınava doğru","परीक्षा की ओर","备考进度"],
+"Inburgering A2":["Integration A2","الاندماج A2","Uyum A2","इंटीग्रेशन A2","融入考试 A2"],
+"Staatsexamen B1":["State exam B1","امتحان الدولة B1","Devlet sınavı B1","राज्य परीक्षा B1","国家考试 B1"],
+"Niveau":["Level","المستوى","Düzey","स्तर","水平"],
+"Proefexamens met tijd, zoals bij DUO. Het percentage is hoeveel je goed had, het streepje wat je nodig hebt om te slagen.":["Timed practice exams, like at DUO. The percentage is how much you got right, the line what you need to pass.","امتحانات تجريبية بوقت محدد، كما في DUO. النسبة هي مقدار إجاباتك الصحيحة، والخط هو ما تحتاجه للنجاح.","Süreli deneme sınavları, DUO'daki gibi. Yüzde ne kadar doğru yaptığını, çizgi geçmek için gerekeni gösterir.","DUO की तरह समयबद्ध अभ्यास परीक्षाएँ। प्रतिशत बताता है कि आपके कितने उत्तर सही थे, रेखा बताती है कि पास होने के लिए कितना चाहिए।","限时模拟考试，和 DUO 一样。百分比是你答对的比例，竖线是及格所需的分数。"],
+"Proefexamens met tijd, zoals het Staatsexamen. Het percentage is hoeveel je goed had, het streepje ongeveer wat je nodig hebt.":["Timed practice exams, like the State exam. The percentage is how much you got right, the line about what you need.","امتحانات تجريبية بوقت محدد، مثل امتحان الدولة. النسبة هي مقدار إجاباتك الصحيحة، والخط هو تقريبًا ما تحتاجه.","Süreli deneme sınavları, devlet sınavı gibi. Yüzde ne kadar doğru yaptığını, çizgi yaklaşık olarak gerekeni gösterir.","राज्य परीक्षा की तरह समयबद्ध अभ्यास परीक्षाएँ। प्रतिशत बताता है कि आपके कितने उत्तर सही थे, रेखा लगभग बताती है कि कितना चाहिए।","限时模拟考试，和国家考试一样。百分比是你答对的比例，竖线大约是所需的分数。"],
+"goed":["right","صحيح","doğru","सही","答对"],
+"Klaar voor het examen":["Ready for the exam","جاهز للامتحان","Sınava hazır","परीक्षा के लिए तैयार","可以考试了"],
+"Bijna klaar":["Almost ready","جاهز تقريبًا","Neredeyse hazır","लगभग तैयार","快准备好了"],
+"Nog niet klaar":["Not ready yet","غير جاهز بعد","Henüz hazır değil","अभी तैयार नहीं","还没准备好"],
+"Bij het oefenen":["While practising","أثناء التدرّب","Alıştırmada","अभ्यास के दौरान","练习时"],
+"Nog niet geoefend":["Not practised yet","لم تتدرّب بعد","Henüz çalışılmadı","अभी अभ्यास नहीं किया","尚未练习"],
+"je kende de meeste vragen al":["you knew most questions already","كنت تعرف معظم الأسئلة","soruların çoğunu zaten biliyordun","आप ज़्यादातर प्रश्न पहले से जानते थे","大部分问题你已经会了"],
+"Oefenexamens van DUO ↗":["DUO's practice exams ↗","امتحانات DUO التجريبية ↗","DUO deneme sınavları ↗","DUO की अभ्यास परीक्षाएँ ↗","DUO 的模拟考试 ↗"],
+"De echte, met echte stemmen. Liefst op een computer.":["The real ones, with real voices. Best on a computer.","الأصلية، بأصوات حقيقية. يفضّل على الكمبيوتر.","Gerçekleri, gerçek seslerle. Tercihen bilgisayarda.","असली, असली आवाज़ों के साथ। बेहतर है कंप्यूटर पर करें।","官方练习，真人语音。最好用电脑。"],
+"Oefenexamens Staatsexamen NT2 ↗":["State exam NT2 practice exams ↗","امتحانات تجريبية لامتحان الدولة NT2 ↗","NT2 devlet sınavı deneme sınavları ↗","NT2 राज्य परीक्षा की अभ्यास परीक्षाएँ ↗","NT2 国家考试模拟题 ↗"],
+"Officieel, voor programma I. Liefst op een computer.":["Official, for programme I. Best on a computer.","رسمية، للبرنامج I. يفضّل على الكمبيوتر.","Resmî, program I için. Tercihen bilgisayarda.","आधिकारिक, प्रोग्राम I के लिए। बेहतर है कंप्यूटर पर करें।","官方，针对 programma I。最好用电脑。"],
+"Examenonderdelen":["Exam parts","أقسام الامتحان","Sınav bölümleri","परीक्षा के भाग","考试部分"],
+"Zonder tijd, met uitleg bij elk antwoord.":["No clock, with an explanation for every answer.","بدون وقت محدد، مع شرح لكل إجابة.","Süre yok, her cevap için açıklama var.","बिना समय सीमा, हर उत्तर की व्याख्या के साथ।","不限时，每个答案都有讲解。"],
+"Berichten en gesprekken":["Messages and conversations","الرسائل والمحادثات","Mesajlar ve konuşmalar","संदेश और बातचीत","短信和对话"],
+"Berichten, e-mails en een formulier":["Messages, e-mails and a form","رسائل وبريد إلكتروني ونموذج","Mesajlar, e-postalar ve bir form","संदेश, ई-मेल और एक फ़ॉर्म","短信、电子邮件和一份表格"],
+"Vragen en foto's, hardop":["Questions and photos, out loud","أسئلة وصور، بصوت عالٍ","Sorular ve fotoğraflar, sesli","प्रश्न और तस्वीरें, बोलकर","问题和照片，大声说"],
+"De 8 thema's van het examen":["The 8 themes of the exam","مواضيع الامتحان الثمانية","Sınavın 8 konusu","परीक्षा के 8 विषय","考试的 8 个主题"],
+"Lange teksten, zes vragen per tekst":["Long texts, six questions each","نصوص طويلة، ستة أسئلة لكل نص","Uzun metinler, metin başına altı soru","लंबे पाठ, हर पाठ में छह प्रश्न","长文章，每篇六个问题"],
+"Radio, gesprekken en uitleg":["Radio, conversations and talks","الراديو والمحادثات والشروحات","Radyo, konuşmalar ve anlatımlar","रेडियो, बातचीत और व्याख्यान","广播、对话和讲解"],
+"Zinnen, een formulier en e-mails":["Sentences, a form and e-mails","جمل ونموذج ورسائل بريد إلكتروني","Cümleler, bir form ve e-postalar","वाक्य, एक फ़ॉर्म और ई-मेल","句子、一份表格和电子邮件"],
+"Korte en middellange opdrachten":["Short and medium tasks","مهام قصيرة ومتوسطة","Kısa ve orta uzunlukta görevler","छोटे और मध्यम कार्य","短任务和中等任务"],
+"Grammatica en woorden":["Grammar and words","القواعد والكلمات","Dil bilgisi ve kelimeler","व्याकरण और शब्द","语法和词汇"],
+"Rondes van 10 vragen.":["Rounds of 10 questions.","جولات من 10 أسئلة.","10 soruluk turlar.","10 प्रश्नों के दौर।","每轮 10 个问题。"],
+"Herhalen op A2-niveau":["Review at A2 level","المراجعة بمستوى A2","A2 düzeyinde tekrar","A2 स्तर पर दोहराएँ","复习 A2 水平"],
+"Werkwoordsvormen":["Verb forms","تصريف الأفعال","Fiil çekimleri","क्रिया रूप","动词形式"],
+"Imperfectum en perfectum":["Past simple and present perfect","صيغتا الماضي: imperfectum وperfectum","Geçmiş zaman: imperfectum ve perfectum","भूतकाल: imperfectum और perfectum","过去时：imperfectum 和 perfectum"],
+"Woordvolgorde":["Word order","ترتيب الكلمات","Kelime sırası","शब्द क्रम","语序"],
+"Maak een zin van de woorden":["Make a sentence from the words","كوّن جملة من الكلمات","Kelimelerden cümle kur","शब्दों से वाक्य बनाएँ","用这些词组句"],
+"Tegenwoordige tijd":["Present tense","المضارع","Şimdiki zaman","वर्तमान काल","现在时"],
+"Vervoeging, modale en scheidbare werkwoorden":["Conjugation, modal and separable verbs","التصريف والأفعال المساعدة والأفعال المنفصلة","Çekim, kiplik ve ayrılabilen fiiller","रूप-परिवर्तन, सहायक और अलग होने वाली क्रियाएँ","变位、情态动词和可分动词"],
+"De, het en uitgangen":["De, het and endings","de وhet والنهايات","De, het ve ekler","de, het और प्रत्यय","de、het 和词尾"],
+"Lidwoorden, meervoud, niet en geen":["Articles, plurals, niet and geen","أدوات التعريف والجمع وniet وgeen","Artikeller, çoğul, niet ve geen","आर्टिकल, बहुवचन, niet और geen","冠词、复数、niet 和 geen"],
+"Die en dat, zou, het passief, er, voegwoorden":["Die and dat, zou, the passive, er, conjunctions","die وdat وzou والمبني للمجهول وer وأدوات الربط","Die ve dat, zou, edilgen, er, bağlaçlar","die और dat, zou, कर्मवाच्य, er, संयोजक","die 和 dat、zou、被动态、er、连词"],
+"Lange zinnen met bijzinnen":["Long sentences with subordinate clauses","جمل طويلة مع جمل فرعية","Yan cümleli uzun cümleler","उपवाक्यों वाले लंबे वाक्य","带从句的长句"],
+"Werk, geld, gezondheid, wonen":["Work, money, health, housing","العمل والمال والصحة والسكن","İş, para, sağlık, konut","काम, पैसा, स्वास्थ्य, आवास","工作、金钱、健康、住房"],
+"Lezen, luisteren en spreken":["Reading, listening and speaking","القراءة والاستماع والمحادثة","Okuma, dinleme ve konuşma","पढ़ना, सुनना और बोलना","阅读、听力和口语"],
+"Boekenkast":["Bookshelf","رف الكتب","Kitaplık","किताबों की अलमारी","书架"],
+"Verhalen en je eigen e-books.":["Stories and your own e-books.","قصص وكتبك الإلكترونية.","Hikâyeler ve kendi e-kitapların.","कहानियाँ और आपकी अपनी ई-बुक।","故事和你自己的电子书。"],
+"Geschiedenis van Nederland":["History of the Netherlands","تاريخ هولندا","Hollanda tarihi","नीदरलैंड का इतिहास","荷兰历史"],
+"Van de hunebedden tot nu.":["From the hunebeds to now.","من المقابر الحجرية (hunebed) حتى اليوم.","Hunebed'lerden günümüze.","hunebed से आज तक।","从巨石墓到今天。"],
+"Luisteren en kijken":["Listen and watch","الاستماع والمشاهدة","Dinle ve izle","सुनें और देखें","听和看"],
+"Nieuws, video's en podcasts.":["News, videos and podcasts.","أخبار وفيديوهات وبودكاست.","Haberler, videolar ve podcast'ler.","समाचार, वीडियो और पॉडकास्ट।","新闻、视频和播客。"],
+"Gesprekken":["Conversations","المحادثات","Konuşmalar","बातचीत","对话"],
+"Bel de dokter, koop brood, praat met de buren.":["Call the doctor, buy bread, talk to the neighbours.","اتصل بالطبيب، اشترِ الخبز، تحدّث مع الجيران.","Doktoru ara, ekmek al, komşularla konuş.","डॉक्टर को फ़ोन करें, ब्रेड खरीदें, पड़ोसियों से बात करें।","给医生打电话、买面包、和邻居聊天。"],
+"Mijn zwakke punten":["My weak points","نقاط ضعفي","Zayıf noktalarım","मेरी कमज़ोरियाँ","我的弱项"],
+"Oefen waar je de meeste fouten maakt.":["Practise where you make the most mistakes.","تدرّب على ما تخطئ فيه أكثر.","En çok hata yaptığın yerleri çalış.","जहाँ सबसे ज़्यादा गलतियाँ होती हैं, वहाँ अभ्यास करें।","练习你错得最多的地方。"],
+"Mijn fouten":["My mistakes","أخطائي","Hatalarım","मेरी गलतियाँ","我的错误"],
+"Uit je eigen teksten en antwoorden.":["From your own texts and answers.","من نصوصك وإجاباتك.","Kendi metinlerinden ve cevaplarından.","आपके अपने पाठों और उत्तरों से।","来自你自己的文字和回答。"],
+"Mijn woorden":["My words","كلماتي","Kelimelerim","मेरे शब्द","我的单词"],
+"Die je bij het lezen hebt bewaard.":["The ones you saved while reading.","التي حفظتها أثناء القراءة.","Okurken kaydettiklerin.","जो आपने पढ़ते समय सहेजे।","你在阅读时保存的。"],
+"Voornaam":["First name","الاسم الأول","Ad","पहला नाम","名字"],
+"Achternaam":["Last name","اسم العائلة","Soyadı","उपनाम","姓氏"],
+"Ik oefen voor":["I practise for","أتدرّب من أجل","Hazırlandığım sınav","मेरी तैयारी","我在准备"],
+"Trillen bij een antwoord":["Vibrate on an answer","الاهتزاز عند الإجابة","Cevapta titreşim","उत्तर पर कंपन","答题时振动"],
+"Account":["Account","الحساب","Hesap","खाता","账户"],
+"Bewaar je voortgang en laat je teksten nakijken.":["Keep your progress and get your texts checked.","احفظ تقدّمك واطلب تصحيح نصوصك.","İlerlemeni kaydet, metinlerini kontrol ettir.","अपनी प्रगति सहेजें और अपने पाठ जँचवाएँ।","保存进度，并批改你的文章。"],
+"Inloggen of account maken":["Log in or create an account","تسجيل الدخول أو إنشاء حساب","Giriş yap veya hesap oluştur","लॉग इन करें या खाता बनाएँ","登录或创建账户"],
+"Uitloggen":["Log out","تسجيل الخروج","Çıkış yap","लॉग आउट","退出登录"],
+"Account verwijderen":["Delete account","حذف الحساب","Hesabı sil","खाता हटाएँ","删除账户"],
+"Passkey toevoegen":["Add a passkey","إضافة مفتاح مرور","Geçiş anahtarı ekle","पासकी जोड़ें","添加通行密钥"],
+"Ingelogd als":["Logged in as","تم الدخول باسم","Giriş yapan:","इस रूप में लॉग इन:","当前登录："],
+"Over Bittertalen":["About Bittertalen","عن Bittertalen","Bittertalen hakkında","Bittertalen के बारे में","关于 Bittertalen"],
+"Wie het maakt, waarom, en wat erin zit.":["Who makes it, why, and what is in it.","من يصنعه ولماذا وماذا يحتوي.","Kim yapıyor, neden yapıyor ve içinde neler var.","इसे कौन बनाता है, क्यों, और इसमें क्या है।","谁在做、为什么做、里面有什么。"],
+"Privacyverklaring":["Privacy statement","بيان الخصوصية","Gizlilik bildirimi","गोपनीयता कथन","隐私声明"],
+"Welke gegevens Bittertalen gebruikt, waarom en waar ze staan.":["What data Bittertalen uses, why and where it is kept.","البيانات التي يستخدمها Bittertalen وسبب استخدامها وأين تُحفظ.","Bittertalen hangi verileri, neden kullanıyor ve nerede saklıyor.","Bittertalen कौन-सा डेटा इस्तेमाल करता है, क्यों और वह कहाँ रखा जाता है।","Bittertalen 使用哪些数据、为什么使用、存放在哪里。"],
+"Mijn resultaten":["My results","نتائجي","Sonuçlarım","मेरे परिणाम","我的成绩"],
+"Nog geen proefexamens.":["No practice exams yet.","لا توجد امتحانات تجريبية بعد.","Henüz deneme sınavı yok.","अभी कोई अभ्यास परीक्षा नहीं।","还没有模拟考试。"],
+"Geoefend":["Practised","تم التدرّب","Çalışıldı","अभ्यास किया","已练习"],
+"Dagen op rij":["Days in a row","أيام متواصلة","Üst üste gün","लगातार दिन","连续天数"],
+"Vragen geoefend":["Questions practised","الأسئلة التي تدرّبت عليها","Çalışılan sorular","अभ्यास किए गए प्रश्न","已练习的问题"],
+"Bewaarde woorden":["Saved words","الكلمات المحفوظة","Kaydedilen kelimeler","सहेजे गए शब्द","已保存的单词"],
+"Gesprekken gevoerd":["Conversations held","المحادثات المنجزة","Yapılan konuşmalar","की गई बातचीत","完成的对话"],
+"uit het geheugen van je telefoon":["from your phone's memory","من ذاكرة هاتفك","telefonunun belleğinden","आपके फ़ोन की मेमोरी से","来自手机内存"],
+"De onderdelen met de meeste fouten staan bovenaan.":["The parts with the most mistakes are at the top.","الأقسام التي فيها أكثر الأخطاء في الأعلى.","En çok hata yapılan bölümler en üstte.","सबसे ज़्यादा गलतियों वाले भाग सबसे ऊपर हैं।","错误最多的部分排在最上面。"],
+"Nog te weinig antwoorden. Maak eerst een paar rondes; daarna zie je hier je zwakke punten.":["Not enough answers yet. Do a few rounds first; then your weak points show here.","الإجابات قليلة حتى الآن. أكمل بعض الجولات أولًا، ثم ستظهر نقاط ضعفك هنا.","Henüz yeterince cevap yok. Önce birkaç tur yap; sonra zayıf noktaların burada görünür.","अभी बहुत कम उत्तर हैं। पहले कुछ दौर पूरे करें; फिर आपकी कमज़ोरियाँ यहाँ दिखेंगी।","回答还太少。先做几轮，然后这里会显示你的弱项。"],
+"Tik op een woord voor de betekenis.":["Tap a word for its meaning.","اضغط على كلمة لمعرفة معناها.","Anlamı için kelimeye dokun.","अर्थ के लिए शब्द पर टैप करें।","点击单词查看意思。"],
+"Boek toevoegen":["Add a book","إضافة كتاب","Kitap ekle","किताब जोड़ें","添加书籍"],
+"Bestand kiezen":["Choose a file","اختيار ملف","Dosya seç","फ़ाइल चुनें","选择文件"],
+"Tekst plakken":["Paste text","لصق نص","Metin yapıştır","पाठ चिपकाएँ","粘贴文字"],
+"Een e-book (.epub, zonder kopieerbeveiliging), een tekstbestand (.txt) of een tekst die je plakt. Het boek blijft op dit apparaat.":["An e-book (.epub, without copy protection), a text file (.txt) or text you paste. The book stays on this device.","كتاب إلكتروني (.epub بدون حماية من النسخ) أو ملف نصي (.txt) أو نص تلصقه. يبقى الكتاب على هذا الجهاز.","Bir e-kitap (.epub, kopya koruması olmadan), bir metin dosyası (.txt) veya yapıştırdığın bir metin. Kitap bu cihazda kalır.","एक ई-बुक (.epub, बिना कॉपी सुरक्षा), एक टेक्स्ट फ़ाइल (.txt) या चिपकाया गया पाठ। किताब इसी डिवाइस पर रहती है।","电子书（.epub，无复制保护）、文本文件（.txt）或粘贴的文字。书只保存在这台设备上。"],
+"Nog geen woorden. Tik bij het lezen op een woord en dan op Bewaar.":["No words yet. While reading, tap a word and then Bewaar (save).","لا توجد كلمات بعد. أثناء القراءة اضغط على كلمة ثم على Bewaar (حفظ).","Henüz kelime yok. Okurken bir kelimeye, sonra Bewaar'a (kaydet) dokun.","अभी कोई शब्द नहीं। पढ़ते समय किसी शब्द पर और फिर Bewaar (सहेजें) पर टैप करें।","还没有单词。阅读时点击单词，再点击 Bewaar（保存）。"],
+"Echt Nederlands. Je hoeft niet alles te begrijpen.":["Real Dutch. You don't need to understand everything.","هولندية حقيقية. لست مضطرًا لفهم كل شيء.","Gerçek Hollandaca. Her şeyi anlaman gerekmiyor.","असली डच। सब कुछ समझना ज़रूरी नहीं है।","真实的荷兰语。不必全部听懂。"],
+"Video's":["Videos","فيديوهات","Videolar","वीडियो","视频"],
+"Podcasts":["Podcasts","بودكاست","Podcast'ler","पॉडकास्ट","播客"],
+"Makkelijk":["Easy","سهل","Kolay","आसान","简单"],
+"Gemiddeld":["Medium","متوسط","Orta","मध्यम","中等"],
+"Moeilijk":["Hard","صعب","Zor","कठिन","困难"],
+"Herhaal de vragen van alle hoofdstukken":["Review the questions of all chapters","راجع أسئلة جميع الفصول","Tüm bölümlerin sorularını tekrarla","सभी अध्यायों के प्रश्न दोहराएँ","复习所有章节的问题"],
+"E-mailadres":["E-mail address","البريد الإلكتروني","E-posta adresi","ई-मेल पता","电子邮箱"],
+"Volgende":["Next","التالي","İleri","आगे","下一步"],
+"Terug":["Back","رجوع","Geri","वापस","返回"],
+"Eerst rondkijken":["Look around first","ألقِ نظرة أولًا","Önce göz at","पहले देखें","先看看"],
+"Face ID of vingerafdruk":["Face ID or fingerprint","Face ID أو بصمة الإصبع","Face ID veya parmak izi","Face ID या फ़िंगरप्रिंट","Face ID 或指纹"],
+"Vul de code in":["Enter the code","أدخل الرمز","Kodu gir","कोड दर्ज करें","输入验证码"],
+"ONA en participatieverklaring":["ONA and participation statement","ONA وبيان المشاركة","ONA ve katılım beyanı","ONA और सहभागिता घोषणा","ONA 和参与声明"],
+"Niet voor iedereen: kijk of jij ze nodig hebt.":["Not for everyone: check whether you need them.","ليس للجميع: تحقّق هل تحتاج إليهما.","Herkes için değil: sana gerekip gerekmediğine bak.","सबके लिए नहीं: देखें कि आपको इनकी ज़रूरत है या नहीं।","并非人人需要：看看你是否需要。"],
+"ONA":["ONA","ONA","ONA","ONA","ONA"],
+"Inloggen is niet gelukt":["Logging in did not work","تعذّر تسجيل الدخول","Giriş yapılamadı","लॉग इन नहीं हो पाया","登录失败"],
+"Je bent ingelogd":["You are logged in","تم تسجيل دخولك","Giriş yaptın","आप लॉग इन हैं","你已登录"],
+"Ga terug naar Bittertalen op je beginscherm. Daar ben je nu ook ingelogd.":["Go back to Bittertalen on your home screen. You are logged in there too.","عد إلى Bittertalen على شاشتك الرئيسية. أنت مسجّل الدخول هناك أيضًا.","Ana ekranındaki Bittertalen'e dön. Orada da giriş yapmış oldun.","अपनी होम स्क्रीन पर Bittertalen पर लौटें। वहाँ भी आप लॉग इन हैं।","回到主屏幕上的 Bittertalen。你在那里也已登录。"],
+"Ga terug naar Bittertalen op je beginscherm en probeer het nog een keer, of log in met je e-mailadres.":["Go back to Bittertalen on your home screen and try again, or log in with your e-mail address.","عد إلى Bittertalen على شاشتك الرئيسية وحاول مرة أخرى، أو سجّل الدخول ببريدك الإلكتروني.","Ana ekranındaki Bittertalen'e dön ve tekrar dene veya e-posta adresinle giriş yap.","अपनी होम स्क्रीन पर Bittertalen पर लौटें और फिर कोशिश करें, या अपने ई-मेल पते से लॉग इन करें।","回到主屏幕上的 Bittertalen 再试一次，或用电子邮箱登录。"],
+"Inloggen is nog niet ingesteld.":["Logging in is not set up yet.","تسجيل الدخول غير مُعدّ بعد.","Giriş henüz ayarlanmadı.","लॉग इन अभी सेट नहीं है।","登录尚未设置。"],
+"Inloggen":["Log in","تسجيل الدخول","Giriş yap","लॉग इन","登录"],
+"Ander e-mailadres":["Another e-mail address","بريد إلكتروني آخر","Başka e-posta adresi","दूसरा ई-मेल पता","其他邮箱"],
+"Code van 6 cijfers":["6-digit code","رمز من 6 أرقام","6 haneli kod","6 अंकों का कोड","6 位验证码"],
+"Met een account blijft je voortgang bewaard, ook op je andere apparaten, en kijkt Claude je teksten en antwoorden na.":["With an account your progress is kept, also on your other devices, and Claude checks your texts and answers.","بالحساب يبقى تقدّمك محفوظًا، حتى على أجهزتك الأخرى، ويصحّح Claude نصوصك وإجاباتك.","Hesapla ilerlemen diğer cihazlarında da saklanır ve Claude metinlerini ve cevaplarını kontrol eder.","खाते से आपकी प्रगति आपके दूसरे डिवाइसों पर भी सुरक्षित रहती है, और Claude आपके पाठ और उत्तर जाँचता है।","有了账户，你的进度会保存，其他设备上也能用，Claude 还会批改你的文字和回答。"],
+"Er is een nieuwe versie van Bittertalen.":["There is a new version of Bittertalen.","يتوفر إصدار جديد من Bittertalen.","Bittertalen'in yeni bir sürümü var.","Bittertalen का नया संस्करण उपलब्ध है।","Bittertalen 有新版本。"],
+"Vernieuwen":["Refresh","تحديث","Yenile","रीफ़्रेश करें","刷新"],
+"Zet Bittertalen op je beginscherm":["Put Bittertalen on your home screen","أضف Bittertalen إلى شاشتك الرئيسية","Bittertalen'i ana ekranına ekle","Bittertalen को अपनी होम स्क्रीन पर रखें","把 Bittertalen 添加到主屏幕"],
+"Al geoefend in Safari?":["Already practised in Safari?","هل تدرّبت في Safari من قبل؟","Safari'de çalıştın mı?","क्या Safari में पहले अभ्यास किया है?","已经在 Safari 里练习过了？"],
+"Kopieer mijn voortgang":["Copy my progress","انسخ تقدّمي","İlerlememi kopyala","मेरी प्रगति कॉपी करें","复制我的进度"],
+"Plak mijn voortgang":["Paste my progress","الصق تقدّمي","İlerlememi yapıştır","मेरी प्रगति चिपकाएँ","粘贴我的进度"],
+"Begrepen":["Got it","فهمت","Anladım","ठीक है","知道了"],
+"Nee, ik begin nieuw":["No, I'm starting fresh","لا، سأبدأ من جديد","Hayır, yeniden başlıyorum","नहीं, नई शुरुआत करें","不，我要重新开始"],
+"Toch beginnen":["Start anyway","ابدأ على أي حال","Yine de başla","फिर भी शुरू करें","仍然开始"],
+"Verhaal op A2-niveau":["Story at A2 level","قصة بمستوى A2","A2 düzeyinde hikâye","A2 स्तर की कहानी","A2 水平的故事"],
+"Verhaal op B1-niveau":["Story at B1 level","قصة بمستوى B1","B1 düzeyinde hikâye","B1 स्तर की कहानी","B1 水平的故事"],
+"nog niet gelezen":["not read yet","لم تُقرأ بعد","henüz okunmadı","अभी नहीं पढ़ी","尚未阅读"],
+"Klaar":["Done","تم","Tamam","पूरा","完成"],
+"dagen op rij":["days in a row","أيام متواصلة","gün üst üste","दिन लगातार","连续天数"],
+"dag op rij":["day in a row","يوم متواصل","gün üst üste","दिन लगातार","连续天数"],
+"Het verhaal van dit schilderij":["The story of this painting","قصة هذه اللوحة","Bu tablonun hikâyesi","इस चित्र की कहानी","这幅画的故事"],
+"Bekijk het hele schilderij":["See the whole painting","شاهد اللوحة كاملة","Tablonun tamamını gör","पूरा चित्र देखें","查看整幅画"],
+"Taal":["Language","اللغة","Dil","भाषा","语言"]};
+let LANG=LANGS[lsGet("ww-ui")]?lsGet("ww-ui"):"nl", LI=LCODE.indexOf(LANG);
+// Month and day names come from the browser; only the order differs per language
+const NLM=["januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december"];
+const NLD=["maandag","dinsdag","woensdag","donderdag","vrijdag","zaterdag","zondag"];
+const lName=(o,d)=>new Intl.DateTimeFormat(LANGS[LANG].c,o).format(d);
+const dayMon=(n,mo)=>{const i=NLM.indexOf(mo.toLowerCase());if(i<0)return`${n} ${mo}`;return LANG==="zh"?`${i+1}月${n}日`:`${n} ${lName({month:"long"},new Date(2026,i,15))}`};
+const uiT=s=>(UI[s]||[])[LI];
 const UIR=[
- [/^(\d+) van (\d+) klaar$/,"$1 of $2 done"],[/^(\d+) van (\d+)$/,"$1 of $2"],[/^nodig: (\d+)%$/,"needed: $1%"],[/^(\d+) min$/,"$1 min"],
- [/^Gestart in ([\d,]+) s$/,(m,a)=>`Started in ${a.replace(",",".")} s`],
- [/^(maandag|dinsdag|woensdag|donderdag|vrijdag|zaterdag|zondag) (\d+) (\w+)$/i,(m,d,n,mo)=>`${DAYS[d.toLowerCase()]} ${n} ${MON[mo.toLowerCase()]||mo}`],
- [/^Proefexamen (\d+) (\w+)$/,(m,n,mo)=>`Practice exam ${n} ${MON[mo]||mo}`],
- [/^Nakijken vandaag: nog (\d+) van de (\d+)$/,"Checks left today: $1 of $2"],
- [/^Je les van vandaag is voor (.+) \(kies in Profiel\)\.$/,(m,l)=>`Today's lesson is for ${UI[l]||l} (choose in Profile).`],
- [/^Zonder account kijkt Claude (\d+) keer per dag gratis na\. Met een account (\d+) keer per dag \(Profiel\)\.$/,"Without an account Claude checks $1 times a day for free. With an account $2 times a day (Profile)."],
- [/^Van de hunebedden tot nu, in (\d+) korte hoofdstukken\. Goed voor KNM\.$/,"From the hunebeds to now, in $1 short chapters. Good for KNM."],
- [/^Nog (\d+) keer gratis nakijken vandaag\. Met een account (\d+) keer per dag \(Profiel\)\.$/,"$1 free checks left today. With an account $2 a day (Profile)."]];
-let EN=lsGet("ww-ui")==="en";
+ [/^(\d+) van (\d+) klaar$/,["$1 of $2 done","أنجزت $1 من $2","$1/$2 tamam","$2 में से $1 पूरे","已完成 $1/$2"]],
+ [/^(\d+) van (\d+)$/,["$1 of $2","$1 من $2","$1/$2","$2 में से $1","$1/$2"]],
+ [/^nodig: (\d+)%$/,["needed: $1%","المطلوب: $1%","gerekli: %$1","आवश्यक: $1%","需要：$1%"]],
+ [/^(\d+)\smin$/,["$1 min","$1 دقيقة","$1 dk","$1 मिनट","$1 分钟"]],
+ [/^Gestart in ([\d,]+) s$/,(m,a)=>{const p=a.replace(",",".");return[`Started in ${p} s`,`بدأ التشغيل في ${p} ثانية`,`${a} sn'de açıldı`,`${p} सेकंड में शुरू हुआ`,`${p} 秒启动`][LI]}],
+ [/^(maandag|dinsdag|woensdag|donderdag|vrijdag|zaterdag|zondag) (\d+) (\w+)$/i,(m,d,n,mo)=>{const w=lName({weekday:"long"},new Date(2026,0,5+NLD.indexOf(d.toLowerCase()))),a=dayMon(n,mo);return LANG==="tr"||LANG==="zh"?`${a} ${w}`:`${w} ${a}`}],
+ [/^Proefexamen (\d+) (\w+)$/,(m,n,mo)=>["Practice exam ","امتحان تجريبي ","Deneme sınavı ","अभ्यास परीक्षा ","模拟考试 "][LI]+dayMon(n,mo)],
+ [/^Nakijken vandaag: nog (\d+) van de (\d+)$/,["Checks left today: $1 of $2","التصحيحات المتبقية اليوم: $1 من $2","Bugün kalan kontrol: $1/$2","आज बची जाँचें: $2 में से $1","今天剩余批改：$1/$2"]],
+ [/^Je les van vandaag is voor (.+) \(kies in Profiel\)\.$/,(m,l)=>{const v=uiT(l)||l;return[`Today's lesson is for ${v} (choose in Profile).`,`درس اليوم مخصص لـ ${v} (اختر في ملفك).`,`Bugünkü ders ${v} için (Profil'den seç).`,`आज का पाठ ${v} के लिए है (प्रोफ़ाइल में चुनें)।`,`今天的课程针对 ${v}（在“我的”中选择）。`][LI]}],
+ [/^Zonder account kijkt Claude (\d+) keer per dag gratis na\. Met een account (\d+) keer per dag \(Profiel\)\.$/,["Without an account Claude checks $1 times a day for free. With an account $2 times a day (Profile).","بدون حساب يصحّح Claude مجانًا $1 مرات في اليوم. وبحساب $2 مرة في اليوم (ملفي).","Hesapsız Claude günde $1 kez ücretsiz kontrol eder. Hesapla günde $2 kez (Profil).","बिना खाते के Claude दिन में $1 बार मुफ़्त जाँच करता है। खाते के साथ दिन में $2 बार (प्रोफ़ाइल)।","没有账户时，Claude 每天免费批改 $1 次。有账户时每天 $2 次（我的）。"]],
+ [/^Van de hunebedden tot nu, in (\d+) korte hoofdstukken\. Goed voor KNM\.$/,["From the hunebeds to now, in $1 short chapters. Good for KNM.","من المقابر الحجرية (hunebed) حتى اليوم، في $1 فصلًا قصيرًا. مفيد لامتحان KNM.","Hunebed'lerden günümüze, $1 kısa bölümde. KNM için faydalı.","hunebed से आज तक, $1 छोटे अध्यायों में। KNM के लिए उपयोगी।","从巨石墓到今天，共 $1 个短章节。对 KNM 有帮助。"]],
+ [/^Nog (\d+) keer gratis nakijken vandaag\. Met een account (\d+) keer per dag \(Profiel\)\.$/,["$1 free checks left today. With an account $2 a day (Profile).","بقي $1 تصحيحات مجانية اليوم. وبحساب $2 مرة في اليوم (ملفي).","Bugün $1 ücretsiz kontrol kaldı. Hesapla günde $2 kez (Profil).","आज $1 मुफ़्त जाँचें बची हैं। खाते के साथ दिन में $2 (प्रोफ़ाइल)।","今天还剩 $1 次免费批改。有账户时每天 $2 次（我的）。"]]];
+const uiR=s=>{for(const[r,f]of UIR)if(r.test(s))return s.replace(r,Array.isArray(f)?f[LI]:f);return null};
 const UIO=new WeakMap(), UIA=new WeakMap();
-const trS=s=>{const t=s.trim();if(!t)return null;if(UI[t])return s.replace(t,UI[t]);
-  for(const[r,f]of UIR){if(r.test(t))return s.replace(t,t.replace(r,f))}
-  if(t.includes(" · ")){const p=t.split(" · "),q=p.map(x=>UI[x]||UIR.reduce((a,[r,f])=>a!==x?a:x.replace(r,f),x));if(q.some((x,i)=>x!==p[i]))return s.replace(t,q.join(" · "))}
+const rtlMark=v=>LANG==="ar"?"\u200f"+v:v; // an Arabic line that starts with a Latin word (KNM, Face ID) still runs right to left
+const trS=s=>{const t=s.trim();if(!t)return null;const v=uiT(t)||uiR(t);if(v)return s.replace(t,rtlMark(v));
+  if(t.includes(" · ")){const p=t.split(" · "),q=p.map(x=>uiT(x)||uiR(x)||x);if(q.some((x,i)=>x!==p[i]))return s.replace(t,rtlMark(q.join(" · ")))}
   return null};
-const uiSkip=el=>!el||el.closest("#play,#read,script,style,.doc,.sample,.msum");
+const uiSkip=el=>!el||el.closest("#play,#read,script,style,select,.doc,.sample,.msum");
 function trNode(root){
-  if(root.nodeType===3){const el=root.parentElement;if(uiSkip(el))return;const o=UIO.get(root)??root.nodeValue,v=EN?trS(o):null;
-    if(v!=null){if(!UIO.has(root))UIO.set(root,o);if(root.nodeValue!==v)root.nodeValue=v}else if(!EN&&UIO.has(root)){root.nodeValue=UIO.get(root);UIO.delete(root)}return}
+  if(root.nodeType===3){const el=root.parentElement;if(uiSkip(el))return;const o=UIO.get(root)??root.nodeValue,v=LI<0?null:trS(o);
+    if(v!=null){if(!UIO.has(root))UIO.set(root,o);if(root.nodeValue!==v)root.nodeValue=v}else if(UIO.has(root)){root.nodeValue=UIO.get(root);UIO.delete(root)}return}
   if(root.nodeType!==1||uiSkip(root))return;
-  [root,...root.querySelectorAll("[aria-label],[placeholder]")].forEach(e=>{if(!e.getAttribute||uiSkip(e))return;["aria-label","placeholder"].forEach(a=>{
-    const cur=e.getAttribute(a);if(cur==null)return;const m=UIA.get(e)||{};const o=m[a]??cur,v=EN?trS(o):null;
-    if(v!=null){m[a]=o;UIA.set(e,m);if(cur!==v)e.setAttribute(a,v)}else if(!EN&&m[a]!=null){e.setAttribute(a,m[a]);delete m[a]}})});
+  [root,...root.querySelectorAll("[aria-label],[placeholder]")].forEach(e=>{if(!e.getAttribute||e.closest("#play,#read,script,style,.doc,.sample,.msum"))return;["aria-label","placeholder"].forEach(a=>{
+    const cur=e.getAttribute(a);if(cur==null)return;const m=UIA.get(e)||{};const o=m[a]??cur,v=LI<0?null:trS(o);
+    if(v!=null){m[a]=o;UIA.set(e,m);if(cur!==v)e.setAttribute(a,v)}else if(m[a]!=null){e.setAttribute(a,m[a]);delete m[a]}})});
   const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;while(n=w.nextNode())trNode(n);
 }
 let uiBusy=false;
-new MutationObserver(ms=>{if(!EN||uiBusy)return;uiBusy=true;
+new MutationObserver(ms=>{if(LI<0||uiBusy)return;uiBusy=true;
   try{ms.forEach(m=>{if(m.type==="characterData")trNode(m.target);else m.addedNodes.forEach(trNode)})}finally{uiBusy=false}})
   .observe(document.body,{childList:true,subtree:true,characterData:true});
-const langHTML=()=>`<button type="button" class="lang" data-lang aria-label="${EN?"Nederlands":"English"}">${EN?"NL":"EN"}</button>`;
-function setLangBtns(){document.querySelectorAll("[data-lang]").forEach(b=>{b.textContent=EN?"NL":"EN";b.setAttribute("aria-label",EN?"Nederlands":"English")})}
-function toggleLang(){EN=!EN;lsSet("ww-ui",EN?"en":null);uiBusy=true;try{trNode(document.body)}finally{uiBusy=false}setLangBtns();
-  document.documentElement.classList.toggle("en",EN)}
-document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("[data-lang]"))toggleLang()});
-if(EN){uiBusy=true;try{trNode(document.body)}finally{uiBusy=false}document.documentElement.classList.add("en")}
-setLangBtns();
+const GLOBE=`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.6 3.9 5.6 3.9 9s-1.3 6.4-3.9 9c-2.6-2.6-3.9-5.6-3.9-9s1.3-6.4 3.9-9z"/></svg>`;
+// a native list over the pill, so an iPhone shows its own menu; every language is named in itself
+const langHTML=()=>`<label class="lang">${GLOBE}<span data-langs>${LANGS[LANG].s}</span><select data-lang aria-label="Taal">${Object.keys(LANGS).map(k=>`<option value="${k}"${k===LANG?" selected":""}>${LANGS[k].n}</option>`).join("")}</select></label>`;
+function setLangBtns(){document.querySelectorAll("[data-langs]").forEach(b=>b.textContent=LANGS[LANG].s);document.querySelectorAll("[data-lang]").forEach(b=>b.value=LANG)}
+function applyLang(){const h=document.documentElement;h.lang=LANGS[LANG].c;h.dir=LANG==="ar"?"rtl":"ltr";uiBusy=true;try{trNode(document.body)}finally{uiBusy=false}setLangBtns()}
+document.addEventListener("change",e=>{if(!e.target.matches("[data-lang]"))return;LANG=e.target.value;LI=LCODE.indexOf(LANG);lsSet("ww-ui",LI<0?null:LANG);applyLang()});
+document.querySelector("header .lang").outerHTML=langHTML();
+if(LI>=0)applyLang();
 ready$.then(()=>location.hash.startsWith("#verhuis=")?arrive():0).then(initCloud).finally(()=>{window.__up=1});
 // A newer version was fetched in the background: offer it (a reload takes it from the cache, so it is quick)
 function showFresh(){if($("fresh"))return;const d=document.createElement("div");d.id="fresh";d.setAttribute("role","status");
