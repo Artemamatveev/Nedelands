@@ -102,6 +102,15 @@ exemption after 6 of the last 12 months of work, 48 hours a month; the portfolio
 eindgesprek or a 64-hour course with the Blik op Werk keurmerk; the PVT with the four values, no mark), links to
 inburgeren.nl ↗, and the eindgesprek to practise as four conversations (`GP` items with `ona:1`, the learner is a kok,
 examiner "Mevrouw Bakker"), which the Gesprekken list and its count leave out. Check these rules when DUO changes them. Practising a part is on Oefenen.
+Last on both level tabs, "Mijn examen" (`uitScreen()`, in `#talk`): per part the learner taps Geslaagd or Niet geslaagd for
+the real exam (tap again to take it back), which also shows in Mijn resultaten. Their own record is `S.uit` `{part: {ok, at}}`;
+a copy goes to `/api/outcome` (`api/outcome.js`, table `exam_outcomes` and `put_outcome()` in `supabase/schema.sql`, run it
+in the SQL editor) to see whether the proefexamens and "Klaar voor het examen" predict the result: part, ok, `pc` the last
+proefexamen score, `rd` the status then (0 nog niet, 1 bijna, 2 klaar), the month. No name, e-mail, account or IP. The row's
+random id stays on the device (`ww-uit`, also what is still unsent; it goes at the next start) and never in `S`, so a row
+can't be tied to an account: a correction within a day changes the row, later it is a new attempt with a new row, and a row
+can only be taken back on the device that sent it. `OUTCOME_CAP` new rows a month (default 2000); rows go after three years
+(privacy.html says so). A passed part stays in today's lesson for now.
 - **Oefenen**: "Examenonderdelen" (Lezen, Luisteren, Schrijven, Spreken, KNM: practice without the clock) and
 "Grammatica en woorden" under it, "Lezen, luisteren en spreken" beside them on a computer.
 - **Herhalen**: Mijn zwakke punten, Mijn fouten and Mijn woorden (the last two once there is something in them).

@@ -259,7 +259,7 @@ textarea{display:block;width:100%;font-size:var(--fs-b);line-height:1.5;padding:
 .wlogo{font-size:30px;font-weight:700;letter-spacing:-.01em;margin:0 0 6px;color:var(--ink)}
 .wcard h2{display:block;text-align:center;font-size:var(--fs-xl);font-weight:600;margin:0 0 18px} .wcard h2::before{display:none}
 .wcard .wlv{font-size:var(--fs-m);color:var(--soft);margin:0 0 6px}
-.wcard .seg{margin:0 0 14px}
+.wcard .seg{margin:0 0 14px} .seg.uit{margin:0 0 14px}
 .wcard .fld{margin-bottom:0} .wcard .fld input{height:54px}
 .wcard .btn,.wcard .ghost{min-height:54px;padding:10px 14px;margin:0 0 10px}
 .wcard .login .prov{gap:6px;margin:14px 0} .wcard .login .prov button{border:0;background:none;height:44px;max-width:52px}
@@ -2143,6 +2143,7 @@ function mergeS(a,b){
   o.gp=by(a.gp,b.gp,(x,y)=>({n:Math.max(x.n||0,y.n||0),b:Math.max(x.b||0,y.b||0),at:Math.max(x.at||0,y.at||0)}));
   o.bk=by(a.bk,b.bk,(x,y)=>(y.at||0)>(x.at||0)?y:x);
   o.res=by(a.res,b.res,(x,y)=>{const m={};x.concat(y).forEach(r=>m[r.at]=r);return Object.values(m).sort((p,q)=>p.at-q.at).slice(-10)});
+  o.uit=by(a.uit,b.uit,(x,y)=>(y.at||0)>(x.at||0)?y:x);
   o.errs=uni(a.errs,b.errs,e=>e.r); o.words=uni(a.words,b.words,w=>w.w);
   const ga=a.gen||{},gb=b.gen||{}; o.gen={lz:uni(ga.lz,gb.lz,JSON.stringify),ls:uni(ga.ls,gb.ls,JSON.stringify)};
   const[p,q]=(a.last||0)>=(b.last||0)?[a,b]:[b,a]; o.last=p.last||0; o.streak=p.last===q.last?Math.max(p.streak||0,q.streak||0):p.streak||0;
@@ -3359,7 +3360,8 @@ const IC={
   stats:'<rect x="2.5" y="12" width="5" height="9.5" rx="1.3"/><rect x="9.5" y="3.5" width="5" height="18" rx="1.3"/><rect x="16.5" y="8.5" width="5" height="13" rx="1.3"/>',
   errs:'<path fill-rule="evenodd" d="M10.2 3.4a2.1 2.1 0 0 1 3.6 0l8.2 14.1a2.1 2.1 0 0 1-1.8 3.1H3.8A2.1 2.1 0 0 1 2 17.5zM11 9v5.5h2V9zm0 7v2h2v-2z"/>',
   hist:'<path d="M5.5 2.5h13v2.2h-1.2v2.1c0 2.2-1.8 3.8-3.6 5.2 1.8 1.4 3.6 3 3.6 5.2v2.1h1.2v2.2h-13v-2.2h1.2v-2.1c0-2.2 1.8-3.8 3.6-5.2C8.5 10.6 6.7 9 6.7 6.8V4.7H5.5z"/>',
-  ona:'<path d="M9 3.5h6A1.5 1.5 0 0 1 16.5 5v1.5h3.5A2 2 0 0 1 22 8.5V12H2V8.5a2 2 0 0 1 2-2h3.5V5A1.5 1.5 0 0 1 9 3.5zm.5 3h5V5.5h-5zM2 13.5h8.5v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1H22v5a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2z"/>',
+  uit:'<path d="M12 4 1.5 9.5 12 15l8.5-4.45V16h2V9.5z"/><path d="M6 14.2V17c0 1.6 2.7 3 6 3s6-1.4 6-3v-2.8l-6 3.1z"/>',
+ona:'<path d="M9 3.5h6A1.5 1.5 0 0 1 16.5 5v1.5h3.5A2 2 0 0 1 22 8.5V12H2V8.5a2 2 0 0 1 2-2h3.5V5A1.5 1.5 0 0 1 9 3.5zm.5 3h5V5.5h-5zM2 13.5h8.5v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1H22v5a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2z"/>',
   talk:'<path d="M3.5 2.5h10A1.6 1.6 0 0 1 15 4.1v6.3a1.6 1.6 0 0 1-1.5 1.6H8.2l-3.7 3.2V12h-1A1.6 1.6 0 0 1 2 10.4V4.1a1.6 1.6 0 0 1 1.5-1.6z"/><path d="M16.7 7.5h3.8A1.6 1.6 0 0 1 22 9.1v6.3a1.6 1.6 0 0 1-1.5 1.6h-1v3.2L15.8 17H10.5A1.6 1.6 0 0 1 9 15.4V13.6h4.6a3.1 3.1 0 0 0 3.1-3.1z"/>',
   privacy:'<path fill-rule="evenodd" d="M12 2l8.5 3.4v6c0 5.2-3.6 9.2-8.5 10.9-4.9-1.7-8.5-5.7-8.5-10.9v-6zM10.7 13.4L8.3 11l-1.5 1.5 3.9 3.9 6.4-6.4-1.5-1.5z"/>',
   duo:'<path fill-rule="evenodd" d="M6.5 2h7.8L19.5 7.2v13.3A1.5 1.5 0 0 1 18 22H6.5A1.5 1.5 0 0 1 5 20.5v-17A1.5 1.5 0 0 1 6.5 2zM8.4 14.2l2.7 2.7 4.9-4.9-1.4-1.4-3.5 3.5-1.3-1.3z"/>'};
@@ -3390,15 +3392,16 @@ function home(){
   // Examen and Oefenen: A2 and B1 as two tabs (.seg), one at a time; it opens on the level you practise for (exV: the tab
   // you picked since).
   const v=exV||lvl(),seg=`<div class="seg lvt" role="group" aria-label="Niveau">${["A2","B1"].map(x=>`<button data-v="${x}" aria-pressed="${x===v}">${LVL[x]}</button>`).join("")}</div>`,
-    other=v!==lvl()?`<p class="note">Je les van vandaag is voor ${LVL[lvl()]} (kies in Profiel).</p>`:"";
+    other=v!==lvl()?`<p class="note">Je les van vandaag is voor ${LVL[lvl()]} (kies in Profiel).</p>`:"",
+    uitRow=`<div class="list">${itHTML(`data-x="uit"`,"Mijn examen","Echt examen gedaan? Vertel hoe het ging.",{ic:"uit",n:(n=>n?`${n} van 5`:null)((v==="B1"?["l1","lb","wb","sb","knm"]:["lz","ls","wr","sp","knm"]).filter(k=>(S.uit||{})[k]&&S.uit[k].ok).length)})}</div>`;
   if(v==="B1"){
     $("exam").innerHTML=`<h2>Naar het examen</h2>${seg}${other}<p class="sub">Proefexamens met tijd, zoals het Staatsexamen. Het percentage is hoeveel je goed had, het streepje ongeveer wat je nodig hebt.</p><div class="list">${["l1","lb","wb","sb","knm"].map(part).join("")}</div>`
-      +`<div class="list"><a class="it ext" href="https://oefenexamensnt2.nl" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens Staatsexamen NT2 ↗</b></span><span class="d">Officieel, voor programma I. Liefst op een computer.</span></span></a></div>`;
+      +`<div class="list"><a class="it ext" href="https://oefenexamensnt2.nl" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens Staatsexamen NT2 ↗</b></span><span class="d">Officieel, voor programma I. Liefst op een computer.</span></span></a></div>`+uitRow;
     $("parts").innerHTML=`<h2>Examenonderdelen</h2>${seg}<p class="sub">Zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["l1","lb","wb","sb","knm"].map(row).join("")}</div>`;
   }else{
     $("exam").innerHTML=`<h2>Naar het examen</h2>${seg}${other}<p class="sub">Proefexamens met tijd, zoals bij DUO. Het percentage is hoeveel je goed had, het streepje wat je nodig hebt om te slagen.</p><div class="list">${["lz","ls","wr","sp","knm"].map(part).join("")}</div>`
       +`<div class="list"><a class="it ext" href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens van DUO ↗</b><small>15</small></span><span class="d">De echte, met echte stemmen. Liefst op een computer.</span></span></a></div>`
-      +`<div class="list">${itHTML(`data-x="ona"`,"ONA en participatieverklaring","Niet voor iedereen: kijk of jij ze nodig hebt.",{ic:"ona",n:(n=>n?`${n} van 4`:null)(GP.filter(c=>c.ona&&(S.gp||{})[c.id]).length)})}</div>`;
+      +`<div class="list">${itHTML(`data-x="ona"`,"ONA en participatieverklaring","Niet voor iedereen: kijk of jij ze nodig hebt.",{ic:"ona",n:(n=>n?`${n} van 4`:null)(GP.filter(c=>c.ona&&(S.gp||{})[c.id]).length)})}</div>`+uitRow;
     $("parts").innerHTML=`<h2>Examenonderdelen</h2>${seg}<p class="sub">Zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["lz","ls","wr","sp","knm"].map(row).join("")}</div>`;
   }
   $("gram").innerHTML=`<h2>Grammatica en woorden</h2><p class="sub">Rondes van 10 vragen.</p>`+(lvl()==="B1"
@@ -3421,6 +3424,7 @@ function home(){
     else if(d.x==="hist")hist();
     else if(d.x==="talk")talks();
     else if(d.x==="ona")onaScreen();
+    else if(d.x==="uit")uitScreen();
     else if(d.x==="words")practiseWords();
     else build("custom",{id:"custom",t:"Mijn fouten",n:10,pool:()=>shuffle(errItems())})});
   drawProfile();
@@ -3621,8 +3625,9 @@ function drawProfile(){
 function drawResults(){
   const el=$("myres"); if(!el)return;
   const R=S.res||{};
-  const day=t=>new Date(t).toLocaleDateString("nl-NL",{day:"numeric",month:"long"}),ks=["lz","ls","wr","sp","knm","l1","lb","wb","sb"].filter(k=>(R[k]||[]).length);
+  const day=t=>new Date(t).toLocaleDateString("nl-NL",{day:"numeric",month:"long"}),all=["lz","ls","wr","sp","knm","l1","lb","wb","sb"],ks=all.filter(k=>(R[k]||[]).length),U=S.uit||{},uk=all.filter(k=>U[k]);
   el.innerHTML=`<h2>Mijn resultaten</h2>`
+    +(uk.length?`<h3 class="lh">Echt examen</h3><ul class="errs kv">${uk.map(k=>`<li>${PART[k]}<span class="${U[k].ok?"good":"bad"}">${U[k].ok?"Geslaagd":"Niet geslaagd"}</span></li>`).join("")}</ul>`:"")
     +(ks.length?ks.map(k=>`<h3 class="lh">${PART[k]}</h3><ul class="errs kv">${R[k].slice().reverse().map(r=>`<li>Proefexamen ${day(r.at)}<span class="${r.pc>=passPc(k)?"good":"bad"}">${r.pc}%</span></li>`).join("")}</ul>`).join("")
       :`<p class="sub">Nog geen proefexamens.</p>`)
     +`<h3 class="lh">Geoefend</h3><ul class="errs kv"><li>Dagen op rij<span>${S.last>=today()-1?S.streak:0}</span></li><li>Vragen geoefend<span>${Object.keys(S.items).length}</span></li>`
@@ -4956,6 +4961,47 @@ function talks(){
 // ONA and the participatieverklaring: two parts of inburgeren that not everyone has to do. What they are, who needs
 // them, and the ONA final interview to practise as conversations (GP items with ona, not in the Gesprekken list).
 // The facts follow DUO (inburgeren.nl); check them there when the rules change.
+// Mijn examen: the result of the real exam, per part, as the learner tells it. Their own record is S.uit {part: {ok, at}};
+// a copy goes to /api/outcome (table exam_outcomes) to see whether the proefexamens and "Klaar voor het examen" predict the
+// real result: the part, passed or not, the last proefexamen score, the status then, and the month the server adds. No
+// name, e-mail or account. The row's random id stays on this device (ww-uit), never in S, so it can't be tied to an account;
+// with it a correction or taking it back changes that row. Unsent ones (offline) go at the next start. See privacy.html.
+const uitQ=()=>{try{return JSON.parse(lsGet("ww-uit"))||{}}catch(e){return{}}};
+const uuid=()=>crypto.randomUUID?crypto.randomUUID():"10000000-1000-4000-8000-100000000000".replace(/[018]/g,c=>(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16));
+async function uitSend(){
+  const Q=uitQ();
+  for(const k of Object.keys(Q)){const e=Q[k]; if(e.sent)continue;
+    try{const r=await fetch("/api/outcome",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:e.id,part:k,ok:e.ok,pc:e.pc,rd:e.rd})});
+      if(!r.ok)continue;
+      const q=uitQ(),n=q[k]; if(!n||n.id!==e.id||n.ok!==e.ok)continue; // changed while sending: it goes next time
+      if(n.ok==null)delete q[k]; else n.sent=1;
+      lsSet("ww-uit",JSON.stringify(q));
+    }catch(err){}}
+}
+setTimeout(()=>{if(Object.values(uitQ()).some(e=>!e.sent))uitSend()},5000);
+function setUit(k,ok){
+  const U=S.uit=S.uit||{},Q=uitQ(),old=U[k],e=Q[k];
+  if(old&&old.ok===ok){delete U[k];if(e){e.ok=null;e.sent=0}} // the same answer again takes it back
+  else{
+    // changing it within a day is a correction; later it is a new attempt, so a new row
+    const R=(S.res||{})[k]||[],r=ready(k),same=e&&e.ok!=null&&old&&Date.now()-old.at<864e5;
+    Q[k]={id:same?e.id:uuid(),ok,pc:R.length?R[R.length-1].pc:null,rd:R.length?r.cls==="good"?2:r.cls==="bad"?0:1:null};
+    U[k]={ok,at:Date.now()};
+    if(ok)buzz("good");
+  }
+  lsSet("ww-uit",JSON.stringify(Q)); save(); uitSend(); uitScreen(scrollY);
+}
+function uitScreen(y=0){
+  closePop();hush();TK=null;$("card").innerHTML="";
+  $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;
+  tBack(TABN[tab],home);
+  const U=S.uit||{},ks=(exV||lvl())==="B1"?["l1","lb","wb","sb","knm"]:["lz","ls","wr","sp","knm"];
+  $("tbody").innerHTML=`<h2>Mijn examen</h2><p class="sub">Echt examen gedaan? Tik per onderdeel op je uitslag.</p>`
+    +ks.map(k=>`<h3 class="lh">${PART[k]}</h3><div class="seg uit" role="group" aria-label="${PART[k]}">${[1,0].map(o=>`<button data-k="${k}" data-ok="${o}" aria-pressed="${!!U[k]&&U[k].ok===!!o}">${o?"Geslaagd":"Niet geslaagd"}</button>`).join("")}</div>`).join("")
+    +`<p class="note">Je uitslag telt mee in onze cijfers, zonder je naam of e-mailadres. Zo zien we of de proefexamens kloppen.</p><p class="note">Tik nog een keer op je uitslag om hem weg te halen.</p><p class="note"><a href="/privacy">Privacyverklaring</a></p>`;
+  document.querySelectorAll("#tbody .uit button").forEach(b=>b.onclick=()=>setUit(b.dataset.k,b.dataset.ok==="1"));
+  window.scrollTo(0,y);
+}
 function onaScreen(){
   closePop();hush();TK=null;$("card").innerHTML="";
   $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;window.scrollTo(0,0);
@@ -5436,7 +5482,7 @@ const UI={
 "Echt Nederlands. Je hoeft niet alles te begrijpen.":"Real Dutch. You don't need to understand everything.","Video's":"Videos","Podcasts":"Podcasts",
 "Makkelijk":"Easy","Gemiddeld":"Medium","Moeilijk":"Hard","Herhaal de vragen van alle hoofdstukken":"Review the questions of all chapters",
 "E-mailadres":"E-mail address","Volgende":"Next","Terug":"Back","Eerst rondkijken":"Look around first","Face ID of vingerafdruk":"Face ID or fingerprint",
-"Vul de code in":"Enter the code","ONA en participatieverklaring":"ONA and participation statement","Niet voor iedereen: kijk of jij ze nodig hebt.":"Not for everyone: check whether you need them.","ONA":"ONA","Inloggen is niet gelukt":"Logging in did not work","Je bent ingelogd":"You are logged in","Ga terug naar Bittertalen op je beginscherm. Daar ben je nu ook ingelogd.":"Go back to Bittertalen on your home screen. You are logged in there too.","Ga terug naar Bittertalen op je beginscherm en probeer het nog een keer, of log in met je e-mailadres.":"Go back to Bittertalen on your home screen and try again, or log in with your e-mail address.","Inloggen is nog niet ingesteld.":"Logging in is not set up yet.","Inloggen":"Log in","Ander e-mailadres":"Another e-mail address","Code van 6 cijfers":"6-digit code",
+"Vul de code in":"Enter the code","ONA en participatieverklaring":"ONA and participation statement","Mijn examen":"My exam","Echt examen gedaan? Vertel hoe het ging.":"Taken the real exam? Tell us how it went.","Echt examen gedaan? Tik per onderdeel op je uitslag.":"Taken the real exam? Tap your result for each part.","Geslaagd":"Passed","Niet geslaagd":"Not passed","Echt examen":"Real exam","Je uitslag telt mee in onze cijfers, zonder je naam of e-mailadres. Zo zien we of de proefexamens kloppen.":"Your result counts in our figures, without your name or e-mail. It shows us whether the practice exams are right.","Tik nog een keer op je uitslag om hem weg te halen.":"Tap your result again to remove it.","Privacyverklaring":"Privacy statement","Niet voor iedereen: kijk of jij ze nodig hebt.":"Not for everyone: check whether you need them.","ONA":"ONA","Inloggen is niet gelukt":"Logging in did not work","Je bent ingelogd":"You are logged in","Ga terug naar Bittertalen op je beginscherm. Daar ben je nu ook ingelogd.":"Go back to Bittertalen on your home screen. You are logged in there too.","Ga terug naar Bittertalen op je beginscherm en probeer het nog een keer, of log in met je e-mailadres.":"Go back to Bittertalen on your home screen and try again, or log in with your e-mail address.","Inloggen is nog niet ingesteld.":"Logging in is not set up yet.","Inloggen":"Log in","Ander e-mailadres":"Another e-mail address","Code van 6 cijfers":"6-digit code",
 "Met een account blijft je voortgang bewaard, ook op je andere apparaten, en kijkt Claude je teksten en antwoorden na.":"With an account your progress is kept, also on your other devices, and Claude checks your texts and answers.",
 "Er is een nieuwe versie van Bittertalen.":"There is a new version of Bittertalen.","Vernieuwen":"Refresh",
 "Zet Bittertalen op je beginscherm":"Put Bittertalen on your home screen","Al geoefend in Safari?":"Already practised in Safari?",
