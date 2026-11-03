@@ -218,7 +218,8 @@ vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one comin
   random `h` in the address it comes back to); a window that comes back with an `h` it did not make leaves the one-time
   code at `/api/handoff` (`handBack()`, table `handoff` in `supabase/schema.sql`, rows gone after 10 minutes) and says
   "Ga terug naar Bittertalen", and the app takes it when it is visible again (`claimHand()`) and exchanges it itself
-  (PKCE: the code is useless without the verifier only the app holds). If the login comes back in the app, nothing changes. No name is asked to log in: the e-mail is enough, the providers bring theirs
+  (PKCE: the code is useless without the verifier only the app holds). If the login comes back in the app, nothing changes
+  (that is what happened on the user's iPhone in November 2026; the handoff is the fallback for other iOS versions). No name is asked to log in: the e-mail is enough, the providers bring theirs
   (`syncMeta()`), and Profiel has the name fields; the e-mail code (`signInWithOtp` + `verifyOtp`, a 6-digit
   code, so an iPhone home-screen app never has to open a link) only with `LOGIN_EMAIL=1`, because Supabase's own mail
   only reaches the project's team (it needs custom SMTP); passkeys (experimental in Supabase) only with
