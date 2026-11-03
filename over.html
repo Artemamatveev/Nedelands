@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Over Bittertalen</title>
+<meta name="description" content="Wat Bittertalen is, wie het maakt en waar alles vandaan komt.">
+<link rel="canonical" href="https://bittertalen.nl/over">
+<link rel="icon" type="image/png" href="/apple-touch-icon.png">
+<style>
+/* The same Delfts blauw as the app: tin-glaze white, cobalt, the system font, one plain tile on the frosted windmill */
+:root{
+  --surface:#EEF2FA; --wash:#C9D6F2; --ink:#14213D; --soft:#56617C; --line:#D6DDEB; --blue:#1F3C96; --oranje:#C8500C;
+  --card:#FFFFFF; --glass:rgba(240,244,252,.5); --lift:0 1px 2px rgba(8,16,40,.06),0 8px 24px rgba(8,16,40,.10);
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --surface:#14204A; --wash:#2A3D7A; --ink:#E8EEFA; --soft:#A6B2CF; --line:#24346A; --blue:#8EADF5; --oranje:#FF8A3D;
+  --card:#111C42; --glass:rgba(8,14,36,.6); --lift:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.4); } }
+:root[data-theme="dark"]{
+  --surface:#14204A; --wash:#2A3D7A; --ink:#E8EEFA; --soft:#A6B2CF; --line:#24346A; --blue:#8EADF5; --oranje:#FF8A3D;
+  --card:#111C42; --glass:rgba(8,14,36,.6); --lift:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.4); }
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.55}
+body::before{content:"";position:fixed;inset:-24px;z-index:-2;background:url(/art/molen-glass.jpg) 70% 40%/cover}
+body::after{content:"";position:fixed;inset:0;z-index:-1;background:var(--glass)}
+main{max-width:720px;margin:0 auto;padding:16px 16px 48px}
+article{background:var(--card);border-radius:20px;box-shadow:var(--lift);padding:8px 20px 24px}
+.back{display:inline-flex;align-items:center;gap:6px;min-height:44px;margin-top:12px;border:1px solid var(--line);color:var(--ink);font-weight:600;font-size:16px;padding:5px 14px 6px 10px;border-radius:14px;text-decoration:none}
+h1{font-size:28px;font-weight:600;line-height:1.2;margin:20px 0 6px}
+h2{color:var(--soft);font-size:14px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin:28px 0 6px}
+p,li{margin:0 0 10px} ul{padding-left:22px;margin:0 0 10px}
+.sub{color:var(--soft)}
+a{color:var(--blue)}
+a:focus-visible{outline:3px solid var(--oranje);outline-offset:2px}
+.box{border-left:3px solid var(--wash);padding:2px 0 2px 14px;margin:14px 0}
+@media (min-width:768px){article{padding:12px 36px 32px}}
+.hero{display:block;width:100%;aspect-ratio:1200/630;object-fit:cover;border-radius:14px;margin:18px 0 6px}
+.cap{font-size:13px;color:var(--soft);margin:0 0 6px}
+</style>
+</head>
+<body>
+<main>
+<article>
+<a class="back" href="/"><span aria-hidden="true">←</span>Bittertalen</a>
+<h1>Over Bittertalen</h1>
+<img class="hero" src="/art/og-delft.jpg" alt="Gezicht op Delft van Johannes Vermeer">
+<p class="cap">Johannes Vermeer, Gezicht op Delft, ongeveer 1660 · Mauritshuis, Den Haag</p>
+
+<p>Bittertalen is een gratis app om te oefenen voor het inburgeringsexamen (A2) en het Staatsexamen NT2 (B1):
+lezen, luisteren, schrijven, spreken, KNM, grammatica en woorden. Met proefexamens met tijd, zoals bij DUO.</p>
+
+<h2>De naam</h2>
+<p>Bitterballen en talen. Nederlands leren is soms bitter, maar met een bitterbal gaat het beter. Daarom is de punt op
+de i een bitterbal.</p>
+
+<h2>Wie</h2>
+<p>Bittertalen wordt gemaakt door Artem Matveev, in Nederland.</p>
+
+<h2>Hoe het werkt</h2>
+<ul>
+<li>Alles werkt zonder account. Met een account blijft je voortgang bewaard op al je apparaten.</li>
+<li>Bij Schrijven en Spreken kijkt Claude (van Anthropic) je tekst na, volgens de punten die DUO gebruikt.</li>
+<li>Geen advertenties. Je gegevens verkopen we niet. Zie de <a href="/privacy">privacyverklaring</a>.</li>
+</ul>
+
+<h2>Wat het niet is</h2>
+<p>Bittertalen is niet van DUO of de overheid. Alle vragen en teksten zijn zelf geschreven. De officiële oefenexamens
+vind je op <a href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" rel="noopener">inburgeren.nl ↗</a> en
+<a href="https://oefenexamensnt2.nl" rel="noopener">oefenexamensnt2.nl ↗</a>.</p>
+
+<h2>Waar alles vandaan komt</h2>
+<ul>
+<li>De schilderijen zijn uit het publieke domein, uit het Rijksmuseum, het Mauritshuis en andere musea, via Wikimedia
+Commons.</li>
+<li>Het woordenboek komt van Wiktionary (CC BY-SA 4.0).</li>
+<li>De stemmen zijn gemaakt met Google Cloud Text-to-Speech.</li>
+</ul>
+
+<h2>Contact</h2>
+<p>Een fout gevonden, of een idee? Mail naar <a href="mailto:privacy@bittertalen.nl">privacy@bittertalen.nl</a>.</p>
+</article>
+</main>
+</body>
+</html>

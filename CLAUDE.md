@@ -73,8 +73,10 @@ with a finger (it grows and clears while held; where you let go is the tab that 
 shows on the five tabs; exercises and inner screens hide it and go back with their back button or a swipe. The tab
 you were on is kept (`tab`), so every back button returns to it and is named after it.
 
-- **Vandaag**: the painting and its label, then today's lesson (six numbered steps; the next one is filled
-cobalt; no exam dates): every exam part every day, the one that scores lowest first as a full round (every
+- **Vandaag**: the painting and its label, then today's lesson: how far you are today (a bar of six pills, "2 van 6
+klaar"), one short line, and the steps: the next one a big filled cobalt card with its painting detail, the others
+small rows; no exam dates. When all are done the streak stamp is put down once that day (`ww-stamp`) with a tap of the
+phone. The lesson: every exam part every day, the one that scores lowest first as a full round (every
 third day a proefexamen), the other four as short rounds (`SHORT`: one Lezen text, three Luisteren fragments,
 one Schrijven task, two Spreken questions, five KNM questions), weakest to strongest, and last a grammar round
 that helps the weakest part. Then Mix van de dag.
@@ -97,8 +99,12 @@ Every section appears once; don't add a second entry point to the same exercise.
 
 - **Going somewhere** (an exercise, a screen, a book, a source) is a list row, `itHTML()`:
   the whole row is the button, title + grey description, a count on the right, `›` at the end.
-  On the home screen a row starts with a cobalt line icon (`IC`) on a flat light `--wash` square, the same on every
-  background, not a picture.
+  On the home screen a row for a part of the app starts with a detail of one of our Dutch paintings (`PIC`,
+  `icHTML()`, `art/ic/<id>.jpg`, 128 px squares cut from `art/`: Lezen Vermeer's letter reader, Luisteren Leyster's
+  violinist, Schrijven Erasmus writing, Spreken Jan Steen, KNM Willem van Oranje, grammar Mondriaan, Woordenschat
+  Het melkmeisje…): generic line icons on pastel squares look like every generated app. Tools (privacy, Over, DUO's
+  site) keep a cobalt line icon (`IC`). A new part gets its own detail. Counts on the right only once something
+  was done (no "0 van 225").
   No "Oefenen →" or "Openen →" text links, no cards with their own buttons.
 - **Filled cobalt `.btn`**: the one main action on a screen (the next step of today,
   Controleer, Volgende). **Outlined `.ghost`** (neutral grey border): secondary actions (Proefexamen, Mix van de dag,
@@ -113,6 +119,21 @@ Every section appears once; don't add a second entry point to the same exercise.
   button (`.act`), the exam buttons (`.exnav`) and the feedback stick to the bottom of the screen, under the thumb.
   The feedback is a sheet (`.fb.sheet`): a ✓ or ✕ as well as green or red, the right answer, why, and Verder.
   Options also show ✓ / ✕; three options stand in one column.
+
+## Words, motion, touch
+
+- **Short words**: no explaining paragraph under every heading; a description says what is in it in a few words
+  ("Korte teksten met vragen"). Text wraps balanced (`text-wrap`), units with a non-breaking space (`10&nbsp;min`).
+- **Motion**: short and quiet, like iOS: a screen or tab comes in (`rise`), buttons give a little when pressed, a right
+  option pops, a wrong one shakes, the feedback sheet slides up, the stamp is put down. All off with
+  `prefers-reduced-motion`.
+- **Trillen, no sound** (the user's choice): `buzz("good"|"bad")` at every right or wrong answer and at the stamp:
+  Android `navigator.vibrate`; iPhone has none for websites, so a hidden `<input type="checkbox" switch>` is
+  toggled inside the tap (Safari 18+ gives the switch's own tap). A switch in Profiel turns it off per device
+  (`ww-tril`); it shows only on phones that can do it.
+- **Over Bittertalen**: `over.html` (served as /over, in the sitemap, linked from Profiel above the privacy row):
+  what it is, the name, who makes it, how it works, what it is not (not DUO), where everything comes from, contact.
+  The maker's own story and photo go there when the user gives them.
 
 ## Paintings
 

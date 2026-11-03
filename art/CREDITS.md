@@ -26,3 +26,9 @@ Ze zijn verkleind en gecomprimeerd voor de app (max. 1000 px).
 `molen-glass.jpg` is `molen.jpg`, kleiner en vervaagd: de achtergrond achter het glas van de app.
 
 `spinoza.jpg` is bijgesneden: de lijst en de kleurenkaart van het museum zijn weggehaald.
+
+## Details for the menu (art/ic/)
+
+`art/ic/<part>.jpg` are small square details (128 px) cut from the paintings above, one per part of the app
+(Lezen: Vermeer's Brieflezende vrouw, Luisteren: Leyster's violinist, Schrijven: Holbein's Erasmus writing, Spreken: Jan
+Steen, KNM: Willem van Oranje, grammar: Mondriaan, Woordenschat: Het melkmeisje, and so on). Same public-domain sources.
