@@ -41,6 +41,22 @@ Ze zijn verkleind (max. 640 px breed) en gecomprimeerd voor de app.
 | `fietstocht.jpg` | [Older woman with flowers protected bike lane boston.jpg](https://commons.wikimedia.org/wiki/File:Older_woman_with_flowers_protected_bike_lane_boston.jpg) | Photo by Adam Coppola. | CC0 |
 | `lekkeband.jpg` | [Hoe plak ik fietsband PK-F-A.01257.jpg](https://commons.wikimedia.org/wiki/File:Hoe_plak_ik_fietsband_PK-F-A.01257.jpg) | Emmy Andriesse for Anefo | Public domain |
 | `fietsenmaker.jpg` | [U.S. Air Force Tech. Sgt. Juan Sanchezduarte, with the 451st Expeditionary Logistics Readiness Squadron, works on a bicycle at a bike repair shop at Camp Losano, Kandahar Airfield, Afghanistan, Nov. 11, 2013 131111-F-BY961-018.jpg](https://commons.wikimedia.org/wiki/File:U.S._Air_Force_Tech._Sgt._Juan_Sanchezduarte,_with_the_451st_Expeditionary_Logistics_Readiness_Squadron,_works_on_a_bicycle_at_a_bike_repair_shop_at_Camp_Losano,_Kandahar_Airfield,_Afghanistan,_Nov._11,_2013_131111-F-BY961-018.jpg) | Capt Jason Smith | Public domain |
+| `fabriek.jpg` | [Post-war production line.webp](https://commons.wikimedia.org/wiki/File:Post-war_production_line.webp) | RoughRider00 | CC0 |
+| `paardwater.jpg` | [Horse drinking water.jpg](https://commons.wikimedia.org/wiki/File:Horse_drinking_water.jpg) | GiFavetta | CC0 |
+| `paardborstel.jpg` | [Village woman grooming her pony (Unsplash).jpg](https://commons.wikimedia.org/wiki/File:Village_woman_grooming_her_pony_(Unsplash).jpg) | Bantita Wongwai pearrigirl | CC0 |
+| `paardlopen.jpg` | [A participant leading their brown wild horse in the outdoor arena (53002254157).jpg](https://commons.wikimedia.org/wiki/File:A_participant_leading_their_brown_wild_horse_in_the_outdoor_arena_(53002254157).jpg) | BLMUtah | Public domain |
+| `ladekast.jpg` | [Chiffonnière (ladenkast) met zeven laden en blad van wit marmer, BK-2001-3.jpg](https://commons.wikimedia.org/wiki/File:Chiffonni%C3%A8re_(ladenkast)_met_zeven_laden_en_blad_van_wit_marmer,_BK-2001-3.jpg) | Rijksmuseum | CC0 |
+| `fauteuil.jpg` | [Armstoel bekleed met groene wol en met armleggers die eindigen in dierensnuiten, BK-1973-211.jpg](https://commons.wikimedia.org/wiki/File:Armstoel_bekleed_met_groene_wol_en_met_armleggers_die_eindigen_in_dierensnuiten,_BK-1973-211.jpg) | Rijksmuseum | CC0 |
+| `tafel.jpg` | [Dinner table side pine wood large table.png](https://commons.wikimedia.org/wiki/File:Dinner_table_side_pine_wood_large_table.png) | Kurtkaiser | CC0 |
+| `studenten.jpg` | [Students learning together (Unsplash).jpg](https://commons.wikimedia.org/wiki/File:Students_learning_together_(Unsplash).jpg) | Alexis Brown alexisrbrown | CC0 |
+| `raam.jpg` | [Window Pohto Hietasaari Oulu 20241020 02.jpg](https://commons.wikimedia.org/wiki/File:Window_Pohto_Hietasaari_Oulu_20241020_02.jpg) | Estormiz | CC0 |
+| `sleutel.jpg` | [Broken key IMG 7122.JPG](https://commons.wikimedia.org/wiki/File:Broken_key_IMG_7122.JPG) | 01x07x2022000 | CC0 |
+| `cadeau.jpg` | [Brown paper gift (Unsplash).jpg](https://commons.wikimedia.org/wiki/File:Brown_paper_gift_(Unsplash).jpg) | Annie Spratt anniespratt | CC0 |
+| `konijn.jpg` | [Pet rabbit white 2009.JPG](https://commons.wikimedia.org/wiki/File:Pet_rabbit_white_2009.JPG) | Steven Lek | Public domain |
+| `siroop.jpg` | [Coughsyrup-promethcode.jpg](https://commons.wikimedia.org/wiki/File:Coughsyrup-promethcode.jpg) | Stickpen | Public domain |
+| `kleed.jpg` | [Geometric Fringed Doll Rug - DPLA - 544da94f1ac32f5c3166753d4e152ae4 (page 1).jpg](https://commons.wikimedia.org/wiki/File:Geometric_Fringed_Doll_Rug_-_DPLA_-_544da94f1ac32f5c3166753d4e152ae4_(page_1).jpg) | onbekend | Public domain |
+| `kleedrond.jpg` | [Doll's Round Tapestry Rug - DPLA - 9ef212218deaf8a4fd6cde079a0f4a9b (page 1).jpg](https://commons.wikimedia.org/wiki/File:Doll%27s_Round_Tapestry_Rug_-_DPLA_-_9ef212218deaf8a4fd6cde079a0f4a9b_(page_1).jpg) | onbekend | Public domain |
+| `stel.jpg` | [Happy Couple (Unsplash).jpg](https://commons.wikimedia.org/wiki/File:Happy_Couple_(Unsplash).jpg) | freestocks.org freestocks | CC0 |
 
 ## Geschiedenis van Nederland
 

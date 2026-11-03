@@ -96,8 +96,8 @@ proefexamen: its icon, the name with its minutes under it, the score on the righ
 klaar, grey Nog niet klaar) or "Bij het oefenen" / "Nog niet geoefend", then "nodig: 76%". The user found a bare
 percentage unclear, so the intro says in one line what the percentage and the line mean. The number is the share of right answers (the last
 proefexamen, else practice), never a chance of passing; the intro says so. Under the rows one row to DUO's 15
-official oefenexamens ↗, and (A2 only) "ONA en participatieverklaring" (`onaScreen()`, in `#talk`): the two parts not
-everyone does, as DUO says them (who: the 2013 law and voluntary inburgering, the 2021 law does MAP instead; the
+official oefenexamens ↗, and on both levels "ONA en participatieverklaring" (`onaScreen()`, in `#talk`): the two parts not
+everyone does, as DUO says them (who: the 2013 law and voluntary inburgering, the 2021 law does MAP instead; the Staatsexamen NT2 counts for the language exams only; the
 exemption after 6 of the last 12 months of work, 48 hours a month; the portfolio of eight resultaatkaarten, then the
 eindgesprek or a 64-hour course with the Blik op Werk keurmerk; the PVT with the four values, no mark), links to
 inburgeren.nl ↗, and the eindgesprek to practise as four conversations (`GP` items with `ona:1`, the learner is a kok,
@@ -181,8 +181,8 @@ before writing `w`, and check every fact in `v`.
 
 The picture tasks in Spreken use real photos in `foto/`, by the same rules as the paintings:
 public domain or CC0 from Wikimedia Commons, max 640px wide (~30–100 KB), each recorded in
-`foto/CREDITS.md`. An `SP` item lists its photos in `p[3]` (two to choose from, or three in
-order); `FOTO` holds a short Dutch description of each for screen readers. No emoji as pictures.
+`foto/CREDITS.md`. An `SP` item lists its photos in `p[3]` (two to choose from, or three, in order if the
+question says so); `FOTO` holds a short Dutch description of each for screen readers. No emoji as pictures.
 
 ## Progress
 
@@ -378,7 +378,8 @@ proefexamen); `task` also says what the photos show (`spTask()`, from `FOTO`). E
 (inhoud 0–3, woorden 0–2, grammatica 0–2, samenhang 0–1: DUO's criteria as far as a transcript shows them; pronunciation
 and fluency can't be judged), clamped on the server; the Spreken proefexamen score is points of all 16 questions.
 The Spreken proefexamen has DUO's four parts of four (since March 2025): a question, one photo (describe and answer),
-two photos (choose and explain), three photos (tell in order); the proefexamen reads each question aloud, like the
+two photos (choose and explain), three photos (a story in order, or three separate things to say something about: learners
+remembered both kinds from the real exam, so the part's label leaves the order to the question); the proefexamen reads each question aloud, like the
 video on the exam, and speech stops before the microphone opens; `SP` items fall into a part by their number of photos. Claude can't take audio, so the phone writes the answer down first (Web Speech
 API, `nl-NL`). Recording (`MediaRecorder`, to play the answer back) and transcribing are
 separate takes, never at the same time: on iPhone they compete for the microphone. One
