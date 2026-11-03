@@ -74,7 +74,7 @@ shows on the five tabs; exercises and inner screens hide it and go back with the
 you were on is kept (`tab`), so every back button returns to it and is named after it.
 
 - **Vandaag**: the painting and its label, then today's lesson: how far you are today (a bar of six pills, "2 van 6
-klaar"), one short line, and the steps: the next one a big filled cobalt card with its painting detail, the others
+klaar"), one short line, and the steps: the next one a big filled cobalt card with its icon, the others
 small rows; no exam dates. When all are done the streak stamp is put down once that day (`ww-stamp`) with a tap of the
 phone. The lesson: every exam part every day, the one that scores lowest first as a full round (every
 third day a proefexamen), the other four as short rounds (`SHORT`: one Lezen text, three Luisteren fragments,
@@ -99,11 +99,10 @@ Every section appears once; don't add a second entry point to the same exercise.
 
 - **Going somewhere** (an exercise, a screen, a book, a source) is a list row, `itHTML()`:
   the whole row is the button, title + grey description, a count on the right, `›` at the end.
-  On the home screen a row for a part of the app starts with a detail of one of our Dutch paintings (`PIC`,
-  `icHTML()`, `art/ic/<id>.jpg`, 128 px squares cut from `art/`: Lezen Vermeer's letter reader, Luisteren Leyster's
-  violinist, Schrijven Erasmus writing, Spreken Jan Steen, KNM Willem van Oranje, grammar Mondriaan, Woordenschat
-  Het melkmeisje…): generic line icons on pastel squares look like every generated app. Tools (privacy, Over, DUO's
-  site) keep a cobalt line icon (`IC`). A new part gets its own detail. Counts on the right only once something
+  On the home screen a row starts with an icon like the Settings app on iPhone (`IC`, `icHTML()`): a filled white
+  glyph on a cobalt (`--fill`) square of 34 px with 9 px corners; a path with class `s` is drawn as a line. The next
+  step of today shows its icon in cobalt on a white square (`.sic`). Not thin line icons on pastel squares (they look
+  generated) and not painting details (tried, the user didn't like them). Counts on the right only once something
   was done (no "0 van 225").
   No "Oefenen →" or "Openen →" text links, no cards with their own buttons.
 - **Filled cobalt `.btn`**: the one main action on a screen (the next step of today,

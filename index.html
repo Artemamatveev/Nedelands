@@ -151,9 +151,9 @@ h2{display:flex;align-items:center;gap:10px;font-size:var(--fs-xl);font-weight:6
 .list{display:grid;margin-top:8px;border-top:1px solid var(--line)}
 .it{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:11px 0 12px;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);color:var(--ink)}
 .it>span{flex:1;min-width:0}
-.it .ic{flex:none;display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:var(--rs);background:color-mix(in srgb,var(--wash) 45%,transparent);color:var(--blue)}
-.it .ic.pic{width:48px;height:48px;background:var(--surface) center/cover no-repeat;box-shadow:inset 0 0 0 1px rgba(8,16,40,.08)}
-.ic svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.it .ic{flex:none;display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;background:var(--fill);color:#fff}
+.ic svg,.sic svg{width:20px;height:20px;fill:currentColor;stroke:none}
+.ic svg .s,.sic svg .s{fill:none;stroke:currentColor;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round}
 .ic text{fill:currentColor;stroke:none;font:600 12px -apple-system,system-ui,sans-serif}
 .it::after{content:"›";flex:none;font-size:26px;line-height:1;margin-top:-3px;color:var(--soft)}
 a.it{text-decoration:none} .it.ext::after{content:none}
@@ -502,8 +502,9 @@ body.vfull{overflow:hidden}
 .dayp{display:flex;align-items:center;gap:10px;margin:10px 0 8px} .dayp span{flex:1;display:flex;gap:4px}
 .dayp i{flex:1;height:6px;border-radius:999px;background:var(--surface)} .dayp i.on{background:var(--good)}
 .dayp small{font-size:var(--fs-s);color:var(--soft);font-variant-numeric:tabular-nums;white-space:nowrap}
-.step.next{grid-template-columns:56px minmax(0,1fr) auto;column-gap:14px;padding:16px} .step.next b{font-size:var(--fs-l)}
-.step.next .pic{grid-row:1/3;width:56px;height:56px;border:0;border-radius:var(--rs);background:center/cover no-repeat;box-shadow:0 0 0 2px rgba(255,255,255,.3)}
+.step.next{grid-template-columns:44px minmax(0,1fr) auto;column-gap:14px;padding:16px} .step.next b{font-size:var(--fs-l)}
+.step.next .sic{grid-row:1/3;width:44px;height:44px;border:0;border-radius:11px;background:var(--on-fill);color:var(--fill);display:flex;align-items:center;justify-content:center}
+.step.next .sic svg{width:24px;height:24px}
 .step:not(.next){padding:10px 14px}
 /* longer lines break in better places */
 h2,h3,.verb,.step b,.it b{text-wrap:balance} p,.d,.sub,.note{text-wrap:pretty}
@@ -3252,31 +3253,29 @@ function story(p){
 // o.ic = a line icon from IC on the left, in a thin frame that shows the glass behind the page
 // Line icons (24×24, drawn with the stroke in --blue): one per exercise or screen, chosen for its meaning
 const IC={
-  over:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/>',
-  lz:'<path d="M3 5.5c2.6-1 5.6-.8 9 1.3v13c-3.4-2.1-6.4-2.3-9-1.3zM21 5.5c-2.6-1-5.6-.8-9 1.3v13c3.4-2.1 6.4-2.3 9-1.3z"/>',
-  ls:'<path d="M4 15v-3a8 8 0 0 1 16 0v3"/><path d="M4 14h3v6H5a1 1 0 0 1-1-1zM20 14h-3v6h2a1 1 0 0 0 1-1z"/>',
-  wr:'<path d="M4 20l1-4.5L15.5 5 19 8.5 8.5 19z"/><path d="M13.5 7l3.5 3.5"/>',
-  sp:'<path d="M4 5h16v11h-9l-5 4v-4H4z"/><path d="M8 9.5h8M8 12.5h5"/>',
-  knm:'<path d="M5 21V11h2V8h2V5h6v3h2v3h2v10z"/><path d="M10.5 21v-4h3v4M9 13h1.5M13.5 13h1.5"/>',
-  verb:'<path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3.5 4v4.5H8M12 8v4.5l3 2"/>',
-  wo:'<path d="M3 9h5v6H3zM10 9h5v6h-5zM17 9h4v6h-4z"/>',
-  pr:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7v5h4"/>',
-  dh:'<path d="M3 11.5V4h7.5L20 13.5 13.5 20z"/><circle cx="7.5" cy="8.5" r="1.3"/>',
-  vo:'<text x="12" y="16.5" text-anchor="middle">Aa</text><path d="M4 20h16"/>',
-  books:'<path d="M5 4h3v16H5zM10 4h3v16h-3zM15.4 5.2l2.8-.7 3.3 14.7-2.8.7zM3 20h18"/>',
-  media:'<path d="M3 5h18v12H3z"/><path d="M10 8.5v5l4.3-2.5zM8 20h8"/>',
-  words:'<path d="M6 3h12v18l-6-4-6 4z"/>',
-  stats:'<path d="M5 20v-9M10 20V5M15 20v-6M20 20v-11M3 20h18"/>',
-  errs:'<path d="M4 7h16M4 12h9M4 17h6M15 14l5 5M20 14l-5 5"/>',
-  hist:'<path d="M7 3h10M7 21h10M8 3v2.5c0 2.5 4 4 4 6.5s-4 4-4 6.5V21M16 3v2.5c0 2.5-4 4-4 6.5s4 4 4 6.5V21"/>',
-  talk:'<path d="M3 4h11v8H8l-3 3v-3H3z"/><path d="M14 8h7v8h-2v3l-3-3h-6v-4"/>',
-  privacy:'<path d="M12 3l7 3v5c0 4.6-3 8.2-7 10-4-1.8-7-5.4-7-10V6z"/><path d="M9 12l2 2 4-4"/>',
-  duo:'<path d="M6 4h12v17H6z"/><path d="M9.5 4V2.8h5V4M9 12.5l2.2 2.2L15.5 10"/>'};
+  // filled white glyphs on a cobalt square, like the Settings app on iPhone; a path with class "s" is drawn as a line
+  over:'<path fill-rule="evenodd" d="M12 2.5a9.5 9.5 0 1 1 0 19 9.5 9.5 0 0 1 0-19zM11 10.5v7h2v-7zm0-4v2h2v-2z"/>',
+  lz:'<path d="M2.5 5.2c2.8-1.2 5.8-1 8.6.9v14c-2.8-1.7-5.8-2-8.6-1.1zM21.5 5.2c-2.8-1.2-5.8-1-8.6.9v14c2.8-1.7 5.8-2 8.6-1.1z"/>',
+  ls:'<path class="s" d="M4.5 15v-3a7.5 7.5 0 0 1 15 0v3"/><rect x="2.5" y="13" width="5" height="8" rx="1.6"/><rect x="16.5" y="13" width="5" height="8" rx="1.6"/>',
+  wr:'<path d="M3.5 20.5l1.3-5.1L15.4 4.8a2 2 0 0 1 2.8 0l1 1a2 2 0 0 1 0 2.8L8.6 19.2z"/>',
+  sp:'<path d="M12 3c5.2 0 9.5 3.4 9.5 7.8s-4.3 7.8-9.5 7.8c-1 0-2-.1-2.9-.4L4 20.8l1.5-4.3C3.8 15 2.5 13 2.5 10.8 2.5 6.4 6.8 3 12 3z"/>',
+  knm:'<path d="M12 2.3l9.5 5.2v1.8h-19V7.5zM4.5 10.8h3v7h-3zM10.5 10.8h3v7h-3zM16.5 10.8h3v7h-3zM2.5 19h19v2.5h-19z"/>',
+  verb:'<path class="s" d="M4.3 12a7.8 7.8 0 1 0 2.4-5.6"/><path d="M3 3.5v6h6z"/><path class="s" d="M12 8.3v4.2l2.8 1.8"/>',
+  wo:'<rect x="2" y="7.5" width="6.5" height="9" rx="1.8"/><rect x="10" y="7.5" width="5.5" height="9" rx="1.8"/><rect x="17" y="7.5" width="5" height="9" rx="1.8"/>',
+  pr:'<path fill-rule="evenodd" d="M12 2.5a9.5 9.5 0 1 1 0 19 9.5 9.5 0 0 1 0-19zM11 6.5v6.4l4.6 2.8 1-1.7-3.6-2.2V6.5z"/>',
+  dh:'<path fill-rule="evenodd" d="M2.5 4A1.5 1.5 0 0 1 4 2.5h7.4l10.1 10.1a1.5 1.5 0 0 1 0 2.1l-6.8 6.8a1.5 1.5 0 0 1-2.1 0L2.5 11.4zM7.5 6a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>',
+  vo:'<text x="12" y="17.2" text-anchor="middle" font-size="13.5" font-weight="700" font-family="-apple-system,system-ui,sans-serif">Aa</text>',
+  books:'<rect x="2.5" y="4" width="4.5" height="17" rx="1.2"/><rect x="8.5" y="4" width="4.5" height="17" rx="1.2"/><path d="M14.4 5.6l3.2-.9a1.2 1.2 0 0 1 1.5.8l3.3 13a1.2 1.2 0 0 1-.9 1.5l-3.2.9a1.2 1.2 0 0 1-1.5-.8L13.5 7.1a1.2 1.2 0 0 1 .9-1.5z"/>',
+  media:'<path fill-rule="evenodd" d="M4 4h16a1.8 1.8 0 0 1 1.8 1.8v11A1.8 1.8 0 0 1 20 18.6H4a1.8 1.8 0 0 1-1.8-1.8v-11A1.8 1.8 0 0 1 4 4zM10 8v6.6l5.5-3.3z"/><rect x="7" y="19.9" width="10" height="1.8" rx=".9"/>',
+  words:'<path d="M6.5 2.5h11A1.5 1.5 0 0 1 19 4v17.5l-7-4.6-7 4.6V4a1.5 1.5 0 0 1 1.5-1.5z"/>',
+  stats:'<rect x="2.5" y="12" width="5" height="9.5" rx="1.3"/><rect x="9.5" y="3.5" width="5" height="18" rx="1.3"/><rect x="16.5" y="8.5" width="5" height="13" rx="1.3"/>',
+  errs:'<path fill-rule="evenodd" d="M10.2 3.4a2.1 2.1 0 0 1 3.6 0l8.2 14.1a2.1 2.1 0 0 1-1.8 3.1H3.8A2.1 2.1 0 0 1 2 17.5zM11 9v5.5h2V9zm0 7v2h2v-2z"/>',
+  hist:'<path d="M5.5 2.5h13v2.2h-1.2v2.1c0 2.2-1.8 3.8-3.6 5.2 1.8 1.4 3.6 3 3.6 5.2v2.1h1.2v2.2h-13v-2.2h1.2v-2.1c0-2.2 1.8-3.8 3.6-5.2C8.5 10.6 6.7 9 6.7 6.8V4.7H5.5z"/>',
+  talk:'<path d="M3.5 2.5h10A1.6 1.6 0 0 1 15 4.1v6.3a1.6 1.6 0 0 1-1.5 1.6H8.2l-3.7 3.2V12h-1A1.6 1.6 0 0 1 2 10.4V4.1a1.6 1.6 0 0 1 1.5-1.6z"/><path d="M16.7 7.5h3.8A1.6 1.6 0 0 1 22 9.1v6.3a1.6 1.6 0 0 1-1.5 1.6h-1v3.2L15.8 17H10.5A1.6 1.6 0 0 1 9 15.4V13.6h4.6a3.1 3.1 0 0 0 3.1-3.1z"/>',
+  privacy:'<path fill-rule="evenodd" d="M12 2l8.5 3.4v6c0 5.2-3.6 9.2-8.5 10.9-4.9-1.7-8.5-5.7-8.5-10.9v-6zM10.7 13.4L8.3 11l-1.5 1.5 3.9 3.9 6.4-6.4-1.5-1.5z"/>',
+  duo:'<path fill-rule="evenodd" d="M6.5 2h7.8L19.5 7.2v13.3A1.5 1.5 0 0 1 18 22H6.5A1.5 1.5 0 0 1 5 20.5v-17A1.5 1.5 0 0 1 6.5 2zM8.4 14.2l2.7 2.7 4.9-4.9-1.4-1.4-3.5 3.5-1.3-1.3z"/>'};
 IC.l1=IC.lz;IC.lb=IC.ls;IC.wb=IC.wr;IC.sb=IC.sp;IC.g1=IC.pr;IC.w1=IC.wo;IC.v1=IC.vo;
-// A part of the app starts with a detail of a Dutch painting (art/ic/<id>.jpg, cut from the paintings in art/);
-// tools (privacy, DUO's site) keep a line icon
-const PIC=new Set("lz l1 ls lb wr wb sp sb knm verb wo g1 w1 pr dh vo v1 books hist media talk stats errs words".split(" "));
-const icHTML=k=>PIC.has(k)?`<i class="ic pic" style="background-image:url(/art/ic/${k}.jpg)" aria-hidden="true"></i>`:`<i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC[k]}</svg></i>`;
+const icHTML=k=>`<i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC[k]||""}</svg></i>`;
 function itHTML(attr,t,d,o={}){
   return`<button class="it" ${attr}>${o.ic?icHTML(o.ic):""}<span><span class="th"><b>${t}</b>${o.n!=null?`<small>${o.n}</small>`:""}</span>${d?`<span class="d">${d}</span>`:""}${o.bar!=null?`<span class="bar${o.pass?" pass":""}"><i style="width:${o.bar}%"></i></span>`:""}</span></button>`;
 }
@@ -3461,7 +3460,7 @@ function planHTML(){
     <div class="dayp"><span aria-hidden="true">${steps.map(t=>`<i${done.includes(t.id)?' class="on"':""}></i>`).join("")}</span><small>${nd} van ${steps.length} klaar</small></div>
     <p class="sub">${intro}</p>
     <ol class="steps">${steps.map((t,i)=>{const ok=done.includes(t.id),nxt=i===nx&&!ok,k=t.id.split(":")[1];
-      return`<li><button class="step${ok?" ok":nxt?" next":""}" data-p="${t.id}">${nxt&&PIC.has(k)?`<i class="pic" style="background-image:url(/art/ic/${k}.jpg)" aria-hidden="true"></i>`:`<i>${ok?"✓":i+1}</i>`}<b>${t.t}</b><span>${t.s}</span><em${nxt?"":` class="c"`}>${nxt?"Begin":"›"}</em></button></li>`}).join("")}</ol>
+      return`<li><button class="step${ok?" ok":nxt?" next":""}" data-p="${t.id}">${nxt&&IC[k]?`<i class="sic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC[k]}</svg></i>`:`<i>${ok?"✓":i+1}</i>`}<b>${t.t}</b><span>${t.s}</span><em${nxt?"":` class="c"`}>${nxt?"Begin":"›"}</em></button></li>`}).join("")}</ol>
     <button class="ghost wide" data-p="s:mix">Meer tijd? Mix van de dag</button>`;
 }
 // iPhone: Safari can wipe a site's storage after a week without a visit; on the home screen the app keeps it.
@@ -5187,7 +5186,7 @@ ready$.then(()=>location.hash.startsWith("#verhuis=")?arrive():0).then(initCloud
 // Offline (sw.js): the page, and every painting and photo, stay available without a connection
 if("serviceWorker" in navigator&&window.isSecureContext&&!window.claude)
   navigator.serviceWorker.register("/sw.js").then(()=>navigator.serviceWorker.ready)
-    .then(r=>{if(r.active)r.active.postMessage({warm:ART.map(p=>"/art/"+p.f+".jpg").concat([...PIC].map(k=>"/art/ic/"+k+".jpg"),Object.keys(FOTO).map(f=>"/foto/"+f+".jpg"),GS.flatMap(c=>(c.p?[c.p]:[]).concat((c.f||[]).map(f=>f[0]))).map(f=>"/"+f))})}).catch(()=>{});
+    .then(r=>{if(r.active)r.active.postMessage({warm:ART.map(p=>"/art/"+p.f+".jpg").concat(Object.keys(FOTO).map(f=>"/foto/"+f+".jpg"),GS.flatMap(c=>(c.p?[c.p]:[]).concat((c.f||[]).map(f=>f[0]))).map(f=>"/"+f))})}).catch(()=>{});
 </script>
 </body>
 </html>
