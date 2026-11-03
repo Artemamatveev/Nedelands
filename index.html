@@ -191,7 +191,7 @@ a.it{text-decoration:none} .it.ext::after{content:none}
 .seg{display:grid;grid-template-columns:1fr 1fr;border:1.5px solid var(--blue);border-radius:3px;overflow:hidden;margin-top:2px}
 .seg button{border:0;background:none;color:var(--blue);font-weight:700;font-size:16px;padding:10px 6px;min-height:44px}
 .seg button+button{border-left:1.5px solid var(--blue)}
-.seg button[aria-pressed="true"]{background:var(--fill);color:var(--on-fill)} .seg.lvt{margin:4px 0 12px} #acct .ghost.wide,#welcome .wide,#welcome .two,#move .wide{margin-bottom:8px}
+.seg button[aria-pressed="true"]{background:var(--fill);color:var(--on-fill)} .seg.lvt{margin:4px 0 12px} #acct .wide,#welcome .wide,#welcome .two,#move .wide{margin-bottom:8px}
 .tabs.min button{padding:10px 4px} .tabs.min span{display:none}
 body:has(#home[hidden]) .tabs{display:none}
 main:has(#home:not([hidden])){padding-bottom:116px}
@@ -225,6 +225,11 @@ input:focus,textarea:focus{border-color:var(--blue);outline:0}
 input{flex:1;min-width:0;font-size:21px;font-weight:700;padding:9px 12px}
 textarea{display:block;width:100%;font-size:17px;line-height:1.5;padding:12px;margin-bottom:12px;resize:vertical}
 .fld{display:block;margin-bottom:8px}
+.login .prov{display:flex;justify-content:center;gap:10px;margin:6px 0 14px}
+.login .prov button{flex:1;max-width:76px;height:48px;display:flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--line);border-radius:3px;cursor:pointer}
+.login .prov button:active{background:var(--wash)} .login .prov svg{width:24px;height:24px} .login .prov .mono{fill:var(--ink)}
+.login .pk{display:flex;align-items:center;justify-content:center;gap:10px}
+.login .pk svg{width:26px;height:26px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .fld span{display:block;font-size:14.5px;color:var(--soft)}
 .fld input{width:100%;font-size:17px;font-weight:400;padding:7px 10px}
 .btn{background:var(--fill);color:var(--on-fill);border:0;border-radius:3px;padding:14px 20px;font-weight:600;font-size:18px}
@@ -2094,34 +2099,57 @@ const segHTML=()=>["A2","B1"].map(v=>`<button type="button" data-lvl="${v}" aria
 const setLvl=v=>{if(v===lvl())return;S.lvl=v;exV=null;save()};
 // The logins that work here: an iPhone home-screen app opens Google's and Apple's page in a separate Safari window,
 // and the login would stay there, so it only offers the e-mail code (and passkeys)
-const logins=()=>(acc.cfg&&acc.cfg.login||[]).filter(p=>!(navigator.standalone===true&&(p==="google"||p==="apple")));
+const logins=()=>(acc.cfg&&acc.cfg.login||[]).filter(p=>!(navigator.standalone===true&&PROV[p]));
+// One login block for the welcome screen ("w") and Profiel ("a"): e-mail, a row of the other logins (the ones switched on
+// in Supabase), Volgende (sends the 6-digit code), and Face ID / fingerprint (passkey). The brands' own logos, as their rules ask.
+const PROV={
+  google:["Google",'<svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>'],
+  apple:["Apple",'<svg viewBox="0 0 24 24" aria-hidden="true" class="mono"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>'],
+  azure:["Microsoft",'<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#F25022" d="M1 1h10v10H1z"/><path fill="#7FBA00" d="M13 1h10v10H13z"/><path fill="#00A4EF" d="M1 13h10v10H1z"/><path fill="#FFB900" d="M13 13h10v10H13z"/></svg>'],
+  facebook:["Facebook",'<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#0866FF" d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg>']};
+const FACEID='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8M20 16v2.5a1.5 1.5 0 0 1-1.5 1.5H16M8 20H5.5A1.5 1.5 0 0 1 4 18.5V16M9 9v1.5M15 9v1.5M12 9v4h-1M9.5 16.2c1.5 1 3.5 1 5 0"/></svg>';
+function loginHTML(x){
+  const L=logins(),P=L.filter(p=>PROV[p]);
+  if(acc.step==="code")return`<p class="sub">We hebben een code van 6 cijfers gestuurd naar <b>${esc(acc.mail)}</b>. Kijk ook in je spam.</p>
+    <label class="fld"><span>Code</span><input id="${x}code" inputmode="numeric" autocomplete="one-time-code" maxlength="10"></label>
+    <button class="btn wide" id="${x}verify">Inloggen</button><button class="ghost wide" id="${x}again">Ander e-mailadres</button>`;
+  return`<div class="login">`
+    +(L.includes("email")?`<label class="fld"><span>E-mailadres</span><input id="${x}mail" type="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="naam@voorbeeld.nl"></label>`:"")
+    +(P.length?`<div class="prov" role="group" aria-label="Of log in met">${P.map(p=>`<button type="button" data-login="${p}" aria-label="Inloggen met ${PROV[p][0]}" title="${PROV[p][0]}">${PROV[p][1]}</button>`).join("")}</div>`:"")
+    +(L.includes("email")?`<button class="btn wide" id="${x}send">Volgende</button>`:"")
+    +(L.includes("passkey")?`<button class="ghost wide pk" data-login="passkey" aria-label="Inloggen met Face ID of vingerafdruk">${FACEID}Face ID of vingerafdruk</button>`:"")
+    +(L.length?"":`<p class="note">Inloggen is nog niet ingesteld.</p>`)+`</div>`;
+}
+// pre(kind) may stop a login (the welcome screen first keeps the name); mail = what was typed before a redraw
+function bindLogin(el,x,pre,mail){
+  const ok=k=>!pre||pre(k),m=$(x+"mail"),s=$(x+"send"),c=$(x+"code");
+  if(m&&mail)m.value=mail;
+  if(s){const go=()=>{if(ok("email"))mailCode(m.value,s)};s.onclick=go;m.onkeydown=e=>{if(e.key==="Enter")go()}}
+  if(c){const v=()=>mailVerify(c.value,$(x+"verify"));$(x+"verify").onclick=v;c.onkeydown=e=>{if(e.key==="Enter")v()};
+    $(x+"again").onclick=()=>{acc.step=null;acc.msg="";redraw()}}
+  el.querySelectorAll("[data-login]").forEach(b=>b.onclick=()=>{if(ok(b.dataset.login))login(b.dataset.login)});
+}
 function welcome(){$("home").hidden=true;$("welcome").hidden=false;window.scrollTo(0,0);drawWelcome()}
 function drawWelcome(){
-  const el=$("welcome"),me=S.me||{},L=logins(),nm={google:"Doorgaan met Google",apple:"Doorgaan met Apple",passkey:"Inloggen met passkey"};
+  const el=$("welcome"),me=S.me||{};
   const v=id=>$(id)?$(id).value:null,keep={f:v("wfirst")??me.name??"",l:v("wlast")??me.last??"",m:v("wmail")??acc.mail??""};
   let h=`<h2>Welkom bij Bittertalen</h2><p class="sub">Maak een account. Dan blijft je voortgang bewaard, ook op je andere apparaten, en kijkt Claude je teksten en antwoorden na.</p>`;
-  if(acc.step==="code")h+=`<label class="fld"><span>Code uit de e-mail aan ${esc(acc.mail)}</span><input id="wcode" inputmode="numeric" autocomplete="one-time-code" maxlength="10"></label>
-    <div class="two"><button class="ghost" id="wagain">Ander adres</button><button class="btn" id="wverify">Bevestig</button></div>`;
-  else h+=`<div class="fld"><span>Ik oefen voor</span><div class="seg" id="wlvl" role="group" aria-label="Niveau">${segHTML()}</div></div>
+  if(acc.step!=="code")h+=`<div class="fld"><span>Ik oefen voor</span><div class="seg" id="wlvl" role="group" aria-label="Niveau">${segHTML()}</div></div>
     <label class="fld"><span>Voornaam</span><input id="wfirst" autocomplete="given-name" maxlength="40"></label>
-    <label class="fld"><span>Achternaam</span><input id="wlast" autocomplete="family-name" maxlength="60"></label>`
-    +(L.includes("email")?`<label class="fld"><span>E-mail</span><input id="wmail" type="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="naam@voorbeeld.nl"></label>
-    <button class="btn wide" id="wsend">Stuur een code</button>`:"")
-    +L.filter(p=>nm[p]).map(p=>`<button class="ghost wide" data-wlogin="${p}">${nm[p]}</button>`).join("");
+    <label class="fld"><span>Achternaam</span><input id="wlast" autocomplete="family-name" maxlength="60"></label>`;
+  h+=loginHTML("w");
   if(acc.msg)h+=`<p class="note">${esc(acc.msg)}</p>`;
   el.innerHTML=h+`<button class="ghost wide" id="wlater">Eerst rondkijken</button>
     <p class="note">Wat we met je e-mailadres en je voortgang doen: <a href="/privacy" target="_blank" rel="noopener">privacyverklaring ↗</a></p>`;
   if($("wfirst")){$("wfirst").value=keep.f;$("wlast").value=keep.l}
   if($("wlvl"))$("wlvl").querySelectorAll("button").forEach(b=>b.onclick=()=>{setLvl(b.dataset.lvl);drawWelcome()});
-  if($("wmail"))$("wmail").value=keep.m;
-  // the name is kept before logging in, so it is there whichever way the login goes
-  const names=()=>{const f=$("wfirst").value.trim().slice(0,40),l=$("wlast").value.trim().slice(0,60);
-    if(!f){acc.msg="Vul je voornaam in.";drawWelcome();return false}
-    S.me={...(S.me||{}),name:f,last:l};save();drawProfile();return true};
-  if($("wsend")){const go=()=>{if(names())mailCode($("wmail").value,$("wsend"))};$("wsend").onclick=go;$("wmail").onkeydown=e=>{if(e.key==="Enter")go()}}
-  el.querySelectorAll("[data-wlogin]").forEach(b=>b.onclick=()=>{if(names())login(b.dataset.wlogin)});
-  if($("wcode")){$("wverify").onclick=()=>mailVerify($("wcode").value,$("wverify"));$("wcode").onkeydown=e=>{if(e.key==="Enter")mailVerify($("wcode").value,$("wverify"))};
-    $("wagain").onclick=()=>{acc.step=null;acc.msg="";drawWelcome()}}
+  // the name is kept before logging in, so it is there whichever way the login goes; a new account by e-mail needs
+  // a first name, Google, Apple and the others bring their own (syncMeta), a passkey is an account that exists
+  const names=k=>{if(!$("wfirst"))return true;const f=$("wfirst").value.trim().slice(0,40),l=$("wlast").value.trim().slice(0,60);
+    if(f){S.me={...(S.me||{}),name:f,last:l};save();drawProfile()}
+    if(!f&&k==="email"){acc.msg="Vul je voornaam in.";drawWelcome();return false}
+    return true};
+  bindLogin(el,"w",names,keep.m);
   $("wlater").onclick=()=>{lsSet(WEL,"1");acc.msg="";acc.step=null;home()};
 }
 // The token for /api/check; with accounts on, grading needs a login
@@ -3408,23 +3436,11 @@ function drawProfile(){
         ${L.includes("passkey")?`<button class="ghost wide" id="apk">Passkey toevoegen</button>`:""}
         <button class="ghost wide" id="aout">Uitloggen</button>
         <button class="ghost wide" id="adel">Account verwijderen</button>`;
-    }else{
-      const nm={google:"Doorgaan met Google",apple:"Doorgaan met Apple",passkey:"Inloggen met passkey"};
-      h+=`<p class="sub">Log in om je voortgang op al je apparaten te hebben en je teksten te laten nakijken.</p>`
-        +L.filter(p=>nm[p]).map(p=>`<button class="ghost wide" data-login="${p}">${nm[p]}</button>`).join("");
-      if(L.includes("email"))h+=acc.step==="code"
-        ?`<label class="fld"><span>Code uit de e-mail aan ${esc(acc.mail)}</span><input id="acode" inputmode="numeric" autocomplete="one-time-code" maxlength="10"></label>
-          <div class="two"><button class="ghost" id="aagain">Ander adres</button><button class="btn" id="averify">Inloggen</button></div>`
-        :`<label class="fld"><span>${L.some(p=>nm[p])?"Of met een code per e-mail":"E-mail"}</span><input id="amail" type="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="naam@voorbeeld.nl"></label>
-          <button class="btn wide" id="asend">Stuur een code</button>`;
-      if(!L.length)h+=`<p class="note">Inloggen is nog niet ingesteld.</p>`;
-    }
+    }else h+=`<p class="sub">Log in om je voortgang op al je apparaten te hebben en je teksten te laten nakijken.</p>`+loginHTML("a");
     if(acc.msg)h+=`<p class="note">${esc(acc.msg)}</p>`;
   }
   el.innerHTML=h;
-  if($("amail")){$("amail").value=mail;$("amail").onkeydown=e=>{if(e.key==="Enter")mailCode($("amail").value,$("asend"))};$("asend").onclick=()=>mailCode($("amail").value,$("asend"))}
-  if($("acode")){$("acode").onkeydown=e=>{if(e.key==="Enter")mailVerify($("acode").value,$("averify"))};$("averify").onclick=()=>mailVerify($("acode").value,$("averify"));$("aagain").onclick=()=>{acc.step=null;acc.msg="";drawProfile()}}
-  el.querySelectorAll("[data-login]").forEach(b=>b.onclick=()=>login(b.dataset.login));
+  if(c&&!u)bindLogin(el,"a",null,mail);
   if($("apk"))$("apk").onclick=async()=>{
     try{const{error}=await acc.sb.auth.registerPasskey();if(error)throw error;acc.msg="Je passkey is gemaakt. Nu kun je ook met Face ID, Touch ID of je vingerafdruk inloggen."}
     catch(e){acc.msg=/NotAllowed|abort|cancel/i.test(String(e&&(e.message||e.name)))?"Gestopt.":"Een passkey maken lukt hier niet."}
