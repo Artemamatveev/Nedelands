@@ -189,23 +189,26 @@ a.it{text-decoration:none} .it.ext::after{content:none}
 /* tabbalk: vier plekken in zwevend glas onderaan, zoals in iOS 26 (Instagram). Alleen op de vier startschermen;
    in een oefening en op een binnenscherm verdwijnt hij, daar ga je terug met de knop of door te vegen */
 .tabs{position:fixed;z-index:8;left:50%;bottom:calc(10px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;width:min(410px,calc(100vw - 24px));padding:5px;border-radius:999px;
-  background:color-mix(in srgb,var(--card) 55%,transparent);-webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8);
-  border:1px solid color-mix(in srgb,var(--card) 70%,transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),var(--lift);
+  /* a capsule that stands out on a white tile too: nearly opaque, a thin line and a deeper shadow (the user found the
+     clear glass bar hard to see on light screens) */
+  background:color-mix(in srgb,var(--card) 88%,transparent);-webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8);
+  border:1px solid color-mix(in srgb,var(--ink) 12%,transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 2px 6px rgba(8,16,40,.10),0 12px 32px rgba(8,16,40,.22);
   touch-action:none;-webkit-user-select:none;user-select:none;transition:width .3s cubic-bezier(.3,1.2,.5,1)}
 .tabs button{position:relative;z-index:1;flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 4px 8px;border:0;border-radius:999px;background:none;color:var(--ink);font-size:var(--fs-xs);font-weight:600;line-height:1.1;transition:color .25s,padding .3s;-webkit-tap-highlight-color:transparent}
 .tabs svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-.tabs [aria-current]{color:var(--blue)}
+.tabs [aria-current]{color:var(--on-fill)}
 /* the lens: a drop of glass over the current tab. It glides over and settles without overshooting (so it never leaves
    the bar), with a slight stretch on the way, and you can drag it
    along the bar with your finger: it grows and clears while you hold it, like Liquid Glass */
 .tabs .lens{position:absolute;top:5px;bottom:5px;left:5px;width:calc((100% - 10px)/5);border-radius:999px;pointer-events:none;
-  background:color-mix(in srgb,var(--wash) 55%,transparent);-webkit-backdrop-filter:blur(4px) saturate(2);backdrop-filter:blur(4px) saturate(2);
-  box-shadow:inset 0 1px 1px rgba(255,255,255,.75),inset 0 -1px 1px rgba(255,255,255,.3),inset 0 0 0 .5px rgba(255,255,255,.4),0 2px 10px rgba(8,16,40,.12);
+  /* the lens is filled cobalt now, the current tab white on it: you see at once where you are */
+  background:var(--fill);
+  box-shadow:inset 0 1px 1px rgba(255,255,255,.35),inset 0 -1px 1px rgba(0,0,0,.12),0 4px 12px color-mix(in srgb,var(--fill) 45%,transparent);
   transform:translateX(calc(var(--i,0) * 100%));transition:transform .38s cubic-bezier(.22,1,.36,1),scale .3s cubic-bezier(.22,1,.36,1),background-color .3s}
 .tabs .lens.go{animation:goo .38s ease-out}
 @keyframes goo{40%{scale:1.06 .96}}
-.tabs.drag .lens{transition:scale .25s cubic-bezier(.22,1,.36,1),background-color .3s;scale:1.03 1.14;background-color:color-mix(in srgb,var(--wash) 22%,transparent)}
-.tabs.drag button{color:var(--ink)} .tabs.drag button.on{color:var(--blue)}
+.tabs.drag .lens{transition:scale .25s cubic-bezier(.22,1,.36,1),background-color .3s;scale:1.03 1.14;background-color:color-mix(in srgb,var(--fill) 70%,transparent)}
+.tabs.drag button{color:var(--ink)} .tabs.drag button.on{color:var(--on-fill)}
 /* scroll down and the bar shrinks to its icons; scroll up and the names come back */
 .tabs.min{width:min(300px,calc(100vw - 24px))}
 .gate{padding:2px 0 12px}
