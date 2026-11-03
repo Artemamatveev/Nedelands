@@ -389,6 +389,24 @@ the learner reads the example or corrected answer aloud and the words speech rec
 Making new Lezen and Luisteren material with Claude was removed (it cost a call per tap and its
 result was invisible). Items made earlier stay in `S.gen` and are still added by `addGenerated()`.
 
+## Beginnen (from nothing)
+
+For someone who starts from nothing, at A2 only. `BG` in `index.html` holds twelve short lessons (`t`, `s`; `x` the rule in very
+simple Dutch, a paragraph per line, `<b>` allowed; `e` the same in English, behind an "English" toggle and open when the menus
+are in English, the one place where an explanation is in English, because a beginner can't read the Dutch yet; `v` examples
+and `w` words as `Dutch=English` split by `|`, both recorded; `q` questions `[question, right, wrong, wrong, why]`). Keys
+`bg|<id>.<n>`, section `bg`: append, don't rename. A wrong option must never also be correct Dutch. A lesson is Klaar when every
+question was answered right once (`bgDone()`). Twelve lessons are the basics, not A2: don't promise more on screen. Screens in
+`#talk`: `bgList()` (a row at the top of Grammatica en woorden, A2), `bgLes()`, `startTest()`.
+
+The starttest (`START`: one question per lesson, easy to hard, each with "Ik weet het niet"; no right or wrong shown; three misses
+in a row stop it, the rest counts as missed) gives `S.start` `{at, lv, miss}`: 10+ right `lv` 2, needs no lessons; 5+ `lv` 1, the
+lessons in `miss`, one a day instead of the grammar round; fewer `lv` 0, all lessons in order, and today's lesson is only the
+lesson of the day plus "Herhalen" (`SHORT.bg`, `bgDue()`, the lesson questions that are due), without the Mix, until the lessons
+are done (`bgTodo()`, in `planTasks()`). A lesson done today stays on the list, or the day would never finish. It is offered at
+the top of Vandaag ("Waar begin ik?") at A2 while there is no `S.start` and fewer than 30 practised items, and on the Beginnen
+screen. Without a test nothing changes. The Mix only takes lesson questions that were already practised.
+
 ## Boekenkast (reading)
 
 Built-in A2 stories live in `BOOKS` in `index.html` (original texts; check facts, they double

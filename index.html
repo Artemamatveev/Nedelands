@@ -115,6 +115,8 @@ h1 .idot,.wlogo .idot{position:relative} h1 .idot svg,.wlogo .idot svg{position:
 .sw{list-style:none;margin:8px 0 0;padding:0}
 .sw li{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:var(--fs-b)}
 .sw li>span{flex:1;min-width:0}
+.sw small{display:block;color:var(--soft);font-size:var(--fs-m)}
+.bgq{font-size:var(--fs-xl);font-weight:600;letter-spacing:-.01em;margin:6px 0 16px}
 .sw .say{flex:none;background:none;border:0;color:var(--blue);font-size:var(--fs-m);padding:6px 4px}
 .sw .ghost{flex:none;padding:6px 12px;font-size:var(--fs-m)}
 .sw .ghost:disabled{opacity:.5;cursor:default}
@@ -2067,7 +2069,8 @@ const SEC=[
 {id:"w1",t:"Woordvolgorde B1",s:"Lange zinnen met bijzinnen",n:6},
 {id:"v1",t:"Woordenschat B1",s:"Werk, geld, gezondheid, wonen",n:10},
 {id:"vo",t:"Woordenschat",s:"Ruim 1000 woorden in 23 thema's",n:10},
-{id:"gs",t:"Geschiedenis",s:"Vragen over de geschiedenis van Nederland",n:10}
+{id:"gs",t:"Geschiedenis",s:"Vragen over de geschiedenis van Nederland",n:10},
+{id:"bg",t:"Beginnen",s:"Twaalf korte lessen",n:8}
 ];
 const GAP=[1,2,4,7,14], KEY="ww-v1";
 const $=id=>document.getElementById(id);
@@ -2176,6 +2179,7 @@ function mergeS(a,b){
   o.bk=by(a.bk,b.bk,(x,y)=>(y.at||0)>(x.at||0)?y:x);
   o.res=by(a.res,b.res,(x,y)=>{const m={};x.concat(y).forEach(r=>m[r.at]=r);return Object.values(m).sort((p,q)=>p.at-q.at).slice(-10)});
   o.uit=by(a.uit,b.uit,(x,y)=>(y.at||0)>(x.at||0)?y:x);
+  o.start=a.start&&b.start?(a.start.at>=b.start.at?a.start:b.start):a.start||b.start;
   o.errs=uni(a.errs,b.errs,e=>e.r); o.words=uni(a.words,b.words,w=>w.w);
   const ga=a.gen||{},gb=b.gen||{}; o.gen={lz:uni(ga.lz,gb.lz,JSON.stringify),ls:uni(ga.ls,gb.ls,JSON.stringify)};
   const[p,q]=(a.last||0)>=(b.last||0)?[a,b]:[b,a]; o.last=p.last||0; o.streak=p.last===q.last?Math.max(p.streak||0,q.streak||0):p.streak||0;
@@ -3053,6 +3057,109 @@ LS.forEach((p,i)=>ITEMS.push({sec:"ls",k:"ls|"+i,ord:i/5|0,type:"choice",label:"
 // Luisteren B1: qs = every question of the fragment, shown before listening in the proefexamen (you hear it once)
 LSB.forEach((p,i)=>p[2].forEach((q,j)=>ITEMS.push({sec:"lb",k:"lb|"+i+"."+j,ord:j,type:"choice",label:`Luister en kies het goede antwoord (vraag ${j+1} van ${p[2].length} bij dit fragment)`,intro:p[3],say:p[0],big:q[0],sub:"",right:q[1],opts:()=>shuffle(q.slice(1)),pics:p[1]?[p[1]]:null,note:sayHTML(p[0]),qs:p[2].map(x=>x[0])})));
 const genN={lz:0,ls:0};
+// Beginnen: first steps for someone who starts from nothing. Twelve short lessons: t title, s what is in it, x the rule in very
+// simple Dutch (a paragraph per line), e the same in English (a beginner can't read the Dutch yet), v examples (Dutch=English,
+// recorded), w words (Dutch=English), q questions [question, right, wrong, wrong, why]. Keys bg|<id>.<n>: append, don't rename.
+// A wrong option must never also be correct Dutch.
+const BG=[
+{id:"ik",t:"Jezelf voorstellen",s:"Ik heet, ik kom uit, ik woon in",
+ x:"Zo vertel je wie je bent. Eerst komt <b>ik</b>, dan het werkwoord, dan de rest.\n<b>Ik heet</b> + je naam. <b>Ik kom uit</b> + je land. <b>Ik woon in</b> + je stad.",
+ e:"This is how you say who you are. First comes ik (I), then the verb, then the rest.\nIk heet + your name. Ik kom uit + your country. Ik woon in + your town.",
+ v:"Ik heet Sara.=My name is Sara.|Ik kom uit Syrië.=I come from Syria.|Ik woon in Utrecht.=I live in Utrecht.|Ik ben 34 jaar.=I am 34 years old.|Hoe heet jij?=What is your name?",
+ w:"de naam=name|het land=country|de stad=town|wonen=to live|komen=to come|het jaar=year",
+ q:[["Ik ___ Sara.","heet","woon","kom"],["Ik kom ___ Marokko.","uit","aan","op"],["Ik woon ___ Den Haag.","in","uit","op"],
+  ["Hoe heet jij?","Ik heet Omar.","Ik woon in Delft.","Ik ben 40 jaar."],["Waar woon jij?","Ik woon in Delft.","Ik heet Omar.","Ik ben 40 jaar."],["Wat betekent: de stad?","town","name","year"]]},
+{id:"zijn",t:"Zijn en hebben",s:"Ik ben, jij bent, ik heb, jij hebt",
+ x:"<b>Zijn</b> en <b>hebben</b> zijn de belangrijkste werkwoorden. Leer ze uit je hoofd.\n<b>Zijn:</b> ik ben, jij bent, u bent, hij is, zij is, wij zijn, jullie zijn, zij zijn.\n<b>Hebben:</b> ik heb, jij hebt, u hebt, hij heeft, zij heeft, wij hebben, jullie hebben, zij hebben.",
+ e:"Zijn (to be) and hebben (to have) are the most important verbs. Learn them by heart.\nThey are irregular: ik = I, jij = you, u = you (polite), hij = he, zij = she or they, wij = we, jullie = you (more people).",
+ v:"Ik ben moe.=I am tired.|Jij bent mijn buurman.=You are my neighbour.|Mijn moeder is ziek.=My mother is ill.|Ik heb een kind.=I have a child.|Hij heeft een auto.=He has a car.|Wij hebben tijd.=We have time.",
+ w:"moe=tired|ziek=ill|de buurman=neighbour|het kind=child|de auto=car|de tijd=time",
+ q:[["Ik ___ moe.","ben","bent","is","Bij ik hoort ben."],["Mijn moeder ___ ziek.","is","ben","bent","Mijn moeder is zij: zij is."],["Hij ___ een auto.","heeft","heb","hebben","Hij heeft."],
+  ["Wij ___ twee kinderen.","hebben","heeft","hebt","Wij hebben."],["Jij ___ mijn vriend.","bent","ben","is","Jij bent."],["Wat betekent: moe?","tired","ill","late"]]},
+{id:"lidw",t:"De, het en een",s:"De man, het huis, een hond",
+ x:"Een woord krijgt <b>de</b> of <b>het</b>. De meeste woorden krijgen de. Leer bij elk nieuw woord welke het is.\nMeer dan één? Dan is het altijd <b>de</b>: het boek, de boeken.\n<b>Een</b> past bij de en het. Gebruik een als je nog niet zegt welke je bedoelt: een hond. Gebruik de of het als je weet welke: de hond.",
+ e:"A noun takes de or het (the). Most nouns take de. Learn which one with every new word.\nMore than one? Then it is always de: het boek, de boeken.\nEen (a) goes with both. Use een when you don't say which one: een hond. Use de or het when it is clear which: de hond.",
+ v:"De man werkt.=The man is working.|Het huis is groot.=The house is big.|Ik zie een hond.=I see a dog.|De hond is lief.=The dog is sweet.|De boeken zijn duur.=The books are expensive.",
+ w:"de man=man|de vrouw=woman|het huis=house|het boek=book|de hond=dog|groot=big",
+ q:[["___ huis is groot.","Het","De","Die","Het is: het huis."],["___ man werkt.","De","Het","Dit","Het is: de man."],["___ boeken zijn duur.","De","Het","Een","Meer dan één: altijd de."],
+  ["Ik heb ___ hond.","een","het","dit","Het is: de hond of een hond."],["___ kind speelt.","Het","De","Die","Het is: het kind."],["Wat betekent: het huis?","house","dog","book"]]},
+{id:"ww",t:"Het werkwoord nu",s:"Ik werk, jij werkt, wij werken",
+ x:"<b>Werken</b> is het hele werkwoord. Haal -en weg, dan heb je de stam: <b>werk</b>.\n<b>Ik:</b> de stam: ik werk. <b>Jij, u, hij, zij:</b> stam + t: jij werkt, hij werkt. <b>Wij, jullie, zij (meer mensen):</b> het hele werkwoord: wij werken.\nEen lange klank blijft lang: wonen, ik woon. Maken, ik maak. Twee dezelfde letters worden één: zitten, ik zit.",
+ e:"Werken (to work) is the whole verb. Take away -en and you have the stem: werk.\nIk: the stem. Jij, u, hij, zij: stem + t. Wij, jullie, zij (they): the whole verb.\nA long sound stays long: wonen, ik woon; maken, ik maak. A double letter becomes single: zitten, ik zit.",
+ v:"Ik werk in een winkel.=I work in a shop.|Jij woont in Delft.=You live in Delft.|Hij leert Nederlands.=He is learning Dutch.|Wij eten om zes uur.=We eat at six o'clock.|Zij maken koffie.=They are making coffee.",
+ w:"werken=to work|leren=to learn|eten=to eat|maken=to make|de winkel=shop|de koffie=coffee",
+ q:[["Ik ___ in een winkel.","werk","werkt","werken","Bij ik: alleen de stam."],["Hij ___ Nederlands.","leert","leer","leren","Bij hij: stam + t."],["Wij ___ om zes uur.","eten","eet","gegeten","Bij wij: het hele werkwoord."],
+  ["Jij ___ in Delft.","woont","woon","wonen","Bij jij: stam + t."],["Wonen. Ik ...","woon","won","wont","De lange klank blijft lang: ik woon."],["Wat betekent: werken?","to work","to eat","to learn"]]},
+{id:"vraag",t:"Een vraag maken",s:"Werk je? Waar woon je?",
+ x:"In een vraag staat het werkwoord vooraan: Jij werkt. <b>Werk</b> jij?\nStaat jij of je achter het werkwoord? Dan valt de t weg: Woon jij hier? Bij hij blijft de t: Werkt hij hier?\nMet een vraagwoord: vraagwoord, werkwoord, persoon: Waar woon je? De vraagwoorden: <b>wie</b> (een persoon), <b>wat</b> (een ding), <b>waar</b> (een plaats), <b>wanneer</b> (een tijd), <b>hoe</b> (een manier), <b>waarom</b> (een reden).",
+ e:"In a question the verb comes first: Jij werkt. Werk jij?\nWhen jij or je comes after the verb, the t disappears: Woon jij hier? With hij the t stays: Werkt hij hier?\nWith a question word: question word, verb, person: Waar woon je? Wie = who, wat = what, waar = where, wanneer = when, hoe = how, waarom = why.",
+ v:"Werk jij hier?=Do you work here?|Waar woon je?=Where do you live?|Wat doe je?=What are you doing?|Wanneer kom je?=When are you coming?|Hoe gaat het?=How are you?|Waarom lach je?=Why are you laughing?",
+ w:"waar=where|wat=what|wie=who|wanneer=when|hoe=how|waarom=why",
+ q:[["___ woon je? In Delft.","Waar","Wie","Wat","In Delft is een plaats: waar."],["___ jij hier?","Werk","Werkt","Werken","Jij achter het werkwoord: geen t."],["___ hij hier?","Werkt","Werk","Werken","Bij hij blijft de t."],
+  ["___ kom je? Morgen.","Wanneer","Wie","Wat","Morgen is een tijd: wanneer."],["Welke zin is goed?","Waar woon jij?","Waar jij woont?","Waar woont jij?","Vraagwoord, werkwoord, persoon. Geen t voor jij."],["Wat betekent: waarom?","why","when","who"]]},
+{id:"niet",t:"Niet en geen",s:"Ik werk niet, ik heb geen auto",
+ x:"<b>Geen</b> staat bij een woord met een, of zonder lidwoord: Ik heb een auto. Ik heb geen auto. Ik heb tijd. Ik heb geen tijd.\n<b>Niet</b> gebruik je bij de rest: Ik werk niet. Het huis is niet groot. Ik heb de auto niet.",
+ e:"Geen (no, not a) goes with a word that has een or no article: Ik heb een auto, ik heb geen auto. Ik heb tijd, ik heb geen tijd.\nNiet (not) is for everything else: Ik werk niet. Het huis is niet groot. Ik heb de auto niet.",
+ v:"Ik heb geen auto.=I don't have a car.|Ik heb geen tijd.=I have no time.|Ik werk vandaag niet.=I am not working today.|Het huis is niet groot.=The house is not big.|Hij komt niet.=He is not coming.",
+ w:"vandaag=today|morgen=tomorrow|het geld=money|het werk=work|duur=expensive|goedkoop=cheap",
+ q:[["Ik heb ___ auto.","geen","niet","nee","Een auto wordt geen auto."],["Ik werk vandaag ___.","niet","geen","nee","Bij een werkwoord: niet."],["Het huis is ___ groot.","niet","geen","nee","Voor groot: niet."],
+  ["Wij hebben ___ geld.","geen","niet","nee","Geld zonder lidwoord: geen geld."],["Welke zin is goed?","Ik heb de auto niet.","Ik heb geen de auto.","Ik niet heb de auto.","Bij de auto: niet, achteraan."],["Wat betekent: duur?","expensive","cheap","today"]]},
+{id:"mv",t:"Meer dan één",s:"Boeken, tafels, kinderen",
+ x:"Meer dan één: meestal <b>-en</b>: het boek, de boeken.\nEen korte klank: de letter erna komt twee keer: de man, de mannen. Een lange klank: één klinker is genoeg: de straat, de straten.\nWoorden op -el, -er, -en en -je krijgen <b>-s</b>: de tafel, de tafels. Het meisje, de meisjes.\nLeer deze uit je hoofd: het kind, de kinderen.",
+ e:"More than one: usually -en: het boek, de boeken.\nA short sound doubles the next letter: de man, de mannen. A long sound needs only one vowel: de straat, de straten.\nWords ending in -el, -er, -en and -je take -s: de tafel, de tafels; het meisje, de meisjes.\nLearn this one by heart: het kind, de kinderen.",
+ v:"Ik heb twee kinderen.=I have two children.|De tafels zijn nieuw.=The tables are new.|Daar lopen drie mannen.=Three men are walking there.|De straten zijn druk.=The streets are busy.|Ik koop vier appels.=I am buying four apples.",
+ w:"de tafel=table|de straat=street|de appel=apple|het meisje=girl|nieuw=new|druk=busy",
+ q:[["twee ___ (het boek)","boeken","boeks","boekken","Meestal -en."],["drie ___ (de tafel)","tafels","tafelen","tafeles","Op -el: -s."],["twee ___ (het kind)","kinderen","kinden","kinds","Uit je hoofd: kinderen."],
+  ["vier ___ (de man)","mannen","manen","mans","Korte klank: de n komt twee keer."],["vijf ___ (de straat)","straten","straaten","straats","Lange klank: één a is genoeg."],["Wat betekent: het meisje?","girl","table","street"]]},
+{id:"tijd",t:"Getallen en de klok",s:"Half vier, kwart over drie",
+ x:"1 een, 2 twee, 3 drie, 4 vier, 5 vijf, 6 zes, 7 zeven, 8 acht, 9 negen, 10 tien, 11 elf, 12 twaalf, 13 dertien, 14 veertien, 15 vijftien, 16 zestien, 17 zeventien, 18 achttien, 19 negentien, 20 twintig, 30 dertig, 40 veertig, 50 vijftig.\nBoven twintig zeg je het laatste cijfer eerst: 25 is vijfentwintig.\nDe klok: 3:00 is drie uur. 3:15 is kwart over drie. 3:45 is kwart voor vier.\nLet op: 3:30 is <b>half vier</b>: een half uur vóór vier.",
+ e:"Above twenty you say the last digit first: 25 is vijfentwintig (five and twenty).\nThe clock: 3:00 is drie uur. 3:15 is kwart over drie (quarter past three). 3:45 is kwart voor vier (quarter to four).\nCareful: 3:30 is half vier: half an hour before four, not half past four.",
+ v:"Hoe laat is het?=What time is it?|Het is drie uur.=It is three o'clock.|Het is kwart over drie.=It is a quarter past three.|Het is half vier.=It is half past three.|Het is kwart voor vier.=It is a quarter to four.|Ik ben vijfendertig jaar.=I am thirty-five.",
+ w:"het uur=hour|de minuut=minute|de klok=clock|half=half|laat=late|vroeg=early",
+ q:[["Het is half negen. Hoe laat is het?","8:30","9:30","8:15","Half negen is een half uur vóór negen."],["Het is kwart over vijf. Hoe laat is het?","5:15","4:45","5:30"],["Het is kwart voor zeven. Hoe laat is het?","6:45","7:15","6:15"],
+  ["Wat is 25?","vijfentwintig","tweeënvijftig","vijftwintig","Het laatste cijfer eerst."],["Wat is 13?","dertien","dertig","drietien","30 is dertig, 13 is dertien."],["Wat betekent: laat?","late","early","half"]]},
+{id:"modaal",t:"Willen, kunnen, moeten",s:"Ik wil morgen werken",
+ x:"Met <b>willen, kunnen, moeten</b> en <b>mogen</b> gebruik je nog een werkwoord. Dat staat helemaal aan het eind, en het is het hele werkwoord: Ik wil morgen <b>werken</b>.\n<b>Willen:</b> ik wil, jij wilt, hij wil, wij willen. <b>Kunnen:</b> ik kan, jij kunt, hij kan, wij kunnen.\n<b>Moeten:</b> ik moet, jij moet, hij moet, wij moeten. <b>Mogen:</b> ik mag, jij mag, hij mag, wij mogen.",
+ e:"Willen (want), kunnen (can), moeten (must) and mogen (may) go with a second verb. That verb stands at the very end, as the whole verb: Ik wil morgen werken.\nLearn their forms by heart.",
+ v:"Ik wil koffie drinken.=I want to drink coffee.|Jij moet morgen werken.=You have to work tomorrow.|Hij kan goed koken.=He can cook well.|Wij willen een huis kopen.=We want to buy a house.|Mag ik hier zitten?=May I sit here?",
+ w:"drinken=to drink|koken=to cook|kopen=to buy|zitten=to sit|goed=good|de dokter=doctor",
+ q:[["Ik wil morgen ___.","werken","werk","werkt","Het tweede werkwoord: het hele werkwoord, aan het eind."],["Hij ___ goed koken.","kan","kunnen","kun","Hij kan."],["Wij ___ een huis kopen.","willen","wil","wilt","Wij willen."],
+  ["Welke zin is goed?","Ik moet vandaag werken.","Ik moet vandaag werkt.","Ik moeten vandaag werken.","Ik moet, en aan het eind het hele werkwoord."],["___ ik hier zitten?","Mag","Mogen","Magt","Ik mag: mag ik?"],["Wat betekent: kopen?","to buy","to cook","to sit"]]},
+{id:"plek2",t:"Het werkwoord op plek 2",s:"Morgen ga ik naar de dokter",
+ x:"In een gewone zin staat het werkwoord op plek 2: Ik <b>werk</b> morgen.\nBegint de zin met iets anders, zoals morgen? Dan blijft het werkwoord op plek 2, en de persoon komt erachter: Morgen <b>werk</b> ik.\nJij achter het werkwoord? Dan valt de t weg: Morgen werk jij.",
+ e:"In a normal sentence the verb is in second place: Ik werk morgen.\nIf the sentence starts with something else, like morgen (tomorrow), the verb stays in second place and the person comes after it: Morgen werk ik.\nWhen jij comes after the verb, the t disappears: Morgen werk jij.",
+ v:"Ik ga morgen naar de dokter.=I am going to the doctor tomorrow.|Morgen ga ik naar de dokter.=Tomorrow I am going to the doctor.|Vandaag werk ik niet.=I am not working today.|In Delft woont mijn zus.=My sister lives in Delft.|Om acht uur begint de les.=The lesson starts at eight.",
+ w:"gaan=to go|beginnen=to begin|de les=lesson|de zus=sister|de broer=brother|naar=to",
+ q:[["Morgen ___ ik naar de dokter.","ga","gaan","gaat","Ik ga: het werkwoord op plek 2."],["Welke zin is goed?","Vandaag werk ik niet.","Vandaag ik werk niet.","Vandaag ik niet werk.","Vandaag is plek 1, het werkwoord plek 2."],["Om acht uur ___ de les.","begint","beginnen","begin","De les begint."],
+  ["Morgen ___ jij naar school.","ga","gaat","gaan","Jij achter het werkwoord: geen t."],["Welke zin is goed?","In Delft woont mijn zus.","In Delft mijn zus woont.","In Delft wonen mijn zus.","Het werkwoord op plek 2."],["Wat betekent: beginnen?","to begin","to go","to sit"]]},
+{id:"perf",t:"Wat je hebt gedaan",s:"Ik heb gewerkt, ik ben gegaan",
+ x:"Over gisteren of vorige week praat je meestal zo: <b>hebben</b> of <b>zijn</b>, en aan het eind het deelwoord: Ik heb gisteren <b>gewerkt</b>.\nHet deelwoord is ge + stam + t of d: werken, gewerkt. Wonen, gewoond. Eindigt de stam op t, k, f, s, ch of p? Dan t: gewerkt, gemaakt. Anders d: gewoond, gespeeld.\nSommige zijn anders. Leer ze uit je hoofd: eten, gegeten. Gaan, gegaan. Komen, gekomen.\nMeestal gebruik je hebben. Bij gaan, komen en blijven gebruik je zijn: Ik ben gegaan.",
+ e:"To talk about yesterday or last week you usually use hebben or zijn, with the past participle at the end: Ik heb gisteren gewerkt.\nThe participle is ge + stem + t or d: gewerkt, gewoond. If the stem ends in t, k, f, s, ch or p, use t; otherwise d.\nSome are irregular; learn them by heart: gegeten, gegaan, gekomen.\nMost verbs use hebben. Gaan, komen and blijven use zijn: Ik ben gegaan.",
+ v:"Ik heb gisteren gewerkt.=I worked yesterday.|Wij hebben pizza gegeten.=We ate pizza.|Zij heeft in Delft gewoond.=She lived in Delft.|Ik ben naar huis gegaan.=I went home.|Hij is laat gekomen.=He came late.",
+ w:"gisteren=yesterday|vorige week=last week|spelen=to play|blijven=to stay|het eten=food|thuis=at home",
+ q:[["Gisteren ___ ik gewerkt.","heb","ben","hebt","Werken gaat met hebben: ik heb gewerkt."],["Ik ben naar huis ___.","gegaan","gaan","gegaat","Gaan, gegaan."],["Wij hebben pizza ___.","gegeten","geëet","eten","Eten, gegeten."],
+  ["Hij ___ laat gekomen.","is","heeft","ben","Komen gaat met zijn: hij is gekomen."],["Ik heb in Delft ___.","gewoond","gewoont","gewonen","De stam woon eindigt op n: dus d."],["Wat betekent: gisteren?","yesterday","tomorrow","today"]]},
+{id:"omdat",t:"Omdat en want",s:"Ik blijf thuis, omdat ik ziek ben",
+ x:"Met <b>want</b> en <b>omdat</b> geef je een reden.\nNa want blijft de zin gewoon: Ik blijf thuis, want ik <b>ben</b> ziek.\nNa omdat gaat het werkwoord naar het eind: Ik blijf thuis, omdat ik ziek <b>ben</b>.\nDat gebeurt ook na <b>als</b> en <b>dat</b>: Ik bel je als ik thuis ben. Hij zegt dat hij moe is.",
+ e:"Want and omdat both mean because.\nAfter want the sentence stays normal: Ik blijf thuis, want ik ben ziek.\nAfter omdat the verb goes to the end: Ik blijf thuis, omdat ik ziek ben.\nThe same happens after als (if, when) and dat (that): Ik bel je als ik thuis ben. Hij zegt dat hij moe is.",
+ v:"Ik blijf thuis, want ik ben ziek.=I am staying home, because I am ill.|Ik blijf thuis, omdat ik ziek ben.=I am staying home because I am ill.|Ik leer Nederlands, omdat ik hier woon.=I am learning Dutch because I live here.|Ik bel je als ik thuis ben.=I will call you when I am home.|Hij zegt dat hij moe is.=He says that he is tired.",
+ w:"want=because|omdat=because|als=if, when|bellen=to call|zeggen=to say|de reden=reason",
+ q:[["Ik blijf thuis, omdat ik ziek ___.","ben","bent","zijn","Na omdat: het werkwoord aan het eind."],["Welke zin is goed?","Ik leer Nederlands, omdat ik hier woon.","Ik leer Nederlands, omdat ik woon hier.","Ik leer Nederlands, omdat woon ik hier.","Na omdat: het werkwoord aan het eind."],["Ik kom niet, ___ ik ben moe.","want","omdat","als","Na want blijft de zin gewoon."],
+  ["Ik bel je als ik thuis ___.","ben","is","heb","Na als: het werkwoord aan het eind."],["Hij zegt dat hij moe ___.","is","ben","heeft","Na dat: het werkwoord aan het eind."],["Wat betekent: bellen?","to call","to say","to stay"]]},
+];
+BG.forEach((l,i)=>l.q.forEach((q,j)=>ch("bg",l.id+"."+j,i,l.t,q[0],"",q[1],[q[2],q[3]],q[4])));
+const pairs=s=>s.split("|").map(x=>x.split("="));
+// One question per lesson, from easy to hard: a wrong one or "Ik weet het niet" means that lesson is still to do
+const START=[["ik","Hoe heet jij?","Ik heet Sara.","Ik woon in Delft.","Ik ben 30 jaar."],["zijn","Ik ___ moe.","ben","bent","is"],["lidw","___ huis is groot.","Het","De","Die"],
+  ["ww","Jij ___ in Amsterdam.","woont","woon","wonen"],["vraag","___ woon je? In Delft.","Waar","Wie","Wat"],["niet","Ik heb ___ auto.","geen","niet","nee"],
+  ["mv","twee ___ (het boek)","boeken","boeks","boekken"],["tijd","Het is half negen. Hoe laat is het?","8:30","9:30","8:15"],["modaal","Ik wil morgen ___.","werken","werk","werkt"],
+  ["plek2","Morgen ___ ik naar de dokter.","ga","gaan","gaat"],["perf","Gisteren ___ ik gewerkt.","heb","ben","hebt"],["omdat","Ik blijf thuis, omdat ik ziek ___.","ben","bent","zijn"]];
+// S.start {at, lv, miss}: lv 0 starts from nothing (all lessons, and today's lesson is only that), 1 knows some (the lessons in
+// miss, one a day instead of the grammar round), 2 needs none. No test yet: as before.
+const bgItems=l=>ITEMS.filter(x=>x.k.startsWith("bg|"+l.id+"."));
+const bgDone=l=>bgItems(l).every(x=>(S.items[x.k]||{}).r);
+const bgTodo=()=>!S.start||lvl()!=="A2"||S.start.lv>1?[]:BG.filter(l=>!bgDone(l)&&(!S.start.lv||(S.start.miss||[]).includes(l.id)));
+const bgDue=()=>{const d=today();return ITEMS.filter(x=>x.sec==="bg"&&S.items[x.k]&&S.items[x.k].d<=d).sort((a,b)=>S.items[a.k].b-S.items[b.k].b)};
 function addGenerated(){
   const g=S.gen||{}; let n=0;
   (g.lz||[]).slice(genN.lz).forEach((t,i0)=>{const i=genN.lz+i0;t[1].forEach((q,j)=>{n++;ITEMS.push({sec:"lz",k:"lz|g"+i+"."+j,ord:j,type:"choice",label:"Lees de tekst",text:t[0],big:q[0],sub:"",right:q[1],opts:()=>shuffle(q.slice(1))})})});
@@ -3103,6 +3210,7 @@ function voiceTexts(){
     if(["knm","ls","lb"].includes(q.sec)&&q.type==="choice"){add(q.big,"q");q.opts().forEach(o=>add(plain(o),"q"))}});
   ART.forEach(p=>{(p.v||"").split("\n").forEach(l=>add(l,"r"));(p.w||"").split("|").filter(Boolean).forEach(x=>add(x.split("=")[0],"w"))});
   GS.forEach(c=>c.x.split("\n").forEach(l=>add(l,"r")));
+  BG.forEach(l=>{pairs(l.v).forEach(x=>add(x[0],"r"));pairs(l.w).forEach(x=>add(x[0],"w"))});
   GP.forEach(c=>{c.d.forEach(s=>{add(s.a,"gp",c.w);add(s.r||GPNO,"gp",c.w);add(s.m.replace(/\[|\]/g,""),"gpm",c.w)});add(c.e,"gp",c.w)});
   return out}
 let rec=null,recUrl=null;
@@ -3392,7 +3500,8 @@ const IC={
   stats:'<rect x="2.5" y="12" width="5" height="9.5" rx="1.3"/><rect x="9.5" y="3.5" width="5" height="18" rx="1.3"/><rect x="16.5" y="8.5" width="5" height="13" rx="1.3"/>',
   errs:'<path fill-rule="evenodd" d="M10.2 3.4a2.1 2.1 0 0 1 3.6 0l8.2 14.1a2.1 2.1 0 0 1-1.8 3.1H3.8A2.1 2.1 0 0 1 2 17.5zM11 9v5.5h2V9zm0 7v2h2v-2z"/>',
   hist:'<path d="M5.5 2.5h13v2.2h-1.2v2.1c0 2.2-1.8 3.8-3.6 5.2 1.8 1.4 3.6 3 3.6 5.2v2.1h1.2v2.2h-13v-2.2h1.2v-2.1c0-2.2 1.8-3.8 3.6-5.2C8.5 10.6 6.7 9 6.7 6.8V4.7H5.5z"/>',
-  uit:'<path d="M12 4 1.5 9.5 12 15l8.5-4.45V16h2V9.5z"/><path d="M6 14.2V17c0 1.6 2.7 3 6 3s6-1.4 6-3v-2.8l-6 3.1z"/>',
+  bg:'<path class="s" d="M12 21v-9M12 12c0-4 3-7 8-7 0 5-3 7-8 7zM12 15.5c0-3-2.5-5-7-5 0 4 2.5 5 7 5z"/>',
+uit:'<path d="M12 4 1.5 9.5 12 15l8.5-4.45V16h2V9.5z"/><path d="M6 14.2V17c0 1.6 2.7 3 6 3s6-1.4 6-3v-2.8l-6 3.1z"/>',
 ona:'<path d="M9 3.5h6A1.5 1.5 0 0 1 16.5 5v1.5h3.5A2 2 0 0 1 22 8.5V12H2V8.5a2 2 0 0 1 2-2h3.5V5A1.5 1.5 0 0 1 9 3.5zm.5 3h5V5.5h-5zM2 13.5h8.5v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1H22v5a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2z"/>',
   talk:'<path d="M3.5 2.5h10A1.6 1.6 0 0 1 15 4.1v6.3a1.6 1.6 0 0 1-1.5 1.6H8.2l-3.7 3.2V12h-1A1.6 1.6 0 0 1 2 10.4V4.1a1.6 1.6 0 0 1 1.5-1.6z"/><path d="M16.7 7.5h3.8A1.6 1.6 0 0 1 22 9.1v6.3a1.6 1.6 0 0 1-1.5 1.6h-1v3.2L15.8 17H10.5A1.6 1.6 0 0 1 9 15.4V13.6h4.6a3.1 3.1 0 0 0 3.1-3.1z"/>',
   privacy:'<path fill-rule="evenodd" d="M12 2l8.5 3.4v6c0 5.2-3.6 9.2-8.5 10.9-4.9-1.7-8.5-5.7-8.5-10.9v-6zM10.7 13.4L8.3 11l-1.5 1.5 3.9 3.9 6.4-6.4-1.5-1.5z"/>',
@@ -3439,7 +3548,7 @@ function home(){
   }
   $("gram").innerHTML=`<h2>Grammatica en woorden</h2><p class="sub">Rondes van 10 vragen.</p>`+(lvl()==="B1"
     ?`<div class="list">${["g1","w1","v1"].map(row).join("")}</div><h3 class="lh">Herhalen op A2-niveau</h3><div class="list">${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`
-    :`<div class="list">${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`);
+    :`<div class="list">${itHTML(`data-x="bg"`,"Beginnen","Twaalf korte lessen, voor als je net begint.",{ic:"bg",n:(n=>n?`${n} van ${BG.length}`:null)(BG.filter(bgDone).length)})}${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`);
   $("books").innerHTML=itHTML(`data-x="books"`,"Boekenkast",lb?`Je leest nu: ${esc(lb.t)}, blz. ${lb.p+1}`:"Verhalen en je eigen e-books.",{ic:"books"})
     +itHTML(`data-x="hist"`,"Geschiedenis van Nederland",lh?`Je was bij: ${lh.t}`:"Van de hunebedden tot nu.",{n:gsDone?`${gsDone} van ${GS.length}`:null,ic:"hist"})
     +itHTML(`data-x="media"`,"Luisteren en kijken","Nieuws, video's en podcasts.",{ic:"media"})
@@ -3458,6 +3567,7 @@ function home(){
     else if(d.x==="talk")talks();
     else if(d.x==="ona")onaScreen();
     else if(d.x==="uit")uitScreen();
+    else if(d.x==="bg")bgList();
     else if(d.x==="words")practiseWords();
     else build("custom",{id:"custom",t:"Mijn fouten",n:10,pool:()=>shuffle(errItems())})});
   drawProfile();
@@ -3566,34 +3676,41 @@ const someTexts=(sec,k)=>()=>{
     .slice(0,k).flatMap(x=>x[0].sort((p,q)=>p.k<q.k?-1:1))};
 const oneText=sec=>someTexts(sec,1);
 const SHORT={lz:{n:6,s:"Eén tekst met vragen",pool:oneText("lz"),keep:1},l1:{n:6,s:"Eén lange tekst met zes vragen",pool:oneText("l1"),keep:1},lb:{n:4,s:"Eén fragment met vragen",pool:oneText("lb"),keep:1},
-  ls:{n:3,s:"Drie fragmenten"},wr:{n:1,min:10,s:"Eén opdracht in 10 minuten"},wb:{n:3,min:15,keep:1,s:"Drie zinsopdrachten of één langere opdracht, in 15 minuten",pool:()=>today()%2?wbTasks(3,0):wbTasks(0,1)},sp:{n:2,s:"Twee vragen: spreek je antwoord in"},sb:{n:2,keep:1,s:"Een korte en een middellange opdracht: spreek je antwoord in",pool:()=>sbTasks(1,1)},knm:{n:5,s:"Vijf vragen"}};
+  ls:{n:3,s:"Drie fragmenten"},wr:{n:1,min:10,s:"Eén opdracht in 10 minuten"},wb:{n:3,min:15,keep:1,s:"Drie zinsopdrachten of één langere opdracht, in 15 minuten",pool:()=>today()%2?wbTasks(3,0):wbTasks(0,1)},sp:{n:2,s:"Twee vragen: spreek je antwoord in"},sb:{n:2,keep:1,s:"Een korte en een middellange opdracht: spreek je antwoord in",pool:()=>sbTasks(1,1)},knm:{n:5,s:"Vijf vragen"},bg:{n:8,s:"Herhaal wat je al hebt geleerd",pool:bgDue}};
 // Je les van vandaag, without exam dates: every exam part, the weakest first (lowest proefexamen or practice
 // score; a part not practised yet counts as 50%) as a full round, every third day as a proefexamen once it
 // has been practised; then the other four as short rounds, weakest to strongest; last a grammar round
 // that helps the weakest part
 function planTasks(){
   const d=today(),T=[],ks=parts(),sec=id=>SEC.find(x=>x.id===id);
+  // Beginnen: one lesson a day (the one done today stays on the list, or the day would never be finished)
+  const dn=S.day&&S.day.d===d?S.day.done:[],was=dn.find(x=>x.startsWith("b:bg:")),les=was?BG.find(l=>l.id===was.split(":")[2]):bgTodo()[0],
+    lesStep=les&&{id:"b:bg:"+les.id,t:`Les ${BG.indexOf(les)+1}: ${les.t}`,s:les.s};
+  if(les&&S.start&&!S.start.lv){T.push(lesStep);if(dn.includes("q:bg")||bgDue().length)T.push({id:"q:bg",t:"Herhalen",s:SHORT.bg.s});return{T,k:"bg",pc:null,bg:1}}
   const sc=ks.map(k=>({k,r:ready(k)})), add=(id,t,s)=>T.push({id,t,s});
   sc.sort((a,b)=>(a.r.pc==null?50:a.r.pc)-(b.r.pc==null?50:b.r.pc)||ks.indexOf(a.k)-ks.indexOf(b.k));
   const k=sc[0].k;
   if(sc[0].r.pc!=null&&d%3===0)add("e:"+k,"Proefexamen "+PART[k],k==="wr"?"4 opdrachten in 40 minuten":k==="wb"?"12 opdrachten in 100 minuten":EX[k].min+" minuten, zoals op het examen");
   else add("s:"+k,PART[k],sec(k).s);
   sc.slice(1).forEach(x=>add("q:"+x.k,PART[x.k],SHORT[x.k].s));
-  const help=HELP[k].length?HELP[k]:lvl()==="B1"?["g1","w1","v1"]:["verb","wo","vo"],h=help[d%help.length];add("s:"+h,sec(h).t,sec(h).s);
+  const help=HELP[k].length?HELP[k]:lvl()==="B1"?["g1","w1","v1"]:["verb","wo","vo"],h=help[d%help.length];
+  if(les)T.push(lesStep);else add("s:"+h,sec(h).t,sec(h).s);
   return{T,k,pc:sc[0].r.pc};
 }
 function planHTML(){
   const d=today(),done=S.day&&S.day.d===d?S.day.done:[],P=planTasks(),steps=P.T,nx=steps.findIndex(t=>!done.includes(t.id));
   const nd=steps.filter(t=>done.includes(t.id)).length;
-  const intro=nx<0?"Alles is klaar. Tot morgen!":P.pc!=null?`Vooral ${PART[P.k]}: daar scoor je nu het laagst.`:"Van elk onderdeel een beetje.";
+  const intro=nx<0?"Alles is klaar. Tot morgen!":P.bg?"Eerst de basis: elke dag één les.":P.pc!=null?`Vooral ${PART[P.k]}: daar scoor je nu het laagst.`:"Van elk onderdeel een beetje.";
+  // new here at A2: where to begin. Gone after the test, or once someone has clearly been practising
+  const first=lvl()==="A2"&&!S.start&&Object.keys(S.items).length<30?`<div class="list">${itHTML(`data-p="t:start"`,"Waar begin ik?","Twaalf korte vragen. Daarna weet je waar je kunt beginnen.",{ic:"bg"})}</div>`:"";
   const date=new Date().toLocaleDateString("nl-NL",{weekday:"long",day:"numeric",month:"long"});
   // the next step is a big card with a detail of a painting; the others are small rows; above them how far you are today
   return`<p class="ask">${date}</p><h2>Je les van vandaag</h2>
     <div class="dayp"><span aria-hidden="true">${steps.map(t=>`<i${done.includes(t.id)?' class="on"':""}></i>`).join("")}</span><small>${nd} van ${steps.length} klaar</small></div>
-    <p class="sub">${intro}</p>
+    <p class="sub">${intro}</p>${first}
     <ol class="steps">${steps.map((t,i)=>{const ok=done.includes(t.id),nxt=i===nx&&!ok,k=t.id.split(":")[1];
       return`<li><button class="step${ok?" ok":""}" data-p="${t.id}"${nxt?' aria-current="step"':""}><i class="sic">${ok?'<svg viewBox="0 0 24 24" aria-hidden="true"><path class="s" d="M5.5 12.5l4.2 4.2 8.8-9"/></svg>':IC[k]?`<svg viewBox="0 0 24 24" aria-hidden="true">${IC[k]}</svg>`:i+1}</i><b>${t.t}</b><span>${t.s}</span><em class="c">›</em></button></li>`}).join("")}</ol>
-    <button class="ghost wide" data-p="s:mix">Meer tijd? Mix van de dag</button>`;
+    ${P.bg?"":`<button class="ghost wide" data-p="s:mix">Meer tijd? Mix van de dag</button>`}`;
 }
 // iPhone: Safari can wipe a site's storage after a week without a visit; on the home screen the app keeps it.
 // The home-screen app has its own storage, so the progress goes along by the clipboard (Kopieer / Plak).
@@ -3672,7 +3789,9 @@ function drawPlan(){
   const d=today();if(!$("plan").querySelector(".step:not(.ok)")&&lsGet("ww-stamp")!=String(d)){lsSet("ww-stamp",String(d));
     const st=$("streak");st.classList.remove("stamp");void st.offsetWidth;st.classList.add("stamp");buzz("good")}
   document.querySelectorAll("#plan [data-p]").forEach(b=>b.onclick=()=>{const id=b.dataset.p,[k,v]=id.split(":");
-    if(k==="s")build(v);else if(k==="q")build(v,{...SEC.find(x=>x.id===v),...SHORT[v]});else startExam(v);
+    if(k==="t")return startTest();
+    if(k==="b")bgLes(BG.findIndex(l=>l.id===id.split(":")[2]));
+    else if(k==="s")build(v);else if(k==="q")build(v,{...SEC.find(x=>x.id===v),...SHORT[v]});else startExam(v);
     planId=id});
 }
 const weak=q=>{const it=S.items[q.k];return it?(it.w||0)-(it.r||0):0};
@@ -3692,7 +3811,7 @@ function stats(){
 function build(id,custom){
   cur=custom||SEC.find(s=>s.id===id); cur.zs=[]; const d=today(), due=[],fresh=[];
   const lv=x=>lvl()==="B1"||!x.k.startsWith("gb|"); // the B1 history questions only at B1
-  const pool=id==="mix"?ITEMS.filter(x=>lv(x)&&!isWr(x.sec)&&!(lvl()==="B1"?["lz","ls","sp"]:["l1","lb","sb","g1","w1","v1"]).includes(x.sec)).concat(wordItems()):ITEMS.filter(x=>x.sec===id&&lv(x));
+  const pool=id==="mix"?ITEMS.filter(x=>lv(x)&&(x.sec!=="bg"||S.items[x.k])&&!isWr(x.sec)&&!(lvl()==="B1"?["lz","ls","sp"]:["l1","lb","sb","g1","w1","v1"]).includes(x.sec)).concat(wordItems()):ITEMS.filter(x=>x.sec===id&&lv(x));
   shuffle(pool.slice()).forEach(q=>{const it=S.items[q.k];if(!it)fresh.push(q);else if(it.d<=d)due.push(q)});
   due.sort((a,b)=>S.items[a.k].b-S.items[b.k].b);
   fresh.sort((a,b)=>a.ord-b.ord);
@@ -5013,6 +5132,63 @@ function talks(){
 // ONA and the participatieverklaring: two parts of inburgeren that not everyone has to do. What they are, who needs
 // them, and the ONA final interview to practise as conversations (GP items with ona, not in the Gesprekken list).
 // The facts follow DUO (inburgeren.nl); check them there when the rules change.
+// Beginnen (data in BG, START): the list, one lesson, and the test that says where to begin. All in #talk.
+function bgOpen(back,f){
+  closePop();hush();TK=null;$("card").innerHTML="";
+  $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;window.scrollTo(0,0);
+  tBack(back,f);
+}
+function bgList(){
+  bgOpen(TABN[tab],home);
+  $("tbody").innerHTML=`<h2>Beginnen</h2><p class="sub">Twaalf korte lessen met de basis van het Nederlands.</p>
+    <div class="list">${BG.map((l,i)=>itHTML(`data-i="${i}"`,`Les ${i+1}: ${l.t}`,l.s,{n:bgDone(l)?"Klaar":null})).join("")}</div>
+    <button class="ghost wide" id="bgt">${S.start?"Doe de starttest opnieuw":"Doe de starttest"}</button>`;
+  document.querySelectorAll("#tbody [data-i]").forEach(b=>b.onclick=()=>bgLes(+b.dataset.i));
+  $("bgt").onclick=startTest;
+}
+function bgLes(i){
+  const l=BG[i],V=pairs(l.v),W=pairs(l.w),has=w=>(S.words||[]).some(y=>y.w===w),para=t=>t.split("\n").map(x=>`<p>${x}</p>`).join("");
+  bgOpen("Beginnen",bgList);
+  $("tbody").innerHTML=`<p class="ask">Les ${i+1} van ${BG.length}</p><h2>${l.t}</h2>
+    <div lang="nl">${para(l.x)}</div><button class="hint" id="bge" style="margin-top:0" aria-expanded="${EN}">English</button><div id="bgx" lang="en" class="note"${EN?"":" hidden"}>${para(l.e)}</div>
+    <h3 class="lh">Voorbeelden</h3><ul class="sw">${V.map((x,j)=>`<li><span lang="nl"><b>${x[0]}</b><small lang="en">${x[1]}</small></span>${canSpeak?`<button class="say" data-v="${j}" aria-label="Luister">▶</button>`:""}</li>`).join("")}</ul>
+    <h3 class="lh">Woorden</h3><ul class="sw">${W.map((x,j)=>`<li><span><b lang="nl">${x[0]}</b> — <span lang="en">${x[1]}</span></span>${canSpeak?`<button class="say" data-w="${j}" aria-label="Luister">▶</button>`:""}</li>`).join("")}</ul>
+    <button class="ghost wide" id="bgk" style="margin:12px 0 10px"${W.every(x=>has(x[0]))?" disabled":""}>${W.every(x=>has(x[0]))?"Bewaard in Mijn woorden":"Bewaar in Mijn woorden"}</button>
+    <button class="btn wide" id="bgo">Oefenen</button>`;
+  $("bge").onclick=()=>{const x=$("bgx");x.hidden=!x.hidden;$("bge").setAttribute("aria-expanded",!x.hidden)};
+  document.querySelectorAll("#tbody [data-v]").forEach(b=>b.onclick=()=>speak(V[b.dataset.v][0]));
+  document.querySelectorAll("#tbody [data-w]").forEach(b=>b.onclick=()=>speak(W[b.dataset.w][0]));
+  $("bgk").onclick=()=>{S.words=S.words||[];W.filter(x=>!has(x[0])).forEach(([w,en])=>S.words.unshift({w,en,p:/^(de|het) /.test(w)?"n":"a",s:l.t,f:[]}));save();$("bgk").textContent="Bewaard in Mijn woorden";$("bgk").disabled=true};
+  $("bgo").onclick=()=>build("custom",{id:"custom",t:l.t,n:l.q.length,pool:()=>bgItems(l),back:{t:"De les",f:()=>bgLes(i)},next:BG[i+1]?{t:"Volgende les",f:()=>bgLes(i+1)}:null});
+}
+function startTest(){
+  planId=null;
+  let i=0,inRow=0; const miss=[];
+  const end=()=>{const right=START.length-miss.length,lv=right>=10?2:right>=5?1:0;
+    S.start={at:Date.now(),lv,miss}; save();
+    const f=BG.find(l=>miss.includes(l.id));
+    $("tbody").innerHTML=`<p class="ask">Starttest</p><h2>${right} van ${START.length} goed</h2>
+      <p>${lv===2?"Je kent de basis. Je kunt meteen met de onderdelen van het examen beginnen.":lv===1?"Je kent al veel. Elke dag krijg je een les over wat je nog niet goed weet.":"Je begint bij het begin. Elke dag krijg je één korte les. Daarna ga je verder met de onderdelen van het examen."}</p>
+      ${lv<2?`<button class="btn wide" id="bgf" style="margin-bottom:10px">Naar les ${BG.indexOf(f)+1}: ${f.t}</button>`:`<button class="btn wide" id="bgh" style="margin-bottom:10px">Naar je les van vandaag</button>`}
+      <button class="ghost wide" id="bga">Alle lessen</button>`;
+    window.scrollTo(0,0);
+    if($("bgf"))$("bgf").onclick=()=>bgLes(BG.indexOf(f)); if($("bgh"))$("bgh").onclick=()=>{setTab("vandaag");home()};
+    $("bga").onclick=bgList};
+  const pick=q=>ok=>{buzz("tick");if(ok)inRow=0;else{inRow++;miss.push(q[0])}
+    i++;
+    // three wrong in a row: the next ones are harder, so stop here; those not asked count as still to do
+    if(inRow>=3&&i<START.length){START.slice(i).forEach(x=>miss.push(x[0]));return end()}
+    i<START.length?draw():end()};
+  const draw=()=>{const q=START[i],o=shuffle(q.slice(2,5)),go=pick(q);
+    $("tbody").innerHTML=`<p class="ask">Vraag ${i+1} van ${START.length}</p><p class="bgq" lang="nl">${q[1]}</p>
+      <div class="opts one" lang="nl">${o.map((x,j)=>`<button class="opt" data-n="${j}">${x}</button>`).join("")}</div>
+      <button class="ghost wide" id="bgn" style="margin-top:12px">Ik weet het niet</button>`;
+    document.querySelectorAll("#tbody .opt").forEach(b=>b.onclick=()=>go(o[b.dataset.n]===q[2]));
+    $("bgn").onclick=()=>go(false);
+    window.scrollTo(0,0)};
+  bgOpen(TABN[tab],home);
+  draw();
+}
 // Mijn examen: the result of the real exam, per part, as the learner tells it. Their own record is S.uit {part: {ok, at}};
 // a copy goes to /api/outcome (table exam_outcomes) to see whether the proefexamens and "Klaar voor het examen" predict the
 // real result: the part, passed or not, the last proefexamen score, the status then, and the month the server adds. No
@@ -5535,7 +5711,7 @@ const UI={
 "Echt Nederlands. Je hoeft niet alles te begrijpen.":"Real Dutch. You don't need to understand everything.","Video's":"Videos","Podcasts":"Podcasts",
 "Makkelijk":"Easy","Gemiddeld":"Medium","Moeilijk":"Hard","Herhaal de vragen van alle hoofdstukken":"Review the questions of all chapters",
 "E-mailadres":"E-mail address","Volgende":"Next","Terug":"Back","Eerst rondkijken":"Look around first","Face ID of vingerafdruk":"Face ID or fingerprint",
-"Vul de code in":"Enter the code","ONA en participatieverklaring":"ONA and participation statement","Mijn examen":"My exam","Echt examen gedaan? Vertel hoe het ging.":"Taken the real exam? Tell us how it went.","Echt examen gedaan? Tik per onderdeel op je uitslag.":"Taken the real exam? Tap your result for each part.","Geslaagd":"Passed","Niet geslaagd":"Not passed","Echt examen":"Real exam","Je uitslag telt mee in onze cijfers, zonder je naam of e-mailadres. Zo zien we of de proefexamens kloppen.":"Your result counts in our figures, without your name or e-mail. It shows us whether the practice exams are right.","Tik nog een keer op je uitslag om hem weg te halen.":"Tap your result again to remove it.","Privacyverklaring":"Privacy statement","Niet voor iedereen: kijk of jij ze nodig hebt.":"Not for everyone: check whether you need them.","ONA":"ONA","Inloggen is niet gelukt":"Logging in did not work","Je bent ingelogd":"You are logged in","Ga terug naar Bittertalen op je beginscherm. Daar ben je nu ook ingelogd.":"Go back to Bittertalen on your home screen. You are logged in there too.","Ga terug naar Bittertalen op je beginscherm en probeer het nog een keer, of log in met je e-mailadres.":"Go back to Bittertalen on your home screen and try again, or log in with your e-mail address.","Inloggen is nog niet ingesteld.":"Logging in is not set up yet.","Inloggen":"Log in","Ander e-mailadres":"Another e-mail address","Code van 6 cijfers":"6-digit code",
+"Vul de code in":"Enter the code","ONA en participatieverklaring":"ONA and participation statement","Beginnen":"Getting started","Twaalf korte lessen, voor als je net begint.":"Twelve short lessons, for when you are just starting.","Twaalf korte lessen met de basis van het Nederlands.":"Twelve short lessons with the basics of Dutch.","Waar begin ik?":"Where do I start?","Twaalf korte vragen. Daarna weet je waar je kunt beginnen.":"Twelve short questions. Then you know where to start.","Starttest":"Starting test","Doe de starttest":"Take the starting test","Doe de starttest opnieuw":"Take the starting test again","Voorbeelden":"Examples","Woorden":"Words","Bewaar in Mijn woorden":"Save in My words","Bewaard in Mijn woorden":"Saved in My words","Ik weet het niet":"I don't know","Alle lessen":"All lessons","Naar je les van vandaag":"Go to today's lesson","Herhaal wat je al hebt geleerd":"Repeat what you have learned","Eerst de basis: elke dag één les.":"The basics first: one lesson a day.","Je kent de basis. Je kunt meteen met de onderdelen van het examen beginnen.":"You know the basics. You can start on the exam parts right away.","Je kent al veel. Elke dag krijg je een les over wat je nog niet goed weet.":"You already know a lot. Every day you get a lesson on what you don't know well yet.","Je begint bij het begin. Elke dag krijg je één korte les. Daarna ga je verder met de onderdelen van het examen.":"You start at the beginning. Every day you get one short lesson. After that you go on to the exam parts.","Mijn examen":"My exam","Echt examen gedaan? Vertel hoe het ging.":"Taken the real exam? Tell us how it went.","Echt examen gedaan? Tik per onderdeel op je uitslag.":"Taken the real exam? Tap your result for each part.","Geslaagd":"Passed","Niet geslaagd":"Not passed","Echt examen":"Real exam","Je uitslag telt mee in onze cijfers, zonder je naam of e-mailadres. Zo zien we of de proefexamens kloppen.":"Your result counts in our figures, without your name or e-mail. It shows us whether the practice exams are right.","Tik nog een keer op je uitslag om hem weg te halen.":"Tap your result again to remove it.","Privacyverklaring":"Privacy statement","Niet voor iedereen: kijk of jij ze nodig hebt.":"Not for everyone: check whether you need them.","ONA":"ONA","Inloggen is niet gelukt":"Logging in did not work","Je bent ingelogd":"You are logged in","Ga terug naar Bittertalen op je beginscherm. Daar ben je nu ook ingelogd.":"Go back to Bittertalen on your home screen. You are logged in there too.","Ga terug naar Bittertalen op je beginscherm en probeer het nog een keer, of log in met je e-mailadres.":"Go back to Bittertalen on your home screen and try again, or log in with your e-mail address.","Inloggen is nog niet ingesteld.":"Logging in is not set up yet.","Inloggen":"Log in","Ander e-mailadres":"Another e-mail address","Code van 6 cijfers":"6-digit code",
 "Met een account blijft je voortgang bewaard, ook op je andere apparaten, en kijkt Claude je teksten en antwoorden na.":"With an account your progress is kept, also on your other devices, and Claude checks your texts and answers.",
 "Er is een nieuwe versie van Bittertalen.":"There is a new version of Bittertalen.","Vernieuwen":"Refresh",
 "Zet Bittertalen op je beginscherm":"Put Bittertalen on your home screen","Al geoefend in Safari?":"Already practised in Safari?",
@@ -5546,6 +5722,7 @@ const UI={
 const MON={januari:"January",februari:"February",maart:"March",april:"April",mei:"May",juni:"June",juli:"July",augustus:"August",september:"September",oktober:"October",november:"November",december:"December"};
 const DAYS={maandag:"Monday",dinsdag:"Tuesday",woensdag:"Wednesday",donderdag:"Thursday",vrijdag:"Friday",zaterdag:"Saturday",zondag:"Sunday"};
 const UIR=[
+ [/^Vraag (\d+) van (\d+)$/,"Question $1 of $2"],[/^Les (\d+) van (\d+)$/,"Lesson $1 of $2"],[/^(\d+) van (\d+) goed$/,"$1 of $2 right"],[/^Les (\d+): (.+)$/,"Lesson $1: $2"],[/^Naar les (\d+): (.+)$/,"Go to lesson $1: $2"],
  [/^(\d+) van (\d+) klaar$/,"$1 of $2 done"],[/^(\d+) van (\d+)$/,"$1 of $2"],[/^nodig: (\d+)%$/,"needed: $1%"],[/^(\d+) min$/,"$1 min"],
  [/^Gestart in ([\d,]+) s$/,(m,a)=>`Started in ${a.replace(",",".")} s`],
  [/^(maandag|dinsdag|woensdag|donderdag|vrijdag|zaterdag|zondag) (\d+) (\w+)$/i,(m,d,n,mo)=>`${DAYS[d.toLowerCase()]} ${n} ${MON[mo.toLowerCase()]||mo}`],
