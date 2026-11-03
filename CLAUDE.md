@@ -123,8 +123,7 @@ Every section appears once; don't add a second entry point to the same exercise.
 ## Words, motion, touch
 
 - **Short words**: no explaining paragraph under every heading; a description says what is in it in a few words
-  ("Korte teksten met vragen"). Units with a non-breaking space (`10&nbsp;min`). No `text-wrap: balance/pretty` and no `text-rendering:
-  optimizeLegibility`: with them the iPhone app stayed white on start (November 2026).
+  ("Korte teksten met vragen"). Text wraps balanced (`text-wrap`), units with a non-breaking space (`10&nbsp;min`).
 - **Motion**: short and quiet, like iOS: a screen or tab comes in (`rise`), buttons give a little when pressed, a right
   option pops, a wrong one shakes, the feedback sheet slides up, the stamp is put down. All off with
   `prefers-reduced-motion`.
@@ -166,7 +165,8 @@ for the rest). The proefexamen takes the least-seen
 questions first (`seenN()`: practice answers plus `S.xs`, how often a question was in a proefexamen); Lezen takes
 whole texts.
 
-`sw.js` makes the app work offline: the page network-first (a push is live at once), paintings and
+`sw.js` makes the app work offline: the page network-first (a push is live at once), but after 3.5 s without an
+answer the cached copy (`netFirst()`: a bad connection once left the app white), paintings and
 photos from the cache (the page sends their list after loading), `api/` never cached. Don't change the stored shape without migrating old data.
 Saving progress to a file was removed on purpose. On an iPhone in Safari a tile on Vandaag (`drawA2hs()`)
 asks to put the app on the home screen, because Safari can wipe a site's storage after a week without a visit; the

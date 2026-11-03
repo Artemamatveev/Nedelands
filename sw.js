@@ -1,6 +1,7 @@
 // Offline: the app keeps working without a connection (on the train, abroad).
-// The page itself: network first, so a push to main is live at once; the cached copy only when offline. Other pages
-// (privacy.html) are cached under their own address, never as "/".
+// The page itself: network first, so a push to main is live at once; the cached copy when offline, or when the
+// network has not answered within 3.5 s (a bad connection used to leave the app white). Other pages (privacy, over)
+// are cached under their own address, never as "/".
 // Paintings, photos and icons: from the cache, refreshed in the background. The dictionary (7 MB): cache only.
 // Recorded voices (audio/): cached on first play. api/ (grading, new texts) always goes to the network.
 const CACHE = "nl-a2-v2", CORE = ["/", "/manifest.json", "/apple-touch-icon.png"];
@@ -22,21 +23,9 @@ self.addEventListener("fetch", e => {
   const r = e.request, u = new URL(r.url);
   if (r.method !== "GET" || u.origin !== location.origin || u.pathname.startsWith("/api/")) return;
   const app = u.pathname === "/" || u.pathname === "/index.html";
-  // Another page of the site (the privacy statement): network first, kept under its own address for offline
-  if (r.mode === "navigate" && !app) {
-    e.respondWith(fetch(r).then(res => {
-      if (res.ok) { const copy = res.clone(); caches.open(CACHE).then(c => c.put(r, copy)) }
-      return res;
-    }).catch(() => caches.match(r).then(hit => hit || caches.match("/"))));
-    return;
-  }
-  if (r.mode === "navigate" || app) {
-    e.respondWith(fetch(r).then(res => {
-      if (res.ok) { const copy = res.clone(); caches.open(CACHE).then(c => c.put("/", copy)) }
-      return res;
-    }).catch(() => caches.match("/")));
-    return;
-  }
+  // Another page of the site (privacy, over): network first, kept under its own address for offline
+  if (r.mode === "navigate" && !app) { e.respondWith(netFirst(r, r, "/")); return }
+  if (r.mode === "navigate" || app) { e.respondWith(netFirst(r, "/")); return }
   // Recorded voices: kept after the first play (a file never changes, its name is the hash of its line). The audio
   // element asks for byte ranges (Safari won't play without them), answered from the whole file.
   if (u.pathname.startsWith("/audio/") && u.pathname.endsWith(".mp3")) {
@@ -51,6 +40,21 @@ self.addEventListener("fetch", e => {
     return net;
   })));
 });
+// Network first, but not forever: after 3.5 s without an answer the cached copy is shown (the network answer still
+// refreshes the cache for next time); without a copy it keeps waiting for the network
+function netFirst(r, key, alt) {
+  const net = fetch(r).then(res => {
+    if (res.ok) { const copy = res.clone(); caches.open(CACHE).then(c => c.put(key, copy)) }
+    return res;
+  });
+  const cached = () => caches.match(key).then(hit => hit || (alt ? caches.match(alt) : undefined));
+  return new Promise(done => {
+    let over = false;
+    const give = res => { if (!over && res) { over = true; clearTimeout(t); done(res) } };
+    const t = setTimeout(() => cached().then(give), 3500);
+    net.then(give, () => cached().then(hit => { if (!over) { over = true; clearTimeout(t); done(hit || Response.error()) } }));
+  });
+}
 async function ranged(r, res) {
   const m = /^bytes=(\d+)-(\d*)$/.exec(r.headers.get("range") || "");
   if (!m || res.status !== 200) return res;
