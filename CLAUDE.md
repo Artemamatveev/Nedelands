@@ -19,8 +19,8 @@ and its date. `sw.js` caches other pages under their own address, never as "/".
 The app's UI language is Dutch; the user talks to Claude in Russian. There is no Russian anywhere in the app: a word's meaning is
 a short Dutch description (A2), or English from the dictionary. For beginners the menus and navigation can switch to
 English, Arabic, Turkish, Hindi or simplified Chinese (the groups CBS counts most among inburgeraars, plus the user's choice of
-Hindi and Chinese; the language pill top left on the painting and on the login card, where the user wanted it: a native
-`<select>` over the pill, `langHTML()`; `ww-ui` per device, Dutch by default): `UI` (exact Dutch string → `[en, ar, tr, hi, zh]`, the
+Hindi and Chinese; the language pill top left on the painting and on the login card, where the user wanted it: filled cobalt with a white edge,
+because clear glass got lost on light paintings, with a globe and a ⌄; a native `<select>` over the pill, `langHTML()`; `ww-ui` per device, Dutch by default): `UI` (exact Dutch string → `[en, ar, tr, hi, zh]`, the
 order of `LCODE`) and `UIR` (patterns: "2 van 6 klaar", dates, "nodig: 76%"…) translate text
 nodes, `aria-label` and `placeholder` after every render (a MutationObserver; the Dutch original is kept in `UIO`, so
 switching back restores it). Never inside `#play` (exercises) or `#read` (the reader), and not content: texts, stories,
