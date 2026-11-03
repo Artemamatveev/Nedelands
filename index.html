@@ -347,7 +347,7 @@ main:has(#play:not([hidden])) header{display:none}
 .errs s{color:var(--bad)} .errs strong{color:var(--good)}
 .errs span{display:block;color:var(--soft);font-size:var(--fs-m)}
 /* errors: marked in your own text and numbered like the list */
-.sample.own{border-left-color:var(--line)}
+.sample.own{border-left-color:var(--line)} .rdo{margin:0 0 14px}
 .diff s{color:var(--bad)} .diff ins{color:var(--good);font-weight:600}
 mark.err{background:color-mix(in srgb,var(--bad) 16%,transparent);color:inherit;border-radius:4px;padding:0 2px;box-shadow:inset 0 -2px 0 color-mix(in srgb,var(--bad) 55%,transparent)}
 mark.err sup{font-size:11px;font-weight:700;color:var(--bad);margin-left:1px}
@@ -3993,18 +3993,32 @@ function diffHTML(own,right){
   // a word in the wrong place is struck through once and added once: that is one mistake, not two
   return{h,n:n&&Math.max(1,n-moved.length)};
 }
-// items: {own, right, errs, l (the task, for a sentence), ctx (a text with an open place)}
-function redo(items){
-  const what=items.length>1?"zinnen":items[0].l?"zin":"tekst";
+// What can be written again of one task: [] when nothing differs. A B1 form has one box per answer that differs: its corrected
+// text is one line per form answer, the open answer last (SYSTEM_WB in api/check.js); another shape gives no boxes.
+function redoItems(q,form,text,right,errs){
+  if(q.sec==="wb"&&q.fields){
+    const n=q.fields.length,L=String(right||"").split("\n").map(x=>x.trim()).filter(Boolean),F=form.split("\n");
+    if(L.length<n+1)return[];
+    const I=q.fields.map((f,i)=>({own:(F[i]||"").slice(f.length+2),right:L[i].startsWith(f+":")?L[i].slice(f.length+1).trim():L[i],l:f,f:1,errs:[]}))
+      .concat({own:text,right:L.slice(n).join(" "),l:q.open,f:1,errs:[]}).filter(x=>redoable(x.own,x.right));
+    if(I.length)I[I.length-1].errs=errs;
+    return I}
+  if(q.kind==="z"){const own=zWhole({q,text});return redoable(own,right)?[{own,right,errs,l:q.big,ctx:/___/.test(q.ctx||"")?q.ctx:""}]:[]}
+  return redoable(text,right)?[{own:text,right,errs}]:[];
+}
+// items: {own, right, errs, l (the task or question), ctx (a text with an open place), f (a form's answer)};
+// back: after a proefexamen, back to its result, which is not marked again
+function redo(items,back){
+  const what=items[0].f?items.length>1?"antwoorden":"antwoord":items.length>1?"zinnen":items[0].l?"zin":"tekst";
   $("card").innerHTML=`<p class="ask">Schrijf het nog een keer</p><p class="note">Verbeter je eigen ${what}, zonder naar de verbeterde ${what} te kijken.</p>`
     +items.map((x,i)=>`${x.l?`<p class="note">${x.l}</p>`:""}${x.ctx?`<div class="sample">${esc(x.ctx).replace("___",'<b class="gapw">______</b>')}</div>`:""}
-      <textarea id="rw${i}" rows="${x.l?3:Math.max(7,x.own.split("\n").length+2)}" aria-label="Je ${x.l?"zin":"tekst"}" spellcheck="false" autocorrect="off" autocapitalize="off"></textarea>
+      <textarea id="rw${i}" rows="${x.l?3:Math.max(7,x.own.split("\n").length+2)}" aria-label="Je ${x.f?"antwoord":x.l?"zin":"tekst"}" spellcheck="false" autocorrect="off" autocapitalize="off"></textarea>
       ${x.errs.length?`<details><summary>Kijk nog even naar de fouten</summary>${errsHTML(x.errs)}</details>`:""}<div id="rwd${i}"></div>`).join("")
     +`<p class="note" id="rwn" hidden>Doorgestreept moet weg, groen moet erbij. De telefoon vergelijkt alleen: een ander woord kan ook goed zijn.</p>
-      <div class="two"><button class="ghost" id="rwgo">Verder</button><button class="btn" id="rwchk">Vergelijk</button></div>`;
+      <div class="two"><button class="ghost" id="rwgo">${back?"Naar de uitslag":"Verder"}</button><button class="btn" id="rwchk">Vergelijk</button></div>`;
   items.forEach((x,i)=>$("rw"+i).value=x.own);
   window.scrollTo(0,0);
-  $("rwgo").onclick=()=>{pos++;show()};
+  $("rwgo").onclick=back||(()=>{pos++;show()});
   $("rwchk").onclick=()=>{
     const R=items.map((x,i)=>{const t=$("rw"+i).value.trim(),d=diffHTML(t,x.right);
       $("rwd"+i).innerHTML=d.n?`<p class="ask">Nog ${d.n} ${d.n===1?"verschil":"verschillen"}</p><div class="sample diff">${d.h}</div>`:`<p class="note"><b class="good">✓ Precies goed!</b></p>`;
@@ -4028,17 +4042,16 @@ async function check(q){
     const res=(await nakijken([{kind:q.kind,task,form,text}],q.sec==="wb"?"wb":undefined))[0];
     const errs=Array.isArray(res.errors)?res.errors:[];
     btn.hidden=true; const ok=!!res.passed;
-    // a B1 form: the corrected text also has the form's answers, so it can't be compared with the open answer alone
-    const canRedo=redoable(text,res.corrected)&&!(q.sec==="wb"&&q.fields);
+    const RD=redoItems(q,form,text,res.corrected,errs);
     keepErrs(errs); record(ok);
     $("fb").innerHTML=`<b class="${ok?"good":"bad"}">${ok?"Goed zo! Voldoende":"Nog niet voldoende"}</b>
       <p class="note">${esc(res.verdict)}</p>${scoreHTML(res.scores,q.mx)}
       ${ownHTML(text,errs)}${errsHTML(errs)}${freeNote()}
       <p class="ask">Verbeterde tekst</p><div class="sample">${esc(res.corrected)}</div>
       <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(q.right)}</div></details>
-      ${canRedo?redoBtn:""}${docBtn}<button class="btn wide" id="next">Verder</button>`;
+      ${RD.length?redoBtn:""}${docBtn}<button class="btn wide" id="next">Verder</button>`;
     $("next").onclick=()=>{pos++;show()};
-    if(canRedo)$("redo").onclick=()=>redo([{own:text,right:res.corrected,errs}]);
+    if(RD.length)$("redo").onclick=()=>redo(RD);
     $("docx").onclick=()=>saveDocx([{task,form,text}]);
   }catch(e){
     const c=e&&e.code;
@@ -4060,7 +4073,7 @@ async function checkZ(q){
   try{
     const T=await nakijken(Z.map(z=>({kind:"z",task:z.task,form:"",text:z.text})),"wb");
     btn.hidden=true;
-    const RD=Z.map((z,i)=>{const t=T[i]||{};return{own:zWhole(z),right:t.corrected,errs:Array.isArray(t.errors)?t.errors:[],l:z.q.big,ctx:/___/.test(z.q.ctx||"")?z.q.ctx:""}}).filter(x=>redoable(x.own,x.right));
+    const RD=Z.flatMap((z,i)=>{const t=T[i]||{};return redoItems(z.q,"",z.text,t.corrected,Array.isArray(t.errors)?t.errors:[])});
     $("fb").innerHTML=Z.map((z,i)=>{const t=T[i]||{},errs=Array.isArray(t.errors)?t.errors:[],ok=!!t.passed; keepErrs(errs); record(ok,z.q);
       return`<p class="ask">${Z.length>1?`Zin ${i+1}: `:""}<span class="${ok?"good":"bad"}">${ok?"voldoende":"nog niet voldoende"}</span></p>${Z.length>1?`<p class="note">${z.q.big}</p>`:""}
         <p class="note">${esc(t.verdict)}</p>${scoreHTML(t.scores,z.q.mx)}
@@ -4096,17 +4109,22 @@ async function examWrite(){
   try{
     const T=await nakijken(A.map(a=>({kind:a.q.kind,task:wrTask(a.q),form:a.form,text:a.text})),cur.part==="wb"?"wb":undefined);
     let good=0,pts=0,scored=0;
+    const RD=[];
     const body=A.map((a,i)=>{const t=T[i]||{},errs=Array.isArray(t.errors)?t.errors:[],pt=spPts(t);if(t.passed)good++;if(pt!=null){pts+=pt;scored++}
-      keepErrs(errs);
+      keepErrs(errs); RD[i]=redoItems(a.q,a.form,a.text,t.corrected,errs);
       return`<h2>Opdracht ${queue.indexOf(a.q)+1}: <span class="${t.passed?"good":"bad"}">${t.passed?"voldoende":"nog niet voldoende"}</span></h2><p class="note">${a.q.big}</p><p class="note">${esc(t.verdict)}</p>${scoreHTML(t.scores,a.q.mx)}
         ${own(a,errs)}${errs.length?errsHTML(errs):""}<p class="ask">Verbeterde tekst</p><div class="sample">${esc(t.corrected)}</div>
-        <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(a.q.right)}</div></details>`}).join("");
+        <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(a.q.right)}</div></details>${RD[i].length?`<button class="ghost wide rdo" data-i="${i}">Schrijf het nog een keer</button>`:""}`}).join("");
     // score: points of all tasks, as DUO counts them (a task not made counts 0); without points (older server) the share of good tasks
     const max=queue.reduce((s,q)=>s+(q.mx?mxPts(q.mx):WRMAX),0), pc=scored?Math.round(pts/max*100):Math.round(good/queue.length*100), pass=pc>=passPc(cur.part);
     keepRes(cur.part,pc);
     card.innerHTML=`<div class="done"><p class="ask">${cur.t}: uitslag</p><div class="big">${pc}%</div><p class="ru">${scored?`${pts} van ${max} punten, `:""}${good} van ${queue.length} opdrachten voldoende${A.length<queue.length?`; ${queue.length-A.length} niet gemaakt`:""}</p></div>
       <p><b class="${pass?"good":"bad"}">${pass?"Geslaagd":"Nog niet geslaagd"}</b></p>
-      <p class="note">${cur.part==="wb"?"Bij het Staatsexamen heb je een score van 500 nodig. Bij de openbare examens van de laatste jaren was dat ongeveer 25 van de 47 punten":`Je hebt ongeveer ${PASS*100}% van de punten nodig`}${scored&&cur.part!=="wb"?`: hier ${Math.ceil(max*passOf(cur.part)-1e-9)} van ${max}`:""}. Punten verlies je ook door fouten in grammatica en spelling.</p>`+body+foot; bind();
+      <p class="note">${cur.part==="wb"?"Bij het Staatsexamen heb je een score van 500 nodig. Bij de openbare examens van de laatste jaren was dat ongeveer 25 van de 47 punten":`Je hebt ongeveer ${PASS*100}% van de punten nodig`}${scored&&cur.part!=="wb"?`: hier ${Math.ceil(max*passOf(cur.part)-1e-9)} van ${max}`:""}. Punten verlies je ook door fouten in grammatica en spelling.</p>${RD.some(x=>x.length)?`<p class="note">Je kunt een opdracht nog een keer schrijven. Dit kost geen nakijkbeurt.</p>`:""}`+body+foot;
+    // writing a task again leaves the result: coming back shows the same result, without marking it again
+    const html=card.innerHTML,wire=()=>{bind();card.querySelectorAll(".rdo").forEach(b=>b.onclick=()=>{const i=b.dataset.i;
+      redo(RD[i],()=>{card.innerHTML=html;wire();card.querySelector(`.rdo[data-i="${i}"]`).scrollIntoView({block:"center"})})})};
+    wire();
   }catch(e){
     const c=e&&e.code;
     fallback(noCheck(c)?noCheck(c)+" Vergelijk je teksten nu met de voorbeelden.":c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je teksten met de voorbeelden.":c==="rate_limited"?"Te veel verzoeken achter elkaar. Probeer het over een minuut opnieuw.":"Het nakijken is niet gelukt. Vergelijk je teksten met de voorbeelden.");

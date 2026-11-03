@@ -353,12 +353,14 @@ with the total, then the learner's own text with every error marked where it is 
 `ownHTML()`: Claude's `wrong` is looked up in the text; one it can't find is only in the list), the numbered list of
 errors (`errsHTML()`: wrong → right, why) and the corrected text.
 
-"Schrijf het nog een keer" (`redo()`, practice in Schrijven and Schrijven B1, not in a proefexamen or Spreken, and only when
-the corrected text differs): the learner gets their own text back to correct, without the corrected text on screen (the
-errors are in a fold), and "Vergelijk" marks it against Claude's corrected text on the phone (`diffHTML()`: struck through
-= take out, green = add; capitals and punctuation count; a word in the wrong place counts as one). No Claude call, so it
-costs no check, works offline and changes nothing in `S`. A sentence to finish comes back whole (`zWhole()`), because
-`corrected` is the whole sentence. A B1 form has none: its `corrected` also holds the form's answers.
+"Schrijf het nog een keer" (`redo()`, `redoItems()`: Schrijven and Schrijven B1, in practice and per task after a proefexamen,
+not in Spreken, and only when the corrected text differs): the learner gets their own text back to correct, without the
+corrected text on screen (the errors are in a fold), and "Vergelijk" marks it against Claude's corrected text on the phone
+(`diffHTML()`: struck through = take out, green = add; capitals and punctuation count; a word in the wrong place counts as
+one). No Claude call, so it costs no check, works offline and changes nothing in `S`. After a proefexamen it goes back to the
+same result, not marked again. A sentence to finish comes back whole (`zWhole()`), because `corrected` is the whole sentence.
+A B1 form gets one box per answer that differs: `SYSTEM_WB` asks for one line per form answer with the open answer last, and
+another shape gives no button. An A2 form's `corrected` is the open answer only, so only that comes back.
 
 `api/check.js` is a Vercel function that grades writing with Claude (`claude-opus-5-5`,
 structured JSON output, server-side refusal fallback). The page posts
