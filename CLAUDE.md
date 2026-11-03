@@ -213,9 +213,12 @@ vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one comin
   `azure`, Facebook; the brands' own logos), "Volgende" (sends the code) and "Face ID of vingerafdruk" (passkey). A
   provider shows when it is on in Supabase (`/api/config` reads `/auth/v1/settings`; Google is on since November 2026:
   the OAuth client "Bittertalen" in the user's Google Cloud project, consent screen published without a logo so it
-  needs no verification; Supabase's Site URL and Redirect URLs are https://bittertalen.nl), except in an iPhone home-screen
-  app (`logins()`: iOS opens their page in a separate Safari window and the login would stay there; untested since,
-  so try it once one is on). No name is asked to log in: the e-mail is enough, the providers bring theirs
+  needs no verification; Supabase's Site URL and Redirect URLs are https://bittertalen.nl), also in an iPhone home-screen
+  app: iOS may open their page in a separate Safari window, so there the app marks the login (`HAND` = `ww-hand`, a
+  random `h` in the address it comes back to); a window that comes back with an `h` it did not make leaves the one-time
+  code at `/api/handoff` (`handBack()`, table `handoff` in `supabase/schema.sql`, rows gone after 10 minutes) and says
+  "Ga terug naar Bittertalen", and the app takes it when it is visible again (`claimHand()`) and exchanges it itself
+  (PKCE: the code is useless without the verifier only the app holds). If the login comes back in the app, nothing changes. No name is asked to log in: the e-mail is enough, the providers bring theirs
   (`syncMeta()`), and Profiel has the name fields; the e-mail code (`signInWithOtp` + `verifyOtp`, a 6-digit
   code, so an iPhone home-screen app never has to open a link) only with `LOGIN_EMAIL=1`, because Supabase's own mail
   only reaches the project's team (it needs custom SMTP); passkeys (experimental in Supabase) only with

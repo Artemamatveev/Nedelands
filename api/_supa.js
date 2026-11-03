@@ -85,3 +85,30 @@ export const sameOrigin = (req) => {
   try { host = new URL(req.headers.origin).host; } catch {}
   return host === req.headers.host;
 };
+
+// Logging in with Google or Apple from an iPhone home-screen app may come back in a separate Safari window. That window
+// leaves the one-time code here under the random `h` the app made, and the app takes it (and exchanges it itself: the
+// code is useless without the PKCE secret only the app holds). Rows live at most 10 minutes (table handoff, schema.sql).
+const rest = (path, init = {}) =>
+  fetch(`${URL_}/rest/v1/${path}`, {
+    ...init,
+    headers: { apikey: SERVICE, authorization: `Bearer ${SERVICE}`, "content-type": "application/json", ...(init.headers || {}) },
+  });
+const HAND_MS = 10 * 60 * 1000;
+export async function putHand(h, code) {
+  const old = encodeURIComponent(new Date(Date.now() - HAND_MS).toISOString());
+  await rest(`handoff?at=lt.${old}`, { method: "DELETE" }).catch(() => {});
+  const r = await rest("handoff", {
+    method: "POST",
+    headers: { prefer: "resolution=merge-duplicates,return=minimal" },
+    body: JSON.stringify({ nonce: h, code, at: new Date().toISOString() }),
+  });
+  return r.ok;
+}
+// Takes the code once: the row is deleted as it is read
+export async function takeHand(h) {
+  const r = await rest(`handoff?nonce=eq.${encodeURIComponent(h)}`, { method: "DELETE", headers: { prefer: "return=representation" } });
+  if (!r.ok) return null;
+  const row = (await r.json().catch(() => []))[0];
+  return row && Date.now() - Date.parse(row.at) < HAND_MS ? row.code : null;
+}

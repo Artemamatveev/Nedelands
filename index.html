@@ -2100,11 +2100,14 @@ async function initAccount(){
   acc.cfg=cfg&&cfg.url?cfg:null; drawProfile();
   if(!acc.cfg)return;
   const q=new URLSearchParams(location.search),back=q.has("code")||q.has("error");
+  if(back&&q.get("h")&&(!handOf()||handOf().h!==q.get("h")))return handBack(q.get("h"),q.get("code"),q.get("error"));
+  if(back)lsSet(HAND,null);
   let has=false; try{has=Object.keys(localStorage).some(k=>/^sb-.+-auth-token$/.test(k))}catch(e){}
   if(back||has)try{await loadSb();const{data}=await acc.sb.auth.getSession();if(!acc.user)await setUser(data.session&&data.session.user||null)}catch(e){}
   if(back){ // back from Google or Apple
     if(q.get("error"))acc.msg="Inloggen is niet gelukt. Probeer het nog een keer.";
     history.replaceState(null,"",location.pathname); setTab("profiel"); drawProfile()}
+  if(handOf())claimHand();
   if(!acc.user&&!back&&!lsGet(WEL)&&!$("home").hidden&&(acc.cfg.login||[]).length&&!/bot|crawl|spider|slurp|lighthouse/i.test(navigator.userAgent))welcome();
 }
 async function setUser(u){
@@ -2159,7 +2162,9 @@ const loginErr=e=>{const m=String(e&&(e.message||e.name)||"");
 async function login(p){
   acc.msg=""; redraw();
   try{await loadSb();
-    const{error}=p==="passkey"?await acc.sb.auth.signInWithPasskey():await acc.sb.auth.signInWithOAuth({provider:p,options:{redirectTo:location.origin+"/"}});
+    let to=location.origin+"/";
+    if(p!=="passkey"&&inApp()){const h=b64(crypto.getRandomValues(new Uint8Array(18)));lsSet(HAND,JSON.stringify({h,t:Date.now()}));to+="?h="+h}
+    const{error}=p==="passkey"?await acc.sb.auth.signInWithPasskey():await acc.sb.auth.signInWithOAuth({provider:p,options:{redirectTo:to}});
     if(error)throw error;
   }catch(e){acc.msg=loginErr(e);redraw()}
 }
@@ -2191,9 +2196,39 @@ function syncMeta(){
 const WEL="ww-welcome";
 const segHTML=()=>["A2","B1"].map(v=>`<button type="button" data-lvl="${v}" aria-pressed="${lvl()===v}">${LVL[v]}</button>`).join("");
 const setLvl=v=>{if(v===lvl())return;S.lvl=v;exV=null;save()};
-// The logins that work here: an iPhone home-screen app opens Google's and Apple's page in a separate Safari window,
-// and the login would stay there, so it only offers the e-mail code (and passkeys)
-const logins=()=>(acc.cfg&&acc.cfg.login||[]).filter(p=>!(navigator.standalone===true&&PROV[p]));
+const logins=()=>acc.cfg&&acc.cfg.login||[];
+// Google or Apple from an iPhone home-screen app: iOS may open their page in a separate Safari window, and the login
+// would come back there, not in the app. So the app marks the login (HAND, a random h in the address it comes back to);
+// a window that comes back with an h it did not make passes the one-time code to the server (/api/handoff), and the
+// app takes it from there when you return and exchanges it itself (PKCE: the code is useless without the secret that
+// only the app holds). If the login comes back in the app itself, nothing changes.
+const HAND="ww-hand",inApp=()=>navigator.standalone===true||matchMedia("(display-mode: standalone)").matches;
+const handOf=()=>{try{const o=JSON.parse(lsGet(HAND));return o&&o.h&&Date.now()-o.t<6e5?o:null}catch(e){return null}};
+let handBusy=false;
+async function claimHand(){
+  const o=handOf(); if(!o){lsSet(HAND,null);return} if(acc.user||handBusy||!acc.cfg)return;
+  handBusy=true;
+  try{const r=await fetch("/api/handoff",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({h:o.h})});
+    const j=await r.json().catch(()=>({}));
+    if(j.code){lsSet(HAND,null);await loadSb();const{error}=await acc.sb.auth.exchangeCodeForSession(j.code);
+      if(error){acc.msg=loginErr(error);redraw()}}
+  }catch(e){}
+  handBusy=false;
+}
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&handOf())claimHand()});
+setInterval(()=>{if(document.visibilityState==="visible"&&handOf()&&!acc.user)claimHand()},3000);
+// The separate window: say where the login went
+async function handBack(h,code,err){
+  history.replaceState(null,"",location.pathname);
+  let ok=false;
+  if(code)try{const r=await fetch("/api/handoff",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({h,code})});ok=r.ok}catch(e){}
+  const el=$("welcome"),p=ART[today()%ART.length],logo=document.querySelector("header h1 [aria-hidden]");
+  $("home").hidden=true; el.hidden=false; el.style.setProperty("--wbg",`url(/art/${p.f}.jpg)`);
+  el.innerHTML=`<div class="wcard">${langHTML()}<p class="wlogo">${logo?logo.outerHTML:"Bittertalen"}</p>`+(ok
+    ?`<h2>Je bent ingelogd</h2><p class="sub">Ga terug naar Bittertalen op je beginscherm. Daar ben je nu ook ingelogd.</p>`
+    :`<h2>Inloggen is niet gelukt</h2><p class="sub">Ga terug naar Bittertalen op je beginscherm en probeer het nog een keer, of log in met je e-mailadres.</p>`)
+    +`</div><div class="wfoot"><p class="wart">${p.a} · ${p.t} · ${p.m}</p></div>`;
+}
 // The login block of the login window (#welcome, prefix "w"): e-mail, a row of the other logins (the ones switched on
 // in Supabase), Volgende (sends the 6-digit code), and Face ID / fingerprint (passkey). The brands' own logos, as their rules ask.
 const PROV={
@@ -5289,7 +5324,7 @@ const UI={
 "Echt Nederlands. Je hoeft niet alles te begrijpen.":"Real Dutch. You don't need to understand everything.","Video's":"Videos","Podcasts":"Podcasts",
 "Makkelijk":"Easy","Gemiddeld":"Medium","Moeilijk":"Hard","Herhaal de vragen van alle hoofdstukken":"Review the questions of all chapters",
 "E-mailadres":"E-mail address","Volgende":"Next","Terug":"Back","Eerst rondkijken":"Look around first","Face ID of vingerafdruk":"Face ID or fingerprint",
-"Vul de code in":"Enter the code","Inloggen is nog niet ingesteld.":"Logging in is not set up yet.","Inloggen":"Log in","Ander e-mailadres":"Another e-mail address","Code van 6 cijfers":"6-digit code",
+"Vul de code in":"Enter the code","Inloggen is niet gelukt":"Logging in did not work","Je bent ingelogd":"You are logged in","Ga terug naar Bittertalen op je beginscherm. Daar ben je nu ook ingelogd.":"Go back to Bittertalen on your home screen. You are logged in there too.","Ga terug naar Bittertalen op je beginscherm en probeer het nog een keer, of log in met je e-mailadres.":"Go back to Bittertalen on your home screen and try again, or log in with your e-mail address.","Inloggen is nog niet ingesteld.":"Logging in is not set up yet.","Inloggen":"Log in","Ander e-mailadres":"Another e-mail address","Code van 6 cijfers":"6-digit code",
 "Met een account blijft je voortgang bewaard, ook op je andere apparaten, en kijkt Claude je teksten en antwoorden na.":"With an account your progress is kept, also on your other devices, and Claude checks your texts and answers.",
 "Er is een nieuwe versie van Bittertalen.":"There is a new version of Bittertalen.","Vernieuwen":"Refresh",
 "Zet Bittertalen op je beginscherm":"Put Bittertalen on your home screen","Al geoefend in Safari?":"Already practised in Safari?",

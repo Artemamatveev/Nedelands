@@ -132,3 +132,13 @@ end;
 $$;
 revoke execute on function public.use_total(int, int) from public, anon, authenticated;
 grant execute on function public.use_total(int, int) to service_role;
+
+-- Logging in with Google or Apple from an iPhone home-screen app may come back in a separate Safari window: that window
+-- leaves the one-time login code here under a random nonce the app made, and the app takes it (and deletes it). The code
+-- is useless without the PKCE secret that only the app holds. Rows older than 10 minutes are deleted. Only the server uses it.
+create table if not exists public.handoff (
+  nonce text primary key,
+  code text not null,
+  at timestamptz not null default now()
+);
+alter table public.handoff enable row level security; -- no policies: nobody but the service role
