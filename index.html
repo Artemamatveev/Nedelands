@@ -520,11 +520,11 @@ body.vfull{overflow:hidden}
   padding:10px 10px 10px 16px;border-radius:var(--rc);background:color-mix(in srgb,var(--card) 82%,transparent);backdrop-filter:blur(18px) saturate(1.6);-webkit-backdrop-filter:blur(18px) saturate(1.6);
   box-shadow:var(--lift);border:1px solid var(--line);font-size:var(--fs-m);animation:sheet .26s cubic-bezier(.2,.8,.2,1)}
 #fresh span{flex:1} #fresh .btn{min-height:40px;padding:8px 14px;font-size:var(--fs-m)}
-/* NL / EN for the menus: a small glass pill top right on the painting, left of the streak ribbon (and on the login card) */
-.lang{position:absolute;top:10px;right:14px;z-index:3;min-width:44px;height:30px;padding:0 10px;border-radius:999px;border:1px solid rgba(255,255,255,.4);
+/* NL / EN for the menus: a small glass pill top left on the painting (and on the login card) */
+.lang{position:absolute;top:10px;left:14px;z-index:3;min-width:44px;height:30px;padding:0 10px;border-radius:999px;border:1px solid rgba(255,255,255,.4);
   background:rgba(255,255,255,.2);backdrop-filter:blur(12px) saturate(1.5);-webkit-backdrop-filter:blur(12px) saturate(1.5);color:#fff;font-size:var(--fs-s);font-weight:700;letter-spacing:.04em}
-header:has(.streak:not(:empty)) .lang{right:74px}
-.wcard{position:relative} .wcard .lang{top:14px;right:14px;border-color:var(--line);background:var(--surface);color:var(--ink);backdrop-filter:none;-webkit-backdrop-filter:none}
+main:is(:not(.big),:has(#home[hidden])) .lang{top:6px;height:26px;min-width:40px;font-size:12px} /* the narrow strip: clear of the logo */
+.wcard{position:relative} .wcard .lang{top:14px;left:14px;border-color:var(--line);background:var(--surface);color:var(--ink);backdrop-filter:none;-webkit-backdrop-filter:none}
 /* Profiel: the trillen switch */
 .tog{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;margin:0 0 6px;font-size:var(--fs-b)}
 .tog input{flex:none;appearance:none;-webkit-appearance:none;width:51px;height:31px;margin:0;padding:0;border:0;border-radius:999px;background:var(--line);position:relative;cursor:pointer;transition:background-color .2s}
@@ -5287,7 +5287,7 @@ const UI={
 "Echt Nederlands. Je hoeft niet alles te begrijpen.":"Real Dutch. You don't need to understand everything.","Video's":"Videos","Podcasts":"Podcasts",
 "Makkelijk":"Easy","Gemiddeld":"Medium","Moeilijk":"Hard","Herhaal de vragen van alle hoofdstukken":"Review the questions of all chapters",
 "E-mailadres":"E-mail address","Volgende":"Next","Terug":"Back","Eerst rondkijken":"Look around first","Face ID of vingerafdruk":"Face ID or fingerprint",
-"Vul de code in":"Enter the code","Inloggen":"Log in","Ander e-mailadres":"Another e-mail address","Code van 6 cijfers":"6-digit code",
+"Vul de code in":"Enter the code","Inloggen is nog niet ingesteld.":"Logging in is not set up yet.","Inloggen":"Log in","Ander e-mailadres":"Another e-mail address","Code van 6 cijfers":"6-digit code",
 "Met een account blijft je voortgang bewaard, ook op je andere apparaten, en kijkt Claude je teksten en antwoorden na.":"With an account your progress is kept, also on your other devices, and Claude checks your texts and answers.",
 "Er is een nieuwe versie van Bittertalen.":"There is a new version of Bittertalen.","Vernieuwen":"Refresh",
 "Zet Bittertalen op je beginscherm":"Put Bittertalen on your home screen","Al geoefend in Safari?":"Already practised in Safari?",

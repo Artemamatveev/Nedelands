@@ -17,7 +17,7 @@ screen. Keep it true: when data goes somewhere new (a new service, a new field i
 and its date. `sw.js` caches other pages under their own address, never as "/".
 The app's UI language is Dutch; the user talks to Claude in Russian. There is no Russian anywhere in the app: a word's meaning is
 a short Dutch description (A2), or English from the dictionary. For beginners the menus and navigation can switch to
-English (the NL/EN pill top right on the painting, left of the streak ribbon, and on the login card; `ww-ui` per
+English (the NL/EN pill top left on the painting and on the login card, where the user wanted it; `ww-ui` per
 device): `UI` (exact Dutch string → English) and `UIR` (patterns: "2 van 6 klaar", dates, "nodig: 76%"…) translate text
 nodes, `aria-label` and `placeholder` after every render (a MutationObserver; the Dutch original is kept in `UIO`, so
 switching back restores it). Never inside `#play` (exercises) or `#read` (the reader), and not content: texts, stories,
