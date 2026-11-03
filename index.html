@@ -141,6 +141,7 @@ h2{display:flex;align-items:center;gap:10px;font-size:var(--fs-xl);font-weight:6
 #hear{margin:10px 0 4px}
 #a2hs ol{margin:10px 0 0;padding-left:22px}#a2hs .two{margin-top:14px}
 .steps{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:8px}
+.ona{margin:0 0 12px;padding-left:22px}.ona li{margin:0 0 6px}
 .step{display:grid;grid-template-columns:36px minmax(0,1fr) 36px;column-gap:14px;align-items:center;width:100%;height:100%;text-align:left;background:var(--bg);border:1.5px solid var(--line);border-radius:var(--rc);padding:12px 14px}
 /* every step: its icon on a cobalt square (the next one: cobalt on white, a done one: a green check), title, line, › or ▶ */
 .step .sic{grid-row:1/3;width:36px;height:36px;border-radius:9px;background:var(--fill);color:#fff;display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:600;font-size:var(--fs-m)}
@@ -3357,6 +3358,7 @@ const IC={
   stats:'<rect x="2.5" y="12" width="5" height="9.5" rx="1.3"/><rect x="9.5" y="3.5" width="5" height="18" rx="1.3"/><rect x="16.5" y="8.5" width="5" height="13" rx="1.3"/>',
   errs:'<path fill-rule="evenodd" d="M10.2 3.4a2.1 2.1 0 0 1 3.6 0l8.2 14.1a2.1 2.1 0 0 1-1.8 3.1H3.8A2.1 2.1 0 0 1 2 17.5zM11 9v5.5h2V9zm0 7v2h2v-2z"/>',
   hist:'<path d="M5.5 2.5h13v2.2h-1.2v2.1c0 2.2-1.8 3.8-3.6 5.2 1.8 1.4 3.6 3 3.6 5.2v2.1h1.2v2.2h-13v-2.2h1.2v-2.1c0-2.2 1.8-3.8 3.6-5.2C8.5 10.6 6.7 9 6.7 6.8V4.7H5.5z"/>',
+  ona:'<path d="M9 3.5h6A1.5 1.5 0 0 1 16.5 5v1.5h3.5A2 2 0 0 1 22 8.5V12H2V8.5a2 2 0 0 1 2-2h3.5V5A1.5 1.5 0 0 1 9 3.5zm.5 3h5V5.5h-5zM2 13.5h8.5v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1H22v5a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2z"/>',
   talk:'<path d="M3.5 2.5h10A1.6 1.6 0 0 1 15 4.1v6.3a1.6 1.6 0 0 1-1.5 1.6H8.2l-3.7 3.2V12h-1A1.6 1.6 0 0 1 2 10.4V4.1a1.6 1.6 0 0 1 1.5-1.6z"/><path d="M16.7 7.5h3.8A1.6 1.6 0 0 1 22 9.1v6.3a1.6 1.6 0 0 1-1.5 1.6h-1v3.2L15.8 17H10.5A1.6 1.6 0 0 1 9 15.4V13.6h4.6a3.1 3.1 0 0 0 3.1-3.1z"/>',
   privacy:'<path fill-rule="evenodd" d="M12 2l8.5 3.4v6c0 5.2-3.6 9.2-8.5 10.9-4.9-1.7-8.5-5.7-8.5-10.9v-6zM10.7 13.4L8.3 11l-1.5 1.5 3.9 3.9 6.4-6.4-1.5-1.5z"/>',
   duo:'<path fill-rule="evenodd" d="M6.5 2h7.8L19.5 7.2v13.3A1.5 1.5 0 0 1 18 22H6.5A1.5 1.5 0 0 1 5 20.5v-17A1.5 1.5 0 0 1 6.5 2zM8.4 14.2l2.7 2.7 4.9-4.9-1.4-1.4-3.5 3.5-1.3-1.3z"/>'};
@@ -3394,7 +3396,8 @@ function home(){
     $("parts").innerHTML=`<h2>Examenonderdelen</h2>${seg}<p class="sub">Zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["l1","lb","wb","sb","knm"].map(row).join("")}</div>`;
   }else{
     $("exam").innerHTML=`<h2>Naar het examen</h2>${seg}${other}<p class="sub">Proefexamens met tijd, zoals bij DUO. Het percentage is hoeveel je goed had, het streepje wat je nodig hebt om te slagen.</p><div class="list">${["lz","ls","wr","sp","knm"].map(part).join("")}</div>`
-      +`<div class="list"><a class="it ext" href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens van DUO ↗</b><small>15</small></span><span class="d">De echte, met echte stemmen. Liefst op een computer.</span></span></a></div>`;
+      +`<div class="list"><a class="it ext" href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens van DUO ↗</b><small>15</small></span><span class="d">De echte, met echte stemmen. Liefst op een computer.</span></span></a></div>`
+      +`<div class="list">${itHTML(`data-x="ona"`,"ONA en participatieverklaring","Niet voor iedereen: kijk of jij ze nodig hebt.",{ic:"ona",n:(n=>n?`${n} van 4`:null)(GP.filter(c=>c.ona&&(S.gp||{})[c.id]).length)})}</div>`;
     $("parts").innerHTML=`<h2>Examenonderdelen</h2>${seg}<p class="sub">Zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["lz","ls","wr","sp","knm"].map(row).join("")}</div>`;
   }
   $("gram").innerHTML=`<h2>Grammatica en woorden</h2><p class="sub">Rondes van 10 vragen.</p>`+(lvl()==="B1"
@@ -3403,7 +3406,7 @@ function home(){
   $("books").innerHTML=itHTML(`data-x="books"`,"Boekenkast",lb?`Je leest nu: ${esc(lb.t)}, blz. ${lb.p+1}`:"Verhalen en je eigen e-books.",{ic:"books"})
     +itHTML(`data-x="hist"`,"Geschiedenis van Nederland",lh?`Je was bij: ${lh.t}`:"Van de hunebedden tot nu.",{n:gsDone?`${gsDone} van ${GS.length}`:null,ic:"hist"})
     +itHTML(`data-x="media"`,"Luisteren en kijken","Nieuws, video's en podcasts.",{ic:"media"})
-    +itHTML(`data-x="talk"`,"Gesprekken","Bel de dokter, koop brood, praat met de buren.",{n:(n=>n?`${n} van ${GP.length}`:null)(GP.filter(c=>(S.gp||{})[c.id]).length),ic:"talk"});
+    +itHTML(`data-x="talk"`,"Gesprekken","Bel de dokter, koop brood, praat met de buren.",{n:(n=>n?`${n} van ${GP.filter(c=>!c.ona).length}`:null)(GP.filter(c=>!c.ona&&(S.gp||{})[c.id]).length),ic:"talk"});
   $("mine").innerHTML=itHTML(`data-x="stats"`,"Mijn zwakke punten","Oefen waar je de meeste fouten maakt.",{ic:"stats"})
     +((S.errs||[]).length?itHTML(`data-x="errs"`,"Mijn fouten","Uit je eigen teksten en antwoorden.",{n:S.errs.length,ic:"errs"}):"")
     +((S.words||[]).length?itHTML(`data-x="words"`,"Mijn woorden","Die je bij het lezen hebt bewaard.",{n:S.words.length,ic:"words"}):"");
@@ -3416,6 +3419,7 @@ function home(){
     else if(d.x==="media")media();
     else if(d.x==="hist")hist();
     else if(d.x==="talk")talks();
+    else if(d.x==="ona")onaScreen();
     else if(d.x==="words")practiseWords();
     else build("custom",{id:"custom",t:"Mijn fouten",n:10,pool:()=>shuffle(errItems())})});
   drawProfile();
@@ -4840,7 +4844,41 @@ const GP=[
   {a:"Heeft u samen met de andere bestuurder een schadeformulier ingevuld?",k:["ja|formulier|ingevuld|getekend"],m:"Ja, we hebben samen het schadeformulier ingevuld en allebei getekend.",r:"Heeft u het schadeformulier ingevuld?"},
   {a:"Mooi. Wilt u dat formulier en een paar foto's van de schade via onze app opsturen?",k:["ja|goed|prima|doe|stuur|app"],m:"Ja, dat doe ik vandaag nog. Mag ik de auto al laten repareren?",r:"Kunt u het formulier en de foto's opsturen?"},
   {a:"Wacht daar even mee, tot een expert de schade heeft bekeken. Die belt u deze week. Heeft u nog een vraag?",k:["nee|ja|dank|bedankt|vraag|vervang|huur|auto"],m:"Nee, het is duidelijk. Dank u wel.",r:"Heeft u verder nog een vraag?"}],
- e:"Graag gedaan. U hoort snel van ons."}
+ e:"Graag gedaan. U hoort snel van ons."},
+{id:"ona1",ona:1,g:"ONA-eindgesprek",t:"Je beroep",s:"Welk beroep, en wat weet je ervan?",w:"Mevrouw Bakker",
+ o:"Je doet het eindgesprek van ONA bij DUO. In je portfolio heb je het beroep kok gekozen. In je eigen land werkte je vijf jaar als kok in een restaurant. Vertel over je beroep.",
+ d:[{a:"Goedemorgen, ik ben mevrouw Bakker van DUO. Ik heb uw portfolio gelezen. Welk beroep heeft u gekozen?",k:["kok|koken|keuken"],m:"Goedemorgen. Ik heb het beroep kok gekozen.",r:"Welk beroep wilt u gaan doen?"},
+  {a:"Waarom wilt u kok worden?",k:[],m:"Ik kook heel graag, en ik heb in mijn land al vijf jaar in een restaurant gewerkt.",r:"Waarom kiest u voor dit beroep?"},
+  {a:"Wat doet een kok op een gewone werkdag?",k:["kook|koken|snij|bereid|maak|schoon|bestel|gerecht|eten|keuken"],m:"Een kok maakt het eten klaar, snijdt groente en vlees, en houdt de keuken schoon. Hij bestelt ook de producten.",r:"Wat doet u allemaal als kok?"},
+  {a:"Welke opleiding hebben koks in Nederland meestal?",k:["mbo|opleiding|school|cursus|diploma|leren"],m:"Meestal een mbo-opleiding tot kok. Je kunt ook werken en leren tegelijk.",r:"Welke school of opleiding is er voor koks?"},
+  {a:"En wat zijn de werktijden van een kok?",k:["avond|weekend|laat|zaterdag|zondag|feestdag|onregelmatig|dienst"],m:"Een kok werkt vaak 's avonds en in het weekend. Dat vind ik niet erg.",r:"Wanneer werkt een kok meestal?"},
+  {a:"U koos eerst drie beroepen. Waarom heeft u kok gekozen, en niet een van de andere twee?",k:[],m:"Omdat ik al ervaring heb als kok. Dat beroep past het beste bij mij.",r:"Waarom past dit beroep het beste bij u?"}],
+ e:"Duidelijk, dank u wel. Dan gaan we het nu hebben over uw eigenschappen."},
+{id:"ona2",ona:1,t:"Je eigenschappen",s:"Wat kun je goed, en wat nog niet?",w:"Mevrouw Bakker",
+ o:"Je doet het eindgesprek van ONA bij DUO. In je portfolio heb je het beroep kok gekozen. In je eigen land werkte je vijf jaar als kok in een restaurant. Vertel wat je goed kunt.",
+ d:[{a:"Welke eigenschappen heeft u? Noem er eens twee.",k:[],m:"Ik ben precies, en ik kan goed samenwerken.",r:"Hoe bent u? Noem twee eigenschappen."},
+  {a:"Kunt u een voorbeeld geven? Wanneer werkte u goed samen?",k:[],m:"In het restaurant werkten we met vijf mensen in de keuken. Als het druk was, hielp ik altijd mijn collega's.",r:"Vertel eens over een keer dat u goed samenwerkte."},
+  {a:"Wat kunt u nog niet zo goed?",k:[],m:"Mijn Nederlands is nog niet zo goed. Daarom volg ik een cursus.",r:"Wat wilt u nog beter leren?"},
+  {a:"Welke competenties heeft een kok nodig?",k:["samenwerk|snel|druk|hygi|schoon|precies|nauwkeurig|creatief|stress|plan"],m:"Een kok moet snel en schoon werken, goed samenwerken en rustig blijven als het druk is.",r:"Wat moet een goede kok kunnen?"},
+  {a:"En welke van die competenties heeft u al?",k:[],m:"Ik werk snel en schoon. Dat heb ik in mijn land geleerd.",r:"Wat kunt u daarvan al?"}],
+ e:"Goed. Dan wil ik nu iets vragen over uw kansen op werk."},
+{id:"ona3",ona:1,t:"Je kansen en je netwerk",s:"Is er werk, en wie kan je helpen?",w:"Mevrouw Bakker",
+ o:"Je doet het eindgesprek van ONA bij DUO. In je portfolio heb je het beroep kok gekozen. In je eigen land werkte je vijf jaar als kok in een restaurant. Vertel over je kansen op werk en over de mensen die je kent.",
+ d:[{a:"Zijn er in Nederland veel vacatures voor koks?",k:["ja|veel|vacature|genoeg|tekort|nodig"],m:"Ja, er zijn veel vacatures voor koks, vooral in de grote steden.",r:"Is er veel werk voor koks?"},
+  {a:"Waar heeft u dat gezien?",k:["werk.nl|internet|site|website|indeed|krant|uwv|linkedin|uitzendbureau|app|online"],m:"Op werk.nl en op andere vacaturesites.",r:"Waar zoekt u naar vacatures?"},
+  {a:"Uw diploma komt uit het buitenland. Wat kunt u daarmee doen?",k:["waarder|idw|erken|vertal|vergelijk"],m:"Ik kan mijn diploma laten waarderen bij IDW. Dan weet een werkgever wat het waard is.",r:"Hoe kan een werkgever zien wat uw diploma waard is?"},
+  {a:"Wie kent u in Nederland die u kan helpen met werk?",k:[],m:"Mijn buurman werkt in een hotel. En ik ken mensen van mijn taalcursus.",r:"Kent u mensen die u kunnen helpen?"},
+  {a:"Hoe kunt u uw netwerk groter maken?",k:["vrijwillig|linkedin|vragen|vertellen|praten|bijeenkomst|club|vereniging|stage|mensen|leren kennen"],m:"Ik kan vrijwilligerswerk doen, bijvoorbeeld in een buurthuis, en een profiel maken op LinkedIn.",r:"Hoe kunt u meer mensen leren kennen?"}],
+ e:"Mooi. Nog één onderwerp: werk vinden, en werken in Nederland."},
+{id:"ona4",ona:1,t:"Werk vinden en werken in Nederland",s:"Solliciteren, je ziek melden, de werkcultuur.",w:"Mevrouw Bakker",
+ o:"Je doet het eindgesprek van ONA bij DUO. In je portfolio heb je het beroep kok gekozen. In je eigen land werkte je vijf jaar als kok in een restaurant. Vertel hoe je werk gaat zoeken, en hoe werken in Nederland gaat.",
+ d:[{a:"Hoe gaat u werk zoeken?",k:["vacature|solliciteer|solliciteren|uitzendbureau|werk.nl|zoek|brief|cv|bel|netwerk|internet|vraag"],m:"Ik zoek vacatures op internet, ik schrijf me in bij een uitzendbureau, en ik vraag het aan mensen die ik ken.",r:"Hoe gaat u een baan zoeken?"},
+  {a:"Wat stuurt u mee als u solliciteert?",k:["cv|brief|motivatie"],m:"Mijn cv en een sollicitatiebrief.",r:"Wat stuurt u naar een werkgever?"},
+  {a:"U bent ziek en u kunt niet werken. Wat doet u?",k:["bel|meld|leidinggevende|baas|chef|werkgever|manager|ziek"],m:"Dan bel ik mijn leidinggevende, voordat mijn werk begint.",r:"Wat doet u als u ziek bent?"},
+  {a:"Is werken in Nederland anders dan in uw land?",k:[],m:"Ja. In Nederland zeggen mensen direct wat ze denken, en je moet altijd op tijd komen.",r:"Wat is anders aan werken in Nederland?"},
+  {a:"Uw chef geeft u een opdracht, maar u begrijpt het niet. Wat doet u?",k:["vraag|vragen|nog een keer|uitleg|zeg|uitleggen"],m:"Dan vraag ik het. In Nederland is het normaal om vragen te stellen.",r:"Wat doet u als u iets niet begrijpt?"},
+  {a:"Wat wilt u over vijf jaar bereiken?",k:[],m:"Over vijf jaar wil ik als kok werken in een goed restaurant, en misschien chef-kok worden.",r:"Waar wilt u over vijf jaar zijn?"}],
+ e:"Dank u wel. Dat was het eindgesprek. De uitslag krijgt u later van DUO."}
 ];
 const gpWords=s=>String(s).toLowerCase().split(/[^\p{L}\d]+/u).filter(Boolean);
 function gpFits(k,said){
@@ -4857,15 +4895,36 @@ function talks(){
   tBack(TABN[tab],home);
   const st=c=>{const g=(S.gp||{})[c.id];return g?`<span class="good">Gelukt</span>`:null};
   let h=`<h2>Gesprekken</h2><p class="sub">Je hoort de ander en je antwoordt hardop${SR?"":" (of je typt)"}.</p>`;
-  const L=GP.map((c,i)=>[c,i]),O=lvl()==="B1"?L.filter(x=>x[0].b1).concat(L.filter(x=>!x[0].b1)):L; // at B1 the B1 group first
+  const L=GP.map((c,i)=>[c,i]).filter(x=>!x[0].ona),O=lvl()==="B1"?L.filter(x=>x[0].b1).concat(L.filter(x=>!x[0].b1)):L; // at B1 the B1 group first
   O.forEach(([c,i],n)=>{if(c.g)h+=(n?"</div>":"")+`<h3 class="lh">${c.g}</h3><div class="list">`;h+=itHTML(`data-t="${i}"`,c.t,c.s,{n:st(c)})});
   $("tbody").innerHTML=h+"</div>";
+  document.querySelectorAll("#tbody [data-t]").forEach(b=>b.onclick=()=>talk(+b.dataset.t));
+}
+// ONA and the participatieverklaring: two parts of inburgeren that not everyone has to do. What they are, who needs
+// them, and the ONA final interview to practise as conversations (GP items with ona, not in the Gesprekken list).
+// The facts follow DUO (inburgeren.nl); check them there when the rules change.
+function onaScreen(){
+  closePop();hush();TK=null;$("card").innerHTML="";
+  $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;window.scrollTo(0,0);
+  tBack(TABN[tab],home);
+  const st=c=>(S.gp||{})[c.id]?`<span class="good">Gelukt</span>`:null;
+  const K=["Beroepenoriëntatie","Realistisch beroepsbeeld","Je eigenschappen kennen","Beroepskansen","Beroepscompetenties","Netwerk opbouwen","Werk vinden","Werkcultuur"];
+  $("tbody").innerHTML=`<h2>ONA en participatieverklaring</h2><p class="sub">Twee onderdelen van inburgeren die niet iedereen hoeft te doen.</p>
+    <h3 class="lh">Wat is ONA?</h3><p>ONA betekent Oriëntatie op de Nederlandse Arbeidsmarkt. Je laat zien dat je weet welk werk bij je past, en hoe je in Nederland werk vindt.</p>
+    <h3 class="lh">Wie doet ONA?</h3><p>Mensen die inburgeren volgens de wet van 2013, en mensen die vrijwillig inburgeren, bijvoorbeeld om Nederlander te worden. Inburger je volgens de wet van 2021? Dan doe je geen ONA, maar de MAP bij je gemeente.</p>
+    <h3 class="lh">Vrijstelling</h3><p>Heb je in de laatste 12 maanden minstens 6 maanden gewerkt in loondienst, minstens 48 uur per maand? Dan kun je vrijstelling vragen in Mijn Inburgering. Voor zelfstandigen is er een eigen formulier.</p>
+    <h3 class="lh">Zo gaat het</h3><ol class="ona"><li>Je kiest drie beroepen, en daarna één beroep dat je wilt doen.</li><li>Je vult acht resultaatkaarten in, allemaal over dat beroep. Samen is dat je portfolio.</li><li>Je stuurt je portfolio naar DUO, via Mijn Inburgering.</li><li>Je hebt een eindgesprek bij DUO over je portfolio. Of je volgt een ONA-cursus van minstens 64 uur bij een school met het keurmerk Blik op Werk: dan is er geen eindgesprek.</li></ol>
+    <h3 class="lh">De acht resultaatkaarten</h3><ol class="ona">${K.map(k=>`<li>${k}</li>`).join("")}</ol>
+    <h3 class="lh">Oefen het eindgesprek</h3><p class="note">In deze gesprekken ben je kok. Op het echte eindgesprek praat je over je eigen beroep en je eigen portfolio.</p>
+    <div class="list">${GP.map((c,i)=>c.ona?itHTML(`data-t="${i}"`,c.t,c.s,{n:st(c)}):"").join("")}</div>
+    <h3 class="lh">Participatieverklaring</h3><p>In het participatieverklaringstraject (PVT) leer je over de belangrijkste waarden in Nederland: vrijheid, gelijkwaardigheid, solidariteit en participatie. Je gemeente organiseert het. Aan het eind teken je de participatieverklaring. Het is geen examen: je krijgt geen cijfer. Moet jij het doen? Vraag het aan je gemeente.</p>
+    <p class="note"><a href="https://www.inburgeren.nl/examen-doen/" target="_blank" rel="noopener">Welke examens jij moet doen: inburgeren.nl ↗</a><br><a href="https://www.inburgeren.nl/minder-of-geen-examens/vrijstelling-orientatie-op-de-nederlandse-arbeidsmarkt.jsp" target="_blank" rel="noopener">Vrijstelling voor ONA: inburgeren.nl ↗</a></p>`;
   document.querySelectorAll("#tbody [data-t]").forEach(b=>b.onclick=()=>talk(+b.dataset.t));
 }
 function talk(i){
   const c=GP[i]; closePop();hush();$("card").innerHTML="";
   $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;
-  tBack("Gesprekken",talks);
+  if(c.ona)tBack("ONA",onaScreen);else tBack("Gesprekken",talks);
   TK={i,c,n:0,log:[],miss:0,hint:false,self:0};
   $("tbody").innerHTML=`<p class="ask">${gpGroup(i)}</p><h2>${c.t}</h2>`+(c.p?picsHTML([c.p]):"")
     +`<p class="ask">Jouw opdracht</p><div class="sample">${c.o}</div><div class="talk" id="tlog" aria-live="polite"></div><div id="tctl"></div>`;
@@ -4924,7 +4983,7 @@ function talkEnd(){
   const c=TK.c,N=c.d.length,self=Math.min(TK.self,N);
   TK.log.push({t:c.e}); tDraw(); speak(c.e);
   S.gp=S.gp||{}; const g=S.gp[c.id]||{n:0,b:0}; S.gp[c.id]={n:g.n+1,b:Math.max(g.b,self),at:Date.now()}; complete();
-  const nx=(TK.i+1)%GP.length;
+  let nx=TK.i; do nx=(nx+1)%GP.length; while(!GP[nx].ona!==!c.ona); // the next one of the same kind
   $("tctl").innerHTML=`<div class="tend"><b class="good">Gesprek gelukt!</b><p class="note">${self===N?"Je hebt alles zelf gezegd, zonder hulp. Heel goed!":`Je antwoordde ${self} van de ${N} keer zonder hulp.`}</p></div>
     <h3 class="lh">Zo kun je het zeggen</h3><ol class="tsum">${c.d.map((s,j)=>`<li><span>${esc(s.a)}</span><b>${esc(s.m)}</b>${canSpeak?`<button class="hint" data-m="${j}">▶ Luister</button>`:""}</li>`).join("")}</ol>
     <button class="btn wide" id="tnx">Volgende: ${GP[nx].t}</button><button class="ghost wide" id="tre">Nog een keer</button>`;
@@ -5324,7 +5383,7 @@ const UI={
 "Echt Nederlands. Je hoeft niet alles te begrijpen.":"Real Dutch. You don't need to understand everything.","Video's":"Videos","Podcasts":"Podcasts",
 "Makkelijk":"Easy","Gemiddeld":"Medium","Moeilijk":"Hard","Herhaal de vragen van alle hoofdstukken":"Review the questions of all chapters",
 "E-mailadres":"E-mail address","Volgende":"Next","Terug":"Back","Eerst rondkijken":"Look around first","Face ID of vingerafdruk":"Face ID or fingerprint",
-"Vul de code in":"Enter the code","Inloggen is niet gelukt":"Logging in did not work","Je bent ingelogd":"You are logged in","Ga terug naar Bittertalen op je beginscherm. Daar ben je nu ook ingelogd.":"Go back to Bittertalen on your home screen. You are logged in there too.","Ga terug naar Bittertalen op je beginscherm en probeer het nog een keer, of log in met je e-mailadres.":"Go back to Bittertalen on your home screen and try again, or log in with your e-mail address.","Inloggen is nog niet ingesteld.":"Logging in is not set up yet.","Inloggen":"Log in","Ander e-mailadres":"Another e-mail address","Code van 6 cijfers":"6-digit code",
+"Vul de code in":"Enter the code","ONA en participatieverklaring":"ONA and participation statement","Niet voor iedereen: kijk of jij ze nodig hebt.":"Not for everyone: check whether you need them.","ONA":"ONA","Inloggen is niet gelukt":"Logging in did not work","Je bent ingelogd":"You are logged in","Ga terug naar Bittertalen op je beginscherm. Daar ben je nu ook ingelogd.":"Go back to Bittertalen on your home screen. You are logged in there too.","Ga terug naar Bittertalen op je beginscherm en probeer het nog een keer, of log in met je e-mailadres.":"Go back to Bittertalen on your home screen and try again, or log in with your e-mail address.","Inloggen is nog niet ingesteld.":"Logging in is not set up yet.","Inloggen":"Log in","Ander e-mailadres":"Another e-mail address","Code van 6 cijfers":"6-digit code",
 "Met een account blijft je voortgang bewaard, ook op je andere apparaten, en kijkt Claude je teksten en antwoorden na.":"With an account your progress is kept, also on your other devices, and Claude checks your texts and answers.",
 "Er is een nieuwe versie van Bittertalen.":"There is a new version of Bittertalen.","Vernieuwen":"Refresh",
 "Zet Bittertalen op je beginscherm":"Put Bittertalen on your home screen","Al geoefend in Safari?":"Already practised in Safari?",

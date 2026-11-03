@@ -96,7 +96,12 @@ proefexamen: its icon, the name with its minutes under it, the score on the righ
 klaar, grey Nog niet klaar) or "Bij het oefenen" / "Nog niet geoefend", then "nodig: 76%". The user found a bare
 percentage unclear, so the intro says in one line what the percentage and the line mean. The number is the share of right answers (the last
 proefexamen, else practice), never a chance of passing; the intro says so. Under the rows one row to DUO's 15
-official oefenexamens ↗. Practising a part is on Oefenen.
+official oefenexamens ↗, and (A2 only) "ONA en participatieverklaring" (`onaScreen()`, in `#talk`): the two parts not
+everyone does, as DUO says them (who: the 2013 law and voluntary inburgering, the 2021 law does MAP instead; the
+exemption after 6 of the last 12 months of work, 48 hours a month; the portfolio of eight resultaatkaarten, then the
+eindgesprek or a 64-hour course with the Blik op Werk keurmerk; the PVT with the four values, no mark), links to
+inburgeren.nl ↗, and the eindgesprek to practise as four conversations (`GP` items with `ona:1`, the learner is a kok,
+examiner "Mevrouw Bakker"), which the Gesprekken list and its count leave out. Check these rules when DUO changes them. Practising a part is on Oefenen.
 - **Oefenen**: "Examenonderdelen" (Lezen, Luisteren, Schrijven, Spreken, KNM: practice without the clock) and
 "Grammatica en woorden" under it, "Lezen, luisteren en spreken" beside them on a computer.
 - **Herhalen**: Mijn zwakke punten, Mijn fouten and Mijn woorden (the last two once there is something in them).
