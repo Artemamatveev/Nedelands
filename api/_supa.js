@@ -105,6 +105,21 @@ export async function putHand(h, code) {
   });
   return r.ok;
 }
+// Real exam results for our figures (api/outcome.js, table exam_outcomes). OUTCOME_CAP new rows a month (default 2000), so a
+// stranger can't fill the table: true when kept, false when the month is full; throws when it failed.
+const OUTCOME_CAP = Math.max(1, parseInt(process.env.OUTCOME_CAP, 10) || 2000);
+export async function putOutcome({ id, part, ok, pc, rd }) {
+  const r = await rest("rpc/put_outcome", {
+    method: "POST",
+    body: JSON.stringify({ o_id: id, o_part: part, o_ok: ok, o_pc: pc, o_rd: rd, cap: OUTCOME_CAP }),
+  });
+  if (!r.ok) throw new Error(`put_outcome ${r.status}`);
+  return (await r.json()) === true;
+}
+export async function dropOutcome(id) {
+  const r = await rest(`exam_outcomes?id=eq.${encodeURIComponent(id)}`, { method: "DELETE" });
+  return r.ok;
+}
 // Takes the code once: the row is deleted as it is read
 export async function takeHand(h) {
   const r = await rest(`handoff?nonce=eq.${encodeURIComponent(h)}`, { method: "DELETE", headers: { prefer: "return=representation" } });

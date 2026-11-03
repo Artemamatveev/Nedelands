@@ -259,7 +259,7 @@ textarea{display:block;width:100%;font-size:var(--fs-b);line-height:1.5;padding:
 .wlogo{font-size:30px;font-weight:700;letter-spacing:-.01em;margin:0 0 6px;color:var(--ink)}
 .wcard h2{display:block;text-align:center;font-size:var(--fs-xl);font-weight:600;margin:0 0 18px} .wcard h2::before{display:none}
 .wcard .wlv{font-size:var(--fs-m);color:var(--soft);margin:0 0 6px}
-.wcard .seg{margin:0 0 14px}
+.wcard .seg{margin:0 0 14px} .seg.uit{margin:0 0 14px}
 .wcard .fld{margin-bottom:0} .wcard .fld input{height:54px}
 .wcard .btn,.wcard .ghost{min-height:54px;padding:10px 14px;margin:0 0 10px}
 .wcard .login .prov{gap:6px;margin:14px 0} .wcard .login .prov button{border:0;background:none;height:44px;max-width:52px}
@@ -347,7 +347,8 @@ main:has(#play:not([hidden])) header{display:none}
 .errs s{color:var(--bad)} .errs strong{color:var(--good)}
 .errs span{display:block;color:var(--soft);font-size:var(--fs-m)}
 /* errors: marked in your own text and numbered like the list */
-.sample.own{border-left-color:var(--line)}
+.sample.own{border-left-color:var(--line)} .rdo{margin:0 0 14px}
+.diff s{color:var(--bad)} .diff ins{color:var(--good);font-weight:600}
 mark.err{background:color-mix(in srgb,var(--bad) 16%,transparent);color:inherit;border-radius:4px;padding:0 2px;box-shadow:inset 0 -2px 0 color-mix(in srgb,var(--bad) 55%,transparent)}
 mark.err sup{font-size:11px;font-weight:700;color:var(--bad);margin-left:1px}
 .errs.fixes{counter-reset:fx} .errs.fixes li{counter-increment:fx;position:relative;padding-left:28px}
@@ -2187,6 +2188,7 @@ function mergeS(a,b){
   o.gp=by(a.gp,b.gp,(x,y)=>({n:Math.max(x.n||0,y.n||0),b:Math.max(x.b||0,y.b||0),at:Math.max(x.at||0,y.at||0)}));
   o.bk=by(a.bk,b.bk,(x,y)=>(y.at||0)>(x.at||0)?y:x);
   o.res=by(a.res,b.res,(x,y)=>{const m={};x.concat(y).forEach(r=>m[r.at]=r);return Object.values(m).sort((p,q)=>p.at-q.at).slice(-10)});
+  o.uit=by(a.uit,b.uit,(x,y)=>(y.at||0)>(x.at||0)?y:x);
   o.errs=uni(a.errs,b.errs,e=>e.r); o.words=uni(a.words,b.words,w=>w.w);
   const ga=a.gen||{},gb=b.gen||{}; o.gen={lz:uni(ga.lz,gb.lz,JSON.stringify),ls:uni(ga.ls,gb.ls,JSON.stringify)};
   const[p,q]=(a.last||0)>=(b.last||0)?[a,b]:[b,a]; o.last=p.last||0; o.streak=p.last===q.last?Math.max(p.streak||0,q.streak||0):p.streak||0;
@@ -3403,7 +3405,8 @@ const IC={
   stats:'<rect x="2.5" y="12" width="5" height="9.5" rx="1.3"/><rect x="9.5" y="3.5" width="5" height="18" rx="1.3"/><rect x="16.5" y="8.5" width="5" height="13" rx="1.3"/>',
   errs:'<path fill-rule="evenodd" d="M10.2 3.4a2.1 2.1 0 0 1 3.6 0l8.2 14.1a2.1 2.1 0 0 1-1.8 3.1H3.8A2.1 2.1 0 0 1 2 17.5zM11 9v5.5h2V9zm0 7v2h2v-2z"/>',
   hist:'<path d="M5.5 2.5h13v2.2h-1.2v2.1c0 2.2-1.8 3.8-3.6 5.2 1.8 1.4 3.6 3 3.6 5.2v2.1h1.2v2.2h-13v-2.2h1.2v-2.1c0-2.2 1.8-3.8 3.6-5.2C8.5 10.6 6.7 9 6.7 6.8V4.7H5.5z"/>',
-  ona:'<path d="M9 3.5h6A1.5 1.5 0 0 1 16.5 5v1.5h3.5A2 2 0 0 1 22 8.5V12H2V8.5a2 2 0 0 1 2-2h3.5V5A1.5 1.5 0 0 1 9 3.5zm.5 3h5V5.5h-5zM2 13.5h8.5v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1H22v5a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2z"/>',
+  uit:'<path d="M12 4 1.5 9.5 12 15l8.5-4.45V16h2V9.5z"/><path d="M6 14.2V17c0 1.6 2.7 3 6 3s6-1.4 6-3v-2.8l-6 3.1z"/>',
+ona:'<path d="M9 3.5h6A1.5 1.5 0 0 1 16.5 5v1.5h3.5A2 2 0 0 1 22 8.5V12H2V8.5a2 2 0 0 1 2-2h3.5V5A1.5 1.5 0 0 1 9 3.5zm.5 3h5V5.5h-5zM2 13.5h8.5v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1H22v5a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2z"/>',
   talk:'<path d="M3.5 2.5h10A1.6 1.6 0 0 1 15 4.1v6.3a1.6 1.6 0 0 1-1.5 1.6H8.2l-3.7 3.2V12h-1A1.6 1.6 0 0 1 2 10.4V4.1a1.6 1.6 0 0 1 1.5-1.6z"/><path d="M16.7 7.5h3.8A1.6 1.6 0 0 1 22 9.1v6.3a1.6 1.6 0 0 1-1.5 1.6h-1v3.2L15.8 17H10.5A1.6 1.6 0 0 1 9 15.4V13.6h4.6a3.1 3.1 0 0 0 3.1-3.1z"/>',
   privacy:'<path fill-rule="evenodd" d="M12 2l8.5 3.4v6c0 5.2-3.6 9.2-8.5 10.9-4.9-1.7-8.5-5.7-8.5-10.9v-6zM10.7 13.4L8.3 11l-1.5 1.5 3.9 3.9 6.4-6.4-1.5-1.5z"/>',
   duo:'<path fill-rule="evenodd" d="M6.5 2h7.8L19.5 7.2v13.3A1.5 1.5 0 0 1 18 22H6.5A1.5 1.5 0 0 1 5 20.5v-17A1.5 1.5 0 0 1 6.5 2zM8.4 14.2l2.7 2.7 4.9-4.9-1.4-1.4-3.5 3.5-1.3-1.3z"/>'};
@@ -3434,16 +3437,17 @@ function home(){
   // Examen and Oefenen: A2 and B1 as two tabs (.seg), one at a time; it opens on the level you practise for (exV: the tab
   // you picked since).
   const v=exV||lvl(),seg=`<div class="seg lvt" role="group" aria-label="Niveau">${["A2","B1"].map(x=>`<button data-v="${x}" aria-pressed="${x===v}">${LVL[x]}</button>`).join("")}</div>`,
-    other=v!==lvl()?`<p class="note">Je les van vandaag is voor ${LVL[lvl()]} (kies in Profiel).</p>`:"";
+    other=v!==lvl()?`<p class="note">Je les van vandaag is voor ${LVL[lvl()]} (kies in Profiel).</p>`:"",
+    uitRow=`<div class="list">${itHTML(`data-x="uit"`,"Mijn examen","Echt examen gedaan? Vertel hoe het ging.",{ic:"uit",n:(n=>n?`${n} van 5`:null)((v==="B1"?["l1","lb","wb","sb","knm"]:["lz","ls","wr","sp","knm"]).filter(k=>(S.uit||{})[k]&&S.uit[k].ok).length)})}</div>`;
   // ONA and the participatieverklaring: on both levels (with the Staatsexamen you still do them apart)
   const onaRow=`<div class="list">${itHTML(`data-x="ona"`,"ONA en participatieverklaring","Niet voor iedereen: kijk of jij ze nodig hebt.",{ic:"ona",n:(n=>n?`${n} van 4`:null)(GP.filter(c=>c.ona&&(S.gp||{})[c.id]).length)})}</div>`;
   if(v==="B1"){
     $("exam").innerHTML=`<h2>Naar het examen</h2>${seg}${other}<p class="sub">Proefexamens met tijd, zoals het Staatsexamen. Het percentage is hoeveel je goed had, het streepje ongeveer wat je nodig hebt.</p><div class="list">${["l1","lb","wb","sb","knm"].map(part).join("")}</div>`
-      +`<div class="list"><a class="it ext" href="https://oefenexamensnt2.nl" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens Staatsexamen NT2 ↗</b></span><span class="d">Officieel, voor programma I. Liefst op een computer.</span></span></a></div>`+onaRow;
+      +`<div class="list"><a class="it ext" href="https://oefenexamensnt2.nl" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens Staatsexamen NT2 ↗</b></span><span class="d">Officieel, voor programma I. Liefst op een computer.</span></span></a></div>`+onaRow+uitRow;
     $("parts").innerHTML=`<h2>Examenonderdelen</h2>${seg}<p class="sub">Zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["l1","lb","wb","sb","knm"].map(row).join("")}</div>`;
   }else{
     $("exam").innerHTML=`<h2>Naar het examen</h2>${seg}${other}<p class="sub">Proefexamens met tijd, zoals bij DUO. Het percentage is hoeveel je goed had, het streepje wat je nodig hebt om te slagen.</p><div class="list">${["lz","ls","wr","sp","knm"].map(part).join("")}</div>`
-      +`<div class="list"><a class="it ext" href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens van DUO ↗</b><small>15</small></span><span class="d">De echte, met echte stemmen. Liefst op een computer.</span></span></a></div>`+onaRow;
+      +`<div class="list"><a class="it ext" href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens van DUO ↗</b><small>15</small></span><span class="d">De echte, met echte stemmen. Liefst op een computer.</span></span></a></div>`+onaRow+uitRow;
     $("parts").innerHTML=`<h2>Examenonderdelen</h2>${seg}<p class="sub">Zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["lz","ls","wr","sp","knm"].map(row).join("")}</div>`;
   }
   $("gram").innerHTML=`<h2>Grammatica en woorden</h2><p class="sub">Rondes van 10 vragen.</p>`+(lvl()==="B1"
@@ -3466,6 +3470,7 @@ function home(){
     else if(d.x==="hist")hist();
     else if(d.x==="talk")talks();
     else if(d.x==="ona")onaScreen();
+    else if(d.x==="uit")uitScreen();
     else if(d.x==="words")practiseWords();
     else build("custom",{id:"custom",t:"Mijn fouten",n:10,pool:()=>shuffle(errItems())})});
   drawProfile();
@@ -3666,8 +3671,9 @@ function drawProfile(){
 function drawResults(){
   const el=$("myres"); if(!el)return;
   const R=S.res||{};
-  const day=t=>new Date(t).toLocaleDateString("nl-NL",{day:"numeric",month:"long"}),ks=["lz","ls","wr","sp","knm","l1","lb","wb","sb"].filter(k=>(R[k]||[]).length);
+  const day=t=>new Date(t).toLocaleDateString("nl-NL",{day:"numeric",month:"long"}),all=["lz","ls","wr","sp","knm","l1","lb","wb","sb"],ks=all.filter(k=>(R[k]||[]).length),U=S.uit||{},uk=all.filter(k=>U[k]);
   el.innerHTML=`<h2>Mijn resultaten</h2>`
+    +(uk.length?`<h3 class="lh">Echt examen</h3><ul class="errs kv">${uk.map(k=>`<li>${PART[k]}<span class="${U[k].ok?"good":"bad"}">${U[k].ok?"Geslaagd":"Niet geslaagd"}</span></li>`).join("")}</ul>`:"")
     +(ks.length?ks.map(k=>`<h3 class="lh">${PART[k]}</h3><ul class="errs kv">${R[k].slice().reverse().map(r=>`<li>Proefexamen ${day(r.at)}<span class="${r.pc>=passPc(k)?"good":"bad"}">${r.pc}%</span></li>`).join("")}</ul>`).join("")
       :`<p class="sub">Nog geen proefexamens.</p>`)
     +`<h3 class="lh">Geoefend</h3><ul class="errs kv"><li>Dagen op rij<span>${S.last>=today()-1?S.streak:0}</span></li><li>Vragen geoefend<span>${Object.keys(S.items).length}</span></li>`
@@ -3898,14 +3904,16 @@ function echoBind(target){
   const b=$("echo"); if(!b)return;
   b.onclick=()=>{$("echor").innerHTML="";listen("say",r=>echoDone(target,r));b.textContent="■ Stop";b.onclick=()=>recEnd(true)};
 }
+const lcs=(T,H)=>{const D=Array.from({length:T.length+1},()=>new Uint16Array(H.length+1));
+  for(let i=T.length-1;i>=0;i--)for(let j=H.length-1;j>=0;j--)D[i][j]=T[i]===H[j]?D[i+1][j+1]+1:Math.max(D[i+1][j],D[i][j+1]);
+  return D};
 function echoDone(target,r){
   const rb=$("recb"); rb.textContent="● Opnemen";rb.className="ghost wide";rb.onclick=()=>listen("rec",spTake);
   $("recn").textContent=""; $("recp").innerHTML=""; echoBind(target); if($("echo"))$("echo").textContent="● Nog een keer";
   const P=String(target).split(WTOK), T=P.filter((x,i)=>i%2).map(norm), H=r.text.split(WTOK).filter((x,i)=>i%2).map(norm), n=T.length, m=H.length;
   if(!m){$("echor").innerHTML=`<p class="note">${r.fail?"Meeschrijven lukt hier niet.":"Ik heb niets verstaan. Spreek wat harder, of dichter bij de telefoon."}</p>`;return}
   // longest common subsequence: which words of the model were heard, in order
-  const D=Array.from({length:n+1},()=>new Uint16Array(m+1)), ok=new Set();
-  for(let i=n-1;i>=0;i--)for(let j=m-1;j>=0;j--)D[i][j]=T[i]===H[j]?D[i+1][j+1]+1:Math.max(D[i+1][j],D[i][j+1]);
+  const D=lcs(T,H), ok=new Set();
   for(let i=0,j=0;i<n&&j<m;){if(T[i]===H[j]){ok.add(i);i++;j++}else if(D[i+1][j]>=D[i][j+1])i++;else j++}
   let k=0; const html=P.map((x,i)=>i%2?(ok.has(k++)?esc(x):`<button class="miss" data-w="${esc(x)}">${esc(x)}</button>`):esc(x)).join("");
   $("echor").innerHTML=`<p class="note"><strong class="${ok.size>=n*.9?"good":""}">${ok.size>=n*.9?"Heel duidelijk!":"De telefoon verstond "+ok.size+" van de "+n+" woorden."}</strong>
@@ -4012,6 +4020,65 @@ function selfGrade(q,msg,doc){
   if(doc)$("docx").onclick=()=>saveDocx([doc]);
   if(q.type==="reveal")echoBind(q.right);
 }
+// Schrijf het nog een keer: after the check the learner corrects their own text, and the phone compares it with Claude's
+// corrected text (no call, so no check is used, and it works offline). Spelling counts: capitals and punctuation are compared too.
+const RTOK=/([\p{L}\d]+(?:['’-][\p{L}\d]+)*|[.,!?;:])/u, rtok=x=>x.replace(/’/g,"'"), rtoks=t=>String(t).split(RTOK).filter((x,i)=>i%2).map(rtok);
+const redoable=(own,right)=>!!right&&rtoks(own).join(" ")!==rtoks(right).join(" ");
+const redoBtn=`<button class="ghost wide" id="redo">Schrijf het nog een keer</button><p class="note">Dit kost geen nakijkbeurt.</p>`;
+// what is wrong with own against right: words to take out struck through, words to add in green; n = the places that differ
+function diffHTML(own,right){
+  const P=String(right).split(RTOK),A=P.filter((x,i)=>i%2).map(rtok),G=P.filter((x,i)=>!(i%2)),B=rtoks(own),D=lcs(A,B);
+  let h="",i=0,j=0,sep=-1,n=0,same=true; const out=[],moved=[];
+  const gap=()=>{if(sep<i){h+=esc(G[i]);sep=i}};
+  while(i<A.length||j<B.length){gap();
+    if(i<A.length&&j<B.length&&A[i]===B[j]){h+=esc(P[2*i+1]);i++;j++;same=true;continue}
+    if(same)n++; same=false;
+    if(j<B.length&&(i>=A.length||D[i][j+1]>=D[i+1][j])){h+=`<s>${esc(B[j])}</s> `;out.push(B[j]);j++}
+    else{const k=out.indexOf(A[i]);if(k>=0){out.splice(k,1);moved.push(A[i])}h+=`<ins>${esc(P[2*i+1])}</ins>`;i++}
+  }
+  gap();
+  // a word in the wrong place is struck through once and added once: that is one mistake, not two
+  return{h,n:n&&Math.max(1,n-moved.length)};
+}
+// What can be written again of one task: [] when nothing differs. A B1 form has one box per answer that differs: its corrected
+// text is one line per form answer, the open answer last (SYSTEM_WB in api/check.js); another shape gives no boxes.
+function redoItems(q,form,text,right,errs){
+  if(q.sec==="wb"&&q.fields){
+    const n=q.fields.length,L=String(right||"").split("\n").map(x=>x.trim()).filter(Boolean),F=form.split("\n");
+    if(L.length<n+1)return[];
+    const I=q.fields.map((f,i)=>({own:(F[i]||"").slice(f.length+2),right:L[i].startsWith(f+":")?L[i].slice(f.length+1).trim():L[i],l:f,f:1,errs:[]}))
+      .concat({own:text,right:L.slice(n).join(" "),l:q.open,f:1,errs:[]}).filter(x=>redoable(x.own,x.right));
+    if(I.length)I[I.length-1].errs=errs;
+    return I}
+  if(q.kind==="z"){const own=zWhole({q,text});return redoable(own,right)?[{own,right,errs,l:q.big,ctx:/___/.test(q.ctx||"")?q.ctx:""}]:[]}
+  return redoable(text,right)?[{own:text,right,errs}]:[];
+}
+// items: {own, right, errs, l (the task or question), ctx (a text with an open place), f (a form's answer)};
+// back: after a proefexamen, back to its result, which is not marked again
+function redo(items,back){
+  const what=items[0].f?items.length>1?"antwoorden":"antwoord":items.length>1?"zinnen":items[0].l?"zin":"tekst";
+  $("card").innerHTML=`<p class="ask">Schrijf het nog een keer</p><p class="note">Verbeter je eigen ${what}, zonder naar de verbeterde ${what} te kijken.</p>`
+    +items.map((x,i)=>`${x.l?`<p class="note">${x.l}</p>`:""}${x.ctx?`<div class="sample">${esc(x.ctx).replace("___",'<b class="gapw">______</b>')}</div>`:""}
+      <textarea id="rw${i}" rows="${x.l?3:Math.max(7,x.own.split("\n").length+2)}" aria-label="Je ${x.f?"antwoord":x.l?"zin":"tekst"}" spellcheck="false" autocorrect="off" autocapitalize="off"></textarea>
+      ${x.errs.length?`<details><summary>Kijk nog even naar de fouten</summary>${errsHTML(x.errs)}</details>`:""}<div id="rwd${i}"></div>`).join("")
+    +`<p class="note" id="rwn" hidden>Doorgestreept moet weg, groen moet erbij. De telefoon vergelijkt alleen: een ander woord kan ook goed zijn.</p>
+      <div class="two"><button class="ghost" id="rwgo">${back?"Naar de uitslag":"Verder"}</button><button class="btn" id="rwchk">Vergelijk</button></div>`;
+  items.forEach((x,i)=>$("rw"+i).value=x.own);
+  window.scrollTo(0,0);
+  $("rwgo").onclick=back||(()=>{pos++;show()});
+  $("rwchk").onclick=()=>{
+    const R=items.map((x,i)=>{const t=$("rw"+i).value.trim(),d=diffHTML(t,x.right);
+      $("rwd"+i).innerHTML=d.n?`<p class="ask">Nog ${d.n} ${d.n===1?"verschil":"verschillen"}</p><div class="sample diff">${d.h}</div>`:`<p class="note"><b class="good">✓ Precies goed!</b></p>`;
+      return d.n});
+    const all=R.every(n=>!n);
+    $("rwn").hidden=all; $("rwchk").textContent="Vergelijk opnieuw";
+    $("rwgo").className=all?"btn":"ghost"; $("rwchk").className=all?"ghost":"btn";
+    if(all)buzz("good");
+    $("rwd"+R.findIndex((n,i)=>n||i===R.length-1)).scrollIntoView({block:"nearest",behavior:"smooth"});
+  };
+}
+// a sentence to finish: the corrected text is the whole sentence, so the learner gets the whole sentence to correct
+const zWhole=z=>{const c=z.q.ctx,b=c&&!/___/.test(c)?c.replace(/[….\s]+$/,""):"";return b&&!z.text.startsWith(b)?b+" "+z.text:z.text};
 async function check(q){
   const text=$("txt").value.trim();
   if(text.split(/\s+/).length<(q.kind==="z"?3:5)){$("fb").innerHTML=`<p class="note">${q.kind==="z"?"Schrijf een hele zin.":"Schrijf minimaal een paar zinnen."}</p>`;return}
@@ -4022,14 +4089,16 @@ async function check(q){
     const res=(await nakijken([{kind:q.kind,task,form,text}],q.sec==="wb"?"wb":undefined))[0];
     const errs=Array.isArray(res.errors)?res.errors:[];
     btn.hidden=true; const ok=!!res.passed;
+    const RD=redoItems(q,form,text,res.corrected,errs);
     keepErrs(errs); record(ok);
     $("fb").innerHTML=`<b class="${ok?"good":"bad"}">${ok?"Goed zo! Voldoende":"Nog niet voldoende"}</b>
       <p class="note">${esc(res.verdict)}</p>${scoreHTML(res.scores,q.mx)}
       ${ownHTML(text,errs)}${errsHTML(errs)}${freeNote()}
       <p class="ask">Verbeterde tekst</p><div class="sample">${esc(res.corrected)}</div>
       <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(q.right)}</div></details>
-      ${docBtn}<button class="btn wide" id="next">Verder</button>`;
+      ${RD.length?redoBtn:""}${docBtn}<button class="btn wide" id="next">Verder</button>`;
     $("next").onclick=()=>{pos++;show()};
+    if(RD.length)$("redo").onclick=()=>redo(RD);
     $("docx").onclick=()=>saveDocx([{task,form,text}]);
   }catch(e){
     const c=e&&e.code;
@@ -4051,13 +4120,15 @@ async function checkZ(q){
   try{
     const T=await nakijken(Z.map(z=>({kind:"z",task:z.task,form:"",text:z.text})),"wb");
     btn.hidden=true;
+    const RD=Z.flatMap((z,i)=>{const t=T[i]||{};return redoItems(z.q,"",z.text,t.corrected,Array.isArray(t.errors)?t.errors:[])});
     $("fb").innerHTML=Z.map((z,i)=>{const t=T[i]||{},errs=Array.isArray(t.errors)?t.errors:[],ok=!!t.passed; keepErrs(errs); record(ok,z.q);
       return`<p class="ask">${Z.length>1?`Zin ${i+1}: `:""}<span class="${ok?"good":"bad"}">${ok?"voldoende":"nog niet voldoende"}</span></p>${Z.length>1?`<p class="note">${z.q.big}</p>`:""}
         <p class="note">${esc(t.verdict)}</p>${scoreHTML(t.scores,z.q.mx)}
         ${ownHTML(z.text,errs,"Jouw zin")}${errs.length?errsHTML(errs):""}
         <p class="ask">Verbeterd</p><div class="sample">${esc(t.corrected||z.text)}</div><details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(z.q.right)}</div></details>`}).join("")
-      +`${freeNote()}${docBtn}<button class="btn wide" id="next">Verder</button>`;
+      +`${freeNote()}${RD.length?redoBtn:""}${docBtn}<button class="btn wide" id="next">Verder</button>`;
     $("next").onclick=()=>{pos++;show()}; $("docx").onclick=()=>saveDocx(doc);
+    if(RD.length)$("redo").onclick=()=>redo(RD);
   }catch(e){
     const c=e&&e.code;
     if(c==="rate_limited"){cur.zs=Z.slice(0,-1);btn.disabled=false;$("txt").readOnly=false;$("fb").innerHTML=`<p class="note">Te veel verzoeken achter elkaar. Wacht een minuut en probeer het opnieuw.</p>`;return}
@@ -4085,17 +4156,22 @@ async function examWrite(){
   try{
     const T=await nakijken(A.map(a=>({kind:a.q.kind,task:wrTask(a.q),form:a.form,text:a.text})),cur.part==="wb"?"wb":undefined);
     let good=0,pts=0,scored=0;
+    const RD=[];
     const body=A.map((a,i)=>{const t=T[i]||{},errs=Array.isArray(t.errors)?t.errors:[],pt=spPts(t);if(t.passed)good++;if(pt!=null){pts+=pt;scored++}
-      keepErrs(errs);
+      keepErrs(errs); RD[i]=redoItems(a.q,a.form,a.text,t.corrected,errs);
       return`<h2>Opdracht ${queue.indexOf(a.q)+1}: <span class="${t.passed?"good":"bad"}">${t.passed?"voldoende":"nog niet voldoende"}</span></h2><p class="note">${a.q.big}</p><p class="note">${esc(t.verdict)}</p>${scoreHTML(t.scores,a.q.mx)}
         ${own(a,errs)}${errs.length?errsHTML(errs):""}<p class="ask">Verbeterde tekst</p><div class="sample">${esc(t.corrected)}</div>
-        <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(a.q.right)}</div></details>`}).join("");
+        <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(a.q.right)}</div></details>${RD[i].length?`<button class="ghost wide rdo" data-i="${i}">Schrijf het nog een keer</button>`:""}`}).join("");
     // score: points of all tasks, as DUO counts them (a task not made counts 0); without points (older server) the share of good tasks
     const max=queue.reduce((s,q)=>s+(q.mx?mxPts(q.mx):WRMAX),0), pc=scored?Math.round(pts/max*100):Math.round(good/queue.length*100), pass=pc>=passPc(cur.part);
     keepRes(cur.part,pc);
     card.innerHTML=`<div class="done"><p class="ask">${cur.t}: uitslag</p><div class="big">${pc}%</div><p class="ru">${scored?`${pts} van ${max} punten, `:""}${good} van ${queue.length} opdrachten voldoende${A.length<queue.length?`; ${queue.length-A.length} niet gemaakt`:""}</p></div>
       <p><b class="${pass?"good":"bad"}">${pass?"Geslaagd":"Nog niet geslaagd"}</b></p>
-      <p class="note">${cur.part==="wb"?"Bij het Staatsexamen heb je een score van 500 nodig. Bij de openbare examens van de laatste jaren was dat ongeveer 25 van de 47 punten":`Je hebt ongeveer ${PASS*100}% van de punten nodig`}${scored&&cur.part!=="wb"?`: hier ${Math.ceil(max*passOf(cur.part)-1e-9)} van ${max}`:""}. Punten verlies je ook door fouten in grammatica en spelling.</p>`+body+foot; bind();
+      <p class="note">${cur.part==="wb"?"Bij het Staatsexamen heb je een score van 500 nodig. Bij de openbare examens van de laatste jaren was dat ongeveer 25 van de 47 punten":`Je hebt ongeveer ${PASS*100}% van de punten nodig`}${scored&&cur.part!=="wb"?`: hier ${Math.ceil(max*passOf(cur.part)-1e-9)} van ${max}`:""}. Punten verlies je ook door fouten in grammatica en spelling.</p>${RD.some(x=>x.length)?`<p class="note">Je kunt een opdracht nog een keer schrijven. Dit kost geen nakijkbeurt.</p>`:""}`+body+foot;
+    // writing a task again leaves the result: coming back shows the same result, without marking it again
+    const html=card.innerHTML,wire=()=>{bind();card.querySelectorAll(".rdo").forEach(b=>b.onclick=()=>{const i=b.dataset.i;
+      redo(RD[i],()=>{card.innerHTML=html;wire();card.querySelector(`.rdo[data-i="${i}"]`).scrollIntoView({block:"center"})})})};
+    wire();
   }catch(e){
     const c=e&&e.code;
     fallback(noCheck(c)?noCheck(c)+" Vergelijk je teksten nu met de voorbeelden.":c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je teksten met de voorbeelden.":c==="rate_limited"?"Te veel verzoeken achter elkaar. Probeer het over een minuut opnieuw.":"Het nakijken is niet gelukt. Vergelijk je teksten met de voorbeelden.");
@@ -4950,6 +5026,47 @@ function talks(){
 // ONA and the participatieverklaring: two parts of inburgeren that not everyone has to do. What they are, who needs
 // them, and the ONA final interview to practise as conversations (GP items with ona, not in the Gesprekken list).
 // The facts follow DUO (inburgeren.nl); check them there when the rules change.
+// Mijn examen: the result of the real exam, per part, as the learner tells it. Their own record is S.uit {part: {ok, at}};
+// a copy goes to /api/outcome (table exam_outcomes) to see whether the proefexamens and "Klaar voor het examen" predict the
+// real result: the part, passed or not, the last proefexamen score, the status then, and the month the server adds. No
+// name, e-mail or account. The row's random id stays on this device (ww-uit), never in S, so it can't be tied to an account;
+// with it a correction or taking it back changes that row. Unsent ones (offline) go at the next start. See privacy.html.
+const uitQ=()=>{try{return JSON.parse(lsGet("ww-uit"))||{}}catch(e){return{}}};
+const uuid=()=>crypto.randomUUID?crypto.randomUUID():"10000000-1000-4000-8000-100000000000".replace(/[018]/g,c=>(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16));
+async function uitSend(){
+  const Q=uitQ();
+  for(const k of Object.keys(Q)){const e=Q[k]; if(e.sent)continue;
+    try{const r=await fetch("/api/outcome",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:e.id,part:k,ok:e.ok,pc:e.pc,rd:e.rd})});
+      if(!r.ok)continue;
+      const q=uitQ(),n=q[k]; if(!n||n.id!==e.id||n.ok!==e.ok)continue; // changed while sending: it goes next time
+      if(n.ok==null)delete q[k]; else n.sent=1;
+      lsSet("ww-uit",JSON.stringify(q));
+    }catch(err){}}
+}
+setTimeout(()=>{if(Object.values(uitQ()).some(e=>!e.sent))uitSend()},5000);
+function setUit(k,ok){
+  const U=S.uit=S.uit||{},Q=uitQ(),old=U[k],e=Q[k];
+  if(old&&old.ok===ok){delete U[k];if(e){e.ok=null;e.sent=0}} // the same answer again takes it back
+  else{
+    // changing it within a day is a correction; later it is a new attempt, so a new row
+    const R=(S.res||{})[k]||[],r=ready(k),same=e&&e.ok!=null&&old&&Date.now()-old.at<864e5;
+    Q[k]={id:same?e.id:uuid(),ok,pc:R.length?R[R.length-1].pc:null,rd:R.length?r.cls==="good"?2:r.cls==="bad"?0:1:null};
+    U[k]={ok,at:Date.now()};
+    if(ok)buzz("good");
+  }
+  lsSet("ww-uit",JSON.stringify(Q)); save(); uitSend(); uitScreen(scrollY);
+}
+function uitScreen(y=0){
+  closePop();hush();TK=null;$("card").innerHTML="";
+  $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;
+  tBack(TABN[tab],home);
+  const U=S.uit||{},ks=(exV||lvl())==="B1"?["l1","lb","wb","sb","knm"]:["lz","ls","wr","sp","knm"];
+  $("tbody").innerHTML=`<h2>Mijn examen</h2><p class="sub">Echt examen gedaan? Tik per onderdeel op je uitslag.</p>`
+    +ks.map(k=>`<h3 class="lh">${PART[k]}</h3><div class="seg uit" role="group" aria-label="${PART[k]}">${[1,0].map(o=>`<button data-k="${k}" data-ok="${o}" aria-pressed="${!!U[k]&&U[k].ok===!!o}">${o?"Geslaagd":"Niet geslaagd"}</button>`).join("")}</div>`).join("")
+    +`<p class="note">Je uitslag telt mee in onze cijfers, zonder je naam of e-mailadres. Zo zien we of de proefexamens kloppen.</p><p class="note">Tik nog een keer op je uitslag om hem weg te halen.</p><p class="note"><a href="/privacy">Privacyverklaring</a></p>`;
+  document.querySelectorAll("#tbody .uit button").forEach(b=>b.onclick=()=>setUit(b.dataset.k,b.dataset.ok==="1"));
+  window.scrollTo(0,y);
+}
 function onaScreen(){
   closePop();hush();TK=null;$("card").innerHTML="";
   $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;window.scrollTo(0,0);
@@ -5522,6 +5639,14 @@ const UI={
 "Face ID of vingerafdruk":["Face ID or fingerprint","Face ID أو بصمة الإصبع","Face ID veya parmak izi","Face ID या फ़िंगरप्रिंट","Face ID 或指纹"],
 "Vul de code in":["Enter the code","أدخل الرمز","Kodu gir","कोड दर्ज करें","输入验证码"],
 "ONA en participatieverklaring":["ONA and participation statement","ONA وبيان المشاركة","ONA ve katılım beyanı","ONA और सहभागिता घोषणा","ONA 和参与声明"],
+"Mijn examen":["My exam","امتحاني","Sınavım","मेरी परीक्षा","我的考试"],
+"Echt examen gedaan? Vertel hoe het ging.":["Taken the real exam? Tell us how it went.","هل أدّيت الامتحان الحقيقي؟ أخبرنا كيف سار.","Gerçek sınava girdin mi? Nasıl geçtiğini anlat.","असली परीक्षा दे दी? बताएँ कि कैसी रही।","考过真实考试了？告诉我们结果如何。"],
+"Echt examen gedaan? Tik per onderdeel op je uitslag.":["Taken the real exam? Tap your result for each part.","هل أدّيت الامتحان الحقيقي؟ اضغط على نتيجتك لكل قسم.","Gerçek sınava girdin mi? Her bölüm için sonucuna dokun.","असली परीक्षा दे दी? हर भाग के लिए अपने परिणाम पर टैप करें।","考过真实考试了？请按部分点击你的结果。"],
+"Geslaagd":["Passed","ناجح","Geçti","उत्तीर्ण","通过"],
+"Niet geslaagd":["Not passed","غير ناجح","Geçemedi","अनुत्तीर्ण","未通过"],
+"Echt examen":["Real exam","الامتحان الحقيقي","Gerçek sınav","असली परीक्षा","真实考试"],
+"Je uitslag telt mee in onze cijfers, zonder je naam of e-mailadres. Zo zien we of de proefexamens kloppen.":["Your result counts in our figures, without your name or e-mail. It shows us whether the practice exams are right.","تُحتسب نتيجتك في أرقامنا، بدون اسمك أو بريدك الإلكتروني. هكذا نعرف هل الامتحانات التجريبية دقيقة.","Sonucun, adın veya e-posta adresin olmadan istatistiklerimize eklenir. Böylece deneme sınavlarının doğru olup olmadığını görürüz.","आपका परिणाम हमारे आँकड़ों में गिना जाता है, आपके नाम या ई-मेल के बिना। इससे हमें पता चलता है कि अभ्यास परीक्षाएँ सही हैं या नहीं।","你的结果会计入我们的统计，不含姓名和电子邮箱。这样我们能知道模拟考试是否准确。"],
+"Tik nog een keer op je uitslag om hem weg te halen.":["Tap your result again to remove it.","اضغط على نتيجتك مرة أخرى لإزالتها.","Kaldırmak için sonucuna tekrar dokun.","हटाने के लिए अपने परिणाम पर फिर से टैप करें।","再次点击结果即可删除。"],
 "Niet voor iedereen: kijk of jij ze nodig hebt.":["Not for everyone: check whether you need them.","ليس للجميع: تحقّق هل تحتاج إليهما.","Herkes için değil: sana gerekip gerekmediğine bak.","सबके लिए नहीं: देखें कि आपको इनकी ज़रूरत है या नहीं।","并非人人需要：看看你是否需要。"],
 "ONA":["ONA","ONA","ONA","ONA","ONA"],
 "Inloggen is niet gelukt":["Logging in did not work","تعذّر تسجيل الدخول","Giriş yapılamadı","लॉग इन नहीं हो पाया","登录失败"],

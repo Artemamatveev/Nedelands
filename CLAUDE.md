@@ -110,6 +110,15 @@ exemption after 6 of the last 12 months of work, 48 hours a month; the portfolio
 eindgesprek or a 64-hour course with the Blik op Werk keurmerk; the PVT with the four values, no mark), links to
 inburgeren.nl ↗, and the eindgesprek to practise as four conversations (`GP` items with `ona:1`, the learner is a kok,
 examiner "Mevrouw Bakker"), which the Gesprekken list and its count leave out. Check these rules when DUO changes them. Practising a part is on Oefenen.
+Last on both level tabs, "Mijn examen" (`uitScreen()`, in `#talk`): per part the learner taps Geslaagd or Niet geslaagd for
+the real exam (tap again to take it back), which also shows in Mijn resultaten. Their own record is `S.uit` `{part: {ok, at}}`;
+a copy goes to `/api/outcome` (`api/outcome.js`, table `exam_outcomes` and `put_outcome()` in `supabase/schema.sql`, run it
+in the SQL editor) to see whether the proefexamens and "Klaar voor het examen" predict the result: part, ok, `pc` the last
+proefexamen score, `rd` the status then (0 nog niet, 1 bijna, 2 klaar), the month. No name, e-mail, account or IP. The row's
+random id stays on the device (`ww-uit`, also what is still unsent; it goes at the next start) and never in `S`, so a row
+can't be tied to an account: a correction within a day changes the row, later it is a new attempt with a new row, and a row
+can only be taken back on the device that sent it. `OUTCOME_CAP` new rows a month (default 2000); rows go after three years
+(privacy.html says so). A passed part stays in today's lesson for now.
 - **Oefenen**: "Examenonderdelen" (Lezen, Luisteren, Schrijven, Spreken, KNM: practice without the clock) and
 "Grammatica en woorden" under it, "Lezen, luisteren en spreken" beside them on a computer.
 - **Herhalen**: Mijn zwakke punten, Mijn fouten and Mijn woorden (the last two once there is something in them).
@@ -351,6 +360,15 @@ The result shows DUO's points as bars, one per criterion (`scoreHTML()`, `.dpts`
 with the total, then the learner's own text with every error marked where it is and numbered (`markErrs()`,
 `ownHTML()`: Claude's `wrong` is looked up in the text; one it can't find is only in the list), the numbered list of
 errors (`errsHTML()`: wrong → right, why) and the corrected text.
+
+"Schrijf het nog een keer" (`redo()`, `redoItems()`: Schrijven and Schrijven B1, in practice and per task after a proefexamen,
+not in Spreken, and only when the corrected text differs): the learner gets their own text back to correct, without the
+corrected text on screen (the errors are in a fold), and "Vergelijk" marks it against Claude's corrected text on the phone
+(`diffHTML()`: struck through = take out, green = add; capitals and punctuation count; a word in the wrong place counts as
+one). No Claude call, so it costs no check, works offline and changes nothing in `S`. After a proefexamen it goes back to the
+same result, not marked again. A sentence to finish comes back whole (`zWhole()`), because `corrected` is the whole sentence.
+A B1 form gets one box per answer that differs: `SYSTEM_WB` asks for one line per form answer with the open answer last, and
+another shape gives no button. An A2 form's `corrected` is the open answer only, so only that comes back.
 
 `api/check.js` is a Vercel function that grades writing with Claude (`claude-opus-5-5`,
 structured JSON output, server-side refusal fallback). The page posts

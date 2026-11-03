@@ -142,3 +142,42 @@ create table if not exists public.handoff (
   at timestamptz not null default now()
 );
 alter table public.handoff enable row level security; -- no policies: nobody but the service role
+
+-- The result of a real exam, as learners tell it in Mijn examen, to see whether the proefexamens and "Klaar voor het
+-- examen" predict it. Nothing about the person: id is a random uuid that stays on their device (never in the progress), pc
+-- the last proefexamen score of that part, rd the status then (0 nog niet, 1 bijna, 2 klaar), month only the month.
+-- Rows older than three years are deleted (privacy.html says so). Only the server writes it; read it here, for example:
+--   select part, ok, rd, count(*), round(avg(pc)) as pc from public.exam_outcomes group by 1, 2, 3 order by 1, 2, 3;
+create table if not exists public.exam_outcomes (
+  id uuid primary key,
+  part text not null check (part in ('lz', 'ls', 'wr', 'sp', 'knm', 'l1', 'lb', 'wb', 'sb')),
+  ok boolean not null,
+  pc smallint check (pc between 0 and 100),
+  rd smallint check (rd between 0 and 2),
+  month date not null
+);
+alter table public.exam_outcomes enable row level security; -- no policies: nobody but the service role
+
+-- Keeps a result, or corrects it when the id is known. Returns false when this month already has `cap` rows (nothing is
+-- kept then), so a stranger can't fill the table.
+create or replace function public.put_outcome(o_id uuid, o_part text, o_ok boolean, o_pc int, o_rd int, cap int)
+returns boolean
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  m date := date_trunc('month', now() at time zone 'Europe/Amsterdam')::date;
+begin
+  delete from public.exam_outcomes where month < m - interval '3 years';
+  if not exists (select 1 from public.exam_outcomes where id = o_id)
+     and (select count(*) from public.exam_outcomes where month = m) >= cap then
+    return false;
+  end if;
+  insert into public.exam_outcomes (id, part, ok, pc, rd, month) values (o_id, o_part, o_ok, o_pc, o_rd, m)
+    on conflict (id) do update set part = excluded.part, ok = excluded.ok, pc = excluded.pc, rd = excluded.rd;
+  return true;
+end;
+$$;
+revoke execute on function public.put_outcome(uuid, text, boolean, int, int, int) from public, anon, authenticated;
+grant execute on function public.put_outcome(uuid, text, boolean, int, int, int) to service_role;
