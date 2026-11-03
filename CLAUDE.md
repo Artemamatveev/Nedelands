@@ -35,8 +35,9 @@ generic "AI app" look.
 - **Type**: the system font only (`-apple-system, system-ui`: SF Pro on iPhone), so the
   app reads like a native iPhone app. No web fonts; headings semibold (600–700), never 800.
   No handwriting or decorative fonts.
-- **Shapes**: square or nearly square corners (2–4px), solid 1px separators, flat buttons. The one exception is
-  the floating tab bar: a glass pill, like iOS 26 and Instagram (the user asked for it).
+- **Shapes**: square or nearly square corners (2–4px), solid 1px separators, flat buttons. Two exceptions, both
+  the user's wish: the floating tab bar (a glass pill, like iOS 26 and Instagram) and the login window (`#welcome`, a
+  rounded card like Yandex ID).
 - **Logo**: the name "Bittertalen" in the system font, with a bitterbal (`--oranje`, light crumbs) as the dot on
   the i, the size and place of a normal dot (`h1 .idot`). The app icon is a bitterbal too.
 - **Dutch motifs instead of decoration**:
@@ -150,13 +151,13 @@ through the Marketplace: `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_
 security and `use_checks()` are in `supabase/schema.sql` (run it in the SQL editor). Without those env vars
 `/api/config` returns `{}` and the app behaves as before. The page loads `lib/supabase-2.117.3.js` (the UMD build,
 vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one coming back from Google/Apple.
-- Login: one block for the welcome screen and Profiel (`loginHTML("w"|"a")`, `bindLogin()`), laid out like Yandex ID at
-  the user's wish: the e-mail field, a row of square logo buttons (`PROV`: Google, Apple, Microsoft = Supabase's
+- Login: one login window (`#welcome`, see Welcome screen) with the login block (`loginHTML("w")`, `bindLogin()`),
+  laid out like Yandex ID at the user's wish: the e-mail field, a row of square logo buttons (`PROV`: Google, Apple, Microsoft = Supabase's
   `azure`, Facebook; the brands' own logos), "Volgende" (sends the code) and "Face ID of vingerafdruk" (passkey). A
   provider shows when it is on in Supabase (`/api/config` reads `/auth/v1/settings`), except in an iPhone home-screen
   app (`logins()`: iOS opens their page in a separate Safari window and the login would stay there; untested since,
-  so try it once one is on). The welcome screen needs a first name only for the e-mail code; the providers bring
-  theirs (`syncMeta()`); the e-mail code (`signInWithOtp` + `verifyOtp`, a 6-digit
+  so try it once one is on). No name is asked to log in: the e-mail is enough, the providers bring theirs
+  (`syncMeta()`), and Profiel has the name fields; the e-mail code (`signInWithOtp` + `verifyOtp`, a 6-digit
   code, so an iPhone home-screen app never has to open a link) only with `LOGIN_EMAIL=1`, because Supabase's own mail
   only reaches the project's team (it needs custom SMTP); passkeys (experimental in Supabase) only with
   `LOGIN_PASSKEY=1`, and a passkey is added after logging in another way.
@@ -167,9 +168,12 @@ vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one comin
   (default 20, Amsterdam days, `check_usage`): one task 1, a Schrijven proefexamen 2, Schrijven B1 4, a Spreken proefexamen 6
   (`checkCost()`; the page's `examGate()` uses the same numbers and warns before such a proefexamen). A failed grading
   gives them back. The answer has `left`.
-- Welcome screen (`#welcome`, `drawWelcome()`): the first time the app opens with accounts on and nobody logged in,
-  it asks for first name, last name and e-mail (or the other logins), or "Eerst rondkijken"; answered once per device
-  (`ww-welcome`), also shown once to people who already had progress.
+- Welcome screen = the login window (`#welcome`, `drawWelcome()`): a fixed full screen with the painting of the day
+  behind a rounded white card (the logo, "Inloggen of account maken", the level, the login block, "Eerst rondkijken"
+  or "Terug"); under the card on the painting what an account gives, the privacy link and the painting's name. It opens
+  by itself the first time the app opens with accounts on and nobody logged in (once per device, `ww-welcome`, also
+  shown once to people who already had progress), and from Profiel ("Inloggen of account maken"); after logging in
+  you are back where you were.
 - `/api/account` (DELETE) deletes the user and, by cascade, their rows; the progress on the device stays.
 
 ## Content

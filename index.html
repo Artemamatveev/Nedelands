@@ -58,7 +58,7 @@ main{max-width:720px;margin:0 auto;padding:0 16px 48px;overflow-x:clip}
 /* art/molen-glass.jpg is the painting already blurred and small, so the page needs no live blur */
 body::before{content:"";position:fixed;inset:-24px;z-index:-2;background:url(/art/molen-glass.jpg) 70% 40%/cover}
 body::after{content:"";position:fixed;inset:0;z-index:-1;background:var(--glass)}
-.tile,#play,#stats,#lib,#read,#media,#story,#hist,#talk,#welcome,#move{background:var(--card);border-radius:4px;box-shadow:var(--lift);margin-top:16px;padding:4px 16px 20px}
+.tile,#play,#stats,#lib,#read,#media,#story,#hist,#talk,#move{background:var(--card);border-radius:4px;box-shadow:var(--lift);margin-top:16px;padding:4px 16px 20px}
 button{font:inherit;color:inherit;cursor:pointer}
 a{color:var(--blue)}
 button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid var(--oranje);outline-offset:2px}
@@ -72,7 +72,7 @@ header::after{content:"";position:absolute;inset:0;background:linear-gradient(to
 h1{position:absolute;left:16px;bottom:12px;z-index:1;margin:0;font-size:28px;font-weight:700;letter-spacing:0;line-height:1;color:#fff;pointer-events:none}
 /* Logo: a bitterbal (oranje, with crumbs) as the dot on the i, the size and place of a normal dot */
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-h1 .idot{position:relative} h1 .idot svg{position:absolute;left:50%;top:-.06em;width:.42em;height:.42em;transform:translateX(-50%)}
+h1 .idot,.wlogo .idot{position:relative} h1 .idot svg,.wlogo .idot svg{position:absolute;left:50%;top:-.06em;width:.42em;height:.42em;transform:translateX(-50%)}
 /* stempel op de museumkaart */
 .streak{position:absolute;top:10px;right:14px;z-index:1;width:66px;height:66px;border-radius:50%;background:#FFF7EF;color:#B5470A;border:2px solid #B5470A;box-shadow:inset 0 0 0 3px #FFF7EF,inset 0 0 0 4px #B5470A;
   display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(-9deg);font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;line-height:1.15;text-align:center;pointer-events:none}
@@ -225,6 +225,27 @@ input:focus,textarea:focus{border-color:var(--blue);outline:0}
 input{flex:1;min-width:0;font-size:21px;font-weight:700;padding:9px 12px}
 textarea{display:block;width:100%;font-size:17px;line-height:1.5;padding:12px;margin-bottom:12px;resize:vertical}
 .fld{display:block;margin-bottom:8px}
+/* The login window, like Yandex ID at the user's wish: the one place with round corners besides the tab bar */
+#welcome{position:fixed;inset:0;z-index:30;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:calc(env(safe-area-inset-top) + 20px) 16px calc(env(safe-area-inset-bottom) + 20px);background:#0E1B45 var(--wbg) 50% 40%/cover no-repeat}
+#welcome[hidden]{display:none}
+#welcome::before{content:"";position:fixed;inset:0;background:rgba(8,16,40,.32);z-index:-1}
+.wcard{width:100%;max-width:400px;margin-top:auto;background:var(--card);border-radius:24px;padding:26px 22px 14px;box-shadow:0 14px 44px rgba(0,0,0,.3);text-align:center}
+.wlogo{font-size:30px;font-weight:700;letter-spacing:-.01em;margin:0 0 6px;color:var(--ink)}
+.wcard h2{display:block;text-align:center;font-size:21px;font-weight:600;margin:0 0 18px} .wcard h2::before{display:none}
+.wcard .wlv{font-size:14px;color:var(--soft);margin:0 0 6px}
+.wcard .seg{background:color-mix(in srgb,var(--ink) 8%,var(--card));border:0;border-radius:12px;padding:4px;gap:4px;margin:0 0 14px}
+.wcard .seg button,.wcard .seg button+button{border:0;border-radius:9px;color:var(--soft);font-weight:600;font-size:15px;min-height:40px}
+.wcard .seg button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:0 1px 4px rgba(8,16,40,.18)}
+.wcard .fld{margin-bottom:0} .wcard .fld input{height:54px;border:1.5px solid var(--ink);border-radius:14px;padding:0 16px;font-size:17px;background:var(--card)}
+.wcard .fld input:focus{border-color:var(--blue)}
+.wcard .btn,.wcard .ghost{border-radius:14px;min-height:54px;padding:10px 14px;font-size:17px;margin:0 0 10px}
+.wcard .ghost{border:1px solid var(--line);color:var(--ink);font-weight:600}
+.wcard .login .prov{gap:6px;margin:14px 0} .wcard .login .prov button{border:0;background:none;height:44px;max-width:52px}
+.wcard .prov svg{width:28px;height:28px}
+.wcard .sub,.wcard .note{text-align:left}
+.wcard .fld+.btn{margin-top:14px}
+.wfoot{max-width:400px;margin:16px 0 auto;text-align:center;color:#fff;font-size:15px;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+.wfoot p{margin:0 0 6px} .wfoot a{color:#fff;font-weight:600} .wfoot .wart{font-size:13px;opacity:.85;margin-top:10px}
 .login .prov{display:flex;justify-content:center;gap:10px;margin:6px 0 14px}
 .login .prov button{flex:1;max-width:76px;height:48px;display:flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--line);border-radius:3px;cursor:pointer}
 .login .prov button:active{background:var(--wash)} .login .prov svg{width:24px;height:24px} .login .prov .mono{fill:var(--ink)}
@@ -321,7 +342,7 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
 .miss{font:inherit;color:var(--bad);background:none;border:0;border-bottom:2px solid var(--bad);padding:0;margin:0;cursor:pointer}
 .bar.pass{position:relative} .bar.pass::after{content:"";position:absolute;left:var(--pass,70%);top:0;bottom:0;width:2px;background:var(--ink)}
 #stats .back,#lib .back{margin-top:14px}
-#stats h2,#lib h2,#welcome h2,#move h2{margin-top:18px}
+#stats h2,#lib h2,#move h2{margin-top:18px}
 /* boekenkast */
 .file{display:flex;align-items:center;justify-content:center;text-align:center;cursor:pointer}
 .file:focus-within{outline:3px solid var(--oranje);outline-offset:2px}
@@ -442,12 +463,12 @@ body.vfull{overflow:hidden}
   #label{display:flex;align-items:baseline;gap:40px}
   #label{flex-wrap:wrap} #label .lab{flex:0 0 340px} #label .nl{flex:1;margin:0} #label .it{flex:0 0 100%}
   #home .tile{padding:24px 28px 20px}
-  .tile,#play,#stats,#lib,#read,#media,#story,#hist,#talk,#welcome,#move{padding-left:28px;padding-right:28px}
+  .tile,#play,#stats,#lib,#read,#media,#story,#hist,#talk,#move{padding-left:28px;padding-right:28px}
   #card>.act,#card>.exnav,#card>.fb.sheet{margin-left:-28px;margin-right:-28px;padding-left:28px;padding-right:28px}
   .steps{grid-template-columns:repeat(3,minmax(0,1fr))}
   #exam .list{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));column-gap:40px}
   .duo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:16px;align-items:start}
-  #play,#stats,#lib,#read,#media,#story,#hist,#talk,#welcome,#move{max-width:720px;margin:16px auto 0}
+  #play,#stats,#lib,#read,#media,#story,#hist,#talk,#move{max-width:720px;margin:16px auto 0}
   .book{font-size:20px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}.tabs .lens.go{animation:none}}
@@ -2020,7 +2041,7 @@ async function setUser(u){
   cloud={set:o=>acc.sb.from("progress").upsert({user_id:uid,data:o,t:o.t||0,updated_at:new Date().toISOString()})
     .then(r=>{if(r.error)throw r.error;acc.saved=Date.now();drawProfile()})};
   drawProfile(); await pull().catch(()=>{}); usage(); syncMeta();
-  if(!$("welcome").hidden){lsSet(WEL,"1");acc.msg="";if(OLD==="bittertalen.vercel.app")moveScreen();else{home();setTab("vandaag")}}
+  if(!$("welcome").hidden){lsSet(WEL,"1");acc.msg="";if(OLD==="bittertalen.vercel.app")moveScreen();else home()}
 }
 // The first time a device joins an account both sides are merged; after that the newer one wins (S.t),
 // so something deleted on one device stays deleted
@@ -2077,7 +2098,7 @@ async function mailCode(m,btn){
   const me=S.me||{}; // a new account gets the name at once (user_metadata), so it shows in Supabase
   try{await loadSb();const{error}=await acc.sb.auth.signInWithOtp({email:m,options:{shouldCreateUser:true,data:{first_name:me.name||"",last_name:me.last||""}}});if(error)throw error;acc.mail=m;acc.step="code"}
   catch(e){acc.msg=loginErr(e)}
-  redraw(); const f=$("welcome").hidden?$("acode"):$("wcode"); if(f)f.focus();
+  redraw(); if($("wcode"))$("wcode").focus();
 }
 async function mailVerify(c,btn){
   c=(c||"").replace(/\D/g,""); if(c.length<6){acc.msg="Vul de code uit de e-mail in.";return redraw()}
@@ -2100,7 +2121,7 @@ const setLvl=v=>{if(v===lvl())return;S.lvl=v;exV=null;save()};
 // The logins that work here: an iPhone home-screen app opens Google's and Apple's page in a separate Safari window,
 // and the login would stay there, so it only offers the e-mail code (and passkeys)
 const logins=()=>(acc.cfg&&acc.cfg.login||[]).filter(p=>!(navigator.standalone===true&&PROV[p]));
-// One login block for the welcome screen ("w") and Profiel ("a"): e-mail, a row of the other logins (the ones switched on
+// The login block of the login window (#welcome, prefix "w"): e-mail, a row of the other logins (the ones switched on
 // in Supabase), Volgende (sends the 6-digit code), and Face ID / fingerprint (passkey). The brands' own logos, as their rules ask.
 const PROV={
   google:["Google",'<svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>'],
@@ -2110,17 +2131,17 @@ const PROV={
 const FACEID='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8M20 16v2.5a1.5 1.5 0 0 1-1.5 1.5H16M8 20H5.5A1.5 1.5 0 0 1 4 18.5V16M9 9v1.5M15 9v1.5M12 9v4h-1M9.5 16.2c1.5 1 3.5 1 5 0"/></svg>';
 function loginHTML(x){
   const L=logins(),P=L.filter(p=>PROV[p]);
-  if(acc.step==="code")return`<p class="sub">We hebben een code van 6 cijfers gestuurd naar <b>${esc(acc.mail)}</b>. Kijk ook in je spam.</p>
-    <label class="fld"><span>Code</span><input id="${x}code" inputmode="numeric" autocomplete="one-time-code" maxlength="10"></label>
+  if(acc.step==="code")return`<p class="sub">We hebben een code gestuurd naar <b>${esc(acc.mail)}</b>. Kijk ook in je spam.</p>
+    <label class="fld"><span class="sr-only">Code</span><input id="${x}code" inputmode="numeric" autocomplete="one-time-code" maxlength="10" placeholder="Code van 6 cijfers"></label>
     <button class="btn wide" id="${x}verify">Inloggen</button><button class="ghost wide" id="${x}again">Ander e-mailadres</button>`;
   return`<div class="login">`
-    +(L.includes("email")?`<label class="fld"><span>E-mailadres</span><input id="${x}mail" type="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="naam@voorbeeld.nl"></label>`:"")
+    +(L.includes("email")?`<label class="fld"><span class="sr-only">E-mailadres</span><input id="${x}mail" type="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="E-mailadres"></label>`:"")
     +(P.length?`<div class="prov" role="group" aria-label="Of log in met">${P.map(p=>`<button type="button" data-login="${p}" aria-label="Inloggen met ${PROV[p][0]}" title="${PROV[p][0]}">${PROV[p][1]}</button>`).join("")}</div>`:"")
     +(L.includes("email")?`<button class="btn wide" id="${x}send">Volgende</button>`:"")
     +(L.includes("passkey")?`<button class="ghost wide pk" data-login="passkey" aria-label="Inloggen met Face ID of vingerafdruk">${FACEID}Face ID of vingerafdruk</button>`:"")
     +(L.length?"":`<p class="note">Inloggen is nog niet ingesteld.</p>`)+`</div>`;
 }
-// pre(kind) may stop a login (the welcome screen first keeps the name); mail = what was typed before a redraw
+// pre(kind) may stop a login; mail = what was typed before a redraw
 function bindLogin(el,x,pre,mail){
   const ok=k=>!pre||pre(k),m=$(x+"mail"),s=$(x+"send"),c=$(x+"code");
   if(m&&mail)m.value=mail;
@@ -2131,25 +2152,21 @@ function bindLogin(el,x,pre,mail){
 }
 function welcome(){$("home").hidden=true;$("welcome").hidden=false;window.scrollTo(0,0);drawWelcome()}
 function drawWelcome(){
-  const el=$("welcome"),me=S.me||{};
-  const v=id=>$(id)?$(id).value:null,keep={f:v("wfirst")??me.name??"",l:v("wlast")??me.last??"",m:v("wmail")??acc.mail??""};
-  let h=`<h2>Welkom bij Bittertalen</h2><p class="sub">Maak een account. Dan blijft je voortgang bewaard, ook op je andere apparaten, en kijkt Claude je teksten en antwoorden na.</p>`;
-  if(acc.step!=="code")h+=`<div class="fld"><span>Ik oefen voor</span><div class="seg" id="wlvl" role="group" aria-label="Niveau">${segHTML()}</div></div>
-    <label class="fld"><span>Voornaam</span><input id="wfirst" autocomplete="given-name" maxlength="40"></label>
-    <label class="fld"><span>Achternaam</span><input id="wlast" autocomplete="family-name" maxlength="60"></label>`;
-  h+=loginHTML("w");
-  if(acc.msg)h+=`<p class="note">${esc(acc.msg)}</p>`;
-  el.innerHTML=h+`<button class="ghost wide" id="wlater">Eerst rondkijken</button>
-    <p class="note">Wat we met je e-mailadres en je voortgang doen: <a href="/privacy" target="_blank" rel="noopener">privacyverklaring ↗</a></p>`;
-  if($("wfirst")){$("wfirst").value=keep.f;$("wlast").value=keep.l}
+  // A window like Yandex ID (the user's wish): one rounded card on the painting of the day, the logo, the level,
+  // the login block; under the card on the painting what an account gives, the privacy link and the painting's name.
+  // No name here: the e-mail is enough, Google and the others bring theirs, and Profiel has the fields.
+  const el=$("welcome"),p=ART[today()%ART.length],first=!lsGet(WEL),mail=$("wmail")?$("wmail").value:acc.mail||"";
+  const logo=document.querySelector("header h1 [aria-hidden]");
+  el.style.setProperty("--wbg",`url(/art/${p.f}.jpg)`);
+  el.innerHTML=`<div class="wcard"><p class="wlogo">${logo?logo.outerHTML:"Bittertalen"}</p>
+    <h2>${acc.step==="code"?"Vul de code in":"Inloggen of account maken"}</h2>`
+    +(acc.step==="code"?"":`<p class="wlv" id="wlvt">Ik oefen voor</p><div class="seg" id="wlvl" role="group" aria-labelledby="wlvt">${segHTML()}</div>`)
+    +loginHTML("w")+(acc.msg?`<p class="note">${esc(acc.msg)}</p>`:"")
+    +`<button class="ghost wide" id="wlater">${first?"Eerst rondkijken":"Terug"}</button></div>
+    <div class="wfoot"><p>Met een account blijft je voortgang bewaard, ook op je andere apparaten, en kijkt Claude je teksten en antwoorden na.</p>
+    <p><a href="/privacy" target="_blank" rel="noopener">Privacyverklaring</a></p><p class="wart">${p.a} · ${p.t} · ${p.m}</p></div>`;
   if($("wlvl"))$("wlvl").querySelectorAll("button").forEach(b=>b.onclick=()=>{setLvl(b.dataset.lvl);drawWelcome()});
-  // the name is kept before logging in, so it is there whichever way the login goes; a new account by e-mail needs
-  // a first name, Google, Apple and the others bring their own (syncMeta), a passkey is an account that exists
-  const names=k=>{if(!$("wfirst"))return true;const f=$("wfirst").value.trim().slice(0,40),l=$("wlast").value.trim().slice(0,60);
-    if(f){S.me={...(S.me||{}),name:f,last:l};save();drawProfile()}
-    if(!f&&k==="email"){acc.msg="Vul je voornaam in.";drawWelcome();return false}
-    return true};
-  bindLogin(el,"w",names,keep.m);
+  bindLogin(el,"w",null,mail);
   $("wlater").onclick=()=>{lsSet(WEL,"1");acc.msg="";acc.step=null;home()};
 }
 // The token for /api/check; with accounts on, grading needs a login
@@ -3427,7 +3444,7 @@ function drawProfile(){
   if(document.activeElement!==n)n.value=me.name||""; if(document.activeElement!==l)l.value=me.last||"";
   n.onchange=l.onchange=()=>{S.me={...(S.me||{}),name:n.value.trim().slice(0,40),last:l.value.trim().slice(0,60)};save();syncMeta()};
   $("plvl").innerHTML=segHTML(); $("plvl").querySelectorAll("button").forEach(b=>b.onclick=()=>{setLvl(b.dataset.lvl);home()});
-  const c=acc.cfg,u=acc.user,L=logins(),mail=$("amail")?$("amail").value:"",el=$("acct");
+  const c=acc.cfg,u=acc.user,L=logins(),el=$("acct");
   let h="";
   if(c){
     h=`<h3 class="lh">Account</h3>`;
@@ -3436,11 +3453,12 @@ function drawProfile(){
         ${L.includes("passkey")?`<button class="ghost wide" id="apk">Passkey toevoegen</button>`:""}
         <button class="ghost wide" id="aout">Uitloggen</button>
         <button class="ghost wide" id="adel">Account verwijderen</button>`;
-    }else h+=`<p class="sub">Log in om je voortgang op al je apparaten te hebben en je teksten te laten nakijken.</p>`+loginHTML("a");
+    }else h+=`<p class="sub">Log in om je voortgang op al je apparaten te hebben en je teksten te laten nakijken.</p>`
+      +(L.length?`<button class="btn wide" id="alogin">Inloggen of account maken</button>`:`<p class="note">Inloggen is nog niet ingesteld.</p>`);
     if(acc.msg)h+=`<p class="note">${esc(acc.msg)}</p>`;
   }
   el.innerHTML=h;
-  if(c&&!u)bindLogin(el,"a",null,mail);
+  if($("alogin"))$("alogin").onclick=()=>{acc.msg="";welcome()};
   if($("apk"))$("apk").onclick=async()=>{
     try{const{error}=await acc.sb.auth.registerPasskey();if(error)throw error;acc.msg="Je passkey is gemaakt. Nu kun je ook met Face ID, Touch ID of je vingerafdruk inloggen."}
     catch(e){acc.msg=/NotAllowed|abort|cancel/i.test(String(e&&(e.message||e.name)))?"Gestopt.":"Een passkey maken lukt hier niet."}
