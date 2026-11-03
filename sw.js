@@ -39,10 +39,13 @@ self.addEventListener("fetch", e => {
       .then(res => ranged(r, res)));
     return;
   }
+  // Everything else from the cache. Paintings, photos and the dictionary never change under the same name, so a hit is
+  // not fetched again (on a slow connection that used to fill the line at every start); the rest (manifest, icons,
+  // lib, audio/index.json) is refreshed in the background.
   e.respondWith(caches.open(CACHE).then(c => c.match(r).then(hit => {
-    const net = fetch(r).then(res => { if (res.ok) c.put(r, res.clone()); return res });
-    if (hit) { if (!u.pathname.startsWith("/dict/")) e.waitUntil(net.catch(() => {})); return hit }
-    return net;
+    const net = () => fetch(r).then(res => { if (res.ok) c.put(r, res.clone()); return res });
+    if (hit) { if (!/^\/(dict|art|foto)\//.test(u.pathname)) e.waitUntil(net().catch(() => {})); return hit }
+    return net();
   })));
 });
 // The cached page at once; the network refreshes the cache in the background and, when the page changed, tells the

@@ -175,8 +175,11 @@ people waited for ~300 KB), fetched again in the background; when it changed (an
 `{fresh:true}`, and because a page that is still starting can miss that, the time of the change is also kept at
 `/__changed`, which the page asks after 4 and 15 s and when it comes back (`freshCheck()`); then a glass bar above the
 tab bar says "Er is een nieuwe versie van Bittertalen" with "Vernieuwen" (`showFresh()`). So a push shows on the next
-start, or at once after Vernieuwen. Paintings and
-photos from the cache (the page sends their list after loading), `api/` never cached. Don't change the stored shape without migrating old data.
+start, or at once after Vernieuwen. Paintings, photos and the dictionary from the cache and never fetched again once
+there (on a slow line every start used to fetch them all again); the rest (manifest, icons, lib, audio/index.json)
+cache first and refreshed in the background. The page sends the list of paintings and photos to keep 10 s after the
+start, asks for a new sw.js at every start and return (`r.update()`), and Profiel's last line says how long the start
+took and whether it came from the phone ("Gestart in 0,3 s · uit het geheugen van je telefoon"). `api/` never cached. Don't change the stored shape without migrating old data.
 Saving progress to a file was removed on purpose. On an iPhone in Safari a tile on Vandaag (`drawA2hs()`)
 asks to put the app on the home screen, because Safari can wipe a site's storage after a week without a visit; the
 home-screen app has its own storage, so the progress goes along by the clipboard (Kopieer / Plak mijn voortgang).

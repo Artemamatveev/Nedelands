@@ -558,6 +558,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
       <label class="tog" id="ptrilw" hidden><span>Trillen bij een antwoord</span><input type="checkbox" switch id="ptril"></label>
       <div id="acct"></div>
       <div class="list" id="plinks"></div>
+      <p class="note" id="pstart" style="margin:10px 0 0"></p>
     </section>
     <section class="tile" id="myres" data-tab="profiel"></section>
     <section class="tile" data-tab="herhalen"><h2>Herhalen</h2><div class="list" id="mine"></div></section>
@@ -3560,6 +3561,8 @@ function drawProfile(){
       acc.msg="Je account is verwijderd. Je voortgang op dit apparaat blijft.";setUser(null)}
     catch(e){acc.msg="Verwijderen is niet gelukt. Probeer het later opnieuw.";drawProfile()}};
   if(canBuzz()){$("ptrilw").hidden=false;$("ptril").checked=lsGet("ww-tril")!=="0";$("ptril").onchange=()=>{lsSet("ww-tril",$("ptril").checked?"1":"0");if($("ptril").checked)buzz("good")}}
+  const nt=performance.getEntriesByType&&performance.getEntriesByType("navigation")[0];
+  if(nt&&$("pstart"))$("pstart").textContent=`Gestart in ${(nt.domContentLoadedEventEnd/1000).toFixed(1).replace(".",",")} s${navigator.serviceWorker&&navigator.serviceWorker.controller?" · uit het geheugen van je telefoon":""}`;
   $("plinks").innerHTML=itHTML(`data-x="over"`,"Over Bittertalen","Wie het maakt, waarom, en wat erin zit.",{ic:"over"})
     +itHTML(`data-x="privacy"`,"Privacyverklaring","Welke gegevens Bittertalen gebruikt, waarom en waar ze staan.",{ic:"privacy"});
   $("plinks").querySelectorAll("button").forEach(b=>b.onclick=()=>{location.href="/"+b.dataset.x});
@@ -5239,9 +5242,14 @@ const freshCheck=()=>{if(!navigator.serviceWorker||!navigator.serviceWorker.cont
 setTimeout(freshCheck,4000);setTimeout(freshCheck,15000);
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")setTimeout(freshCheck,3000)});
 // Offline (sw.js): the page, and every painting and photo, stay available without a connection
-if("serviceWorker" in navigator&&window.isSecureContext&&!window.claude)
-  navigator.serviceWorker.register("/sw.js").then(()=>navigator.serviceWorker.ready)
+// The list is sent 10 s after the start, so the first minutes on a slow connection go to the page itself.
+// The worker is asked to look for a new sw.js at every start and return (iPhone otherwise waits long).
+if("serviceWorker" in navigator&&window.isSecureContext&&!window.claude){
+  navigator.serviceWorker.register("/sw.js").then(r=>{r.update().catch(()=>{});
+    document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update().catch(()=>{})});
+    return navigator.serviceWorker.ready}).then(r=>new Promise(ok=>setTimeout(()=>ok(r),10000)))
     .then(r=>{if(r.active)r.active.postMessage({warm:ART.map(p=>"/art/"+p.f+".jpg").concat(Object.keys(FOTO).map(f=>"/foto/"+f+".jpg"),GS.flatMap(c=>(c.p?[c.p]:[]).concat((c.f||[]).map(f=>f[0]))).map(f=>"/"+f))})}).catch(()=>{});
+}
 </script>
 </body>
 </html>
