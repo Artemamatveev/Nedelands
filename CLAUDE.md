@@ -101,7 +101,8 @@ Every section appears once; don't add a second entry point to the same exercise.
   the whole row is the button, title + grey description, a count on the right, `›` at the end.
   On the home screen a row starts with an icon like the Settings app on iPhone (`IC`, `icHTML()`): a filled white
   glyph on a cobalt (`--fill`) square of 34 px with 9 px corners; a path with class `s` is drawn as a line. The next
-  step of today shows its icon in cobalt on a white square (`.sic`). Not thin line icons on pastel squares (they look
+  step of today shows its icon in cobalt on a white square (`.sic`) and a round white play button on the right
+  (`em.go`, "Begin" for screen readers). Hover colours only under `@media (hover:hover)`: on iPhone they stuck after a tap. Not thin line icons on pastel squares (they look
   generated) and not painting details (tried, the user didn't like them). Counts on the right only once something
   was done (no "0 van 225").
   No "Oefenen →" or "Openen →" text links, no cards with their own buttons.
