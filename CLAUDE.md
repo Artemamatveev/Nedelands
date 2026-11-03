@@ -74,8 +74,7 @@ shows on the five tabs; exercises and inner screens hide it and go back with the
 you were on is kept (`tab`), so every back button returns to it and is named after it.
 
 - **Vandaag**: the painting and its label, then today's lesson: how far you are today (a bar of six pills, "2 van 6
-klaar"), one short line, and the steps: each with its icon, the next one the filled cobalt card with ▶, the others
-white rows with ›, a done one a green check; no exam dates. When all are done the streak stamp is put down once that day (`ww-stamp`) with a tap of the
+klaar"), one short line, and the steps: all alike: its icon, title, a short line and ›, a done one a green check; no exam dates. When all are done the streak stamp is put down once that day (`ww-stamp`) with a tap of the
 phone. The lesson: every exam part every day, the one that scores lowest first as a full round (every
 third day a proefexamen), the other four as short rounds (`SHORT`: one Lezen text, three Luisteren fragments,
 one Schrijven task, two Spreken questions, five KNM questions), weakest to strongest, and last a grammar round
@@ -101,9 +100,9 @@ Every section appears once; don't add a second entry point to the same exercise.
   the whole row is the button, title + grey description, a count on the right, `›` at the end.
   On the home screen a row starts with an icon like the Settings app on iPhone (`IC`, `icHTML()`): a filled white
   glyph on a cobalt (`--fill`) square of 34 px with 9 px corners; a path with class `s` is drawn as a line. Every step
-  of today has the same layout (`.sic` icon 36 px, title, line, › or ▶, so the titles line up): the next one is
-  the cobalt card with its icon in cobalt on white and a round white play button (`em.go`, "Begin" for screen
-  readers), a done one a green square with a check. Hover colours only under `@media (hover:hover)`: on iPhone they stuck after a tap. Not thin line icons on pastel squares (they look
+  of today looks the same (`.sic` icon 36 px, title, line, ›, so the titles and chevrons line up), a done one a
+  green square with a check. The next step is no longer singled out (a filled card and a play button were tried; the
+  user found one highlighted row odd): the order and the checks say what is next (`aria-current="step"`). Hover colours only under `@media (hover:hover)`: on iPhone they stuck after a tap. Not thin line icons on pastel squares (they look
   generated) and not painting details (tried, the user didn't like them). Counts on the right only once something
   was done (no "0 van 225").
   No "Oefenen →" or "Openen →" text links, no cards with their own buttons.
