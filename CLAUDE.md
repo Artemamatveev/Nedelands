@@ -35,6 +35,11 @@ generic "AI app" look.
 - **Type**: the system font only (`-apple-system, system-ui`: SF Pro on iPhone), so the
   app reads like a native iPhone app. No web fonts; headings semibold (600–700), never 800.
   No handwriting or decorative fonts.
+- **The login window's look, everywhere** (the user liked its type and colours): headings in `--ink`, semibold (600),
+  no diamond; small labels (`h3.lh`, `.ask`) in `--soft`; cobalt only on the main action (`.btn`, the next step) and
+  in icons; secondary buttons (`.ghost`, `.back`) are neutral: 1px `--line` border, `--ink` text; chevrons › in
+  `--soft`; fields have a 1.5px `--ink` border, 52px high; the level switch (`.seg`) is a grey track with a white
+  thumb, like iOS.
 - **Shapes**: round corners, as in the login window the user liked (it looks livelier): tokens on `:root`, `--r` 20px
   for tiles and inner screens, `--rc` 14px for controls (buttons, fields, options, steps, the level switch, documents,
   photos), `--rs` 10px for small things (icon squares, word tokens, small buttons), 8px for the tiniest (numbers, the
@@ -91,12 +96,12 @@ Every section appears once; don't add a second entry point to the same exercise.
   background, not a picture.
   No "Oefenen →" or "Openen →" text links, no cards with their own buttons.
 - **Filled cobalt `.btn`**: the one main action on a screen (the next step of today,
-  Controleer, Volgende). **Outlined `.ghost`**: secondary actions (Proefexamen, Mix van de dag,
+  Controleer, Volgende). **Outlined `.ghost`** (neutral grey border): secondary actions (Proefexamen, Mix van de dag,
   Wis).
 - **Underlined `.hint`**: only small in-place toggles (Betekenis, Uitspraak).
   Text links `<a>` only for other websites, with ↗.
-- One `h2` (with the tile diamond) per section or screen; groups inside it get `h3.lh`
-  (small capitals, cobalt). Every inner screen starts with a back button named after where it
+- One `h2` per section or screen; groups inside it get `h3.lh`
+  (small capitals, `--soft`). Every inner screen starts with a back button named after where it
   goes: the tab's name (Vandaag, Examen, Oefenen, Herhalen) for the home screen.
 - **Practising is a focus screen** (`#play`): no painting, one row with ✕ (back to where you came from; in a
   proefexamen the first tap or swipe back only asks "Stoppen?" and the page springs back), the progress bar, the count (3/10) and the clock. The main
