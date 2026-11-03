@@ -29,7 +29,7 @@ The design should also teach Dutch culture. Keep it recognisably Dutch and avoid
 generic "AI app" look.
 
 - **Colours**: tin-glaze white `--bg`, cobalt `--blue`, light wash `--wash`, and
-  `--oranje` as the only accent (timer, selection). Filled cobalt surfaces (`.btn`, the icon squares,
+  `--oranje` as the only accent (timer, selection, the bitterbal lens in the tab bar). Filled cobalt surfaces (`.btn`, the icon squares,
   chosen word tokens, photo numbers) use `--fill` with `--on-fill` text: in dark mode that stays a deep
   cobalt with white text (5.3:1), because the light `--blue` read as a highlight rather than the main action.
   Always use the tokens on `:root`; every colour has a dark-mode value.
@@ -76,7 +76,8 @@ generic "AI app" look.
 Five tabs, switched by a floating glass bar at the bottom (`nav.tabs`, `setTab()`; like iOS 26 / Instagram:
 icons with names, the names fold away while you scroll down). The bar is a nearly opaque capsule with a thin line and a deep
 shadow, so it stands out on a white tile too (the clear glass one vanished on light screens). The current tab sits
-under a lens (`.tabs .lens`), filled cobalt with the tab in white, that slides to the new tab with a little spring and stretch, and can be dragged along the bar
+under a lens (`.tabs .lens`), a bitterbal (an orange gradient, lighter top left, the same in dark mode) with the
+tab in white, that slides to the new tab with a little spring and stretch, and can be dragged along the bar
 with a finger (it grows and clears while held; where you let go is the tab that opens). The bar only
 shows on the five tabs; exercises and inner screens hide it and go back with their back button or a swipe. The tab
 you were on is kept (`tab`), so every back button returns to it and is named after it.
