@@ -210,7 +210,9 @@ vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one comin
 - Login: one login window (`#welcome`, see Welcome screen) with the login block (`loginHTML("w")`, `bindLogin()`),
   laid out like Yandex ID at the user's wish: the e-mail field, a row of square logo buttons (`PROV`: Google, Apple, Microsoft = Supabase's
   `azure`, Facebook; the brands' own logos), "Volgende" (sends the code) and "Face ID of vingerafdruk" (passkey). A
-  provider shows when it is on in Supabase (`/api/config` reads `/auth/v1/settings`), except in an iPhone home-screen
+  provider shows when it is on in Supabase (`/api/config` reads `/auth/v1/settings`; Google is on since November 2026:
+  the OAuth client "Bittertalen" in the user's Google Cloud project, consent screen published without a logo so it
+  needs no verification; Supabase's Site URL and Redirect URLs are https://bittertalen.nl), except in an iPhone home-screen
   app (`logins()`: iOS opens their page in a separate Safari window and the login would stay there; untested since,
   so try it once one is on). No name is asked to log in: the e-mail is enough, the providers bring theirs
   (`syncMeta()`), and Profiel has the name fields; the e-mail code (`signInWithOtp` + `verifyOtp`, a 6-digit
