@@ -80,8 +80,10 @@ third day a proefexamen), the other four as short rounds (`SHORT`: one Lezen tex
 one Schrijven task, two Spreken questions, five KNM questions), weakest to strongest, and last a grammar round
 that helps the weakest part. Then Mix van de dag.
 - **Examen**: "Naar het examen": one row per exam part (`.rd`, from `ready()`), the whole row starts that part's
-proefexamen: the name with its time under it, a bar with the pass line (`passOf()`: Lezen and Luisteren 19 of 25, KNM 28 of 40, the rest 70%), "76% goed" and ›; once there is a proefexamen
-a line under it says the status and the last results. The number is the share of right answers (the last
+proefexamen: its icon, the name with its minutes under it, the score on the right ("76%", in ink, no "goed"; "–"
+without one) and ›; under it the bar with the pass line (`passOf()`: Lezen and Luisteren 19 of 25, KNM 28 of 40, the
+rest 70%) and one status line with a dot (green Klaar voor het examen, oranje Bijna klaar, grey Nog niet klaar, or
+"Bij het oefenen · nog geen proefexamen"). The number is the share of right answers (the last
 proefexamen, else practice), never a chance of passing; the intro says so. Under the rows one row to DUO's 15
 official oefenexamens ↗. Practising a part is on Oefenen.
 - **Oefenen**: "Examenonderdelen" (Lezen, Luisteren, Schrijven, Spreken, KNM: practice without the clock) and
