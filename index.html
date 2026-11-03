@@ -520,6 +520,11 @@ body.vfull{overflow:hidden}
   padding:10px 10px 10px 16px;border-radius:var(--rc);background:color-mix(in srgb,var(--card) 82%,transparent);backdrop-filter:blur(18px) saturate(1.6);-webkit-backdrop-filter:blur(18px) saturate(1.6);
   box-shadow:var(--lift);border:1px solid var(--line);font-size:var(--fs-m);animation:sheet .26s cubic-bezier(.2,.8,.2,1)}
 #fresh span{flex:1} #fresh .btn{min-height:40px;padding:8px 14px;font-size:var(--fs-m)}
+/* NL / EN for the menus: a small glass pill top right on the painting, left of the streak ribbon (and on the login card) */
+.lang{position:absolute;top:10px;right:14px;z-index:3;min-width:44px;height:30px;padding:0 10px;border-radius:999px;border:1px solid rgba(255,255,255,.4);
+  background:rgba(255,255,255,.2);backdrop-filter:blur(12px) saturate(1.5);-webkit-backdrop-filter:blur(12px) saturate(1.5);color:#fff;font-size:var(--fs-s);font-weight:700;letter-spacing:.04em}
+header:has(.streak:not(:empty)) .lang{right:74px}
+.wcard{position:relative} .wcard .lang{top:14px;right:14px;border-color:var(--line);background:var(--surface);color:var(--ink);backdrop-filter:none;-webkit-backdrop-filter:none}
 /* Profiel: the trillen switch */
 .tog{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;margin:0 0 6px;font-size:var(--fs-b)}
 .tog input{flex:none;appearance:none;-webkit-appearance:none;width:51px;height:31px;margin:0;padding:0;border:0;border-radius:999px;background:var(--line);position:relative;cursor:pointer;transition:background-color .2s}
@@ -540,6 +545,7 @@ h2,h3,.verb,.step b,.it b{text-wrap:balance} p,.d,.sub,.note{text-wrap:pretty}
 KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript aan om te oefenen.</p></noscript>
 <main>
   <header>
+    <button type="button" class="lang" data-lang aria-label="English">EN</button>
     <button class="art" id="artbtn" aria-label="Bekijk het hele schilderij"><img id="artimg" alt=""></button>
     <h1><span class="sr-only">Bittertalen</span><span aria-hidden="true">B<span class="idot">ı<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="var(--oranje)"/><g fill="#fff" fill-opacity=".45"><circle cx="34" cy="36" r="6"/><circle cx="57" cy="29" r="5"/><circle cx="68" cy="50" r="6"/><circle cx="44" cy="56" r="5.2"/><circle cx="28" cy="63" r="4.6"/><circle cx="58" cy="71" r="5.6"/></g></svg></span>ttertalen</span></h1><span class="streak" id="streak"></span></header>
   <div id="home">
@@ -2221,7 +2227,7 @@ function drawWelcome(){
   const el=$("welcome"),p=ART[today()%ART.length],first=!lsGet(WEL),mail=$("wmail")?$("wmail").value:acc.mail||"";
   const logo=document.querySelector("header h1 [aria-hidden]");
   el.style.setProperty("--wbg",`url(/art/${p.f}.jpg)`);
-  el.innerHTML=`<div class="wcard"><p class="wlogo">${logo?logo.outerHTML:"Bittertalen"}</p>
+  el.innerHTML=`<div class="wcard">${langHTML()}<p class="wlogo">${logo?logo.outerHTML:"Bittertalen"}</p>
     <h2>${acc.step==="code"?"Vul de code in":"Inloggen of account maken"}</h2>`
     +(acc.step==="code"?"":`<p class="wlv" id="wlvt">Ik oefen voor</p><div class="seg" id="wlvl" role="group" aria-labelledby="wlvt">${segHTML()}</div>`)
     +loginHTML("w")+(acc.msg?`<p class="note">${esc(acc.msg)}</p>`:"")
@@ -5230,6 +5236,104 @@ async function arrive(){
 }
 const OLD=location.hostname, ready$=restore();
 if(OLD==="nedelands.vercel.app")location.replace(NEWURL); else if(OLD==="bittertalen.vercel.app")moveScreen(); else home();
+// English for the menus and navigation, for beginners (the NL/EN switch in the header and on the login window).
+// Exercises, texts, stories and questions stay Dutch: only text nodes and labels that match a menu string are
+// translated, never inside #play (the exercises) or #read (the book reader). A text node keeps its Dutch original
+// (UIO), so switching back restores it; a MutationObserver translates what later renders draw.
+const UI={
+"Vandaag":"Today","Examen":"Exam","Oefenen":"Practise","Herhalen":"Review","Profiel":"Profile","Onderdelen":"Sections",
+"Je les van vandaag":"Today's lesson","Van elk onderdeel een beetje.":"A little of every part.","Alles is klaar. Tot morgen!":"All done. See you tomorrow!",
+"Meer tijd? Mix van de dag":"More time? Mix of the day",
+"Lezen":"Reading","Luisteren":"Listening","Schrijven":"Writing","Spreken":"Speaking","KNM":"KNM (Dutch society)",
+"Lezen B1":"Reading B1","Luisteren B1":"Listening B1","Schrijven B1":"Writing B1","Spreken B1":"Speaking B1",
+"Woordenschat":"Vocabulary","Woordenschat B1":"Vocabulary B1","Grammatica B1":"Grammar B1","Woordvolgorde B1":"Word order B1",
+"Korte teksten met vragen":"Short texts with questions","Drie fragmenten":"Three fragments","Eén opdracht in 10 minuten":"One task in 10 minutes",
+"Twee vragen: spreek je antwoord in":"Two questions: speak your answer","Vijf vragen":"Five questions","Eén tekst met vragen":"One text with questions",
+"Ruim 1000 woorden in 23 thema's":"Over 1000 words in 23 themes","Eén lange tekst met zes vragen":"One long text with six questions","Eén fragment met vragen":"One fragment with questions",
+"10 vragen uit alles":"10 questions from everything","Mix van de dag":"Mix of the day",
+"Naar het examen":"To the exam","Inburgering A2":"Integration A2","Staatsexamen B1":"State exam B1","Niveau":"Level",
+"Proefexamens met tijd, zoals bij DUO. Het percentage is hoeveel je goed had, het streepje wat je nodig hebt om te slagen.":"Timed practice exams, like at DUO. The percentage is how much you got right, the line what you need to pass.",
+"Proefexamens met tijd, zoals het Staatsexamen. Het percentage is hoeveel je goed had, het streepje ongeveer wat je nodig hebt.":"Timed practice exams, like the State exam. The percentage is how much you got right, the line about what you need.",
+"goed":"right","Klaar voor het examen":"Ready for the exam","Bijna klaar":"Almost ready","Nog niet klaar":"Not ready yet",
+"Bij het oefenen":"While practising","Nog niet geoefend":"Not practised yet","je kende de meeste vragen al":"you knew most questions already",
+"Oefenexamens van DUO ↗":"DUO's practice exams ↗","De echte, met echte stemmen. Liefst op een computer.":"The real ones, with real voices. Best on a computer.",
+"Oefenexamens Staatsexamen NT2 ↗":"State exam NT2 practice exams ↗","Officieel, voor programma I. Liefst op een computer.":"Official, for programme I. Best on a computer.",
+"Examenonderdelen":"Exam parts","Zonder tijd, met uitleg bij elk antwoord.":"No clock, with an explanation for every answer.",
+"Berichten en gesprekken":"Messages and conversations","Berichten, e-mails en een formulier":"Messages, e-mails and a form","Vragen en foto's, hardop":"Questions and photos, out loud",
+"De 8 thema's van het examen":"The 8 themes of the exam","Lange teksten, zes vragen per tekst":"Long texts, six questions each","Radio, gesprekken en uitleg":"Radio, conversations and talks",
+"Zinnen, een formulier en e-mails":"Sentences, a form and e-mails","Korte en middellange opdrachten":"Short and medium tasks",
+"Grammatica en woorden":"Grammar and words","Rondes van 10 vragen.":"Rounds of 10 questions.","Herhalen op A2-niveau":"Review at A2 level",
+"Werkwoordsvormen":"Verb forms","Imperfectum en perfectum":"Past simple and present perfect","Woordvolgorde":"Word order","Maak een zin van de woorden":"Make a sentence from the words",
+"Tegenwoordige tijd":"Present tense","Vervoeging, modale en scheidbare werkwoorden":"Conjugation, modal and separable verbs","De, het en uitgangen":"De, het and endings",
+"Lidwoorden, meervoud, niet en geen":"Articles, plurals, niet and geen","Die en dat, zou, het passief, er, voegwoorden":"Die and dat, zou, the passive, er, conjunctions",
+"Lange zinnen met bijzinnen":"Long sentences with subordinate clauses","Werk, geld, gezondheid, wonen":"Work, money, health, housing",
+"Lezen, luisteren en spreken":"Reading, listening and speaking","Boekenkast":"Bookshelf","Verhalen en je eigen e-books.":"Stories and your own e-books.",
+"Geschiedenis van Nederland":"History of the Netherlands","Van de hunebedden tot nu.":"From the hunebeds to now.","Luisteren en kijken":"Listen and watch",
+"Nieuws, video's en podcasts.":"News, videos and podcasts.","Gesprekken":"Conversations","Bel de dokter, koop brood, praat met de buren.":"Call the doctor, buy bread, talk to the neighbours.",
+"Mijn zwakke punten":"My weak points","Oefen waar je de meeste fouten maakt.":"Practise where you make the most mistakes.","Mijn fouten":"My mistakes",
+"Uit je eigen teksten en antwoorden.":"From your own texts and answers.","Mijn woorden":"My words","Die je bij het lezen hebt bewaard.":"The ones you saved while reading.",
+"Voornaam":"First name","Achternaam":"Last name","Ik oefen voor":"I practise for","Trillen bij een antwoord":"Vibrate on an answer","Account":"Account",
+"Bewaar je voortgang en laat je teksten nakijken.":"Keep your progress and get your texts checked.","Inloggen of account maken":"Log in or create an account",
+"Uitloggen":"Log out","Account verwijderen":"Delete account","Passkey toevoegen":"Add a passkey","Ingelogd als":"Logged in as",
+"Over Bittertalen":"About Bittertalen","Wie het maakt, waarom, en wat erin zit.":"Who makes it, why, and what is in it.","Privacyverklaring":"Privacy statement",
+"Welke gegevens Bittertalen gebruikt, waarom en waar ze staan.":"What data Bittertalen uses, why and where it is kept.",
+"Mijn resultaten":"My results","Nog geen proefexamens.":"No practice exams yet.","Geoefend":"Practised","Dagen op rij":"Days in a row","Vragen geoefend":"Questions practised",
+"Bewaarde woorden":"Saved words","Gesprekken gevoerd":"Conversations held","uit het geheugen van je telefoon":"from your phone's memory",
+"De onderdelen met de meeste fouten staan bovenaan.":"The parts with the most mistakes are at the top.",
+"Nog te weinig antwoorden. Maak eerst een paar rondes; daarna zie je hier je zwakke punten.":"Not enough answers yet. Do a few rounds first; then your weak points show here.",
+"Tik op een woord voor de betekenis.":"Tap a word for its meaning.","Boek toevoegen":"Add a book","Bestand kiezen":"Choose a file","Tekst plakken":"Paste text",
+"Een e-book (.epub, zonder kopieerbeveiliging), een tekstbestand (.txt) of een tekst die je plakt. Het boek blijft op dit apparaat.":"An e-book (.epub, without copy protection), a text file (.txt) or text you paste. The book stays on this device.",
+"Nog geen woorden. Tik bij het lezen op een woord en dan op Bewaar.":"No words yet. While reading, tap a word and then Bewaar (save).",
+"Echt Nederlands. Je hoeft niet alles te begrijpen.":"Real Dutch. You don't need to understand everything.","Video's":"Videos","Podcasts":"Podcasts",
+"Makkelijk":"Easy","Gemiddeld":"Medium","Moeilijk":"Hard","Herhaal de vragen van alle hoofdstukken":"Review the questions of all chapters",
+"E-mailadres":"E-mail address","Volgende":"Next","Terug":"Back","Eerst rondkijken":"Look around first","Face ID of vingerafdruk":"Face ID or fingerprint",
+"Vul de code in":"Enter the code","Inloggen":"Log in","Ander e-mailadres":"Another e-mail address","Code van 6 cijfers":"6-digit code",
+"Met een account blijft je voortgang bewaard, ook op je andere apparaten, en kijkt Claude je teksten en antwoorden na.":"With an account your progress is kept, also on your other devices, and Claude checks your texts and answers.",
+"Er is een nieuwe versie van Bittertalen.":"There is a new version of Bittertalen.","Vernieuwen":"Refresh",
+"Zet Bittertalen op je beginscherm":"Put Bittertalen on your home screen","Al geoefend in Safari?":"Already practised in Safari?",
+"Kopieer mijn voortgang":"Copy my progress","Plak mijn voortgang":"Paste my progress","Begrepen":"Got it","Nee, ik begin nieuw":"No, I'm starting fresh",
+"Toch beginnen":"Start anyway","Verhaal op A2-niveau":"Story at A2 level","Verhaal op B1-niveau":"Story at B1 level","nog niet gelezen":"not read yet",
+"Klaar":"Done","dagen op rij":"days in a row","dag op rij":"day in a row","Het verhaal van dit schilderij":"The story of this painting",
+"Bekijk het hele schilderij":"See the whole painting"};
+const MON={januari:"January",februari:"February",maart:"March",april:"April",mei:"May",juni:"June",juli:"July",augustus:"August",september:"September",oktober:"October",november:"November",december:"December"};
+const DAYS={maandag:"Monday",dinsdag:"Tuesday",woensdag:"Wednesday",donderdag:"Thursday",vrijdag:"Friday",zaterdag:"Saturday",zondag:"Sunday"};
+const UIR=[
+ [/^(\d+) van (\d+) klaar$/,"$1 of $2 done"],[/^(\d+) van (\d+)$/,"$1 of $2"],[/^nodig: (\d+)%$/,"needed: $1%"],[/^(\d+) min$/,"$1 min"],
+ [/^Gestart in ([\d,]+) s$/,(m,a)=>`Started in ${a.replace(",",".")} s`],
+ [/^(maandag|dinsdag|woensdag|donderdag|vrijdag|zaterdag|zondag) (\d+) (\w+)$/i,(m,d,n,mo)=>`${DAYS[d.toLowerCase()]} ${n} ${MON[mo.toLowerCase()]||mo}`],
+ [/^Proefexamen (\d+) (\w+)$/,(m,n,mo)=>`Practice exam ${n} ${MON[mo]||mo}`],
+ [/^Nakijken vandaag: nog (\d+) van de (\d+)$/,"Checks left today: $1 of $2"],
+ [/^Je les van vandaag is voor (.+) \(kies in Profiel\)\.$/,(m,l)=>`Today's lesson is for ${UI[l]||l} (choose in Profile).`],
+ [/^Zonder account kijkt Claude (\d+) keer per dag gratis na\. Met een account (\d+) keer per dag \(Profiel\)\.$/,"Without an account Claude checks $1 times a day for free. With an account $2 times a day (Profile)."],
+ [/^Van de hunebedden tot nu, in (\d+) korte hoofdstukken\. Goed voor KNM\.$/,"From the hunebeds to now, in $1 short chapters. Good for KNM."],
+ [/^Nog (\d+) keer gratis nakijken vandaag\. Met een account (\d+) keer per dag \(Profiel\)\.$/,"$1 free checks left today. With an account $2 a day (Profile)."]];
+let EN=lsGet("ww-ui")==="en";
+const UIO=new WeakMap(), UIA=new WeakMap();
+const trS=s=>{const t=s.trim();if(!t)return null;if(UI[t])return s.replace(t,UI[t]);
+  for(const[r,f]of UIR){if(r.test(t))return s.replace(t,t.replace(r,f))}
+  if(t.includes(" · ")){const p=t.split(" · "),q=p.map(x=>UI[x]||UIR.reduce((a,[r,f])=>a!==x?a:x.replace(r,f),x));if(q.some((x,i)=>x!==p[i]))return s.replace(t,q.join(" · "))}
+  return null};
+const uiSkip=el=>!el||el.closest("#play,#read,script,style,.doc,.sample,.msum");
+function trNode(root){
+  if(root.nodeType===3){const el=root.parentElement;if(uiSkip(el))return;const o=UIO.get(root)??root.nodeValue,v=EN?trS(o):null;
+    if(v!=null){if(!UIO.has(root))UIO.set(root,o);if(root.nodeValue!==v)root.nodeValue=v}else if(!EN&&UIO.has(root)){root.nodeValue=UIO.get(root);UIO.delete(root)}return}
+  if(root.nodeType!==1||uiSkip(root))return;
+  [root,...root.querySelectorAll("[aria-label],[placeholder]")].forEach(e=>{if(!e.getAttribute||uiSkip(e))return;["aria-label","placeholder"].forEach(a=>{
+    const cur=e.getAttribute(a);if(cur==null)return;const m=UIA.get(e)||{};const o=m[a]??cur,v=EN?trS(o):null;
+    if(v!=null){m[a]=o;UIA.set(e,m);if(cur!==v)e.setAttribute(a,v)}else if(!EN&&m[a]!=null){e.setAttribute(a,m[a]);delete m[a]}})});
+  const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;while(n=w.nextNode())trNode(n);
+}
+let uiBusy=false;
+new MutationObserver(ms=>{if(!EN||uiBusy)return;uiBusy=true;
+  try{ms.forEach(m=>{if(m.type==="characterData")trNode(m.target);else m.addedNodes.forEach(trNode)})}finally{uiBusy=false}})
+  .observe(document.body,{childList:true,subtree:true,characterData:true});
+const langHTML=()=>`<button type="button" class="lang" data-lang aria-label="${EN?"Nederlands":"English"}">${EN?"NL":"EN"}</button>`;
+function setLangBtns(){document.querySelectorAll("[data-lang]").forEach(b=>{b.textContent=EN?"NL":"EN";b.setAttribute("aria-label",EN?"Nederlands":"English")})}
+function toggleLang(){EN=!EN;lsSet("ww-ui",EN?"en":null);uiBusy=true;try{trNode(document.body)}finally{uiBusy=false}setLangBtns();
+  document.documentElement.classList.toggle("en",EN)}
+document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("[data-lang]"))toggleLang()});
+if(EN){uiBusy=true;try{trNode(document.body)}finally{uiBusy=false}document.documentElement.classList.add("en")}
+setLangBtns();
 ready$.then(()=>location.hash.startsWith("#verhuis=")?arrive():0).then(initCloud).finally(()=>{window.__up=1});
 // A newer version was fetched in the background: offer it (a reload takes it from the cache, so it is quick)
 function showFresh(){if($("fresh"))return;const d=document.createElement("div");d.id="fresh";d.setAttribute("role","status");

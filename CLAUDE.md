@@ -16,7 +16,12 @@ Delfts blauw; controller Artem Matveev, contact privacy@bittertalen.nl. Linked f
 screen. Keep it true: when data goes somewhere new (a new service, a new field in the account, analytics), update it
 and its date. `sw.js` caches other pages under their own address, never as "/".
 The app's UI language is Dutch; the user talks to Claude in Russian. There is no Russian anywhere in the app: a word's meaning is
-a short Dutch description (A2), or English from the dictionary.
+a short Dutch description (A2), or English from the dictionary. For beginners the menus and navigation can switch to
+English (the NL/EN pill top right on the painting, left of the streak ribbon, and on the login card; `ww-ui` per
+device): `UI` (exact Dutch string → English) and `UIR` (patterns: "2 van 6 klaar", dates, "nodig: 76%"…) translate text
+nodes, `aria-label` and `placeholder` after every render (a MutationObserver; the Dutch original is kept in `UIO`, so
+switching back restores it). Never inside `#play` (exercises) or `#read` (the reader), and not content: texts, stories,
+chapter titles, museum labels and questions stay Dutch. A new menu string needs its English in `UI`.
 
 ## Design: Delfts blauw
 
