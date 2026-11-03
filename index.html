@@ -2250,7 +2250,7 @@ async function authHead(){
   return{Authorization:"Bearer "+t};
 }
 // Why Claude can't grade now, or null
-const noCheck=c=>c==="login"?(acc.free===0?`Je gratis nakijkbeurten van vandaag zijn op. Log in bij Profiel: dan kijkt Claude ${acc.cfg?acc.cfg.limit:20} keer per dag na.`:"Log in bij Profiel om dit door Claude te laten nakijken."):c==="limit"?`Je hebt vandaag al ${acc.cfg?acc.cfg.limit+" keer":"vaak"} laten nakijken. Morgen kan het weer.`:null;
+const noCheck=c=>c==="login"?(acc.free===0?`Je gratis nakijkbeurten van vandaag zijn op. Log in bij Profiel: dan kijkt Claude ${acc.cfg?acc.cfg.limit:20} keer per dag na.`:"Log in bij Profiel om dit door Claude te laten nakijken."):c==="limit"?`Je hebt vandaag al ${acc.cfg?acc.cfg.limit+" keer":"vaak"} laten nakijken. Morgen kan het weer.`:c==="busy"?"Claude heeft vandaag al heel veel teksten nagekeken. Morgen kan het weer.":null;
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const answer=(v,t)=>t==="past"?v[2]:t==="pastpl"?v[3]:t==="pp"?v[4]:v[5];
 

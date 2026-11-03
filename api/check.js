@@ -13,7 +13,7 @@
 // With accounts set up (Supabase, see _supa.js) only a signed-in user may grade, CHECK_LIMIT checks a day;
 // the answer then also has `left`, the checks left today.
 import Anthropic from "@anthropic-ai/sdk";
-import { accounts, caller, checkCost, useChecks, LIMIT, sameOrigin, FREE, visitor, useFree } from "./_supa.js";
+import { accounts, caller, checkCost, useChecks, LIMIT, sameOrigin, FREE, visitor, useFree, useTotal } from "./_supa.js";
 
 // Created only when the key is set, so a missing key gives a clear error instead of a crash
 // (trimmed: a key pasted into the dashboard with a trailing newline breaks the request header)
@@ -154,6 +154,8 @@ export default async function handler(req, res) {
   if (!sameOrigin(req)) return res.status(403).json({ error: "forbidden" });
   if (!client) return res.status(503).json({ error: "not_configured" });
 
+  // A real request is at most ~80 KB (16 answers or 12 texts, each cut below); refuse anything far bigger
+  if (Number(req.headers["content-length"]) > 200000) return res.status(413).json({ error: "too_large" });
   const sb = req.body?.part === "sb", sp = req.body?.part === "sp" || sb, wb = req.body?.part === "wb";
   const input = Array.isArray(req.body?.tasks) ? req.body.tasks.slice(0, sp ? 16 : wb ? 12 : 4) : [];
   if (!input.length) return res.status(400).json({ error: "no_tasks" });
@@ -178,7 +180,11 @@ export default async function handler(req, res) {
       if (left < 0) return res.status(429).json({ error: "limit", limit: LIMIT });
     }
   }
-  const giveBack = () => (uid ? useChecks(uid, -cost).catch(() => {}) : who ? useFree(who, -cost).catch(() => {}) : null);
+  const mine = () => (uid ? useChecks(uid, -cost).catch(() => {}) : who ? useFree(who, -cost).catch(() => {}) : null);
+  // Everyone's checks of today together: when the day is full, give this one back and ask to come back tomorrow
+  const total = accounts ? await useTotal(cost) : null;
+  if (total != null && total < 0) { await mine(); return res.status(429).json({ error: "busy" }); }
+  const giveBack = () => Promise.all([mine(), total != null ? useTotal(-cost) : null]);
   const tasks = input.map((t) => ({
     kind: wb ? (SCORES_WB[t?.kind] ? t.kind : "m") : sb ? (SCORES_SB[t?.kind] ? t.kind : "m") : "",
     task: str(t?.task, wb ? 2000 : 1200), form: sp ? "" : str(t?.form, 1500), text: str(t?.text, 2500),

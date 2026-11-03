@@ -236,6 +236,15 @@ vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one comin
   by itself the first time the app opens with accounts on and nobody logged in (once per device, `ww-welcome`, also
   shown once to people who already had progress), and from Profiel ("Inloggen of account maken"); after logging in
   you are back where you were.
+- A ceiling for everyone: all Claude checks of a day together, logged-in and free, stop at `CHECK_CAP` (default 400,
+  `use_total()` and `check_total` in `supabase/schema.sql`), so many new accounts can't run up the bill; then the
+  server answers 429 `busy` and the page says "Morgen kan het weer". Without that function in the database nothing is
+  counted, as before. `/api/check` also refuses bodies over 200 KB (413).
+- Security headers for every address in `vercel.json`: a Content-Security-Policy (scripts and styles only from the site
+  itself plus inline, connections only to the site and `*.supabase.co`, frames only `youtube-nocookie.com`, media also
+  any https podcast, no framing of the site), `X-Frame-Options`, `nosniff`, `Referrer-Policy`, `Permissions-Policy`
+  (microphone only for the site, no camera or location) and COOP. A new outside service (a script, an API, an embed)
+  needs its host in the CSP, or the browser blocks it.
 - `/api/account` (DELETE) deletes the user and, by cascade, their rows; the progress on the device stays.
 
 ## Content

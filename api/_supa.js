@@ -56,6 +56,20 @@ export async function useFree(who, cost) {
   return Number(await r.json());
 }
 
+// All checks of a day together, logged-in and free (default 400, CHECK_CAP): a ceiling on what Claude can cost in a
+// day, even if someone makes many accounts. Takes `cost` (negative gives back); what is left, -1 when the day is full;
+// null when use_total is not in the database yet (then nothing is counted, as before).
+const CAP = Math.max(1, parseInt(process.env.CHECK_CAP, 10) || 400);
+export async function useTotal(cost) {
+  const r = await fetch(`${URL_}/rest/v1/rpc/use_total`, {
+    method: "POST",
+    headers: { apikey: SERVICE, authorization: `Bearer ${SERVICE}`, "content-type": "application/json" },
+    body: JSON.stringify({ cost, cap: CAP }),
+  }).catch(() => null);
+  if (!r || !r.ok) return null;
+  return Number(await r.json());
+}
+
 // Deletes the user; their progress and usage rows go with them (on delete cascade)
 export async function deleteUser(uid) {
   const r = await fetch(`${URL_}/auth/v1/admin/users/${encodeURIComponent(uid)}`, {

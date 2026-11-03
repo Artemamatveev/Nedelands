@@ -98,3 +98,37 @@ end;
 $$;
 revoke execute on function public.use_free_checks(text, int, int, int) from public, anon, authenticated;
 grant execute on function public.use_free_checks(text, int, int, int) to service_role;
+
+-- All Claude checks of a day together (logged-in and free), so a crowd of new accounts can't run up the bill:
+-- CHECK_CAP a day (default 400). One row per day; old rows are deleted. Only the server uses it.
+create table if not exists public.check_total (
+  day date primary key,
+  n int not null default 0
+);
+alter table public.check_total enable row level security; -- no policies: nobody but the service role
+
+-- Takes `cost` checks from today's total; returns what is left, -1 when the day's cap is reached (nothing is taken
+-- then). A negative cost gives them back, after a failed grading.
+create or replace function public.use_total(cost int, cap int)
+returns int
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  d date := (now() at time zone 'Europe/Amsterdam')::date;
+  used int;
+begin
+  delete from public.check_total where day < d - 1;
+  insert into public.check_total (day, n) values (d, 0) on conflict do nothing;
+  if cost < 0 then
+    update public.check_total set n = greatest(0, n + cost) where day = d returning n into used;
+    return cap - used;
+  end if;
+  update public.check_total set n = n + cost where day = d and n + cost <= cap returning n into used;
+  if not found then return -1; end if;
+  return cap - used;
+end;
+$$;
+revoke execute on function public.use_total(int, int) from public, anon, authenticated;
+grant execute on function public.use_total(int, int) to service_role;
