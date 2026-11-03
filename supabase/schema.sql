@@ -55,3 +55,46 @@ end;
 $$;
 revoke execute on function public.use_checks(uuid, int, int) from public, anon, authenticated;
 grant execute on function public.use_checks(uuid, int, int) to service_role;
+
+-- Free checks without an account: a few a day per visitor and a cap for everyone together, so people can try Claude's
+-- grading before they make an account. "who" is a hash of the visitor's IP address with a secret (never the address
+-- itself), '*' is everyone together. Rows older than yesterday are deleted on every call. Only the server uses it.
+create table if not exists public.free_checks (
+  who text not null,
+  day date not null,
+  n int not null default 0,
+  primary key (who, day)
+);
+alter table public.free_checks enable row level security; -- no policies: nobody but the service role
+
+-- Takes `cost` free checks; returns how many this visitor has left today, -1 when the visitor's are used up, -2 when
+-- everyone's are (nothing is taken then). A negative cost gives them back, after a failed grading.
+create or replace function public.use_free_checks(who text, cost int, lim int, cap int)
+returns int
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  d date := (now() at time zone 'Europe/Amsterdam')::date;
+  used int;
+  total int;
+begin
+  delete from public.free_checks where day < d - 1;
+  insert into public.free_checks (who, day, n) values (use_free_checks.who, d, 0), ('*', d, 0) on conflict do nothing;
+  if cost < 0 then
+    update public.free_checks f set n = greatest(0, f.n + cost) where f.day = d and f.who in (use_free_checks.who, '*');
+    select f.n into used from public.free_checks f where f.who = use_free_checks.who and f.day = d;
+    return lim - used;
+  end if;
+  select f.n into total from public.free_checks f where f.who = '*' and f.day = d for update;
+  if total + cost > cap then return -2; end if;
+  update public.free_checks f set n = f.n + cost
+    where f.who = use_free_checks.who and f.day = d and f.n + cost <= lim returning f.n into used;
+  if not found then return -1; end if;
+  update public.free_checks f set n = f.n + cost where f.who = '*' and f.day = d;
+  return lim - used;
+end;
+$$;
+revoke execute on function public.use_free_checks(text, int, int, int) from public, anon, authenticated;
+grant execute on function public.use_free_checks(text, int, int, int) to service_role;

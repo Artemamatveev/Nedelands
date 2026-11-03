@@ -333,6 +333,20 @@ main:has(#play:not([hidden])) header{display:none}
 .errs li{padding:8px 0;border-bottom:1px solid var(--line)}
 .errs s{color:var(--bad)} .errs strong{color:var(--good)}
 .errs span{display:block;color:var(--soft);font-size:var(--fs-m)}
+/* errors: marked in your own text and numbered like the list */
+.sample.own{border-left-color:var(--line)}
+mark.err{background:color-mix(in srgb,var(--bad) 16%,transparent);color:inherit;border-radius:4px;padding:0 2px;box-shadow:inset 0 -2px 0 color-mix(in srgb,var(--bad) 55%,transparent)}
+mark.err sup{font-size:11px;font-weight:700;color:var(--bad);margin-left:1px}
+.errs.fixes{counter-reset:fx} .errs.fixes li{counter-increment:fx;position:relative;padding-left:28px}
+.errs.fixes li::before{content:counter(fx);position:absolute;left:0;top:9px;width:20px;height:20px;border-radius:50%;background:color-mix(in srgb,var(--bad) 14%,transparent);color:var(--bad);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.errs.fixes s+strong::before{content:"→ ";color:var(--soft);font-weight:400}
+/* DUO's points as bars (.dpts; .pts is the list of points a task asks for) */
+.dpts{margin:10px 0 6px;display:grid;gap:8px}
+.pt{display:grid;grid-template-columns:96px minmax(0,1fr) 34px;align-items:center;gap:10px;font-size:var(--fs-m)}
+.pt i{height:8px;border-radius:999px;background:var(--surface);overflow:hidden} .pt b{display:block;height:100%;border-radius:999px}
+.pt b.full{background:var(--good)} .pt b.some{background:var(--oranje)} .pt b.none{background:var(--bad)}
+.pt em{font-style:normal;font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+.ptt{margin:2px 0 0;font-size:var(--fs-m);color:var(--soft)} .ptt b{color:var(--ink)}
 .errs.kv li{display:flex;justify-content:space-between;gap:12px} .errs.kv span{display:inline;color:var(--ink);font-size:inherit;font-weight:600}
 .errs.kv span.good{color:var(--good)} .errs.kv span.bad{color:var(--bad)}
 details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:700;padding:6px 0}
@@ -2207,14 +2221,13 @@ function drawWelcome(){
 }
 // The token for /api/check; with accounts on, grading needs a login
 async function authHead(){
-  if(!acc.cfg)return{};
-  if(!acc.user)throw{code:"login"};
+  if(!acc.cfg||!acc.user)return{}; // without a login the server may still grade a few a day for free
   const{data}=await acc.sb.auth.getSession(),t=data.session&&data.session.access_token;
   if(!t)throw{code:"login"};
   return{Authorization:"Bearer "+t};
 }
 // Why Claude can't grade now, or null
-const noCheck=c=>c==="login"?"Log in bij Profiel om dit door Claude te laten nakijken.":c==="limit"?`Je hebt vandaag al ${acc.cfg?acc.cfg.limit+" keer":"vaak"} laten nakijken. Morgen kan het weer.`:null;
+const noCheck=c=>c==="login"?(acc.free===0?`Je gratis nakijkbeurten van vandaag zijn op. Log in bij Profiel: dan kijkt Claude ${acc.cfg?acc.cfg.limit:20} keer per dag na.`:"Log in bij Profiel om dit door Claude te laten nakijken."):c==="limit"?`Je hebt vandaag al ${acc.cfg?acc.cfg.limit+" keer":"vaak"} laten nakijken. Morgen kan het weer.`:null;
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const answer=(v,t)=>t==="past"?v[2]:t==="pastpl"?v[3]:t==="pp"?v[4]:v[5];
 
@@ -3016,8 +3029,25 @@ const spTask=q=>spoken(q.big)+(q.text?` (Tekst bij de opdracht: ${q.text.replace
 // Schrijven has DUO's criteria with spelling (max 10; voldoende: inhoud 2 or more and 7 points, decided by api/check.js)
 const SCMAX={inhoud:3,woorden:2,grammatica:2,spelling:2,samenhang:1}, SPMAX=8, WRMAX=10, spPts=t=>t&&t.scores?Object.values(t.scores).reduce((a,b)=>a+(+b||0),0):null;
 const mxPts=M=>Object.values(M).reduce((a,b)=>a+b,0);
+// DUO's points as bars: one per criterion (full green, some oranje, none red), then the total and what is voldoende
 const scoreHTML=(sc,M)=>{if(!sc)return""; const wr="spelling" in sc,X=M||SCMAX,n=M?mxPts(M):wr?WRMAX:SPMAX;
-  return`<p class="note">Punten: ${Object.keys(X).filter(k=>k in sc).map(k=>`${k} ${sc[k]}/${X[k]}`).join(" · ")} = <b>${spPts({scores:sc})} van ${n}</b>. ${M?M.spelling?`Voldoende is ${Math.ceil(n*.7)} punten, met inhoud minstens 2.`:M===WBMAX.z?"Eén punt voor de inhoud, één voor de grammatica. Past de inhoud niet, dan telt de grammatica ook niet.":`Voldoende is ${Math.ceil(n*.6)} punten, met inhoud minstens 2. Uitspraak en spreektempo kan ik niet horen: oefen die met Zeg het na.`:wr?"Voldoende is 7 punten, met inhoud minstens 2.":"Uitspraak en vloeiendheid kan ik niet horen: oefen die met Zeg het na."}</p>`};
+  return`<div class="dpts">${Object.keys(X).filter(k=>k in sc).map(k=>{const v=+sc[k]||0,m=X[k];
+      return`<div class="pt"><span>${k[0].toUpperCase()+k.slice(1)}</span><i><b class="${v>=m?"full":v>0?"some":"none"}" style="width:${m?Math.max(v/m*100,v?0:4):0}%"></b></i><em>${v}/${m}</em></div>`}).join("")}
+    <p class="ptt">Samen <b>${spPts({scores:sc})} van ${n}</b></p></div><p class="note">${M?M.spelling?`Voldoende is ${Math.ceil(n*.7)} punten, met inhoud minstens 2.`:M===WBMAX.z?"Eén punt voor de inhoud, één voor de grammatica. Past de inhoud niet, dan telt de grammatica ook niet.":`Voldoende is ${Math.ceil(n*.6)} punten, met inhoud minstens 2. Uitspraak en spreektempo kan ik niet horen: oefen die met Zeg het na.`:wr?"Voldoende is 7 punten, met inhoud minstens 2.":"Uitspraak en vloeiendheid kan ik niet horen: oefen die met Zeg het na."}</p>`};
+// The learner's own text with each error marked where it is (numbered like the list under it). Claude returns the
+// wrong words as they stand in the text; one that can't be found (a missing word) is only in the list.
+function markErrs(text,errs){
+  text=String(text||"");const hits=[];
+  (errs||[]).forEach((e,i)=>{const w=String(e&&e.wrong||"").trim();if(!w)return;
+    let at=-1,from=0;const low=text.toLowerCase(),lw=w.toLowerCase();
+    while((at=low.indexOf(lw,from))>=0){if(!hits.some(h=>at<h.b&&at+w.length>h.a))break;from=at+1}
+    if(at>=0)hits.push({a:at,b:at+w.length,n:i+1})});
+  hits.sort((x,y)=>x.a-y.a);let out="",p=0;
+  hits.forEach(h=>{out+=esc(text.slice(p,h.a))+`<mark class="err">${esc(text.slice(h.a,h.b))}<sup>${h.n}</sup></mark>`;p=h.b});
+  return out+esc(text.slice(p));
+}
+const ownHTML=(text,errs,label="Jouw tekst")=>`<p class="ask">${label}</p><div class="sample own">${markErrs(text,errs)||"(niets)"}</div>`;
+const errsHTML=errs=>errs.length?`<p class="ask">Fouten: ${errs.length}</p><ol class="errs fixes">${errs.map(e=>`<li><s>${esc(e.wrong)}</s> <strong>${esc(e.right)}</strong><span>${esc(e.why)}</span></li>`).join("")}</ol>`:`<p class="note">Geen fouten gevonden.</p>`;
 const spoken=t=>String(t).replace(/[\p{Extended_Pictographic}←-⇿️‍]/gu,"").replace(/\s+/g," ").trim();
 const saidText=r=>r.said.concat(r.part).join(" ").replace(/\s+/g," ").trim();
 async function listen(mode,done,lim=SPK){
@@ -3087,7 +3117,7 @@ async function spGrade(q,r){
     b.disabled=false; $("rev").hidden=true; keepErrs(errs); record(ok);
     $("fb").innerHTML=`<b class="${ok?"good":"bad"}">${ok?"Goed zo! Voldoende":"Nog niet voldoende"}</b>
       <p class="note">${esc(res.verdict)}</p>${scoreHTML(res.scores,q.mx)}
-      ${errs.length?`<p class="ask">Fouten: ${errs.length}</p><ul class="errs">${errs.map(e=>`<li><s>${esc(e.wrong)}</s> <strong>${esc(e.right)}</strong><span>${esc(e.why)}</span></li>`).join("")}</ul>`:`<p class="note">Geen fouten gevonden.</p>`}
+      ${ownHTML(r.text,errs,"Wat ik heb verstaan")}${errsHTML(errs)}${freeNote()}
       <p class="ask">Zo zeg je het goed</p><div class="sample">${esc(res.corrected)}</div>${echoHTML("de verbeterde zinnen")}
       <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(q.right)}</div></details>
       <button class="btn wide" id="next">Verder</button>`;
@@ -3600,12 +3630,12 @@ function show(){
   if(q.type==="order")h+=`<div class="line" id="line"></div><div class="pool" id="pool"></div><div class="act"><button class="btn wide" id="chk" disabled>Controleer</button></div>`;
   else if(q.type==="write")h+=(q.pts?`<ul class="pts">${q.pts.map(x=>`<li>${x}</li>`).join("")}</ul>`:"")
     +(q.ctx?`<div class="sample">${esc(q.ctx).replace("___",'<b class="gapw">______</b>')}</div>`:"")+(q.fields?q.fields.map((f,i)=>`<label class="fld"><span>${f}</span><input id="f${i}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></label>`).join("")+`<p class="ask">${q.open}</p>`:"")+`<textarea id="txt" rows="${q.kind==="z"?3:7}" placeholder="${q.kind==="z"?q.ctx&&!/___/.test(q.ctx)?"Schrijf hier het einde van de zin…":"Schrijf hier je zin…":"Schrijf hier je tekst…"}" aria-label="Je tekst" spellcheck="false" autocorrect="off" autocapitalize="off"></textarea>`
-    +(!cur.exam&&acc.cfg&&!acc.user?`<p class="note">Claude kijkt je tekst na als je bent ingelogd (Profiel).</p>`:"")
+    +(!cur.exam&&acc.cfg&&!acc.user?(acc.cfg.free?freeNote():`<p class="note">Claude kijkt je tekst na als je bent ingelogd (Profiel).</p>`):"")
     +(cur.nav?navHTML():`<div class="act"><button class="btn wide" id="chk">${cur.exam?"Volgende opdracht":zNext(q)?"Volgende zin":q.kind==="z"&&(cur.zs||[]).length?"Controleer mijn zinnen":"Controleer mijn tekst"}</button></div>`);
   else if(q.type==="reveal")h+=(canSpeak?`<button class="hint" id="sayq">▶ Luister naar de vraag</button>`:"")
     +`<div class="rec" id="rec"><div class="clk"><span class="t" id="rect">${mmss(q.spk||SPK)}</span><div class="m"><i id="recm"></i></div></div><div id="recp"></div>
     <button class="btn wide" id="recb">${cur.exam?"● Antwoord geven":"● Opnemen"}</button><p class="note" id="recn">${q.spk?`${q.prep?`Denk eerst ${q.prep} seconden na. `:""}Je hebt ${q.spk} seconden om te antwoorden, zoals op het Staatsexamen.${cur.exam?" Na de vraag begint de tijd vanzelf.":" Daarna kun je jezelf terugluisteren."}`:cur.exam?"Je hebt één minuut per vraag.":"Je hebt één minuut. Daarna kun je jezelf terugluisteren."}</p></div>
-    ${cur.exam?"":`${SR?`<button class="ghost wide" id="spchk" style="margin-bottom:10px">Spreek in en laat nakijken</button>${acc.cfg&&!acc.user?`<p class="note">Nakijken kan als je bent ingelogd (Profiel).</p>`:""}`:""}<button class="ghost wide" id="rev">Toon voorbeeld</button>`}`;
+    ${cur.exam?"":`${SR?`<button class="ghost wide" id="spchk" style="margin-bottom:10px">Spreek in en laat nakijken</button>${acc.cfg&&!acc.user?(acc.cfg.free?freeNote():`<p class="note">Nakijken kan als je bent ingelogd (Profiel).</p>`):""}`:""}<button class="ghost wide" id="rev">Toon voorbeeld</button>`}`;
   else if(S.typing&&q.canType)h+=`<div class="type"><input id="inp" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Je antwoord"><button class="btn" id="chk">Controleer</button></div>`;
   else{const nv=cur.nav&&q.type==="choice";o=nv?cur.op[pos]=cur.op[pos]||q.opts():q.opts();
     h+=`<div class="opts${o.length===3||o.some(x=>x.length>14)?" one":""}">${o.map((x,i)=>`<button class="opt${nv&&cur.pick[pos]===x?" sel":""}" data-n="${i}"${nv?` aria-pressed="${cur.pick[pos]===x}"`:""}>${x}</button>`).join("")}</div>`;
@@ -3856,10 +3886,13 @@ async function nakijken(tasks,part){
   const h=await authHead();
   const r=await fetch("/api/check",{method:"POST",headers:{"Content-Type":"application/json",...h},body:JSON.stringify(part?{part,tasks}:{tasks})});
   const j=await r.json().catch(()=>({}));
-  if(typeof j.left==="number")acc.left=j.left; else if(j.error==="limit")acc.left=0;
+  if(typeof j.free==="number")acc.free=j.free; // checks left today without an account
+  if(acc.user){if(typeof j.left==="number")acc.left=j.left; else if(j.error==="limit")acc.left=0}
   if(!r.ok||!Array.isArray(j.tasks))throw{code:j.error||"failed"};
   return j.tasks;
 }
+// Without an account: how many free checks are left today, and what an account gives
+const freeNote=()=>acc.cfg&&!acc.user&&acc.cfg.free?`<p class="note">${acc.free==null?`Zonder account kijkt Claude ${acc.cfg.free} keer per dag gratis na.`:acc.free>0?`Nog ${acc.free} keer gratis nakijken vandaag.`:"Je gratis nakijkbeurten van vandaag zijn op."} Met een account ${acc.cfg.limit} keer per dag (Profiel).</p>`:"";
 function selfGrade(q,msg,doc){
   $("fb").innerHTML=`<p class="note">${msg}</p><p class="ask">Voorbeeld</p><div class="sample">${esc(q.right)}</div>
     ${q.type==="reveal"?echoHTML("het voorbeeld"):""}${doc?docBtn:""}<div class="two"><button class="ghost" id="again">Later herhalen</button><button class="btn" id="got">Gelukt</button></div>`;
@@ -3881,7 +3914,7 @@ async function check(q){
     keepErrs(errs); record(ok);
     $("fb").innerHTML=`<b class="${ok?"good":"bad"}">${ok?"Goed zo! Voldoende":"Nog niet voldoende"}</b>
       <p class="note">${esc(res.verdict)}</p>${scoreHTML(res.scores,q.mx)}
-      ${errs.length?`<p class="ask">Fouten: ${errs.length}</p><ul class="errs">${errs.map(e=>`<li><s>${esc(e.wrong)}</s> <strong>${esc(e.right)}</strong><span>${esc(e.why)}</span></li>`).join("")}</ul>`:`<p class="note">Geen fouten gevonden.</p>`}
+      ${ownHTML(text,errs)}${errsHTML(errs)}${freeNote()}
       <p class="ask">Verbeterde tekst</p><div class="sample">${esc(res.corrected)}</div>
       <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(q.right)}</div></details>
       ${docBtn}<button class="btn wide" id="next">Verder</button>`;
@@ -3910,9 +3943,9 @@ async function checkZ(q){
     $("fb").innerHTML=Z.map((z,i)=>{const t=T[i]||{},errs=Array.isArray(t.errors)?t.errors:[],ok=!!t.passed; keepErrs(errs); record(ok,z.q);
       return`<p class="ask">${Z.length>1?`Zin ${i+1}: `:""}<span class="${ok?"good":"bad"}">${ok?"voldoende":"nog niet voldoende"}</span></p>${Z.length>1?`<p class="note">${z.q.big}</p>`:""}
         <p class="note">${esc(t.verdict)}</p>${scoreHTML(t.scores,z.q.mx)}
-        ${errs.length?`<ul class="errs">${errs.map(e=>`<li><s>${esc(e.wrong)}</s> <strong>${esc(e.right)}</strong><span>${esc(e.why)}</span></li>`).join("")}</ul>`:""}
-        <div class="sample">${esc(t.corrected||z.text)}</div><details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(z.q.right)}</div></details>`}).join("")
-      +`${docBtn}<button class="btn wide" id="next">Verder</button>`;
+        ${ownHTML(z.text,errs,"Jouw zin")}${errs.length?errsHTML(errs):""}
+        <p class="ask">Verbeterd</p><div class="sample">${esc(t.corrected||z.text)}</div><details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(z.q.right)}</div></details>`}).join("")
+      +`${freeNote()}${docBtn}<button class="btn wide" id="next">Verder</button>`;
     $("next").onclick=()=>{pos++;show()}; $("docx").onclick=()=>saveDocx(doc);
   }catch(e){
     const c=e&&e.code;
@@ -3934,7 +3967,7 @@ async function examWrite(){
   const doc=A.map(a=>({task:wrTask(a.q),form:a.form,text:a.text}));
   const foot=`${A.length?docBtn:""}<div class="two"><button class="ghost" id="tohome">Alle onderdelen</button><button class="btn" id="more">Nog een keer</button></div>`;
   const bind=()=>{$("more").onclick=()=>build(cur.id,cur);$("tohome").onclick=home;if($("docx"))$("docx").onclick=()=>saveDocx(doc)};
-  const own=a=>`<p class="ask">Jouw tekst</p><div class="sample">${esc((a.form?a.form+"\n\n":"")+a.text)||"(niets geschreven)"}</div>`;
+  const own=(a,errs)=>a.text||a.form?ownHTML((a.form?a.form+"\n\n":"")+a.text,errs):`<p class="ask">Jouw tekst</p><div class="sample">(niets geschreven)</div>`;
   const fallback=msg=>{card.innerHTML=`<p class="note">${msg}</p>`+A.map((a,i)=>`<h2>Opdracht ${queue.indexOf(a.q)+1}</h2><p class="note">${a.q.big}</p>${own(a)}<p class="ask">Voorbeeld</p><div class="sample">${esc(a.q.right)}</div>`).join("")+foot;bind()};
   if(!A.length){card.innerHTML=`<p class="note">Je hebt geen opdracht gemaakt.</p>`+foot;return bind()}
   card.innerHTML=`<p class="note">Ik kijk je ${A.length} teksten na… Dit duurt ongeveer een minuut.</p>`;
@@ -3944,8 +3977,7 @@ async function examWrite(){
     const body=A.map((a,i)=>{const t=T[i]||{},errs=Array.isArray(t.errors)?t.errors:[],pt=spPts(t);if(t.passed)good++;if(pt!=null){pts+=pt;scored++}
       keepErrs(errs);
       return`<h2>Opdracht ${queue.indexOf(a.q)+1}: <span class="${t.passed?"good":"bad"}">${t.passed?"voldoende":"nog niet voldoende"}</span></h2><p class="note">${a.q.big}</p><p class="note">${esc(t.verdict)}</p>${scoreHTML(t.scores,a.q.mx)}
-        ${errs.length?`<ul class="errs">${errs.map(e=>`<li><s>${esc(e.wrong)}</s> <strong>${esc(e.right)}</strong><span>${esc(e.why)}</span></li>`).join("")}</ul>`:""}
-        ${own(a)}<p class="ask">Verbeterde tekst</p><div class="sample">${esc(t.corrected)}</div>
+        ${own(a,errs)}${errs.length?errsHTML(errs):""}<p class="ask">Verbeterde tekst</p><div class="sample">${esc(t.corrected)}</div>
         <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(a.q.right)}</div></details>`}).join("");
     // score: points of all tasks, as DUO counts them (a task not made counts 0); without points (older server) the share of good tasks
     const max=queue.reduce((s,q)=>s+(q.mx?mxPts(q.mx):WRMAX),0), pc=scored?Math.round(pts/max*100):Math.round(good/queue.length*100), pass=pc>=passPc(cur.part);
@@ -3962,7 +3994,7 @@ async function examSpeak(){
   const A=cur.ans, card=$("card");
   const foot=`<div class="two"><button class="ghost" id="tohome">Alle onderdelen</button><button class="btn" id="more">Nog een keer</button></div>`;
   const bind=()=>{$("more").onclick=()=>build(cur.id,cur);$("tohome").onclick=home};
-  const own=a=>`<p class="ask">Jouw antwoord</p>${a.url?`<audio controls src="${a.url}"></audio>`:""}${a.text||!a.url?`<div class="sample">${esc(a.text)||"(niets verstaan)"}</div>`:""}`;
+  const own=(a,errs)=>`<p class="ask">Jouw antwoord</p>${a.url?`<audio controls src="${a.url}"></audio>`:""}${a.text||!a.url?`<div class="sample own">${markErrs(a.text,errs)||"(niets verstaan)"}</div>`:""}`;
   const plain=msg=>{card.innerHTML=`<p class="note">${msg}</p>`+A.map((a,i)=>`<h2>Vraag ${i+1}</h2><p class="note">${a.q.big}</p>${own(a)}<p class="ask">Voorbeeld</p><div class="sample">${esc(a.q.right)}</div>`).join("")+foot;bind()};
   if(!A.length){card.innerHTML=`<p class="note">Je hebt geen vraag beantwoord.</p>`+foot;return bind()}
   if(!A.some(a=>a.text))return plain("Luister naar je antwoorden en vergelijk ze met de voorbeelden.");
@@ -3972,8 +4004,7 @@ async function examSpeak(){
     let good=0,pts=0,scored=0;
     const body=A.map((a,i)=>{const t=T[i]||{},errs=Array.isArray(t.errors)?t.errors:[],pt=spPts(t);if(t.passed)good++;if(pt!=null){pts+=pt;scored++}keepErrs(errs);
       return`<h2>Vraag ${i+1}: <span class="${t.passed?"good":"bad"}">${t.passed?"voldoende":"nog niet voldoende"}</span></h2><p class="note">${esc(a.q.label)}</p><p class="note">${a.q.big}</p><p class="note">${esc(t.verdict)}</p>${scoreHTML(t.scores,a.q.mx)}
-        ${errs.length?`<ul class="errs">${errs.map(e=>`<li><s>${esc(e.wrong)}</s> <strong>${esc(e.right)}</strong><span>${esc(e.why)}</span></li>`).join("")}</ul>`:""}
-        ${own(a)}${a.text?`<p class="ask">Zo zeg je het goed</p><div class="sample">${esc(t.corrected)}</div>`:""}
+        ${own(a,errs)}${errs.length?errsHTML(errs):""}${a.text?`<p class="ask">Zo zeg je het goed</p><div class="sample">${esc(t.corrected)}</div>`:""}
         <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(a.q.right)}</div></details>`}).join("");
     // score: points of all 16 questions (an unanswered one counts 0); without points (older server) the share of good answers
     const max=queue.reduce((s,q)=>s+(q.mx?mxPts(q.mx):SPMAX),0), pc=scored?Math.round(pts/max*100):Math.round(good/queue.length*100), pass=pc>=passPc(cur.part);

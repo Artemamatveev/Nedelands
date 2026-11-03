@@ -13,7 +13,7 @@
 // With accounts set up (Supabase, see _supa.js) only a signed-in user may grade, CHECK_LIMIT checks a day;
 // the answer then also has `left`, the checks left today.
 import Anthropic from "@anthropic-ai/sdk";
-import { accounts, caller, checkCost, useChecks, LIMIT, sameOrigin } from "./_supa.js";
+import { accounts, caller, checkCost, useChecks, LIMIT, sameOrigin, FREE, visitor, useFree } from "./_supa.js";
 
 // Created only when the key is set, so a missing key gives a clear error instead of a crash
 // (trimmed: a key pasted into the dashboard with a trailing newline breaks the request header)
@@ -161,15 +161,24 @@ export default async function handler(req, res) {
   // Accounts: who is asking, and take the checks before calling Claude (given back if grading fails)
   let uid = null, left;
   const cost = checkCost(input.length);
+  let who = null, free;
   if (accounts) {
     const user = await caller(req).catch(() => null);
-    if (!user) return res.status(401).json({ error: "login" });
-    uid = user.id;
-    left = await useChecks(uid, cost).catch(() => null);
-    if (left == null) return res.status(502).json({ error: "failed" });
-    if (left < 0) return res.status(429).json({ error: "limit", limit: LIMIT });
+    if (!user) {
+      // Without a login: a few single tasks a day for free (no proefexamens), counted per visitor
+      who = FREE && cost === 1 ? visitor(req) : "";
+      if (!who) return res.status(401).json({ error: "login" });
+      free = await useFree(who, cost).catch(() => null);
+      if (free == null) return res.status(401).json({ error: "login" }); // not set up in the database yet
+      if (free < 0) return res.status(401).json({ error: "login", free: 0 });
+    } else {
+      uid = user.id;
+      left = await useChecks(uid, cost).catch(() => null);
+      if (left == null) return res.status(502).json({ error: "failed" });
+      if (left < 0) return res.status(429).json({ error: "limit", limit: LIMIT });
+    }
   }
-  const giveBack = () => (uid ? useChecks(uid, -cost).catch(() => {}) : null);
+  const giveBack = () => (uid ? useChecks(uid, -cost).catch(() => {}) : who ? useFree(who, -cost).catch(() => {}) : null);
   const tasks = input.map((t) => ({
     kind: wb ? (SCORES_WB[t?.kind] ? t.kind : "m") : sb ? (SCORES_SB[t?.kind] ? t.kind : "m") : "",
     task: str(t?.task, wb ? 2000 : 1200), form: sp ? "" : str(t?.form, 1500), text: str(t?.text, 2500),
@@ -217,7 +226,8 @@ export default async function handler(req, res) {
     const result = JSON.parse(text);
     const out = result.tasks.slice(0, tasks.length);
     return res.status(200).json({
-      left,
+      left: who ? free : left,
+      ...(who ? { free } : {}),
       tasks: out.map((t, i) => {
         const SC = wb ? SCORES_WB[tasks[i].kind] : sb ? SCORES_SB[tasks[i].kind] : sp ? SCORES_SP : SCORES_WR;
         const scores = clampScores(t.scores, SC);

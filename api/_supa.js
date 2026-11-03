@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 // Supabase from the server, by plain fetch (no SDK): who is calling, the daily check allowance, deleting an account.
 // Files starting with _ are not routes on Vercel. The env vars come from the Supabase integration in the Vercel
 // Marketplace; without them accounts are off and everything works as before (no login needed for grading).
@@ -31,6 +32,27 @@ export async function useChecks(uid, cost) {
     body: JSON.stringify({ uid, cost, lim: LIMIT }),
   });
   if (!r.ok) throw new Error(`use_checks ${r.status}`);
+  return Number(await r.json());
+}
+
+// Free checks without an account: FREE_CHECKS a day per visitor (default 2, 0 turns it off) and FREE_CAP a day for
+// all visitors together (default 50), so a stranger can try it but it can't cost much. The visitor is a hash of the
+// IP address with a secret, never the address itself; the rows are deleted after a day (use_free_checks in schema.sql).
+export const FREE = Math.max(0, parseInt(process.env.FREE_CHECKS ?? "2", 10) || 0);
+const FREE_CAP = Math.max(1, parseInt(process.env.FREE_CAP, 10) || 50);
+export const visitor = (req) => {
+  const ip = String(req.headers["x-real-ip"] || req.headers["x-forwarded-for"] || "").split(",")[0].trim();
+  return ip ? createHash("sha256").update(ip + "|" + SERVICE).digest("hex").slice(0, 32) : "";
+};
+// Takes `cost` free checks for this visitor (negative gives back): what is left, -1 (visitor's day used up) or -2
+// (everyone's day used up); throws when the function is not in the database yet
+export async function useFree(who, cost) {
+  const r = await fetch(`${URL_}/rest/v1/rpc/use_free_checks`, {
+    method: "POST",
+    headers: { apikey: SERVICE, authorization: `Bearer ${SERVICE}`, "content-type": "application/json" },
+    body: JSON.stringify({ who, cost, lim: FREE, cap: FREE_CAP }),
+  });
+  if (!r.ok) throw new Error(`use_free_checks ${r.status}`);
   return Number(await r.json());
 }
 

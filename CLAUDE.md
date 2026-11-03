@@ -201,7 +201,13 @@ vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one comin
 - Sync: `progress` holds the same JSON as `ww-v1`, one row per user, written by the page itself (RLS). The first time a
   device joins an account both sides are merged (`mergeS()`); after that the newer `S.t` wins, pulled when the app comes
   back to the foreground, pushed 3 s after a change. `ww-acc` remembers which account this device was joined with.
-- Grading: with accounts on, `/api/check` needs the user's access token and takes checks from `CHECK_LIMIT` a day
+- Free checks without an account: `FREE_CHECKS` a day per visitor (default 2, 0 turns it off), single tasks only (cost
+  1, no proefexamens), and `FREE_CAP` a day for all visitors together (default 50). The visitor is a hash of the IP
+  with the service key (`visitor()` in `api/_supa.js`), counted in `free_checks` by `use_free_checks()` (in
+  `supabase/schema.sql`, rows deleted after a day; privacy.html says so). Without that function in the database the
+  server answers `login` as before. `/api/config` gives `free`; the page shows how many are left (`acc.free`,
+  `freeNote()`) and asks to log in when they are used up.
+- Grading: with accounts on, `/api/check` needs the user's access token (or a free check, above) and takes checks from `CHECK_LIMIT` a day
   (default 20, Amsterdam days, `check_usage`): one task 1, a Schrijven proefexamen 2, Schrijven B1 4, a Spreken proefexamen 6
   (`checkCost()`; the page's `examGate()` uses the same numbers and warns before such a proefexamen). A failed grading
   gives them back. The answer has `left`.
@@ -292,6 +298,11 @@ A2-niveau", and today's grammar step helps with a B1 round. The page title, desc
   `gsItems()` and `lv()` in `build()` leave them out at A2).
 
 ## Writing and speaking check (Schrijven, Spreken)
+
+The result shows DUO's points as bars, one per criterion (`scoreHTML()`, `.dpts`: full green, some oranje, none red)
+with the total, then the learner's own text with every error marked where it is and numbered (`markErrs()`,
+`ownHTML()`: Claude's `wrong` is looked up in the text; one it can't find is only in the list), the numbered list of
+errors (`errsHTML()`: wrong → right, why) and the corrected text.
 
 `api/check.js` is a Vercel function that grades writing with Claude (`claude-opus-5-5`,
 structured JSON output, server-side refusal fallback). The page posts
