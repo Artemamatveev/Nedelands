@@ -25,22 +25,31 @@ body::before{content:"";position:fixed;inset:-24px;z-index:-2;background:url(/ar
 body::after{content:"";position:fixed;inset:0;z-index:-1;background:var(--glass)}
 main{max-width:720px;margin:0 auto;padding:16px 16px 48px}
 article{background:var(--card);border-radius:20px;box-shadow:var(--lift);padding:8px 20px 24px}
-.back{display:inline-flex;align-items:center;gap:6px;min-height:44px;margin-top:12px;border:1px solid var(--line);color:var(--ink);font-weight:600;font-size:16px;padding:5px 14px 6px 10px;border-radius:14px;text-decoration:none}
+.back{display:inline-flex;align-items:center;gap:6px;min-height:44px;margin-top:12px;border:1px solid var(--line);color:var(--ink);font-weight:600;font-size:16px;padding-block:5px 6px;padding-inline:10px 14px;border-radius:14px;text-decoration:none}
 h1{font-size:28px;font-weight:600;line-height:1.2;margin:20px 0 6px}
 h2{color:var(--soft);font-size:14px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin:28px 0 6px}
-p,li{margin:0 0 10px} ul{padding-left:22px;margin:0 0 10px}
+p,li{margin:0 0 10px} ul{padding-inline-start:22px;margin:0 0 10px}
 .sub{color:var(--soft)}
 a{color:var(--blue)}
 a:focus-visible{outline:3px solid var(--oranje);outline-offset:2px}
-.box{border-left:3px solid var(--wash);padding:2px 0 2px 14px;margin:14px 0}
+.box{border-inline-start:3px solid var(--wash);padding-block:2px;padding-inline-start:14px;margin:14px 0}
 @media (min-width:768px){article{padding:12px 36px 32px}}
+.top{display:flex;justify-content:flex-end;margin-bottom:10px}
+.lang{position:relative;display:flex;align-items:center;gap:5px;height:36px;padding:0 8px 0 9px;border-radius:999px;border:1.5px solid #fff;background:#1F3C96;color:#fff;font-size:15px;font-weight:600;box-shadow:0 2px 10px rgba(8,16,40,.4)}
+.lang svg{flex:none;width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8}
+.lang svg.dn{width:12px;height:12px;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.lang select{position:absolute;inset:-5px;width:calc(100% + 10px);height:calc(100% + 10px);opacity:0;font-size:16px;border:0}
+.lang:focus-within{outline:2px solid var(--oranje);outline-offset:2px}
+[dir=rtl] .back>span{display:inline-block;transform:scaleX(-1)}
+:root:is([lang=ar],[lang=hi],[lang=zh-Hans]) h2{letter-spacing:0}
 .hero{display:block;width:100%;aspect-ratio:1200/630;object-fit:cover;border-radius:14px;margin:18px 0 6px}
 .cap{font-size:13px;color:var(--soft);margin:0 0 6px}
 </style>
 </head>
 <body>
 <main>
-<article>
+<div class="top"><label class="lang"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.6 3.9 5.6 3.9 9s-1.3 6.4-3.9 9c-2.6-2.6-3.9-5.6-3.9-9s1.3-6.4 3.9-9z"/></svg><span id="langs">NL</span><svg class="dn" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4"/></svg><select id="lang" aria-label="Taal"><option value="nl">Nederlands</option><option value="en">English</option><option value="ar">العربية</option><option value="tr">Türkçe</option><option value="hi">हिन्दी</option><option value="zh">中文</option></select></label></div>
+<article data-l="nl" lang="nl">
 <a class="back" href="/"><span aria-hidden="true">←</span>Bittertalen</a>
 <h1>Over Bittertalen</h1>
 <img class="hero" src="/art/og-delft.jpg" alt="Gezicht op Delft van Johannes Vermeer">
@@ -79,6 +88,189 @@ Commons.</li>
 <h2>Contact</h2>
 <p>Een fout gevonden, of een idee? Mail naar <a href="mailto:privacy@bittertalen.nl">privacy@bittertalen.nl</a>.</p>
 </article>
+<article data-l="en" lang="en" hidden>
+<a class="back" href="/"><span aria-hidden="true">←</span>Bittertalen</a>
+<h1>About Bittertalen</h1>
+<img class="hero" src="/art/og-delft.jpg" alt="View of Delft by Johannes Vermeer">
+<p class="cap">Johannes Vermeer, View of Delft, about 1660 · Mauritshuis, The Hague</p>
+
+<p>Bittertalen is a free app to practise for the civic integration exam (A2) and the State exam NT2 (B1): reading, listening, writing, speaking, KNM, grammar and words. With timed practice exams, like at DUO.</p>
+
+<h2>The name</h2>
+<p>Bitterballen and talen (languages). Learning Dutch is sometimes bitter, but with a bitterbal it goes better. That is why the dot on the i is a bitterbal.</p>
+
+<h2>Who</h2>
+<p>Bittertalen is made by Artem Matveev, in the Netherlands.</p>
+
+<h2>How it works</h2>
+<ul>
+<li>Everything works without an account. With an account your progress is kept on all your devices.</li>
+<li>In Writing and Speaking, Claude (by Anthropic) checks your text, using the points DUO uses.</li>
+<li>No advertisements. We do not sell your data. See the <a href="/privacy">privacy statement</a>.</li>
+</ul>
+
+<h2>What it is not</h2>
+<p>Bittertalen does not belong to DUO or the government. All questions and texts are written by ourselves. You can find the official practice exams at <a href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" rel="noopener">inburgeren.nl ↗</a> and <a href="https://oefenexamensnt2.nl" rel="noopener">oefenexamensnt2.nl ↗</a>.</p>
+
+<h2>Where everything comes from</h2>
+<ul>
+<li>The paintings are in the public domain, from the Rijksmuseum, the Mauritshuis and other museums, through Wikimedia Commons.</li>
+<li>The dictionary comes from Wiktionary (CC BY-SA 4.0).</li>
+<li>The voices are made with Google Cloud Text-to-Speech.</li>
+</ul>
+
+<h2>Contact</h2>
+<p>Found a mistake, or have an idea? Send an e-mail to <a href="mailto:privacy@bittertalen.nl">privacy@bittertalen.nl</a>.</p>
+</article>
+<article data-l="ar" lang="ar" dir="rtl" hidden>
+<a class="back" href="/"><span aria-hidden="true">←</span>Bittertalen</a>
+<h1>عن Bittertalen</h1>
+<img class="hero" src="/art/og-delft.jpg" alt="منظر مدينة دلفت، لوحة يوهانس فيرمير">
+<p class="cap">يوهانس فيرمير، منظر مدينة دلفت، نحو عام 1660 · متحف ماوريتسهاوس، لاهاي</p>
+
+<p>Bittertalen تطبيق مجاني للتدرّب على امتحان الاندماج (A2) وامتحان الدولة NT2 (B1): القراءة والاستماع والكتابة والمحادثة وKNM والقواعد والكلمات. مع امتحانات تجريبية بوقت محدد، كما في DUO.</p>
+
+<h2>الاسم</h2>
+<p>Bitterballen (كرات اللحم المقلية الهولندية) وtalen (اللغات). تعلّم الهولندية مرّ أحيانًا، لكنه يصبح أسهل مع bitterbal. لذلك فإن النقطة فوق حرف i هي bitterbal.</p>
+
+<h2>من</h2>
+<p>يصنع Bittertalen في هولندا Artem Matveev.</p>
+
+<h2>كيف يعمل</h2>
+<ul>
+<li>كل شيء يعمل بدون حساب. مع الحساب يبقى تقدّمك محفوظًا على جميع أجهزتك.</li>
+<li>في قسمي الكتابة والمحادثة يصحّح Claude (من Anthropic) نصك، وفق النقاط التي تستخدمها DUO.</li>
+<li>لا إعلانات. لا نبيع بياناتك. انظر <a href="/privacy">بيان الخصوصية</a>.</li>
+</ul>
+
+<h2>ما ليس عليه</h2>
+<p>Bittertalen لا يتبع DUO ولا الحكومة. جميع الأسئلة والنصوص من تأليفنا. تجد الامتحانات التجريبية الرسمية على <a href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" rel="noopener">inburgeren.nl ↗</a> و<a href="https://oefenexamensnt2.nl" rel="noopener">oefenexamensnt2.nl ↗</a>.</p>
+
+<h2>من أين يأتي كل شيء</h2>
+<ul>
+<li>اللوحات في الملك العام، من متحف Rijksmuseum ومتحف Mauritshuis ومتاحف أخرى، عبر Wikimedia Commons.</li>
+<li>القاموس من Wiktionary (CC BY-SA 4.0).</li>
+<li>الأصوات مصنوعة باستخدام Google Cloud Text-to-Speech.</li>
+</ul>
+
+<h2>التواصل</h2>
+<p>وجدت خطأ أو لديك فكرة؟ راسل <a href="mailto:privacy@bittertalen.nl">privacy@bittertalen.nl</a>.</p>
+</article>
+<article data-l="tr" lang="tr" hidden>
+<a class="back" href="/"><span aria-hidden="true">←</span>Bittertalen</a>
+<h1>Bittertalen hakkında</h1>
+<img class="hero" src="/art/og-delft.jpg" alt="Johannes Vermeer'in Delft Manzarası tablosu">
+<p class="cap">Johannes Vermeer, Delft Manzarası, yaklaşık 1660 · Mauritshuis, Lahey</p>
+
+<p>Bittertalen; uyum sınavına (A2) ve NT2 devlet sınavına (B1) hazırlanmak için ücretsiz bir uygulamadır: okuma, dinleme, yazma, konuşma, KNM, dil bilgisi ve kelimeler. DUO'daki gibi süreli deneme sınavlarıyla.</p>
+
+<h2>İsim</h2>
+<p>Bitterballen (Hollanda'nın kızarmış köftesi) ve talen (diller). Hollandaca öğrenmek bazen acıdır (bitter), ama bir bitterbal ile daha iyi gider. Bu yüzden i'nin noktası bir bitterbal.</p>
+
+<h2>Kim</h2>
+<p>Bittertalen'i Hollanda'da Artem Matveev yapıyor.</p>
+
+<h2>Nasıl çalışır</h2>
+<ul>
+<li>Her şey hesap olmadan çalışır. Hesapla ilerlemen tüm cihazlarında saklanır.</li>
+<li>Yazma ve Konuşma bölümlerinde Claude (Anthropic) metnini, DUO'nun kullandığı puanlara göre kontrol eder.</li>
+<li>Reklam yok. Verilerini satmayız. Bak: <a href="/privacy">gizlilik bildirimi</a>.</li>
+</ul>
+
+<h2>Ne değildir</h2>
+<p>Bittertalen, DUO'ya veya devlete ait değildir. Bütün sorular ve metinler bize aittir. Resmî deneme sınavlarını <a href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" rel="noopener">inburgeren.nl ↗</a> ve <a href="https://oefenexamensnt2.nl" rel="noopener">oefenexamensnt2.nl ↗</a> adreslerinde bulursun.</p>
+
+<h2>Her şey nereden geliyor</h2>
+<ul>
+<li>Tablolar kamu malıdır; Rijksmuseum, Mauritshuis ve diğer müzelerden, Wikimedia Commons aracılığıyla.</li>
+<li>Sözlük Wiktionary'den gelir (CC BY-SA 4.0).</li>
+<li>Sesler Google Cloud Text-to-Speech ile yapılmıştır.</li>
+</ul>
+
+<h2>İletişim</h2>
+<p>Bir hata mı buldun, bir fikrin mi var? <a href="mailto:privacy@bittertalen.nl">privacy@bittertalen.nl</a> adresine yaz.</p>
+</article>
+<article data-l="hi" lang="hi" hidden>
+<a class="back" href="/"><span aria-hidden="true">←</span>Bittertalen</a>
+<h1>Bittertalen के बारे में</h1>
+<img class="hero" src="/art/og-delft.jpg" alt="योहानेस वर्मीर का चित्र, डेल्फ़्ट का दृश्य">
+<p class="cap">योहानेस वर्मीर, डेल्फ़्ट का दृश्य, लगभग 1660 · मॉरित्सहॉइस, द हेग</p>
+
+<p>Bittertalen, इंटीग्रेशन परीक्षा (A2) और NT2 राज्य परीक्षा (B1) की तैयारी के लिए एक मुफ़्त ऐप है: पढ़ना, सुनना, लिखना, बोलना, KNM, व्याकरण और शब्द। DUO की तरह समयबद्ध अभ्यास परीक्षाओं के साथ।</p>
+
+<h2>नाम</h2>
+<p>Bitterballen (डच तले हुए स्नैक) और talen (भाषाएँ)। डच सीखना कभी-कभी कड़वा होता है, लेकिन bitterbal के साथ आसान हो जाता है। इसीलिए i का बिंदु एक bitterbal है।</p>
+
+<h2>कौन</h2>
+<p>Bittertalen को नीदरलैंड में Artem Matveev बनाते हैं।</p>
+
+<h2>यह कैसे काम करता है</h2>
+<ul>
+<li>सब कुछ बिना खाते के काम करता है। खाते के साथ आपकी प्रगति आपके सभी डिवाइसों पर सुरक्षित रहती है।</li>
+<li>लिखने और बोलने वाले भागों में Claude (Anthropic का) आपका पाठ DUO के अंकों के अनुसार जाँचता है।</li>
+<li>कोई विज्ञापन नहीं। हम आपका डेटा नहीं बेचते। देखें <a href="/privacy">गोपनीयता कथन</a>।</li>
+</ul>
+
+<h2>यह क्या नहीं है</h2>
+<p>Bittertalen, DUO या सरकार का नहीं है। सभी प्रश्न और पाठ हमने खुद लिखे हैं। आधिकारिक अभ्यास परीक्षाएँ आपको <a href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" rel="noopener">inburgeren.nl ↗</a> और <a href="https://oefenexamensnt2.nl" rel="noopener">oefenexamensnt2.nl ↗</a> पर मिलेंगी।</p>
+
+<h2>सब कुछ कहाँ से आता है</h2>
+<ul>
+<li>चित्र सार्वजनिक डोमेन के हैं, Rijksmuseum, Mauritshuis और दूसरे संग्रहालयों से, Wikimedia Commons के ज़रिए।</li>
+<li>शब्दकोश Wiktionary से है (CC BY-SA 4.0)।</li>
+<li>आवाज़ें Google Cloud Text-to-Speech से बनाई गई हैं।</li>
+</ul>
+
+<h2>संपर्क</h2>
+<p>कोई गलती मिली या कोई विचार है? <a href="mailto:privacy@bittertalen.nl">privacy@bittertalen.nl</a> पर ई-मेल करें।</p>
+</article>
+<article data-l="zh" lang="zh-Hans" hidden>
+<a class="back" href="/"><span aria-hidden="true">←</span>Bittertalen</a>
+<h1>关于 Bittertalen</h1>
+<img class="hero" src="/art/og-delft.jpg" alt="约翰内斯·维米尔的《代尔夫特一景》">
+<p class="cap">约翰内斯·维米尔，《代尔夫特一景》，约 1660 年 · 莫瑞泰斯皇家美术馆，海牙</p>
+
+<p>Bittertalen 是一款免费应用，用于练习融入考试（A2）和 NT2 国家考试（B1）：阅读、听力、写作、口语、KNM、语法和词汇。还有和 DUO 一样的限时模拟考试。</p>
+
+<h2>名字</h2>
+<p>Bitterballen（荷兰炸肉丸）和 talen（语言）。学荷兰语有时很苦（bitter），但有了 bitterbal 就好多了。所以字母 i 上的点是一颗 bitterbal。</p>
+
+<h2>谁</h2>
+<p>Bittertalen 由 Artem Matveev 在荷兰制作。</p>
+
+<h2>如何运作</h2>
+<ul>
+<li>不用账户也能使用所有功能。有账户时，你的进度会保存在你所有设备上。</li>
+<li>在写作和口语部分，Claude（Anthropic 开发）按照 DUO 使用的评分标准批改你的文字。</li>
+<li>没有广告。我们不出售你的数据。请参阅<a href="/privacy">隐私声明</a>。</li>
+</ul>
+
+<h2>它不是什么</h2>
+<p>Bittertalen 不属于 DUO 或政府。所有问题和文章都是我们自己写的。官方模拟考试可以在 <a href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" rel="noopener">inburgeren.nl ↗</a> 和 <a href="https://oefenexamensnt2.nl" rel="noopener">oefenexamensnt2.nl ↗</a> 找到。</p>
+
+<h2>所有内容的来源</h2>
+<ul>
+<li>画作属于公有领域，来自 Rijksmuseum、Mauritshuis 和其他博物馆，通过 Wikimedia Commons 获得。</li>
+<li>词典来自 Wiktionary（CC BY-SA 4.0）。</li>
+<li>语音由 Google Cloud Text-to-Speech 生成。</li>
+</ul>
+
+<h2>联系方式</h2>
+<p>发现错误或有想法？请发邮件至 <a href="mailto:privacy@bittertalen.nl">privacy@bittertalen.nl</a>。</p>
+</article>
 </main>
+<script>
+// The page follows the language of the app (ww-ui); the Dutch text is the official one and shows without a script
+(function(){
+  var S={nl:["nl","NL"],en:["en","EN"],ar:["ar","عربي"],tr:["tr","TR"],hi:["hi","हिं"],zh:["zh-Hans","中文"]},sel=document.getElementById("lang"),l=null,suffix="";
+  try{l=localStorage.getItem("ww-ui")}catch(e){}
+  function show(k){if(!S[k])k="nl";var h=document.documentElement;
+    document.querySelectorAll("article").forEach(function(a){var on=a.getAttribute("data-l")===k;a.hidden=!on;if(on)document.title=a.querySelector("h1").textContent+suffix});
+    h.lang=S[k][0];h.dir=k==="ar"?"rtl":"ltr";sel.value=k;document.getElementById("langs").textContent=S[k][1]}
+  show(l);
+  sel.onchange=function(){try{sel.value==="nl"?localStorage.removeItem("ww-ui"):localStorage.setItem("ww-ui",sel.value)}catch(e){}show(sel.value)};
+})();
+</script>
+
 </body>
 </html>
