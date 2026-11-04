@@ -91,8 +91,7 @@ test('Legacy results need fresh attempts before the stable practice label is sho
   assert.equal(a.run('ready("lz").st'),'Stabiel oefenresultaat');
   a.run('S.res.lz=S.res.lz.map(r=>({...r,at:Date.now()-20*864e5}))');
   assert.notEqual(a.run('ready("lz").cls'),'good');
-  a.run('S.res.sb=S.res.lz;home()');
-  a.document.querySelector('[data-v="B1"]').click();
+  a.run('S.res.sb=S.res.lz;S.lvl="B1";home()');
   assert.match(a.document.querySelector('#exam').textContent,/Uitspraak en tempo zijn niet beoordeeld/);
 });
 
@@ -115,7 +114,9 @@ test('The level is chosen once: no A2/B1 tabs on Examen and Oefenen, a list in P
   const sel=a.document.querySelector('#plvl');
   assert.equal(sel.tagName,'SELECT');
   assert.equal(sel.querySelectorAll('option').length,2);
-  sel.value='B1';sel.onchange();
+  sel.querySelectorAll('option').forEach(o=>o.value==='B1'?o.setAttribute('selected',''):o.removeAttribute('selected'));
+  assert.equal(sel.value,'B1');
+  sel.onchange();
   assert.equal(a.run('S.lvl'),'B1');
   assert.match(a.document.querySelector('#exam').textContent,/Staatsexamen NT2/);
   assert.doesNotMatch(a.document.querySelector('#exam').textContent,/Oefenexamens van DUO/);
