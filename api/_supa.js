@@ -134,3 +134,29 @@ export async function takeHand(h) {
   return row && Date.now() - Date.parse(row.at) < HAND_MS ? row.code : null;
 }
 
+
+// Bittertalen Plus (table plans, schema.sql): one row per user, written only by the server from Stripe's webhook.
+// {user_id, customer, sub, status, period, ends_at, cancel_at_end, trial_used}
+export async function getPlan(uid) {
+  const r = await rest(`plans?user_id=eq.${encodeURIComponent(uid)}&select=*`);
+  if (!r.ok) throw new Error(`plans ${r.status}`);
+  return (await r.json())[0] || null;
+}
+export async function planByCustomer(customer) {
+  const r = await rest(`plans?customer=eq.${encodeURIComponent(customer)}&select=*`);
+  if (!r.ok) throw new Error(`plans ${r.status}`);
+  return (await r.json())[0] || null;
+}
+export async function putPlan(row) {
+  const r = await rest("plans", {
+    method: "POST",
+    headers: { prefer: "resolution=merge-duplicates,return=minimal" },
+    body: JSON.stringify({ ...row, updated_at: new Date().toISOString() }),
+  });
+  if (!r.ok) throw new Error(`plans ${r.status}`);
+}
+// Plus now? Paying, in the trial, or a renewal Stripe is still retrying (see PLUS in _stripe.js)
+export const plusRow = (p) => !!p && ["active", "trialing", "past_due"].includes(p.status);
+export async function isPlus(uid) {
+  return plusRow(await getPlan(uid));
+}

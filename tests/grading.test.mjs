@@ -21,14 +21,16 @@ async function handler(options={}){
     accounts:options.accounts??true,caller:async()=>options.guest?null:{id:'test-user'},
     checkCost:n=>Math.max(1,Math.ceil(n/3)),LIMIT:20,FREE:2,visitor:()=> 'test-visitor',sameOrigin:()=>true,
     useChecks:async(_id,cost)=>{usage.push(cost);return options.userLeft??19},
-    useFree:async(_id,cost)=>{usage.push(cost);return 1},
-    useTotal:async cost=>{quotas.push(cost);return 'total' in options?options.total:399}
+    useFree:async(_id,cost)=>{usage.push(cost);return options.freeLeft??1},
+    useTotal:async cost=>{quotas.push(cost);return 'total' in options?options.total:399},
+    isPlus:async()=>{if(options.plusFails)throw Error('down');return options.plus??false}
   };
   const context=vm.createContext({process:{env:{ANTHROPIC_API_KEY:'test-only'}},console:{info:x=>logs.push(x),error:x=>logs.push(x)}});
   const sdk=new vm.SyntheticModule(['default'],function(){this.setExport('default',Anthropic)},{context});
   const supa=new vm.SyntheticModule(Object.keys(values),function(){for(const [key,value]of Object.entries(values))this.setExport(key,value)},{context});
+  const stripeMod=new vm.SyntheticModule(['pay'],function(){this.setExport('pay',!!options.pay)},{context});
   const module=new vm.SourceTextModule(fs.readFileSync(new URL('api/check.js',root),'utf8'),{context});
-  await module.link(name=>name==='@anthropic-ai/sdk'?sdk:supa);await module.evaluate();
+  await module.link(name=>name==='@anthropic-ai/sdk'?sdk:name==='./_stripe.js'?stripeMod:supa);await module.evaluate();
   const req={method:'POST',headers:{host:'example.test',origin:'https://example.test'},body:{tasks:[{task:'Stuur een bericht',text:'Ik kom later. Personal test content.'}]}};
   const res={statusCode:200,status(n){this.statusCode=n;return this},json(body){this.body=body;return this}};
   await module.namespace.default(req,res);
@@ -68,4 +70,14 @@ test('The real quota reader rejects JSON values that could otherwise coerce into
     await assert.rejects(source.namespace.useChecks('user',1));
     await assert.rejects(source.namespace.useFree('visitor',1));
   }
+});
+
+test('With payments on, a logged-in learner without Plus gets only the free single checks, then a Plus answer',async()=>{
+  const free=await handler({pay:true,plus:false});assert.equal(free.res.statusCode,200);assert.equal(free.res.body.free,1);assert.equal(free.modelCalls,1);
+  const plus=await handler({pay:true,plus:true});assert.equal(plus.res.statusCode,200);assert.equal(plus.res.body.left,19);
+  const used=await handler({pay:true,plus:false,freeLeft:-1});assert.equal(used.res.statusCode,402);assert.equal(used.res.body.error,'plus');assert.equal(used.modelCalls,0);
+  const down=await handler({pay:true,plusFails:true});assert.equal(down.res.statusCode,502);assert.equal(down.modelCalls,0);
+});
+test('Without payments set up, grading works as before for every logged-in learner',async()=>{
+  const r=await handler({pay:false,plus:false});assert.equal(r.res.statusCode,200);assert.equal(r.res.body.left,19);
 });
