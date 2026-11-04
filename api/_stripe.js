@@ -4,8 +4,8 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 // Env vars (Vercel project settings; never in the repository or the chat):
 //   STRIPE_SECRET_KEY      sk_test_… or sk_live_…
 //   STRIPE_WEBHOOK_SECRET  whsec_… of the endpoint https://bittertalen.nl/api/stripe
-//   STRIPE_PRICE_MONTH     price_… €4,99 a month
-//   STRIPE_PRICE_YEAR      price_… €49,90 a year
+//   STRIPE_PRICE_MONTH     price_… €9,99 a month
+//   STRIPE_PRICE_YEAR      price_… €99,90 a year
 // Without all four, payments are off and the app behaves as before (everything free within the daily limits).
 const KEY = (process.env.STRIPE_SECRET_KEY || "").trim();
 const HOOK = (process.env.STRIPE_WEBHOOK_SECRET || "").trim();

@@ -281,7 +281,7 @@ vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one comin
 ## Bittertalen Plus (payments)
 
 The user chose Stripe (November 2026): practice is free; Claude's grading and every proefexamen are Bittertalen Plus,
-€4,99 a month or €49,90 a year, the first time with 7 days free (once per person, `trial_used`). Stripe by plain
+€9,99 a month or €99,90 a year (two months free; chosen in November 2026, still the cheapest monthly offer without a long contract), the first time with 7 days free (once per person, `trial_used`). Stripe by plain
 fetch, no SDK (`api/_stripe.js`: form encoding, `verify()` of the `Stripe-Signature` header, `PLUS` statuses: active,
 trialing, past_due). Off until all four env vars are set (`STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`,
 `STRIPE_PRICE_MONTH`, `STRIPE_PRICE_YEAR`; never in the repository or the chat); then `/api/config` gives `plus`
