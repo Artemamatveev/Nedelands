@@ -115,6 +115,8 @@ h1 .idot,.wlogo .idot{position:relative} h1 .idot svg,.wlogo .idot svg{position:
 .sw{list-style:none;margin:8px 0 0;padding:0}
 .sw li{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:var(--fs-b)}
 .sw li>span{flex:1;min-width:0}
+.sw small{display:block;color:var(--soft);font-size:var(--fs-m)}
+.bgq{font-size:var(--fs-xl);font-weight:600;letter-spacing:-.01em;margin:6px 0 16px}
 .sw .say{flex:none;background:none;border:0;color:var(--blue);font-size:var(--fs-m);padding:6px 4px}
 .sw .ghost{flex:none;padding:6px 12px;font-size:var(--fs-m)}
 .sw .ghost:disabled{opacity:.5;cursor:default}
@@ -216,8 +218,9 @@ a.it{text-decoration:none} .it.ext::after{content:none}
 .gate{padding:2px 0 12px}
 /* the level: two halves of one outlined button, the chosen one filled */
 .seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;background:color-mix(in srgb,var(--ink) 8%,var(--card));border-radius:var(--rc);margin-top:2px}
+.seg.minutes{grid-template-columns:repeat(3,minmax(0,1fr))}
 .seg button{border:0;border-radius:10px;background:none;color:var(--soft);font-weight:600;font-size:var(--fs-m);padding:8px 6px;min-height:40px}
-.seg button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:0 1px 4px rgba(8,16,40,.18)} .seg.lvt{margin:12px 0 14px} #acct .wide,#welcome .wide,#welcome .two,#move .wide{margin-bottom:8px}
+.seg button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:0 1px 4px rgba(8,16,40,.18)} #acct .wide,#welcome .wide,#welcome .two,#move .wide{margin-bottom:8px}
 .tabs.min button{padding:10px 4px} .tabs.min span{display:none}
 body:has(#home[hidden]) .tabs{display:none}
 main:has(#home:not([hidden])){padding-bottom:116px}
@@ -258,7 +261,6 @@ textarea{display:block;width:100%;font-size:var(--fs-b);line-height:1.5;padding:
 .wcard{width:100%;max-width:400px;margin-top:auto;background:var(--card);border-radius:24px;padding:26px 22px 14px;box-shadow:0 14px 44px rgba(0,0,0,.3);text-align:center}
 .wlogo{font-size:30px;font-weight:700;letter-spacing:-.01em;margin:0 0 6px;color:var(--ink)}
 .wcard h2{display:block;text-align:center;font-size:var(--fs-xl);font-weight:600;margin:0 0 18px} .wcard h2::before{display:none}
-.wcard .wlv{font-size:var(--fs-m);color:var(--soft);margin:0 0 6px}
 .wcard .seg{margin:0 0 14px} .seg.uit{margin:0 0 14px}
 .wcard .fld{margin-bottom:0} .wcard .fld input{height:54px}
 .wcard .btn,.wcard .ghost{min-height:54px;padding:10px 14px;margin:0 0 10px}
@@ -275,6 +277,14 @@ textarea{display:block;width:100%;font-size:var(--fs-b);line-height:1.5;padding:
 .login .pk svg{width:26px;height:26px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .fld span{display:block;font-size:var(--fs-m);color:var(--soft);margin-bottom:6px}
 .fld input{width:100%;height:52px;font-size:var(--fs-b);font-weight:400;padding:0 16px}
+/* a native <select> under a field-like box (like the language pill): the box shows the choice, the phone its own picker */
+.pick{position:relative;display:flex;align-items:center;gap:10px;height:52px;padding:0 16px;background:var(--card);color:var(--ink);border:1.5px solid var(--ink);border-radius:var(--rc)}
+.pick b{flex:1;min-width:0;font-weight:400;font-size:var(--fs-b);text-align:var(--ta);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pick svg{flex:none;width:14px;height:14px;fill:none;stroke:var(--soft);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.pick select{position:absolute;inset:0;width:100%;height:100%;opacity:0;font-size:16px;border:0;cursor:pointer}
+.pick:focus-within{border-color:var(--blue)}
+.seg.tlv{margin:0 0 14px}
+.plus ul{margin:8px 0 16px;padding-inline-start:22px} .plus li{margin:0 0 6px} .plus .seg{margin:0 0 8px} .plus .pr{margin:0 0 14px;color:var(--soft);font-size:var(--fs-m)} .plus .pr b{color:var(--ink);font-size:var(--fs-b)}
 .btn{background:var(--fill);color:var(--on-fill);border:0;border-radius:var(--rc);padding:14px 20px;min-height:52px;font-weight:600;font-size:var(--fs-b)}
 .btn:active{background:var(--fill-press)}
 .btn:disabled{opacity:.4;cursor:default}
@@ -417,7 +427,7 @@ body.vfull{overflow:hidden}
 /* geschiedenis */
 #hist{position:relative}
 #hist>.back{margin-top:14px}
-#hist h2{margin-top:18px} #hbody>.ask{margin-top:20px} #hbody>.ask+h2{margin-top:4px}
+#hist h2{margin-top:18px} #hbody .ask:first-child{margin-top:20px} #hbody .ask:first-child+h2{margin-top:4px}
 #hall{margin-top:24px}
 .hfig{margin:14px 0 18px}
 .hfig button{display:block;width:100%;padding:0;border:0;background:var(--surface)}
@@ -430,7 +440,7 @@ body.vfull{overflow:hidden}
 /* gesprekken: het gesprek als een toneeltekst; wat jij zegt springt in */
 #talk{position:relative}
 #talk>.back{margin-top:14px}
-#talk h2{margin-top:18px} #tbody>.ask{margin-top:20px} #tbody>.ask+h2{margin-top:4px}
+#talk h2{margin-top:18px} #tbody>.ask,#tbody>[lang=nl]>.ask:first-child{margin-top:20px} #tbody>.ask+h2,#tbody>[lang=nl]>.ask:first-child+h2{margin-top:4px}
 #tbody .pics{margin:14px 0 16px}
 .talk{margin:18px 0 0;border-top:1px solid var(--line)}
 .talk:empty{display:none}
@@ -540,7 +550,7 @@ main:is(:not(.big),:has(#home[hidden])) header .lang{top:6px;height:32px} /* the
 :root[dir=rtl]{--ta:right;--te:left}
 :root[dir=rtl] body{text-align:right}
 :root[dir=rtl] :is(p,h2,h3,b,small,li,.d){unicode-bidi:plaintext}
-:root[dir=rtl] :is(header,#play,#read,[lang=nl],.doc,.sample,.msum,input[type=email]){direction:ltr;text-align:left;--ta:left;--te:right}
+:root[dir=rtl] :is(header,#play,#read,[lang=nl],.book,.doc,.sample,.msum,.tl,.bgl,input[type=email]){direction:ltr;text-align:left;--ta:left;--te:right}
 :root[dir=rtl] .tabs .lens{left:auto;right:5px;transform:translateX(calc(var(--i,0) * -100%))}
 :root[dir=rtl] :not(#read *).back>span{display:inline-block;transform:scaleX(-1)}
 /* spacing between letters breaks joined Arabic and Devanagari */
@@ -558,6 +568,22 @@ main:is(:not(.big),:has(#home[hidden])) header .lang{top:6px;height:32px} /* the
 /* longer lines break in better places */
 h2,h3,.verb,.step b,.it b{text-wrap:balance} p,.d,.sub,.note{text-wrap:pretty}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.tabs .lens.go{animation:none}}
+
+/* Writing feedback reuses the existing score bars and list-row controls. */
+.writing-review{margin-block:22px;padding-block:16px;border-block-start:1px solid var(--line)}
+.writing-review .lh{margin-block:18px 10px}
+.writing-type{margin-block:12px 18px}
+.writing-type-heading{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:start}
+.writing-type-heading strong{font-variant-numeric:tabular-nums;font-weight:600}
+.writing-type .note{margin-block:3px 0}
+.writing-type .bar{margin-block:7px 0}
+.writing-focus{border-inline-start:3px solid var(--oranje);padding-inline-start:12px;margin-block:14px 20px}
+.writing-focus p{margin-block:0 8px}
+.writing-focus .it{padding-inline:0;min-height:52px}
+.writing-history summary,.writing-details summary{cursor:pointer;font-weight:600;min-height:44px;display:list-item;padding-block:10px}
+.writing-details{margin-block:18px}
+.writing-details h2{margin-block-start:24px}
+
 </style>
 </head>
 <body>
@@ -580,7 +606,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
     <section class="tile" id="prof" data-tab="profiel"><h2>Profiel</h2>
       <label class="fld"><span>Voornaam</span><input id="pname" autocomplete="given-name" maxlength="40"></label>
       <label class="fld"><span>Achternaam</span><input id="plast" autocomplete="family-name" maxlength="60"></label>
-      <div class="fld"><span>Ik oefen voor</span><div class="seg" id="plvl" role="group" aria-label="Niveau"></div></div>
+      <div class="fld"><span id="plvlt">Ik oefen voor</span><div class="pick"><b id="plvlv"></b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg><select id="plvl" aria-labelledby="plvlt"></select></div></div>
       <label class="tog" id="ptrilw" hidden><span>Trillen bij een antwoord</span><input type="checkbox" switch id="ptril"></label>
       <div id="acct"></div>
       <div class="list" id="plinks"></div>
@@ -655,185 +681,16 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
   <button data-t="profiel"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c1.2-3.6 4-5.5 7.5-5.5s6.3 1.9 7.5 5.5"/></svg><span>Profiel</span></button>
 </nav>
 <div class="zoom" id="zoom" hidden><img id="zimg" alt=""><p id="zcap"></p></div>
+<script src="/study/language-v1.js"></script>
+<script src="/study/progress-v1.js"></script>
+<script src="/study/writing-v1.js"></script>
 <script>
-
-const V=[
-["zijn","","was","waren","geweest","zijn"],["hebben","","had","hadden","gehad","hebben"],
-["gaan","","ging","gingen","gegaan","zijn"],["komen","","kwam","kwamen","gekomen","zijn"],
-["doen","","deed","deden","gedaan","hebben"],["zien","","zag","zagen","gezien","hebben"],
-["zeggen","","zei","zeiden","gezegd","hebben"],["weten","","wist","wisten","geweten","hebben"],
-["kunnen","","kon","konden","gekund","hebben"],["willen","","wilde","wilden","gewild","hebben"],
-["moeten","","moest","moesten","gemoeten","hebben"],["mogen","","mocht","mochten","gemogen","hebben"],
-["krijgen","","kreeg","kregen","gekregen","hebben"],["geven","","gaf","gaven","gegeven","hebben"],
-["nemen","","nam","namen","genomen","hebben"],["staan","","stond","stonden","gestaan","hebben"],
-["zitten","","zat","zaten","gezeten","hebben"],["liggen","","lag","lagen","gelegen","hebben"],
-["blijven","","bleef","bleven","gebleven","zijn"],["worden","","werd","werden","geworden","zijn"],
-["vinden","","vond","vonden","gevonden","hebben"],["denken","","dacht","dachten","gedacht","hebben"],
-["brengen","","bracht","brachten","gebracht","hebben"],["kopen","","kocht","kochten","gekocht","hebben"],
-["zoeken","","zocht","zochten","gezocht","hebben"],["lezen","","las","lazen","gelezen","hebben"],
-["schrijven","","schreef","schreven","geschreven","hebben"],["spreken","","sprak","spraken","gesproken","hebben"],
-["eten","","at","aten","gegeten","hebben"],["drinken","","dronk","dronken","gedronken","hebben"],
-["slapen","","sliep","sliepen","geslapen","hebben"],["lopen","","liep","liepen","gelopen",null],
-["rijden","","reed","reden","gereden",null],["vliegen","","vloog","vlogen","gevlogen",null],
-["beginnen","","begon","begonnen","begonnen","zijn"],["vergeten","","vergat","vergaten","vergeten",null],
-["begrijpen","","begreep","begrepen","begrepen","hebben"],["helpen","","hielp","hielpen","geholpen","hebben"],
-["vragen","","vroeg","vroegen","gevraagd","hebben"],["dragen","","droeg","droegen","gedragen","hebben"],
-["vallen","","viel","vielen","gevallen","zijn"],["laten","","liet","lieten","gelaten","hebben"],
-["houden","","hield","hielden","gehouden","hebben"],["roepen","","riep","riepen","geroepen","hebben"],
-["sterven","","stierf","stierven","gestorven","zijn"],["trekken","","trok","trokken","getrokken","hebben"],
-["sluiten","","sloot","sloten","gesloten","hebben"],["kiezen","","koos","kozen","gekozen","hebben"],
-["verliezen","","verloor","verloren","verloren","hebben"],["winnen","","won","wonnen","gewonnen","hebben"],
-["zingen","","zong","zongen","gezongen","hebben"],["zwemmen","","zwom","zwommen","gezwommen",null],
-["bieden","","bood","boden","geboden","hebben"],["breken","","brak","braken","gebroken","hebben"],
-["kijken","","keek","keken","gekeken","hebben"],["snijden","","sneed","sneden","gesneden","hebben"],
-["wassen","","waste","wasten","gewassen","hebben"],["bakken","","bakte","bakten","gebakken","hebben"],
-["lachen","","lachte","lachten","gelachen","hebben"],["verkopen","","verkocht","verkochten","verkocht","hebben"],
-["werken","","werkte","werkten","gewerkt","hebben"],["wonen","","woonde","woonden","gewoond","hebben"],
-["maken","","maakte","maakten","gemaakt","hebben"],["leren","","leerde","leerden","geleerd","hebben"],
-["praten","","praatte","praatten","gepraat","hebben"],["fietsen","","fietste","fietsten","gefietst",null],
-["betalen","","betaalde","betaalden","betaald","hebben"],["reizen","","reisde","reisden","gereisd",null],
-["verhuizen","","verhuisde","verhuisden","verhuisd","zijn"],["luisteren","","luisterde","luisterden","geluisterd","hebben"],
-["spelen","","speelde","speelden","gespeeld","hebben"],["koken","","kookte","kookten","gekookt","hebben"],
-["wachten","","wachtte","wachtten","gewacht","hebben"],["antwoorden","","antwoordde","antwoordden","geantwoord","hebben"],
-["gebeuren","","gebeurde","gebeurden","gebeurd","zijn"],["stoppen","","stopte","stopten","gestopt",null],
-["verbieden","","verbood","verboden","verboden","hebben"],["vertrekken","","vertrok","vertrokken","vertrokken","zijn"],
-["ontvangen","","ontving","ontvingen","ontvangen","hebben"],["onthouden","","onthield","onthielden","onthouden","hebben"],
-["vriezen","","vroor","vroren","gevroren","hebben"],["schijnen","","scheen","schenen","geschenen","hebben"],
-["wegen","","woog","wogen","gewogen","hebben"],["zwijgen","","zweeg","zwegen","gezwegen","hebben"],
-["blijken","","bleek","bleken","gebleken","zijn"],["verdwijnen","","verdween","verdwenen","verdwenen","zijn"],
-["springen","","sprong","sprongen","gesprongen",null],["stijgen","","steeg","stegen","gestegen","zijn"],
-["schieten","","schoot","schoten","geschoten","hebben"],["genieten","","genoot","genoten","genoten","hebben"],
-["wijzen","","wees","wezen","gewezen","hebben"],["bewijzen","","bewees","bewezen","bewezen","hebben"],
-["lijken","","leek","leken","geleken","hebben"],["glijden","","gleed","gleden","gegleden",null],
-["schrikken","","schrok","schrokken","geschrokken","zijn"],["treffen","","trof","troffen","getroffen","hebben"],
-["stelen","","stal","stalen","gestolen","hebben"],["bidden","","bad","baden","gebeden","hebben"],
-["meten","","mat","maten","gemeten","hebben"],["schenken","","schonk","schonken","geschonken","hebben"],
-["vechten","","vocht","vochten","gevochten","hebben"],["hangen","","hing","hingen","gehangen","hebben"],
-["vangen","","ving","vingen","gevangen","hebben"],["slaan","","sloeg","sloegen","geslagen","hebben"],
-["varen","","voer","voeren","gevaren",null],["kruipen","","kroop","kropen","gekropen",null],
-["heten","","heette","heetten","geheten","hebben"],["vouwen","","vouwde","vouwden","gevouwen","hebben"],
-["raden","","raadde","raadden","geraden","hebben"],["leggen","","legde","legden","gelegd","hebben"],
-["zetten","","zette","zetten","gezet","hebben"],["bellen","","belde","belden","gebeld","hebben"],
-["wandelen","","wandelde","wandelden","gewandeld",null],["studeren","","studeerde","studeerden","gestudeerd","hebben"],
-["parkeren","","parkeerde","parkeerden","geparkeerd","hebben"],["dansen","","danste","dansten","gedanst","hebben"],
-["pakken","","pakte","pakten","gepakt","hebben"],["missen","","miste","misten","gemist","hebben"],
-["hopen","","hoopte","hoopten","gehoopt","hebben"],["rusten","","rustte","rustten","gerust","hebben"],
-["leven","","leefde","leefden","geleefd","hebben"],["geloven","","geloofde","geloofden","geloofd","hebben"],
-["huren","","huurde","huurden","gehuurd","hebben"],["sturen","","stuurde","stuurden","gestuurd","hebben"],
-["poetsen","","poetste","poetsten","gepoetst","hebben"],["regenen","","regende","regenden","geregend","hebben"],
-["verdienen","","verdiende","verdienden","verdiend","hebben"],["bestellen","","bestelde","bestelden","besteld","hebben"],
-["vertellen","","vertelde","vertelden","verteld","hebben"],["proberen","","probeerde","probeerden","geprobeerd","hebben"],
-["veranderen","","veranderde","veranderden","veranderd",null],["trouwen","","trouwde","trouwden","getrouwd",null],
-["groeien","","groeide","groeiden","gegroeid","zijn"],["slagen","","slaagde","slaagden","geslaagd","zijn"],
-["zakken","","zakte","zakten","gezakt","zijn"]
-];
 
 const TYPES={past:"Imperfectum: gisteren … ik / hij",pastpl:"Imperfectum: gisteren … wij / zij",pp:"Perfectum: voltooid deelwoord",aux:"Perfectum: hebben of zijn?"};
 const TL=["past","pastpl","pp","aux"];
 
 
-const WO=[
-["Morgen ga ik naar de dokter.","","Inversie: het werkwoord staat altijd op plaats twee."],
-["Gisteren heb ik boodschappen gedaan.","","Na 'gisteren' komt eerst het werkwoord. Het voltooid deelwoord staat aan het eind."],
-["Ik kom niet omdat ik ziek ben.","","Na 'omdat' staat het werkwoord aan het eind."],
-["Ik wil graag een afspraak maken.","","Het modale werkwoord staat op plaats twee, de infinitief aan het eind."],
-["Kunt u dat nog een keer zeggen?","","Een ja/nee-vraag begint met het werkwoord."],
-["Ik sta elke dag om zeven uur op.","","Scheidbaar werkwoord: 'op' gaat naar het eind."],
-["Daarom blijf ik vandaag thuis.","","Na 'daarom' komt inversie."],
-["Ik denk dat hij morgen komt.","","Na 'dat' staat het werkwoord aan het eind."],
-["Wij hebben vorig jaar een huis gekocht.","","Het voltooid deelwoord staat aan het eind."],
-["Waar kan ik een kaartje kopen?","","Eerst het vraagwoord, dan het werkwoord."],
-["Vanavond moet ik tot zes uur werken.","","Inversie, en de infinitief staat aan het eind."],
-["Mijn dochter gaat nog niet naar school.","","'Niet' staat voor het voorzetsel (naar)."],
-["Ik weet niet waar het station is.","","Indirecte vraag: het werkwoord staat aan het eind."],
-["Zij is gisteren naar Amsterdam gegaan.","","Perfectum met 'zijn'; het voltooid deelwoord staat aan het eind."],
-["Volgende week begin ik met een nieuwe baan.","","Inversie na een tijdsbepaling."],
-["Hij zegt dat hij geen geld heeft.","","Na 'dat' staat het werkwoord aan het eind."],
-["Na het eten kijken wij televisie.","","Inversie: het werkwoord staat voor het onderwerp."],
-["Ik blijf thuis omdat het regent.","","Na 'omdat' staat het werkwoord aan het eind."],
-["Als het regent neem ik de bus.","","De bijzin staat vooraan, dus inversie in de hoofdzin."],
-["Toen ik klein was woonde ik in een dorp.","","Na 'toen' staat het werkwoord aan het eind; daarna inversie."],
-["Vandaag kan ik niet naar mijn werk komen.","","Inversie: het werkwoord op plaats twee. 'Niet' staat voor 'naar mijn werk'."],
-["Mijn zoon is sinds gisteren ziek.","","Het werkwoord staat op plaats twee, na het onderwerp."],
-["Ik heb gisteren een afspraak gemaakt.","","Perfectum: 'heb' op plaats twee, 'gemaakt' aan het eind."],
-["Kan ik morgen om tien uur langskomen?","","Een ja/nee-vraag begint met het werkwoord. 'Langskomen' staat aan het eind."],
-["De dokter zegt dat ik veel water moet drinken.","","Na 'dat' staan de werkwoorden aan het eind."],
-["Ik neem elke ochtend een pil in.","","Scheidbaar werkwoord: 'in' gaat naar het eind."],
-["Waarom bent u gisteren niet gekomen?","","Vraagwoord, dan het werkwoord. 'Niet' staat voor het voltooid deelwoord."],
-["Ik wil me graag ziekmelden.","","'Wil' op plaats twee, 'ziekmelden' aan het eind."],
-["Morgen heb ik een sollicitatiegesprek bij een bank.","","Inversie na 'morgen': eerst het werkwoord, dan het onderwerp."],
-["Ik werk sinds twee jaar in een supermarkt.","","Eerst de tijd, dan de plaats."],
-["Ik zoek een baan omdat ik meer geld wil verdienen.","","Na 'omdat' staan de werkwoorden aan het eind."],
-["Hij heeft het contract nog niet getekend.","","'Nog niet' staat voor het voltooid deelwoord."],
-["Mijn baas vraagt of ik zaterdag kan werken.","","Na 'of' (indirecte vraag) staan de werkwoorden aan het eind."],
-["Volgende maand begint mijn nieuwe baan.","","Inversie: 'begint' op plaats twee, het onderwerp erna."],
-["Ik heb geen ervaring met dit werk.","","'Geen' staat voor een zelfstandig naamwoord."],
-["Kunt u mij uitleggen hoe het werkt?","","In de bijzin met 'hoe' staat het werkwoord aan het eind."],
-["Ik ben vorige week verhuisd.","","Perfectum met 'zijn': 'verhuisd' aan het eind."],
-["Wij zoeken een woning met drie slaapkamers.","","Onderwerp, werkwoord, dan de rest."],
-["De verwarming doet het al twee dagen niet.","","'Niet' staat aan het eind van de zin."],
-["Wanneer kunt u de lekkage komen repareren?","","Twee infinitieven aan het eind: 'komen repareren'."],
-["Ik moet mijn nieuwe adres doorgeven.","","Het modale werkwoord op plaats twee, 'doorgeven' aan het eind."],
-["Onze buren maken elke avond veel lawaai.","","Het werkwoord op plaats twee, dan de tijd."],
-["Ik wil weten hoeveel de huur per maand is.","","Na 'hoeveel' (indirecte vraag) staat het werkwoord aan het eind."],
-["Op dinsdag wordt het afval opgehaald.","","Inversie na 'op dinsdag'; 'opgehaald' aan het eind."],
-["Mijn dochter gaat elke dag met de fiets naar school.","","Tijd, manier, plaats: elke dag, met de fiets, naar school."],
-["De les begint om half negen.","","Het werkwoord op plaats twee."],
-["Mijn zoon heeft zijn huiswerk nog niet gemaakt.","","'Nog niet' staat voor het voltooid deelwoord."],
-["Ik wil graag met de juf praten.","","'Wil' op plaats twee, 'praten' aan het eind."],
-["Na school gaat hij naar de sportclub.","","Inversie na 'na school'."],
-["Wie kan mijn kind van school ophalen?","","Vraagwoord, werkwoord; 'ophalen' aan het eind."],
-["Ik weet niet wanneer de vakantie begint.","","Na 'wanneer' (indirecte vraag) staat het werkwoord aan het eind."],
-["Hoe laat vertrekt de trein naar Utrecht?","","Eerst het vraagwoord, dan het werkwoord."],
-["In Amersfoort moet ik overstappen.","","Inversie na 'in Amersfoort'; 'overstappen' aan het eind."],
-["De trein heeft twintig minuten vertraging.","","Onderwerp, werkwoord, dan de rest."],
-["Vergeet niet in te checken!","","'Te' staat voor de infinitief; 'in' staat voor 'te'."],
-["Ik ga meestal met de bus naar mijn werk.","","Tijd, manier, plaats: meestal, met de bus, naar mijn werk."],
-["Bij welke halte moet ik uitstappen?","","Vraagwoord, werkwoord, onderwerp; 'uitstappen' aan het eind."],
-["Gisteren heb ik mijn fiets laten repareren.","","Inversie; twee infinitieven aan het eind: 'laten repareren'."],
-["Heeft u deze jas ook in een grotere maat?","","Ja/nee-vraag: het werkwoord eerst."],
-["Ik wil deze broek ruilen.","","'Wil' op plaats twee, 'ruilen' aan het eind."],
-["Kan ik hier met mijn pinpas betalen?","","Ja/nee-vraag; 'betalen' aan het eind."],
-["Ik heb de bon niet meer.","","'Niet meer' staat na het lijdend voorwerp."],
-["Ik heb vorige week een pakket besteld.","","Perfectum: 'besteld' aan het eind."],
-["Op zaterdag doen wij boodschappen.","","Inversie na 'op zaterdag': eerst het werkwoord, dan het onderwerp."],
-["Ik heb een nieuw paspoort nodig.","","'Nodig' staat aan het eind."],
-["U moet dit formulier invullen en ondertekenen.","","Twee infinitieven met 'en' aan het eind."],
-["De Belastingdienst heeft mij een brief gestuurd.","","Perfectum: 'heeft' op plaats twee, 'gestuurd' aan het eind."],
-["Ik begrijp niet wat ik moet doen.","","Na 'wat' (indirecte vraag) staan de werkwoorden aan het eind."],
-["Waar kan ik huurtoeslag aanvragen?","","Vraagwoord, werkwoord, onderwerp; 'aanvragen' aan het eind."],
-["Ik ben het er niet mee eens.","","'Het er niet mee eens zijn': 'niet' staat tussen 'er' en 'mee'."],
-["Ik heb mijn DigiD-wachtwoord vergeten.","","Perfectum: 'vergeten' aan het eind."],
-["Mag ik u iets vragen?","","Ja/nee-vraag; 'vragen' aan het eind."],
-["Ik ben blij dat je er bent.","","Na 'dat' staat het werkwoord aan het eind."],
-["Zaterdag geef ik een feest voor mijn verjaardag.","","Inversie na 'zaterdag'."],
-["Heb je zin om mee te gaan?","","'Om … te' met een scheidbaar werkwoord: 'mee te gaan'."],
-["Ik kom later omdat de bus niet reed.","","Na 'omdat' staat het werkwoord aan het eind."],
-["Wij gaan in de zomer naar Spanje.","","Eerst de tijd, dan de plaats."],
-["Ik had geen tijd om te koken.","","'Om te' + infinitief aan het eind."],
-["Als ik tijd heb, bel ik je.","","De bijzin staat vooraan: 'heb' aan het eind, dan inversie 'bel ik'."],
-["Toen ik in Nederland kwam, sprak ik geen Nederlands.","","Bijzin met 'toen' vooraan; daarna inversie."],
-["Omdat het hard regent, blijven we binnen.","","Bijzin vooraan: daarna komt eerst het werkwoord."],
-["Ik hoop dat het morgen mooi weer wordt.","","Na 'dat' staat het werkwoord aan het eind."],
-["Het is belangrijk om elke dag Nederlands te oefenen.","","'Om … te' + infinitief aan het eind."],
-["Ik zou graag een kopje koffie willen.","","'Zou' op plaats twee, 'willen' aan het eind."],
-["Hij vertelt dat hij een nieuwe baan heeft.","","Na 'dat' staat het werkwoord aan het eind."],
-["De man die naast mij woont, heet Peter.","","Na 'die' staat het werkwoord aan het eind van de bijzin."],
-["Het boek dat ik lees, is erg spannend.","","In de bijzin met 'dat' staat 'lees' aan het eind."],
-["Ik ben gisteren om elf uur naar bed gegaan.","","Perfectum met 'zijn': 'gegaan' aan het eind."],
-["Wij hebben het hele weekend hard gewerkt.","","Perfectum: 'gewerkt' aan het eind."],
-["Mijn moeder belt mij elke zondag op.","","Scheidbaar werkwoord: 'op' gaat naar het eind."],
-["Wanneer komt de monteur de wasmachine maken?","","Vraagwoord, werkwoord, onderwerp; 'maken' aan het eind."],
-["Daarna heb ik nog een uur gewandeld.","","Inversie na 'daarna'; 'gewandeld' aan het eind."],
-["Eerst ga ik douchen, dan eet ik.","","Na 'eerst' en 'dan': inversie."],
-["Ik kan vandaag niet komen, want ik ben ziek.","","Na 'want' blijft de gewone volgorde: onderwerp, werkwoord."],
-["Ik weet niet of ik morgen kan komen.","","Na 'of' (indirecte vraag) staan de werkwoorden aan het eind."],
-["Hoeveel kost een kaartje naar Rotterdam?","","Eerst het vraagwoord, dan het werkwoord."],
-["Ik woon al vijf jaar in Nederland.","","'Al vijf jaar' staat direct na het werkwoord."],
-["Sinds een jaar leer ik Nederlands.","","Inversie na 'sinds een jaar'."],
-["Ik heb je bericht te laat gelezen.","","Perfectum: 'gelezen' aan het eind."],
-["Wil je de deur dichtdoen?","","Ja/nee-vraag; 'dichtdoen' aan het eind."]
-];
+
 
 const PR=[
 ["Hij ___ in een winkel.","werken","werkt","werk","werken"],
@@ -1796,7 +1653,7 @@ const LZ=[
   ["Hoe weten de bewoners wanneer ze geen water hebben?","ze krijgen een week van tevoren een brief","het staat op een bord in de straat","ze horen het op het spreekuur"],
   ["Waar zetten de bewoners hun container?","aan het begin van de straat, bij het bord","op het parkeerterrein bij het sportpark","op een andere dag bij het buurthuis"]],
  "Fleur krijgt een brief van het waterbedrijf."],
-["Nieuw in Zuidstad: de Repair Café\nGooi je kapotte spullen niet weg! Elke eerste zaterdag van de maand is er een Repair Café in buurthuis De Ster. Van tien tot één uur helpen vrijwilligers je om je spullen te repareren.\nWat kun je meenemen? Bijvoorbeeld een lamp die het niet meer doet, een broek met een gat, een kapotte fiets of een speelgoedauto. Ook kleine apparaten, zoals een broodrooster of een föhn, kunnen vaak gemaakt worden. Grote apparaten, zoals een wasmachine of een koelkast, kunnen we helaas niet repareren.\nDe vrijwilligers repareren niet alleen voor je, maar samen met je. Zo leer je zelf ook iets.\nRepareren is gratis. Wel betaal je zelf voor nieuwe onderdelen, zoals een nieuwe stekker. Wil je iets geven voor de koffie? Dat mag, in de pot bij de deur.\nJe hoeft je niet aan te melden. Kom gewoon langs. Het kan wel druk zijn: om tien uur is er vaak een rij. Kom dus liever wat later, rond half twaalf.\nWil je zelf vrijwilliger worden? Kun je goed naaien of goed met elektriciteit werken? Stuur dan een e-mail naar repaircafe@destar.nl.",
+["Nieuw in Zuidstad: het Repair Café\nGooi je kapotte spullen niet weg! Elke eerste zaterdag van de maand is er een Repair Café in buurthuis De Ster. Van tien tot één uur helpen vrijwilligers je om je spullen te repareren.\nWat kun je meenemen? Bijvoorbeeld een lamp die het niet meer doet, een broek met een gat, een kapotte fiets of een speelgoedauto. Ook kleine apparaten, zoals een broodrooster of een föhn, kunnen vaak gemaakt worden. Grote apparaten, zoals een wasmachine of een koelkast, kunnen we helaas niet repareren.\nDe vrijwilligers repareren niet alleen voor je, maar samen met je. Zo leer je zelf ook iets.\nRepareren is gratis. Wel betaal je zelf voor nieuwe onderdelen, zoals een nieuwe stekker. Wil je iets geven voor de koffie? Dat mag, in de pot bij de deur.\nJe hoeft je niet aan te melden. Kom gewoon langs. Het kan wel druk zijn: om tien uur is er vaak een rij. Kom dus liever wat later, rond half twaalf.\nWil je zelf vrijwilliger worden? Kun je goed naaien of goed met elektriciteit werken? Stuur dan een e-mail naar repaircafe@destar.nl.",
  [["Wat kun je niet meenemen naar het Repair Café?","een koelkast","een föhn","een broek met een gat"],
   ["Wat moet je betalen?","alleen nieuwe onderdelen","een vast bedrag voor elke reparatie","niets, ook geen onderdelen"],
   ["Wanneer kun je het beste komen?","rond half twaalf","om tien uur","om één uur"]],
@@ -2081,33 +1938,93 @@ const SEC=[
 {id:"w1",t:"Woordvolgorde B1",s:"Lange zinnen met bijzinnen",n:6},
 {id:"v1",t:"Woordenschat B1",s:"Werk, geld, gezondheid, wonen",n:10},
 {id:"vo",t:"Woordenschat",s:"Ruim 1000 woorden in 23 thema's",n:10},
-{id:"gs",t:"Geschiedenis",s:"Vragen over de geschiedenis van Nederland",n:10}
+{id:"gs",t:"Geschiedenis",s:"Vragen over de geschiedenis van Nederland",n:10},
+{id:"bg",t:"Beginnen",s:"Twaalf korte lessen",n:8}
 ];
 const GAP=[1,2,4,7,14], KEY="ww-v1";
 const $=id=>document.getElementById(id);
 const today=()=>{const d=new Date();return Math.floor((d.getTime()-d.getTimezoneOffset()*6e4)/864e5)};
-let S={items:{},streak:0,last:0,typing:false,errs:[],gen:{lz:[],ls:[]},t:0,day:{d:0,done:[]},words:[],bk:{}};
-try{const r=JSON.parse(localStorage.getItem(KEY));if(r&&r.items)S=Object.assign(S,r)}catch(e){}
+const freshProgress=()=>({items:{},streak:0,last:0,typing:false,errs:[],gen:{lz:[],ls:[]},t:0,day:{d:0,done:[]},words:[],bk:{}});
+let progressOwner="guest", syncFrame={}, S=freshProgress();
+const progressKey=owner=>"ww-progress-v2:"+owner;
+function readLocal(key){try{return JSON.parse(localStorage.getItem(key))}catch{return null}}
+const legacyOwner=(()=>{try{return localStorage.getItem("ww-acc")||"guest"}catch{return "guest"}})();
+function openProgress(owner, initial){
+  progressOwner=owner;
+  const entry=readLocal(progressKey(owner));
+  const legacy=owner===legacyOwner && !entry ? readLocal(KEY) : null;
+  S=migrateGenerated(Object.assign(freshProgress(),entry?.data||legacy||initial||{}));
+  syncFrame=entry?.frame||{};
+}
+// A cached auth user selects only a local scope. Server access still requires Supabase auth/RLS.
+function cachedProgressOwner(){
+  try{
+    const owner=localStorage.getItem("ww-active-owner") || (legacyOwner!=="guest"?legacyOwner:null);
+    if(!owner)return "guest";
+    for(let i=0;i<localStorage.length;i++){
+      const key=localStorage.key(i);
+      if(/^sb-.+-auth-token$/.test(key) && readLocal(key)?.user?.id===owner)return owner;
+    }
+  }catch{}
+  return "guest";
+}
+openProgress(cachedProgressOwner());
 // Backup copy in IndexedDB: iOS home-screen apps can lose localStorage
 const idb=new Promise((ok,no)=>{try{const r=indexedDB.open("ww",1);r.onupgradeneeded=()=>r.result.createObjectStore("kv");r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)}catch(e){no(e)}});
 idb.catch(()=>{});
-const idbPut=v=>idb.then(db=>db.transaction("kv","readwrite").objectStore("kv").put(v,KEY)).catch(()=>{});
-const idbGet=()=>idb.then(db=>new Promise(ok=>{const r=db.transaction("kv").objectStore("kv").get(KEY);r.onsuccess=()=>ok(r.result);r.onerror=()=>ok(null)})).catch(()=>null);
+const idbPut=(v,key=progressKey(progressOwner))=>idb.then(db=>db.transaction("kv","readwrite").objectStore("kv").put(v,key)).catch(()=>{});
+const idbGet=(key=progressKey(progressOwner))=>idb.then(db=>new Promise(ok=>{const r=db.transaction("kv").objectStore("kv").get(key);r.onsuccess=()=>ok(r.result);r.onerror=()=>ok(null)})).catch(()=>null);
 try{navigator.storage.persist().catch(()=>{})}catch(e){}
 let restored=false;
-const localSave=()=>{const j=JSON.stringify(S);try{localStorage.setItem(KEY,j)}catch(e){}if(restored)idbPut(j)};
+let localVersion=0;
+function localSave(){
+  const key=progressKey(progressOwner), value=JSON.stringify({data:S,frame:syncFrame,version:++localVersion});
+  let stored=false;
+  try{localStorage.setItem(key,value);stored=true}catch{}
+  if(restored)idbPut(value,key);
+  return stored;
+}
 async function restore(){
-  try{const r=JSON.parse(await idbGet());restored=true;if(r&&r.items&&(r.t||0)>(S.t||0)){S=Object.assign(S,r);addGenerated();if(!$("home").hidden)home()}}catch(e){restored=true}
-  localSave();
+  const owner=progressOwner, key=progressKey(owner), start=S.t;
+  let entry=null;
+  try{
+    entry=JSON.parse(await within(idbGet(key),1800,null));
+    if(!entry && owner===legacyOwner && !readLocal(key))
+      entry={data:JSON.parse(await within(idbGet(KEY),1000,null))};
+  }catch{}
+  if(owner!==progressOwner)return;
+  const local=readLocal(key);
+  localVersion=Math.max(localVersion,local?.version||0,entry?.version||0);
+  if(S.t===start && entry?.data && (!local || (entry.version||0)>(local.version||0)) && (entry.data.t||0)>=(S.t||0)){
+    S=Object.assign(freshProgress(),entry.data);syncFrame=entry.frame||{};addGenerated();refresh();
+  }
+  restored=true;localSave();
 }
 // cloud: where the progress is mirrored, {set(S)}: the account (Supabase, below) or the claude.ai runtime
-let cloud=null,busy=false,dirty=false,pushT=null;
+let cloud=null,dirty=false,pushT=null;
+let syncing=null, retryDelay=3000;
 function push(){
   clearTimeout(pushT);pushT=null;
-  if(!cloud)return; if(busy){dirty=true;return} busy=true;
-  cloud.set(S).catch(()=>{}).then(()=>{busy=false;if(dirty){dirty=false;push()}});
+  if(!cloud)return Promise.resolve();
+  const session=cloud;
+  if(syncing?.session===session){dirty=true;return syncing.promise}
+  dirty=false;
+  const run=session.set(S).then(()=>{
+    if(cloud!==session)return;
+    retryDelay=3000;acc.sync="Opgeslagen";acc.saved=Date.now();
+  }).catch(()=>{
+    if(cloud!==session)return;
+    acc.sync=navigator.onLine?"Synchroniseren mislukt":"Wacht op internet";
+    pushT=setTimeout(push,retryDelay);retryDelay=Math.min(retryDelay*2,60000);
+  }).finally(()=>{
+    if(cloud!==session)return;
+    syncing=null;drawProfile();
+    if(dirty)push();
+  });
+  syncing={session,promise:run};return run;
 }
-const save=()=>{S.t=Date.now();localSave();if(cloud){clearTimeout(pushT);pushT=setTimeout(push,3000)}};
+const save=()=>{S.t=Math.max(Date.now(),(S.t||0)+1);localSave();if(cloud){acc.sync="Wacht op synchronisatie";clearTimeout(pushT);pushT=setTimeout(push,1000)}};
+window.addEventListener("online",()=>{if(cloud)push()});
 const refresh=()=>{if(!$("home").hidden)home()};
 async function initCloud(){
   try{
@@ -2150,36 +2067,69 @@ async function initAccount(){
   const q=new URLSearchParams(location.search),back=q.has("code")||q.has("error");
   if(back&&q.get("h")&&(!handOf()||handOf().h!==q.get("h")))return handBack(q.get("h"),q.get("code"),q.get("error"));
   if(back)lsSet(HAND,null);
-  let has=false; try{has=Object.keys(localStorage).some(k=>/^sb-.+-auth-token$/.test(k))}catch(e){}
-  if(back||has)try{await loadSb();const{data}=await acc.sb.auth.getSession();if(!acc.user)await setUser(data.session&&data.session.user||null)}catch(e){}
+  let has=false; try{for(let i=0;i<localStorage.length;i++)if(/^sb-.+-auth-token$/.test(localStorage.key(i)))has=true}catch(e){}
+  if(back||has)try{await loadSb();const{data,error}=await acc.sb.auth.getSession();if(error)throw error;if(!acc.user)await setUser(data.session&&data.session.user||null)}catch(e){}
   if(back){ // back from Google or Apple
     if(q.get("error"))acc.msg="Inloggen is niet gelukt. Probeer het nog een keer.";
     history.replaceState(null,"",location.pathname); setTab("profiel"); drawProfile()}
   if(handOf())claimHand();
   if(!acc.user&&!back&&!lsGet(WEL)&&!$("home").hidden&&(acc.cfg.login||[]).length&&!/bot|crawl|spider|slurp|lighthouse/i.test(navigator.userAgent))welcome();
 }
+let accountEpoch=0;
 async function setUser(u){
-  acc.user=u; acc.left=null; acc.step=null;
-  if(!u){cloud=null;return drawProfile()}
-  const uid=u.id;
-  cloud={set:o=>acc.sb.from("progress").upsert({user_id:uid,data:o,t:o.t||0,updated_at:new Date().toISOString()})
-    .then(r=>{if(r.error)throw r.error;acc.saved=Date.now();drawProfile()})};
-  drawProfile(); await pull().catch(()=>{}); usage(); syncMeta();
-  if(!$("welcome").hidden){lsSet(WEL,"1");acc.msg="";if(OLD==="bittertalen.vercel.app")moveScreen();else home()}
+  const uid=u?.id, owner=uid||"guest";
+  if(acc.user?.id===uid && cloud && owner===progressOwner)return;
+  const epoch=++accountEpoch;
+  lsSet("ww-active-owner",uid||null);
+  if(!uid)lsSet(ALINK,null);
+  const guest=progressOwner==="guest" && uid && (S.t || Object.keys(S.items).length) ? progressClone(S) : null;
+  clearTimeout(pushT);cloud=null;syncing=null;dirty=false;
+  acc.user=u;acc.left=null;acc.plan=null;acc.saved=0;acc.step=null;acc.sync="";
+  if(owner!==progressOwner){
+    localSave();openProgress(owner);
+    ITEMS.splice(0,ITEMS.length,...ITEMS.filter(q=>!/^l[zs]\|g/.test(q.k)));
+    await restore();
+    if(progressOwner!==owner || epoch!==accountEpoch)return;
+    if(guest){
+      S=rebaseProgress(freshProgress(),guest,S);
+      // Keep the guest copy if this browser cannot persist the account copy.
+      if(localSave()){
+        const key=progressKey("guest"),empty=JSON.stringify({data:freshProgress(),frame:{},version:++localVersion});
+        lsSet(key,empty);idbPut(empty,key);
+      }
+    }
+    addGenerated();home();
+  }
+  if(!u)return drawProfile();
+  // Each tab keeps its own receipt even while another tab is syncing the same account.
+  let device;
+  try{device=sessionStorage.getItem("ww-sync-tab")||crypto.randomUUID();sessionStorage.setItem("ww-sync-tab",device)}catch{device=crypto.randomUUID()}
+  const table=()=>acc.sb.from("progress"), active=()=>acc.user?.id===uid && progressOwner===uid && accountEpoch===epoch;
+  cloud={set:()=>syncProgress({
+    device,active,current:()=>S,frame:()=>syncFrame,
+    read:async()=>{const {data,error}=await table().select("data,t").eq("user_id",uid).maybeSingle();if(error)throw error;if(data?.data)migrateGenerated(data.data);return data},
+    first:(local,remote)=>local.t?mergeS(local,remote):progressClone(remote),
+    prepare:async pending=>{syncFrame.pending=pending;localSave();
+      // The receipt must survive a reload before sending the change.
+      const key=progressKey(uid), stored=readLocal(key);
+      if(stored?.frame?.pending?.id!==pending.id){
+        const value=JSON.stringify({data:S,frame:syncFrame,version:localVersion});
+        await within(new Promise((ok,no)=>idb.then(db=>{const tx=db.transaction("kv","readwrite");tx.objectStore("kv").put(value,key);tx.oncomplete=ok;tx.onerror=no;tx.onabort=no},no)),3000,false).then(done=>{if(done===false)throw new Error("Local persistence unavailable")});
+      }},
+    write:async(row,target)=>{
+      const fields={data:target,t:target.t,updated_at:new Date().toISOString()};
+      if(!row){const {error}=await table().insert({...fields,user_id:uid});if(error?.code==="23505")return false;if(error)throw error;return true}
+      const {data,error}=await table().update(fields).eq("user_id",uid).eq("t",row.t).select("t");
+      if(error)throw error;return data.length===1;
+    },
+    ack:pending=>{S=rebaseProgress(pending.local,S,pending.target);syncFrame={base:progressClone(pending.target)};localSave()},
+    accept:remote=>{S=progressClone(remote);syncFrame={base:progressClone(remote)};localSave()}
+  })};
+  drawProfile();await push();if(!active())return;
+  addGenerated();refresh();usage();syncMeta();lsSet(WEL,"1");
+  if(OLD==="bittertalen.vercel.app")moveScreen();
 }
-// The first time a device joins an account both sides are merged; after that the newer one wins (S.t),
-// so something deleted on one device stays deleted
-async function pull(){
-  if(!acc.user||!acc.sb)return; const uid=acc.user.id;
-  const{data,error}=await acc.sb.from("progress").select("data,t").eq("user_id",uid).maybeSingle();
-  if(error||!acc.user||acc.user.id!==uid)return;
-  const rem=data&&data.data&&data.data.items?data.data:null, mine=Object.keys(S.items).length>0;
-  if(!rem){if(mine){S.t=S.t||Date.now();push()}}
-  else if(lsGet(ALINK)!==uid){S=mine?mergeS(S,rem):Object.assign(S,rem);if(mine)S.t=Date.now();localSave();addGenerated();if(mine)push();refresh()}
-  else if((rem.t||0)>(S.t||0)){S=Object.assign(S,rem);localSave();addGenerated();refresh()}
-  else if((S.t||0)>(rem.t||0))push();
-  lsSet(ALINK,uid); if(!acc.saved)acc.saved=Date.now(); drawProfile();
-}
+function pull(){return push()}
 function mergeS(a,b){
   const o=Object.assign({},b,a), n=it=>(it.r||0)+(it.w||0);
   const by=(x,y,f)=>{const m=Object.assign({},x||{});for(const k in y||{})m[k]=k in m?f(m[k],y[k]):y[k];return m};
@@ -2190,6 +2140,7 @@ function mergeS(a,b){
   o.bk=by(a.bk,b.bk,(x,y)=>(y.at||0)>(x.at||0)?y:x);
   o.res=by(a.res,b.res,(x,y)=>{const m={};x.concat(y).forEach(r=>m[r.at]=r);return Object.values(m).sort((p,q)=>p.at-q.at).slice(-10)});
   o.uit=by(a.uit,b.uit,(x,y)=>(y.at||0)>(x.at||0)?y:x);
+  o.start=a.start&&b.start?(a.start.at>=b.start.at?a.start:b.start):a.start||b.start;
   o.errs=uni(a.errs,b.errs,e=>e.r); o.words=uni(a.words,b.words,w=>w.w);
   const ga=a.gen||{},gb=b.gen||{}; o.gen={lz:uni(ga.lz,gb.lz,JSON.stringify),ls:uni(ga.ls,gb.ls,JSON.stringify)};
   const[p,q]=(a.last||0)>=(b.last||0)?[a,b]:[b,a]; o.last=p.last||0; o.streak=p.last===q.last?Math.max(p.streak||0,q.streak||0):p.streak||0;
@@ -2202,6 +2153,67 @@ async function usage(){
   if(!acc.user||!acc.cfg)return;
   const{data,error}=await acc.sb.from("check_usage").select("n").eq("user_id",acc.user.id).eq("day",amsDay()).maybeSingle();
   if(!error){acc.left=acc.cfg.limit-((data&&data.n)||0);drawProfile()}
+  if(payOn()){const p=await acc.sb.from("plans").select("status,period,tier,ends_at,cancel_at_end,trial_used,customer").eq("user_id",acc.user.id).maybeSingle();
+    if(!p.error){acc.plan=p.data||null;drawProfile()}}
+}
+// Bittertalen Plus (Stripe, api/pay.js): Claude's grading and the proefexamens. Only when the server has payments set up
+// (/api/config gives plus {month, year, trial}); otherwise everything stays as it was. The server decides for grading;
+// the page only keeps the proefexamens behind the Plus screen.
+const payOn=()=>!!(acc.cfg&&acc.cfg.plus);
+// B1 has its own price when /api/config gives plus.b1: then Plus B1 covers both levels and Plus A2 only A2 (and KNM)
+const b1Own=()=>!!(payOn()&&acc.cfg.plus.b1);
+const needOf=e=>["l1","lb","wb","sb"].includes(e)?"B1":"A2";
+const plusNow=(need="A2")=>!payOn()||!!(acc.plan&&["active","trialing","past_due"].includes(acc.plan.status)&&(need!=="B1"||!b1Own()||acc.plan.tier==="B1"));
+const plusTier=()=>lvl()==="B1"&&b1Own()?"B1":"A2"; // the Plus the learner's level asks for
+const eur=c=>"€"+(c/100).toFixed(2).replace(".",",");
+const dmy=t=>new Date(t).toLocaleDateString("nl-NL");
+// The status in one sentence (Profiel and the Plus screen), or "" without a subscription
+function plusLine(){
+  const p=acc.plan; if(!p||!plusNow()||!payOn())return"";
+  if(p.status==="past_due")return"De laatste betaling is niet gelukt. Kijk bij Abonnement beheren.";
+  if(p.cancel_at_end&&p.ends_at)return`Opgezegd: Plus stopt op ${dmy(p.ends_at)}.`;
+  if(p.status==="trialing"&&p.ends_at)return`Gratis proefweek tot ${dmy(p.ends_at)}.`;
+  return p.ends_at?`Volgende betaling op ${dmy(p.ends_at)}.`:"";
+}
+async function payGo(body,btn){
+  if(btn){btn.disabled=true;btn.textContent="Naar de betaalpagina…"}
+  try{const r=await fetch("/api/pay",{method:"POST",headers:{"Content-Type":"application/json",...await authHead()},body:JSON.stringify(body)});
+    const j=await r.json().catch(()=>({}));if(!r.ok||!j.url)throw 0;location.href=j.url}
+  catch(e){acc.msg="Betalen lukt nu niet. Probeer het later opnieuw.";if(btn){btn.disabled=false;btn.textContent="Probeer het opnieuw"}
+    const n=$("plusmsg");if(n)n.textContent=acc.msg}
+}
+let plusPer="month";
+function plusScreen(){
+  closePop();hush();TK=null;$("card").innerHTML="";
+  $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;window.scrollTo(0,0);
+  tBack(TABN[tab],home);
+  const T=plusTier(),P=T==="B1"?acc.cfg.plus.b1:acc.cfg.plus,u=acc.user,on=u&&plusNow(T),up=u&&!on&&plusNow("A2"),
+    trial=!(acc.plan&&acc.plan.trial_used),per=plusPer==="year";
+  const free=Math.round(12-P.year/P.month);
+  $("tbody").innerHTML=`<div class="plus"><h2>${b1Own()?`Bittertalen Plus ${T}`:"Bittertalen Plus"}</h2><p class="sub">${!b1Own()?"Alles voor je examen, in één abonnement.":T==="B1"?"Voor het Staatsexamen B1, en ook alles van A2.":"Voor het inburgeringsexamen A2."}</p>
+    <ul><li>Claude kijkt je teksten en gesproken antwoorden na.</li><li>Alle proefexamens met tijd, zoals op het echte examen.</li></ul>`
+    +(on?`<p>${plusLine()}</p><button class="btn wide" id="pman">Abonnement beheren</button>`
+      :up?`<div class="seg" id="pper" role="group" aria-label="Periode">${["month","year"].map(x=>`<button type="button" data-p="${x}" aria-pressed="${plusPer===x}">${x==="year"?"Per jaar":"Per maand"}</button>`).join("")}</div>
+      <p class="pr"><b>${eur(per?P.year:P.month)}</b> <span>${per?"per jaar":"per maand"}</span></p>
+      <button class="btn wide" id="pup">Upgrade naar Plus B1</button><p class="note">Je betaalt alleen het verschil voor de rest van de periode.</p>`
+      :`<div class="seg" id="pper" role="group" aria-label="Periode">${["month","year"].map(x=>`<button type="button" data-p="${x}" aria-pressed="${plusPer===x}">${x==="year"?"Per jaar":"Per maand"}</button>`).join("")}</div>
+      <p class="pr"><b>${eur(per?P.year:P.month)}</b> <span>${per?"per jaar":"per maand"}</span>${per&&free>0?` · <span>${free} maanden gratis</span>`:""}</p>`
+      +(u?`<button class="btn wide" id="pbuy">${trial?`Probeer ${acc.cfg.plus.trial} dagen gratis`:"Word Plus-lid"}</button>
+        <p class="note">${trial?`<span>Daarna ${eur(per?P.year:P.month)} ${per?"per jaar":"per maand"}.</span> `:""}<span>Je betaalt met iDEAL of een kaart. Opzeggen kan altijd, in Profiel.</span></p>`
+        :`<p class="note">Log eerst in. Dan hoort je abonnement bij je account.</p><button class="btn wide" id="plog">Inloggen of account maken</button>`))
+    +`<p class="note" id="plusmsg" role="status"></p></div>`;
+  if($("pper"))$("pper").querySelectorAll("button").forEach(b=>b.onclick=()=>{plusPer=b.dataset.p;plusScreen()});
+  if($("pbuy"))$("pbuy").onclick=()=>payGo({action:"checkout",period:plusPer,tier:T},$("pbuy"));
+  if($("pup"))$("pup").onclick=()=>payGo({action:"checkout",period:plusPer,tier:"B1"},$("pup"));
+  if($("pman"))$("pman").onclick=()=>payGo({action:"portal"},$("pman"));
+  if($("plog"))$("plog").onclick=()=>{acc.msg="";welcome()};
+}
+// Back from Stripe (?plus=ok or ?plus=terug): the webhook may still be on its way, so look a few times
+function plusBack(){
+  const q=new URLSearchParams(location.search),v=q.get("plus"); if(!v)return;
+  q.delete("plus");history.replaceState(null,"",location.pathname+(q.toString()?"?"+q:"")+location.hash);
+  if(v==="ok"){acc.msg="Welkom bij Bittertalen Plus!";[0,3000,8000,15000].forEach(t=>setTimeout(()=>usage().catch(()=>{}),t))}
+  setTab("profiel");drawProfile();
 }
 // Another device may have practised in between: look again when the app comes back; send what is waiting when it goes
 document.addEventListener("visibilitychange",()=>{if(!acc.user)return;if(document.visibilityState==="visible"){pull().catch(()=>{});usage()}else if(pushT)push()});
@@ -2244,7 +2256,7 @@ function syncMeta(){
 // The first time the app opens with accounts on: make an account (first name, last name, e-mail) or look around first
 const WEL="ww-welcome";
 const segHTML=()=>["A2","B1"].map(v=>`<button type="button" data-lvl="${v}" aria-pressed="${lvl()===v}">${LVL[v]}</button>`).join("");
-const setLvl=v=>{if(v===lvl())return;S.lvl=v;exV=null;save()};
+const setLvl=v=>{if(v===lvl())return;S.lvl=v;save()};
 const logins=()=>acc.cfg&&acc.cfg.login||[];
 // Google or Apple from an iPhone home-screen app: iOS may open their page in a separate Safari window, and the login
 // would come back there, not in the app. So the app marks the login (HAND, a random h in the address it comes back to);
@@ -2309,20 +2321,22 @@ function bindLogin(el,x,pre,mail){
 }
 function welcome(){$("home").hidden=true;$("welcome").hidden=false;window.scrollTo(0,0);drawWelcome()}
 function drawWelcome(){
-  // A window like Yandex ID (the user's wish): one rounded card on the painting of the day, the logo, the level,
-  // the login block; under the card on the painting what an account gives, the privacy link and the painting's name.
+  // A window like Yandex ID (the user's wish): one rounded card on the painting of the day, the logo and the login
+  // block (no level: the starttest asks it, Profiel changes it); under the card on the painting what an account gives, the privacy link and the painting's name.
   // No name here: the e-mail is enough, Google and the others bring theirs, and Profiel has the fields.
   const el=$("welcome"),p=ART[today()%ART.length],first=!lsGet(WEL),mail=$("wmail")?$("wmail").value:acc.mail||"";
   const logo=document.querySelector("header h1 [aria-hidden]");
   el.style.setProperty("--wbg",`url(/art/${p.f}.jpg)`);
   el.innerHTML=`<div class="wcard">${langHTML()}<p class="wlogo">${logo?logo.outerHTML:"Bittertalen"}</p>
-    <h2>${acc.step==="code"?"Vul de code in":"Inloggen of account maken"}</h2>`
-    +(acc.step==="code"?"":`<p class="wlv" id="wlvt">Ik oefen voor</p><div class="seg" id="wlvl" role="group" aria-labelledby="wlvt">${segHTML()}</div>`)
-    +loginHTML("w")+(acc.msg?`<p class="note">${esc(acc.msg)}</p>`:"")
+    <h2>${acc.step==="code"?"Vul de code in":first?"Welkom bij Bittertalen":"Inloggen of account maken"}</h2>`
+    +(first && !acc.step?`<p>Oefen Nederlands met een korte leesopdracht.</p><button class="btn wide" id="wtry">Probeer één vraag</button><details><summary>Inloggen of account maken</summary>${loginHTML("w")}</details>`:loginHTML("w"))+(acc.msg?`<p class="note">${esc(acc.msg)}</p>`:"")
     +`<button class="ghost wide" id="wlater">${first?"Eerst rondkijken":"Terug"}</button></div>
     <div class="wfoot"><p>Met een account blijft je voortgang bewaard, ook op je andere apparaten, en kijkt Claude je teksten en antwoorden na.</p>
     <p><a href="/privacy" target="_blank" rel="noopener">Privacyverklaring</a></p><p class="wart">${p.a} · ${p.t} · ${p.m}</p></div>`;
-  if($("wlvl"))$("wlvl").querySelectorAll("button").forEach(b=>b.onclick=()=>{setLvl(b.dataset.lvl);drawWelcome()});
+  if($("wtry"))$("wtry").onclick=()=>{
+    lsSet(WEL,"1"); home();const section=lvl()==="B1"?"l1":"lz";
+    build(section,{...SEC.find(x=>x.id===section),n:1});
+  };
   bindLogin(el,"w",null,mail);
   $("wlater").onclick=()=>{lsSet(WEL,"1");acc.msg="";acc.step=null;home()};
 }
@@ -2334,7 +2348,7 @@ async function authHead(){
   return{Authorization:"Bearer "+t};
 }
 // Why Claude can't grade now, or null
-const noCheck=c=>c==="login"?(acc.free===0?`Je gratis nakijkbeurten van vandaag zijn op. Log in bij Profiel: dan kijkt Claude ${acc.cfg?acc.cfg.limit:20} keer per dag na.`:"Log in bij Profiel om dit door Claude te laten nakijken."):c==="limit"?`Je hebt vandaag al ${acc.cfg?acc.cfg.limit+" keer":"vaak"} laten nakijken. Morgen kan het weer.`:c==="busy"?"Claude heeft vandaag al heel veel teksten nagekeken. Morgen kan het weer.":null;
+const noCheck=c=>c==="plus"?"Je gratis nakijkbeurten van vandaag zijn op. Met Bittertalen Plus kijkt Claude elke dag je teksten na: kijk in Profiel.":c==="login"&&payOn()?(acc.free===0?"Je gratis nakijkbeurten van vandaag zijn op. Met Bittertalen Plus kijkt Claude elke dag je teksten na: log in bij Profiel.":"Log in bij Profiel om dit door Claude te laten nakijken."):c==="quota_unavailable"?"Nakijken is tijdelijk niet beschikbaar. Je kunt verder oefenen.":c==="login"?(acc.free===0?`Je gratis nakijkbeurten van vandaag zijn op. Log in bij Profiel: dan kijkt Claude ${acc.cfg?acc.cfg.limit:20} keer per dag na.`:"Log in bij Profiel om dit door Claude te laten nakijken."):c==="limit"?`Je hebt vandaag al ${acc.cfg?acc.cfg.limit+" keer":"vaak"} laten nakijken. Morgen kan het weer.`:c==="busy"?"Claude heeft vandaag al heel veel teksten nagekeken. Morgen kan het weer.":null;
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const answer=(v,t)=>t==="past"?v[2]:t==="pastpl"?v[3]:t==="pp"?v[4]:v[5];
 
@@ -2360,16 +2374,6 @@ function options(v,t){
 const ITEMS=[];
 const ch=(sec,k,ord,label,big,sub,right,wrong,note)=>ITEMS.push({sec,k:sec+"|"+k,ord,type:"choice",label,big,sub,right,opts:()=>shuffle([right,...wrong]),note});
 // Present tense for ik, jij, hij, wij: regular verbs follow the spelling rules, the rest are listed
-const PRES={zijn:"ben bent is",hebben:"heb hebt heeft",gaan:"ga gaat gaat",staan:"sta staat staat",kunnen:"kan kunt kan",willen:"wil wilt wil",mogen:"mag mag mag",komen:"kom komt komt",luisteren:"luister luistert luistert"};
-function present(inf){
-  if(PRES[inf])return[...PRES[inf].split(" "),inf];
-  let s=/[aeiou]en$/.test(inf)?inf.slice(0,-1):inf.slice(0,-2);
-  if(/([b-df-hj-np-tv-z])\1$/.test(s))s=s.slice(0,-1);
-  else if(/(^|[^aeiou])[aeou][^aeiou]$/.test(s))s=s.slice(0,-2)+s.slice(-2,-1).repeat(2)+s.slice(-1);
-  s=s.replace(/z$/,"s").replace(/v$/,"f");
-  const t=s.endsWith("t")?s:s+"t";
-  return[s,t,t,inf];
-}
 // A verb's forms as a small table: under each tense the pronouns that go with each form,
 // so it is clear which form is which; t marks the form that was just asked
 function vforms(v,t){
@@ -2470,36 +2474,6 @@ const G1=[
 ["Vergelijken","Fietsen is in de stad vaak ___ dan de auto nemen.","sneller","snelste","meer snel","Twee dingen vergelijken: de vergrotende trap + dan."]
 ];
 // Woordvolgorde B1: long sentences with bijzinnen, more verbs, om … te and the passive. [sentence, hint, why]; keys w1|<i>
-const WO1=[
-["Ik weet niet of hij morgen kan komen.","","Na of staan alle werkwoorden aan het eind: kan komen."],
-["Ze zegt dat ze de brief al heeft verstuurd.","","Na dat staan de werkwoorden aan het eind."],
-["Als het morgen regent, blijven we thuis.","","Begint de zin met een bijzin, dan komt daarna eerst het werkwoord: blijven we."],
-["Omdat de trein vertraging had, kwam ik te laat.","","Na de bijzin met omdat: eerst het werkwoord, dan het onderwerp."],
-["Hij belt zijn moeder als hij thuiskomt.","","In een bijzin blijft een scheidbaar werkwoord heel: thuiskomt."],
-["Ik ga naar Utrecht om mijn zus te bezoeken.","","Om … te + infinitief aan het eind."],
-["De man die naast ons woont, werkt bij de gemeente.","","De bijzin met die staat direct na de man; het werkwoord aan het eind."],
-["Het huis wordt volgend jaar verbouwd.","","Passief: worden op plaats twee, het voltooid deelwoord aan het eind."],
-["Ik had eerder moeten vertrekken.","","Had op plaats twee, de twee infinitieven aan het eind."],
-["Zou je mij morgen kunnen helpen?","","Een vraag: het werkwoord eerst; de infinitieven aan het eind."],
-["Hoewel het koud was, gingen we naar het strand.","","Na de bijzin: eerst het werkwoord (gingen), dan het onderwerp (we)."],
-["Ze vroeg waarom ik niet was gekomen.","","Een vraag in een bijzin: het werkwoord aan het eind."],
-["Toen ik in Nederland kwam, sprak ik nog geen Nederlands.","","Na de bijzin met toen: sprak ik."],
-["Ik heb geen tijd gehad om te koken.","","Om te koken komt na het voltooid deelwoord."],
-["Er wordt in deze straat te hard gereden.","","Er wordt … gereden: het voltooid deelwoord aan het eind."],
-["Weet jij waar de dichtstbijzijnde apotheek is?","","Waar … is: in de bijzin het werkwoord aan het eind."],
-["Nadat hij had gegeten, ging hij naar bed.","","Na de bijzin met nadat: ging hij."],
-["Ik denk dat ze vanavond niet komt, omdat ze ziek is.","","Twee bijzinnen: elke keer het werkwoord aan het eind."],
-["Zodra ik meer weet, stuur ik je een bericht.","","Na de bijzin met zodra: stuur ik."],
-["Kun je me vertellen hoe laat de winkel opengaat?","","Scheidbaar werkwoord in een bijzin: opengaat, aan elkaar."],
-["Hij is gestopt met roken, omdat hij gezonder wil leven.","","Na omdat: wil leven aan het eind."],
-["Morgen moet ik vroeg opstaan, want ik heb een sollicitatiegesprek.","","Na want verandert de woordvolgorde niet: ik heb."],
-["De cursus waarvoor ik me heb aangemeld, begint in september.","","Waarvoor ik me heb aangemeld: de werkwoorden aan het eind van de bijzin."],
-["Ik vind het belangrijk dat kinderen buiten spelen.","","Ik vind het belangrijk dat …: het werkwoord aan het eind."],
-["Als ik jou was, zou ik een andere baan zoeken.","","Na de bijzin: zou ik; de infinitief aan het eind."],
-["Het pakket is gisteren door de buren aangenomen.","","Passief in het perfectum: is … aangenomen; door de buren in het midden."],
-["Ze heeft beloofd dat ze op tijd zal komen.","","Na dat: zal komen aan het eind."],
-["Waarom heb je niet gezegd dat je ziek was?","","Vraagwoord, werkwoord, onderwerp; daarna de bijzin met dat."]
-];
 // Woordenschat B1: words for the Staatsexamen (work, money, health, housing, society, media) with a short Dutch description.
 // Two ways: word → description (v1|) and description → word (v1r|). Append only.
 const VO1="de mening:wat je over iets denkt|het voordeel:iets goeds aan een situatie|het nadeel:iets slechts aan een situatie|de oplossing:een manier om een probleem weg te nemen|de ervaring:wat je hebt meegemaakt of geleerd door het zelf te doen|het gevolg:wat er gebeurt door iets anders|de oorzaak:de reden waardoor iets gebeurt|de voorwaarde:iets wat eerst moet gebeuren of moet kloppen|de verantwoordelijkheid:de taak om ergens voor te zorgen|de ontwikkeling:hoe iets langzaam verandert en groeit|de samenleving:alle mensen in een land samen|het onderzoek:goed zoeken en kijken om iets te weten te komen|de klacht:wat je zegt of schrijft als je ergens niet tevreden over bent|de aanvraag:een formulier of brief waarin je officieel om iets vraagt|de vergunning:een papier waarop staat dat je iets mag doen|de toeslag:extra geld van de overheid, bijvoorbeeld voor de huur of de zorg|de uitkering:geld van de overheid als je geen werk hebt of ziek bent|de belasting:geld dat je aan de overheid betaalt|de verzekering:je betaalt elke maand, en als er iets gebeurt, betaalt zij de kosten|het eigen risico:het deel van de zorgkosten dat je elk jaar zelf betaalt|de schuld:geld dat je nog aan iemand moet betalen|de sollicitatie:een brief of gesprek om een baan te krijgen|de vacature:een baan die vrij is|het contract:een papier met afspraken dat je ondertekent|de proeftijd:de eerste weken van een baan, waarin je makkelijk kunt stoppen|de leidinggevende:de persoon die de baas is van een team|de werkloosheid:als veel mensen geen werk hebben|de stage:een periode waarin je tijdens je opleiding op een werkplek leert|de opleiding:een school of cursus waar je een beroep leert|het diploma:een papier dat laat zien dat je een opleiding hebt afgemaakt|de vaardigheid:iets wat je goed kunt, zoals schrijven of rekenen|de bijeenkomst:een moment waarop mensen samenkomen om te praten|het overleg:een gesprek om samen iets te beslissen|de beslissing:wat je kiest nadat je erover hebt nagedacht|de gezondheid:hoe goed je lichaam en je geest zich voelen|de behandeling:wat een dokter doet om je beter te maken|de specialist:een dokter die veel weet van één deel van het lichaam|de verwijzing:een brief van de huisarts om naar een specialist te gaan|de bijwerking:een slecht effect van een medicijn|de wachtlijst:een lijst van mensen die op hun beurt wachten|de huurder:iemand die een huis huurt|de verhuurder:iemand die een huis aan een ander verhuurt|de woningcorporatie:een organisatie die betaalbare huurhuizen verhuurt|de overlast:last van anderen, bijvoorbeeld door lawaai|de omgeving:de plaats en de dingen om je heen|het milieu:de natuur, de lucht en het water om ons heen|duurzaam:goed voor het milieu en lang te gebruiken|de verkiezingen:de dag waarop mensen kiezen wie in de politiek komt|de regering:de ministers die het land besturen|de overheid:alle organisaties die het land, de provincie en de gemeente besturen|de wet:een officiële regel van het land|het recht:wat je volgens de wet mag of mag krijgen|de plicht:wat je moet doen|de vrijheid:als je zelf mag kiezen wat je doet en zegt|de gelijkheid:als iedereen op dezelfde manier behandeld wordt|de discriminatie:iemand slechter behandelen om zijn afkomst, geloof of geslacht|de vrijwilliger:iemand die werk doet zonder er geld voor te krijgen|de inwoner:iemand die in een stad of land woont|het artikel:een tekst in een krant of op een website|de bron:de plaats waar informatie vandaan komt|de reclame:een tekst of filmpje dat je iets wil laten kopen|het abonnement:je betaalt elke maand of elk jaar, bijvoorbeeld voor een krant of sportclub|de bezorging:het brengen van een pakket naar je huis|de garantie:de belofte dat een winkel iets repareert of vervangt als het kapotgaat|de factuur:een papier met wat je moet betalen|de termijn:de tijd waarin iets moet gebeuren|het vervoer:hoe mensen of dingen van de ene plaats naar de andere gaan|de file:een lange rij auto's die bijna niet rijden|de boete:geld dat je moet betalen als je een regel niet volgt|de omleiding:een andere weg, omdat de normale weg dicht is|tevreden:blij met hoe iets is|teleurgesteld:verdrietig omdat iets niet zo goed was als je hoopte|zelfstandig:alleen, zonder hulp van anderen|betrouwbaar:iemand op wie je kunt rekenen|geschikt:goed passend bij een taak of situatie|noodzakelijk:echt nodig|gemiddeld:normaal, niet veel en niet weinig|voldoende:genoeg|ingewikkeld:moeilijk te begrijpen, met veel delen|eerlijk:je zegt de waarheid en je behandelt iedereen hetzelfde|beleefd:vriendelijk en netjes tegen anderen|bezorgd:je maakt je zorgen|opgelucht:blij omdat een probleem voorbij is|nieuwsgierig:je wilt graag iets weten|verplicht:het moet|vrijwillig:je doet het omdat je het zelf wilt|tijdelijk:voor een korte tijd|plotseling:heel snel en onverwacht|voorlopig:voor nu, tot het verandert|inmiddels:nu, na een tijdje|bovendien:en daarnaast ook nog|eigenlijk:in werkelijkheid; als je goed nadenkt|waarschijnlijk:bijna zeker|uiteindelijk:aan het eind, na lange tijd|aanvragen:officieel om iets vragen, bijvoorbeeld een paspoort|beslissen:kiezen nadat je hebt nagedacht|bespreken:samen over iets praten|bevestigen:zeggen dat iets klopt of zeker is|klagen:zeggen dat je ergens niet tevreden over bent|regelen:zorgen dat iets goed georganiseerd wordt|ondertekenen:je handtekening onder een papier zetten|opzeggen:zeggen dat je wilt stoppen met een contract of abonnement|overleggen:samen praten om iets te beslissen|reageren:iets zeggen of doen als antwoord|solliciteren:een brief sturen of een gesprek hebben om een baan te krijgen|verbeteren:beter maken|verwachten:denken dat iets gaat gebeuren|voorkomen:zorgen dat iets niet gebeurt|zich aanmelden:zeggen dat je mee wilt doen|zich zorgen maken:bang zijn dat er iets misgaat|toestaan:zeggen dat iets mag|vergelijken:kijken wat hetzelfde en wat anders is|overtuigen:iemand laten geloven dat jij gelijk hebt|ontdekken:iets voor het eerst vinden of zien|uitstellen:later doen dan je van plan was|vermijden:iets niet doen of ergens niet heen gaan, omdat je het niet wilt|besparen:minder geld of energie gebruiken|verspillen:zonder nut gebruiken, bijvoorbeeld eten of geld|ontslaan:iemand laten stoppen met zijn werk|onderhandelen:praten om samen tot een afspraak te komen, bijvoorbeeld over salaris|de werkgever:het bedrijf of de persoon voor wie je werkt|de werknemer:iemand die voor een bedrijf werkt|het inkomen:al het geld dat je in een maand of jaar krijgt|de kosten:het geld dat je voor iets moet betalen|de ondersteuning:hulp die je krijgt".split("|").map(x=>x.split(":"));
@@ -3066,13 +3040,134 @@ LSM.forEach((p,i)=>p[2].forEach((q,j)=>ITEMS.push({sec:"ls",k:"ls|m"+i+"."+j,ord
 LS.forEach((p,i)=>ITEMS.push({sec:"ls",k:"ls|"+i,ord:i/5|0,type:"choice",label:"Luister en kies het goede antwoord",say:p[0],big:p[1],sub:"",right:p[2],opts:()=>shuffle(p.slice(2,5)),pics:p[5]?[p[5]]:null,note:sayHTML(p[0])}));
 // Luisteren B1: qs = every question of the fragment, shown before listening in the proefexamen (you hear it once)
 LSB.forEach((p,i)=>p[2].forEach((q,j)=>ITEMS.push({sec:"lb",k:"lb|"+i+"."+j,ord:j,type:"choice",label:`Luister en kies het goede antwoord (vraag ${j+1} van ${p[2].length} bij dit fragment)`,intro:p[3],say:p[0],big:q[0],sub:"",right:q[1],opts:()=>shuffle(q.slice(1)),pics:p[1]?[p[1]]:null,note:sayHTML(p[0]),qs:p[2].map(x=>x[0])})));
-const genN={lz:0,ls:0};
+
+// Beginnen: first steps for someone who starts from nothing. Twelve short lessons: t title, s what is in it, x the rule in very
+// simple Dutch (a paragraph per line), e the same in English (a beginner can't read the Dutch yet), v examples (Dutch=English,
+// recorded), w words (Dutch=English), q questions [question, right, wrong, wrong, why]. Keys bg|<id>.<n>: append, don't rename.
+// A wrong option must never also be correct Dutch.
+const BG=[
+{id:"ik",t:"Jezelf voorstellen",s:"Ik heet, ik kom uit, ik woon in",
+ x:"Zo vertel je wie je bent. Eerst komt <b>ik</b>, dan het werkwoord, dan de rest.\n<b>Ik heet</b> + je naam. <b>Ik kom uit</b> + je land. <b>Ik woon in</b> + je stad.",
+ e:"This is how you say who you are. First comes ik (I), then the verb, then the rest.\nIk heet + your name. Ik kom uit + your country. Ik woon in + your town.",
+ v:"Ik heet Sara.=My name is Sara.|Ik kom uit Syrië.=I come from Syria.|Ik woon in Utrecht.=I live in Utrecht.|Ik ben 34 jaar.=I am 34 years old.|Hoe heet jij?=What is your name?",
+ w:"de naam=name|het land=country|de stad=town|wonen=to live|komen=to come|het jaar=year",
+ q:[["Ik ___ Sara.","heet","woon","kom"],["Ik kom ___ Marokko.","uit","aan","op"],["Ik woon ___ Den Haag.","in","uit","op"],
+  ["Hoe heet jij?","Ik heet Omar.","Ik woon in Delft.","Ik ben 40 jaar."],["Waar woon jij?","Ik woon in Delft.","Ik heet Omar.","Ik ben 40 jaar."],["Wat betekent: de stad?","town","name","year"]]},
+{id:"zijn",t:"Zijn en hebben",s:"Ik ben, jij bent, ik heb, jij hebt",
+ x:"<b>Zijn</b> en <b>hebben</b> zijn de belangrijkste werkwoorden. Leer ze uit je hoofd.\n<b>Zijn:</b> ik ben, jij bent, u bent, hij is, zij is, wij zijn, jullie zijn, zij zijn.\n<b>Hebben:</b> ik heb, jij hebt, u hebt, hij heeft, zij heeft, wij hebben, jullie hebben, zij hebben.",
+ e:"Zijn (to be) and hebben (to have) are the most important verbs. Learn them by heart.\nThey are irregular: ik = I, jij = you, u = you (polite), hij = he, zij = she or they, wij = we, jullie = you (more people).",
+ v:"Ik ben moe.=I am tired.|Jij bent mijn buurman.=You are my neighbour.|Mijn moeder is ziek.=My mother is ill.|Ik heb een kind.=I have a child.|Hij heeft een auto.=He has a car.|Wij hebben tijd.=We have time.",
+ w:"moe=tired|ziek=ill|de buurman=neighbour|het kind=child|de auto=car|de tijd=time",
+ q:[["Ik ___ moe.","ben","bent","is","Bij ik hoort ben."],["Mijn moeder ___ ziek.","is","ben","bent","Mijn moeder is zij: zij is."],["Hij ___ een auto.","heeft","heb","hebben","Hij heeft."],
+  ["Wij ___ twee kinderen.","hebben","heeft","hebt","Wij hebben."],["Jij ___ mijn vriend.","bent","ben","is","Jij bent."],["Wat betekent: moe?","tired","ill","late"]]},
+{id:"lidw",t:"De, het en een",s:"De man, het huis, een hond",
+ x:"Een woord krijgt <b>de</b> of <b>het</b>. De meeste woorden krijgen de. Leer bij elk nieuw woord welke het is.\nMeer dan één? Dan is het altijd <b>de</b>: het boek, de boeken.\n<b>Een</b> past bij de en het. Gebruik een als je nog niet zegt welke je bedoelt: een hond. Gebruik de of het als je weet welke: de hond.",
+ e:"A noun takes de or het (the). Most nouns take de. Learn which one with every new word.\nMore than one? Then it is always de: het boek, de boeken.\nEen (a) goes with both. Use een when you don't say which one: een hond. Use de or het when it is clear which: de hond.",
+ v:"De man werkt.=The man is working.|Het huis is groot.=The house is big.|Ik zie een hond.=I see a dog.|De hond is lief.=The dog is sweet.|De boeken zijn duur.=The books are expensive.",
+ w:"de man=man|de vrouw=woman|het huis=house|het boek=book|de hond=dog|groot=big",
+ q:[["___ huis is groot.","Het","De","Die","Het is: het huis."],["___ man werkt.","De","Het","Dit","Het is: de man."],["___ boeken zijn duur.","De","Het","Een","Meer dan één: altijd de."],
+  ["Ik heb ___ hond.","een","het","dit","Het is: de hond of een hond."],["___ kind speelt.","Het","De","Die","Het is: het kind."],["Wat betekent: het huis?","house","dog","book"]]},
+{id:"ww",t:"Het werkwoord nu",s:"Ik werk, jij werkt, wij werken",
+ x:"<b>Werken</b> is het hele werkwoord. Haal -en weg, dan heb je de stam: <b>werk</b>.\n<b>Ik:</b> de stam: ik werk. <b>Jij, u, hij, zij:</b> stam + t: jij werkt, hij werkt. <b>Wij, jullie, zij (meer mensen):</b> het hele werkwoord: wij werken.\nEen lange klank blijft lang: wonen, ik woon. Maken, ik maak. Twee dezelfde letters worden één: zitten, ik zit.",
+ e:"Werken (to work) is the whole verb. Take away -en and you have the stem: werk.\nIk: the stem. Jij, u, hij, zij: stem + t. Wij, jullie, zij (they): the whole verb.\nA long sound stays long: wonen, ik woon; maken, ik maak. A double letter becomes single: zitten, ik zit.",
+ v:"Ik werk in een winkel.=I work in a shop.|Jij woont in Delft.=You live in Delft.|Hij leert Nederlands.=He is learning Dutch.|Wij eten om zes uur.=We eat at six o'clock.|Zij maken koffie.=They are making coffee.",
+ w:"werken=to work|leren=to learn|eten=to eat|maken=to make|de winkel=shop|de koffie=coffee",
+ q:[["Ik ___ in een winkel.","werk","werkt","werken","Bij ik: alleen de stam."],["Hij ___ Nederlands.","leert","leer","leren","Bij hij: stam + t."],["Wij ___ om zes uur.","eten","eet","gegeten","Bij wij: het hele werkwoord."],
+  ["Jij ___ in Delft.","woont","woon","wonen","Bij jij: stam + t."],["Wonen. Ik ...","woon","won","wont","De lange klank blijft lang: ik woon."],["Wat betekent: werken?","to work","to eat","to learn"]]},
+{id:"vraag",t:"Een vraag maken",s:"Werk je? Waar woon je?",
+ x:"In een vraag staat het werkwoord vooraan: Jij werkt. <b>Werk</b> jij?\nStaat jij of je achter het werkwoord? Dan valt de t weg: Woon jij hier? Bij hij blijft de t: Werkt hij hier?\nMet een vraagwoord: vraagwoord, werkwoord, persoon: Waar woon je? De vraagwoorden: <b>wie</b> (een persoon), <b>wat</b> (een ding), <b>waar</b> (een plaats), <b>wanneer</b> (een tijd), <b>hoe</b> (een manier), <b>waarom</b> (een reden).",
+ e:"In a question the verb comes first: Jij werkt. Werk jij?\nWhen jij or je comes after the verb, the t disappears: Woon jij hier? With hij the t stays: Werkt hij hier?\nWith a question word: question word, verb, person: Waar woon je? Wie = who, wat = what, waar = where, wanneer = when, hoe = how, waarom = why.",
+ v:"Werk jij hier?=Do you work here?|Waar woon je?=Where do you live?|Wat doe je?=What are you doing?|Wanneer kom je?=When are you coming?|Hoe gaat het?=How are you?|Waarom lach je?=Why are you laughing?",
+ w:"waar=where|wat=what|wie=who|wanneer=when|hoe=how|waarom=why",
+ q:[["___ woon je? In Delft.","Waar","Wie","Wat","In Delft is een plaats: waar."],["___ jij hier?","Werk","Werkt","Werken","Jij achter het werkwoord: geen t."],["___ hij hier?","Werkt","Werk","Werken","Bij hij blijft de t."],
+  ["___ kom je? Morgen.","Wanneer","Wie","Wat","Morgen is een tijd: wanneer."],["Welke zin is goed?","Waar woon jij?","Waar jij woont?","Waar woont jij?","Vraagwoord, werkwoord, persoon. Geen t voor jij."],["Wat betekent: waarom?","why","when","who"]]},
+{id:"niet",t:"Niet en geen",s:"Ik werk niet, ik heb geen auto",
+ x:"<b>Geen</b> staat bij een woord met een, of zonder lidwoord: Ik heb een auto. Ik heb geen auto. Ik heb tijd. Ik heb geen tijd.\n<b>Niet</b> gebruik je bij de rest: Ik werk niet. Het huis is niet groot. Ik heb de auto niet.",
+ e:"Geen (no, not a) goes with a word that has een or no article: Ik heb een auto, ik heb geen auto. Ik heb tijd, ik heb geen tijd.\nNiet (not) is for everything else: Ik werk niet. Het huis is niet groot. Ik heb de auto niet.",
+ v:"Ik heb geen auto.=I don't have a car.|Ik heb geen tijd.=I have no time.|Ik werk vandaag niet.=I am not working today.|Het huis is niet groot.=The house is not big.|Hij komt niet.=He is not coming.",
+ w:"vandaag=today|morgen=tomorrow|het geld=money|het werk=work|duur=expensive|goedkoop=cheap",
+ q:[["Ik heb ___ auto.","geen","niet","nee","Een auto wordt geen auto."],["Ik werk vandaag ___.","niet","geen","nee","Bij een werkwoord: niet."],["Het huis is ___ groot.","niet","geen","nee","Voor groot: niet."],
+  ["Wij hebben ___ geld.","geen","niet","nee","Geld zonder lidwoord: geen geld."],["Welke zin is goed?","Ik heb de auto niet.","Ik heb geen de auto.","Ik niet heb de auto.","Bij de auto: niet, achteraan."],["Wat betekent: duur?","expensive","cheap","today"]]},
+{id:"mv",t:"Meer dan één",s:"Boeken, tafels, kinderen",
+ x:"Meer dan één: meestal <b>-en</b>: het boek, de boeken.\nEen korte klank: de letter erna komt twee keer: de man, de mannen. Een lange klank: één klinker is genoeg: de straat, de straten.\nWoorden op -el, -er, -en en -je krijgen <b>-s</b>: de tafel, de tafels. Het meisje, de meisjes.\nLeer deze uit je hoofd: het kind, de kinderen.",
+ e:"More than one: usually -en: het boek, de boeken.\nA short sound doubles the next letter: de man, de mannen. A long sound needs only one vowel: de straat, de straten.\nWords ending in -el, -er, -en and -je take -s: de tafel, de tafels; het meisje, de meisjes.\nLearn this one by heart: het kind, de kinderen.",
+ v:"Ik heb twee kinderen.=I have two children.|De tafels zijn nieuw.=The tables are new.|Daar lopen drie mannen.=Three men are walking there.|De straten zijn druk.=The streets are busy.|Ik koop vier appels.=I am buying four apples.",
+ w:"de tafel=table|de straat=street|de appel=apple|het meisje=girl|nieuw=new|druk=busy",
+ q:[["twee ___ (het boek)","boeken","boeks","boekken","Meestal -en."],["drie ___ (de tafel)","tafels","tafelen","tafeles","Op -el: -s."],["twee ___ (het kind)","kinderen","kinden","kinds","Uit je hoofd: kinderen."],
+  ["vier ___ (de man)","mannen","manen","mans","Korte klank: de n komt twee keer."],["vijf ___ (de straat)","straten","straaten","straats","Lange klank: één a is genoeg."],["Wat betekent: het meisje?","girl","table","street"]]},
+{id:"tijd",t:"Getallen en de klok",s:"Half vier, kwart over drie",
+ x:"1 een, 2 twee, 3 drie, 4 vier, 5 vijf, 6 zes, 7 zeven, 8 acht, 9 negen, 10 tien, 11 elf, 12 twaalf, 13 dertien, 14 veertien, 15 vijftien, 16 zestien, 17 zeventien, 18 achttien, 19 negentien, 20 twintig, 30 dertig, 40 veertig, 50 vijftig.\nBoven twintig zeg je het laatste cijfer eerst: 25 is vijfentwintig.\nDe klok: 3:00 is drie uur. 3:15 is kwart over drie. 3:45 is kwart voor vier.\nLet op: 3:30 is <b>half vier</b>: een half uur vóór vier.",
+ e:"Above twenty you say the last digit first: 25 is vijfentwintig (five and twenty).\nThe clock: 3:00 is drie uur. 3:15 is kwart over drie (quarter past three). 3:45 is kwart voor vier (quarter to four).\nCareful: 3:30 is half vier: half an hour before four, not half past four.",
+ v:"Hoe laat is het?=What time is it?|Het is drie uur.=It is three o'clock.|Het is kwart over drie.=It is a quarter past three.|Het is half vier.=It is half past three.|Het is kwart voor vier.=It is a quarter to four.|Ik ben vijfendertig jaar.=I am thirty-five.",
+ w:"het uur=hour|de minuut=minute|de klok=clock|half=half|laat=late|vroeg=early",
+ q:[["Het is half negen. Hoe laat is het?","8:30","9:30","8:15","Half negen is een half uur vóór negen."],["Het is kwart over vijf. Hoe laat is het?","5:15","4:45","5:30"],["Het is kwart voor zeven. Hoe laat is het?","6:45","7:15","6:15"],
+  ["Wat is 25?","vijfentwintig","tweeënvijftig","vijftwintig","Het laatste cijfer eerst."],["Wat is 13?","dertien","dertig","drietien","30 is dertig, 13 is dertien."],["Wat betekent: laat?","late","early","half"]]},
+{id:"modaal",t:"Willen, kunnen, moeten",s:"Ik wil morgen werken",
+ x:"Met <b>willen, kunnen, moeten</b> en <b>mogen</b> gebruik je nog een werkwoord. Dat staat helemaal aan het eind, en het is het hele werkwoord: Ik wil morgen <b>werken</b>.\n<b>Willen:</b> ik wil, jij wilt, hij wil, wij willen. <b>Kunnen:</b> ik kan, jij kunt, hij kan, wij kunnen.\n<b>Moeten:</b> ik moet, jij moet, hij moet, wij moeten. <b>Mogen:</b> ik mag, jij mag, hij mag, wij mogen.",
+ e:"Willen (want), kunnen (can), moeten (must) and mogen (may) go with a second verb. That verb stands at the very end, as the whole verb: Ik wil morgen werken.\nLearn their forms by heart.",
+ v:"Ik wil koffie drinken.=I want to drink coffee.|Jij moet morgen werken.=You have to work tomorrow.|Hij kan goed koken.=He can cook well.|Wij willen een huis kopen.=We want to buy a house.|Mag ik hier zitten?=May I sit here?",
+ w:"drinken=to drink|koken=to cook|kopen=to buy|zitten=to sit|goed=good|de dokter=doctor",
+ q:[["Ik wil morgen ___.","werken","werk","werkt","Het tweede werkwoord: het hele werkwoord, aan het eind."],["Hij ___ goed koken.","kan","kunnen","kun","Hij kan."],["Wij ___ een huis kopen.","willen","wil","wilt","Wij willen."],
+  ["Welke zin is goed?","Ik moet vandaag werken.","Ik moet vandaag werkt.","Ik moeten vandaag werken.","Ik moet, en aan het eind het hele werkwoord."],["___ ik hier zitten?","Mag","Mogen","Magt","Ik mag: mag ik?"],["Wat betekent: kopen?","to buy","to cook","to sit"]]},
+{id:"plek2",t:"Het werkwoord op plek 2",s:"Morgen ga ik naar de dokter",
+ x:"In een gewone zin staat het werkwoord op plek 2: Ik <b>werk</b> morgen.\nBegint de zin met iets anders, zoals morgen? Dan blijft het werkwoord op plek 2, en de persoon komt erachter: Morgen <b>werk</b> ik.\nJij achter het werkwoord? Dan valt de t weg: Morgen werk jij.",
+ e:"In a normal sentence the verb is in second place: Ik werk morgen.\nIf the sentence starts with something else, like morgen (tomorrow), the verb stays in second place and the person comes after it: Morgen werk ik.\nWhen jij comes after the verb, the t disappears: Morgen werk jij.",
+ v:"Ik ga morgen naar de dokter.=I am going to the doctor tomorrow.|Morgen ga ik naar de dokter.=Tomorrow I am going to the doctor.|Vandaag werk ik niet.=I am not working today.|In Delft woont mijn zus.=My sister lives in Delft.|Om acht uur begint de les.=The lesson starts at eight.",
+ w:"gaan=to go|beginnen=to begin|de les=lesson|de zus=sister|de broer=brother|naar=to",
+ q:[["Morgen ___ ik naar de dokter.","ga","gaan","gaat","Ik ga: het werkwoord op plek 2."],["Welke zin is goed?","Vandaag werk ik niet.","Vandaag ik werk niet.","Vandaag ik niet werk.","Vandaag is plek 1, het werkwoord plek 2."],["Om acht uur ___ de les.","begint","beginnen","begin","De les begint."],
+  ["Morgen ___ jij naar school.","ga","gaat","gaan","Jij achter het werkwoord: geen t."],["Welke zin is goed?","In Delft woont mijn zus.","In Delft mijn zus woont.","In Delft wonen mijn zus.","Het werkwoord op plek 2."],["Wat betekent: beginnen?","to begin","to go","to sit"]]},
+{id:"perf",t:"Wat je hebt gedaan",s:"Ik heb gewerkt, ik ben gegaan",
+ x:"Over gisteren of vorige week praat je meestal zo: <b>hebben</b> of <b>zijn</b>, en aan het eind het deelwoord: Ik heb gisteren <b>gewerkt</b>.\nHet deelwoord is ge + stam + t of d: werken, gewerkt. Wonen, gewoond. Eindigt de stam op t, k, f, s, ch of p? Dan t: gewerkt, gemaakt. Anders d: gewoond, gespeeld.\nSommige zijn anders. Leer ze uit je hoofd: eten, gegeten. Gaan, gegaan. Komen, gekomen.\nMeestal gebruik je hebben. Bij gaan, komen en blijven gebruik je zijn: Ik ben gegaan.",
+ e:"To talk about yesterday or last week you usually use hebben or zijn, with the past participle at the end: Ik heb gisteren gewerkt.\nThe participle is ge + stem + t or d: gewerkt, gewoond. If the stem ends in t, k, f, s, ch or p, use t; otherwise d.\nSome are irregular; learn them by heart: gegeten, gegaan, gekomen.\nMost verbs use hebben. Gaan, komen and blijven use zijn: Ik ben gegaan.",
+ v:"Ik heb gisteren gewerkt.=I worked yesterday.|Wij hebben pizza gegeten.=We ate pizza.|Zij heeft in Delft gewoond.=She lived in Delft.|Ik ben naar huis gegaan.=I went home.|Hij is laat gekomen.=He came late.",
+ w:"gisteren=yesterday|vorige week=last week|spelen=to play|blijven=to stay|het eten=food|thuis=at home",
+ q:[["Gisteren ___ ik gewerkt.","heb","ben","hebt","Werken gaat met hebben: ik heb gewerkt."],["Ik ben naar huis ___.","gegaan","gaan","gegaat","Gaan, gegaan."],["Wij hebben pizza ___.","gegeten","geëet","eten","Eten, gegeten."],
+  ["Hij ___ laat gekomen.","is","heeft","ben","Komen gaat met zijn: hij is gekomen."],["Ik heb in Delft ___.","gewoond","gewoont","gewonen","De stam woon eindigt op n: dus d."],["Wat betekent: gisteren?","yesterday","tomorrow","today"]]},
+{id:"omdat",t:"Omdat en want",s:"Ik blijf thuis, omdat ik ziek ben",
+ x:"Met <b>want</b> en <b>omdat</b> geef je een reden.\nNa want blijft de zin gewoon: Ik blijf thuis, want ik <b>ben</b> ziek.\nNa omdat gaat het werkwoord naar het eind: Ik blijf thuis, omdat ik ziek <b>ben</b>.\nDat gebeurt ook na <b>als</b> en <b>dat</b>: Ik bel je als ik thuis ben. Hij zegt dat hij moe is.",
+ e:"Want and omdat both mean because.\nAfter want the sentence stays normal: Ik blijf thuis, want ik ben ziek.\nAfter omdat the verb goes to the end: Ik blijf thuis, omdat ik ziek ben.\nThe same happens after als (if, when) and dat (that): Ik bel je als ik thuis ben. Hij zegt dat hij moe is.",
+ v:"Ik blijf thuis, want ik ben ziek.=I am staying home, because I am ill.|Ik blijf thuis, omdat ik ziek ben.=I am staying home because I am ill.|Ik leer Nederlands, omdat ik hier woon.=I am learning Dutch because I live here.|Ik bel je als ik thuis ben.=I will call you when I am home.|Hij zegt dat hij moe is.=He says that he is tired.",
+ w:"want=because|omdat=because|als=if, when|bellen=to call|zeggen=to say|de reden=reason",
+ q:[["Ik blijf thuis, omdat ik ziek ___.","ben","bent","zijn","Na omdat: het werkwoord aan het eind."],["Welke zin is goed?","Ik leer Nederlands, omdat ik hier woon.","Ik leer Nederlands, omdat ik woon hier.","Ik leer Nederlands, omdat woon ik hier.","Na omdat: het werkwoord aan het eind."],["Ik kom niet, ___ ik ben moe.","want","omdat","als","Na want blijft de zin gewoon."],
+  ["Ik bel je als ik thuis ___.","ben","is","heb","Na als: het werkwoord aan het eind."],["Hij zegt dat hij moe ___.","is","ben","heeft","Na dat: het werkwoord aan het eind."],["Wat betekent: bellen?","to call","to say","to stay"]]},
+];
+BG.forEach((l,i)=>l.q.forEach((q,j)=>ch("bg",l.id+"."+j,i,l.t,q[0],"",q[1],[q[2],q[3]],q[4])));
+const pairs=s=>s.split("|").map(x=>x.split("="));
+// One question per lesson, from easy to hard: a wrong one or "Ik weet het niet" means that lesson is still to do
+const START=[["ik","Hoe heet jij?","Ik heet Sara.","Ik woon in Delft.","Ik ben 30 jaar."],["zijn","Ik ___ moe.","ben","bent","is"],["lidw","___ huis is groot.","Het","De","Die"],
+  ["ww","Jij ___ in Amsterdam.","woont","woon","wonen"],["vraag","___ woon je? In Delft.","Waar","Wie","Wat"],["niet","Ik heb ___ auto.","geen","niet","nee"],
+  ["mv","twee ___ (het boek)","boeken","boeks","boekken"],["tijd","Het is half negen. Hoe laat is het?","8:30","9:30","8:15"],["modaal","Ik wil morgen ___.","werken","werk","werkt"],
+  ["plek2","Morgen ___ ik naar de dokter.","ga","gaan","gaat"],["perf","Gisteren ___ ik gewerkt.","heb","ben","hebt"],["omdat","Ik blijf thuis, omdat ik ziek ___.","ben","bent","zijn"]];
+// S.start {at, lv, miss}: lv 0 starts from nothing (all lessons, and today's lesson is only that), 1 knows some (the lessons in
+// miss, one a day instead of the grammar round), 2 needs none. No test yet: as before.
+const bgItems=l=>ITEMS.filter(x=>x.k.startsWith("bg|"+l.id+"."));
+const bgDone=l=>bgItems(l).every(x=>(S.items[x.k]||{}).r);
+const bgTodo=()=>!S.start||lvl()!=="A2"||S.start.lv>1?[]:BG.filter(l=>!bgDone(l)&&(!S.start.lv||[...(S.start.miss||[]),...(S.start.untested||[])].includes(l.id)));
+const bgDue=()=>{const d=today();return ITEMS.filter(x=>x.sec==="bg"&&S.items[x.k]&&S.items[x.k].d<=d).sort((a,b)=>S.items[a.k].b-S.items[b.k].b)};
+// Generated material used to be keyed by its array position. Stable content keys preserve its
+// answers when two devices contribute different texts in a different order.
+function migrateGenerated(state){
+  const move=(oldKey,key)=>{
+    for(const field of ["items","xs"]){
+      const map=state[field];if(!map || map[oldKey]===undefined)continue;
+      if(map[key]===undefined)map[key]=map[oldKey];
+      delete map[oldKey];
+    }
+  };
+  (state.gen?.lz||[]).forEach((text,i)=>text[1].forEach((q,j)=>move("lz|g"+i+"."+j,"lz|g:"+vkey(JSON.stringify(text))+"."+j)));
+  (state.gen?.ls||[]).forEach((text,i)=>move("ls|g"+i,"ls|g:"+vkey(JSON.stringify(text))));
+  return state;
+}
 function addGenerated(){
-  const g=S.gen||{}; let n=0;
-  (g.lz||[]).slice(genN.lz).forEach((t,i0)=>{const i=genN.lz+i0;t[1].forEach((q,j)=>{n++;ITEMS.push({sec:"lz",k:"lz|g"+i+"."+j,ord:j,type:"choice",label:"Lees de tekst",text:t[0],big:q[0],sub:"",right:q[1],opts:()=>shuffle(q.slice(1))})})});
-  genN.lz=(g.lz||[]).length;
-  (g.ls||[]).slice(genN.ls).forEach((p,i0)=>{const i=genN.ls+i0;n++;ITEMS.push({sec:"ls",k:"ls|g"+i,ord:1,type:"choice",label:"Luister en kies het goede antwoord",say:p[0],big:p[1],sub:"",right:p[2],opts:()=>shuffle(p.slice(2,5)),note:sayHTML(esc(p[0]))})});
-  genN.ls=(g.ls||[]).length;
+  migrateGenerated(S);
+  for(let i=ITEMS.length-1;i>=0;i--)if(/^l[zs]\|g/.test(ITEMS[i].k))ITEMS.splice(i,1);
+  let n=0;
+  (S.gen?.lz||[]).forEach(text=>text[1].forEach((q,j)=>{
+    n++;ITEMS.push({sec:"lz",k:"lz|g:"+vkey(JSON.stringify(text))+"."+j,ord:j,type:"choice",label:"Lees de tekst",text:text[0],big:q[0],sub:"",right:q[1],opts:()=>shuffle(q.slice(1))});
+  }));
+  (S.gen?.ls||[]).forEach(text=>{
+    n++;ITEMS.push({sec:"ls",k:"ls|g:"+vkey(JSON.stringify(text)),ord:1,type:"choice",label:"Luister en kies het goede antwoord",say:text[0],big:text[1],sub:"",right:text[2],opts:()=>shuffle(text.slice(2,5)),note:sayHTML(esc(text[0]))});
+  });
   return n;
 }
 function errItems(){return(S.errs||[]).map(e=>({sec:"er",k:"er|"+e.r,ord:0,type:"choice",label:"Welke zin is goed?",big:"",sub:"",right:esc(e.r),opts:()=>shuffle([esc(e.r),esc(e.w)]),note:esc(e.y)}))}
@@ -3117,6 +3212,7 @@ function voiceTexts(){
     if(["knm","ls","lb"].includes(q.sec)&&q.type==="choice"){add(q.big,"q");q.opts().forEach(o=>add(plain(o),"q"))}});
   ART.forEach(p=>{(p.v||"").split("\n").forEach(l=>add(l,"r"));(p.w||"").split("|").filter(Boolean).forEach(x=>add(x.split("=")[0],"w"))});
   GS.forEach(c=>c.x.split("\n").forEach(l=>add(l,"r")));
+  BG.forEach(l=>{pairs(l.v).forEach(x=>add(x[0],"r"));pairs(l.w).forEach(x=>add(x[0],"w"))});
   GP.forEach(c=>{c.d.forEach(s=>{add(s.a,"gp",c.w);add(s.r||GPNO,"gp",c.w);add(s.m.replace(/\[|\]/g,""),"gpm",c.w)});add(c.e,"gp",c.w)});
   return out}
 let rec=null,recUrl=null;
@@ -3406,7 +3502,8 @@ const IC={
   stats:'<rect x="2.5" y="12" width="5" height="9.5" rx="1.3"/><rect x="9.5" y="3.5" width="5" height="18" rx="1.3"/><rect x="16.5" y="8.5" width="5" height="13" rx="1.3"/>',
   errs:'<path fill-rule="evenodd" d="M10.2 3.4a2.1 2.1 0 0 1 3.6 0l8.2 14.1a2.1 2.1 0 0 1-1.8 3.1H3.8A2.1 2.1 0 0 1 2 17.5zM11 9v5.5h2V9zm0 7v2h2v-2z"/>',
   hist:'<path d="M5.5 2.5h13v2.2h-1.2v2.1c0 2.2-1.8 3.8-3.6 5.2 1.8 1.4 3.6 3 3.6 5.2v2.1h1.2v2.2h-13v-2.2h1.2v-2.1c0-2.2 1.8-3.8 3.6-5.2C8.5 10.6 6.7 9 6.7 6.8V4.7H5.5z"/>',
-  uit:'<path d="M12 4 1.5 9.5 12 15l8.5-4.45V16h2V9.5z"/><path d="M6 14.2V17c0 1.6 2.7 3 6 3s6-1.4 6-3v-2.8l-6 3.1z"/>',
+  bg:'<path class="s" d="M12 21v-9M12 12c0-4 3-7 8-7 0 5-3 7-8 7zM12 15.5c0-3-2.5-5-7-5 0 4 2.5 5 7 5z"/>',
+uit:'<path d="M12 4 1.5 9.5 12 15l8.5-4.45V16h2V9.5z"/><path d="M6 14.2V17c0 1.6 2.7 3 6 3s6-1.4 6-3v-2.8l-6 3.1z"/>',
 ona:'<path d="M9 3.5h6A1.5 1.5 0 0 1 16.5 5v1.5h3.5A2 2 0 0 1 22 8.5V12H2V8.5a2 2 0 0 1 2-2h3.5V5A1.5 1.5 0 0 1 9 3.5zm.5 3h5V5.5h-5zM2 13.5h8.5v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1H22v5a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2z"/>',
   talk:'<path d="M3.5 2.5h10A1.6 1.6 0 0 1 15 4.1v6.3a1.6 1.6 0 0 1-1.5 1.6H8.2l-3.7 3.2V12h-1A1.6 1.6 0 0 1 2 10.4V4.1a1.6 1.6 0 0 1 1.5-1.6z"/><path d="M16.7 7.5h3.8A1.6 1.6 0 0 1 22 9.1v6.3a1.6 1.6 0 0 1-1.5 1.6h-1v3.2L15.8 17H10.5A1.6 1.6 0 0 1 9 15.4V13.6h4.6a3.1 3.1 0 0 0 3.1-3.1z"/>',
   privacy:'<path fill-rule="evenodd" d="M12 2l8.5 3.4v6c0 5.2-3.6 9.2-8.5 10.9-4.9-1.7-8.5-5.7-8.5-10.9v-6zM10.7 13.4L8.3 11l-1.5 1.5 3.9 3.9 6.4-6.4-1.5-1.5z"/>',
@@ -3427,33 +3524,31 @@ function home(){
   // the number is the share of right answers (last proefexamen, else practice), not a chance of passing; the line under it says which
   const part=k=>{const r=ready(k),ex=((S.res||{})[k]||[]).length;
     // the number is the share right (the last proefexamen, else practice); the line says where it comes from and what you need
-    const need=`nodig: ${passPc(k)}%`;
+    const need=`oefendoel: ${passPc(k)}%`;
+    const speech=["sp","sb"].includes(k)?'<span class="st">Uitspraak en tempo zijn niet beoordeeld.</span>':"";
     const st=ex?`<span class="st ${r.cls==="good"?"good":r.cls===""?"near":""}"><i></i>${r.st} · ${need}${/kende/.test(r.t)?" · je kende de meeste vragen al":""}</span>`
       :`<span class="st">${r.pc!=null?"Bij het oefenen":"Nog niet geoefend"} · ${need}</span>`;
-    return`<button class="rd" data-e="${k}" aria-label="${PART[k]}, ${EX[k].min} minuten${r.pc!=null?", "+r.pc+"% goed":""}${ex?", "+r.st:""}">${icHTML(k)}<span class="rm"><b>${PART[k]}</b><small>${EX[k].min}&nbsp;min</small></span><strong class="rp${r.pc==null?" none":""}">${r.pc==null?"–":r.pc+"%"}${r.pc==null?"":"<small>goed</small>"}</strong><span class="bar pass" style="--pass:${passPc(k)}%"><i style="width:${r.pc||0}%"></i></span>${st}</button>`};
+    return`<button class="rd" data-e="${k}" aria-label="${PART[k]}, ${EX[k].min} minuten${r.pc!=null?", "+r.pc+"% goed":""}${ex?", "+r.st:""}">${icHTML(k)}<span class="rm"><b>${PART[k]}</b><small>${EX[k].min}&nbsp;min</small></span><strong class="rp${r.pc==null?" none":""}">${r.pc==null?"–":r.pc+"%"}${r.pc==null?"":"<small>goed</small>"}</strong><span class="bar pass" style="--pass:${passPc(k)}%"><i style="width:${r.pc||0}%"></i></span>${st}${speech}</button>`};
   const lb=Object.values(S.bk||{}).filter(b=>b.t).sort((a,b)=>b.at-a.at)[0];
   const hs=S.hs||{},lh=GS.filter(c=>hs[c.id]).sort((a,b)=>hs[b.id]-hs[a.id])[0],gsDone=GS.filter(c=>gsItems(c).every(x=>(S.items[x.k]||{}).r)).length;
   // one row per part: tap it for a proefexamen; on the right how far you are
-  // Examen and Oefenen follow the level: its parts first; at B1 the parts that have no B1 version yet come after, at A2
-  // Examen and Oefenen: A2 and B1 as two tabs (.seg), one at a time; it opens on the level you practise for (exV: the tab
-  // you picked since).
-  const v=exV||lvl(),seg=`<div class="seg lvt" role="group" aria-label="Niveau">${["A2","B1"].map(x=>`<button data-v="${x}" aria-pressed="${x===v}">${LVL[x]}</button>`).join("")}</div>`,
-    other=v!==lvl()?`<p class="note">Je les van vandaag is voor ${LVL[lvl()]} (kies in Profiel).</p>`:"",
+  // Examen and Oefenen show only the level you practise for (S.lvl); it is chosen at the start and changed in Profiel.
+  const v=lvl(),
     uitRow=`<div class="list">${itHTML(`data-x="uit"`,"Mijn examen","Echt examen gedaan? Vertel hoe het ging.",{ic:"uit",n:(n=>n?`${n} van 5`:null)((v==="B1"?["l1","lb","wb","sb","knm"]:["lz","ls","wr","sp","knm"]).filter(k=>(S.uit||{})[k]&&S.uit[k].ok).length)})}</div>`;
   // ONA and the participatieverklaring: on both levels (with the Staatsexamen you still do them apart)
   const onaRow=`<div class="list">${itHTML(`data-x="ona"`,"ONA en participatieverklaring","Niet voor iedereen: kijk of jij ze nodig hebt.",{ic:"ona",n:(n=>n?`${n} van 4`:null)(GP.filter(c=>c.ona&&(S.gp||{})[c.id]).length)})}</div>`;
   if(v==="B1"){
-    $("exam").innerHTML=`<h2>Naar het examen</h2>${seg}${other}<p class="sub">Proefexamens met tijd, zoals het Staatsexamen. Het percentage is hoeveel je goed had, het streepje ongeveer wat je nodig hebt.</p><div class="list">${["l1","lb","wb","sb","knm"].map(part).join("")}</div>`
+    $("exam").innerHTML=`<h2>Naar het examen</h2><p class="sub">Je score is het percentage goede antwoorden of punten. Het streepje is je oefendoel.</p>${payOn()&&!plusNow(lvl())?`<p class="note">${plusNow("A2")?"Voor B1 heb je Plus B1 nodig.":"Proefexamens horen bij Bittertalen Plus."}</p>`:""}<div class="list">${["l1","lb","wb","sb","knm"].map(part).join("")}</div>`
       +`<div class="list"><a class="it ext" href="https://oefenexamensnt2.nl" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens Staatsexamen NT2 ↗</b></span><span class="d">Officieel, voor programma I. Liefst op een computer.</span></span></a></div>`+onaRow+uitRow;
-    $("parts").innerHTML=`<h2>Examenonderdelen</h2>${seg}<p class="sub">Zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["l1","lb","wb","sb","knm"].map(row).join("")}</div>`;
+    $("parts").innerHTML=`<h2>Examenonderdelen</h2><p class="sub">Zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["l1","lb","wb","sb","knm"].map(row).join("")}</div>`;
   }else{
-    $("exam").innerHTML=`<h2>Naar het examen</h2>${seg}${other}<p class="sub">Proefexamens met tijd, zoals bij DUO. Het percentage is hoeveel je goed had, het streepje wat je nodig hebt om te slagen.</p><div class="list">${["lz","ls","wr","sp","knm"].map(part).join("")}</div>`
+    $("exam").innerHTML=`<h2>Naar het examen</h2><p class="sub">Je score is het percentage goede antwoorden of punten. Het streepje is je oefendoel.</p>${payOn()&&!plusNow(lvl())?`<p class="note">${plusNow("A2")?"Voor B1 heb je Plus B1 nodig.":"Proefexamens horen bij Bittertalen Plus."}</p>`:""}<div class="list">${["lz","ls","wr","sp","knm"].map(part).join("")}</div>`
       +`<div class="list"><a class="it ext" href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens van DUO ↗</b><small>15</small></span><span class="d">De echte, met echte stemmen. Liefst op een computer.</span></span></a></div>`+onaRow+uitRow;
-    $("parts").innerHTML=`<h2>Examenonderdelen</h2>${seg}<p class="sub">Zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["lz","ls","wr","sp","knm"].map(row).join("")}</div>`;
+    $("parts").innerHTML=`<h2>Examenonderdelen</h2><p class="sub">Zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["lz","ls","wr","sp","knm"].map(row).join("")}</div>`;
   }
   $("gram").innerHTML=`<h2>Grammatica en woorden</h2><p class="sub">Rondes van 10 vragen.</p>`+(lvl()==="B1"
     ?`<div class="list">${["g1","w1","v1"].map(row).join("")}</div><h3 class="lh">Herhalen op A2-niveau</h3><div class="list">${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`
-    :`<div class="list">${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`);
+    :`<div class="list">${itHTML(`data-x="bg"`,"Beginnen","Twaalf korte lessen, voor als je net begint.",{ic:"bg",n:(n=>n?`${n} van ${BG.length}`:null)(BG.filter(bgDone).length)})}${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`);
   $("books").innerHTML=itHTML(`data-x="books"`,"Boekenkast",lb?`Je leest nu: ${esc(lb.t)}, blz. ${lb.p+1}`:"Verhalen en je eigen e-books.",{ic:"books"})
     +itHTML(`data-x="hist"`,"Geschiedenis van Nederland",lh?`Je was bij: ${lh.t}`:"Van de hunebedden tot nu.",{n:gsDone?`${gsDone} van ${GS.length}`:null,ic:"hist"})
     +itHTML(`data-x="media"`,"Luisteren en kijken","Nieuws, video's en podcasts.",{ic:"media"})
@@ -3464,7 +3559,6 @@ function home(){
   document.querySelectorAll("#exam button,#parts button,#gram button,#books button,#mine button").forEach(b=>b.onclick=()=>{const d=b.dataset;
     if(d.s)build(d.s);
     else if(d.e)startExam(d.e);
-    else if(d.v){exV=d.v;const y=scrollY;home();scrollTo(0,y)}
     else if(d.x==="stats")stats();
     else if(d.x==="books")library();
     else if(d.x==="media")media();
@@ -3472,6 +3566,7 @@ function home(){
     else if(d.x==="talk")talks();
     else if(d.x==="ona")onaScreen();
     else if(d.x==="uit")uitScreen();
+    else if(d.x==="bg")bgList();
     else if(d.x==="words")practiseWords();
     else build("custom",{id:"custom",t:"Mijn fouten",n:10,pool:()=>shuffle(errItems())})});
   drawProfile();
@@ -3531,6 +3626,7 @@ const byFresh=a=>a.map(q=>[q,seenN(q)]).sort((x,y)=>x[1]-y[1]).map(x=>x[0]);
 // Schrijven and Spreken are graded by Claude: without a login, or with too few checks left today, say so first
 function startExam(e,go){
   const cost=e==="wr"?2:e==="wb"?4:e==="sp"||e==="sb"?6:0; // as checkCost() in api/_supa.js
+  if(payOn()&&!plusNow(needOf(e)))return plusScreen(); // every proefexamen belongs to Bittertalen Plus (B1's to Plus B1)
   if(cost&&acc.cfg&&!go&&(!acc.user||acc.left!=null&&acc.left<cost))return examGate(e,cost);
   build("exam",{id:"exam",exam:1,part:e,keep:["lz","l1","ls","lb","sp","wb","sb"].includes(e),write:isWr(e),speak:e==="sp"||e==="sb",...EX[e],pool:()=>{if(e==="wb")return wbTasks(8,3);if(e==="sb")return sbTasks(8,8);const a=byFresh(shuffle(ITEMS.filter(x=>x.sec===e)));
     if(["lz","l1","ls","lb"].includes(e)){const g={};a.forEach(q=>{const t=q.text||q.say;(g[t]=g[t]||[]).push(q)}); // whole texts and fragments, as on the exam; the least-seen first
@@ -3551,16 +3647,16 @@ const PASS=.7;
 const PASSP={lz:19/25,ls:19/25,knm:28/40,wb:25/47}, passOf=k=>PASSP[k]||PASS, passPc=k=>Math.round(passOf(k)*100);
 // Proefexamen results per part (S.res, last 10): {at, pc, nw}, nw = % of the questions that were new (missing in older results).
 // Ready = the last two average 80% or more, and at least one of them was mostly new questions
-function keepRes(k,pc){if(k){S.res=S.res||{};S.res[k]=(S.res[k]||[]).concat({at:Date.now(),pc,nw:cur.nw}).slice(-10)}save()}
+function keepRes(k,pc,writing){if(k){S.res=S.res||{};S.res[k]=(S.res[k]||[]).concat({id:crypto.randomUUID(),at:Date.now(),pc,nw:cur.nw,...(writing?{writing}:{})}).slice(-10)}save()}
 function ready(k){
   const R=(S.res||{})[k]||[],P=passPc(k);
   if(!R.length){let r=0,w=0;ITEMS.forEach(x=>{const it=x.sec===k&&S.items[x.k];if(it){r+=it.r||0;w+=it.w||0}});
     const pc=r+w>=10?Math.round(r/(r+w)*100):null;
     return{pc,st:"Nog geen proefexamen",cls:"",t:pc==null?"Nog weinig geoefend":`Bij het oefenen ${pc}% goed`}}
-  const L=R.slice(-2),avg=Math.round(L.reduce((a,x)=>a+x.pc,0)/L.length),pc=R[R.length-1].pc;
+  const L=R.slice(-3),avg=Math.round(L.reduce((a,x)=>a+x.pc,0)/L.length),pc=R[R.length-1].pc;
   // known: the last proefexamens were mostly questions you had seen before, so a high score may be memory
-  const known=L.every(x=>x.nw!=null&&x.nw<50), sure=avg>=80&&R.length>1&&!known;
-  return{pc,st:sure?"Klaar voor het examen":avg>=P?"Bijna klaar":"Nog niet klaar",cls:sure?"good":avg>=P?"":"bad",
+  const known=L.every(x=>x.nw!=null&&x.nw<50), sure=L.length===3 && avg>=80 && L.every(x=>x.pc>=P) && L.filter(x=>x.nw>=50).length>=2 && Date.now()-L[L.length-1].at<14*864e5;
+  return{pc,st:sure?"Stabiel oefenresultaat":avg>=P?"Oefendoel bereikt":"Meer oefenen",cls:sure?"good":avg>=P?"":"bad",
     t:`Laatste proefexamen ${pc}%${R.length>1?`, daarvoor ${R[R.length-2].pc}%`:""}`
       +(known&&avg>=P?". Je kende de meeste vragen al: doe ook een oefenexamen van DUO":"")}
 }
@@ -3570,7 +3666,6 @@ let planId=null;
 // The level you practise for (Profiel, welcome screen): A2 = the inburgeringsexamen, B1 = Staatsexamen NT2 programma I.
 // B1 has its own Lezen, Luisteren, Schrijven and Spreken; KNM belongs to both routes.
 const lvl=()=>S.lvl==="B1"?"B1":"A2", LVL={A2:"Inburgering A2",B1:"Staatsexamen B1"};
-let exV=null; // the A2/B1 tab picked on Examen and Oefenen; null = the level you practise for
 const parts=()=>lvl()==="B1"?["l1","lb","wb","sb","knm"]:["lz","ls","wr","sp","knm"];
 // the questions of k whole texts (or fragments): due ones first, then the least-seen
 const someTexts=(sec,k)=>()=>{
@@ -3580,34 +3675,55 @@ const someTexts=(sec,k)=>()=>{
     .slice(0,k).flatMap(x=>x[0].sort((p,q)=>p.k<q.k?-1:1))};
 const oneText=sec=>someTexts(sec,1);
 const SHORT={lz:{n:6,s:"Eén tekst met vragen",pool:oneText("lz"),keep:1},l1:{n:6,s:"Eén lange tekst met zes vragen",pool:oneText("l1"),keep:1},lb:{n:4,s:"Eén fragment met vragen",pool:oneText("lb"),keep:1},
-  ls:{n:3,s:"Drie fragmenten"},wr:{n:1,min:10,s:"Eén opdracht in 10 minuten"},wb:{n:3,min:15,keep:1,s:"Drie zinsopdrachten of één langere opdracht, in 15 minuten",pool:()=>today()%2?wbTasks(3,0):wbTasks(0,1)},sp:{n:2,s:"Twee vragen: spreek je antwoord in"},sb:{n:2,keep:1,s:"Een korte en een middellange opdracht: spreek je antwoord in",pool:()=>sbTasks(1,1)},knm:{n:5,s:"Vijf vragen"}};
+  ls:{n:3,s:"Drie fragmenten"},wr:{n:1,min:10,s:"Eén opdracht in 10 minuten"},wb:{n:3,min:15,keep:1,s:"Drie zinsopdrachten of één langere opdracht, in 15 minuten",pool:()=>today()%2?wbTasks(3,0):wbTasks(0,1)},sp:{n:2,s:"Twee vragen: spreek je antwoord in"},sb:{n:2,keep:1,s:"Een korte en een middellange opdracht: spreek je antwoord in",pool:()=>sbTasks(1,1)},knm:{n:5,s:"Vijf vragen"},bg:{n:8,s:"Herhaal wat je al hebt geleerd",pool:bgDue}};
 // Je les van vandaag, without exam dates: every exam part, the weakest first (lowest proefexamen or practice
 // score; a part not practised yet counts as 50%) as a full round, every third day as a proefexamen once it
 // has been practised; then the other four as short rounds, weakest to strongest; last a grammar round
 // that helps the weakest part
 function planTasks(){
   const d=today(),T=[],ks=parts(),sec=id=>SEC.find(x=>x.id===id);
-  const sc=ks.map(k=>({k,r:ready(k)})), add=(id,t,s)=>T.push({id,t,s});
-  sc.sort((a,b)=>(a.r.pc==null?50:a.r.pc)-(b.r.pc==null?50:b.r.pc)||ks.indexOf(a.k)-ks.indexOf(b.k));
-  const k=sc[0].k;
-  if(sc[0].r.pc!=null&&d%3===0)add("e:"+k,"Proefexamen "+PART[k],k==="wr"?"4 opdrachten in 40 minuten":k==="wb"?"12 opdrachten in 100 minuten":EX[k].min+" minuten, zoals op het examen");
-  else add("s:"+k,PART[k],sec(k).s);
-  sc.slice(1).forEach(x=>add("q:"+x.k,PART[x.k],SHORT[x.k].s));
-  const help=HELP[k].length?HELP[k]:lvl()==="B1"?["g1","w1","v1"]:["verb","wo","vo"],h=help[d%help.length];add("s:"+h,sec(h).t,sec(h).s);
-  return{T,k,pc:sc[0].r.pc};
+  // Beginnen: one lesson a day (the one done today stays on the list, or the day would never be finished)
+  const dn=S.day&&S.day.d===d?S.day.done:[],was=dn.find(x=>x.startsWith("b:bg:")),les=was?BG.find(l=>l.id===was.split(":")[2]):bgTodo()[0],
+    lesStep=les&&{id:"b:bg:"+les.id,t:`Les ${BG.indexOf(les)+1}: ${les.t}`,s:les.s};
+  if(les&&S.start&&!S.start.lv){T.push(lesStep);if(dn.includes("q:bg")||bgDue().length)T.push({id:"q:bg",t:"Herhalen",s:SHORT.bg.s});return{T,k:"bg",pc:null,bg:1}}
+  const sc=ks.map(k=>({k,r:ready(k)}));
+  sc.sort((a,b)=>(a.r.pc==null?50:a.r.pc)-(b.r.pc==null?50:b.r.pc)||((ks.indexOf(a.k)+d)%ks.length)-((ks.indexOf(b.k)+d)%ks.length));
+  const budget=[10,20,40].includes(S.minutes)?S.minutes:20;
+  const key=[d,lvl(),budget,S.start?.at||0].join("/");
+  if(S.lessonPlan?.key===key)return S.lessonPlan.value;
+  const k=sc[0].k, estimates={wr:10,wb:15,l1:8,lb:6,lz:5,ls:4,sp:4,sb:5,knm:4};
+  let used=0;
+  if(les){T.push({...lesStep,min:5});used=5}
+  for(const {k:id} of sc){
+    const min=id==="wb"&&budget===10?5:estimates[id];
+    if(used+min>budget)continue;
+    T.push({id:(id==="wb"&&budget===10?"mini:":"q:")+id,t:PART[id],s:id==="wb"&&budget===10?"Eén zin":SHORT[id].s,min});used+=min;
+  }
+  if(budget-used>=5){
+    const helpers=HELP[k].length?HELP[k]:["dh","wo"];
+    const h=helpers[d%helpers.length];T.push({id:"s:"+h,t:sec(h).t,s:sec(h).s,min:5});used+=5;
+  }
+  const value={T,k,pc:sc[0].r.pc,minutes:used};
+  S.lessonPlan={key,value};localSave();
+  return value;
 }
 function planHTML(){
   const d=today(),done=S.day&&S.day.d===d?S.day.done:[],P=planTasks(),steps=P.T,nx=steps.findIndex(t=>!done.includes(t.id));
   const nd=steps.filter(t=>done.includes(t.id)).length;
-  const intro=nx<0?"Alles is klaar. Tot morgen!":P.pc!=null?`Vooral ${PART[P.k]}: daar scoor je nu het laagst.`:"Van elk onderdeel een beetje.";
+  const intro=nx<0?"Alles is klaar. Tot morgen!":P.bg?"Eerst de basis: elke dag één les.":P.pc!=null?`Vooral ${PART[P.k]}: daar scoor je nu het laagst.`:"Van elk onderdeel een beetje.";
+  // new here at A2: where to begin. Gone after the test, or once someone has clearly been practising
+  const first=lvl()==="A2"&&!S.start&&Object.keys(S.items).length<30?`<div class="list">${itHTML(`data-p="t:start"`,"Waar begin ik?","Twaalf korte vragen. Daarna weet je waar je kunt beginnen.",{ic:"bg"})}</div>`:"";
   const date=new Date().toLocaleDateString("nl-NL",{weekday:"long",day:"numeric",month:"long"});
   // the next step is a big card with a detail of a painting; the others are small rows; above them how far you are today
   return`<p class="ask">${date}</p><h2>Je les van vandaag</h2>
+    ${writingDrafts().map(x=>`<button class="ghost wide" data-draft="${x.section}" data-exam="${Number(x.exam)}" data-draft-slot="${esc(x.slot)}"><span>Verder met je concept</span> · ${x.exam?EX[x.section].t:PART[x.section]}${x.slot?" · <span>Gerichte oefening</span>":""}</button>`).join("")}
+    <span>Hoeveel tijd heb je?</span><div class="seg minutes" role="group" aria-label="Hoeveel tijd heb je?">${[10,20,40].map(n=>`<button data-budget="${n}" aria-pressed="${n===(S.minutes||20)}">${n} min</button>`).join("")}</div>
+    <p class="note"><span>Geschatte duur</span> · ${P.minutes||steps.length*5} min</p>
     <div class="dayp"><span aria-hidden="true">${steps.map(t=>`<i${done.includes(t.id)?' class="on"':""}></i>`).join("")}</span><small>${nd} van ${steps.length} klaar</small></div>
-    <p class="sub">${intro}</p>
+    <p class="sub">${intro}</p>${first}
     <ol class="steps">${steps.map((t,i)=>{const ok=done.includes(t.id),nxt=i===nx&&!ok,k=t.id.split(":")[1];
       return`<li><button class="step${ok?" ok":""}" data-p="${t.id}"${nxt?' aria-current="step"':""}><i class="sic">${ok?'<svg viewBox="0 0 24 24" aria-hidden="true"><path class="s" d="M5.5 12.5l4.2 4.2 8.8-9"/></svg>':IC[k]?`<svg viewBox="0 0 24 24" aria-hidden="true">${IC[k]}</svg>`:i+1}</i><b>${t.t}</b><span>${t.s}</span><em class="c">›</em></button></li>`}).join("")}</ol>
-    <button class="ghost wide" data-p="s:mix">Meer tijd? Mix van de dag</button>`;
+    ${P.bg?"":`<button class="ghost wide" data-p="s:mix">Meer tijd? Mix van de dag</button>`}`;
 }
 // iPhone: Safari can wipe a site's storage after a week without a visit; on the home screen the app keeps it.
 // The home-screen app has its own storage, so the progress goes along by the clipboard (Kopieer / Plak).
@@ -3633,13 +3749,19 @@ function drawProfile(){
   const me=S.me||{},n=$("pname"),l=$("plast");
   if(document.activeElement!==n)n.value=me.name||""; if(document.activeElement!==l)l.value=me.last||"";
   n.onchange=l.onchange=()=>{S.me={...(S.me||{}),name:n.value.trim().slice(0,40),last:l.value.trim().slice(0,60)};save();syncMeta()};
-  $("plvl").innerHTML=segHTML(); $("plvl").querySelectorAll("button").forEach(b=>b.onclick=()=>{setLvl(b.dataset.lvl);home()});
+  // the level: chosen at the start (welcome screen, starttest), changed here with a list; the other tabs show only this level
+  // the options are not translated by the observer (it skips <select>); uiT is defined further down, so it may not exist yet at the first render
+  const trLvl=v=>{try{return uiT(LVL[v])||LVL[v]}catch(e){return LVL[v]}};
+  const ps=$("plvl"); ps.innerHTML=["A2","B1"].map(v=>`<option value="${v}"${lvl()===v?" selected":""}>${esc(trLvl(v))}</option>`).join("");
+  $("plvlv").textContent=LVL[lvl()]; ps.onchange=()=>{setLvl(ps.value);home()};
   const c=acc.cfg,u=acc.user,L=logins(),el=$("acct");
   let h="";
   if(c){
     h=`<h3 class="lh">Account</h3>`;
     if(u){
-      h+=`<p class="sub">Ingelogd${u.email?` als <b>${esc(u.email)}</b>`:""}<br>Nakijken vandaag: ${acc.left==null?"…":`nog ${Math.max(0,acc.left)} van de ${c.limit}`}</p>
+      h+=`<p class="sub">Ingelogd${u.email?` als <b>${esc(u.email)}</b>`:""}<br><span role="status">${acc.sync||"Wacht op synchronisatie"}</span>${plusNow()?`<br>Nakijken vandaag: ${acc.left==null?"…":`nog ${Math.max(0,acc.left)} van de ${c.limit}`}`:""}</p>`
+      +(payOn()?`<h3 class="lh">${b1Own()&&plusNow()?`Bittertalen Plus ${acc.plan.tier==="B1"?"B1":"A2"}`:"Bittertalen Plus"}</h3>`+(plusNow()?`<p class="sub">${plusLine()}</p>${plusNow(lvl())?"":`<button class="btn wide" id="aup">Upgrade naar Plus B1</button>`}<button class="ghost wide" id="aplus">Abonnement beheren</button>`
+        :`<p class="sub">Nakijken door Claude en alle proefexamens.</p><button class="btn wide" id="aplus">${acc.plan&&acc.plan.trial_used?"Word Plus-lid":`Probeer ${c.plus.trial} dagen gratis`}</button>`):"")+`
         ${L.includes("passkey")?`<button class="ghost wide" id="apk">Passkey toevoegen</button>`:""}
         <button class="ghost wide" id="aout">Uitloggen</button>
         <button class="ghost wide" id="adel">Account verwijderen</button>`;
@@ -3649,17 +3771,22 @@ function drawProfile(){
   }
   el.innerHTML=h;
   if($("alogin"))$("alogin").onclick=()=>{acc.msg="";welcome()};
+  if($("aplus"))$("aplus").onclick=()=>plusNow()?payGo({action:"portal"},$("aplus")):plusScreen();
+  if($("aup"))$("aup").onclick=plusScreen;
   if($("apk"))$("apk").onclick=async()=>{
     try{const{error}=await acc.sb.auth.registerPasskey();if(error)throw error;acc.msg="Je passkey is gemaakt. Nu kun je ook met Face ID, Touch ID of je vingerafdruk inloggen."}
     catch(e){acc.msg=/NotAllowed|abort|cancel/i.test(String(e&&(e.message||e.name)))?"Gestopt.":"Een passkey maken lukt hier niet."}
     drawProfile()};
-  if($("aout"))$("aout").onclick=async()=>{if(pushT)push();acc.msg="";try{await acc.sb.auth.signOut()}catch(e){}setUser(null)};
+  if($("aout"))$("aout").onclick=async()=>{await push();acc.msg="";const {error}=await acc.sb.auth.signOut();if(error){acc.msg=loginErr(error);return drawProfile()}await setUser(null)};
   if($("adel"))$("adel").onclick=async()=>{const b=$("adel");
     if(!b.dataset.ok){b.dataset.ok=1;b.textContent="Tik nog een keer: je account en alles erin worden gewist";return}
     b.disabled=true;
     try{const r=await fetch("/api/account",{method:"DELETE",headers:await authHead()});if(!r.ok)throw 0;
       lsSet(ALINK,null);cloud=null;try{await acc.sb.auth.signOut({scope:"local"})}catch(e){}
-      acc.msg="Je account is verwijderd. Je voortgang op dit apparaat blijft.";setUser(null)}
+      const retained=progressClone(S);
+      const guestEntry=readLocal(progressKey("guest"));
+      lsSet(progressKey("guest"),JSON.stringify({data:mergeS(retained,guestEntry?.data||freshProgress()),frame:{},version:++localVersion}));
+      acc.msg="Je account is verwijderd. Je voortgang op dit apparaat blijft.";await setUser(null)}
     catch(e){acc.msg="Verwijderen is niet gelukt. Probeer het later opnieuw.";drawProfile()}};
   if(canBuzz()){$("ptrilw").hidden=false;$("ptril").checked=lsGet("ww-tril")!=="0";$("ptril").onchange=()=>{lsSet("ww-tril",$("ptril").checked?"1":"0");if($("ptril").checked)buzz("good")}}
   const nt=performance.getEntriesByType&&performance.getEntriesByType("navigation")[0];
@@ -3675,19 +3802,24 @@ function drawResults(){
   const day=t=>new Date(t).toLocaleDateString("nl-NL",{day:"numeric",month:"long"}),all=["lz","ls","wr","sp","knm","l1","lb","wb","sb"],ks=all.filter(k=>(R[k]||[]).length),U=S.uit||{},uk=all.filter(k=>U[k]);
   el.innerHTML=`<h2>Mijn resultaten</h2>`
     +(uk.length?`<h3 class="lh">Echt examen</h3><ul class="errs kv">${uk.map(k=>`<li>${PART[k]}<span class="${U[k].ok?"good":"bad"}">${U[k].ok?"Geslaagd":"Niet geslaagd"}</span></li>`).join("")}</ul>`:"")
-    +(ks.length?ks.map(k=>`<h3 class="lh">${PART[k]}</h3><ul class="errs kv">${R[k].slice().reverse().map(r=>`<li>Proefexamen ${day(r.at)}<span class="${r.pc>=passPc(k)?"good":"bad"}">${r.pc}%</span></li>`).join("")}</ul>`).join("")
+    +(ks.length?ks.map(k=>`<h3 class="lh">${PART[k]}</h3><ul class="errs kv">${R[k].slice().reverse().map(r=>`<li>Proefexamen ${day(r.at)}<span class="${r.pc>=passPc(k)?"good":"bad"}">${r.pc}%</span></li>`).join("")}</ul>${writingHistoryHTML(k)}`).join("")
       :`<p class="sub">Nog geen proefexamens.</p>`)
     +`<h3 class="lh">Geoefend</h3><ul class="errs kv"><li>Dagen op rij<span>${S.last>=today()-1?S.streak:0}</span></li><li>Vragen geoefend<span>${Object.keys(S.items).length}</span></li>`
     +`<li>Bewaarde woorden<span>${(S.words||[]).length}</span></li><li>Gesprekken gevoerd<span>${Object.keys(S.gp||{}).length}</span></li></ul>`;
 }
 function drawPlan(){
   $("plan").innerHTML=planHTML();
+  document.querySelectorAll("#plan [data-draft]").forEach(b=>b.onclick=()=>resumeWriting(b.dataset.draft,b.dataset.exam==="1",b.dataset.draftSlot));
+  document.querySelectorAll("#plan [data-budget]").forEach(b=>b.onclick=()=>{S.minutes=Number(b.dataset.budget);save();drawPlan()});
   // the whole lesson done: the streak stamp is put down once, with a tap of the phone
   const d=today();if(!$("plan").querySelector(".step:not(.ok)")&&lsGet("ww-stamp")!=String(d)){lsSet("ww-stamp",String(d));
     const st=$("streak");st.classList.remove("stamp");void st.offsetWidth;st.classList.add("stamp");buzz("good")}
-  document.querySelectorAll("#plan [data-p]").forEach(b=>b.onclick=()=>{const id=b.dataset.p,[k,v]=id.split(":");
-    if(k==="s")build(v);else if(k==="q")build(v,{...SEC.find(x=>x.id===v),...SHORT[v]});else startExam(v);
-    planId=id});
+  document.querySelectorAll("#plan [data-p]").forEach(b=>b.onclick=()=>{const id=b.dataset.p,[k,v]=id.split(":");planId=id;
+    if(k==="t")return startTest();
+    if(k==="mini")build(v,{...SEC.find(x=>x.id===v),n:1,keep:1,pool:()=>wbTasks(1,0)});
+    else if(k==="b")bgLes(BG.findIndex(l=>l.id===id.split(":")[2]));
+    else if(k==="s")build(v);else if(k==="q")build(v,{...SEC.find(x=>x.id===v),...SHORT[v]});else startExam(v);
+    });
 }
 const weak=q=>{const it=S.items[q.k];return it?(it.w||0)-(it.r||0):0};
 function stats(){
@@ -3703,10 +3835,44 @@ function stats(){
   document.querySelectorAll("#statlist button").forEach(b=>b.onclick=()=>{const o=gs[b.dataset.i];
     build("custom",{id:"custom",t:o.name,n:10,pool:()=>o.items.slice().sort((a,b)=>weak(b)-weak(a))})});
 }
+const draftKey=(section,exam,slot="")=>"ww-writing:"+progressOwner+":"+(exam?"exam:":"practice:")+section+(slot?":"+slot:"");
+function getDraft(section,exam,slot=""){
+  const draft=readLocal(draftKey(section,exam,slot));
+  if(!draft || !Array.isArray(draft.keys) || !draft.keys.length || !Number.isInteger(draft.pos) || draft.pos<0 || !Array.isArray(draft.pick))return null;
+  if(draft.pick.some(answer=>answer && (typeof answer.t!=="string" || !Array.isArray(answer.f) || answer.f.some(x=>typeof x!=="string"))))return null;
+  return draft.keys.every(key=>ITEMS.some(q=>q.k===key&&q.sec===section)) ? draft : null;
+}
+function writingDrafts(){
+  const entries=["wr","wb"].flatMap(section=>[false,true].map(exam=>({section,exam,slot:""})));
+  try{for(let i=0;i<localStorage.length;i++){
+    const key=localStorage.key(i);
+    for(const section of ["wr","wb"]){
+      const prefix=draftKey(section,false)+":focus/";
+      if(key.startsWith(prefix))entries.push({section,exam:false,slot:"focus/"+key.slice(prefix.length)});
+    }
+  }}catch{}
+  return entries.map(entry=>({...entry,draft:getDraft(entry.section,entry.exam,entry.slot)}))
+    .filter(entry=>entry.draft).sort((a,b)=>b.draft.at-a.draft.at);
+}
+function persistWriting(){
+  const q=queue[pos];if(q?.type!=="write" || cur.sent)return;
+  const key=draftKey(q.sec,!!cur.exam,cur.draftSlot),entry={
+    at:Date.now(), keys:queue.map(q=>q.k), pos, right, end:tEnd, nw:cur.nw, plan:planId,
+    pick:cur.nav?cur.pick:cur.written||[], sentences:(cur.zs||[]).map(z=>({key:z.q.k,text:z.text}))
+  };
+  try{localStorage.setItem(key,JSON.stringify(entry))}
+  catch{const msg=$("draftStatus");if(msg)msg.textContent="Opslaan op dit apparaat lukt niet."}
+}
+function clearWriting(q){
+  if(q?.type==="write")lsSet(draftKey(q.sec,!!cur.exam,cur.draftSlot),null);
+}
+function resumeWriting(section,exam,slot=""){
+  if(exam){setTab("examen");startExam(section,true)}else build(section,{...SEC.find(item=>item.id===section),draftSlot:slot});
+}
 function build(id,custom){
-  cur=custom||SEC.find(s=>s.id===id); cur.zs=[]; const d=today(), due=[],fresh=[];
+  cur={...(custom||SEC.find(s=>s.id===id))}; cur.zs=[]; const d=today(), due=[],fresh=[];
   const lv=x=>lvl()==="B1"||!x.k.startsWith("gb|"); // the B1 history questions only at B1
-  const pool=id==="mix"?ITEMS.filter(x=>lv(x)&&!isWr(x.sec)&&!(lvl()==="B1"?["lz","ls","sp"]:["l1","lb","sb","g1","w1","v1"]).includes(x.sec)).concat(wordItems()):ITEMS.filter(x=>x.sec===id&&lv(x));
+  const pool=id==="mix"?ITEMS.filter(x=>lv(x)&&(x.sec!=="bg"||S.items[x.k])&&!isWr(x.sec)&&!(lvl()==="B1"?["lz","ls","sp"]:["l1","lb","sb","g1","w1","v1"]).includes(x.sec)).concat(wordItems()):ITEMS.filter(x=>x.sec===id&&lv(x));
   shuffle(pool.slice()).forEach(q=>{const it=S.items[q.k];if(!it)fresh.push(q);else if(it.d<=d)due.push(q)});
   due.sort((a,b)=>S.items[a.k].b-S.items[b.k].b);
   fresh.sort((a,b)=>a.ord-b.ord);
@@ -3720,12 +3886,26 @@ function build(id,custom){
   if(!queue.length)queue=shuffle(pool.slice()).slice(0,cur.n);
   if(!cur.keep)shuffle(queue);
   queue=queue.map(q=>({...q,retry:false}));
-  pos=0;total=queue.length;right=0;clock(cur.min);
+  const first=queue[0], draft=first?.type==="write" && getDraft(first.sec,!!cur.exam,cur.draftSlot);
+  pos=0;right=0;
+  if(draft){
+    queue=draft.keys.map(key=>({...ITEMS.find(q=>q.k===key),retry:false}));
+    pos=Math.min(draft.pos,queue.length-1);right=draft.right||0;planId=draft.plan||null;
+    cur.nw=draft.nw;cur.written=draft.pick||[];
+    if(cur.nav)cur.pick=draft.pick||[];
+    cur.zs=(draft.sentences||[]).map(z=>({q:queue.find(q=>q.k===z.key),text:z.text})).filter(z=>z.q)
+      .map(z=>({...z,task:wrTask(z.q)}));
+  }
+  total=queue.length;
+  const remaining=draft?.end?Math.max(0,(draft.end-Date.now())/60000):cur.min;
+  cur.expired=!!(draft && cur.exam && remaining===0);
+  clock(cur.exam?remaining:0);
   ["home","stats","lib","read","media","story","hist","talk"].forEach(x=>$(x).hidden=true);closePop();stopMedia();$("play").hidden=false;window.scrollTo(0,0);
   const b=$("back"),leave=cur.back?cur.back.f:home,x=()=>{clearTimeout(b.t);b.classList.remove("arm");b.innerHTML=XSVG};
   x(); b.setAttribute("aria-label","Stoppen, terug naar "+(cur.back?cur.back.t:TABN[tab]));
   b.onclick=()=>{if(cur.exam&&pos<queue.length&&!b.classList.contains("arm")){b.classList.add("arm");b.textContent="Stoppen?";b.t=setTimeout(x,3000);return}
     x();leave()};
+  if(draft && cur.exam && remaining===0)return overview();
   show();
 }
 // Practising is a focus screen: no painting, only ✕ (back to where you came from), the progress, the count and the clock
@@ -3746,7 +3926,7 @@ function show(){
   else if(["knm","ls","lb"].includes(q.sec)&&canSpeak)h+=`<button class="hint" id="rd">▶ Lees voor</button>`; // the exam reads every question aloud
   else if((q.sec==="verb"||q.sec==="dh")&&BET[q.big])h+=`<button class="hint" id="tr">Betekenis</button>`;
   let o;
-  if(q.type==="order")h+=`<div class="line" id="line"></div><div class="pool" id="pool"></div><div class="act"><button class="btn wide" id="chk" disabled>Controleer</button></div>`;
+  if(q.type==="order")h+=`<p class="note">Maak een zin. Je kunt beginnen met <b>${esc(q.right.split(" ")[0])}</b>.</p>`+`<div class="line" id="line"></div><div class="pool" id="pool"></div><div class="act"><button class="btn wide" id="chk" disabled>Controleer</button></div>`;
   else if(q.type==="write")h+=(q.pts?`<ul class="pts">${q.pts.map(x=>`<li>${x}</li>`).join("")}</ul>`:"")
     +(q.ctx?`<div class="sample">${esc(q.ctx).replace("___",'<b class="gapw">______</b>')}</div>`:"")+(q.fields?q.fields.map((f,i)=>`<label class="fld"><span>${f}</span><input id="f${i}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></label>`).join("")+`<p class="ask">${q.open}</p>`:"")+`<textarea id="txt" rows="${q.kind==="z"?3:7}" placeholder="${q.kind==="z"?q.ctx&&!/___/.test(q.ctx)?"Schrijf hier het einde van de zin…":"Schrijf hier je zin…":"Schrijf hier je tekst…"}" aria-label="Je tekst" spellcheck="false" autocorrect="off" autocapitalize="off"></textarea>`
     +(!cur.exam&&acc.cfg&&!acc.user?(acc.cfg.free?freeNote():`<p class="note">Claude kijkt je tekst na als je bent ingelogd (Profiel).</p>`):"")
@@ -3771,8 +3951,15 @@ function show(){
   if($("hear")){$("hear").onclick=()=>speak(q.hear);speak(q.hear)}
   if($("tr"))$("tr").onclick=()=>{$("tr").textContent=BET[q.big];$("tr").disabled=true};
   if(q.type==="order")return order(q);
-  if(q.type==="write"&&cur.nav){const w=cur.pick[pos]||{f:[],t:""},keep=()=>{cur.pick[pos]={f:(q.fields||[]).map((f,i)=>$("f"+i).value),t:$("txt").value};head()};
-    (q.fields||[]).forEach((f,i)=>{$("f"+i).value=w.f[i]||"";$("f"+i).oninput=keep});$("txt").value=w.t;$("txt").oninput=keep;navBind();return}
+  if(q.type==="write"){
+    const answers=cur.nav?cur.pick:(cur.written ||= []);
+    const w=answers[pos]||{f:[],t:""};
+    const status=document.createElement("small");status.id="draftStatus";status.setAttribute("role","status");$("txt").after(status);
+    if(w.t||w.f.some(Boolean))status.textContent="Concept op dit apparaat";
+    const keep=()=>{answers[pos]={f:(q.fields||[]).map((f,i)=>$("f"+i).value),t:$("txt").value};status.textContent="Concept op dit apparaat";persistWriting();head()};
+    (q.fields||[]).forEach((f,i)=>{$("f"+i).value=w.f[i]||"";$("f"+i).oninput=keep});$("txt").value=w.t;$("txt").oninput=keep;
+    if(cur.expired){$("txt").readOnly=true;(q.fields||[]).forEach((f,i)=>$("f"+i).readOnly=true)}
+    if(cur.nav){navBind();return}}
   if(q.type==="write"){$("chk").onclick=()=>{if(cur.exam){cur.ans.push(grab(q));pos++;show()}else if(q.kind==="z")checkZ(q);else check(q)};return}
   if(q.type==="reveal"){
     if($("sayq"))$("sayq").onclick=()=>speak(spoken(q.big));
@@ -3791,6 +3978,7 @@ function show(){
   document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>grade(o[b.dataset.n],b,o));
 }
 function record(ok,q=queue[pos]){
+  if(!cur.exam)clearWriting(q);
   const d=today();
   if(!q.retry){
     const it=S.items[q.k]||{b:0,d};
@@ -3846,7 +4034,7 @@ const navHTML=()=>`<div class="exnav"><button class="ghost" id="prv"${pos?"":" d
 function navBind(){$("prv").onclick=()=>{pos--;show()}; $("ovw").onclick=overview; $("nxt").onclick=()=>{if(pos<queue.length-1){pos++;show()}else overview()}}
 function overview(){
   hush(); const n=queue.length,open=queue.filter((q,i)=>!picked(i)).length,wr=isWr(cur.part),V=wr?["opdracht","opdrachten"]:["vraag","vragen"]; head();
-  $("card").innerHTML=`<p class="ask">Overzicht</p><p class="note">${n-open} van ${n} ${V[1]} ${wr?"gemaakt":"beantwoord"}. Tik op een nummer om naar die ${V[0]} te gaan.</p>
+  $("card").innerHTML=`<p class="ask">Overzicht</p>${cur.expired?`<p class="note">De tijd is voorbij. Bekijk je antwoorden en lever in.</p>`:""}<p class="note">${n-open} van ${n} ${V[1]} ${wr?"gemaakt":"beantwoord"}. Tik op een nummer om naar die ${V[0]} te gaan.</p>
     <div class="ovw">${queue.map((q,i)=>`<button class="${picked(i)?"done":""}${i===pos?" now":""}" data-i="${i}" aria-label="${wr?"Opdracht":"Vraag"} ${i+1}${picked(i)?", klaar":""}">${i+1}</button>`).join("")}</div>
     ${open?`<p class="note">Nog ${open} ${open===1?V[0]:V[1]} zonder antwoord. ${wr?"Een lege opdracht is onvoldoende.":"Een open vraag telt als fout."}</p>`:""}
     <div class="two"><button class="ghost" id="bk">← ${wr?"Opdracht":"Vraag"} ${pos+1}</button><button class="btn" id="lever">Inleveren</button></div>`;
@@ -3886,8 +4074,15 @@ function order(q){
   draw();
   $("chk").onclick=()=>{
     if(answered)return; answered=true;
-    const ok=picked.map(t=>t.w).join(" ")===words.join(" ");
-    draw(); $("chk").hidden=true; record(ok); feedback(ok,q);
+    const ok=acceptsOrder(q.right, picked.map(t=>t.w).join(" "));
+    draw(); $("chk").hidden=true;
+    if(ok){record(true);return feedback(true,q)}
+    // A different Dutch word order can be valid. Ask the learner to compare before counting a mistake.
+    $("fb").innerHTML=`<p class="ask">Vergelijk je zin</p><p class="note">Dit is een voorbeeld. Een andere volgorde kan ook goed zijn.</p>
+      <div class="sample">${esc(q.right)}</div><p class="note">${esc(q.note||"")}</p>
+      <div class="two"><button class="ghost" id="orderAgain">Nog oefenen</button><button class="btn" id="orderGood">Mijn zin is ook goed</button></div>`;
+    const next=correct=>{record(correct);pos++;show()};
+    $("orderAgain").onclick=()=>next(false);$("orderGood").onclick=()=>next(true);
   };
 }
 function reveal(q){
@@ -4012,7 +4207,7 @@ async function nakijken(tasks,part){
   return j.tasks;
 }
 // Without an account: how many free checks are left today, and what an account gives
-const freeNote=()=>acc.cfg&&!acc.user&&acc.cfg.free?`<p class="note">${acc.free==null?`Zonder account kijkt Claude ${acc.cfg.free} keer per dag gratis na.`:acc.free>0?`Nog ${acc.free} keer gratis nakijken vandaag.`:"Je gratis nakijkbeurten van vandaag zijn op."} Met een account ${acc.cfg.limit} keer per dag (Profiel).</p>`:"";
+const freeNote=()=>acc.cfg&&acc.cfg.free&&(!acc.user||!plusNow(lvl()))?`<p class="note">${acc.free==null?`${payOn()?"Zonder Plus":"Zonder account"} kijkt Claude ${acc.cfg.free} keer per dag gratis na.`:acc.free>0?`Nog ${acc.free} keer gratis nakijken vandaag.`:"Je gratis nakijkbeurten van vandaag zijn op."} ${payOn()?"Met Bittertalen Plus":"Met een account"} ${acc.cfg.limit} keer per dag (Profiel).</p>`:"";
 function selfGrade(q,msg,doc){
   $("fb").innerHTML=`<p class="note">${msg}</p><p class="ask">Voorbeeld</p><div class="sample">${esc(q.right)}</div>
     ${q.type==="reveal"?echoHTML("het voorbeeld"):""}${doc?docBtn:""}<div class="two"><button class="ghost" id="again">Later herhalen</button><button class="btn" id="got">Gelukt</button></div>`;
@@ -4114,7 +4309,7 @@ async function checkZ(q){
   const text=$("txt").value.trim();
   if(text.split(/\s+/).length<3){$("fb").innerHTML=`<p class="note">Schrijf een hele zin.</p>`;return}
   const Z=(cur.zs||[]).concat({q,task:wrTask(q),text});
-  if(zNext(q)){cur.zs=Z;pos++;return show()}
+  if(zNext(q)){cur.zs=Z;pos++;persistWriting();return show()}
   cur.zs=[]; const btn=$("chk"); btn.disabled=true; $("txt").readOnly=true;
   const doc=Z.map(z=>({task:z.task,form:"",text:z.text}));
   $("fb").innerHTML=`<p class="note">Ik kijk je ${Z.length>1?Z.length+" zinnen":"zin"} na… Dit duurt meestal minder dan een minuut.</p>`;
@@ -4145,37 +4340,126 @@ function grab(q){
   const form=q.fields?q.fields.map((f,i)=>f+": "+$("f"+i).value.trim()).join("\n"):"";
   return{q,form,text:$("txt").value.trim()};
 }
+function writingBarsHTML(rows, labels) {
+  return `<div class="dpts">${rows.filter(row=>row.max).map(row=>{
+    const percent=Math.round(row.earned/row.max*100);
+    return `<div class="pt"><span>${esc(labels[row.id] || row.id)}</span><i><b class="${percent===100?"full":percent>0?"some":"none"}" style="width:${row.complete===false?0:percent}%"></b></i><em>${row.complete===false?"–":row.earned}/${row.max}</em></div>`;
+  }).join("")}</div>`;
+}
+const WRITING_CRITERION_LABELS={inhoud:"Inhoud",woorden:"Woorden",grammatica:"Grammatica",spelling:"Spelling",samenhang:"Samenhang",unfinished:"Niet gemaakt"};
+function writingTypesHTML(types, history=false) {
+  return `<div class="writing-types">${types.map(row=>{
+    const percent=row.max && row.complete!==false ? Math.round(row.earned/row.max*100) : null;
+    const count=row.tasks===1?"1 opdracht":`${row.tasks} opdrachten`;
+    return `<div class="writing-type"><div class="writing-type-heading"><span>${esc(WRITING_LABELS[row.id])}</span><strong>${percent==null?"–":percent+"%"}</strong></div>
+      <p class="note">${row.max?`${row.complete===false?"Nog niet volledig beoordeeld":`${row.earned}/${row.max}`} · ${count}`:"Niet in deze poging"}${history?` · ${row.attempts} ${row.attempts===1?"proefexamen":"proefexamens"}`:""}</p>
+      ${row.max?`<div class="bar"><i style="width:${percent||0}%"></i></div>`:""}</div>`;
+  }).join("")}</div>`;
+}
+function writingReviewHTML(review) {
+  const focus=review.priorities.map((priority,i)=>{
+    const action=priority.action;
+    const title=action.kind==="section"?"Woordvolgorde oefenen":"Deze schrijfopdracht oefenen";
+    return `<div class="writing-focus"><p><b>${esc(WRITING_CRITERION_LABELS[priority.criterion])} · ${priority.lost} ${priority.lost===1?"punt":"punten"} verloren</b></p>
+      <p>${esc(priority.instruction)}</p>${priority.evidence?`<p class="note">${esc(priority.evidence.wrong)} → ${esc(priority.evidence.right)}<br>${esc(priority.evidence.why)}</p>`:""}${itHTML(`data-write-focus="${i}"`,title,`Opdracht ${priority.taskNumber}`,{ic:action.kind==="section"?action.section:"wr"})}</div>`;
+  }).join("");
+  return `<section class="writing-review" id="writingReview" aria-label="Je schrijfexamen per onderdeel">
+    <h3 class="lh">Deze poging per soort opdracht</h3>${writingTypesHTML(review.types)}
+    <h3 class="lh">Waar gingen de punten naartoe?</h3>${writingBarsHTML(review.criteria,WRITING_CRITERION_LABELS)}
+    ${!review.complete?`<p class="note">Nog niet alle antwoorden hebben een puntenscore. Er is geen volledige totaalscore opgeslagen. Je concept blijft bewaard.</p>`
+      :focus?`<h3 class="lh">Dit kun je nu verbeteren</h3>${focus}`:`<p class="note good">In deze poging heb je geen punten verloren.</p>`}
+    <p class="note">Dit laat deze poging zien. Bekijk je resultaten in Profiel om meerdere proefexamens te vergelijken.</p>
+  </section>`;
+}
+function writingHistoryHTML(part) {
+  if(!isWr(part))return "";
+  const history=writingHistory(S.res?.[part] || []);
+  if(!history.types.length)return "";
+  return `<details class="writing-review writing-history"><summary>Per soort schrijfopdracht</summary>
+    <p class="note"><span>Laatste proefexamens met deelresultaten</span> · ${history.attempts}</p>
+    ${writingTypesHTML(history.types,true)}
+    ${history.attempts<3?'<p class="note">Nog weinig gegevens. Maak meer proefexamens om je ontwikkeling te zien.</p>':""}
+    <p class="note">Dit zijn oefenresultaten, geen voorspelling van je officiële uitslag.</p></details>`;
+}
+function practiseWritingFocus(action, part, back) {
+  planId=null;
+  if(action.kind==="section"){
+    const section=SEC.find(section=>section.id===action.section);
+    if(section)build(section.id,{...section,back:{t:"Je uitslag",f:back}});
+    return;
+  }
+  const task=ITEMS.find(task=>task.k===action.key && task.sec===part);
+  if(task)build("custom",{id:"custom",t:WRITING_LABELS[writingTaskType(task)],n:1,keep:1,
+    draftSlot:"focus/"+task.k,pool:()=>[task],back:{t:"Je uitslag",f:back}});
+}
+
 async function examWrite(){
-  const A=cur.ans, card=$("card");
-  const doc=A.map(a=>({task:wrTask(a.q),form:a.form,text:a.text}));
-  const foot=`${A.length?docBtn:""}<div class="two"><button class="ghost" id="tohome">Alle onderdelen</button><button class="btn" id="more">Nog een keer</button></div>`;
-  const bind=()=>{$("more").onclick=()=>build(cur.id,cur);$("tohome").onclick=home;if($("docx"))$("docx").onclick=()=>saveDocx(doc)};
-  const own=(a,errs)=>a.text||a.form?ownHTML((a.form?a.form+"\n\n":"")+a.text,errs):`<p class="ask">Jouw tekst</p><div class="sample">(niets geschreven)</div>`;
-  const fallback=msg=>{card.innerHTML=`<p class="note">${msg}</p>`+A.map((a,i)=>`<h2>Opdracht ${queue.indexOf(a.q)+1}</h2><p class="note">${a.q.big}</p>${own(a)}<p class="ask">Voorbeeld</p><div class="sample">${esc(a.q.right)}</div>`).join("")+foot;bind()};
-  if(!A.length){card.innerHTML=`<p class="note">Je hebt geen opdracht gemaakt.</p>`+foot;return bind()}
-  card.innerHTML=`<p class="note">Ik kijk je ${A.length} teksten na… Dit duurt ongeveer een minuut.</p>`;
+  const exam=cur, tasks=queue, answers=exam.ans, card=$("card"), completedDraft=draftKey(exam.part,true);
+  const doc=answers.map(answer=>({task:wrTask(answer.q),form:answer.form,text:answer.text}));
+  const foot=`${answers.length?docBtn:""}<div class="two"><button class="ghost" id="tohome">Alle onderdelen</button><button class="btn" id="more">Nog een keer</button></div>`;
+  const bind=()=>{
+    $("more").onclick=()=>{lsSet(completedDraft,null);build(exam.id,exam)};
+    $("tohome").onclick=home;
+    if($("docx"))$("docx").onclick=()=>saveDocx(doc);
+  };
+  const own=(answer,errors)=>answer.text||answer.form
+    ?ownHTML((answer.form?answer.form+"\n\n":"")+answer.text,errors)
+    :'<p class="ask">Jouw tekst</p><div class="sample">(niets geschreven)</div>';
+  const fallback=message=>{
+    card.innerHTML=`<p class="note">${message}</p>`+answers.map(answer=>
+      `<h2>Opdracht ${tasks.findIndex(task=>task.k===answer.q.k)+1}</h2><p class="note">${answer.q.big}</p>${own(answer)}<p class="ask">Voorbeeld</p><div class="sample">${esc(answer.q.right)}</div>`).join("")+foot;
+    bind();
+  };
+  card.innerHTML=`<p class="note">Ik kijk je ${answers.length} ${answers.length===1?"tekst":"teksten"} na… Dit duurt ongeveer een minuut.</p>`;
   try{
-    const T=await nakijken(A.map(a=>({kind:a.q.kind,task:wrTask(a.q),form:a.form,text:a.text})),cur.part==="wb"?"wb":undefined);
-    let good=0,pts=0,scored=0;
-    const RD=[];
-    const body=A.map((a,i)=>{const t=T[i]||{},errs=Array.isArray(t.errors)?t.errors:[],pt=spPts(t);if(t.passed)good++;if(pt!=null){pts+=pt;scored++}
-      keepErrs(errs); RD[i]=redoItems(a.q,a.form,a.text,t.corrected,errs);
-      return`<h2>Opdracht ${queue.indexOf(a.q)+1}: <span class="${t.passed?"good":"bad"}">${t.passed?"voldoende":"nog niet voldoende"}</span></h2><p class="note">${a.q.big}</p><p class="note">${esc(t.verdict)}</p>${scoreHTML(t.scores,a.q.mx)}
-        ${own(a,errs)}${errs.length?errsHTML(errs):""}<p class="ask">Verbeterde tekst</p><div class="sample">${esc(t.corrected)}</div>
-        <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(a.q.right)}</div></details>${RD[i].length?`<button class="ghost wide rdo" data-i="${i}">Schrijf het nog een keer</button>`:""}`}).join("");
-    // score: points of all tasks, as DUO counts them (a task not made counts 0); without points (older server) the share of good tasks
-    const max=queue.reduce((s,q)=>s+(q.mx?mxPts(q.mx):WRMAX),0), pc=scored?Math.round(pts/max*100):Math.round(good/queue.length*100), pass=pc>=passPc(cur.part);
-    keepRes(cur.part,pc);
-    card.innerHTML=`<div class="done"><p class="ask">${cur.t}: uitslag</p><div class="big">${pc}%</div><p class="ru">${scored?`${pts} van ${max} punten, `:""}${good} van ${queue.length} opdrachten voldoende${A.length<queue.length?`; ${queue.length-A.length} niet gemaakt`:""}</p></div>
-      <p><b class="${pass?"good":"bad"}">${pass?"Geslaagd":"Nog niet geslaagd"}</b></p>
-      <p class="note">${cur.part==="wb"?"Bij het Staatsexamen heb je een score van 500 nodig. Bij de openbare examens van de laatste jaren was dat ongeveer 25 van de 47 punten":`Je hebt ongeveer ${PASS*100}% van de punten nodig`}${scored&&cur.part!=="wb"?`: hier ${Math.ceil(max*passOf(cur.part)-1e-9)} van ${max}`:""}. Punten verlies je ook door fouten in grammatica en spelling.</p>${RD.some(x=>x.length)?`<p class="note">Je kunt een opdracht nog een keer schrijven. Dit kost geen nakijkbeurt.</p>`:""}`+body+foot;
-    // writing a task again leaves the result: coming back shows the same result, without marking it again
-    const html=card.innerHTML,wire=()=>{bind();card.querySelectorAll(".rdo").forEach(b=>b.onclick=()=>{const i=b.dataset.i;
-      redo(RD[i],()=>{card.innerHTML=html;wire();card.querySelector(`.rdo[data-i="${i}"]`).scrollIntoView({block:"center"})})})};
+    const grades=answers.length?await nakijken(answers.map(answer=>({kind:answer.q.kind,task:wrTask(answer.q),form:answer.form,text:answer.text})),exam.part==="wb"?"wb":undefined):[];
+    const review=reviewWriting(tasks,answers,grades), redoByTask=[];
+    const byKey=new Map(answers.map((answer,i)=>[answer.q.k,{answer,grade:grades[i]}]));
+    const good=grades.filter(grade=>grade?.passed).length;
+    const body=tasks.map((task,i)=>{
+      const entry=byKey.get(task.k), row=review.rows[i];
+      if(row.status==="empty")return `<h2>Opdracht ${i+1} · Niet gemaakt</h2><p class="note">${task.big}</p><p>Geen antwoord. Deze opdracht telt voor 0 van ${row.maxPoints} punten.</p>`;
+      const {answer,grade={}}=entry, errors=Array.isArray(grade.errors)?grade.errors:[];
+      keepErrs(errors);
+      redoByTask[i]=redoItems(task,answer.form,answer.text,grade.corrected,errors);
+      const label=typeof grade.passed==="boolean"?(grade.passed?"voldoende":"nog niet voldoende"):"nog niet beoordeeld";
+      return `<h2>Opdracht ${i+1} · <span class="${typeof grade.passed==="boolean"?(grade.passed?"good":"bad"):""}">${label}</span></h2>
+        <p class="note">${task.big}</p><p class="note">${esc(grade.verdict)}</p>${row.status==="scored"?scoreHTML(grade.scores,task.mx):""}
+        ${own(answer,errors)}${errors.length?errsHTML(errors):""}
+        ${grade.corrected?`<p class="ask">Verbeterde tekst</p><div class="sample">${esc(grade.corrected)}</div>`:""}
+        <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(task.right)}</div></details>
+        ${redoByTask[i].length?`<button class="ghost wide rdo" data-i="${i}">Schrijf het nog een keer</button>`:""}`;
+    }).join("");
+    if(review.complete){lsSet(completedDraft,null);keepRes(exam.part,review.percent,writingSnapshot(review))}
+    else save();
+    const passed=review.complete && review.percent>=passPc(exam.part);
+    card.innerHTML=`<div class="done"><p class="ask">${exam.t}: uitslag</p><div class="big">${review.percent==null?"–":review.percent+"%"}</div>
+      <p class="ru">${review.complete?`${review.earned} van ${review.max} punten, `:""}${good} van ${tasks.length} opdrachten voldoende${review.unfinished?`; ${review.unfinished} niet gemaakt`:""}</p></div>
+      <p><b class="${review.complete?(passed?"good":"bad"):""}">${!review.complete?"Onvolledige beoordeling":passed?"Oefendoel bereikt":"Meer oefenen"}</b></p>
+      <p class="note">Het oefendoel is ${passPc(exam.part)}% van de punten. Dit is een oefenresultaat. De officiële uitslag wordt door DUO bepaald.</p>
+      ${writingReviewHTML(review)}
+      <details class="writing-details"><summary>Bekijk elke opdracht en de verbeterde teksten</summary>${body}</details>${foot}`;
+    const html=card.innerHTML, state={cur:exam,queue:tasks,pos,total,right,answered,planId}, backAction=$("back").onclick, backLabel=$("back").getAttribute("aria-label");
+    const restoreResult=()=>{
+      ({cur,queue,pos,total,right,answered,planId}=state);
+      ["home","stats","lib","read","media","story","hist","talk","welcome","move"].forEach(id=>$(id).hidden=true);
+      closePop();stopMedia();$("play").hidden=false;clock(0);head();$("bar").style.width="100%";$("mode").hidden=true;
+      card.innerHTML=html;wire();window.scrollTo(0,0);
+      $("back").onclick=backAction;$("back").setAttribute("aria-label",backLabel);
+    };
+    const wire=()=>{
+      bind();
+      card.querySelectorAll("[data-write-focus]").forEach(button=>button.onclick=()=>
+        practiseWritingFocus(review.priorities[Number(button.dataset.writeFocus)].action,exam.part,restoreResult));
+      card.querySelectorAll(".rdo").forEach(button=>button.onclick=()=>{
+        const i=Number(button.dataset.i);
+        redo(redoByTask[i],()=>{restoreResult();const details=card.querySelector(".writing-details");details.open=true;card.querySelector(`.rdo[data-i="${i}"]`).scrollIntoView({block:"center"})});
+      });
+    };
     wire();
-  }catch(e){
-    const c=e&&e.code;
-    fallback(noCheck(c)?noCheck(c)+" Vergelijk je teksten nu met de voorbeelden.":c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je teksten met de voorbeelden.":c==="rate_limited"?"Te veel verzoeken achter elkaar. Probeer het over een minuut opnieuw.":"Het nakijken is niet gelukt. Vergelijk je teksten met de voorbeelden.");
+  }catch(error){
+    const code=error?.code;
+    fallback(noCheck(code)?noCheck(code)+" Vergelijk je teksten nu met de voorbeelden.":code==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je teksten met de voorbeelden.":code==="rate_limited"?"Te veel verzoeken achter elkaar. Probeer het over een minuut opnieuw.":"Het nakijken is niet gelukt. Vergelijk je teksten met de voorbeelden.");
   }
 }
 async function examSpeak(){
@@ -4198,8 +4482,8 @@ async function examSpeak(){
     const max=queue.reduce((s,q)=>s+(q.mx?mxPts(q.mx):SPMAX),0), pc=scored?Math.round(pts/max*100):Math.round(good/queue.length*100), pass=pc>=passPc(cur.part);
     keepRes(cur.part,pc);
     card.innerHTML=`<div class="done"><p class="ask">${cur.t}: uitslag</p><div class="big">${pc}%</div><p class="ru">${scored?`${pts} van ${max} punten, `:""}${good} van ${queue.length} antwoorden voldoende${A.length<queue.length?`; ${queue.length-A.length} ${queue.length-A.length===1?"vraag":"vragen"} niet beantwoord`:""}</p></div>
-      <p><b class="${pass?"good":"bad"}">${pass?"Geslaagd":"Nog niet geslaagd"}</b></p>
-      <p class="note">${cur.part==="sb"?"Bij het Staatsexamen heb je een score van 500 nodig. Hoeveel punten dat zijn, maakt DUO niet bekend: mik op 70%":`Je hebt ongeveer ${PASS*100}% van de punten nodig`}${scored?`${cur.part==="sb"?",":":"} hier ${Math.ceil(max*passOf(cur.part)-1e-9)} van ${max}`:""}. Uitspraak en vloeiendheid tellen op het examen ook mee; die kan ik niet horen.</p>`+body+foot; bind();
+      <p><b class="${pass?"good":"bad"}">${pass?"Oefendoel bereikt":"Meer oefenen"}</b></p>
+      <p class="note">Het oefendoel is ${passPc(cur.part)}%. Dit beoordeelt alleen je uitgeschreven antwoord. Uitspraak en tempo tellen op het examen ook mee.</p>`+body+foot; bind();
   }catch(e){
     const c=e&&e.code;
     plain(noCheck(c)?noCheck(c)+" Vergelijk je antwoorden nu met de voorbeelden.":c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je antwoorden met de voorbeelden.":c==="rate_limited"?"Te veel verzoeken achter elkaar. Probeer het over een minuut opnieuw.":"Het nakijken is niet gelukt. Vergelijk je antwoorden met de voorbeelden.");
@@ -4218,7 +4502,7 @@ function finish(){
     const themes=cur.part==="knm"&&Object.keys(by).length>1?Object.keys(by).sort((a,b)=>by[a].r/by[a].n-by[b].r/by[b].n)
       .map(t=>`<li>${t}<span>${by[t].r} van ${by[t].n} goed</span></li>`).join(""):"";
     $("card").innerHTML=`<div class="done"><p class="ask">${cur.t}: uitslag</p><div class="big">${pc}%</div><p class="ru">${right} van ${total} goed</p></div>
-      <p><b class="${pass?"good":"bad"}">${pass?"Geslaagd":"Nog niet geslaagd"}</b></p>
+      <p><b class="${pass?"good":"bad"}">${pass?"Oefendoel bereikt":"Meer oefenen"}</b></p>
       <p class="note">${cur.part==="l1"||cur.part==="lb"?"Bij het Staatsexamen heb je een score van 500 nodig. Hoeveel vragen dat zijn, maakt DUO niet bekend: mik op 7 van de 10.":cur.part==="lz"||cur.part==="ls"?"Op het examen heb je waarschijnlijk 19 van de 25 vragen goed nodig. DUO zet de grens op je uitslag.":cur.part==="knm"?"Op het examen heb je 28 van de 40 vragen goed nodig.":"Op het examen heb je ongeveer 7 van de 10 vragen goed nodig."} Hier is dat ${need} van ${total}.</p>
       ${themes?`<p class="ask">Per thema</p><ul class="errs">${themes}</ul>`:""}
       ${cur.miss.length?`<p class="ask">Fout beantwoord</p><ul class="errs">${cur.miss.slice(0,20).map(m=>`<li>${m.q}<span>Goed is: ${m.r}</span></li>`).join("")}</ul>`:""}
@@ -4691,7 +4975,6 @@ function hist(){
     return ok===q.length?`<span class="good">Klaar</span>`:ok?`${ok} van ${q.length} goed`:(S.hs||{})[c.id]?"Gelezen":null};
   let h=`<h2>Geschiedenis van Nederland</h2><p class="sub">Van de hunebedden tot nu, in ${GS.length} korte hoofdstukken. Goed voor KNM.</p>`;
   GS.forEach((c,i)=>{if(c.g)h+=(i?"</div>":"")+`<h3 class="lh">${c.g}</h3><div class="list">`;h+=itHTML(`data-h="${i}"`,c.t,c.y+" · "+c.s,{n:st(c)})});
-  $("hbody").removeAttribute("lang");
   $("hbody").innerHTML=h+`</div><button class="ghost wide" id="hall">Herhaal de vragen van alle hoofdstukken</button>`;
   document.querySelectorAll("#hbody [data-h]").forEach(b=>b.onclick=()=>chapter(+b.dataset.h));
   $("hall").onclick=()=>build("gs",{...SEC.find(x=>x.id==="gs"),back:{t:"Geschiedenis",f:hist}});
@@ -4701,15 +4984,14 @@ function chapter(i){
   S.hs=S.hs||{};S.hs[c.id]=Date.now();save();
   $("home").hidden=true;$("play").hidden=true;$("hist").hidden=false;
   hBack("Geschiedenis",hist);
-  $("hbody").lang="nl";
-  $("hbody").innerHTML=`<p class="ask">${c.y}</p><h2>${c.t}</h2>`
+  $("hbody").innerHTML=`<div lang="nl"><p class="ask">${c.y}</p><h2>${c.t}</h2>`
     +(c.p?`<figure class="hfig"><button data-pic="${c.p}" aria-label="Groot bekijken"><img src="${c.p}" alt="" style="object-position:50% ${c.py}%"></button><figcaption>${c.pc}</figcaption></figure>`:"")
     +(canSpeak?`<button class="hint" id="hsay">▶ Lees voor</button>`:"")
     +`<article class="book" id="hpage" lang="nl">${c.x.split("\n").map((p,n)=>pageHTML([p])+(c.f||[]).filter(f=>f[2]===n)
       .map(f=>`<figure class="hfig in"><button data-pic="${f[0]}" aria-label="Groot bekijken"><img src="${f[0]}" alt="" loading="lazy"></button><figcaption>${f[1]}</figcaption></figure>`).join("")).join("")}</article>`
     +`<p class="note">Tik op een woord: je ziet de betekenis in het Engels.</p>`
     +`<button class="btn wide" id="hq">Beantwoord de vragen</button>`
-    +(nx?`<div class="list hnext">${itHTML(`data-h="${i+1}"`,"Volgende: "+nx.t,nx.y)}</div>`:"");
+    +(nx?`<div class="list hnext">${itHTML(`data-h="${i+1}"`,"Volgende: "+nx.t,nx.y)}</div>`:"")+"</div>";
   $("hpage").style.fontSize=$("page").style.fontSize; // the letter size chosen in the reader
   document.querySelectorAll("#hbody [data-pic]").forEach(b=>b.onclick=()=>zoomPic(b.dataset.pic));
   if($("hsay"))$("hsay").onclick=()=>speak(c.x);
@@ -5023,13 +5305,83 @@ function talks(){
   let h=`<h2>Gesprekken</h2><p class="sub">Je hoort de ander en je antwoordt hardop${SR?"":" (of je typt)"}.</p>`;
   const L=GP.map((c,i)=>[c,i]).filter(x=>!x[0].ona),O=lvl()==="B1"?L.filter(x=>x[0].b1).concat(L.filter(x=>!x[0].b1)):L; // at B1 the B1 group first
   O.forEach(([c,i],n)=>{if(c.g)h+=(n?"</div>":"")+`<h3 class="lh">${c.g}</h3><div class="list">`;h+=itHTML(`data-t="${i}"`,c.t,c.s,{n:st(c)})});
-  $("tbody").removeAttribute("lang");
   $("tbody").innerHTML=h+"</div>";
   document.querySelectorAll("#tbody [data-t]").forEach(b=>b.onclick=()=>talk(+b.dataset.t));
 }
 // ONA and the participatieverklaring: two parts of inburgeren that not everyone has to do. What they are, who needs
 // them, and the ONA final interview to practise as conversations (GP items with ona, not in the Gesprekken list).
 // The facts follow DUO (inburgeren.nl); check them there when the rules change.
+// Beginnen (data in BG, START): the list, one lesson, and the test that says where to begin. All in #talk.
+function bgOpen(back,f){
+  closePop();hush();TK=null;$("card").innerHTML="";
+  $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;window.scrollTo(0,0);
+  tBack(back,f);
+}
+function bgList(){
+  bgOpen(TABN[tab],home);
+  $("tbody").innerHTML=`<h2>Beginnen</h2><p class="sub">Twaalf korte lessen met de basis van het Nederlands.</p>
+    <div class="list">${BG.map((l,i)=>itHTML(`data-i="${i}"`,`Les ${i+1}: ${l.t}`,l.s,{n:bgDone(l)?"Klaar":null})).join("")}</div>
+    <button class="ghost wide" id="bgt">${S.start?"Doe de starttest opnieuw":"Doe de starttest"}</button>`;
+  document.querySelectorAll("#tbody [data-i]").forEach(b=>b.onclick=()=>bgLes(+b.dataset.i));
+  $("bgt").onclick=startTest;
+}
+function bgLes(i){
+  const l=BG[i],V=pairs(l.v),W=pairs(l.w),has=w=>(S.words||[]).some(y=>y.w===w),para=t=>t.split("\n").map(x=>`<p>${x}</p>`).join("");
+  bgOpen("Beginnen",bgList);
+  $("tbody").innerHTML=`<p class="ask">Les ${i+1} van ${BG.length}</p><h2>${l.t}</h2>
+    <div class="bgl" lang="nl">${para(l.x)}</div><button class="hint bgl" id="bge" style="margin-top:0" aria-expanded="${LANG==="en"}">English</button><div id="bgx" lang="en" class="note bgl"${LANG==="en"?"":" hidden"}>${para(l.e)}</div>
+    <h3 class="lh">Voorbeelden</h3><ul class="sw">${V.map((x,j)=>`<li><span class="bgl" lang="nl"><b>${x[0]}</b><small lang="en">${x[1]}</small></span>${canSpeak?`<button class="say" data-v="${j}" aria-label="Luister">▶</button>`:""}</li>`).join("")}</ul>
+    <h3 class="lh">Woorden</h3><ul class="sw">${W.map((x,j)=>`<li><span class="bgl"><b lang="nl">${x[0]}</b> — <span lang="en">${x[1]}</span></span>${canSpeak?`<button class="say" data-w="${j}" aria-label="Luister">▶</button>`:""}</li>`).join("")}</ul>
+    <button class="ghost wide" id="bgk" style="margin:12px 0 10px"${W.every(x=>has(x[0]))?" disabled":""}>${W.every(x=>has(x[0]))?"Bewaard in Mijn woorden":"Bewaar in Mijn woorden"}</button>
+    <button class="btn wide" id="bgo">Oefenen</button>`;
+  $("bge").onclick=()=>{const x=$("bgx");x.hidden=!x.hidden;$("bge").setAttribute("aria-expanded",!x.hidden)};
+  document.querySelectorAll("#tbody [data-v]").forEach(b=>b.onclick=()=>speak(V[b.dataset.v][0]));
+  document.querySelectorAll("#tbody [data-w]").forEach(b=>b.onclick=()=>speak(W[b.dataset.w][0]));
+  $("bgk").onclick=()=>{S.words=S.words||[];W.filter(x=>!has(x[0])).forEach(([w,en])=>S.words.unshift({w,en,p:/^(de|het) /.test(w)?"n":"a",s:l.t,f:[]}));save();$("bgk").textContent="Bewaard in Mijn woorden";$("bgk").disabled=true};
+  $("bgo").onclick=()=>build("custom",{id:"custom",t:l.t,n:l.q.length,pool:()=>bgItems(l),back:{t:"De les",f:()=>bgLes(i)},next:BG[i+1]?{t:"Volgende les",f:()=>bgLes(i+1)}:null});
+}
+function startTest(){
+  planId=null;
+  let i=0,inRow=0; const miss=[];
+  const end=()=>{const right=i-miss.length,lv=i===START.length && right>=10?2:right>=5?1:0;
+    const untested=START.slice(i).map(x=>x[0]);
+    S.start={at:Date.now(),lv,miss:[...miss],untested,asked:i}; save();
+    const f=BG.find(l=>miss.includes(l.id));
+    $("tbody").innerHTML=`<p class="ask">Starttest</p><h2>${right} van ${i} goed</h2>
+      ${untested.length?`<p><span>Nog niet getest</span> · ${untested.length}</p><button class="ghost wide" id="bgcontinue">Ga verder met de test</button>`:""}
+      <p>${lv===2?"Je kent de basis. Je kunt meteen met de onderdelen van het examen beginnen.":lv===1?"Je kent al veel. Elke dag krijg je een les over wat je nog niet goed weet.":"Je begint bij het begin. Elke dag krijg je één korte les. Daarna ga je verder met de onderdelen van het examen."}</p>
+      ${lv<2?`<button class="btn wide" id="bgf" style="margin-bottom:10px">Naar les ${BG.indexOf(f)+1}: ${f.t}</button>`:`<button class="btn wide" id="bgh" style="margin-bottom:10px">Naar je les van vandaag</button>`}
+      <button class="ghost wide" id="bga">Alle lessen</button>`;
+    window.scrollTo(0,0);
+    if($("bgcontinue"))$("bgcontinue").onclick=()=>{inRow=0;draw()};
+    if($("bgf"))$("bgf").onclick=()=>bgLes(BG.indexOf(f)); if($("bgh"))$("bgh").onclick=()=>{setTab("vandaag");home()};
+    $("bga").onclick=bgList};
+  const pick=q=>ok=>{buzz("tick");if(ok)inRow=0;else{inRow++;miss.push(q[0])}
+    i++;
+    // three wrong in a row: the next ones are harder, so stop here; those not asked count as still to do
+    if(inRow>=3&&i<START.length){return end()}
+    i<START.length?draw():end()};
+  const draw=()=>{const q=START[i],o=shuffle(q.slice(2,5)),go=pick(q);
+    $("tbody").innerHTML=`<p class="ask">Vraag ${i+1} van ${START.length}</p><p class="bgq bgl" lang="nl">${q[1]}</p>
+      <div class="opts one bgl" lang="nl">${o.map((x,j)=>`<button class="opt" data-n="${j}">${x}</button>`).join("")}</div>
+      <button class="ghost wide" id="bgn" style="margin-top:12px">Ik weet het niet</button>`;
+    document.querySelectorAll("#tbody .opt").forEach(b=>b.onclick=()=>go(o[b.dataset.n]===q[2]));
+    $("bgn").onclick=()=>go(false);
+    window.scrollTo(0,0)};
+  // first the level (the user's wish: chosen at the start, at sign-up and here); the test itself checks the A2 basics,
+  // so at B1 it goes straight to today's lesson. Changed later only in Profiel.
+  const intro=()=>{const b1=lvl()==="B1";
+    $("tbody").innerHTML=`<p class="ask">Starttest</p><h2>Waar oefen je voor?</h2>
+      <div class="seg tlv" id="tlvl" role="group" aria-label="Niveau">${segHTML()}</div>
+      <p>${b1?"De starttest is voor Inburgering A2. Voor B1 begin je meteen met de onderdelen van het examen.":"Twaalf korte vragen. Daarna weet je waar je kunt beginnen."}</p>
+      <p class="note">Je kunt je niveau later veranderen in Profiel.</p>
+      <button class="btn wide" id="tgo">${b1?"Naar je les van vandaag":"Begin de test"}</button>`;
+    $("tlvl").querySelectorAll("button").forEach(b=>b.onclick=()=>{setLvl(b.dataset.lvl);intro()});
+    $("tgo").onclick=()=>{if(lvl()==="B1"){setTab("vandaag");home()}else draw()};
+    window.scrollTo(0,0)};
+  bgOpen(TABN[tab],home);
+  intro();
+}
 // Mijn examen: the result of the real exam, per part, as the learner tells it. Their own record is S.uit {part: {ok, at}};
 // a copy goes to /api/outcome (table exam_outcomes) to see whether the proefexamens and "Klaar voor het examen" predict the
 // real result: the part, passed or not, the last proefexamen score, the status then, and the month the server adds. No
@@ -5064,8 +5416,7 @@ function uitScreen(y=0){
   closePop();hush();TK=null;$("card").innerHTML="";
   $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;
   tBack(TABN[tab],home);
-  const U=S.uit||{},ks=(exV||lvl())==="B1"?["l1","lb","wb","sb","knm"]:["lz","ls","wr","sp","knm"];
-  $("tbody").removeAttribute("lang");
+  const U=S.uit||{},ks=lvl()==="B1"?["l1","lb","wb","sb","knm"]:["lz","ls","wr","sp","knm"];
   $("tbody").innerHTML=`<h2>Mijn examen</h2><p class="sub">Echt examen gedaan? Tik per onderdeel op je uitslag.</p>`
     +ks.map(k=>`<h3 class="lh">${PART[k]}</h3><div class="seg uit" role="group" aria-label="${PART[k]}">${[1,0].map(o=>`<button data-k="${k}" data-ok="${o}" aria-pressed="${!!U[k]&&U[k].ok===!!o}">${o?"Geslaagd":"Niet geslaagd"}</button>`).join("")}</div>`).join("")
     +`<p class="note">Je uitslag telt mee in onze cijfers, zonder je naam of e-mailadres. Zo zien we of de proefexamens kloppen.</p><p class="note">Tik nog een keer op je uitslag om hem weg te halen.</p><p class="note"><a href="/privacy">Privacyverklaring</a></p>`;
@@ -5078,8 +5429,7 @@ function onaScreen(){
   tBack(TABN[tab],home);
   const st=c=>(S.gp||{})[c.id]?`<span class="good">Gelukt</span>`:null;
   const K=["Beroepenoriëntatie","Realistisch beroepsbeeld","Je eigenschappen kennen","Beroepskansen","Beroepscompetenties","Netwerk opbouwen","Werk vinden","Werkcultuur"];
-  $("tbody").lang="nl";
-  $("tbody").innerHTML=`<h2>ONA en participatieverklaring</h2><p class="sub">Twee onderdelen van inburgeren die niet iedereen hoeft te doen.</p>
+  $("tbody").innerHTML=`<div lang="nl"><h2>ONA en participatieverklaring</h2><p class="sub">Twee onderdelen van inburgeren die niet iedereen hoeft te doen.</p>
     <h3 class="lh">Wat is ONA?</h3><p>ONA betekent Oriëntatie op de Nederlandse Arbeidsmarkt. Je laat zien dat je weet welk werk bij je past, en hoe je in Nederland werk vindt.</p>
     <h3 class="lh">Wie doet ONA?</h3><p>Mensen die inburgeren volgens de wet van 2013, en mensen die vrijwillig inburgeren, bijvoorbeeld om Nederlander te worden. Inburger je volgens de wet van 2021? Dan doe je geen ONA, maar de MAP bij je gemeente.</p>
     <p>Doe je het Staatsexamen NT2? Dat telt voor de taalexamens. KNM, ONA (of de MAP) en de participatieverklaring doe je dan apart.</p>
@@ -5089,7 +5439,7 @@ function onaScreen(){
     <h3 class="lh">Oefen het eindgesprek</h3><p class="note">In deze gesprekken ben je kok. Op het echte eindgesprek praat je over je eigen beroep en je eigen portfolio.</p>
     <div class="list">${GP.map((c,i)=>c.ona?itHTML(`data-t="${i}"`,c.t,c.s,{n:st(c)}):"").join("")}</div>
     <h3 class="lh">Participatieverklaring</h3><p>In het participatieverklaringstraject (PVT) leer je over de belangrijkste waarden in Nederland: vrijheid, gelijkwaardigheid, solidariteit en participatie. Je gemeente organiseert het. Aan het eind teken je de participatieverklaring. Het is geen examen: je krijgt geen cijfer. Moet jij het doen? Vraag het aan je gemeente.</p>
-    <p class="note"><a href="https://www.inburgeren.nl/examen-doen/" target="_blank" rel="noopener">Welke examens jij moet doen: inburgeren.nl ↗</a><br><a href="https://www.inburgeren.nl/minder-of-geen-examens/vrijstelling-orientatie-op-de-nederlandse-arbeidsmarkt.jsp" target="_blank" rel="noopener">Vrijstelling voor ONA: inburgeren.nl ↗</a></p>`;
+    <p class="note"><a href="https://www.inburgeren.nl/examen-doen/" target="_blank" rel="noopener">Welke examens jij moet doen: inburgeren.nl ↗</a><br><a href="https://www.inburgeren.nl/minder-of-geen-examens/vrijstelling-orientatie-op-de-nederlandse-arbeidsmarkt.jsp" target="_blank" rel="noopener">Vrijstelling voor ONA: inburgeren.nl ↗</a></p></div>`;
   document.querySelectorAll("#tbody [data-t]").forEach(b=>b.onclick=()=>talk(+b.dataset.t));
 }
 function talk(i){
@@ -5097,9 +5447,8 @@ function talk(i){
   $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;
   if(c.ona)tBack("ONA",onaScreen);else tBack("Gesprekken",talks);
   TK={i,c,n:0,log:[],miss:0,hint:false,self:0};
-  $("tbody").lang="nl";
-  $("tbody").innerHTML=`<p class="ask">${gpGroup(i)}</p><h2>${c.t}</h2>`+(c.p?picsHTML([c.p]):"")
-    +`<p class="ask">Jouw opdracht</p><div class="sample">${c.o}</div><div class="talk" id="tlog" aria-live="polite"></div><div id="tctl"></div>`;
+  $("tbody").innerHTML=`<div lang="nl"><p class="ask">${gpGroup(i)}</p><h2>${c.t}</h2>`+(c.p?picsHTML([c.p]):"")
+    +`<p class="ask">Jouw opdracht</p><div class="sample">${c.o}</div><div class="talk" id="tlog" aria-live="polite"></div><div id="tctl"></div></div>`;
   document.querySelectorAll("#tbody [data-pic]").forEach(b=>b.onclick=()=>zoomPic(b.dataset.pic));
   $("tctl").innerHTML=`<button class="btn wide" id="tgo">Begin het gesprek</button>`
     +(canSpeak?"":`<p class="note">Geluid werkt hier niet: lees wat de ander zegt.</p>`);
@@ -5715,6 +6064,54 @@ const UI={
 "Claude heeft vandaag al heel veel teksten nagekeken. Morgen kan het weer.":["Claude has already checked a great many texts today. Tomorrow it works again.","صحّح Claude اليوم نصوصًا كثيرة جدًا. يمكنك المحاولة غدًا.","Claude bugün çok fazla metin kontrol etti. Yarın yine olur.","Claude आज बहुत सारे पाठ जाँच चुका है। कल फिर हो सकेगा।","Claude 今天已经批改了很多文字。明天可以再试。"],
 "Log in bij Profiel om dit door Claude te laten nakijken.":["Log in under Profile to have Claude check this.","سجّل الدخول في ملفي ليصحّح Claude هذا.","Bunu Claude'a kontrol ettirmek için Profil'den giriş yap.","Claude से इसकी जाँच करवाने के लिए प्रोफ़ाइल में लॉग इन करें।","请在“我的”中登录，让 Claude 批改。"],
 "Je bent niet ingelogd. Dan kijkt Claude je antwoorden niet na, en zie je aan het eind alleen de voorbeeldantwoorden.":["You are not logged in. Then Claude does not check your answers, and at the end you only see the example answers.","لم تسجّل الدخول. لذلك لن يصحّح Claude إجاباتك، وسترى في النهاية الإجابات النموذجية فقط.","Giriş yapmadın. O zaman Claude cevaplarını kontrol etmez ve sonunda yalnızca örnek cevapları görürsün.","आप लॉग इन नहीं हैं। तब Claude आपके उत्तर नहीं जाँचेगा, और अंत में आपको केवल उदाहरण उत्तर दिखेंगे।","你没有登录。这样 Claude 不会批改你的回答，最后你只能看到示例答案。"],
+"Beginnen":["Getting started","البداية","Başlangıç","शुरुआत","入门"],
+"Twaalf korte lessen, voor als je net begint.":["Twelve short lessons, for when you are just starting.","اثنا عشر درسًا قصيرًا لمن يبدأ للتو.","Yeni başlayanlar için on iki kısa ders.","बारह छोटे पाठ, नई शुरुआत करने वालों के लिए।","十二节短课，适合刚开始学习的人。"],
+"Twaalf korte lessen met de basis van het Nederlands.":["Twelve short lessons with the basics of Dutch.","اثنا عشر درسًا قصيرًا في أساسيات اللغة الهولندية.","Felemenkçenin temelleri üzerine on iki kısa ders.","डच की बुनियादी बातों के बारह छोटे पाठ।","十二节短课，学习荷兰语基础。"],
+"Waar begin ik?":["Where do I start?","من أين أبدأ؟","Nereden başlamalıyım?","मैं कहाँ से शुरू करूँ?","我从哪里开始？"],
+"Twaalf korte vragen. Daarna weet je waar je kunt beginnen.":["Twelve short questions. Then you know where to start.","اثنا عشر سؤالًا قصيرًا. بعدها ستعرف من أين تبدأ.","On iki kısa soru. Sonra nereden başlayacağını bilirsin.","बारह छोटे सवाल। फिर आपको पता चलेगा कि कहाँ से शुरू करें।","十二个简短的问题。然后你就知道从哪里开始了。"],
+"Alles voor je examen, in één abonnement.":["Everything for your exam, in one subscription.","كل ما تحتاجه لامتحانك، في اشتراك واحد.","Sınavın için her şey, tek bir abonelikte.","आपकी परीक्षा के लिए सब कुछ, एक ही सदस्यता में।","备考所需的一切，一个订阅全包。"],
+"Claude kijkt je teksten en gesproken antwoorden na.":["Claude checks your texts and spoken answers.","يصحّح Claude نصوصك وإجاباتك الشفهية.","Claude metinlerini ve sözlü cevaplarını kontrol eder.","Claude आपके लिखे हुए पाठ और बोले गए उत्तर जाँचता है।","Claude 批改你的写作和口语回答。"],
+"Alle proefexamens met tijd, zoals op het echte examen.":["All timed practice exams, like the real exam.","كل الامتحانات التجريبية بوقت محدد، مثل الامتحان الحقيقي.","Gerçek sınav gibi süreli tüm deneme sınavları.","असली परीक्षा जैसी समयबद्ध सभी अभ्यास परीक्षाएँ।","所有限时模拟考试，和真实考试一样。"],
+"Per maand":["Monthly","شهريًا","Aylık","मासिक","按月"],
+"Per jaar":["Yearly","سنويًا","Yıllık","वार्षिक","按年"],
+"per maand":["per month","شهريًا","aylık","प्रति माह","每月"],
+"per jaar":["per year","سنويًا","yıllık","प्रति वर्ष","每年"],
+"Periode":["Period","المدة","Dönem","अवधि","周期"],
+"Word Plus-lid":["Get Plus","اشترك في Plus","Plus üyesi ol","Plus सदस्य बनें","开通 Plus"],
+"Je betaalt met iDEAL of een kaart. Opzeggen kan altijd, in Profiel.":["You pay with iDEAL or a card. You can cancel any time, in Profile.","تدفع عبر iDEAL أو بالبطاقة. يمكنك الإلغاء في أي وقت من «ملفي».","iDEAL veya kartla ödersin. İstediğin zaman Profil'den iptal edebilirsin.","आप iDEAL या कार्ड से भुगतान करते हैं। प्रोफ़ाइल में कभी भी रद्द कर सकते हैं।","可用 iDEAL 或银行卡支付。随时可在“我的”中取消。"],
+"Log eerst in. Dan hoort je abonnement bij je account.":["Log in first, so the subscription belongs to your account.","سجّل الدخول أولًا، ليرتبط الاشتراك بحسابك.","Önce giriş yap; böylece abonelik hesabına bağlanır.","पहले लॉग इन करें, ताकि सदस्यता आपके खाते से जुड़ी रहे।","请先登录，这样订阅会绑定到你的账户。"],
+"Abonnement beheren":["Manage subscription","إدارة الاشتراك","Aboneliği yönet","सदस्यता प्रबंधित करें","管理订阅"],
+"De laatste betaling is niet gelukt. Kijk bij Abonnement beheren.":["The last payment failed. See Manage subscription.","لم تنجح آخر عملية دفع. انظر «إدارة الاشتراك».","Son ödeme başarısız oldu. Aboneliği yönet'e bak.","पिछला भुगतान नहीं हुआ। सदस्यता प्रबंधित करें देखें।","上次付款失败。请查看“管理订阅”。"],
+"Proefexamens horen bij Bittertalen Plus.":["Practice exams are part of Bittertalen Plus.","الامتحانات التجريبية جزء من Bittertalen Plus.","Deneme sınavları Bittertalen Plus'a dahildir.","अभ्यास परीक्षाएँ Bittertalen Plus में शामिल हैं।","模拟考试属于 Bittertalen Plus。"],
+"Nakijken door Claude en alle proefexamens.":["Grading by Claude and all practice exams.","تصحيح من Claude وكل الامتحانات التجريبية.","Claude ile kontrol ve tüm deneme sınavları.","Claude द्वारा जाँच और सभी अभ्यास परीक्षाएँ।","Claude 批改和所有模拟考试。"],
+"Naar de betaalpagina…":["Going to the payment page…","جارٍ الانتقال إلى صفحة الدفع…","Ödeme sayfasına gidiliyor…","भुगतान पेज पर जा रहे हैं…","正在前往付款页面…"],
+"Betalen lukt nu niet. Probeer het later opnieuw.":["Payment isn't possible right now. Try again later.","الدفع غير ممكن الآن. حاول لاحقًا.","Şu anda ödeme yapılamıyor. Daha sonra tekrar dene.","अभी भुगतान नहीं हो पा रहा। बाद में फिर कोशिश करें।","现在无法付款，请稍后再试。"],
+"Probeer het opnieuw":["Try again","حاول مرة أخرى","Tekrar dene","फिर से कोशिश करें","再试一次"],
+"Upgrade naar Plus B1":["Upgrade to Plus B1","الترقية إلى Plus B1","Plus B1'e yükselt","Plus B1 में अपग्रेड करें","升级到 Plus B1"],
+"Je betaalt alleen het verschil voor de rest van de periode.":["You only pay the difference for the rest of the period.","تدفع الفرق فقط لبقية المدة.","Dönemin kalanı için yalnızca farkı ödersin.","आप बाकी अवधि के लिए सिर्फ़ अंतर चुकाते हैं।","你只需支付本周期剩余时间的差价。"],
+"Voor het Staatsexamen B1, en ook alles van A2.":["For the State exam B1, and everything for A2 too.","لامتحان الدولة B1، ويشمل أيضًا كل ما في A2.","Devlet sınavı B1 için; A2'deki her şey de dahil.","राज्य परीक्षा B1 के लिए, और A2 का सब कुछ भी।","适用于国家考试 B1，也包含 A2 的全部内容。"],
+"Voor het inburgeringsexamen A2.":["For the integration exam A2.","لامتحان الاندماج A2.","Uyum sınavı A2 için.","इंटीग्रेशन परीक्षा A2 के लिए।","适用于融入考试 A2。"],
+"Voor B1 heb je Plus B1 nodig.":["For B1 you need Plus B1.","تحتاج إلى Plus B1 لمستوى B1.","B1 için Plus B1 gerekir.","B1 के लिए Plus B1 चाहिए।","B1 需要 Plus B1。"],
+"Welkom bij Bittertalen Plus!":["Welcome to Bittertalen Plus!","مرحبًا بك في Bittertalen Plus!","Bittertalen Plus'a hoş geldin!","Bittertalen Plus में आपका स्वागत है!","欢迎使用 Bittertalen Plus！"],
+"Starttest":["Starting test","اختبار البداية","Başlangıç testi","शुरुआती परीक्षा","入门测试"],
+"Waar oefen je voor?":["What are you practising for?","لأيّ امتحان تتدرّب؟","Hangi sınava hazırlanıyorsun?","आप किसकी तैयारी कर रहे हैं?","你在准备什么考试？"],
+"Begin de test":["Start the test","ابدأ الاختبار","Teste başla","परीक्षा शुरू करें","开始测试"],
+"De starttest is voor Inburgering A2. Voor B1 begin je meteen met de onderdelen van het examen.":["The starting test is for Integration A2. For B1 you start right away with the parts of the exam.","اختبار البداية مخصّص لامتحان الاندماج A2. في مستوى B1 تبدأ مباشرةً بأجزاء الامتحان.","Başlangıç testi Uyum A2 içindir. B1 için hemen sınavın bölümleriyle başlarsın.","शुरुआती परीक्षा इंटीग्रेशन A2 के लिए है। B1 के लिए आप सीधे परीक्षा के हिस्सों से शुरू करते हैं।","入门测试适用于融入考试 A2。B1 级别直接从考试的各个部分开始。"],
+"Je kunt je niveau later veranderen in Profiel.":["You can change your level later in Profile.","يمكنك تغيير مستواك لاحقًا في «ملفي».","Seviyeni daha sonra Profil'de değiştirebilirsin.","आप अपना स्तर बाद में प्रोफ़ाइल में बदल सकते हैं।","你以后可以在“我的”中更改级别。"],
+"Doe de starttest":["Take the starting test","أجرِ اختبار البداية","Başlangıç testini yap","शुरुआती परीक्षा दें","参加入门测试"],
+"Doe de starttest opnieuw":["Take the starting test again","أعد اختبار البداية","Başlangıç testini yeniden yap","शुरुआती परीक्षा फिर से दें","重新参加入门测试"],
+"Voorbeelden":["Examples","أمثلة","Örnekler","उदाहरण","例句"],
+"Woorden":["Words","كلمات","Kelimeler","शब्द","单词"],
+"Bewaar in Mijn woorden":["Save in My words","احفظ في كلماتي","Kelimelerime kaydet","मेरे शब्दों में सहेजें","保存到我的单词"],
+"Bewaard in Mijn woorden":["Saved in My words","محفوظة في كلماتي","Kelimelerime kaydedildi","मेरे शब्दों में सहेजा गया","已保存到我的单词"],
+"Ik weet het niet":["I don't know","لا أعرف","Bilmiyorum","मुझे नहीं पता","我不知道"],
+"Alle lessen":["All lessons","كل الدروس","Tüm dersler","सभी पाठ","所有课程"],
+"Naar je les van vandaag":["Go to today's lesson","إلى درس اليوم","Bugünkü derse git","आज के पाठ पर जाएँ","去今天的课程"],
+"Herhaal wat je al hebt geleerd":["Repeat what you have learned","راجع ما تعلمته","Öğrendiklerini tekrar et","जो सीखा है उसे दोहराएँ","复习已学内容"],
+"Eerst de basis: elke dag één les.":["The basics first: one lesson a day.","الأساسيات أولًا: درس واحد كل يوم.","Önce temeller: her gün bir ders.","पहले बुनियाद: हर दिन एक पाठ।","先学基础：每天一节课。"],
+"Je kent de basis. Je kunt meteen met de onderdelen van het examen beginnen.":["You know the basics. You can start on the exam parts right away.","أنت تعرف الأساسيات. يمكنك البدء فورًا بأقسام الامتحان.","Temelleri biliyorsun. Hemen sınav bölümlerine başlayabilirsin.","आपको बुनियादी बातें आती हैं। आप तुरंत परीक्षा के भागों से शुरू कर सकते हैं।","你已掌握基础。可以马上开始练习考试各部分。"],
+"Je kent al veel. Elke dag krijg je een les over wat je nog niet goed weet.":["You already know a lot. Every day you get a lesson on what you don't know well yet.","أنت تعرف الكثير بالفعل. ستحصل كل يوم على درس فيما لا تعرفه جيدًا بعد.","Zaten çok şey biliyorsun. Her gün henüz iyi bilmediğin bir konuda ders alacaksın.","आपको पहले से काफ़ी आता है। हर दिन आपको उस विषय का पाठ मिलेगा जो अभी अच्छी तरह नहीं आता।","你已经会很多了。每天你会学一节还不太熟悉的内容。"],
+"Je begint bij het begin. Elke dag krijg je één korte les. Daarna ga je verder met de onderdelen van het examen.":["You start at the beginning. Every day you get one short lesson. After that you go on to the exam parts.","ستبدأ من البداية. كل يوم درس قصير واحد. بعد ذلك تنتقل إلى أقسام الامتحان.","En baştan başlıyorsun. Her gün bir kısa ders alacaksın. Sonra sınav bölümlerine geçeceksin.","आप शुरू से शुरू करेंगे। हर दिन एक छोटा पाठ मिलेगा। उसके बाद आप परीक्षा के भागों पर जाएँगे।","你将从头开始。每天一节短课。之后再练习考试各部分。"],
 "Taal":["Language","اللغة","Dil","भाषा","语言"]};
 let LANG=LANGS[lsGet("ww-ui")]?lsGet("ww-ui"):"nl", LI=LCODE.indexOf(LANG);
 // Month and day names come from the browser; only the order differs per language
@@ -5723,7 +6120,173 @@ const NLD=["maandag","dinsdag","woensdag","donderdag","vrijdag","zaterdag","zond
 const lName=(o,d)=>new Intl.DateTimeFormat(LANGS[LANG].c,o).format(d);
 const dayMon=(n,mo)=>{const i=NLM.indexOf(mo.toLowerCase());if(i<0)return`${n} ${mo}`;return LANG==="zh"?`${i+1}月${n}日`:`${n} ${lName({month:"long"},new Date(2026,i,15))}`};
 const uiT=s=>(UI[s]||[])[LI];
+Object.assign(UI,{
+  "Welkom bij Bittertalen": [
+    "Welcome to Bittertalen",
+    "مرحبًا بك في Bittertalen",
+    "Bittertalen’e hoş geldin",
+    "Bittertalen में स्वागत है",
+    "欢迎使用 Bittertalen"
+  ],
+  "Oefen Nederlands met een korte leesopdracht.": [
+    "Try Dutch with a short reading task.",
+    "جرّب الهولندية مع تمرين قراءة قصير.",
+    "Kısa bir okuma göreviyle Hollandaca çalış.",
+    "एक छोटे पढ़ने के अभ्यास से डच सीखें।",
+    "用一道简短的阅读题练习荷兰语。"
+  ],
+  "Probeer één vraag": [
+    "Try one question",
+    "جرّب سؤالًا واحدًا",
+    "Bir soru dene",
+    "एक सवाल आज़माएँ",
+    "试做一道题"
+  ],
+  "Hoeveel tijd heb je?": [
+    "How much time do you have?",
+    "كم لديك من الوقت؟",
+    "Ne kadar zamanın var?",
+    "आपके पास कितना समय है?",
+    "你有多少时间？"
+  ],
+  "Geschatte duur": [
+    "Estimated time",
+    "الوقت التقريبي",
+    "Tahmini süre",
+    "अनुमानित समय",
+    "预计用时"
+  ],
+  "Verder met je concept": [
+    "Continue your draft",
+    "تابع مسودتك",
+    "Taslağına devam et",
+    "अपना मसौदा जारी रखें",
+    "继续草稿"
+  ],
+  "Opgeslagen": [
+    "Saved",
+    "تم الحفظ",
+    "Kaydedildi",
+    "सहेजा गया",
+    "已保存"
+  ],
+  "Wacht op synchronisatie": [
+    "Waiting to sync",
+    "بانتظار المزامنة",
+    "Eşitleme bekleniyor",
+    "सिंक होने का इंतज़ार",
+    "等待同步"
+  ],
+  "Synchroniseren mislukt": [
+    "Could not sync",
+    "تعذّرت المزامنة",
+    "Eşitlenemedi",
+    "सिंक नहीं हो सका",
+    "同步失败"
+  ],
+  "Wacht op internet": [
+    "Waiting for internet",
+    "بانتظار الإنترنت",
+    "İnternet bekleniyor",
+    "इंटरनेट का इंतज़ार",
+    "等待联网"
+  ],
+  "Stabiel oefenresultaat": [
+    "Consistent practice results",
+    "نتائج تدريب مستقرة",
+    "Tutarlı alıştırma sonuçları",
+    "लगातार अच्छे अभ्यास परिणाम",
+    "练习成绩稳定"
+  ],
+  "Oefendoel bereikt": [
+    "Practice target reached",
+    "تم بلوغ هدف التدريب",
+    "Alıştırma hedefine ulaşıldı",
+    "अभ्यास का लक्ष्य पूरा हुआ",
+    "达到练习目标"
+  ],
+  "Meer oefenen": [
+    "Keep practising",
+    "تدرّب أكثر",
+    "Biraz daha çalış",
+    "और अभ्यास करें",
+    "继续练习"
+  ],
+  "Proefexamens": [
+    "Practice exams",
+    "امتحانات تجريبية",
+    "Deneme sınavları",
+    "अभ्यास परीक्षाएँ",
+    "模拟考试"
+  ],
+  "nieuwe vragen": [
+    "new questions",
+    "أسئلة جديدة",
+    "yeni sorular",
+    "नए प्रश्न",
+    "新题"
+  ],
+  "Uitspraak en tempo zijn niet beoordeeld.": [
+    "Pronunciation and pace have not been assessed.",
+    "لم يُقيّم النطق وسرعة الكلام.",
+    "Telaffuz ve konuşma hızı değerlendirilmedi.",
+    "उच्चारण और बोलने की गति का मूल्यांकन नहीं हुआ है।",
+    "尚未评估发音和语速。"
+  ],
+  "Je score is het percentage goede antwoorden of punten. Het streepje is je oefendoel.": [
+    "Your score is the percentage of correct answers or points. The line is your practice target.",
+    "درجتك هي نسبة الإجابات الصحيحة أو النقاط. الخط هو هدف التدريب.",
+    "Puanın, doğru yanıtların veya puanların yüzdesidir. Çizgi alıştırma hedefini gösterir.",
+    "आपका स्कोर सही उत्तरों या अंकों का प्रतिशत है। रेखा अभ्यास का लक्ष्य दिखाती है।",
+    "成绩显示答对题目或所得分数的百分比。标线是练习目标。"
+  ],
+  "Ga verder met de test": [
+    "Continue the test",
+    "تابع الاختبار",
+    "Teste devam et",
+    "परीक्षण जारी रखें",
+    "继续测试"
+  ],
+  "Nog niet getest": [
+    "Not tested yet",
+    "لم يُختبر بعد",
+    "Henüz test edilmedi",
+    "अभी जाँच नहीं हुई",
+    "尚未测试"
+  ]
+});
+Object.assign(UI,{
+  "Per soort schrijfopdracht":["By writing task type","حسب نوع مهمة الكتابة","Yazma görevi türüne göre","लेखन कार्य के प्रकार के अनुसार","按写作题型"],
+  "Laatste proefexamens met deelresultaten":["Recent practice exams with a breakdown","الامتحانات التجريبية الأخيرة مع نتائج مفصلة","Ayrıntılı sonuçları olan son deneme sınavları","विस्तृत परिणाम वाली हाल की अभ्यास परीक्षाएँ","有分项成绩的近期模拟考试"],
+  "Nog weinig gegevens. Maak meer proefexamens om je ontwikkeling te zien.":["There is little data yet. Take more practice exams to see your progress.","لا توجد بيانات كافية بعد. أكمل مزيدًا من الامتحانات التجريبية لترى تقدمك.","Henüz az veri var. Gelişimini görmek için daha fazla deneme sınavı yap.","अभी जानकारी कम है। अपनी प्रगति देखने के लिए और अभ्यास परीक्षाएँ दें।","目前数据较少。多做几次模拟考试，查看自己的进步。"],
+  "Dit zijn oefenresultaten, geen voorspelling van je officiële uitslag.":["These are practice results, not a prediction of your official result.","هذه نتائج تدريبية وليست توقعًا لنتيجتك الرسمية.","Bunlar alıştırma sonuçlarıdır, resmî sonucunun tahmini değildir.","ये अभ्यास के परिणाम हैं, आधिकारिक परिणाम का अनुमान नहीं।","这些是练习成绩，并非对正式考试结果的预测。"],
+  "Gerichte oefening":["Targeted practice","تدريب مخصص","Hedefe yönelik alıştırma","लक्षित अभ्यास","专项练习"],
+  "Formulier":["Form","استمارة","Form","फ़ॉर्म","表格"],
+  "Kort bericht":["Short message","رسالة قصيرة","Kısa mesaj","छोटा संदेश","短消息"],
+  "Vrije tekst":["Free text","نص حر","Serbest metin","स्वतंत्र लेखन","自由写作"],
+  "Zakelijke e-mail of brief":["Formal email or letter","بريد إلكتروني أو خطاب رسمي","Resmî e-posta veya mektup","औपचारिक ईमेल या पत्र","正式邮件或信件"],
+  "Zinsopdracht":["Sentence task","مهمة جملة","Cümle görevi","वाक्य का कार्य","句子题"],
+  "E-mail":["Email","بريد إلكتروني","E-posta","ईमेल","电子邮件"],
+  "Schrijfopdracht":["Writing task","مهمة كتابة","Yazma görevi","लेखन कार्य","写作题"]
+});
 const UIR=[
+ [/^Probeer (\d+) dagen gratis$/,["Try $1 days free","جرّب $1 أيام مجانًا","$1 gün ücretsiz dene","$1 दिन मुफ़्त आज़माएँ","免费试用 $1 天"]],
+ [/^Daarna (\S+) per maand\.$/,["Then $1 per month.","بعد ذلك $1 شهريًا.","Sonra aylık $1.","उसके बाद $1 प्रति माह।","之后每月 $1。"]],
+ [/^Daarna (\S+) per jaar\.$/,["Then $1 per year.","بعد ذلك $1 سنويًا.","Sonra yıllık $1.","उसके बाद $1 प्रति वर्ष।","之后每年 $1。"]],
+ [/^(\d+) maanden gratis$/,["$1 months free","$1 أشهر مجانًا","$1 ay ücretsiz","$1 महीने मुफ़्त","免费 $1 个月"]],
+ [/^Gratis proefweek tot (\S+)\.$/,["Free trial week until $1.","أسبوع تجريبي مجاني حتى $1.","$1 tarihine kadar ücretsiz deneme haftası.","$1 तक मुफ़्त ट्रायल सप्ताह।","免费试用周至 $1。"]],
+ [/^Opgezegd: Plus stopt op (\S+)\.$/,["Cancelled: Plus ends on $1.","تم الإلغاء: ينتهي Plus في $1.","İptal edildi: Plus $1 tarihinde biter.","रद्द: Plus $1 को समाप्त होगा।","已取消：Plus 将于 $1 结束。"]],
+ [/^Volgende betaling op (\S+)\.$/,["Next payment on $1.","الدفعة التالية في $1.","Sonraki ödeme: $1.","अगला भुगतान $1 को।","下次付款：$1。"]],
+ [/^1 opdracht$/,["1 writing task","مهمة كتابة واحدة","1 yazma görevi","1 लेखन कार्य","1 道写作题"]],
+ [/^(\d+) opdrachten$/,["$1 writing tasks","$1 مهام كتابة","$1 yazma görevi","$1 लेखन कार्य","$1 道写作题"]],
+ [/^1 proefexamen$/,["1 practice exam","امتحان تجريبي واحد","1 deneme sınavı","1 अभ्यास परीक्षा","1 次模拟考试"]],
+ [/^(\d+) proefexamens$/,["$1 practice exams","$1 امتحانات تجريبية","$1 deneme sınavı","$1 अभ्यास परीक्षाएँ","$1 次模拟考试"]],
+ [/^oefendoel: (\d+)%$/, ["practice target: $1%","هدف التدريب: $1%","alıştırma hedefi: %$1","अभ्यास का लक्ष्य: $1%","练习目标：$1%"]],
+ [/^Vraag (\d+) van (\d+)$/,["Question $1 of $2","السؤال $1 من $2","Soru $1/$2","प्रश्न $1 / $2","第 $1 题，共 $2 题"]],
+ [/^Les (\d+) van (\d+)$/,["Lesson $1 of $2","الدرس $1 من $2","Ders $1/$2","पाठ $1 / $2","第 $1 课，共 $2 课"]],
+ [/^(\d+) van (\d+) goed$/,["$1 of $2 right","$1 من $2 صحيحة","$1/$2 doğru","$2 में से $1 सही","答对 $1/$2"]],
+ [/^Les (\d+): (.+)$/,["Lesson $1: $2","الدرس $1: $2","Ders $1: $2","पाठ $1: $2","第 $1 课：$2"]],
+ [/^Naar les (\d+): (.+)$/,["Go to lesson $1: $2","إلى الدرس $1: $2","$1. derse git: $2","पाठ $1 पर जाएँ: $2","去第 $1 课：$2"]],
  [/^(\d+) van (\d+) klaar$/,["$1 of $2 done","أنجزت $1 من $2","$1/$2 tamam","$2 में से $1 पूरे","已完成 $1/$2"]],
  [/^(\d+) van (\d+)$/,["$1 of $2","$1 من $2","$1/$2","$2 में से $1","$1/$2"]],
  [/^(\d+) van (\d+) goed$/,["$1 of $2 right","$1 من $2 صحيح","$1/$2 doğru","$2 में से $1 सही","答对 $1/$2"]],
@@ -5744,7 +6307,7 @@ const rtlMark=v=>LANG==="ar"?"\u200f"+v:v; // an Arabic line that starts with a 
 const trS=s=>{const t=s.trim();if(!t)return null;const v=uiT(t)||uiR(t);if(v)return s.replace(t,rtlMark(v));
   if(t.includes(" · ")){const p=t.split(" · "),q=p.map(x=>uiT(x)||uiR(x)||x);if(q.some((x,i)=>x!==p[i]))return s.replace(t,rtlMark(q.join(" · ")))}
   return null};
-const DUTCH="#play,#read,:not(html)[lang=nl],script,style,.doc,.sample,.msum"; // never translated, and left to right: lang="nl" marks Dutch content
+const DUTCH="#play,#read,:not(html)[lang=nl],script,style,.doc,.sample,.msum,.bgl"; // never translated, and left to right: lang="nl" marks Dutch content
 const uiSkip=el=>!el||el.closest(DUTCH+",select");
 function trNode(root){
   if(root.nodeType===3){const el=root.parentElement;if(uiSkip(el))return;const o=UIO.get(root)??root.nodeValue,v=LI<0?null:trS(o);
@@ -5767,7 +6330,7 @@ function applyLang(){const h=document.documentElement;h.lang=LANGS[LANG].c;h.dir
 document.addEventListener("change",e=>{if(!e.target.matches("[data-lang]"))return;LANG=e.target.value;LI=LCODE.indexOf(LANG);lsSet("ww-ui",LI<0?null:LANG);applyLang()});
 document.querySelector("header .lang").outerHTML=langHTML();
 if(LI>=0)applyLang();
-ready$.then(()=>location.hash.startsWith("#verhuis=")?arrive():0).then(initCloud).finally(()=>{window.__up=1});
+ready$.then(()=>location.hash.startsWith("#verhuis=")?arrive():0).then(initCloud).then(plusBack).finally(()=>{window.__up=1});
 // A newer version was fetched in the background: offer it (a reload takes it from the cache, so it is quick)
 function showFresh(){if($("fresh"))return;const d=document.createElement("div");d.id="fresh";d.setAttribute("role","status");
   d.innerHTML=`<span>Er is een nieuwe versie van Bittertalen.</span><button class="btn" type="button">Vernieuwen</button>`;
@@ -5790,3 +6353,4 @@ if("serviceWorker" in navigator&&window.isSecureContext&&!window.claude){
 </script>
 </body>
 </html>
+

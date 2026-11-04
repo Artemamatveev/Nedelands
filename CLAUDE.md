@@ -1,7 +1,7 @@
 # Bittertalen
 
 Bittertalen (a pun on bitterballen: "bitter languages", self-irony about learning Dutch) is a single-page study app for the Dutch A2 integration exam (inburgeringsexamen).
-Everything lives in `index.html` (styles, data, logic). Paintings are in `art/`.
+The UI and most content live in `index.html`. `study/language-v1.js` holds stable verb and word-order data plus checking logic. `study/progress-v1.js` handles three-way progress merges and conditional cloud writes. `study/writing-v1.js` aggregates writing feedback without making another grading request. Paintings are in `art/`.
 Deployed on Vercel from `main`: every push to `main` goes live at https://bittertalen.nl (Vercel project
 `nedelands`; the domain is registered at TransIP with Vercel's nameservers, so its DNS records are in Vercel, including
 Resend's). The old addresses https://bittertalen.vercel.app and https://nedelands.vercel.app serve the same deployment
@@ -26,12 +26,12 @@ nodes, `aria-label` and `placeholder` after every render (a MutationObserver; th
 switching back restores it). The user's rule: only the menus, the privacy statement and sections like it are translated, exercises stay Dutch.
 So never inside `#play` (exercises) or `#read` (the reader), and not content: texts, stories, conversations, chapters, chapter
 and conversation titles in lists, museum labels, the ONA text and questions stay Dutch. `lang="nl"` marks Dutch content (`DUTCH`: never translated, always
-left to right): `#tbody` has it during a conversation and on the ONA screen, `#hbody` in a chapter, `#vbody` always; a screen that
-reuses such a box for a menu removes it. A new menu string needs all five translations in `UI`. The
+left to right): a conversation, a chapter and the ONA screen wrap their own content in `<div lang="nl">`, because `#tbody` and `#hbody` also hold
+menus; `#vbody` has it always. A new menu string needs all five translations in `UI`. The
 translations were made by Claude and not yet checked by native speakers.
 Arabic runs right to left (`<html dir="rtl">`, set by `applyLang()`): use logical CSS (`padding-inline-start`,
 `inset-inline-start`, `text-align:var(--ta)` and `var(--te)` for left and right), not physical sides, for anything in the menus. Dutch
-content stays left to right (`#play`, `#read`, the header, `[lang=nl]`, `.doc`, `.sample`, `.msum`, in one CSS rule). In Arabic the
+content stays left to right (`#play`, `#read`, the header, `[lang=nl]`, `.book`, `.doc`, `.sample`, `.msum`, `.tl`, `.bgl`, in one CSS rule). In Arabic the
 tab bar, its lens and the swipe back are mirrored; `unicode-bidi:plaintext` keeps Dutch titles readable in a right-to-left list.
 No letter spacing in Arabic, Hindi or Chinese: it breaks joined letters.
 `privacy.html` and `over.html` hold the same text six times: one `<article data-l>` per language with the same sections, points and
@@ -99,15 +99,12 @@ you were on is kept (`tab`), so every back button returns to it and is named aft
 
 - **Vandaag**: the painting and its label, then today's lesson: how far you are today (a bar of six pills, "2 van 6
 klaar"), one short line, and the steps: all alike: its icon, title, a short line and ›, a done one a green check; no exam dates. When all are done the streak ribbon drops down once that day (`ww-stamp`) with a tap of the
-phone. The lesson: every exam part every day, the one that scores lowest first as a full round (every
-third day a proefexamen), the other four as short rounds (`SHORT`: one Lezen text, three Luisteren fragments,
-one Schrijven task, two Spreken questions, five KNM questions), weakest to strongest, and last a grammar round
-that helps the weakest part. Then Mix van de dag.
+phone. The learner chooses 10, 20 or 40 minutes. `planTasks()` selects short rounds within that estimated budget, prioritises weak parts, and rotates ties. `S.lessonPlan` freezes the steps for that day, level and budget so completed work does not reorder the lesson. Full timed exams start from Examen. Then Mix van de dag.
 - **Examen**: "Naar het examen": one row per exam part (`.rd`, from `ready()`), the whole row starts that part's
 proefexamen: its icon, the name with its minutes under it, the score on the right ("76%" in ink with a small
 "goed" under it; "–" without one) and ›; under it the bar with the pass line (`passOf()`: Lezen and Luisteren 19 of
-25, KNM 28 of 40, the rest 70%) and one status line: a dot and the status (green Klaar voor het examen, oranje Bijna
-klaar, grey Nog niet klaar) or "Bij het oefenen" / "Nog niet geoefend", then "nodig: 76%". The user found a bare
+25, KNM 28 of 40, the rest 70%) and one status line: a dot and the status (green Stabiel oefenresultaat, oranje Bijna
+klaar, grey Nog niet klaar) or "Bij het oefenen" / "Nog niet geoefend", then "nodig: 76%". No line with the number of proefexamens, the date and "nieuwe vragen" under it (removed at the user's wish: the history is in Mijn resultaten). The user found a bare
 percentage unclear, so the intro says in one line what the percentage and the line mean. The number is the share of right answers (the last
 proefexamen, else practice), never a chance of passing; the intro says so. Under the rows one row to DUO's 15
 official oefenexamens ↗, and on both levels "ONA en participatieverklaring" (`onaScreen()`, in `#talk`): the two parts not
@@ -119,7 +116,7 @@ examiner "Mevrouw Bakker"), which the Gesprekken list and its count leave out. C
 Last on both level tabs, "Mijn examen" (`uitScreen()`, in `#talk`): per part the learner taps Geslaagd or Niet geslaagd for
 the real exam (tap again to take it back), which also shows in Mijn resultaten. Their own record is `S.uit` `{part: {ok, at}}`;
 a copy goes to `/api/outcome` (`api/outcome.js`, table `exam_outcomes` and `put_outcome()` in `supabase/schema.sql`, run it
-in the SQL editor) to see whether the proefexamens and "Klaar voor het examen" predict the result: part, ok, `pc` the last
+in the SQL editor) to see whether the proefexamens and "Stabiel oefenresultaat" predict the result: part, ok, `pc` the last
 proefexamen score, `rd` the status then (0 nog niet, 1 bijna, 2 klaar), the month. No name, e-mail, account or IP. The row's
 random id stays on the device (`ww-uit`, also what is still unsent; it goes at the next start) and never in `S`, so a row
 can't be tied to an account: a correction within a day changes the row, later it is a new attempt with a new row, and a row
@@ -128,7 +125,7 @@ can only be taken back on the device that sent it. `OUTCOME_CAP` new rows a mont
 - **Oefenen**: "Examenonderdelen" (Lezen, Luisteren, Schrijven, Spreken, KNM: practice without the clock) and
 "Grammatica en woorden" under it, "Lezen, luisteren en spreken" beside them on a computer.
 - **Herhalen**: Mijn zwakke punten, Mijn fouten and Mijn woorden (the last two once there is something in them).
-- **Profiel**: first and last name, the level (A2 or B1, see B1) (`S.me` `{name, last}`, so they sync, and they also go to the account's
+- **Profiel**: first and last name, the level (A2 or B1, a list, see B1) (`S.me` `{name, last}`, so they sync, and they also go to the account's
 `user_metadata` by `syncMeta()`; an exam date was asked here once and removed at the user's wish, an old `exam` field is
 kept as it is but not shown), the account
 (see Accounts) and "Mijn resultaten": every proefexamen with its date and score against the pass line, and a few counts.
@@ -200,16 +197,25 @@ question says so); `FOTO` holds a short Dutch description of each for screen rea
 
 ## Progress
 
-Progress is per device: `localStorage` key `ww-v1`, mirrored to IndexedDB as a backup, and to the account when
-someone is logged in (see Accounts). `S.res` keeps the last 10 proefexamen scores per part (`{at, pc, nw}`, `nw` = % of new
-questions; older results have none); the rows in "Naar het examen" read it through `ready()` (ready = the last two
-average 80% or more and not both mostly known questions; the pass line is `passOf()`: 76% for Lezen and Luisteren, 70%
-for the rest). The proefexamen takes the least-seen
-questions first (`seenN()`: practice answers plus `S.xs`, how often a question was in a proefexamen); Lezen takes
-whole texts.
+Progress is isolated by account, with a guest scope. `ww-progress-v2:<owner>` stores `{data, frame, version}` locally and in IndexedDB. Existing `ww-v1` data is migrated only into the account recorded by `ww-acc`, or into the guest scope if none was recorded. Never discard this legacy backup. Normal logout clears the active-owner marker and switches to guest progress, without merging account data into another account. A matching cached Supabase user may reopen that same local scope offline while session refresh is unavailable; it never grants server access.
 
-`sw.js` makes the app work offline and start at once: the page cache-first (`cacheFirst()`: on a slow connection
-people waited for ~300 KB), fetched again in the background; when it changed (another ETag) the open page gets
+`frame.base` is the last acknowledged server snapshot and must be a deep copy independent of live `S`. A pending write records its local input, target, receipt id and device id before sending. `syncProgress()` reads the latest row, merges offline changes, and updates only if its `t` still matches. Retries inspect `_receipts` so losing an acknowledgement cannot count the same answers twice. New practice-result rows have a random `id` as well as `at`; older rows still work. Errors schedule retries and show a sync status in Profiel. Do not revert to whole-document last-writer-wins.
+
+`S.res` keeps the last 10 practice-exam scores per part. A stable practice result requires three recent results averaging at least 80%, each above the practice target, with at least two mostly new attempts. This describes practice performance. Speaking explicitly leaves pronunciation and pace unassessed. The score thresholds are practice targets.
+
+New A2/B1 writing results also have an optional `writing` v1 snapshot: task-type and criterion point totals, task counts and the number left blank. It contains no answer text or error fragments. The current report separates types absent from that exam from types that scored zero; Profile combines up to five recent detailed attempts with their task/attempt counts. Legacy results retain their scores without invented breakdowns. Missing or malformed grades preserve the draft and do not create a total. A submitted blank exam scores zero without a model request.
+
+Writing drafts are local and account-scoped (`ww-writing:<owner>:practice|exam:<section>`). They retain task keys, text, form fields, position, grouped B1 sentences and the original exam deadline. Practice has no timer. An expired exam opens its review without another timed attempt. Successful grading clears the draft. An unsuccessful request preserves it.
+
+Writing feedback recommends at most two actions, prioritising unfinished tasks and critical content before other lost points. A zero for content is not treated as separate evidence of grammar or spelling weakness. Identified word-order errors can open the existing A2/B1 word-order section; other actions open the relevant writing task. These focused tasks use a separate `:focus/<task-key>` draft slot, appear among resumable drafts, and preserve ordinary practice drafts. Returning restores the exam result without grading or recording the attempt again. Detailed corrections, rewriting and Word export remain available under the summary.
+
+Run `npm ci --ignore-scripts` and `npm test` after changes. The workflow checks learner verb forms, order alternatives, normal UI entry points, diagnostic counts, time budgets, drafts and deadlines, account isolation, offline merges, conditional-write races, lost acknowledgements and grading-quota failures. Browser/microphone behaviour and human NT2 review still require separate validation.
+
+`sw.js` makes the app work offline and start quickly: the page from the network if it answers within `FAST` (2.5 s),
+else the cached copy (`cacheFirst()`: on a slow connection people waited for the page). Pure cache-first left the user's
+iPhone on an old version in November 2026 (iOS stops a home-screen app's background work, so the background refresh of
+the 1 MB page never finished), so don't go back to it. A new `sw.js` (bump `CACHE`) tells the open windows at activate, only when it replaces an older cache (not on a first visit). Its install never fails: each core file is cached on its own, a miss is fine, and without a fresh page the old cache's page is carried over (an install that cached the whole page with `addAll` seemed never to finish on the user's iPhone). When
+the cached copy was shown and the network's differs (another ETag), the open page gets
 `{fresh:true}`, and because a page that is still starting can miss that, the time of the change is also kept at
 `/__changed`, which the page asks after 4 and 15 s and when it comes back (`freshCheck()`); then a glass bar above the
 tab bar says "Er is een nieuwe versie van Bittertalen" with "Vernieuwen" (`showFresh()`). So a push shows on the next
@@ -252,9 +258,7 @@ vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one comin
   code, so an iPhone home-screen app never has to open a link) only with `LOGIN_EMAIL=1`, because Supabase's own mail
   only reaches the project's team (it needs custom SMTP); passkeys (experimental in Supabase) only with
   `LOGIN_PASSKEY=1`, and a passkey is added after logging in another way.
-- Sync: `progress` holds the same JSON as `ww-v1`, one row per user, written by the page itself (RLS). The first time a
-  device joins an account both sides are merged (`mergeS()`); after that the newer `S.t` wins, pulled when the app comes
-  back to the foreground, pushed 3 s after a change. `ww-acc` remembers which account this device was joined with.
+- Sync uses the account-scoped state and retry journal described above. Supabase RLS still limits reads and conditional updates to the signed-in user's row. No new table or privileged client API is needed.
 - Free checks without an account: `FREE_CHECKS` a day per visitor (default 2, 0 turns it off), single tasks only (cost
   1, no proefexamens), and `FREE_CAP` a day for all visitors together (default 50). The visitor is a hash of the IP
   with the service key (`visitor()` in `api/_supa.js`), counted in `free_checks` by `use_free_checks()` (in
@@ -263,24 +267,54 @@ vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one comin
   `freeNote()`) and asks to log in when they are used up.
 - Grading: with accounts on, `/api/check` needs the user's access token (or a free check, above) and takes checks from `CHECK_LIMIT` a day
   (default 20, Amsterdam days, `check_usage`): one task 1, a Schrijven proefexamen 2, Schrijven B1 4, a Spreken proefexamen 6
-  (`checkCost()`; the page's `examGate()` uses the same numbers and warns before such a proefexamen). A failed grading
-  gives them back. The answer has `left`.
+  (`checkCost()`; the page's `examGate()` uses the same numbers and warns before such a proefexamen). A failed grading gives the learner their checks back. Once the provider call starts, its global reservation is retained even if the reply is lost, since that request may have incurred cost. Structured `grading_usage` logs record model/token usage without learner text. Configure deployment-log alerts for `grading_quota_unavailable` and review token usage in the provider dashboard. The code does not configure external alert recipients. The answer has `left`.
 - Welcome screen = the login window (`#welcome`, `drawWelcome()`): a fixed full screen with the painting of the day
-  behind a rounded white card (the logo, "Inloggen of account maken", the level, the login block, "Eerst rondkijken"
+  behind a rounded white card (the logo, "Inloggen of account maken", the login block (no level), "Eerst rondkijken"
   or "Terug"); under the card on the painting what an account gives, the privacy link and the painting's name. It opens
   by itself the first time the app opens with accounts on and nobody logged in (once per device, `ww-welcome`, also
   shown once to people who already had progress), and from Profiel ("Inloggen of account maken"); after logging in
   you are back where you were.
 - A ceiling for everyone: all Claude checks of a day together, logged-in and free, stop at `CHECK_CAP` (default 400,
   `use_total()` and `check_total` in `supabase/schema.sql`), so many new accounts can't run up the bill; then the
-  server answers 429 `busy` and the page says "Morgen kan het weer". Without that function in the database nothing is
-  counted, as before. `/api/check` also refuses bodies over 200 KB (413).
+  server answers 429 `busy` and the page says "Morgen kan het weer". Without that function, or if its reply is invalid, grading returns 503 `quota_unavailable` before calling the model. `/api/check` also refuses bodies over 200 KB (413).
 - Security headers for every address in `vercel.json`: a Content-Security-Policy (scripts and styles only from the site
   itself plus inline, connections only to the site and `*.supabase.co`, frames only `youtube-nocookie.com`, media also
   any https podcast, no framing of the site), `X-Frame-Options`, `nosniff`, `Referrer-Policy`, `Permissions-Policy`
   (microphone only for the site, no camera or location) and COOP. A new outside service (a script, an API, an embed)
   needs its host in the CSP, or the browser blocks it.
 - `/api/account` (DELETE) deletes the user and, by cascade, their rows; the progress on the device stays.
+
+## Bittertalen Plus (payments)
+
+The user chose Stripe (November 2026): practice is free; Claude's grading and every proefexamen are Bittertalen Plus,
+priced by level (chosen in November 2026, still the cheapest monthly offers without a long contract): Plus A2 €9,99 a
+month or €99,90 a year, Plus B1 €14,99 or €149,90 (two months free a year), the first time with 7 days free (once per
+person, `trial_used`). Plus B1 covers both levels; Plus A2 covers A2 and KNM, and B1's parts (`l1`, `lb`, `wb`, `sb`)
+need Plus B1 (`covers()` in `_stripe.js`, `plusNow(need)` and `needOf()` in the page; `plans.tier`, from the price).
+The B1 prices (`STRIPE_PRICE_B1_MONTH`, `STRIPE_PRICE_B1_YEAR`) are optional: without them one Plus covers both levels
+at the A2 price. A Plus A2 learner who picks B1 gets "Upgrade naar Plus B1": the portal's `subscription_update_confirm`
+page for the B1 price (Stripe settles the difference), never a second subscription. Stripe by plain
+fetch, no SDK (`api/_stripe.js`: form encoding, `verify()` of the `Stripe-Signature` header, `PLUS` statuses: active,
+trialing, past_due). Off until all four env vars are set (`STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`,
+`STRIPE_PRICE_MONTH`, `STRIPE_PRICE_YEAR`; never in the repository or the chat); then `/api/config` gives `plus`
+`{month, year, trial, b1?:{month, year}}` with the prices from Stripe, and without it everything stays as before.
+- `api/pay.js` (POST, logged in): `checkout` → a Stripe Checkout url (subscription, `subscription_data.metadata.user_id`,
+  the trial unless used, iDEAL and cards through the Dashboard's payment methods, back to `/?plus=ok` or `/?plus=terug`);
+  `portal`, or checkout while already Plus → the customer portal (never a second subscription).
+- `api/stripe.js`: the webhook (raw body, `bodyParser:false`), events checkout.session.completed and
+  customer.subscription.created/updated/deleted. Every event fetches the subscription from Stripe again and saves it in
+  table `plans` (`supabase/schema.sql`; RLS: read own row; written only by the server), so late or repeated events
+  leave the latest state.
+- `api/check.js`: with payments on, a logged-in learner without Plus is graded like a visitor (the free single checks,
+  `FREE`), then 402 `plus`; Plus gets `CHECK_LIMIT`. `api/account.js` cancels the subscription at Stripe before it
+  deletes the account.
+- The page: `payOn()`, `plusNow()`, `acc.plan` (read in `usage()`), `plusScreen()` (in `#talk`: what is in it, Per maand
+  | Per jaar, "Probeer 7 dagen gratis" or "Word Plus-lid", or "Abonnement beheren"), a Plus block in Profiel, the note
+  "Proefexamens horen bij Bittertalen Plus." on Examen, and `startExam()` opens the Plus screen instead of a proefexamen.
+  The proefexamens are only kept back in the page (Lezen, Luisteren and KNM need no server). `plusBack()` handles the
+  return and looks for the plan a few times, because the webhook may be later than the learner.
+- privacy.html has a Stripe section (Stripe Payments Europe, seven years for payment records). Before going live: KvK,
+  live keys, algemene voorwaarden and the right of withdrawal for digital services.
 
 ## Content
 
@@ -306,14 +340,14 @@ stored progress: append new items, don't reorder or rename existing ones.
 
 ## B1 (Staatsexamen NT2, programma I)
 
-Built part by part: Lezen, Luisteren, Schrijven and Spreken. The level is `S.lvl` ("A2" by default, "B1"; it syncs with the progress), chosen
-under "Ik oefen voor" in Profiel and on the welcome screen (`.seg`, two halves of one outlined button, the chosen one
-filled). `parts()` gives the exam parts of the level: at B1 `l1` replaces `lz`, `lb` replaces `ls`, `wb` replaces `wr` and `sb` replaces `sp`; KNM
-belongs to both routes. Examen and Oefenen have two tabs at the top (`.seg.lvt`, "Inburgering A2" |
-"Staatsexamen B1"), showing one level at a time; they open on the level you practise for, and the tab you pick (`exV`,
-not stored) stays until the level changes. The B1 tab shows Lezen B1, Luisteren B1, Schrijven B1, Spreken B1 and KNM (with a
-row to the official oefenexamens NT2 ↗); looking at the other level's tab says which
-level today's lesson follows. At B1 the Grammatica tile shows the B1 rounds first and the A2 ones under "Herhalen op
+Built part by part: Lezen, Luisteren, Schrijven and Spreken. The level is `S.lvl` ("A2" by default, "B1"; it syncs with the progress).
+The user wants it chosen once, at the start: as the first step of the starttest (`startTest()`'s `intro()`, `.seg.tlv`,
+`segHTML()`; the welcome screen had a level switch too, removed at the user's wish; at B1 the test, which checks the A2 basics, is skipped and the
+button goes to today's lesson). After that the app shows only that level: Examen, Oefenen and Mijn examen have no A2/B1
+tabs (they were removed at the user's wish; don't bring them back). It is changed only in Profiel, with a list: a native
+`<select id="plvl">` under a field-like box (`.pick`, like the language pill). `setLvl()` sets it. `parts()` gives the exam parts of the level: at B1 `l1` replaces `lz`, `lb` replaces `ls`, `wb` replaces `wr` and `sb` replaces `sp`; KNM
+belongs to both routes. At B1 Examen and Oefenen show Lezen B1, Luisteren B1, Schrijven B1, Spreken B1 and KNM (with a
+row to the official oefenexamens NT2 ↗). At B1 the Grammatica tile shows the B1 rounds first and the A2 ones under "Herhalen op
 A2-niveau", and today's grammar step helps with a B1 round. The page title, description, Open Graph tags, JSON-LD and
 `manifest.json` name both levels.
 - Grammatica B1: `G1` (`[topic, sentence with ___, right, wrong, wrong, why]`, section `g1`, keys `g1|<i>`): die/dat/
@@ -403,6 +437,26 @@ the learner reads the example or corrected answer aloud and the words speech rec
 Making new Lezen and Luisteren material with Claude was removed (it cost a call per tap and its
 result was invisible). Items made earlier stay in `S.gen` and are still added by `addGenerated()`.
 
+## Beginnen (from nothing)
+
+For someone who starts from nothing, at A2 only. `BG` in `index.html` holds twelve short lessons (`t`, `s`; `x` the rule in very
+simple Dutch, a paragraph per line, `<b>` allowed; `e` the same in English, behind an "English" toggle and open when the menus
+are in English, the one place where an explanation is in English, because a beginner can't read the Dutch yet (there is no
+Arabic, Turkish, Hindi or Chinese version of the explanations); the lessons' own text has class `.bgl`: never translated, always
+left to right; `v` examples
+and `w` words as `Dutch=English` split by `|`, both recorded; `q` questions `[question, right, wrong, wrong, why]`). Keys
+`bg|<id>.<n>`, section `bg`: append, don't rename. A wrong option must never also be correct Dutch. A lesson is Klaar when every
+question was answered right once (`bgDone()`). Twelve lessons are the basics, not A2: don't promise more on screen. Screens in
+`#talk`: `bgList()` (a row at the top of Grammatica en woorden, A2), `bgLes()`, `startTest()`.
+
+The starttest first asks the level (see B1), then (`START`: one question per lesson, easy to hard, each with "Ik weet het niet"; no right or wrong shown; three misses
+in a row offer an early recommendation and a continuation button) gives `S.start` `{at, lv, miss, untested, asked}`. Only asked questions count in the displayed score. Untested lessons can be recommended, but are not counted as errors. The routing is: 10+ right `lv` 2, needs no lessons; 5+ `lv` 1, the
+lessons in `miss`, one a day instead of the grammar round; fewer `lv` 0, all lessons in order, and today's lesson is only the
+lesson of the day plus "Herhalen" (`SHORT.bg`, `bgDue()`, the lesson questions that are due), without the Mix, until the lessons
+are done (`bgTodo()`, in `planTasks()`). A lesson done today stays on the list, or the day would never finish. It is offered at
+the top of Vandaag ("Waar begin ik?") at A2 while there is no `S.start` and fewer than 30 practised items, and on the Beginnen
+screen. Without a test nothing changes. The Mix only takes lesson questions that were already practised.
+
 ## Boekenkast (reading)
 
 Built-in A2 stories live in `BOOKS` in `index.html` (original texts; check facts, they double
@@ -479,3 +533,8 @@ and branding intact), never put the videos behind a paywall, and privacy.html li
 privacy policy.
 What was opened, where a podcast stopped and the chosen speed stay in `localStorage` `ww-media`,
 not in `ww-v1`.
+
+
+## Audit follow-up validation
+
+`supabase/calibration.sql` is a read-only owner report of self-reported real exam outcomes by practice-score band, with sample sizes and Wilson intervals. It does not expose a public view or change the schema. Do not claim the training targets have been empirically calibrated until this report and a qualified NT2 review have been completed against the correct project. Keep historical label changes in mind when analysing outcomes.

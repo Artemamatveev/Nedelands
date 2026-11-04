@@ -4,5 +4,12 @@
   "type": "module",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.132.1"
+  },
+  "devDependencies": {
+    "fake-indexeddb": "6.2.5",
+    "linkedom": "0.18.15"
+  },
+  "scripts": {
+    "test": "node --experimental-vm-modules --test tests/*.test.mjs"
   }
 }

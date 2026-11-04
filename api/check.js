@@ -11,9 +11,11 @@
 // task, 20 s: inhoud 0–2, grammatica 0–1) or m (medium, 30 s: inhoud 0–3, woorden 0–1, grammatica 0–2, samenhang 0–1)
 // Needs ANTHROPIC_API_KEY in the Vercel project's environment variables.
 // With accounts set up (Supabase, see _supa.js) only a signed-in user may grade, CHECK_LIMIT checks a day;
-// the answer then also has `left`, the checks left today.
+// the answer then also has `left`, the checks left today. With payments on (Stripe, see _stripe.js) that allowance is
+// for Bittertalen Plus; everyone else, logged in or not, gets the free single checks (FREE a day) and then {error:"plus"}.
 import Anthropic from "@anthropic-ai/sdk";
-import { accounts, caller, checkCost, useChecks, LIMIT, sameOrigin, FREE, visitor, useFree, useTotal } from "./_supa.js";
+import { accounts, caller, checkCost, useChecks, LIMIT, sameOrigin, FREE, visitor, useFree, useTotal, getPlan } from "./_supa.js";
+import { pay, covers } from "./_stripe.js";
 
 // Created only when the key is set, so a missing key gives a clear error instead of a crash
 // (trimmed: a key pasted into the dashboard with a trailing newline breaks the request header)
@@ -152,7 +154,7 @@ export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "method_not_allowed" });
   // Only accept calls from this site's own pages
   if (!sameOrigin(req)) return res.status(403).json({ error: "forbidden" });
-  if (!client) return res.status(503).json({ error: "not_configured" });
+  if (!client || !accounts) return res.status(503).json({ error: "not_configured" });
 
   // A real request is at most ~80 KB (16 answers or 12 texts, each cut below); refuse anything far bigger
   if (Number(req.headers["content-length"]) > 200000) return res.status(413).json({ error: "too_large" });
@@ -164,15 +166,24 @@ export default async function handler(req, res) {
   let uid = null, left;
   const cost = checkCost(input.length);
   let who = null, free;
-  if (accounts) {
+  {
     const user = await caller(req).catch(() => null);
-    if (!user) {
-      // Without a login: a few single tasks a day for free (no proefexamens), counted per visitor
+    // Bittertalen Plus (only when payments are set up): a logged-in learner without it is graded like a visitor
+    // Schrijven B1 and Spreken B1 need Plus B1 (when B1 has its own price); everything else Plus A2 or B1
+    let plus = !pay;
+    if (user && pay) {
+      const plan = await getPlan(user.id).catch(() => undefined);
+      if (plan === undefined) return res.status(502).json({ error: "failed" });
+      plus = covers(plan, wb || sb ? "B1" : "A2");
+    }
+    if (!user || !plus) {
+      // Without a login (or without Plus): a few single tasks a day for free (no proefexamens), counted per visitor
+      const no = (n) => res.status(user ? 402 : 401).json({ error: user ? "plus" : "login", ...(n === 0 ? { free: 0 } : {}) });
       who = FREE && cost === 1 ? visitor(req) : "";
-      if (!who) return res.status(401).json({ error: "login" });
+      if (!who) return no();
       free = await useFree(who, cost).catch(() => null);
-      if (free == null) return res.status(401).json({ error: "login" }); // not set up in the database yet
-      if (free < 0) return res.status(401).json({ error: "login", free: 0 });
+      if (free == null) return no(); // not set up in the database yet
+      if (free < 0) return no(0);
     } else {
       uid = user.id;
       left = await useChecks(uid, cost).catch(() => null);
@@ -182,9 +193,15 @@ export default async function handler(req, res) {
   }
   const mine = () => (uid ? useChecks(uid, -cost).catch(() => {}) : who ? useFree(who, -cost).catch(() => {}) : null);
   // Everyone's checks of today together: when the day is full, give this one back and ask to come back tomorrow
-  const total = accounts ? await useTotal(cost) : null;
+  const total = await useTotal(cost).catch(() => null);
+  if (!Number.isSafeInteger(total)) {
+    await mine();
+    console.error("grading_quota_unavailable");
+    return res.status(503).json({error: "quota_unavailable"});
+  }
   if (total != null && total < 0) { await mine(); return res.status(429).json({ error: "busy" }); }
-  const giveBack = () => Promise.all([mine(), total != null ? useTotal(-cost) : null]);
+  let providerStarted = false;
+  const giveBack = () => Promise.all([mine(), providerStarted ? null : useTotal(-cost).catch(() => null)]);
   const tasks = input.map((t) => ({
     kind: wb ? (SCORES_WB[t?.kind] ? t.kind : "m") : sb ? (SCORES_SB[t?.kind] ? t.kind : "m") : "",
     task: str(t?.task, wb ? 2000 : 1200), form: sp ? "" : str(t?.form, 1500), text: str(t?.text, 2500),
@@ -217,6 +234,7 @@ export default async function handler(req, res) {
       .join("\n\n") + `\n\nNoem per opdracht maximaal ${max} fouten.`;
 
   try {
+    providerStarted = true;
     const response = await client.beta.messages.create({
       model: "claude-opus-5-5",
       max_tokens: 16000,
@@ -226,6 +244,7 @@ export default async function handler(req, res) {
       system: sb ? SYSTEM_SB : sp ? SYSTEM_SP : wb ? SYSTEM_WB : SYSTEM,
       messages: [{ role: "user", content: prompt }],
     });
+    console.info(JSON.stringify({ event: "grading_usage", model: response.model, usage: response.usage, units: cost }));
     if (response.stop_reason === "refusal") { await giveBack(); return res.status(422).json({ error: "refused" }); }
     if (response.stop_reason === "max_tokens") { await giveBack(); return res.status(502).json({ error: "failed" }); }
     const text = response.content.find((b) => b.type === "text")?.text;
@@ -254,3 +273,4 @@ export default async function handler(req, res) {
     return res.status(502).json({ error: "failed", kind: error?.name || typeof error });
   }
 }
+
