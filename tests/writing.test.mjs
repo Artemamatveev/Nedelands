@@ -91,6 +91,8 @@ test('Word-order practice requires an identified word-order error; other grammar
   const r=review([a2()],[scores],[null,evidence]);
   assert.deepEqual(r.priorities[0].action,{kind:'section',section:'wo'});
   assert.deepEqual(r.priorities[0].evidence,evidence);
+  const actualReason={...evidence,why:"Begint de zin met een tijd, zoals 'volgende week'? Dan komt het werkwoord op plaats 2 en het onderwerp daarna."};
+  assert.deepEqual(review([a2()],[scores],[actualReason]).priorities[0].action,{kind:'section',section:'wo'});
   const other=review([a2()],[scores],[{wrong:'ik werken',right:'ik werk',why:'Werkwoordsvorm.'}]);
   assert.deepEqual(other.priorities[0].action,{kind:'task',key:'wr|0'});
   assert.equal(review([b1('z')],[{inhoud:1,grammatica:0}],[evidence]).priorities[0].action.section,'w1');

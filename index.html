@@ -4348,7 +4348,7 @@ async function examWrite(){
       `<h2>Opdracht ${tasks.findIndex(task=>task.k===answer.q.k)+1}</h2><p class="note">${answer.q.big}</p>${own(answer)}<p class="ask">Voorbeeld</p><div class="sample">${esc(answer.q.right)}</div>`).join("")+foot;
     bind();
   };
-  card.innerHTML=`<p class="note">Ik kijk je ${answers.length} teksten na… Dit duurt ongeveer een minuut.</p>`;
+  card.innerHTML=`<p class="note">Ik kijk je ${answers.length} ${answers.length===1?"tekst":"teksten"} na… Dit duurt ongeveer een minuut.</p>`;
   try{
     const grades=answers.length?await nakijken(answers.map(answer=>({kind:answer.q.kind,task:wrTask(answer.q),form:answer.form,text:answer.text})),exam.part==="wb"?"wb":undefined):[];
     const review=reviewWriting(tasks,answers,grades), redoByTask=[];
@@ -4361,7 +4361,7 @@ async function examWrite(){
       keepErrs(errors);
       redoByTask[i]=redoItems(task,answer.form,answer.text,grade.corrected,errors);
       const label=typeof grade.passed==="boolean"?(grade.passed?"voldoende":"nog niet voldoende"):"nog niet beoordeeld";
-      return `<h2>Opdracht ${i+1} · <span class="${grade.passed?"good":"bad"}">${label}</span></h2>
+      return `<h2>Opdracht ${i+1} · <span class="${typeof grade.passed==="boolean"?(grade.passed?"good":"bad"):""}">${label}</span></h2>
         <p class="note">${task.big}</p><p class="note">${esc(grade.verdict)}</p>${row.status==="scored"?scoreHTML(grade.scores,task.mx):""}
         ${own(answer,errors)}${errors.length?errsHTML(errors):""}
         ${grade.corrected?`<p class="ask">Verbeterde tekst</p><div class="sample">${esc(grade.corrected)}</div>`:""}
