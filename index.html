@@ -3675,7 +3675,9 @@ function drawProfile(){
   if(document.activeElement!==n)n.value=me.name||""; if(document.activeElement!==l)l.value=me.last||"";
   n.onchange=l.onchange=()=>{S.me={...(S.me||{}),name:n.value.trim().slice(0,40),last:l.value.trim().slice(0,60)};save();syncMeta()};
   // the level: chosen at the start (welcome screen, starttest), changed here with a list; the other tabs show only this level
-  const ps=$("plvl"); ps.innerHTML=["A2","B1"].map(v=>`<option value="${v}"${lvl()===v?" selected":""}>${esc(uiT(LVL[v])||LVL[v])}</option>`).join("");
+  // the options are not translated by the observer (it skips <select>); uiT is defined further down, so it may not exist yet at the first render
+  const trLvl=v=>{try{return uiT(LVL[v])||LVL[v]}catch(e){return LVL[v]}};
+  const ps=$("plvl"); ps.innerHTML=["A2","B1"].map(v=>`<option value="${v}"${lvl()===v?" selected":""}>${esc(trLvl(v))}</option>`).join("");
   $("plvlv").textContent=LVL[lvl()]; ps.onchange=()=>{setLvl(ps.value);home()};
   const c=acc.cfg,u=acc.user,L=logins(),el=$("acct");
   let h="";
