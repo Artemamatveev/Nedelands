@@ -3463,12 +3463,10 @@ function home(){
   const part=k=>{const r=ready(k),ex=((S.res||{})[k]||[]).length;
     // the number is the share right (the last proefexamen, else practice); the line says where it comes from and what you need
     const need=`oefendoel: ${passPc(k)}%`;
-    const last=(S.res?.[k]||[]).at(-1);
-    const detail=last?`<span class="st"><span>Proefexamens</span> · ${ex} · ${new Date(last.at).toLocaleDateString("nl-NL")} ${Number.isFinite(last.nw)?`· ${last.nw}% <span>nieuwe vragen</span>`:""}</span>`:"";
     const speech=["sp","sb"].includes(k)?'<span class="st">Uitspraak en tempo zijn niet beoordeeld.</span>':"";
     const st=ex?`<span class="st ${r.cls==="good"?"good":r.cls===""?"near":""}"><i></i>${r.st} · ${need}${/kende/.test(r.t)?" · je kende de meeste vragen al":""}</span>`
       :`<span class="st">${r.pc!=null?"Bij het oefenen":"Nog niet geoefend"} · ${need}</span>`;
-    return`<button class="rd" data-e="${k}" aria-label="${PART[k]}, ${EX[k].min} minuten${r.pc!=null?", "+r.pc+"% goed":""}${ex?", "+r.st:""}">${icHTML(k)}<span class="rm"><b>${PART[k]}</b><small>${EX[k].min}&nbsp;min</small></span><strong class="rp${r.pc==null?" none":""}">${r.pc==null?"–":r.pc+"%"}${r.pc==null?"":"<small>goed</small>"}</strong><span class="bar pass" style="--pass:${passPc(k)}%"><i style="width:${r.pc||0}%"></i></span>${st}${detail}${speech}</button>`};
+    return`<button class="rd" data-e="${k}" aria-label="${PART[k]}, ${EX[k].min} minuten${r.pc!=null?", "+r.pc+"% goed":""}${ex?", "+r.st:""}">${icHTML(k)}<span class="rm"><b>${PART[k]}</b><small>${EX[k].min}&nbsp;min</small></span><strong class="rp${r.pc==null?" none":""}">${r.pc==null?"–":r.pc+"%"}${r.pc==null?"":"<small>goed</small>"}</strong><span class="bar pass" style="--pass:${passPc(k)}%"><i style="width:${r.pc||0}%"></i></span>${st}${speech}</button>`};
   const lb=Object.values(S.bk||{}).filter(b=>b.t).sort((a,b)=>b.at-a.at)[0];
   const hs=S.hs||{},lh=GS.filter(c=>hs[c.id]).sort((a,b)=>hs[b.id]-hs[a.id])[0],gsDone=GS.filter(c=>gsItems(c).every(x=>(S.items[x.k]||{}).r)).length;
   // one row per part: tap it for a proefexamen; on the right how far you are

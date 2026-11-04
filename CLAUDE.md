@@ -98,7 +98,7 @@ phone. The learner chooses 10, 20 or 40 minutes. `planTasks()` selects short rou
 proefexamen: its icon, the name with its minutes under it, the score on the right ("76%" in ink with a small
 "goed" under it; "–" without one) and ›; under it the bar with the pass line (`passOf()`: Lezen and Luisteren 19 of
 25, KNM 28 of 40, the rest 70%) and one status line: a dot and the status (green Stabiel oefenresultaat, oranje Bijna
-klaar, grey Nog niet klaar) or "Bij het oefenen" / "Nog niet geoefend", then "nodig: 76%". The user found a bare
+klaar, grey Nog niet klaar) or "Bij het oefenen" / "Nog niet geoefend", then "nodig: 76%". No line with the number of proefexamens, the date and "nieuwe vragen" under it (removed at the user's wish: the history is in Mijn resultaten). The user found a bare
 percentage unclear, so the intro says in one line what the percentage and the line mean. The number is the share of right answers (the last
 proefexamen, else practice), never a chance of passing; the intro says so. Under the rows one row to DUO's 15
 official oefenexamens ↗, and on both levels "ONA en participatieverklaring" (`onaScreen()`, in `#talk`): the two parts not
