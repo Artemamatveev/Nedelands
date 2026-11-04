@@ -59,7 +59,7 @@ function writingPriorities(rows) {
     if (!row) return null;
     const contentGate = criterion === "inhoud" && affected.some(r=>r.scores.inhoud < (r.type === "sentence" ? 1 : 2));
     let action = {kind:"task",key:row.key};
-    if (criterion === "grammatica" && row.errors.some(e=>e && /woordvolgorde|inversie|plaats twee|werkwoord.*aan het eind/i.test(String(e.why || ""))))
+    if (criterion === "grammatica" && row.errors.some(e=>e && /woordvolgorde|inversie|plaats\s*(?:twee|2)\b|(?:werkwoord|persoonsvorm).*(?:tweede|2e)\s+(?:plaats|positie)|werkwoord.*aan het eind/i.test(String(e.why || ""))))
       action = {kind:"section",section:row.part === "wb" ? "w1" : "wo"};
     const evidence = row.errors.find(error=>error && typeof error.wrong === "string" && typeof error.right === "string" &&
       error.wrong && error.right && error.wrong !== error.right && reasons[criterion].test(String(error.why || "")));
