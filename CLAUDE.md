@@ -208,7 +208,7 @@ Run `npm ci --ignore-scripts` and `npm test` after changes. The workflow checks 
 `sw.js` makes the app work offline and start quickly: the page from the network if it answers within `FAST` (2.5 s),
 else the cached copy (`cacheFirst()`: on a slow connection people waited for the page). Pure cache-first left the user's
 iPhone on an old version in November 2026 (iOS stops a home-screen app's background work, so the background refresh of
-the 1 MB page never finished), so don't go back to it. A new `sw.js` (bump `CACHE`) tells the open windows at activate. When
+the 1 MB page never finished), so don't go back to it. A new `sw.js` (bump `CACHE`) tells the open windows at activate. Its install never fails: each core file is cached on its own, a miss is fine, and without a fresh page the old cache's page is carried over (an install that cached the whole page with `addAll` seemed never to finish on the user's iPhone). When
 the cached copy was shown and the network's differs (another ETag), the open page gets
 `{fresh:true}`, and because a page that is still starting can miss that, the time of the change is also kept at
 `/__changed`, which the page asks after 4 and 15 s and when it comes back (`freshCheck()`); then a glass bar above the
