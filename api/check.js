@@ -11,9 +11,11 @@
 // task, 20 s: inhoud 0–2, grammatica 0–1) or m (medium, 30 s: inhoud 0–3, woorden 0–1, grammatica 0–2, samenhang 0–1)
 // Needs ANTHROPIC_API_KEY in the Vercel project's environment variables.
 // With accounts set up (Supabase, see _supa.js) only a signed-in user may grade, CHECK_LIMIT checks a day;
-// the answer then also has `left`, the checks left today.
+// the answer then also has `left`, the checks left today. With payments on (Stripe, see _stripe.js) that allowance is
+// for Bittertalen Plus; everyone else, logged in or not, gets the free single checks (FREE a day) and then {error:"plus"}.
 import Anthropic from "@anthropic-ai/sdk";
-import { accounts, caller, checkCost, useChecks, LIMIT, sameOrigin, FREE, visitor, useFree, useTotal } from "./_supa.js";
+import { accounts, caller, checkCost, useChecks, LIMIT, sameOrigin, FREE, visitor, useFree, useTotal, isPlus } from "./_supa.js";
+import { pay } from "./_stripe.js";
 
 // Created only when the key is set, so a missing key gives a clear error instead of a crash
 // (trimmed: a key pasted into the dashboard with a trailing newline breaks the request header)
@@ -166,13 +168,20 @@ export default async function handler(req, res) {
   let who = null, free;
   {
     const user = await caller(req).catch(() => null);
-    if (!user) {
-      // Without a login: a few single tasks a day for free (no proefexamens), counted per visitor
+    // Bittertalen Plus (only when payments are set up): a logged-in learner without it is graded like a visitor
+    let plus = !pay;
+    if (user && pay) {
+      plus = await isPlus(user.id).catch(() => null);
+      if (plus == null) return res.status(502).json({ error: "failed" });
+    }
+    if (!user || !plus) {
+      // Without a login (or without Plus): a few single tasks a day for free (no proefexamens), counted per visitor
+      const no = (n) => res.status(user ? 402 : 401).json({ error: user ? "plus" : "login", ...(n === 0 ? { free: 0 } : {}) });
       who = FREE && cost === 1 ? visitor(req) : "";
-      if (!who) return res.status(401).json({ error: "login" });
+      if (!who) return no();
       free = await useFree(who, cost).catch(() => null);
-      if (free == null) return res.status(401).json({ error: "login" }); // not set up in the database yet
-      if (free < 0) return res.status(401).json({ error: "login", free: 0 });
+      if (free == null) return no(); // not set up in the database yet
+      if (free < 0) return no(0);
     } else {
       uid = user.id;
       left = await useChecks(uid, cost).catch(() => null);

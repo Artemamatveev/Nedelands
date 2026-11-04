@@ -278,6 +278,32 @@ vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one comin
   needs its host in the CSP, or the browser blocks it.
 - `/api/account` (DELETE) deletes the user and, by cascade, their rows; the progress on the device stays.
 
+## Bittertalen Plus (payments)
+
+The user chose Stripe (November 2026): practice is free; Claude's grading and every proefexamen are Bittertalen Plus,
+€4,99 a month or €49,90 a year, the first time with 7 days free (once per person, `trial_used`). Stripe by plain
+fetch, no SDK (`api/_stripe.js`: form encoding, `verify()` of the `Stripe-Signature` header, `PLUS` statuses: active,
+trialing, past_due). Off until all four env vars are set (`STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`,
+`STRIPE_PRICE_MONTH`, `STRIPE_PRICE_YEAR`; never in the repository or the chat); then `/api/config` gives `plus`
+`{month, year, trial}` with the prices from Stripe, and without it everything stays as before.
+- `api/pay.js` (POST, logged in): `checkout` → a Stripe Checkout url (subscription, `subscription_data.metadata.user_id`,
+  the trial unless used, iDEAL and cards through the Dashboard's payment methods, back to `/?plus=ok` or `/?plus=terug`);
+  `portal`, or checkout while already Plus → the customer portal (never a second subscription).
+- `api/stripe.js`: the webhook (raw body, `bodyParser:false`), events checkout.session.completed and
+  customer.subscription.created/updated/deleted. Every event fetches the subscription from Stripe again and saves it in
+  table `plans` (`supabase/schema.sql`; RLS: read own row; written only by the server), so late or repeated events
+  leave the latest state.
+- `api/check.js`: with payments on, a logged-in learner without Plus is graded like a visitor (the free single checks,
+  `FREE`), then 402 `plus`; Plus gets `CHECK_LIMIT`. `api/account.js` cancels the subscription at Stripe before it
+  deletes the account.
+- The page: `payOn()`, `plusNow()`, `acc.plan` (read in `usage()`), `plusScreen()` (in `#talk`: what is in it, Per maand
+  | Per jaar, "Probeer 7 dagen gratis" or "Word Plus-lid", or "Abonnement beheren"), a Plus block in Profiel, the note
+  "Proefexamens horen bij Bittertalen Plus." on Examen, and `startExam()` opens the Plus screen instead of a proefexamen.
+  The proefexamens are only kept back in the page (Lezen, Luisteren and KNM need no server). `plusBack()` handles the
+  return and looks for the plan a few times, because the webhook may be later than the learner.
+- privacy.html has a Stripe section (Stripe Payments Europe, seven years for payment records). Before going live: KvK,
+  live keys, algemene voorwaarden and the right of withdrawal for digital services.
+
 ## Content
 
 Lezen texts (`LZ`: `[text, questions, intro?]`) are plain strings rendered as documents by `docHTML()`: the first line is the title
