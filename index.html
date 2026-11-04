@@ -218,6 +218,7 @@ a.it{text-decoration:none} .it.ext::after{content:none}
 .gate{padding:2px 0 12px}
 /* the level: two halves of one outlined button, the chosen one filled */
 .seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;background:color-mix(in srgb,var(--ink) 8%,var(--card));border-radius:var(--rc);margin-top:2px}
+.seg.minutes{grid-template-columns:repeat(3,minmax(0,1fr))}
 .seg button{border:0;border-radius:10px;background:none;color:var(--soft);font-weight:600;font-size:var(--fs-m);padding:8px 6px;min-height:40px}
 .seg button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:0 1px 4px rgba(8,16,40,.18)} .seg.lvt{margin:12px 0 14px} #acct .wide,#welcome .wide,#welcome .two,#move .wide{margin-bottom:8px}
 .tabs.min button{padding:10px 4px} .tabs.min span{display:none}
@@ -3639,7 +3640,7 @@ function planHTML(){
   // the next step is a big card with a detail of a painting; the others are small rows; above them how far you are today
   return`<p class="ask">${date}</p><h2>Je les van vandaag</h2>
     ${writingDrafts().map(x=>`<button class="ghost wide" data-draft="${x.section}" data-exam="${Number(x.exam)}"><span>Verder met je concept</span> · ${x.exam?EX[x.section].t:PART[x.section]}</button>`).join("")}
-    <span>Hoeveel tijd heb je?</span><div class="seg" role="group" aria-label="Hoeveel tijd heb je?">${[10,20,40].map(n=>`<button data-budget="${n}" aria-pressed="${n===(S.minutes||20)}">${n} min</button>`).join("")}</div>
+    <span>Hoeveel tijd heb je?</span><div class="seg minutes" role="group" aria-label="Hoeveel tijd heb je?">${[10,20,40].map(n=>`<button data-budget="${n}" aria-pressed="${n===(S.minutes||20)}">${n} min</button>`).join("")}</div>
     <p class="note"><span>Geschatte duur</span> · ${P.minutes||steps.length*5} min</p>
     <div class="dayp"><span aria-hidden="true">${steps.map(t=>`<i${done.includes(t.id)?' class="on"':""}></i>`).join("")}</span><small>${nd} van ${steps.length} klaar</small></div>
     <p class="sub">${intro}</p>${first}
