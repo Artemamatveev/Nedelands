@@ -561,6 +561,22 @@ main:is(:not(.big),:has(#home[hidden])) header .lang{top:6px;height:32px} /* the
 /* longer lines break in better places */
 h2,h3,.verb,.step b,.it b{text-wrap:balance} p,.d,.sub,.note{text-wrap:pretty}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.tabs .lens.go{animation:none}}
+
+/* Writing feedback reuses the existing score bars and list-row controls. */
+.writing-review{margin-block:22px;padding-block:16px;border-block-start:1px solid var(--line)}
+.writing-review .lh{margin-block:18px 10px}
+.writing-type{margin-block:12px 18px}
+.writing-type-heading{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:start}
+.writing-type-heading strong{font-variant-numeric:tabular-nums;font-weight:600}
+.writing-type .note{margin-block:3px 0}
+.writing-type .bar{margin-block:7px 0}
+.writing-focus{border-inline-start:3px solid var(--oranje);padding-inline-start:12px;margin-block:14px 20px}
+.writing-focus p{margin-block:0 8px}
+.writing-focus .it{padding-inline:0;min-height:52px}
+.writing-history summary,.writing-details summary{cursor:pointer;font-weight:600;min-height:44px;display:list-item;padding-block:10px}
+.writing-details{margin-block:18px}
+.writing-details h2{margin-block-start:24px}
+
 </style>
 </head>
 <body>
@@ -660,6 +676,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
 <div class="zoom" id="zoom" hidden><img id="zimg" alt=""><p id="zcap"></p></div>
 <script src="/study/language-v1.js"></script>
 <script src="/study/progress-v1.js"></script>
+<script src="/study/writing-v1.js"></script>
 <script>
 
 const TYPES={past:"Imperfectum: gisteren … ik / hij",pastpl:"Imperfectum: gisteren … wij / zij",pp:"Perfectum: voltooid deelwoord",aux:"Perfectum: hebben of zijn?"};
@@ -3569,7 +3586,7 @@ const PASS=.7;
 const PASSP={lz:19/25,ls:19/25,knm:28/40,wb:25/47}, passOf=k=>PASSP[k]||PASS, passPc=k=>Math.round(passOf(k)*100);
 // Proefexamen results per part (S.res, last 10): {at, pc, nw}, nw = % of the questions that were new (missing in older results).
 // Ready = the last two average 80% or more, and at least one of them was mostly new questions
-function keepRes(k,pc){if(k){S.res=S.res||{};S.res[k]=(S.res[k]||[]).concat({id:crypto.randomUUID(),at:Date.now(),pc,nw:cur.nw}).slice(-10)}save()}
+function keepRes(k,pc,writing){if(k){S.res=S.res||{};S.res[k]=(S.res[k]||[]).concat({id:crypto.randomUUID(),at:Date.now(),pc,nw:cur.nw,...(writing?{writing}:{})}).slice(-10)}save()}
 function ready(k){
   const R=(S.res||{})[k]||[],P=passPc(k);
   if(!R.length){let r=0,w=0;ITEMS.forEach(x=>{const it=x.sec===k&&S.items[x.k];if(it){r+=it.r||0;w+=it.w||0}});
@@ -3639,7 +3656,7 @@ function planHTML(){
   const date=new Date().toLocaleDateString("nl-NL",{weekday:"long",day:"numeric",month:"long"});
   // the next step is a big card with a detail of a painting; the others are small rows; above them how far you are today
   return`<p class="ask">${date}</p><h2>Je les van vandaag</h2>
-    ${writingDrafts().map(x=>`<button class="ghost wide" data-draft="${x.section}" data-exam="${Number(x.exam)}"><span>Verder met je concept</span> · ${x.exam?EX[x.section].t:PART[x.section]}</button>`).join("")}
+    ${writingDrafts().map(x=>`<button class="ghost wide" data-draft="${x.section}" data-exam="${Number(x.exam)}" data-draft-slot="${esc(x.slot)}"><span>Verder met je concept</span> · ${x.exam?EX[x.section].t:PART[x.section]}${x.slot?" · <span>Gerichte oefening</span>":""}</button>`).join("")}
     <span>Hoeveel tijd heb je?</span><div class="seg minutes" role="group" aria-label="Hoeveel tijd heb je?">${[10,20,40].map(n=>`<button data-budget="${n}" aria-pressed="${n===(S.minutes||20)}">${n} min</button>`).join("")}</div>
     <p class="note"><span>Geschatte duur</span> · ${P.minutes||steps.length*5} min</p>
     <div class="dayp"><span aria-hidden="true">${steps.map(t=>`<i${done.includes(t.id)?' class="on"':""}></i>`).join("")}</span><small>${nd} van ${steps.length} klaar</small></div>
@@ -3717,14 +3734,14 @@ function drawResults(){
   const day=t=>new Date(t).toLocaleDateString("nl-NL",{day:"numeric",month:"long"}),all=["lz","ls","wr","sp","knm","l1","lb","wb","sb"],ks=all.filter(k=>(R[k]||[]).length),U=S.uit||{},uk=all.filter(k=>U[k]);
   el.innerHTML=`<h2>Mijn resultaten</h2>`
     +(uk.length?`<h3 class="lh">Echt examen</h3><ul class="errs kv">${uk.map(k=>`<li>${PART[k]}<span class="${U[k].ok?"good":"bad"}">${U[k].ok?"Geslaagd":"Niet geslaagd"}</span></li>`).join("")}</ul>`:"")
-    +(ks.length?ks.map(k=>`<h3 class="lh">${PART[k]}</h3><ul class="errs kv">${R[k].slice().reverse().map(r=>`<li>Proefexamen ${day(r.at)}<span class="${r.pc>=passPc(k)?"good":"bad"}">${r.pc}%</span></li>`).join("")}</ul>`).join("")
+    +(ks.length?ks.map(k=>`<h3 class="lh">${PART[k]}</h3><ul class="errs kv">${R[k].slice().reverse().map(r=>`<li>Proefexamen ${day(r.at)}<span class="${r.pc>=passPc(k)?"good":"bad"}">${r.pc}%</span></li>`).join("")}</ul>${writingHistoryHTML(k)}`).join("")
       :`<p class="sub">Nog geen proefexamens.</p>`)
     +`<h3 class="lh">Geoefend</h3><ul class="errs kv"><li>Dagen op rij<span>${S.last>=today()-1?S.streak:0}</span></li><li>Vragen geoefend<span>${Object.keys(S.items).length}</span></li>`
     +`<li>Bewaarde woorden<span>${(S.words||[]).length}</span></li><li>Gesprekken gevoerd<span>${Object.keys(S.gp||{}).length}</span></li></ul>`;
 }
 function drawPlan(){
   $("plan").innerHTML=planHTML();
-  document.querySelectorAll("#plan [data-draft]").forEach(b=>b.onclick=()=>resumeWriting(b.dataset.draft,b.dataset.exam==="1"));
+  document.querySelectorAll("#plan [data-draft]").forEach(b=>b.onclick=()=>resumeWriting(b.dataset.draft,b.dataset.exam==="1",b.dataset.draftSlot));
   document.querySelectorAll("#plan [data-budget]").forEach(b=>b.onclick=()=>{S.minutes=Number(b.dataset.budget);save();drawPlan()});
   // the whole lesson done: the streak stamp is put down once, with a tap of the phone
   const d=today();if(!$("plan").querySelector(".step:not(.ok)")&&lsGet("ww-stamp")!=String(d)){lsSet("ww-stamp",String(d));
@@ -3750,20 +3767,28 @@ function stats(){
   document.querySelectorAll("#statlist button").forEach(b=>b.onclick=()=>{const o=gs[b.dataset.i];
     build("custom",{id:"custom",t:o.name,n:10,pool:()=>o.items.slice().sort((a,b)=>weak(b)-weak(a))})});
 }
-const draftKey=(section,exam)=>"ww-writing:"+progressOwner+":"+(exam?"exam:":"practice:")+section;
-function getDraft(section,exam){
-  const draft=readLocal(draftKey(section,exam));
+const draftKey=(section,exam,slot="")=>"ww-writing:"+progressOwner+":"+(exam?"exam:":"practice:")+section+(slot?":"+slot:"");
+function getDraft(section,exam,slot=""){
+  const draft=readLocal(draftKey(section,exam,slot));
   if(!draft || !Array.isArray(draft.keys) || !draft.keys.length || !Number.isInteger(draft.pos) || draft.pos<0 || !Array.isArray(draft.pick))return null;
   if(draft.pick.some(answer=>answer && (typeof answer.t!=="string" || !Array.isArray(answer.f) || answer.f.some(x=>typeof x!=="string"))))return null;
   return draft.keys.every(key=>ITEMS.some(q=>q.k===key&&q.sec===section)) ? draft : null;
 }
 function writingDrafts(){
-  return ["wr","wb"].flatMap(section=>[false,true].map(exam=>({section,exam,draft:getDraft(section,exam)})))
-    .filter(x=>x.draft).sort((a,b)=>b.draft.at-a.draft.at);
+  const entries=["wr","wb"].flatMap(section=>[false,true].map(exam=>({section,exam,slot:""})));
+  try{for(let i=0;i<localStorage.length;i++){
+    const key=localStorage.key(i);
+    for(const section of ["wr","wb"]){
+      const prefix=draftKey(section,false)+":focus/";
+      if(key.startsWith(prefix))entries.push({section,exam:false,slot:"focus/"+key.slice(prefix.length)});
+    }
+  }}catch{}
+  return entries.map(entry=>({...entry,draft:getDraft(entry.section,entry.exam,entry.slot)}))
+    .filter(entry=>entry.draft).sort((a,b)=>b.draft.at-a.draft.at);
 }
 function persistWriting(){
   const q=queue[pos];if(q?.type!=="write" || cur.sent)return;
-  const key=draftKey(q.sec,!!cur.exam),entry={
+  const key=draftKey(q.sec,!!cur.exam,cur.draftSlot),entry={
     at:Date.now(), keys:queue.map(q=>q.k), pos, right, end:tEnd, nw:cur.nw, plan:planId,
     pick:cur.nav?cur.pick:cur.written||[], sentences:(cur.zs||[]).map(z=>({key:z.q.k,text:z.text}))
   };
@@ -3771,10 +3796,10 @@ function persistWriting(){
   catch{const msg=$("draftStatus");if(msg)msg.textContent="Opslaan op dit apparaat lukt niet."}
 }
 function clearWriting(q){
-  if(q?.type==="write")lsSet(draftKey(q.sec,!!cur.exam),null);
+  if(q?.type==="write")lsSet(draftKey(q.sec,!!cur.exam,cur.draftSlot),null);
 }
-function resumeWriting(section,exam){
-  if(exam){setTab("examen");startExam(section,true)}else build(section);
+function resumeWriting(section,exam,slot=""){
+  if(exam){setTab("examen");startExam(section,true)}else build(section,{...SEC.find(item=>item.id===section),draftSlot:slot});
 }
 function build(id,custom){
   cur={...(custom||SEC.find(s=>s.id===id))}; cur.zs=[]; const d=today(), due=[],fresh=[];
@@ -3793,7 +3818,7 @@ function build(id,custom){
   if(!queue.length)queue=shuffle(pool.slice()).slice(0,cur.n);
   if(!cur.keep)shuffle(queue);
   queue=queue.map(q=>({...q,retry:false}));
-  const first=queue[0], draft=first?.type==="write" && getDraft(first.sec,!!cur.exam);
+  const first=queue[0], draft=first?.type==="write" && getDraft(first.sec,!!cur.exam,cur.draftSlot);
   pos=0;right=0;
   if(draft){
     queue=draft.keys.map(key=>({...ITEMS.find(q=>q.k===key),retry:false}));
@@ -4247,38 +4272,126 @@ function grab(q){
   const form=q.fields?q.fields.map((f,i)=>f+": "+$("f"+i).value.trim()).join("\n"):"";
   return{q,form,text:$("txt").value.trim()};
 }
+function writingBarsHTML(rows, labels) {
+  return `<div class="dpts">${rows.filter(row=>row.max).map(row=>{
+    const percent=Math.round(row.earned/row.max*100);
+    return `<div class="pt"><span>${esc(labels[row.id] || row.id)}</span><i><b class="${percent===100?"full":percent>0?"some":"none"}" style="width:${row.complete===false?0:percent}%"></b></i><em>${row.complete===false?"–":row.earned}/${row.max}</em></div>`;
+  }).join("")}</div>`;
+}
+const WRITING_CRITERION_LABELS={inhoud:"Inhoud",woorden:"Woorden",grammatica:"Grammatica",spelling:"Spelling",samenhang:"Samenhang",unfinished:"Niet gemaakt"};
+function writingTypesHTML(types, history=false) {
+  return `<div class="writing-types">${types.map(row=>{
+    const percent=row.max && row.complete!==false ? Math.round(row.earned/row.max*100) : null;
+    const count=row.tasks===1?"1 opdracht":`${row.tasks} opdrachten`;
+    return `<div class="writing-type"><div class="writing-type-heading"><span>${esc(WRITING_LABELS[row.id])}</span><strong>${percent==null?"–":percent+"%"}</strong></div>
+      <p class="note">${row.max?`${row.complete===false?"Nog niet volledig beoordeeld":`${row.earned}/${row.max}`} · ${count}`:"Niet in deze poging"}${history?` · ${row.attempts} ${row.attempts===1?"proefexamen":"proefexamens"}`:""}</p>
+      ${row.max?`<div class="bar"><i style="width:${percent||0}%"></i></div>`:""}</div>`;
+  }).join("")}</div>`;
+}
+function writingReviewHTML(review) {
+  const focus=review.priorities.map((priority,i)=>{
+    const action=priority.action;
+    const title=action.kind==="section"?"Woordvolgorde oefenen":"Deze schrijfopdracht oefenen";
+    return `<div class="writing-focus"><p><b>${esc(WRITING_CRITERION_LABELS[priority.criterion])} · ${priority.lost} ${priority.lost===1?"punt":"punten"} verloren</b></p>
+      <p>${esc(priority.instruction)}</p>${priority.evidence?`<p class="note">${esc(priority.evidence.wrong)} → ${esc(priority.evidence.right)}<br>${esc(priority.evidence.why)}</p>`:""}${itHTML(`data-write-focus="${i}"`,title,`Opdracht ${priority.taskNumber}`,{ic:action.kind==="section"?action.section:"wr"})}</div>`;
+  }).join("");
+  return `<section class="writing-review" id="writingReview" aria-label="Je schrijfexamen per onderdeel">
+    <h3 class="lh">Deze poging per soort opdracht</h3>${writingTypesHTML(review.types)}
+    <h3 class="lh">Waar gingen de punten naartoe?</h3>${writingBarsHTML(review.criteria,WRITING_CRITERION_LABELS)}
+    ${!review.complete?`<p class="note">Nog niet alle antwoorden hebben een puntenscore. Er is geen volledige totaalscore opgeslagen. Je concept blijft bewaard.</p>`
+      :focus?`<h3 class="lh">Dit kun je nu verbeteren</h3>${focus}`:`<p class="note good">In deze poging heb je geen punten verloren.</p>`}
+    <p class="note">Dit laat deze poging zien. Bekijk je resultaten in Profiel om meerdere proefexamens te vergelijken.</p>
+  </section>`;
+}
+function writingHistoryHTML(part) {
+  if(!isWr(part))return "";
+  const history=writingHistory(S.res?.[part] || []);
+  if(!history.types.length)return "";
+  return `<details class="writing-review writing-history"><summary>Per soort schrijfopdracht</summary>
+    <p class="note"><span>Laatste proefexamens met deelresultaten</span> · ${history.attempts}</p>
+    ${writingTypesHTML(history.types,true)}
+    ${history.attempts<3?'<p class="note">Nog weinig gegevens. Maak meer proefexamens om je ontwikkeling te zien.</p>':""}
+    <p class="note">Dit zijn oefenresultaten, geen voorspelling van je officiële uitslag.</p></details>`;
+}
+function practiseWritingFocus(action, part, back) {
+  planId=null;
+  if(action.kind==="section"){
+    const section=SEC.find(section=>section.id===action.section);
+    if(section)build(section.id,{...section,back:{t:"Je uitslag",f:back}});
+    return;
+  }
+  const task=ITEMS.find(task=>task.k===action.key && task.sec===part);
+  if(task)build("custom",{id:"custom",t:WRITING_LABELS[writingTaskType(task)],n:1,keep:1,
+    draftSlot:"focus/"+task.k,pool:()=>[task],back:{t:"Je uitslag",f:back}});
+}
+
 async function examWrite(){
-  const completedDraft=draftKey(cur.part,true);
-  const A=cur.ans, card=$("card");
-  const doc=A.map(a=>({task:wrTask(a.q),form:a.form,text:a.text}));
-  const foot=`${A.length?docBtn:""}<div class="two"><button class="ghost" id="tohome">Alle onderdelen</button><button class="btn" id="more">Nog een keer</button></div>`;
-  const bind=()=>{$("more").onclick=()=>{lsSet(completedDraft,null);build(cur.id,cur)};$("tohome").onclick=home;if($("docx"))$("docx").onclick=()=>saveDocx(doc)};
-  const own=(a,errs)=>a.text||a.form?ownHTML((a.form?a.form+"\n\n":"")+a.text,errs):`<p class="ask">Jouw tekst</p><div class="sample">(niets geschreven)</div>`;
-  const fallback=msg=>{card.innerHTML=`<p class="note">${msg}</p>`+A.map((a,i)=>`<h2>Opdracht ${queue.indexOf(a.q)+1}</h2><p class="note">${a.q.big}</p>${own(a)}<p class="ask">Voorbeeld</p><div class="sample">${esc(a.q.right)}</div>`).join("")+foot;bind()};
-  if(!A.length){card.innerHTML=`<p class="note">Je hebt geen opdracht gemaakt.</p>`+foot;return bind()}
-  card.innerHTML=`<p class="note">Ik kijk je ${A.length} teksten na… Dit duurt ongeveer een minuut.</p>`;
+  const exam=cur, tasks=queue, answers=exam.ans, card=$("card"), completedDraft=draftKey(exam.part,true);
+  const doc=answers.map(answer=>({task:wrTask(answer.q),form:answer.form,text:answer.text}));
+  const foot=`${answers.length?docBtn:""}<div class="two"><button class="ghost" id="tohome">Alle onderdelen</button><button class="btn" id="more">Nog een keer</button></div>`;
+  const bind=()=>{
+    $("more").onclick=()=>{lsSet(completedDraft,null);build(exam.id,exam)};
+    $("tohome").onclick=home;
+    if($("docx"))$("docx").onclick=()=>saveDocx(doc);
+  };
+  const own=(answer,errors)=>answer.text||answer.form
+    ?ownHTML((answer.form?answer.form+"\n\n":"")+answer.text,errors)
+    :'<p class="ask">Jouw tekst</p><div class="sample">(niets geschreven)</div>';
+  const fallback=message=>{
+    card.innerHTML=`<p class="note">${message}</p>`+answers.map(answer=>
+      `<h2>Opdracht ${tasks.findIndex(task=>task.k===answer.q.k)+1}</h2><p class="note">${answer.q.big}</p>${own(answer)}<p class="ask">Voorbeeld</p><div class="sample">${esc(answer.q.right)}</div>`).join("")+foot;
+    bind();
+  };
+  card.innerHTML=`<p class="note">Ik kijk je ${answers.length} teksten na… Dit duurt ongeveer een minuut.</p>`;
   try{
-    const T=await nakijken(A.map(a=>({kind:a.q.kind,task:wrTask(a.q),form:a.form,text:a.text})),cur.part==="wb"?"wb":undefined);
-    let good=0,pts=0,scored=0;
-    const RD=[];
-    const body=A.map((a,i)=>{const t=T[i]||{},errs=Array.isArray(t.errors)?t.errors:[],pt=spPts(t);if(t.passed)good++;if(pt!=null){pts+=pt;scored++}
-      keepErrs(errs); RD[i]=redoItems(a.q,a.form,a.text,t.corrected,errs);
-      return`<h2>Opdracht ${queue.indexOf(a.q)+1}: <span class="${t.passed?"good":"bad"}">${t.passed?"voldoende":"nog niet voldoende"}</span></h2><p class="note">${a.q.big}</p><p class="note">${esc(t.verdict)}</p>${scoreHTML(t.scores,a.q.mx)}
-        ${own(a,errs)}${errs.length?errsHTML(errs):""}<p class="ask">Verbeterde tekst</p><div class="sample">${esc(t.corrected)}</div>
-        <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(a.q.right)}</div></details>${RD[i].length?`<button class="ghost wide rdo" data-i="${i}">Schrijf het nog een keer</button>`:""}`}).join("");
-    // score: points of all tasks, as DUO counts them (a task not made counts 0); without points (older server) the share of good tasks
-    const max=queue.reduce((s,q)=>s+(q.mx?mxPts(q.mx):WRMAX),0), pc=scored?Math.round(pts/max*100):Math.round(good/queue.length*100), pass=pc>=passPc(cur.part);
-    lsSet(completedDraft,null);keepRes(cur.part,pc);
-    card.innerHTML=`<div class="done"><p class="ask">${cur.t}: uitslag</p><div class="big">${pc}%</div><p class="ru">${scored?`${pts} van ${max} punten, `:""}${good} van ${queue.length} opdrachten voldoende${A.length<queue.length?`; ${queue.length-A.length} niet gemaakt`:""}</p></div>
-      <p><b class="${pass?"good":"bad"}">${pass?"Oefendoel bereikt":"Meer oefenen"}</b></p>
-      <p class="note">Het oefendoel is ${passPc(cur.part)}% van de punten. Dit is een oefenresultaat. De officiële uitslag wordt door DUO bepaald.</p>${RD.some(x=>x.length)?`<p class="note">Je kunt een opdracht nog een keer schrijven. Dit kost geen nakijkbeurt.</p>`:""}`+body+foot;
-    // writing a task again leaves the result: coming back shows the same result, without marking it again
-    const html=card.innerHTML,wire=()=>{bind();card.querySelectorAll(".rdo").forEach(b=>b.onclick=()=>{const i=b.dataset.i;
-      redo(RD[i],()=>{card.innerHTML=html;wire();card.querySelector(`.rdo[data-i="${i}"]`).scrollIntoView({block:"center"})})})};
+    const grades=answers.length?await nakijken(answers.map(answer=>({kind:answer.q.kind,task:wrTask(answer.q),form:answer.form,text:answer.text})),exam.part==="wb"?"wb":undefined):[];
+    const review=reviewWriting(tasks,answers,grades), redoByTask=[];
+    const byKey=new Map(answers.map((answer,i)=>[answer.q.k,{answer,grade:grades[i]}]));
+    const good=grades.filter(grade=>grade?.passed).length;
+    const body=tasks.map((task,i)=>{
+      const entry=byKey.get(task.k), row=review.rows[i];
+      if(row.status==="empty")return `<h2>Opdracht ${i+1} · Niet gemaakt</h2><p class="note">${task.big}</p><p>Geen antwoord. Deze opdracht telt voor 0 van ${row.maxPoints} punten.</p>`;
+      const {answer,grade={}}=entry, errors=Array.isArray(grade.errors)?grade.errors:[];
+      keepErrs(errors);
+      redoByTask[i]=redoItems(task,answer.form,answer.text,grade.corrected,errors);
+      const label=typeof grade.passed==="boolean"?(grade.passed?"voldoende":"nog niet voldoende"):"nog niet beoordeeld";
+      return `<h2>Opdracht ${i+1} · <span class="${grade.passed?"good":"bad"}">${label}</span></h2>
+        <p class="note">${task.big}</p><p class="note">${esc(grade.verdict)}</p>${row.status==="scored"?scoreHTML(grade.scores,task.mx):""}
+        ${own(answer,errors)}${errors.length?errsHTML(errors):""}
+        ${grade.corrected?`<p class="ask">Verbeterde tekst</p><div class="sample">${esc(grade.corrected)}</div>`:""}
+        <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(task.right)}</div></details>
+        ${redoByTask[i].length?`<button class="ghost wide rdo" data-i="${i}">Schrijf het nog een keer</button>`:""}`;
+    }).join("");
+    if(review.complete){lsSet(completedDraft,null);keepRes(exam.part,review.percent,writingSnapshot(review))}
+    else save();
+    const passed=review.complete && review.percent>=passPc(exam.part);
+    card.innerHTML=`<div class="done"><p class="ask">${exam.t}: uitslag</p><div class="big">${review.percent==null?"–":review.percent+"%"}</div>
+      <p class="ru">${review.complete?`${review.earned} van ${review.max} punten, `:""}${good} van ${tasks.length} opdrachten voldoende${review.unfinished?`; ${review.unfinished} niet gemaakt`:""}</p></div>
+      <p><b class="${review.complete?(passed?"good":"bad"):""}">${!review.complete?"Onvolledige beoordeling":passed?"Oefendoel bereikt":"Meer oefenen"}</b></p>
+      <p class="note">Het oefendoel is ${passPc(exam.part)}% van de punten. Dit is een oefenresultaat. De officiële uitslag wordt door DUO bepaald.</p>
+      ${writingReviewHTML(review)}
+      <details class="writing-details"><summary>Bekijk elke opdracht en de verbeterde teksten</summary>${body}</details>${foot}`;
+    const html=card.innerHTML, state={cur:exam,queue:tasks,pos,total,right,answered,planId}, backAction=$("back").onclick, backLabel=$("back").getAttribute("aria-label");
+    const restoreResult=()=>{
+      ({cur,queue,pos,total,right,answered,planId}=state);
+      ["home","stats","lib","read","media","story","hist","talk","welcome","move"].forEach(id=>$(id).hidden=true);
+      closePop();stopMedia();$("play").hidden=false;clock(0);head();$("bar").style.width="100%";$("mode").hidden=true;
+      card.innerHTML=html;wire();window.scrollTo(0,0);
+      $("back").onclick=backAction;$("back").setAttribute("aria-label",backLabel);
+    };
+    const wire=()=>{
+      bind();
+      card.querySelectorAll("[data-write-focus]").forEach(button=>button.onclick=()=>
+        practiseWritingFocus(review.priorities[Number(button.dataset.writeFocus)].action,exam.part,restoreResult));
+      card.querySelectorAll(".rdo").forEach(button=>button.onclick=()=>{
+        const i=Number(button.dataset.i);
+        redo(redoByTask[i],()=>{restoreResult();const details=card.querySelector(".writing-details");details.open=true;card.querySelector(`.rdo[data-i="${i}"]`).scrollIntoView({block:"center"})});
+      });
+    };
     wire();
-  }catch(e){
-    const c=e&&e.code;
-    fallback(noCheck(c)?noCheck(c)+" Vergelijk je teksten nu met de voorbeelden.":c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je teksten met de voorbeelden.":c==="rate_limited"?"Te veel verzoeken achter elkaar. Probeer het over een minuut opnieuw.":"Het nakijken is niet gelukt. Vergelijk je teksten met de voorbeelden.");
+  }catch(error){
+    const code=error?.code;
+    fallback(noCheck(code)?noCheck(code)+" Vergelijk je teksten nu met de voorbeelden.":code==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je teksten met de voorbeelden.":code==="rate_limited"?"Te veel verzoeken achter elkaar. Probeer het over een minuut opnieuw.":"Het nakijken is niet gelukt. Vergelijk je teksten met de voorbeelden.");
   }
 }
 async function examSpeak(){
@@ -6002,7 +6115,25 @@ Object.assign(UI,{
     "尚未测试"
   ]
 });
+Object.assign(UI,{
+  "Per soort schrijfopdracht":["By writing task type","حسب نوع مهمة الكتابة","Yazma görevi türüne göre","लेखन कार्य के प्रकार के अनुसार","按写作题型"],
+  "Laatste proefexamens met deelresultaten":["Recent practice exams with a breakdown","الامتحانات التجريبية الأخيرة مع نتائج مفصلة","Ayrıntılı sonuçları olan son deneme sınavları","विस्तृत परिणाम वाली हाल की अभ्यास परीक्षाएँ","有分项成绩的近期模拟考试"],
+  "Nog weinig gegevens. Maak meer proefexamens om je ontwikkeling te zien.":["There is little data yet. Take more practice exams to see your progress.","لا توجد بيانات كافية بعد. أكمل مزيدًا من الامتحانات التجريبية لترى تقدمك.","Henüz az veri var. Gelişimini görmek için daha fazla deneme sınavı yap.","अभी जानकारी कम है। अपनी प्रगति देखने के लिए और अभ्यास परीक्षाएँ दें।","目前数据较少。多做几次模拟考试，查看自己的进步。"],
+  "Dit zijn oefenresultaten, geen voorspelling van je officiële uitslag.":["These are practice results, not a prediction of your official result.","هذه نتائج تدريبية وليست توقعًا لنتيجتك الرسمية.","Bunlar alıştırma sonuçlarıdır, resmî sonucunun tahmini değildir.","ये अभ्यास के परिणाम हैं, आधिकारिक परिणाम का अनुमान नहीं।","这些是练习成绩，并非对正式考试结果的预测。"],
+  "Gerichte oefening":["Targeted practice","تدريب مخصص","Hedefe yönelik alıştırma","लक्षित अभ्यास","专项练习"],
+  "Formulier":["Form","استمارة","Form","फ़ॉर्म","表格"],
+  "Kort bericht":["Short message","رسالة قصيرة","Kısa mesaj","छोटा संदेश","短消息"],
+  "Vrije tekst":["Free text","نص حر","Serbest metin","स्वतंत्र लेखन","自由写作"],
+  "Zakelijke e-mail of brief":["Formal email or letter","بريد إلكتروني أو خطاب رسمي","Resmî e-posta veya mektup","औपचारिक ईमेल या पत्र","正式邮件或信件"],
+  "Zinsopdracht":["Sentence task","مهمة جملة","Cümle görevi","वाक्य का कार्य","句子题"],
+  "E-mail":["Email","بريد إلكتروني","E-posta","ईमेल","电子邮件"],
+  "Schrijfopdracht":["Writing task","مهمة كتابة","Yazma görevi","लेखन कार्य","写作题"]
+});
 const UIR=[
+ [/^1 opdracht$/,["1 writing task","مهمة كتابة واحدة","1 yazma görevi","1 लेखन कार्य","1 道写作题"]],
+ [/^(\d+) opdrachten$/,["$1 writing tasks","$1 مهام كتابة","$1 yazma görevi","$1 लेखन कार्य","$1 道写作题"]],
+ [/^1 proefexamen$/,["1 practice exam","امتحان تجريبي واحد","1 deneme sınavı","1 अभ्यास परीक्षा","1 次模拟考试"]],
+ [/^(\d+) proefexamens$/,["$1 practice exams","$1 امتحانات تجريبية","$1 deneme sınavı","$1 अभ्यास परीक्षाएँ","$1 次模拟考试"]],
  [/^oefendoel: (\d+)%$/, ["practice target: $1%","هدف التدريب: $1%","alıştırma hedefi: %$1","अभ्यास का लक्ष्य: $1%","练习目标：$1%"]],
  [/^Vraag (\d+) van (\d+)$/,["Question $1 of $2","السؤال $1 من $2","Soru $1/$2","प्रश्न $1 / $2","第 $1 题，共 $2 题"]],
  [/^Les (\d+) van (\d+)$/,["Lesson $1 of $2","الدرس $1 من $2","Ders $1/$2","पाठ $1 / $2","第 $1 课，共 $2 课"]],

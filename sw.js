@@ -4,7 +4,7 @@
 // the network. Other pages (privacy, over) the same, cached under their own address, never as "/".
 // Paintings, photos and icons: from the cache, refreshed in the background. The dictionary (7 MB): cache only.
 // Recorded voices (audio/): cached on first play. api/ (grading, new texts) always goes to the network.
-const CACHE = "nl-a2-v3", CORE = ["/", "/manifest.json", "/apple-touch-icon.png", "/study/language-v1.js", "/study/progress-v1.js"];
+const CACHE = "nl-a2-v4", CORE = ["/", "/manifest.json", "/apple-touch-icon.png", "/study/language-v1.js", "/study/progress-v1.js", "/study/writing-v1.js"];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));
