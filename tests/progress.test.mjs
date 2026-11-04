@@ -124,3 +124,30 @@ test('Old generated answers remain attached to their text when device arrays hav
   assert.equal(answer('Tekst A'),2);assert.equal(answer('Tekst B'),3);
   assert.equal(a.run('ITEMS.filter(q=>q.k.startsWith("lz|g:")).length'),2);
 });
+
+test('The previous local account remains usable offline while its session cannot refresh',async()=>{
+  const saved={items:{offlineAnswer:{r:4}},t:100};
+  const store=storage({
+    'ww-active-owner':'account-a',
+    'sb-example-auth-token':JSON.stringify({user:{id:'account-a'},expires_at:1}),
+    'ww-progress-v2:account-a':JSON.stringify({data:saved,frame:{base:saved},version:1}),
+  });
+  const a=await app({storage:store,fetch:async()=>{throw Error('offline')}});
+  assert.equal(a.run('S.items.offlineAnswer.r'),4);assert.equal(a.run('progressOwner'),'account-a');
+  assert.equal(a.run('cloud'),null);
+  a.run('S.items.newAnswer={r:1};save()');
+  await a.run('setUser(null)');
+  assert.equal(a.run('S.items.offlineAnswer'),undefined);
+  assert.equal(store.getItem('ww-active-owner'),null);
+  const b=await app({storage:store});assert.equal(b.run('progressOwner'),'guest');
+  assert.equal(JSON.parse(store.getItem('ww-progress-v2:account-a')).data.items.newAnswer.r,1);
+});
+
+test('An expired cached session for another account never selects the old account data',async()=>{
+  const store=storage({
+    'ww-active-owner':'account-a',
+    'sb-example-auth-token':JSON.stringify({user:{id:'account-b'},expires_at:1}),
+    'ww-progress-v2:account-a':JSON.stringify({data:{items:{privateAnswer:{r:1}},t:100},frame:{},version:1}),
+  });
+  const a=await app({storage:store});assert.equal(a.run('progressOwner'),'guest');assert.equal(a.run('S.items.privateAnswer'),undefined);
+});

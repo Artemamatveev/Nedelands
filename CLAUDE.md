@@ -191,7 +191,7 @@ question says so); `FOTO` holds a short Dutch description of each for screen rea
 
 ## Progress
 
-Progress is isolated by account, with a guest scope. `ww-progress-v2:<owner>` stores `{data, frame, version}` locally and in IndexedDB. Existing `ww-v1` data is migrated only into the account recorded by `ww-acc`, or into the guest scope if none was recorded. Never discard this legacy backup. Normal logout switches to guest progress, without merging account data into another account.
+Progress is isolated by account, with a guest scope. `ww-progress-v2:<owner>` stores `{data, frame, version}` locally and in IndexedDB. Existing `ww-v1` data is migrated only into the account recorded by `ww-acc`, or into the guest scope if none was recorded. Never discard this legacy backup. Normal logout clears the active-owner marker and switches to guest progress, without merging account data into another account. A matching cached Supabase user may reopen that same local scope offline while session refresh is unavailable; it never grants server access.
 
 `frame.base` is the last acknowledged server snapshot and must be a deep copy independent of live `S`. A pending write records its local input, target, receipt id and device id before sending. `syncProgress()` reads the latest row, merges offline changes, and updates only if its `t` still matches. Retries inspect `_receipts` so losing an acknowledgement cannot count the same answers twice. New practice-result rows have a random `id` as well as `at`; older rows still work. Errors schedule retries and show a sync status in Profiel. Do not revert to whole-document last-writer-wins.
 

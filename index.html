@@ -1931,7 +1931,19 @@ function openProgress(owner, initial){
   S=migrateGenerated(Object.assign(freshProgress(),entry?.data||legacy||initial||{}));
   syncFrame=entry?.frame||{};
 }
-openProgress("guest");
+// A cached auth user selects only a local scope. Server access still requires Supabase auth/RLS.
+function cachedProgressOwner(){
+  try{
+    const owner=localStorage.getItem("ww-active-owner") || (legacyOwner!=="guest"?legacyOwner:null);
+    if(!owner)return "guest";
+    for(let i=0;i<localStorage.length;i++){
+      const key=localStorage.key(i);
+      if(/^sb-.+-auth-token$/.test(key) && readLocal(key)?.user?.id===owner)return owner;
+    }
+  }catch{}
+  return "guest";
+}
+openProgress(cachedProgressOwner());
 // Backup copy in IndexedDB: iOS home-screen apps can lose localStorage
 const idb=new Promise((ok,no)=>{try{const r=indexedDB.open("ww",1);r.onupgradeneeded=()=>r.result.createObjectStore("kv");r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)}catch(e){no(e)}});
 idb.catch(()=>{});
@@ -2030,8 +2042,8 @@ async function initAccount(){
   const q=new URLSearchParams(location.search),back=q.has("code")||q.has("error");
   if(back&&q.get("h")&&(!handOf()||handOf().h!==q.get("h")))return handBack(q.get("h"),q.get("code"),q.get("error"));
   if(back)lsSet(HAND,null);
-  let has=false; try{has=Object.keys(localStorage).some(k=>/^sb-.+-auth-token$/.test(k))}catch(e){}
-  if(back||has)try{await loadSb();const{data}=await acc.sb.auth.getSession();if(!acc.user)await setUser(data.session&&data.session.user||null)}catch(e){}
+  let has=false; try{for(let i=0;i<localStorage.length;i++)if(/^sb-.+-auth-token$/.test(localStorage.key(i)))has=true}catch(e){}
+  if(back||has)try{await loadSb();const{data,error}=await acc.sb.auth.getSession();if(error)throw error;if(!acc.user)await setUser(data.session&&data.session.user||null)}catch(e){}
   if(back){ // back from Google or Apple
     if(q.get("error"))acc.msg="Inloggen is niet gelukt. Probeer het nog een keer.";
     history.replaceState(null,"",location.pathname); setTab("profiel"); drawProfile()}
@@ -2043,6 +2055,8 @@ async function setUser(u){
   const uid=u?.id, owner=uid||"guest";
   if(acc.user?.id===uid && cloud && owner===progressOwner)return;
   const epoch=++accountEpoch;
+  lsSet("ww-active-owner",uid||null);
+  if(!uid)lsSet(ALINK,null);
   const guest=progressOwner==="guest" && uid && (S.t || Object.keys(S.items).length) ? progressClone(S) : null;
   clearTimeout(pushT);cloud=null;syncing=null;dirty=false;
   acc.user=u;acc.left=null;acc.saved=0;acc.step=null;acc.sync="";
@@ -2054,7 +2068,10 @@ async function setUser(u){
     if(guest){
       S=rebaseProgress(freshProgress(),guest,S);
       // Keep the guest copy if this browser cannot persist the account copy.
-      if(localSave())lsSet(progressKey("guest"),JSON.stringify({data:freshProgress(),frame:{},version:++localVersion}));
+      if(localSave()){
+        const key=progressKey("guest"),empty=JSON.stringify({data:freshProgress(),frame:{},version:++localVersion});
+        lsSet(key,empty);idbPut(empty,key);
+      }
     }
     addGenerated();home();
   }
