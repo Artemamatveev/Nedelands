@@ -14,8 +14,8 @@
 // the answer then also has `left`, the checks left today. With payments on (Stripe, see _stripe.js) that allowance is
 // for Bittertalen Plus; everyone else, logged in or not, gets the free single checks (FREE a day) and then {error:"plus"}.
 import Anthropic from "@anthropic-ai/sdk";
-import { accounts, caller, checkCost, useChecks, LIMIT, sameOrigin, FREE, visitor, useFree, useTotal, isPlus } from "./_supa.js";
-import { pay } from "./_stripe.js";
+import { accounts, caller, checkCost, useChecks, LIMIT, sameOrigin, FREE, visitor, useFree, useTotal, getPlan } from "./_supa.js";
+import { pay, covers } from "./_stripe.js";
 
 // Created only when the key is set, so a missing key gives a clear error instead of a crash
 // (trimmed: a key pasted into the dashboard with a trailing newline breaks the request header)
@@ -169,10 +169,12 @@ export default async function handler(req, res) {
   {
     const user = await caller(req).catch(() => null);
     // Bittertalen Plus (only when payments are set up): a logged-in learner without it is graded like a visitor
+    // Schrijven B1 and Spreken B1 need Plus B1 (when B1 has its own price); everything else Plus A2 or B1
     let plus = !pay;
     if (user && pay) {
-      plus = await isPlus(user.id).catch(() => null);
-      if (plus == null) return res.status(502).json({ error: "failed" });
+      const plan = await getPlan(user.id).catch(() => undefined);
+      if (plan === undefined) return res.status(502).json({ error: "failed" });
+      plus = covers(plan, wb || sb ? "B1" : "A2");
     }
     if (!user || !plus) {
       // Without a login (or without Plus): a few single tasks a day for free (no proefexamens), counted per visitor

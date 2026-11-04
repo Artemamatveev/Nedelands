@@ -2153,14 +2153,18 @@ async function usage(){
   if(!acc.user||!acc.cfg)return;
   const{data,error}=await acc.sb.from("check_usage").select("n").eq("user_id",acc.user.id).eq("day",amsDay()).maybeSingle();
   if(!error){acc.left=acc.cfg.limit-((data&&data.n)||0);drawProfile()}
-  if(payOn()){const p=await acc.sb.from("plans").select("status,period,ends_at,cancel_at_end,trial_used,customer").eq("user_id",acc.user.id).maybeSingle();
+  if(payOn()){const p=await acc.sb.from("plans").select("status,period,tier,ends_at,cancel_at_end,trial_used,customer").eq("user_id",acc.user.id).maybeSingle();
     if(!p.error){acc.plan=p.data||null;drawProfile()}}
 }
 // Bittertalen Plus (Stripe, api/pay.js): Claude's grading and the proefexamens. Only when the server has payments set up
 // (/api/config gives plus {month, year, trial}); otherwise everything stays as it was. The server decides for grading;
 // the page only keeps the proefexamens behind the Plus screen.
 const payOn=()=>!!(acc.cfg&&acc.cfg.plus);
-const plusNow=()=>!payOn()||!!(acc.plan&&["active","trialing","past_due"].includes(acc.plan.status));
+// B1 has its own price when /api/config gives plus.b1: then Plus B1 covers both levels and Plus A2 only A2 (and KNM)
+const b1Own=()=>!!(payOn()&&acc.cfg.plus.b1);
+const needOf=e=>["l1","lb","wb","sb"].includes(e)?"B1":"A2";
+const plusNow=(need="A2")=>!payOn()||!!(acc.plan&&["active","trialing","past_due"].includes(acc.plan.status)&&(need!=="B1"||!b1Own()||acc.plan.tier==="B1"));
+const plusTier=()=>lvl()==="B1"&&b1Own()?"B1":"A2"; // the Plus the learner's level asks for
 const eur=c=>"€"+(c/100).toFixed(2).replace(".",",");
 const dmy=t=>new Date(t).toLocaleDateString("nl-NL");
 // The status in one sentence (Profiel and the Plus screen), or "" without a subscription
@@ -2183,19 +2187,24 @@ function plusScreen(){
   closePop();hush();TK=null;$("card").innerHTML="";
   $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;window.scrollTo(0,0);
   tBack(TABN[tab],home);
-  const P=acc.cfg.plus,u=acc.user,on=u&&plusNow(),trial=!(acc.plan&&acc.plan.trial_used),per=plusPer==="year";
+  const T=plusTier(),P=T==="B1"?acc.cfg.plus.b1:acc.cfg.plus,u=acc.user,on=u&&plusNow(T),up=u&&!on&&plusNow("A2"),
+    trial=!(acc.plan&&acc.plan.trial_used),per=plusPer==="year";
   const free=Math.round(12-P.year/P.month);
-  $("tbody").innerHTML=`<div class="plus"><h2>Bittertalen Plus</h2><p class="sub">Alles voor je examen, in één abonnement.</p>
+  $("tbody").innerHTML=`<div class="plus"><h2>${b1Own()?`Bittertalen Plus ${T}`:"Bittertalen Plus"}</h2><p class="sub">${!b1Own()?"Alles voor je examen, in één abonnement.":T==="B1"?"Voor het Staatsexamen B1, en ook alles van A2.":"Voor het inburgeringsexamen A2."}</p>
     <ul><li>Claude kijkt je teksten en gesproken antwoorden na.</li><li>Alle proefexamens met tijd, zoals op het echte examen.</li></ul>`
     +(on?`<p>${plusLine()}</p><button class="btn wide" id="pman">Abonnement beheren</button>`
+      :up?`<div class="seg" id="pper" role="group" aria-label="Periode">${["month","year"].map(x=>`<button type="button" data-p="${x}" aria-pressed="${plusPer===x}">${x==="year"?"Per jaar":"Per maand"}</button>`).join("")}</div>
+      <p class="pr"><b>${eur(per?P.year:P.month)}</b> <span>${per?"per jaar":"per maand"}</span></p>
+      <button class="btn wide" id="pup">Upgrade naar Plus B1</button><p class="note">Je betaalt alleen het verschil voor de rest van de periode.</p>`
       :`<div class="seg" id="pper" role="group" aria-label="Periode">${["month","year"].map(x=>`<button type="button" data-p="${x}" aria-pressed="${plusPer===x}">${x==="year"?"Per jaar":"Per maand"}</button>`).join("")}</div>
       <p class="pr"><b>${eur(per?P.year:P.month)}</b> <span>${per?"per jaar":"per maand"}</span>${per&&free>0?` · <span>${free} maanden gratis</span>`:""}</p>`
-      +(u?`<button class="btn wide" id="pbuy">${trial?`Probeer ${P.trial} dagen gratis`:"Word Plus-lid"}</button>
+      +(u?`<button class="btn wide" id="pbuy">${trial?`Probeer ${acc.cfg.plus.trial} dagen gratis`:"Word Plus-lid"}</button>
         <p class="note">${trial?`<span>Daarna ${eur(per?P.year:P.month)} ${per?"per jaar":"per maand"}.</span> `:""}<span>Je betaalt met iDEAL of een kaart. Opzeggen kan altijd, in Profiel.</span></p>`
         :`<p class="note">Log eerst in. Dan hoort je abonnement bij je account.</p><button class="btn wide" id="plog">Inloggen of account maken</button>`))
     +`<p class="note" id="plusmsg" role="status"></p></div>`;
   if($("pper"))$("pper").querySelectorAll("button").forEach(b=>b.onclick=()=>{plusPer=b.dataset.p;plusScreen()});
-  if($("pbuy"))$("pbuy").onclick=()=>payGo({action:"checkout",period:plusPer},$("pbuy"));
+  if($("pbuy"))$("pbuy").onclick=()=>payGo({action:"checkout",period:plusPer,tier:T},$("pbuy"));
+  if($("pup"))$("pup").onclick=()=>payGo({action:"checkout",period:plusPer,tier:"B1"},$("pup"));
   if($("pman"))$("pman").onclick=()=>payGo({action:"portal"},$("pman"));
   if($("plog"))$("plog").onclick=()=>{acc.msg="";welcome()};
 }
@@ -3529,11 +3538,11 @@ function home(){
   // ONA and the participatieverklaring: on both levels (with the Staatsexamen you still do them apart)
   const onaRow=`<div class="list">${itHTML(`data-x="ona"`,"ONA en participatieverklaring","Niet voor iedereen: kijk of jij ze nodig hebt.",{ic:"ona",n:(n=>n?`${n} van 4`:null)(GP.filter(c=>c.ona&&(S.gp||{})[c.id]).length)})}</div>`;
   if(v==="B1"){
-    $("exam").innerHTML=`<h2>Naar het examen</h2><p class="sub">Je score is het percentage goede antwoorden of punten. Het streepje is je oefendoel.</p>${payOn()&&!plusNow()?`<p class="note">Proefexamens horen bij Bittertalen Plus.</p>`:""}<div class="list">${["l1","lb","wb","sb","knm"].map(part).join("")}</div>`
+    $("exam").innerHTML=`<h2>Naar het examen</h2><p class="sub">Je score is het percentage goede antwoorden of punten. Het streepje is je oefendoel.</p>${payOn()&&!plusNow(lvl())?`<p class="note">${plusNow("A2")?"Voor B1 heb je Plus B1 nodig.":"Proefexamens horen bij Bittertalen Plus."}</p>`:""}<div class="list">${["l1","lb","wb","sb","knm"].map(part).join("")}</div>`
       +`<div class="list"><a class="it ext" href="https://oefenexamensnt2.nl" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens Staatsexamen NT2 ↗</b></span><span class="d">Officieel, voor programma I. Liefst op een computer.</span></span></a></div>`+onaRow+uitRow;
     $("parts").innerHTML=`<h2>Examenonderdelen</h2><p class="sub">Zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["l1","lb","wb","sb","knm"].map(row).join("")}</div>`;
   }else{
-    $("exam").innerHTML=`<h2>Naar het examen</h2><p class="sub">Je score is het percentage goede antwoorden of punten. Het streepje is je oefendoel.</p>${payOn()&&!plusNow()?`<p class="note">Proefexamens horen bij Bittertalen Plus.</p>`:""}<div class="list">${["lz","ls","wr","sp","knm"].map(part).join("")}</div>`
+    $("exam").innerHTML=`<h2>Naar het examen</h2><p class="sub">Je score is het percentage goede antwoorden of punten. Het streepje is je oefendoel.</p>${payOn()&&!plusNow(lvl())?`<p class="note">${plusNow("A2")?"Voor B1 heb je Plus B1 nodig.":"Proefexamens horen bij Bittertalen Plus."}</p>`:""}<div class="list">${["lz","ls","wr","sp","knm"].map(part).join("")}</div>`
       +`<div class="list"><a class="it ext" href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens van DUO ↗</b><small>15</small></span><span class="d">De echte, met echte stemmen. Liefst op een computer.</span></span></a></div>`+onaRow+uitRow;
     $("parts").innerHTML=`<h2>Examenonderdelen</h2><p class="sub">Zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["lz","ls","wr","sp","knm"].map(row).join("")}</div>`;
   }
@@ -3617,7 +3626,7 @@ const byFresh=a=>a.map(q=>[q,seenN(q)]).sort((x,y)=>x[1]-y[1]).map(x=>x[0]);
 // Schrijven and Spreken are graded by Claude: without a login, or with too few checks left today, say so first
 function startExam(e,go){
   const cost=e==="wr"?2:e==="wb"?4:e==="sp"||e==="sb"?6:0; // as checkCost() in api/_supa.js
-  if(payOn()&&!plusNow())return plusScreen(); // every proefexamen belongs to Bittertalen Plus
+  if(payOn()&&!plusNow(needOf(e)))return plusScreen(); // every proefexamen belongs to Bittertalen Plus (B1's to Plus B1)
   if(cost&&acc.cfg&&!go&&(!acc.user||acc.left!=null&&acc.left<cost))return examGate(e,cost);
   build("exam",{id:"exam",exam:1,part:e,keep:["lz","l1","ls","lb","sp","wb","sb"].includes(e),write:isWr(e),speak:e==="sp"||e==="sb",...EX[e],pool:()=>{if(e==="wb")return wbTasks(8,3);if(e==="sb")return sbTasks(8,8);const a=byFresh(shuffle(ITEMS.filter(x=>x.sec===e)));
     if(["lz","l1","ls","lb"].includes(e)){const g={};a.forEach(q=>{const t=q.text||q.say;(g[t]=g[t]||[]).push(q)}); // whole texts and fragments, as on the exam; the least-seen first
@@ -3751,7 +3760,7 @@ function drawProfile(){
     h=`<h3 class="lh">Account</h3>`;
     if(u){
       h+=`<p class="sub">Ingelogd${u.email?` als <b>${esc(u.email)}</b>`:""}<br><span role="status">${acc.sync||"Wacht op synchronisatie"}</span>${plusNow()?`<br>Nakijken vandaag: ${acc.left==null?"…":`nog ${Math.max(0,acc.left)} van de ${c.limit}`}`:""}</p>`
-      +(payOn()?`<h3 class="lh">Bittertalen Plus</h3>`+(plusNow()?`<p class="sub">${plusLine()}</p><button class="ghost wide" id="aplus">Abonnement beheren</button>`
+      +(payOn()?`<h3 class="lh">${b1Own()&&plusNow()?`Bittertalen Plus ${acc.plan.tier==="B1"?"B1":"A2"}`:"Bittertalen Plus"}</h3>`+(plusNow()?`<p class="sub">${plusLine()}</p>${plusNow(lvl())?"":`<button class="btn wide" id="aup">Upgrade naar Plus B1</button>`}<button class="ghost wide" id="aplus">Abonnement beheren</button>`
         :`<p class="sub">Nakijken door Claude en alle proefexamens.</p><button class="btn wide" id="aplus">${acc.plan&&acc.plan.trial_used?"Word Plus-lid":`Probeer ${c.plus.trial} dagen gratis`}</button>`):"")+`
         ${L.includes("passkey")?`<button class="ghost wide" id="apk">Passkey toevoegen</button>`:""}
         <button class="ghost wide" id="aout">Uitloggen</button>
@@ -3763,6 +3772,7 @@ function drawProfile(){
   el.innerHTML=h;
   if($("alogin"))$("alogin").onclick=()=>{acc.msg="";welcome()};
   if($("aplus"))$("aplus").onclick=()=>plusNow()?payGo({action:"portal"},$("aplus")):plusScreen();
+  if($("aup"))$("aup").onclick=plusScreen;
   if($("apk"))$("apk").onclick=async()=>{
     try{const{error}=await acc.sb.auth.registerPasskey();if(error)throw error;acc.msg="Je passkey is gemaakt. Nu kun je ook met Face ID, Touch ID of je vingerafdruk inloggen."}
     catch(e){acc.msg=/NotAllowed|abort|cancel/i.test(String(e&&(e.message||e.name)))?"Gestopt.":"Een passkey maken lukt hier niet."}
@@ -4197,7 +4207,7 @@ async function nakijken(tasks,part){
   return j.tasks;
 }
 // Without an account: how many free checks are left today, and what an account gives
-const freeNote=()=>acc.cfg&&acc.cfg.free&&(!acc.user||!plusNow())?`<p class="note">${acc.free==null?`${payOn()?"Zonder Plus":"Zonder account"} kijkt Claude ${acc.cfg.free} keer per dag gratis na.`:acc.free>0?`Nog ${acc.free} keer gratis nakijken vandaag.`:"Je gratis nakijkbeurten van vandaag zijn op."} ${payOn()?"Met Bittertalen Plus":"Met een account"} ${acc.cfg.limit} keer per dag (Profiel).</p>`:"";
+const freeNote=()=>acc.cfg&&acc.cfg.free&&(!acc.user||!plusNow(lvl()))?`<p class="note">${acc.free==null?`${payOn()?"Zonder Plus":"Zonder account"} kijkt Claude ${acc.cfg.free} keer per dag gratis na.`:acc.free>0?`Nog ${acc.free} keer gratis nakijken vandaag.`:"Je gratis nakijkbeurten van vandaag zijn op."} ${payOn()?"Met Bittertalen Plus":"Met een account"} ${acc.cfg.limit} keer per dag (Profiel).</p>`:"";
 function selfGrade(q,msg,doc){
   $("fb").innerHTML=`<p class="note">${msg}</p><p class="ask">Voorbeeld</p><div class="sample">${esc(q.right)}</div>
     ${q.type==="reveal"?echoHTML("het voorbeeld"):""}${doc?docBtn:""}<div class="two"><button class="ghost" id="again">Later herhalen</button><button class="btn" id="got">Gelukt</button></div>`;
@@ -6044,6 +6054,11 @@ const UI={
 "Naar de betaalpagina…":["Going to the payment page…","جارٍ الانتقال إلى صفحة الدفع…","Ödeme sayfasına gidiliyor…","भुगतान पेज पर जा रहे हैं…","正在前往付款页面…"],
 "Betalen lukt nu niet. Probeer het later opnieuw.":["Payment isn't possible right now. Try again later.","الدفع غير ممكن الآن. حاول لاحقًا.","Şu anda ödeme yapılamıyor. Daha sonra tekrar dene.","अभी भुगतान नहीं हो पा रहा। बाद में फिर कोशिश करें।","现在无法付款，请稍后再试。"],
 "Probeer het opnieuw":["Try again","حاول مرة أخرى","Tekrar dene","फिर से कोशिश करें","再试一次"],
+"Upgrade naar Plus B1":["Upgrade to Plus B1","الترقية إلى Plus B1","Plus B1'e yükselt","Plus B1 में अपग्रेड करें","升级到 Plus B1"],
+"Je betaalt alleen het verschil voor de rest van de periode.":["You only pay the difference for the rest of the period.","تدفع الفرق فقط لبقية المدة.","Dönemin kalanı için yalnızca farkı ödersin.","आप बाकी अवधि के लिए सिर्फ़ अंतर चुकाते हैं।","你只需支付本周期剩余时间的差价。"],
+"Voor het Staatsexamen B1, en ook alles van A2.":["For the State exam B1, and everything for A2 too.","لامتحان الدولة B1، ويشمل أيضًا كل ما في A2.","Devlet sınavı B1 için; A2'deki her şey de dahil.","राज्य परीक्षा B1 के लिए, और A2 का सब कुछ भी।","适用于国家考试 B1，也包含 A2 的全部内容。"],
+"Voor het inburgeringsexamen A2.":["For the integration exam A2.","لامتحان الاندماج A2.","Uyum sınavı A2 için.","इंटीग्रेशन परीक्षा A2 के लिए।","适用于融入考试 A2。"],
+"Voor B1 heb je Plus B1 nodig.":["For B1 you need Plus B1.","تحتاج إلى Plus B1 لمستوى B1.","B1 için Plus B1 gerekir.","B1 के लिए Plus B1 चाहिए।","B1 需要 Plus B1。"],
 "Welkom bij Bittertalen Plus!":["Welcome to Bittertalen Plus!","مرحبًا بك في Bittertalen Plus!","Bittertalen Plus'a hoş geldin!","Bittertalen Plus में आपका स्वागत है!","欢迎使用 Bittertalen Plus！"],
 "Starttest":["Starting test","اختبار البداية","Başlangıç testi","शुरुआती परीक्षा","入门测试"],
 "Waar oefen je voor?":["What are you practising for?","لأيّ امتحان تتدرّب؟","Hangi sınava hazırlanıyorsun?","आप किसकी तैयारी कर रहे हैं?","你在准备什么考试？"],

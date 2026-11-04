@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import crypto from 'node:crypto';
 const root=new URL('../',import.meta.url);
 
-const ENV={STRIPE_SECRET_KEY:'sk_test_x',STRIPE_WEBHOOK_SECRET:'whsec_test',STRIPE_PRICE_MONTH:'price_m',STRIPE_PRICE_YEAR:'price_y'};
+const ENV={STRIPE_SECRET_KEY:'sk_test_x',STRIPE_WEBHOOK_SECRET:'whsec_test',STRIPE_PRICE_MONTH:'price_m',STRIPE_PRICE_YEAR:'price_y',STRIPE_PRICE_B1_MONTH:'price_b1m',STRIPE_PRICE_B1_YEAR:'price_b1y'};
 // Loads an api file with a fake _supa.js and a real _stripe.js whose fetch goes to `stripeApi`
 async function load(file,{plans={},user={id:'u1',email:'a@b.nl'},stripeApi=()=>({})}={}){
   const calls=[],saved=[];
@@ -55,7 +55,26 @@ test('The webhook saves the subscription as Stripe has it now, for the user in i
   const req={method:'POST',headers:{'stripe-signature':sign(raw)},body:raw};
   const r=res();await a.m.default(req,r);
   assert.equal(r.statusCode,200);
-  assert.deepEqual({...a.saved[0],updated_at:undefined},{user_id:'u1',customer:'cus_1',sub:'sub_1',status:'trialing',period:'month',ends_at:new Date(1794400000*1000).toISOString(),cancel_at_end:false,trial_used:true,updated_at:undefined});
+  assert.deepEqual({...a.saved[0],updated_at:undefined},{user_id:'u1',customer:'cus_1',sub:'sub_1',status:'trialing',period:'month',tier:'A2',ends_at:new Date(1794400000*1000).toISOString(),cancel_at_end:false,trial_used:true,updated_at:undefined});
   const bad=res();await a.m.default({method:'POST',headers:{'stripe-signature':sign(raw,'whsec_other')},body:raw},bad);
   assert.equal(bad.statusCode,400);assert.equal(a.saved.length,1);
+});
+
+test('B1 has its own prices; a Plus A2 learner who picks B1 gets the portal page to switch, not a second subscription',async()=>{
+  const api=path=>path.startsWith('checkout')?{url:'https://checkout.stripe.test/b1'}:path.startsWith('subscriptions/')?{id:'sub_1',items:{data:[{id:'si_1'}]}}:{url:'https://portal.stripe.test/up'};
+  const req=body=>({method:'POST',headers:{host:'bittertalen.nl',origin:'https://bittertalen.nl',authorization:'Bearer t'},body});
+  let a=await load('api/pay.js',{stripeApi:api});let r=res();await a.m.default(req({action:'checkout',period:'year',tier:'B1'}),r);
+  assert.equal(a.calls[0].body['line_items[0][price]'],'price_b1y');
+  a=await load('api/pay.js',{stripeApi:api,plans:{u1:{user_id:'u1',customer:'cus_1',sub:'sub_1',status:'active',tier:'A2'}}});r=res();
+  await a.m.default(req({action:'checkout',period:'month',tier:'B1'}),r);
+  const portal=a.calls.find(c=>c.path==='billing_portal/sessions').body;
+  assert.equal(portal['flow_data[type]'],'subscription_update_confirm');
+  assert.equal(portal['flow_data[subscription_update_confirm][items][0][price]'],'price_b1m');
+  assert.equal(portal['flow_data[subscription_update_confirm][items][0][id]'],'si_1');
+  assert.equal(a.calls.some(c=>c.path.startsWith('checkout')),false);
+  const {stripe}=await load('api/stripe.js');
+  assert.equal(stripe.tierOf({items:{data:[{price:{id:'price_b1y'}}]}}),'B1');
+  assert.equal(stripe.covers({status:'active',tier:'A2'},'B1'),false);
+  assert.equal(stripe.covers({status:'active',tier:'B1'},'A2'),true);
+  assert.equal(stripe.covers({status:'canceled',tier:'B1'},'A2'),false);
 });
