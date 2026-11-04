@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import vm from 'node:vm';
 import { webcrypto } from 'node:crypto';
-import { parseHTML } from 'linkedom';
+import { parseHTML, NodeFilter } from 'linkedom';
 import { IDBFactory } from 'fake-indexeddb';
 
 export const root = new URL('../', import.meta.url);
@@ -33,6 +33,7 @@ export async function app(options = {}) {
     crypto:webcrypto,
     URL, URLSearchParams, TextEncoder, TextDecoder, Blob, Response,
     MutationObserver:window.MutationObserver,
+    NodeFilter,
     Audio:class {pause(){} play(){return Promise.resolve()} addEventListener(){}},
     console:{log(){},info(){},warn(){},error:(...e)=>errors.push(e.join(' '))},
     getComputedStyle:()=>({getPropertyValue:()=>'',direction:'ltr'}),

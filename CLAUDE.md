@@ -1,7 +1,7 @@
 # Bittertalen
 
 Bittertalen (a pun on bitterballen: "bitter languages", self-irony about learning Dutch) is a single-page study app for the Dutch A2 integration exam (inburgeringsexamen).
-The UI and most content live in `index.html`. `study/language-v1.js` holds stable verb and word-order data plus checking logic. `study/progress-v1.js` handles three-way progress merges and conditional cloud writes. Paintings are in `art/`.
+The UI and most content live in `index.html`. `study/language-v1.js` holds stable verb and word-order data plus checking logic. `study/progress-v1.js` handles three-way progress merges and conditional cloud writes. `study/writing-v1.js` aggregates writing feedback without making another grading request. Paintings are in `art/`.
 Deployed on Vercel from `main`: every push to `main` goes live at https://bittertalen.nl (Vercel project
 `nedelands`; the domain is registered at TransIP with Vercel's nameservers, so its DNS records are in Vercel, including
 Resend's). The old addresses https://bittertalen.vercel.app and https://nedelands.vercel.app serve the same deployment
@@ -197,7 +197,11 @@ Progress is isolated by account, with a guest scope. `ww-progress-v2:<owner>` st
 
 `S.res` keeps the last 10 practice-exam scores per part. A stable practice result requires three recent results averaging at least 80%, each above the practice target, with at least two mostly new attempts. This describes practice performance. Speaking explicitly leaves pronunciation and pace unassessed. The score thresholds are practice targets.
 
+New A2/B1 writing results also have an optional `writing` v1 snapshot: task-type and criterion point totals, task counts and the number left blank. It contains no answer text or error fragments. The current report separates types absent from that exam from types that scored zero; Profile combines up to five recent detailed attempts with their task/attempt counts. Legacy results retain their scores without invented breakdowns. Missing or malformed grades preserve the draft and do not create a total. A submitted blank exam scores zero without a model request.
+
 Writing drafts are local and account-scoped (`ww-writing:<owner>:practice|exam:<section>`). They retain task keys, text, form fields, position, grouped B1 sentences and the original exam deadline. Practice has no timer. An expired exam opens its review without another timed attempt. Successful grading clears the draft. An unsuccessful request preserves it.
+
+Writing feedback recommends at most two actions, prioritising unfinished tasks and critical content before other lost points. A zero for content is not treated as separate evidence of grammar or spelling weakness. Identified word-order errors can open the existing A2/B1 word-order section; other actions open the relevant writing task. These focused tasks use a separate `:focus/<task-key>` draft slot, appear among resumable drafts, and preserve ordinary practice drafts. Returning restores the exam result without grading or recording the attempt again. Detailed corrections, rewriting and Word export remain available under the summary.
 
 Run `npm ci --ignore-scripts` and `npm test` after changes. The workflow checks learner verb forms, order alternatives, normal UI entry points, diagnostic counts, time budgets, drafts and deadlines, account isolation, offline merges, conditional-write races, lost acknowledgements and grading-quota failures. Browser/microphone behaviour and human NT2 review still require separate validation.
 
