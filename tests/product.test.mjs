@@ -78,6 +78,9 @@ test('An expired exam draft opens a review, without starting another timed attem
   assert.ok(b.document.querySelector('#lever'));
   assert.equal(b.run('tEnd'),0);
   assert.equal(b.run('cur.sent'),false);
+  b.document.querySelector('#bk').click();
+  assert.equal(b.document.querySelector('#txt').readOnly,true);
+  assert.equal(b.document.querySelector('#txt').value,'Dit concept blijft bewaard.');
 });
 test('Legacy results need fresh attempts before the stable practice label is shown',async()=>{
   const a=await app();

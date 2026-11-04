@@ -3787,6 +3787,7 @@ function build(id,custom){
   }
   total=queue.length;
   const remaining=draft?.end?Math.max(0,(draft.end-Date.now())/60000):cur.min;
+  cur.expired=!!(draft && cur.exam && remaining===0);
   clock(cur.exam?remaining:0);
   ["home","stats","lib","read","media","story","hist","talk"].forEach(x=>$(x).hidden=true);closePop();stopMedia();$("play").hidden=false;window.scrollTo(0,0);
   const b=$("back"),leave=cur.back?cur.back.f:home,x=()=>{clearTimeout(b.t);b.classList.remove("arm");b.innerHTML=XSVG};
@@ -3845,7 +3846,9 @@ function show(){
     const status=document.createElement("small");status.id="draftStatus";status.setAttribute("role","status");$("txt").after(status);
     if(w.t||w.f.some(Boolean))status.textContent="Concept op dit apparaat";
     const keep=()=>{answers[pos]={f:(q.fields||[]).map((f,i)=>$("f"+i).value),t:$("txt").value};status.textContent="Concept op dit apparaat";persistWriting();head()};
-    (q.fields||[]).forEach((f,i)=>{$("f"+i).value=w.f[i]||"";$("f"+i).oninput=keep});$("txt").value=w.t;$("txt").oninput=keep;if(cur.nav){navBind();return}}
+    (q.fields||[]).forEach((f,i)=>{$("f"+i).value=w.f[i]||"";$("f"+i).oninput=keep});$("txt").value=w.t;$("txt").oninput=keep;
+    if(cur.expired){$("txt").readOnly=true;(q.fields||[]).forEach((f,i)=>$("f"+i).readOnly=true)}
+    if(cur.nav){navBind();return}}
   if(q.type==="write"){$("chk").onclick=()=>{if(cur.exam){cur.ans.push(grab(q));pos++;show()}else if(q.kind==="z")checkZ(q);else check(q)};return}
   if(q.type==="reveal"){
     if($("sayq"))$("sayq").onclick=()=>speak(spoken(q.big));
@@ -3920,7 +3923,7 @@ const navHTML=()=>`<div class="exnav"><button class="ghost" id="prv"${pos?"":" d
 function navBind(){$("prv").onclick=()=>{pos--;show()}; $("ovw").onclick=overview; $("nxt").onclick=()=>{if(pos<queue.length-1){pos++;show()}else overview()}}
 function overview(){
   hush(); const n=queue.length,open=queue.filter((q,i)=>!picked(i)).length,wr=isWr(cur.part),V=wr?["opdracht","opdrachten"]:["vraag","vragen"]; head();
-  $("card").innerHTML=`<p class="ask">Overzicht</p><p class="note">${n-open} van ${n} ${V[1]} ${wr?"gemaakt":"beantwoord"}. Tik op een nummer om naar die ${V[0]} te gaan.</p>
+  $("card").innerHTML=`<p class="ask">Overzicht</p>${cur.expired?`<p class="note">De tijd is voorbij. Bekijk je antwoorden en lever in.</p>`:""}<p class="note">${n-open} van ${n} ${V[1]} ${wr?"gemaakt":"beantwoord"}. Tik op een nummer om naar die ${V[0]} te gaan.</p>
     <div class="ovw">${queue.map((q,i)=>`<button class="${picked(i)?"done":""}${i===pos?" now":""}" data-i="${i}" aria-label="${wr?"Opdracht":"Vraag"} ${i+1}${picked(i)?", klaar":""}">${i+1}</button>`).join("")}</div>
     ${open?`<p class="note">Nog ${open} ${open===1?V[0]:V[1]} zonder antwoord. ${wr?"Een lege opdracht is onvoldoende.":"Een open vraag telt als fout."}</p>`:""}
     <div class="two"><button class="ghost" id="bk">← ${wr?"Opdracht":"Vraag"} ${pos+1}</button><button class="btn" id="lever">Inleveren</button></div>`;
