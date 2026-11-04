@@ -263,7 +263,7 @@ vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one comin
   (default 20, Amsterdam days, `check_usage`): one task 1, a Schrijven proefexamen 2, Schrijven B1 4, a Spreken proefexamen 6
   (`checkCost()`; the page's `examGate()` uses the same numbers and warns before such a proefexamen). A failed grading gives the learner their checks back. Once the provider call starts, its global reservation is retained even if the reply is lost, since that request may have incurred cost. Structured `grading_usage` logs record model/token usage without learner text. Configure deployment-log alerts for `grading_quota_unavailable` and review token usage in the provider dashboard. The code does not configure external alert recipients. The answer has `left`.
 - Welcome screen = the login window (`#welcome`, `drawWelcome()`): a fixed full screen with the painting of the day
-  behind a rounded white card (the logo, "Inloggen of account maken", the level, the login block, "Eerst rondkijken"
+  behind a rounded white card (the logo, "Inloggen of account maken", the login block (no level), "Eerst rondkijken"
   or "Terug"); under the card on the painting what an account gives, the privacy link and the painting's name. It opens
   by itself the first time the app opens with accounts on and nobody logged in (once per device, `ww-welcome`, also
   shown once to people who already had progress), and from Profiel ("Inloggen of account maken"); after logging in
@@ -303,8 +303,8 @@ stored progress: append new items, don't reorder or rename existing ones.
 ## B1 (Staatsexamen NT2, programma I)
 
 Built part by part: Lezen, Luisteren, Schrijven and Spreken. The level is `S.lvl` ("A2" by default, "B1"; it syncs with the progress).
-The user wants it chosen once, at the start: on the welcome screen ("Ik oefen voor", `.seg`, `segHTML()`) and as the first
-step of the starttest (`startTest()`'s `intro()`, `.seg.tlv`; at B1 the test, which checks the A2 basics, is skipped and the
+The user wants it chosen once, at the start: as the first step of the starttest (`startTest()`'s `intro()`, `.seg.tlv`,
+`segHTML()`; the welcome screen had a level switch too, removed at the user's wish; at B1 the test, which checks the A2 basics, is skipped and the
 button goes to today's lesson). After that the app shows only that level: Examen, Oefenen and Mijn examen have no A2/B1
 tabs (they were removed at the user's wish; don't bring them back). It is changed only in Profiel, with a list: a native
 `<select id="plvl">` under a field-like box (`.pick`, like the language pill). `setLvl()` sets it. `parts()` gives the exam parts of the level: at B1 `l1` replaces `lz`, `lb` replaces `ls`, `wb` replaces `wr` and `sb` replaces `sp`; KNM

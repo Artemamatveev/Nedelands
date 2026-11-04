@@ -261,7 +261,6 @@ textarea{display:block;width:100%;font-size:var(--fs-b);line-height:1.5;padding:
 .wcard{width:100%;max-width:400px;margin-top:auto;background:var(--card);border-radius:24px;padding:26px 22px 14px;box-shadow:0 14px 44px rgba(0,0,0,.3);text-align:center}
 .wlogo{font-size:30px;font-weight:700;letter-spacing:-.01em;margin:0 0 6px;color:var(--ink)}
 .wcard h2{display:block;text-align:center;font-size:var(--fs-xl);font-weight:600;margin:0 0 18px} .wcard h2::before{display:none}
-.wcard .wlv{font-size:var(--fs-m);color:var(--soft);margin:0 0 6px}
 .wcard .seg{margin:0 0 14px} .seg.uit{margin:0 0 14px}
 .wcard .fld{margin-bottom:0} .wcard .fld input{height:54px}
 .wcard .btn,.wcard .ghost{min-height:54px;padding:10px 14px;margin:0 0 10px}
@@ -2260,20 +2259,18 @@ function bindLogin(el,x,pre,mail){
 }
 function welcome(){$("home").hidden=true;$("welcome").hidden=false;window.scrollTo(0,0);drawWelcome()}
 function drawWelcome(){
-  // A window like Yandex ID (the user's wish): one rounded card on the painting of the day, the logo, the level,
-  // the login block; under the card on the painting what an account gives, the privacy link and the painting's name.
+  // A window like Yandex ID (the user's wish): one rounded card on the painting of the day, the logo and the login
+  // block (no level: the starttest asks it, Profiel changes it); under the card on the painting what an account gives, the privacy link and the painting's name.
   // No name here: the e-mail is enough, Google and the others bring theirs, and Profiel has the fields.
   const el=$("welcome"),p=ART[today()%ART.length],first=!lsGet(WEL),mail=$("wmail")?$("wmail").value:acc.mail||"";
   const logo=document.querySelector("header h1 [aria-hidden]");
   el.style.setProperty("--wbg",`url(/art/${p.f}.jpg)`);
   el.innerHTML=`<div class="wcard">${langHTML()}<p class="wlogo">${logo?logo.outerHTML:"Bittertalen"}</p>
     <h2>${acc.step==="code"?"Vul de code in":first?"Welkom bij Bittertalen":"Inloggen of account maken"}</h2>`
-    +(acc.step==="code"?"":`<p class="wlv" id="wlvt">Ik oefen voor</p><div class="seg" id="wlvl" role="group" aria-labelledby="wlvt">${segHTML()}</div>`)
     +(first && !acc.step?`<p>Oefen Nederlands met een korte leesopdracht.</p><button class="btn wide" id="wtry">Probeer één vraag</button><details><summary>Inloggen of account maken</summary>${loginHTML("w")}</details>`:loginHTML("w"))+(acc.msg?`<p class="note">${esc(acc.msg)}</p>`:"")
     +`<button class="ghost wide" id="wlater">${first?"Eerst rondkijken":"Terug"}</button></div>
     <div class="wfoot"><p>Met een account blijft je voortgang bewaard, ook op je andere apparaten, en kijkt Claude je teksten en antwoorden na.</p>
     <p><a href="/privacy" target="_blank" rel="noopener">Privacyverklaring</a></p><p class="wart">${p.a} · ${p.t} · ${p.m}</p></div>`;
-  if($("wlvl"))$("wlvl").querySelectorAll("button").forEach(b=>b.onclick=()=>{setLvl(b.dataset.lvl);drawWelcome()});
   if($("wtry"))$("wtry").onclick=()=>{
     lsSet(WEL,"1"); home();const section=lvl()==="B1"?"l1":"lz";
     build(section,{...SEC.find(x=>x.id===section),n:1});
