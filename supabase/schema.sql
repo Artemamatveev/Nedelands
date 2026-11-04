@@ -195,6 +195,7 @@ create table if not exists public.plans (
   trial_used boolean not null default false,  -- one free week per person
   updated_at timestamptz not null default now()
 );
+alter table public.plans add column if not exists tier text not null default 'A2'; -- A2, or B1 (covers both levels)
 alter table public.plans enable row level security;
 drop policy if exists "own plan: read" on public.plans;
 create policy "own plan: read" on public.plans for select to authenticated using ((select auth.uid()) = user_id);

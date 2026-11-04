@@ -23,15 +23,16 @@ async function handler(options={}){
     useChecks:async(_id,cost)=>{usage.push(cost);return options.userLeft??19},
     useFree:async(_id,cost)=>{usage.push(cost);return options.freeLeft??1},
     useTotal:async cost=>{quotas.push(cost);return 'total' in options?options.total:399},
-    isPlus:async()=>{if(options.plusFails)throw Error('down');return options.plus??false}
+    getPlan:async()=>{if(options.plusFails)throw Error('down');return options.plan??null}
   };
   const context=vm.createContext({process:{env:{ANTHROPIC_API_KEY:'test-only'}},console:{info:x=>logs.push(x),error:x=>logs.push(x)}});
   const sdk=new vm.SyntheticModule(['default'],function(){this.setExport('default',Anthropic)},{context});
   const supa=new vm.SyntheticModule(Object.keys(values),function(){for(const [key,value]of Object.entries(values))this.setExport(key,value)},{context});
-  const stripeMod=new vm.SyntheticModule(['pay'],function(){this.setExport('pay',!!options.pay)},{context});
+  const covers=(p,need)=>!!p&&['active','trialing','past_due'].includes(p.status)&&(need!=='B1'||p.tier==='B1');
+  const stripeMod=new vm.SyntheticModule(['pay','covers'],function(){this.setExport('pay',!!options.pay);this.setExport('covers',(p,n)=>{(options.needs||[]).push(n);return covers(p,n)})},{context});
   const module=new vm.SourceTextModule(fs.readFileSync(new URL('api/check.js',root),'utf8'),{context});
   await module.link(name=>name==='@anthropic-ai/sdk'?sdk:name==='./_stripe.js'?stripeMod:supa);await module.evaluate();
-  const req={method:'POST',headers:{host:'example.test',origin:'https://example.test'},body:{tasks:[{task:'Stuur een bericht',text:'Ik kom later. Personal test content.'}]}};
+  const req={method:'POST',headers:{host:'example.test',origin:'https://example.test'},body:{...(options.part?{part:options.part}:{}),tasks:[{...(options.part?{kind:'z'}:{}),task:'Stuur een bericht',text:'Ik kom later. Personal test content.'}]}};
   const res={statusCode:200,status(n){this.statusCode=n;return this},json(body){this.body=body;return this}};
   await module.namespace.default(req,res);
   return {res,usage,quotas,logs,modelCalls};
@@ -73,11 +74,17 @@ test('The real quota reader rejects JSON values that could otherwise coerce into
 });
 
 test('With payments on, a logged-in learner without Plus gets only the free single checks, then a Plus answer',async()=>{
-  const free=await handler({pay:true,plus:false});assert.equal(free.res.statusCode,200);assert.equal(free.res.body.free,1);assert.equal(free.modelCalls,1);
-  const plus=await handler({pay:true,plus:true});assert.equal(plus.res.statusCode,200);assert.equal(plus.res.body.left,19);
-  const used=await handler({pay:true,plus:false,freeLeft:-1});assert.equal(used.res.statusCode,402);assert.equal(used.res.body.error,'plus');assert.equal(used.modelCalls,0);
+  const free=await handler({pay:true,plan:null});assert.equal(free.res.statusCode,200);assert.equal(free.res.body.free,1);assert.equal(free.modelCalls,1);
+  const plus=await handler({pay:true,plan:{status:'active',tier:'A2'}});assert.equal(plus.res.statusCode,200);assert.equal(plus.res.body.left,19);
+  const used=await handler({pay:true,plan:null,freeLeft:-1});assert.equal(used.res.statusCode,402);assert.equal(used.res.body.error,'plus');assert.equal(used.modelCalls,0);
   const down=await handler({pay:true,plusFails:true});assert.equal(down.res.statusCode,502);assert.equal(down.modelCalls,0);
 });
 test('Without payments set up, grading works as before for every logged-in learner',async()=>{
-  const r=await handler({pay:false,plus:false});assert.equal(r.res.statusCode,200);assert.equal(r.res.body.left,19);
+  const r=await handler({pay:false,plan:null});assert.equal(r.res.statusCode,200);assert.equal(r.res.body.left,19);
+});
+
+test('Schrijven B1 asks for Plus B1; Plus A2 grades it only as a free check',async()=>{
+  const needs=[];const a2=await handler({pay:true,plan:{status:'active',tier:'A2'},part:'wb',needs,freeLeft:-1});
+  assert.equal(a2.res.statusCode,402);assert.deepEqual(needs,['B1']);assert.equal(a2.modelCalls,0);
+  const b1=await handler({pay:true,plan:{status:'trialing',tier:'B1'},part:'wb'});assert.equal(b1.res.statusCode,200);assert.equal(b1.res.body.left,19);
 });

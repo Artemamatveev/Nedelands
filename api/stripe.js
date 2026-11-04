@@ -3,7 +3,7 @@
 // checkout.session.completed, customer.subscription.created, customer.subscription.updated, customer.subscription.deleted.
 // Every event fetches the subscription again from Stripe, so events that arrive late or twice still leave the latest state.
 import { accounts, putPlan, getPlan, planByCustomer } from "./_supa.js";
-import { pay, stripe, verify, periodOf } from "./_stripe.js";
+import { pay, stripe, verify, periodOf, tierOf } from "./_stripe.js";
 
 // The signature is over the raw body, so Vercel must not parse it first
 export const config = { api: { bodyParser: false } };
@@ -30,6 +30,7 @@ export async function save(subId, hint = {}) {
     sub: sub.id,
     status: sub.status,
     period: periodOf(sub),
+    tier: tierOf(sub),
     ends_at: iso(end),
     cancel_at_end: !!(sub.cancel_at_period_end || sub.cancel_at),
     trial_used: !!(known?.trial_used || sub.trial_start),
