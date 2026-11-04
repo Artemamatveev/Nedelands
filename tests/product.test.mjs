@@ -27,6 +27,7 @@ test('A2 and B1 daily plans fit all three time budgets and keep their steps afte
 });
 test('Early diagnostic reports only tested questions and can continue to the end',async()=>{
   const a=await app();a.run('startTest()');
+  a.document.querySelector('#tgo').click();
   for(let i=0;i<3;i++)a.document.querySelector('#bgn').click();
   assert.match(a.document.querySelector('#tbody').textContent,/0 van 3 goed/);
   assert.equal(a.run('S.start.miss.length'),3);
@@ -90,8 +91,7 @@ test('Legacy results need fresh attempts before the stable practice label is sho
   assert.equal(a.run('ready("lz").st'),'Stabiel oefenresultaat');
   a.run('S.res.lz=S.res.lz.map(r=>({...r,at:Date.now()-20*864e5}))');
   assert.notEqual(a.run('ready("lz").cls'),'good');
-  a.run('S.res.sb=S.res.lz;home()');
-  a.document.querySelector('[data-v="B1"]').click();
+  a.run('S.res.sb=S.res.lz;S.lvl="B1";home()');
   assert.match(a.document.querySelector('#exam').textContent,/Uitspraak en tempo zijn niet beoordeeld/);
 });
 
@@ -106,4 +106,29 @@ test('Every existing exercise section and home tab still opens through its norma
     a.run('home()');
   }
   assert.deepEqual(a.errors,[]);
+});
+test('The level is chosen once: no A2/B1 tabs on Examen and Oefenen, a list in Profiel',async()=>{
+  const a=await app();a.run('home()');
+  assert.equal(a.document.querySelector('.seg.lvt'),null);
+  assert.match(a.document.querySelector('#exam').textContent,/Oefenexamens van DUO/);
+  const sel=a.document.querySelector('#plvl');
+  assert.equal(sel.tagName,'SELECT');
+  assert.equal(sel.querySelectorAll('option').length,2);
+  sel.querySelectorAll('option').forEach(o=>o.value==='B1'?o.setAttribute('selected',''):o.removeAttribute('selected'));
+  assert.equal(sel.value,'B1');
+  sel.onchange();
+  assert.equal(a.run('S.lvl'),'B1');
+  assert.match(a.document.querySelector('#exam').textContent,/Staatsexamen NT2/);
+  assert.doesNotMatch(a.document.querySelector('#exam').textContent,/Oefenexamens van DUO/);
+  assert.equal(a.document.querySelector('#plvlv').textContent,'Staatsexamen B1');
+});
+test('The starttest asks the level first; at B1 it goes to today\'s lesson',async()=>{
+  const a=await app();a.run('startTest()');
+  assert.match(a.document.querySelector('#tbody').textContent,/Waar oefen je voor/);
+  a.document.querySelector('#tlvl button[data-lvl="B1"]').click();
+  assert.equal(a.run('S.lvl'),'B1');
+  assert.match(a.document.querySelector('#tgo').textContent,/les van vandaag/);
+  a.document.querySelector('#tlvl button[data-lvl="A2"]').click();
+  a.document.querySelector('#tgo').click();
+  assert.match(a.document.querySelector('#tbody').textContent,/Vraag 1 van/);
 });

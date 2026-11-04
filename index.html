@@ -220,7 +220,7 @@ a.it{text-decoration:none} .it.ext::after{content:none}
 .seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;background:color-mix(in srgb,var(--ink) 8%,var(--card));border-radius:var(--rc);margin-top:2px}
 .seg.minutes{grid-template-columns:repeat(3,minmax(0,1fr))}
 .seg button{border:0;border-radius:10px;background:none;color:var(--soft);font-weight:600;font-size:var(--fs-m);padding:8px 6px;min-height:40px}
-.seg button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:0 1px 4px rgba(8,16,40,.18)} .seg.lvt{margin:12px 0 14px} #acct .wide,#welcome .wide,#welcome .two,#move .wide{margin-bottom:8px}
+.seg button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:0 1px 4px rgba(8,16,40,.18)} #acct .wide,#welcome .wide,#welcome .two,#move .wide{margin-bottom:8px}
 .tabs.min button{padding:10px 4px} .tabs.min span{display:none}
 body:has(#home[hidden]) .tabs{display:none}
 main:has(#home:not([hidden])){padding-bottom:116px}
@@ -278,6 +278,13 @@ textarea{display:block;width:100%;font-size:var(--fs-b);line-height:1.5;padding:
 .login .pk svg{width:26px;height:26px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .fld span{display:block;font-size:var(--fs-m);color:var(--soft);margin-bottom:6px}
 .fld input{width:100%;height:52px;font-size:var(--fs-b);font-weight:400;padding:0 16px}
+/* a native <select> under a field-like box (like the language pill): the box shows the choice, the phone its own picker */
+.pick{position:relative;display:flex;align-items:center;gap:10px;height:52px;padding:0 16px;background:var(--card);color:var(--ink);border:1.5px solid var(--ink);border-radius:var(--rc)}
+.pick b{flex:1;min-width:0;font-weight:400;font-size:var(--fs-b);text-align:var(--ta);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pick svg{flex:none;width:14px;height:14px;fill:none;stroke:var(--soft);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.pick select{position:absolute;inset:0;width:100%;height:100%;opacity:0;font-size:16px;border:0;cursor:pointer}
+.pick:focus-within{border-color:var(--blue)}
+.seg.tlv{margin:0 0 14px}
 .btn{background:var(--fill);color:var(--on-fill);border:0;border-radius:var(--rc);padding:14px 20px;min-height:52px;font-weight:600;font-size:var(--fs-b)}
 .btn:active{background:var(--fill-press)}
 .btn:disabled{opacity:.4;cursor:default}
@@ -583,7 +590,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
     <section class="tile" id="prof" data-tab="profiel"><h2>Profiel</h2>
       <label class="fld"><span>Voornaam</span><input id="pname" autocomplete="given-name" maxlength="40"></label>
       <label class="fld"><span>Achternaam</span><input id="plast" autocomplete="family-name" maxlength="60"></label>
-      <div class="fld"><span>Ik oefen voor</span><div class="seg" id="plvl" role="group" aria-label="Niveau"></div></div>
+      <div class="fld"><span id="plvlt">Ik oefen voor</span><div class="pick"><b id="plvlv"></b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg><select id="plvl" aria-labelledby="plvlt"></select></div></div>
       <label class="tog" id="ptrilw" hidden><span>Trillen bij een antwoord</span><input type="checkbox" switch id="ptril"></label>
       <div id="acct"></div>
       <div class="list" id="plinks"></div>
@@ -2171,7 +2178,7 @@ function syncMeta(){
 // The first time the app opens with accounts on: make an account (first name, last name, e-mail) or look around first
 const WEL="ww-welcome";
 const segHTML=()=>["A2","B1"].map(v=>`<button type="button" data-lvl="${v}" aria-pressed="${lvl()===v}">${LVL[v]}</button>`).join("");
-const setLvl=v=>{if(v===lvl())return;S.lvl=v;exV=null;save()};
+const setLvl=v=>{if(v===lvl())return;S.lvl=v;save()};
 const logins=()=>acc.cfg&&acc.cfg.login||[];
 // Google or Apple from an iPhone home-screen app: iOS may open their page in a separate Safari window, and the login
 // would come back there, not in the app. So the app marks the login (HAND, a random h in the address it comes back to);
@@ -3451,22 +3458,19 @@ function home(){
   const lb=Object.values(S.bk||{}).filter(b=>b.t).sort((a,b)=>b.at-a.at)[0];
   const hs=S.hs||{},lh=GS.filter(c=>hs[c.id]).sort((a,b)=>hs[b.id]-hs[a.id])[0],gsDone=GS.filter(c=>gsItems(c).every(x=>(S.items[x.k]||{}).r)).length;
   // one row per part: tap it for a proefexamen; on the right how far you are
-  // Examen and Oefenen follow the level: its parts first; at B1 the parts that have no B1 version yet come after, at A2
-  // Examen and Oefenen: A2 and B1 as two tabs (.seg), one at a time; it opens on the level you practise for (exV: the tab
-  // you picked since).
-  const v=exV||lvl(),seg=`<div class="seg lvt" role="group" aria-label="Niveau">${["A2","B1"].map(x=>`<button data-v="${x}" aria-pressed="${x===v}">${LVL[x]}</button>`).join("")}</div>`,
-    other=v!==lvl()?`<p class="note">Je les van vandaag is voor ${LVL[lvl()]} (kies in Profiel).</p>`:"",
+  // Examen and Oefenen show only the level you practise for (S.lvl); it is chosen at the start and changed in Profiel.
+  const v=lvl(),
     uitRow=`<div class="list">${itHTML(`data-x="uit"`,"Mijn examen","Echt examen gedaan? Vertel hoe het ging.",{ic:"uit",n:(n=>n?`${n} van 5`:null)((v==="B1"?["l1","lb","wb","sb","knm"]:["lz","ls","wr","sp","knm"]).filter(k=>(S.uit||{})[k]&&S.uit[k].ok).length)})}</div>`;
   // ONA and the participatieverklaring: on both levels (with the Staatsexamen you still do them apart)
   const onaRow=`<div class="list">${itHTML(`data-x="ona"`,"ONA en participatieverklaring","Niet voor iedereen: kijk of jij ze nodig hebt.",{ic:"ona",n:(n=>n?`${n} van 4`:null)(GP.filter(c=>c.ona&&(S.gp||{})[c.id]).length)})}</div>`;
   if(v==="B1"){
-    $("exam").innerHTML=`<h2>Naar het examen</h2>${seg}${other}<p class="sub">Je score is het percentage goede antwoorden of punten. Het streepje is je oefendoel.</p><div class="list">${["l1","lb","wb","sb","knm"].map(part).join("")}</div>`
+    $("exam").innerHTML=`<h2>Naar het examen</h2><p class="sub">Je score is het percentage goede antwoorden of punten. Het streepje is je oefendoel.</p><div class="list">${["l1","lb","wb","sb","knm"].map(part).join("")}</div>`
       +`<div class="list"><a class="it ext" href="https://oefenexamensnt2.nl" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens Staatsexamen NT2 ↗</b></span><span class="d">Officieel, voor programma I. Liefst op een computer.</span></span></a></div>`+onaRow+uitRow;
-    $("parts").innerHTML=`<h2>Examenonderdelen</h2>${seg}<p class="sub">Zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["l1","lb","wb","sb","knm"].map(row).join("")}</div>`;
+    $("parts").innerHTML=`<h2>Examenonderdelen</h2><p class="sub">Zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["l1","lb","wb","sb","knm"].map(row).join("")}</div>`;
   }else{
-    $("exam").innerHTML=`<h2>Naar het examen</h2>${seg}${other}<p class="sub">Je score is het percentage goede antwoorden of punten. Het streepje is je oefendoel.</p><div class="list">${["lz","ls","wr","sp","knm"].map(part).join("")}</div>`
+    $("exam").innerHTML=`<h2>Naar het examen</h2><p class="sub">Je score is het percentage goede antwoorden of punten. Het streepje is je oefendoel.</p><div class="list">${["lz","ls","wr","sp","knm"].map(part).join("")}</div>`
       +`<div class="list"><a class="it ext" href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens van DUO ↗</b><small>15</small></span><span class="d">De echte, met echte stemmen. Liefst op een computer.</span></span></a></div>`+onaRow+uitRow;
-    $("parts").innerHTML=`<h2>Examenonderdelen</h2>${seg}<p class="sub">Zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["lz","ls","wr","sp","knm"].map(row).join("")}</div>`;
+    $("parts").innerHTML=`<h2>Examenonderdelen</h2><p class="sub">Zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["lz","ls","wr","sp","knm"].map(row).join("")}</div>`;
   }
   $("gram").innerHTML=`<h2>Grammatica en woorden</h2><p class="sub">Rondes van 10 vragen.</p>`+(lvl()==="B1"
     ?`<div class="list">${["g1","w1","v1"].map(row).join("")}</div><h3 class="lh">Herhalen op A2-niveau</h3><div class="list">${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`
@@ -3481,7 +3485,6 @@ function home(){
   document.querySelectorAll("#exam button,#parts button,#gram button,#books button,#mine button").forEach(b=>b.onclick=()=>{const d=b.dataset;
     if(d.s)build(d.s);
     else if(d.e)startExam(d.e);
-    else if(d.v){exV=d.v;const y=scrollY;home();scrollTo(0,y)}
     else if(d.x==="stats")stats();
     else if(d.x==="books")library();
     else if(d.x==="media")media();
@@ -3588,7 +3591,6 @@ let planId=null;
 // The level you practise for (Profiel, welcome screen): A2 = the inburgeringsexamen, B1 = Staatsexamen NT2 programma I.
 // B1 has its own Lezen, Luisteren, Schrijven and Spreken; KNM belongs to both routes.
 const lvl=()=>S.lvl==="B1"?"B1":"A2", LVL={A2:"Inburgering A2",B1:"Staatsexamen B1"};
-let exV=null; // the A2/B1 tab picked on Examen and Oefenen; null = the level you practise for
 const parts=()=>lvl()==="B1"?["l1","lb","wb","sb","knm"]:["lz","ls","wr","sp","knm"];
 // the questions of k whole texts (or fragments): due ones first, then the least-seen
 const someTexts=(sec,k)=>()=>{
@@ -3672,7 +3674,11 @@ function drawProfile(){
   const me=S.me||{},n=$("pname"),l=$("plast");
   if(document.activeElement!==n)n.value=me.name||""; if(document.activeElement!==l)l.value=me.last||"";
   n.onchange=l.onchange=()=>{S.me={...(S.me||{}),name:n.value.trim().slice(0,40),last:l.value.trim().slice(0,60)};save();syncMeta()};
-  $("plvl").innerHTML=segHTML(); $("plvl").querySelectorAll("button").forEach(b=>b.onclick=()=>{setLvl(b.dataset.lvl);home()});
+  // the level: chosen at the start (welcome screen, starttest), changed here with a list; the other tabs show only this level
+  // the options are not translated by the observer (it skips <select>); uiT is defined further down, so it may not exist yet at the first render
+  const trLvl=v=>{try{return uiT(LVL[v])||LVL[v]}catch(e){return LVL[v]}};
+  const ps=$("plvl"); ps.innerHTML=["A2","B1"].map(v=>`<option value="${v}"${lvl()===v?" selected":""}>${esc(trLvl(v))}</option>`).join("");
+  $("plvlv").textContent=LVL[lvl()]; ps.onchange=()=>{setLvl(ps.value);home()};
   const c=acc.cfg,u=acc.user,L=logins(),el=$("acct");
   let h="";
   if(c){
@@ -5187,8 +5193,19 @@ function startTest(){
     document.querySelectorAll("#tbody .opt").forEach(b=>b.onclick=()=>go(o[b.dataset.n]===q[2]));
     $("bgn").onclick=()=>go(false);
     window.scrollTo(0,0)};
+  // first the level (the user's wish: chosen at the start, at sign-up and here); the test itself checks the A2 basics,
+  // so at B1 it goes straight to today's lesson. Changed later only in Profiel.
+  const intro=()=>{const b1=lvl()==="B1";
+    $("tbody").innerHTML=`<p class="ask">Starttest</p><h2>Waar oefen je voor?</h2>
+      <div class="seg tlv" id="tlvl" role="group" aria-label="Niveau">${segHTML()}</div>
+      <p>${b1?"De starttest is voor Inburgering A2. Voor B1 begin je meteen met de onderdelen van het examen.":"Twaalf korte vragen. Daarna weet je waar je kunt beginnen."}</p>
+      <p class="note">Je kunt je niveau later veranderen in Profiel.</p>
+      <button class="btn wide" id="tgo">${b1?"Naar je les van vandaag":"Begin de test"}</button>`;
+    $("tlvl").querySelectorAll("button").forEach(b=>b.onclick=()=>{setLvl(b.dataset.lvl);intro()});
+    $("tgo").onclick=()=>{if(lvl()==="B1"){setTab("vandaag");home()}else draw()};
+    window.scrollTo(0,0)};
   bgOpen(TABN[tab],home);
-  draw();
+  intro();
 }
 // Mijn examen: the result of the real exam, per part, as the learner tells it. Their own record is S.uit {part: {ok, at}};
 // a copy goes to /api/outcome (table exam_outcomes) to see whether the proefexamens and "Klaar voor het examen" predict the
@@ -5224,7 +5241,7 @@ function uitScreen(y=0){
   closePop();hush();TK=null;$("card").innerHTML="";
   $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;
   tBack(TABN[tab],home);
-  const U=S.uit||{},ks=(exV||lvl())==="B1"?["l1","lb","wb","sb","knm"]:["lz","ls","wr","sp","knm"];
+  const U=S.uit||{},ks=lvl()==="B1"?["l1","lb","wb","sb","knm"]:["lz","ls","wr","sp","knm"];
   $("tbody").innerHTML=`<h2>Mijn examen</h2><p class="sub">Echt examen gedaan? Tik per onderdeel op je uitslag.</p>`
     +ks.map(k=>`<h3 class="lh">${PART[k]}</h3><div class="seg uit" role="group" aria-label="${PART[k]}">${[1,0].map(o=>`<button data-k="${k}" data-ok="${o}" aria-pressed="${!!U[k]&&U[k].ok===!!o}">${o?"Geslaagd":"Niet geslaagd"}</button>`).join("")}</div>`).join("")
     +`<p class="note">Je uitslag telt mee in onze cijfers, zonder je naam of e-mailadres. Zo zien we of de proefexamens kloppen.</p><p class="note">Tik nog een keer op je uitslag om hem weg te halen.</p><p class="note"><a href="/privacy">Privacyverklaring</a></p>`;
@@ -5845,6 +5862,10 @@ const UI={
 "Waar begin ik?":["Where do I start?","من أين أبدأ؟","Nereden başlamalıyım?","मैं कहाँ से शुरू करूँ?","我从哪里开始？"],
 "Twaalf korte vragen. Daarna weet je waar je kunt beginnen.":["Twelve short questions. Then you know where to start.","اثنا عشر سؤالًا قصيرًا. بعدها ستعرف من أين تبدأ.","On iki kısa soru. Sonra nereden başlayacağını bilirsin.","बारह छोटे सवाल। फिर आपको पता चलेगा कि कहाँ से शुरू करें।","十二个简短的问题。然后你就知道从哪里开始了。"],
 "Starttest":["Starting test","اختبار البداية","Başlangıç testi","शुरुआती परीक्षा","入门测试"],
+"Waar oefen je voor?":["What are you practising for?","لأيّ امتحان تتدرّب؟","Hangi sınava hazırlanıyorsun?","आप किसकी तैयारी कर रहे हैं?","你在准备什么考试？"],
+"Begin de test":["Start the test","ابدأ الاختبار","Teste başla","परीक्षा शुरू करें","开始测试"],
+"De starttest is voor Inburgering A2. Voor B1 begin je meteen met de onderdelen van het examen.":["The starting test is for Integration A2. For B1 you start right away with the parts of the exam.","اختبار البداية مخصّص لامتحان الاندماج A2. في مستوى B1 تبدأ مباشرةً بأجزاء الامتحان.","Başlangıç testi Uyum A2 içindir. B1 için hemen sınavın bölümleriyle başlarsın.","शुरुआती परीक्षा इंटीग्रेशन A2 के लिए है। B1 के लिए आप सीधे परीक्षा के हिस्सों से शुरू करते हैं।","入门测试适用于融入考试 A2。B1 级别直接从考试的各个部分开始。"],
+"Je kunt je niveau later veranderen in Profiel.":["You can change your level later in Profile.","يمكنك تغيير مستواك لاحقًا في «ملفي».","Seviyeni daha sonra Profil'de değiştirebilirsin.","आप अपना स्तर बाद में प्रोफ़ाइल में बदल सकते हैं।","你以后可以在“我的”中更改级别。"],
 "Doe de starttest":["Take the starting test","أجرِ اختبار البداية","Başlangıç testini yap","शुरुआती परीक्षा दें","参加入门测试"],
 "Doe de starttest opnieuw":["Take the starting test again","أعد اختبار البداية","Başlangıç testini yeniden yap","शुरुआती परीक्षा फिर से दें","重新参加入门测试"],
 "Voorbeelden":["Examples","أمثلة","Örnekler","उदाहरण","例句"],
