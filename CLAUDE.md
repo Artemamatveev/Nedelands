@@ -23,14 +23,20 @@ Hindi and Chinese; the language pill top left on the painting and on the login c
 because clear glass got lost on light paintings, with a globe and a ⌄; a native `<select>` over the pill, `langHTML()`; `ww-ui` per device, Dutch by default): `UI` (exact Dutch string → `[en, ar, tr, hi, zh]`, the
 order of `LCODE`) and `UIR` (patterns: "2 van 6 klaar", dates, "nodig: 76%"…) translate text
 nodes, `aria-label` and `placeholder` after every render (a MutationObserver; the Dutch original is kept in `UIO`, so
-switching back restores it). Never inside `#play` (exercises) or `#read` (the reader), and not content: texts, stories,
-chapter titles, museum labels and questions stay Dutch. A new menu string needs all five translations in `UI`. The
+switching back restores it). The user's rule: only the menus, the privacy statement and sections like it are translated, exercises stay Dutch.
+So never inside `#play` (exercises) or `#read` (the reader), and not content: texts, stories, conversations, chapters, chapter
+and conversation titles in lists, museum labels, the ONA text and questions stay Dutch. `lang="nl"` marks Dutch content (`DUTCH`: never translated, always
+left to right): a conversation, a chapter and the ONA screen wrap their own content in `<div lang="nl">`, because `#tbody` and `#hbody` also hold
+menus; `#vbody` has it always. A new menu string needs all five translations in `UI`. The
 translations were made by Claude and not yet checked by native speakers.
 Arabic runs right to left (`<html dir="rtl">`, set by `applyLang()`): use logical CSS (`padding-inline-start`,
 `inset-inline-start`, `text-align:var(--ta)` and `var(--te)` for left and right), not physical sides, for anything in the menus. Dutch
-content stays left to right (`#play`, `#read`, the header, `.label`, `.book`, `.doc`, `.sample`, `.msum`, `.tl`, in one CSS rule). In Arabic the
+content stays left to right (`#play`, `#read`, the header, `[lang=nl]`, `.book`, `.doc`, `.sample`, `.msum`, `.tl`, `.bgl`, in one CSS rule). In Arabic the
 tab bar, its lens and the swipe back are mirrored; `unicode-bidi:plaintext` keeps Dutch titles readable in a right-to-left list.
 No letter spacing in Arabic, Hindi or Chinese: it breaks joined letters.
+`privacy.html` and `over.html` hold the same text six times: one `<article data-l>` per language with the same sections, points and
+links, only the one matching `ww-ui` shown (a small script; Dutch without a script), with their own language pill. The Dutch text of the
+privacy statement is the official one and each translation says so. When either page changes, change all six.
 
 ## Design: Delfts blauw
 

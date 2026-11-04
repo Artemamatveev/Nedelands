@@ -427,7 +427,7 @@ body.vfull{overflow:hidden}
 /* geschiedenis */
 #hist{position:relative}
 #hist>.back{margin-top:14px}
-#hist h2{margin-top:18px} #hbody>.ask{margin-top:20px} #hbody>.ask+h2{margin-top:4px}
+#hist h2{margin-top:18px} #hbody .ask:first-child{margin-top:20px} #hbody .ask:first-child+h2{margin-top:4px}
 #hall{margin-top:24px}
 .hfig{margin:14px 0 18px}
 .hfig button{display:block;width:100%;padding:0;border:0;background:var(--surface)}
@@ -440,7 +440,7 @@ body.vfull{overflow:hidden}
 /* gesprekken: het gesprek als een toneeltekst; wat jij zegt springt in */
 #talk{position:relative}
 #talk>.back{margin-top:14px}
-#talk h2{margin-top:18px} #tbody>.ask{margin-top:20px} #tbody>.ask+h2{margin-top:4px}
+#talk h2{margin-top:18px} #tbody>.ask,#tbody>[lang=nl]>.ask:first-child{margin-top:20px} #tbody>.ask+h2,#tbody>[lang=nl]>.ask:first-child+h2{margin-top:4px}
 #tbody .pics{margin:14px 0 16px}
 .talk{margin:18px 0 0;border-top:1px solid var(--line)}
 .talk:empty{display:none}
@@ -550,7 +550,7 @@ main:is(:not(.big),:has(#home[hidden])) header .lang{top:6px;height:32px} /* the
 :root[dir=rtl]{--ta:right;--te:left}
 :root[dir=rtl] body{text-align:right}
 :root[dir=rtl] :is(p,h2,h3,b,small,li,.d){unicode-bidi:plaintext}
-:root[dir=rtl] :is(header,#play,#read,.label,.book,.doc,.sample,.msum,.tl,.bgl,input[type=email]){direction:ltr;text-align:left;--ta:left;--te:right}
+:root[dir=rtl] :is(header,#play,#read,[lang=nl],.book,.doc,.sample,.msum,.tl,.bgl,input[type=email]){direction:ltr;text-align:left;--ta:left;--te:right}
 :root[dir=rtl] .tabs .lens{left:auto;right:5px;transform:translateX(calc(var(--i,0) * -100%))}
 :root[dir=rtl] :not(#read *).back>span{display:inline-block;transform:scaleX(-1)}
 /* spacing between letters breaks joined Arabic and Devanagari */
@@ -619,7 +619,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
   <div id="move" hidden></div>
   <div id="story" hidden>
     <button class="back" id="vback"><span aria-hidden="true">←</span>Vandaag</button>
-    <div id="vbody"></div>
+    <div id="vbody" lang="nl"></div>
   </div>
   <div id="stats" hidden>
     <button class="back" id="sback"><span aria-hidden="true">←</span>Vandaag</button>
@@ -3731,7 +3731,7 @@ const A2K="ww-a2hs",a2Get=()=>{try{return localStorage.getItem(A2K)}catch(e){ret
 function drawA2hs(){
   const el=$("a2hs"),has=Object.keys(S.items).length>0,ios=/iPhone|iPad|iPod/.test(navigator.userAgent)&&!window.claude;
   let h="";
-  if(ios&&navigator.standalone===false&&!a2Get())h=`<h2>Zet Bittertalen op je beginscherm</h2><p class="sub">In Safari kan je voortgang verdwijnen als je de site een week niet opent. Op het beginscherm blijft hij bewaard.</p><ol>${has?"<li>Tik op <b>Kopieer mijn voortgang</b>.</li>":""}<li>Tik onderaan op <b>Deel</b> en dan op <b>Zet op beginscherm</b>.</li><li>Open Bittertalen met het nieuwe icoon${has?" en tik op <b>Plak mijn voortgang</b>":""}.</li></ol><div class="two">${has?`<button class="ghost" id="a2cp">Kopieer mijn voortgang</button>`:""}<button class="ghost" id="a2ok">Begrepen</button></div>`;
+  if(ios&&navigator.standalone===false&&!a2Get())h=`<h2>Zet Bittertalen op je beginscherm</h2><p class="sub">In Safari kan je voortgang verdwijnen als je de site een week niet opent. Op het beginscherm blijft hij bewaard.</p><ol>${has?"<li>Tik op Kopieer mijn voortgang.</li>":""}<li>Tik onderaan op Deel en dan op Zet op beginscherm.</li><li>Open Bittertalen met het nieuwe icoon${has?" en tik op Plak mijn voortgang":""}.</li></ol><div class="two">${has?`<button class="ghost" id="a2cp">Kopieer mijn voortgang</button>`:""}<button class="ghost" id="a2ok">Begrepen</button></div>`;
   else if(ios&&navigator.standalone===true&&!has&&!a2Get())h=`<h2>Al geoefend in Safari?</h2><p class="sub">Kopieer je voortgang in Safari en plak hem hier. Dan ga je verder waar je was.</p><div class="two"><button class="ghost" id="a2ps">Plak mijn voortgang</button><button class="ghost" id="a2ok">Nee, ik begin nieuw</button></div>`;
   el.innerHTML=h;
   if($("a2ok"))$("a2ok").onclick=()=>{a2Set();el.innerHTML=""};
@@ -4984,14 +4984,14 @@ function chapter(i){
   S.hs=S.hs||{};S.hs[c.id]=Date.now();save();
   $("home").hidden=true;$("play").hidden=true;$("hist").hidden=false;
   hBack("Geschiedenis",hist);
-  $("hbody").innerHTML=`<p class="ask">${c.y}</p><h2>${c.t}</h2>`
+  $("hbody").innerHTML=`<div lang="nl"><p class="ask">${c.y}</p><h2>${c.t}</h2>`
     +(c.p?`<figure class="hfig"><button data-pic="${c.p}" aria-label="Groot bekijken"><img src="${c.p}" alt="" style="object-position:50% ${c.py}%"></button><figcaption>${c.pc}</figcaption></figure>`:"")
     +(canSpeak?`<button class="hint" id="hsay">▶ Lees voor</button>`:"")
     +`<article class="book" id="hpage" lang="nl">${c.x.split("\n").map((p,n)=>pageHTML([p])+(c.f||[]).filter(f=>f[2]===n)
       .map(f=>`<figure class="hfig in"><button data-pic="${f[0]}" aria-label="Groot bekijken"><img src="${f[0]}" alt="" loading="lazy"></button><figcaption>${f[1]}</figcaption></figure>`).join("")).join("")}</article>`
     +`<p class="note">Tik op een woord: je ziet de betekenis in het Engels.</p>`
     +`<button class="btn wide" id="hq">Beantwoord de vragen</button>`
-    +(nx?`<div class="list hnext">${itHTML(`data-h="${i+1}"`,"Volgende: "+nx.t,nx.y)}</div>`:"");
+    +(nx?`<div class="list hnext">${itHTML(`data-h="${i+1}"`,"Volgende: "+nx.t,nx.y)}</div>`:"")+"</div>";
   $("hpage").style.fontSize=$("page").style.fontSize; // the letter size chosen in the reader
   document.querySelectorAll("#hbody [data-pic]").forEach(b=>b.onclick=()=>zoomPic(b.dataset.pic));
   if($("hsay"))$("hsay").onclick=()=>speak(c.x);
@@ -5429,7 +5429,7 @@ function onaScreen(){
   tBack(TABN[tab],home);
   const st=c=>(S.gp||{})[c.id]?`<span class="good">Gelukt</span>`:null;
   const K=["Beroepenoriëntatie","Realistisch beroepsbeeld","Je eigenschappen kennen","Beroepskansen","Beroepscompetenties","Netwerk opbouwen","Werk vinden","Werkcultuur"];
-  $("tbody").innerHTML=`<h2>ONA en participatieverklaring</h2><p class="sub">Twee onderdelen van inburgeren die niet iedereen hoeft te doen.</p>
+  $("tbody").innerHTML=`<div lang="nl"><h2>ONA en participatieverklaring</h2><p class="sub">Twee onderdelen van inburgeren die niet iedereen hoeft te doen.</p>
     <h3 class="lh">Wat is ONA?</h3><p>ONA betekent Oriëntatie op de Nederlandse Arbeidsmarkt. Je laat zien dat je weet welk werk bij je past, en hoe je in Nederland werk vindt.</p>
     <h3 class="lh">Wie doet ONA?</h3><p>Mensen die inburgeren volgens de wet van 2013, en mensen die vrijwillig inburgeren, bijvoorbeeld om Nederlander te worden. Inburger je volgens de wet van 2021? Dan doe je geen ONA, maar de MAP bij je gemeente.</p>
     <p>Doe je het Staatsexamen NT2? Dat telt voor de taalexamens. KNM, ONA (of de MAP) en de participatieverklaring doe je dan apart.</p>
@@ -5439,7 +5439,7 @@ function onaScreen(){
     <h3 class="lh">Oefen het eindgesprek</h3><p class="note">In deze gesprekken ben je kok. Op het echte eindgesprek praat je over je eigen beroep en je eigen portfolio.</p>
     <div class="list">${GP.map((c,i)=>c.ona?itHTML(`data-t="${i}"`,c.t,c.s,{n:st(c)}):"").join("")}</div>
     <h3 class="lh">Participatieverklaring</h3><p>In het participatieverklaringstraject (PVT) leer je over de belangrijkste waarden in Nederland: vrijheid, gelijkwaardigheid, solidariteit en participatie. Je gemeente organiseert het. Aan het eind teken je de participatieverklaring. Het is geen examen: je krijgt geen cijfer. Moet jij het doen? Vraag het aan je gemeente.</p>
-    <p class="note"><a href="https://www.inburgeren.nl/examen-doen/" target="_blank" rel="noopener">Welke examens jij moet doen: inburgeren.nl ↗</a><br><a href="https://www.inburgeren.nl/minder-of-geen-examens/vrijstelling-orientatie-op-de-nederlandse-arbeidsmarkt.jsp" target="_blank" rel="noopener">Vrijstelling voor ONA: inburgeren.nl ↗</a></p>`;
+    <p class="note"><a href="https://www.inburgeren.nl/examen-doen/" target="_blank" rel="noopener">Welke examens jij moet doen: inburgeren.nl ↗</a><br><a href="https://www.inburgeren.nl/minder-of-geen-examens/vrijstelling-orientatie-op-de-nederlandse-arbeidsmarkt.jsp" target="_blank" rel="noopener">Vrijstelling voor ONA: inburgeren.nl ↗</a></p></div>`;
   document.querySelectorAll("#tbody [data-t]").forEach(b=>b.onclick=()=>talk(+b.dataset.t));
 }
 function talk(i){
@@ -5447,8 +5447,8 @@ function talk(i){
   $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;
   if(c.ona)tBack("ONA",onaScreen);else tBack("Gesprekken",talks);
   TK={i,c,n:0,log:[],miss:0,hint:false,self:0};
-  $("tbody").innerHTML=`<p class="ask">${gpGroup(i)}</p><h2>${c.t}</h2>`+(c.p?picsHTML([c.p]):"")
-    +`<p class="ask">Jouw opdracht</p><div class="sample">${c.o}</div><div class="talk" id="tlog" aria-live="polite"></div><div id="tctl"></div>`;
+  $("tbody").innerHTML=`<div lang="nl"><p class="ask">${gpGroup(i)}</p><h2>${c.t}</h2>`+(c.p?picsHTML([c.p]):"")
+    +`<p class="ask">Jouw opdracht</p><div class="sample">${c.o}</div><div class="talk" id="tlog" aria-live="polite"></div><div id="tctl"></div></div>`;
   document.querySelectorAll("#tbody [data-pic]").forEach(b=>b.onclick=()=>zoomPic(b.dataset.pic));
   $("tctl").innerHTML=`<button class="btn wide" id="tgo">Begin het gesprek</button>`
     +(canSpeak?"":`<p class="note">Geluid werkt hier niet: lees wat de ander zegt.</p>`);
@@ -6031,6 +6031,39 @@ const UI={
 "dag op rij":["day in a row","يوم متواصل","gün üst üste","दिन लगातार","连续天数"],
 "Het verhaal van dit schilderij":["The story of this painting","قصة هذه اللوحة","Bu tablonun hikâyesi","इस चित्र की कहानी","这幅画的故事"],
 "Bekijk het hele schilderij":["See the whole painting","شاهد اللوحة كاملة","Tablonun tamamını gör","पूरा चित्र देखें","查看整幅画"],
+"Je hoort de ander en je antwoordt hardop.":["You hear the other person and answer out loud.","تسمع الطرف الآخر وتجيب بصوت عالٍ.","Karşındakini duyar, sesli cevap verirsin.","आप दूसरे व्यक्ति को सुनते हैं और बोलकर जवाब देते हैं।","你听对方说话，然后大声回答。"],
+"Je hoort de ander en je antwoordt hardop (of je typt).":["You hear the other person and answer out loud (or type).","تسمع الطرف الآخر وتجيب بصوت عالٍ (أو تكتب).","Karşındakini duyar, sesli cevap verirsin (ya da yazarsın).","आप दूसरे व्यक्ति को सुनते हैं और बोलकर जवाब देते हैं (या टाइप करते हैं)।","你听对方说话，然后大声回答（或打字）。"],
+"Aan de telefoon":["On the phone","على الهاتف","Telefonda","फ़ोन पर","打电话"],
+"B1: werk, wonen en zaken regelen":["B1: work, housing and arranging things","B1: العمل والسكن وإنجاز المعاملات","B1: iş, konut ve işleri halletme","B1: काम, आवास और काम निपटाना","B1：工作、住房和办事"],
+"Werk, school en de dokter":["Work, school and the doctor","العمل والمدرسة والطبيب","İş, okul ve doktor","काम, स्कूल और डॉक्टर","工作、学校和医生"],
+"In de stad":["In town","في المدينة","Şehirde","शहर में","在城里"],
+"In de buurt":["In the neighbourhood","في الحي","Mahallede","पड़ोस में","在社区"],
+"Lang geleden":["Long ago","منذ زمن بعيد","Çok eskiden","बहुत पहले","很久以前"],
+"De Republiek":["The Republic","الجمهورية","Cumhuriyet","गणराज्य","共和国"],
+"Het koninkrijk":["The kingdom","المملكة","Krallık","राजतंत्र","王国"],
+"Oorlog en wederopbouw":["War and rebuilding","الحرب وإعادة الإعمار","Savaş ve yeniden inşa","युद्ध और पुनर्निर्माण","战争与重建"],
+"Nederland nu":["The Netherlands now","هولندا اليوم","Bugünkü Hollanda","आज का नीदरलैंड","今天的荷兰"],
+"Gelukt":["Done","تم بنجاح","Başarıldı","सफल","完成了"],
+"Gelezen":["Read","تمت القراءة","Okundu","पढ़ लिया","已读"],
+"Geschiedenis":["History","التاريخ","Tarih","इतिहास","历史"],
+"In Safari kan je voortgang verdwijnen als je de site een week niet opent. Op het beginscherm blijft hij bewaard.":["In Safari your progress can disappear if you don't open the site for a week. On the home screen it is kept.","في Safari قد يختفي تقدّمك إذا لم تفتح الموقع لمدة أسبوع. أما على الشاشة الرئيسية فيبقى محفوظًا.","Safari'de siteyi bir hafta açmazsan ilerlemen kaybolabilir. Ana ekranda saklı kalır.","Safari में अगर आप साइट एक हफ़्ते तक नहीं खोलते, तो आपकी प्रगति गायब हो सकती है। होम स्क्रीन पर वह सुरक्षित रहती है।","在 Safari 中，如果一周不打开网站，你的进度可能会消失。放在主屏幕上就能保存。"],
+"Tik op Kopieer mijn voortgang.":["Tap Copy my progress.","اضغط على «انسخ تقدّمي».","\"İlerlememi kopyala\"ya dokun.","\"मेरी प्रगति कॉपी करें\" पर टैप करें।","点击“复制我的进度”。"],
+"Tik onderaan op Deel en dan op Zet op beginscherm.":["At the bottom, tap Share and then Add to Home Screen.","في الأسفل اضغط على «مشاركة» ثم على «إضافة إلى الشاشة الرئيسية».","Altta \"Paylaş\"a, sonra \"Ana Ekrana Ekle\"ye dokun.","नीचे \"शेयर करें\" पर और फिर \"होम स्क्रीन में जोड़ें\" पर टैप करें।","点击底部的“分享”，然后点击“添加到主屏幕”。"],
+"Open Bittertalen met het nieuwe icoon.":["Open Bittertalen with the new icon.","افتح Bittertalen من الأيقونة الجديدة.","Yeni simgeyle Bittertalen'i aç.","नए आइकन से Bittertalen खोलें।","用新图标打开 Bittertalen。"],
+"Open Bittertalen met het nieuwe icoon en tik op Plak mijn voortgang.":["Open Bittertalen with the new icon and tap Paste my progress.","افتح Bittertalen من الأيقونة الجديدة واضغط على «الصق تقدّمي».","Yeni simgeyle Bittertalen'i aç ve \"İlerlememi yapıştır\"a dokun.","नए आइकन से Bittertalen खोलें और \"मेरी प्रगति चिपकाएँ\" पर टैप करें।","用新图标打开 Bittertalen，然后点击“粘贴我的进度”。"],
+"Kopieer je voortgang in Safari en plak hem hier. Dan ga je verder waar je was.":["Copy your progress in Safari and paste it here. Then you continue where you were.","انسخ تقدّمك في Safari والصقه هنا. عندها تتابع من حيث توقفت.","İlerlemeni Safari'de kopyala ve buraya yapıştır. Böylece kaldığın yerden devam edersin.","Safari में अपनी प्रगति कॉपी करें और यहाँ चिपकाएँ। फिर आप वहीं से आगे बढ़ेंगे जहाँ थे।","在 Safari 中复制进度并粘贴到这里，就能从上次的地方继续。"],
+"Gekopieerd ✓":["Copied ✓","تم النسخ ✓","Kopyalandı ✓","कॉपी हो गया ✓","已复制 ✓"],
+"Kopiëren lukt niet":["Copying does not work","تعذّر النسخ","Kopyalanamadı","कॉपी नहीं हो पाया","无法复制"],
+"Niets gevonden. Kopieer eerst in Safari.":["Nothing found. Copy in Safari first.","لم يُعثر على شيء. انسخ أولًا في Safari.","Bir şey bulunamadı. Önce Safari'de kopyala.","कुछ नहीं मिला। पहले Safari में कॉपी करें।","没有找到内容。请先在 Safari 中复制。"],
+"Een passkey maken lukt hier niet.":["Making a passkey does not work here.","تعذّر إنشاء مفتاح مرور هنا.","Burada geçiş anahtarı oluşturulamıyor.","यहाँ पासकी नहीं बनाई जा सकती।","这里无法创建通行密钥。"],
+"Gestopt.":["Stopped.","تم الإيقاف.","Durduruldu.","रोक दिया गया।","已停止。"],
+"Je account is verwijderd. Je voortgang op dit apparaat blijft.":["Your account has been deleted. Your progress on this device stays.","تم حذف حسابك. يبقى تقدّمك على هذا الجهاز.","Hesabın silindi. Bu cihazdaki ilerlemen duruyor.","आपका खाता हटा दिया गया है। इस डिवाइस पर आपकी प्रगति बनी रहेगी।","你的账户已删除。此设备上的进度仍然保留。"],
+"Je passkey is gemaakt. Nu kun je ook met Face ID, Touch ID of je vingerafdruk inloggen.":["Your passkey has been made. Now you can also log in with Face ID, Touch ID or your fingerprint.","تم إنشاء مفتاح المرور. يمكنك الآن تسجيل الدخول أيضًا عبر Face ID أو Touch ID أو بصمة الإصبع.","Geçiş anahtarın oluşturuldu. Artık Face ID, Touch ID veya parmak izinle de giriş yapabilirsin.","आपकी पासकी बन गई है। अब आप Face ID, Touch ID या फ़िंगरप्रिंट से भी लॉग इन कर सकते हैं।","通行密钥已创建。现在你也可以用 Face ID、Touch ID 或指纹登录。"],
+"Verwijderen is niet gelukt. Probeer het later opnieuw.":["Deleting did not work. Try again later.","تعذّر الحذف. حاول مرة أخرى لاحقًا.","Silinemedi. Daha sonra tekrar dene.","हटाया नहीं जा सका। बाद में फिर कोशिश करें।","删除失败。请稍后再试。"],
+"Tik nog een keer: je account en alles erin worden gewist":["Tap once more: your account and everything in it will be erased","اضغط مرة أخرى: سيُمسح حسابك وكل ما فيه","Bir kez daha dokun: hesabın ve içindeki her şey silinecek","एक बार और टैप करें: आपका खाता और उसमें मौजूद सब कुछ मिट जाएगा","再点一次：你的账户及其中所有内容都会被删除"],
+"Claude heeft vandaag al heel veel teksten nagekeken. Morgen kan het weer.":["Claude has already checked a great many texts today. Tomorrow it works again.","صحّح Claude اليوم نصوصًا كثيرة جدًا. يمكنك المحاولة غدًا.","Claude bugün çok fazla metin kontrol etti. Yarın yine olur.","Claude आज बहुत सारे पाठ जाँच चुका है। कल फिर हो सकेगा।","Claude 今天已经批改了很多文字。明天可以再试。"],
+"Log in bij Profiel om dit door Claude te laten nakijken.":["Log in under Profile to have Claude check this.","سجّل الدخول في ملفي ليصحّح Claude هذا.","Bunu Claude'a kontrol ettirmek için Profil'den giriş yap.","Claude से इसकी जाँच करवाने के लिए प्रोफ़ाइल में लॉग इन करें।","请在“我的”中登录，让 Claude 批改。"],
+"Je bent niet ingelogd. Dan kijkt Claude je antwoorden niet na, en zie je aan het eind alleen de voorbeeldantwoorden.":["You are not logged in. Then Claude does not check your answers, and at the end you only see the example answers.","لم تسجّل الدخول. لذلك لن يصحّح Claude إجاباتك، وسترى في النهاية الإجابات النموذجية فقط.","Giriş yapmadın. O zaman Claude cevaplarını kontrol etmez ve sonunda yalnızca örnek cevapları görürsün.","आप लॉग इन नहीं हैं। तब Claude आपके उत्तर नहीं जाँचेगा, और अंत में आपको केवल उदाहरण उत्तर दिखेंगे।","你没有登录。这样 Claude 不会批改你的回答，最后你只能看到示例答案。"],
 "Beginnen":["Getting started","البداية","Başlangıç","शुरुआत","入门"],
 "Twaalf korte lessen, voor als je net begint.":["Twelve short lessons, for when you are just starting.","اثنا عشر درسًا قصيرًا لمن يبدأ للتو.","Yeni başlayanlar için on iki kısa ders.","बारह छोटे पाठ, नई शुरुआत करने वालों के लिए।","十二节短课，适合刚开始学习的人。"],
 "Twaalf korte lessen met de basis van het Nederlands.":["Twelve short lessons with the basics of Dutch.","اثنا عشر درسًا قصيرًا في أساسيات اللغة الهولندية.","Felemenkçenin temelleri üzerine on iki kısa ders.","डच की बुनियादी बातों के बारह छोटे पाठ।","十二节短课，学习荷兰语基础。"],
@@ -6256,11 +6289,13 @@ const UIR=[
  [/^Naar les (\d+): (.+)$/,["Go to lesson $1: $2","إلى الدرس $1: $2","$1. derse git: $2","पाठ $1 पर जाएँ: $2","去第 $1 课：$2"]],
  [/^(\d+) van (\d+) klaar$/,["$1 of $2 done","أنجزت $1 من $2","$1/$2 tamam","$2 में से $1 पूरे","已完成 $1/$2"]],
  [/^(\d+) van (\d+)$/,["$1 of $2","$1 من $2","$1/$2","$2 में से $1","$1/$2"]],
+ [/^(\d+) van (\d+) goed$/,["$1 of $2 right","$1 من $2 صحيح","$1/$2 doğru","$2 में से $1 सही","答对 $1/$2"]],
  [/^nodig: (\d+)%$/,["needed: $1%","المطلوب: $1%","gerekli: %$1","आवश्यक: $1%","需要：$1%"]],
  [/^(\d+)\smin$/,["$1 min","$1 دقيقة","$1 dk","$1 मिनट","$1 分钟"]],
  [/^Gestart in ([\d,]+) s$/,(m,a)=>{const p=a.replace(",",".");return[`Started in ${p} s`,`بدأ التشغيل في ${p} ثانية`,`${a} sn'de açıldı`,`${p} सेकंड में शुरू हुआ`,`${p} 秒启动`][LI]}],
  [/^(maandag|dinsdag|woensdag|donderdag|vrijdag|zaterdag|zondag) (\d+) (\w+)$/i,(m,d,n,mo)=>{const w=lName({weekday:"long"},new Date(2026,0,5+NLD.indexOf(d.toLowerCase()))),a=dayMon(n,mo);return LANG==="tr"||LANG==="zh"?`${a} ${w}`:`${w} ${a}`}],
  [/^Proefexamen (\d+) (\w+)$/,(m,n,mo)=>["Practice exam ","امتحان تجريبي ","Deneme sınavı ","अभ्यास परीक्षा ","模拟考试 "][LI]+dayMon(n,mo)],
+ [/^Je kunt vandaag nog (\d+) keer laten nakijken, en dit proefexamen telt als (\d+)\. Zonder nakijken zie je aan het eind alleen de voorbeeldantwoorden\.$/,["You can have $1 more checks today, and this practice exam counts as $2. Without checks you only see the example answers at the end.","يمكنك اليوم طلب $1 تصحيحات أخرى، وهذا الامتحان التجريبي يُحسب $2. بدون تصحيح سترى في النهاية الإجابات النموذجية فقط.","Bugün $1 kez daha kontrol ettirebilirsin ve bu deneme sınavı $2 sayılır. Kontrol olmadan sonunda yalnızca örnek cevapları görürsün.","आज आप $1 बार और जाँच करवा सकते हैं, और यह अभ्यास परीक्षा $2 के बराबर गिनी जाएगी। बिना जाँच के अंत में आपको केवल उदाहरण उत्तर दिखेंगे।","今天你还可以批改 $1 次，这次模拟考试算 $2 次。不批改的话，最后只能看到示例答案。"]],
  [/^Nakijken vandaag: nog (\d+) van de (\d+)$/,["Checks left today: $1 of $2","التصحيحات المتبقية اليوم: $1 من $2","Bugün kalan kontrol: $1/$2","आज बची जाँचें: $2 में से $1","今天剩余批改：$1/$2"]],
  [/^Je les van vandaag is voor (.+) \(kies in Profiel\)\.$/,(m,l)=>{const v=uiT(l)||l;return[`Today's lesson is for ${v} (choose in Profile).`,`درس اليوم مخصص لـ ${v} (اختر في ملفك).`,`Bugünkü ders ${v} için (Profil'den seç).`,`आज का पाठ ${v} के लिए है (प्रोफ़ाइल में चुनें)।`,`今天的课程针对 ${v}（在“我的”中选择）。`][LI]}],
  [/^Zonder account kijkt Claude (\d+) keer per dag gratis na\. Met een account (\d+) keer per dag \(Profiel\)\.$/,["Without an account Claude checks $1 times a day for free. With an account $2 times a day (Profile).","بدون حساب يصحّح Claude مجانًا $1 مرات في اليوم. وبحساب $2 مرة في اليوم (ملفي).","Hesapsız Claude günde $1 kez ücretsiz kontrol eder. Hesapla günde $2 kez (Profil).","बिना खाते के Claude दिन में $1 बार मुफ़्त जाँच करता है। खाते के साथ दिन में $2 बार (प्रोफ़ाइल)।","没有账户时，Claude 每天免费批改 $1 次。有账户时每天 $2 次（我的）。"]],
@@ -6272,12 +6307,13 @@ const rtlMark=v=>LANG==="ar"?"\u200f"+v:v; // an Arabic line that starts with a 
 const trS=s=>{const t=s.trim();if(!t)return null;const v=uiT(t)||uiR(t);if(v)return s.replace(t,rtlMark(v));
   if(t.includes(" · ")){const p=t.split(" · "),q=p.map(x=>uiT(x)||uiR(x)||x);if(q.some((x,i)=>x!==p[i]))return s.replace(t,rtlMark(q.join(" · ")))}
   return null};
-const uiSkip=el=>!el||el.closest("#play,#read,script,style,select,.doc,.sample,.msum,.bgl");
+const DUTCH="#play,#read,:not(html)[lang=nl],script,style,.doc,.sample,.msum,.bgl"; // never translated, and left to right: lang="nl" marks Dutch content
+const uiSkip=el=>!el||el.closest(DUTCH+",select");
 function trNode(root){
   if(root.nodeType===3){const el=root.parentElement;if(uiSkip(el))return;const o=UIO.get(root)??root.nodeValue,v=LI<0?null:trS(o);
     if(v!=null){if(!UIO.has(root))UIO.set(root,o);if(root.nodeValue!==v)root.nodeValue=v}else if(UIO.has(root)){root.nodeValue=UIO.get(root);UIO.delete(root)}return}
   if(root.nodeType!==1||uiSkip(root))return;
-  [root,...root.querySelectorAll("[aria-label],[placeholder]")].forEach(e=>{if(!e.getAttribute||e.closest("#play,#read,script,style,.doc,.sample,.msum,.bgl"))return;["aria-label","placeholder"].forEach(a=>{
+  [root,...root.querySelectorAll("[aria-label],[placeholder]")].forEach(e=>{if(!e.getAttribute||e.closest(DUTCH))return;["aria-label","placeholder"].forEach(a=>{
     const cur=e.getAttribute(a);if(cur==null)return;const m=UIA.get(e)||{};const o=m[a]??cur,v=LI<0?null:trS(o);
     if(v!=null){m[a]=o;UIA.set(e,m);if(cur!==v)e.setAttribute(a,v)}else if(m[a]!=null){e.setAttribute(a,m[a]);delete m[a]}})});
   const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;while(n=w.nextNode())trNode(n);

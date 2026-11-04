@@ -25,20 +25,29 @@ body::before{content:"";position:fixed;inset:-24px;z-index:-2;background:url(/ar
 body::after{content:"";position:fixed;inset:0;z-index:-1;background:var(--glass)}
 main{max-width:720px;margin:0 auto;padding:16px 16px 48px}
 article{background:var(--card);border-radius:20px;box-shadow:var(--lift);padding:8px 20px 24px}
-.back{display:inline-flex;align-items:center;gap:6px;min-height:44px;margin-top:12px;border:1px solid var(--line);color:var(--ink);font-weight:600;font-size:16px;padding:5px 14px 6px 10px;border-radius:14px;text-decoration:none}
+.back{display:inline-flex;align-items:center;gap:6px;min-height:44px;margin-top:12px;border:1px solid var(--line);color:var(--ink);font-weight:600;font-size:16px;padding-block:5px 6px;padding-inline:10px 14px;border-radius:14px;text-decoration:none}
 h1{font-size:28px;font-weight:600;line-height:1.2;margin:20px 0 6px}
 h2{color:var(--soft);font-size:14px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin:28px 0 6px}
-p,li{margin:0 0 10px} ul{padding-left:22px;margin:0 0 10px}
+p,li{margin:0 0 10px} ul{padding-inline-start:22px;margin:0 0 10px}
 .sub{color:var(--soft)}
 a{color:var(--blue)}
 a:focus-visible{outline:3px solid var(--oranje);outline-offset:2px}
-.box{border-left:3px solid var(--wash);padding:2px 0 2px 14px;margin:14px 0}
+.box{border-inline-start:3px solid var(--wash);padding-block:2px;padding-inline-start:14px;margin:14px 0}
 @media (min-width:768px){article{padding:12px 36px 32px}}
+.top{display:flex;justify-content:flex-end;margin-bottom:10px}
+.lang{position:relative;display:flex;align-items:center;gap:5px;height:36px;padding:0 8px 0 9px;border-radius:999px;border:1.5px solid #fff;background:#1F3C96;color:#fff;font-size:15px;font-weight:600;box-shadow:0 2px 10px rgba(8,16,40,.4)}
+.lang svg{flex:none;width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8}
+.lang svg.dn{width:12px;height:12px;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.lang select{position:absolute;inset:-5px;width:calc(100% + 10px);height:calc(100% + 10px);opacity:0;font-size:16px;border:0}
+.lang:focus-within{outline:2px solid var(--oranje);outline-offset:2px}
+[dir=rtl] .back>span{display:inline-block;transform:scaleX(-1)}
+:root:is([lang=ar],[lang=hi],[lang=zh-Hans]) h2{letter-spacing:0}
 </style>
 </head>
 <body>
 <main>
-<article>
+<div class="top"><label class="lang"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.6 3.9 5.6 3.9 9s-1.3 6.4-3.9 9c-2.6-2.6-3.9-5.6-3.9-9s1.3-6.4 3.9-9z"/></svg><span id="langs">NL</span><svg class="dn" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4"/></svg><select id="lang" aria-label="Taal"><option value="nl">Nederlands</option><option value="en">English</option><option value="ar">العربية</option><option value="tr">Türkçe</option><option value="hi">हिन्दी</option><option value="zh">中文</option></select></label></div>
+<article data-l="nl" lang="nl">
 <a class="back" href="/"><span aria-hidden="true">←</span>Bittertalen</a>
 <h1>Privacyverklaring</h1>
 <p class="sub">Laatst bijgewerkt: 4 november 2026</p>
@@ -180,7 +189,485 @@ voogd voordat je een account maakt.</p>
 <p>Verandert er iets aan hoe we met je gegevens omgaan, dan passen we deze pagina aan. Bovenaan staat wanneer dat het
 laatst gebeurde.</p>
 </article>
+<article data-l="en" lang="en" hidden>
+<a class="back" href="/"><span aria-hidden="true">←</span>Bittertalen</a>
+<h1>Privacy statement</h1>
+<p class="sub">Last updated: 4 November 2026</p>
+<p class="sub">This is a translation to help you understand. The Dutch text is the official one.</p>
+
+<p>Bittertalen is an app to practise for the A2 civic integration exam (inburgeringsexamen) and the State exam NT2 (B1). Practising is free; checking by Claude and the practice exams are part of a subscription, Bittertalen Plus. Here you can read what data the app uses, why, where it is kept and what your rights are.</p>
+
+<div class="box">
+<p><b>In short</b></p>
+<ul>
+<li>Without an account, everything stays on your own phone or computer.</li>
+<li>With an account, we keep your e-mail address, your name and your progress, in the EU.</li>
+<li>Do you have a text or answer checked? Then that text goes to Anthropic (Claude). Your name and e-mail address do not go with it.</li>
+<li>If you take Bittertalen Plus, you pay through Stripe. Your bank or card details do not reach us.</li>
+<li>Do you tell us your real exam result yourself? Then it counts in our figures, without your name or e-mail address.</li>
+<li>No cookies, no advertisements, and we sell nothing on.</li>
+<li>You can delete your account and everything in it yourself.</li>
+</ul>
+</div>
+
+<h2>Who is responsible</h2>
+<p>Bittertalen is made by Artem Matveev. He is responsible for your data (the data controller). Questions about your data? Send an e-mail to <a href="mailto:privacy@bittertalen.nl">privacy@bittertalen.nl</a>. E-mail to that address arrives in the maker's mailbox at Apple (iCloud Mail).</p>
+
+<h2>Without an account</h2>
+<p>You can use Bittertalen without an account. Your progress (your answers, practice exams, words and your name if you fill it in), your own books, drafts of writing tasks and where you were in a podcast are then only in your browser, on your own device. We do not get to see that. Recordings and written-out answers in Speaking stay only in the memory until you close the page.</p>
+
+<h2>With an account</h2>
+<p>An account is not required. If you make one, we keep:</p>
+<ul>
+<li>your e-mail address, to log in with a code;</li>
+<li>if you log in with Google, Apple, Microsoft or Facebook, we get your name and e-mail address from them (and sometimes the link to your profile photo). They also see that you log in to Bittertalen, and their own privacy rules apply to them;</li>
+<li>your first name and last name, if you fill them in;</li>
+<li>your progress, so that it is the same on all your devices (including mistakes from your own texts);</li>
+<li>how often per day you had something checked, for the daily limit.</li>
+</ul>
+<p>We do this because you ask for an account yourself (performance of a contract, Article 6(1)(b) GDPR). The data is kept at Supabase, in a data centre in Frankfurt (Germany). Supabase also keeps a log of logins (such as the time and IP address) to prevent abuse. The e-mails with your login code are sent by Resend, from Ireland.</p>
+
+<h2>Checking by Claude</h2>
+<p>In Writing and Speaking you can have your text or your written-out answer checked. The task and your text then go through our server to Anthropic, the company behind Claude, in the United States. Your name and e-mail address do not go with it. We do not keep your texts on our server. Anthropic does not use them to train models and, under its own rules, deletes them within 30 days, unless it needs them longer to investigate abuse or because the law requires it.</p>
+<p>Without an account you can have something checked for free a few times a day. To count that, we keep a code that we make from your IP address (a hash with a secret key, not the address itself), with the number of times. We delete that code after one day. We do this to prevent abuse (legitimate interest, Article 6(1)(f) GDPR).</p>
+<p><b>Tip:</b> you do not need to use real details in a practice text or form. Feel free to make up a name, address or telephone number.</p>
+
+<h2>Bittertalen Plus (paying)</h2>
+<p>If you take Bittertalen Plus, you pay on a payment page of Stripe (Stripe Payments Europe, Ireland), with iDEAL or a card. For this Stripe gets your e-mail address, your payment details (such as your IBAN or card number) and details about your device and IP address, to make the payment and prevent fraud. We do not get to see your bank or card details. We only keep a number for you as a customer and for your subscription at Stripe, whether your subscription is running, whether it is monthly or yearly, and until when. We do this to carry out your subscription (performance of a contract, Article 6(1)(b) GDPR) and because the law requires us to keep our records (Article 6(1)(c) GDPR). For fraud checks Stripe also uses your data itself, under the <a href="https://stripe.com/nl/privacy" rel="noopener">Stripe Privacy Policy ↗</a>. You manage and stop your subscription yourself: Profile → Manage subscription. If you delete your account, we stop your subscription first.</p>
+
+<h2>Your result of the real exam</h2>
+<p>Under Exam → My exam you can tell us yourself whether you passed. You do not have to. If you do, we use your result to see whether the practice exams and the status of your practice results are right. For each part we then keep:</p>
+<ul>
+<li>which part it was and whether you passed;</li>
+<li>your last score on a practice exam of that part and your status at that moment;</li>
+<li>the month (not the day);</li>
+<li>a random number, so that you can correct or remove your result. Apart from that, this number is only on your own device.</li>
+</ul>
+<p>We do not keep a name, e-mail address, account or IP address with this. The data is kept at Supabase in Frankfurt. If you have an account, your result is also in your progress, like your other results, but we do not link the two. We do this because you give your result yourself (consent, Article 6(1)(a) GDPR). You withdraw it by tapping your result again, on the same device. Without that number we cannot find your result either, because it is not linked to you.</p>
+
+<h2>Speech recognition</h2>
+<p>In Speaking, your phone or browser turns your voice into text. Bittertalen does not do that, your browser does: Safari uses Apple for it, Chrome uses Google. Their own privacy rules apply. Bittertalen only gets the text.</p>
+
+<h2>The website and counting visitors</h2>
+<p>Bittertalen runs on Vercel. Our server is in the United States. To deliver and protect the site, Vercel processes your IP address, your browser and the page you open at every visit, and keeps that in a log for a short time. We count visits with Vercel Web Analytics: without cookies and without data that leads to you as a person. We do this because we want to keep the app safe and working (legitimate interest, Article 6(1)(f) GDPR).</p>
+
+<h2>Content from others</h2>
+<p>In Listen and watch you see videos from YouTube and podcasts from Dutch makers. We fetch the pictures in the list through our own server, so YouTube does not see that you are looking at the list. A video comes from youtube-nocookie.com and a podcast from the maker's server, only when you open it. Those parties then see your IP address. The dictionary is on our own server. Translating a sentence goes through Google Translate, only if you tap that link.</p>
+<p>For the videos we use YouTube's player. If you watch a video, the <a href="https://www.youtube.com/t/terms" rel="noopener">YouTube Terms of Service ↗</a> also apply, and YouTube (Google) uses your data under the <a href="https://policies.google.com/privacy" rel="noopener">Google Privacy Policy ↗</a>. The videos and podcasts belong to their makers; Bittertalen only shows them and earns nothing from them.</p>
+
+<h2>Cookies</h2>
+<p>Bittertalen does not use cookies and does not follow you on other websites. The app does keep data in your browser (local storage and IndexedDB), but only in order to work: your progress, your settings and whether you are logged in.</p>
+
+<h2>Outside the EU</h2>
+<p>Vercel, Anthropic, Google and Apple are in the United States. Stripe may also process data in the United States. Data only goes there with the safeguards the GDPR requires, such as the EU-US Data Privacy Framework or the European Commission's standard contractual clauses.</p>
+
+<h2>How long</h2>
+<ul>
+<li>Your account and your progress: until you delete your account. Then everything at Supabase is erased at once.</li>
+<li>Texts you have checked: not with us; at Anthropic for at most 30 days (see above).</li>
+<li>Logs of Vercel, Supabase and Resend: a short time, for security and to solve problems.</li>
+<li>On your own device: until you clear the site's data in your browser.</li>
+<li>The code for free checks without an account: at most two days.</li>
+<li>The result you give yourself: at most three years, or until you remove it.</li>
+<li>Payments and invoices: seven years, because tax law requires it (at Stripe and in our records). Your subscription with us disappears with your account.</li>
+</ul>
+
+<h2>Your rights</h2>
+<p>You may see your data, have it corrected or have it deleted. You may also receive it in a file you can take with you, and object to its use. You delete your account yourself: Profile → Delete account. For everything else, send an e-mail to <a href="mailto:privacy@bittertalen.nl">privacy@bittertalen.nl</a>. You will get an answer within a month.</p>
+<p>Do you disagree with how we handle your data? Then you can file a complaint with the <a href="https://autoriteitpersoonsgegevens.nl" rel="noopener">Autoriteit Persoonsgegevens (the Dutch Data Protection Authority) ↗</a>.</p>
+
+<h2>Age</h2>
+<p>Bittertalen is meant for people aged 16 and over. Are you younger? Then first ask your parent or guardian for permission before you make an account.</p>
+
+<h2>Changes</h2>
+<p>If anything changes in how we handle your data, we update this page. The top says when that last happened.</p>
+</article>
+<article data-l="ar" lang="ar" dir="rtl" hidden>
+<a class="back" href="/"><span aria-hidden="true">←</span>Bittertalen</a>
+<h1>بيان الخصوصية</h1>
+<p class="sub">آخر تحديث: 4 نوفمبر 2026</p>
+<p class="sub">هذه ترجمة لمساعدتك على الفهم. النص الهولندي هو النص الرسمي.</p>
+
+<p>Bittertalen تطبيق للتدرّب على امتحان الاندماج (inburgeringsexamen) بمستوى A2 وامتحان الدولة NT2 (B1). التدرّب مجاني؛ أما التصحيح بواسطة Claude والامتحانات التجريبية فهي جزء من اشتراك، Bittertalen Plus. هنا تقرأ ما البيانات التي يستخدمها التطبيق، ولماذا، وأين تُحفظ، وما حقوقك.</p>
+
+<div class="box">
+<p><b>باختصار</b></p>
+<ul>
+<li>بدون حساب، يبقى كل شيء على هاتفك أو حاسوبك.</li>
+<li>مع الحساب، نحفظ بريدك الإلكتروني واسمك وتقدّمك، داخل الاتحاد الأوروبي.</li>
+<li>هل تطلب تصحيح نص أو إجابة؟ عندها يُرسل ذلك النص إلى Anthropic (Claude). لا يُرسل اسمك ولا بريدك الإلكتروني معه.</li>
+<li>إذا اشتركت في Bittertalen Plus، تدفع عبر Stripe. لا تصل إلينا بيانات حسابك المصرفي أو بطاقتك.</li>
+<li>هل تخبرنا بنفسك بنتيجة امتحانك الحقيقي؟ عندها تُحتسب في أرقامنا، بدون اسمك أو بريدك الإلكتروني.</li>
+<li>لا ملفات تعريف ارتباط، ولا إعلانات، ولا نبيع أي شيء لأي جهة.</li>
+<li>يمكنك أن تحذف حسابك وكل ما فيه بنفسك.</li>
+</ul>
+</div>
+
+<h2>من المسؤول</h2>
+<p>صنع Bittertalen هو Artem Matveev. وهو المسؤول عن بياناتك (المتحكم في البيانات). هل لديك أسئلة عن بياناتك؟ راسل <a href="mailto:privacy@bittertalen.nl">privacy@bittertalen.nl</a>. تصل الرسائل إلى هذا العنوان إلى صندوق بريد صانع التطبيق لدى Apple (iCloud Mail).</p>
+
+<h2>بدون حساب</h2>
+<p>يمكنك استخدام Bittertalen بدون حساب. عندها يبقى تقدّمك (إجاباتك وامتحاناتك التجريبية وكلماتك واسمك إن أدخلته) وكتبك ومسودات مهام الكتابة والموضع الذي وصلت إليه في البودكاست في متصفحك فقط، على جهازك. لا نطّلع نحن على ذلك. أما التسجيلات والإجابات المكتوبة في قسم المحادثة فتبقى في الذاكرة فقط حتى تغلق الصفحة.</p>
+
+<h2>مع الحساب</h2>
+<p>الحساب ليس إلزاميًا. إذا أنشأت حسابًا، نحفظ:</p>
+<ul>
+<li>بريدك الإلكتروني، لتسجيل الدخول برمز؛</li>
+<li>إذا سجّلت الدخول عبر Google أو Apple أو Microsoft أو Facebook، نحصل منهم على اسمك وبريدك الإلكتروني (وأحيانًا رابط صورة ملفك الشخصي). وهم يرون أيضًا أنك تسجّل الدخول إلى Bittertalen، وتسري عليهم قواعد الخصوصية الخاصة بهم؛</li>
+<li>اسمك الأول واسم عائلتك، إذا أدخلتهما؛</li>
+<li>تقدّمك، ليكون هو نفسه على جميع أجهزتك (بما في ذلك الأخطاء من نصوصك)؛</li>
+<li>عدد مرات طلب التصحيح في اليوم، من أجل الحد اليومي.</li>
+</ul>
+<p>نفعل ذلك لأنك أنت من يطلب الحساب (تنفيذ عقد، المادة 6 الفقرة 1 ب من اللائحة العامة لحماية البيانات GDPR). تُحفظ البيانات لدى Supabase، في مركز بيانات في فرانكفورت (ألمانيا). وتحتفظ Supabase أيضًا بسجل لعمليات الدخول (مثل الوقت وعنوان IP) لمنع إساءة الاستخدام. أما الرسائل التي تحمل رمز الدخول فترسلها Resend من أيرلندا.</p>
+
+<h2>التصحيح بواسطة Claude</h2>
+<p>في قسمي الكتابة والمحادثة يمكنك طلب تصحيح نصك أو إجابتك المكتوبة. عندها تُرسل المهمة ونصك عبر خادمنا إلى Anthropic، الشركة التي تقف وراء Claude، في الولايات المتحدة. لا يُرسل اسمك ولا بريدك الإلكتروني معهما. لا نحفظ نصوصك على خادمنا. لا تستخدمها Anthropic لتدريب النماذج، وتحذفها وفق قواعدها خلال 30 يومًا، إلا إذا احتاجت إليها مدة أطول للتحقيق في إساءة الاستخدام أو لأن القانون يتطلب ذلك.</p>
+<p>بدون حساب يمكنك طلب التصحيح مجانًا بضع مرات في اليوم. ولكي نحسب ذلك نحفظ رمزًا نصنعه من عنوان IP الخاص بك (تجزئة بمفتاح سري، وليس العنوان نفسه) مع عدد المرات. نمسح هذا الرمز بعد يوم واحد. نفعل ذلك لمنع إساءة الاستخدام (المصلحة المشروعة، المادة 6 الفقرة 1 و من GDPR).</p>
+<p><b>نصيحة:</b> لا تحتاج إلى استخدام بيانات حقيقية في نص أو نموذج للتدرّب. يمكنك أن تخترع اسمًا أو عنوانًا أو رقم هاتف.</p>
+
+<h2>Bittertalen Plus (الدفع)</h2>
+<p>إذا اشتركت في Bittertalen Plus، تدفع في صفحة دفع تابعة لـ Stripe (Stripe Payments Europe، أيرلندا)، عبر iDEAL أو بالبطاقة. تحصل Stripe لهذا الغرض على بريدك الإلكتروني وبيانات الدفع (مثل رقم IBAN أو رقم البطاقة) وبيانات عن جهازك وعنوان IP، لإتمام الدفع ومنع الاحتيال. لا نطّلع نحن على بيانات حسابك المصرفي أو بطاقتك. لا نحفظ سوى رقمك كعميل ورقم اشتراكك لدى Stripe، وهل اشتراكك ساري، وهل هو شهري أم سنوي، وحتى متى. نفعل ذلك لتنفيذ اشتراكك (تنفيذ عقد، المادة 6 الفقرة 1 ب من GDPR) ولأن القانون يلزمنا بحفظ سجلاتنا (المادة 6 الفقرة 1 ج من GDPR). وتستخدم Stripe بياناتك أيضًا بنفسها لفحص الاحتيال، وفق <a href="https://stripe.com/nl/privacy" rel="noopener">سياسة خصوصية Stripe ↗</a>. تدير اشتراكك وتوقفه بنفسك: ملفي ← إدارة الاشتراك. إذا حذفت حسابك، نوقف اشتراكك أولًا.</p>
+
+<h2>نتيجتك في الامتحان الحقيقي</h2>
+<p>في الامتحان ← امتحاني يمكنك أن تخبرنا بنفسك هل نجحت. هذا ليس إلزاميًا. إذا فعلت، نستخدم نتيجتك لنرى هل الامتحانات التجريبية وحالة نتائج تدرّبك دقيقة. ونحفظ عندها لكل قسم:</p>
+<ul>
+<li>أي قسم كان وهل نجحت فيه؛</li>
+<li>آخر نتيجة لك في امتحان تجريبي لذلك القسم وحالتك في تلك اللحظة؛</li>
+<li>الشهر (وليس اليوم)؛</li>
+<li>رقمًا عشوائيًا، لتتمكن من تصحيح نتيجتك أو إزالتها. ولا يوجد هذا الرقم في مكان آخر غير جهازك.</li>
+</ul>
+<p>لا نحفظ مع ذلك اسمًا أو بريدًا إلكترونيًا أو حسابًا أو عنوان IP. تُحفظ البيانات لدى Supabase في فرانكفورت. إذا كان لديك حساب، فإن نتيجتك موجودة أيضًا في تقدّمك مثل نتائجك الأخرى، لكننا لا نربط بين الاثنين. نفعل ذلك لأنك أنت من يقدّم نتيجته (الموافقة، المادة 6 الفقرة 1 أ من GDPR). يمكنك سحب موافقتك بالضغط على نتيجتك مرة أخرى، على الجهاز نفسه. وبدون ذلك الرقم لا نستطيع نحن أيضًا العثور على نتيجتك، لأنها غير مرتبطة بك.</p>
+
+<h2>التعرف على الكلام</h2>
+<p>في قسم المحادثة يحوّل هاتفك أو متصفحك صوتك إلى نص. لا يفعل ذلك Bittertalen بل متصفحك: يستخدم Safari خدمة Apple، ويستخدم Chrome خدمة Google. وتسري قواعد الخصوصية الخاصة بهما. لا يحصل Bittertalen إلا على النص.</p>
+
+<h2>الموقع وإحصاء الزوار</h2>
+<p>يعمل Bittertalen على Vercel. خادمنا موجود في الولايات المتحدة. لتقديم الموقع وحمايته، تعالج Vercel في كل زيارة عنوان IP الخاص بك ومتصفحك والصفحة التي تفتحها، وتحفظ ذلك في سجل لفترة قصيرة. نحصي الزيارات باستخدام Vercel Web Analytics: بدون ملفات تعريف ارتباط وبدون بيانات تدل عليك شخصيًا. نفعل ذلك لأننا نريد أن يبقى التطبيق آمنًا وعاملًا (المصلحة المشروعة، المادة 6 الفقرة 1 و من GDPR).</p>
+
+<h2>محتوى من جهات أخرى</h2>
+<p>في قسم الاستماع والمشاهدة ترى فيديوهات من YouTube وبودكاست من صنّاع هولنديين. نجلب الصور في القائمة عبر خادمنا، فلا يرى YouTube أنك تتصفح القائمة. يأتي الفيديو من youtube-nocookie.com والبودكاست من خادم صانعه، فقط عندما تفتحه. وعندها ترى تلك الجهات عنوان IP الخاص بك. القاموس موجود على خادمنا. وتتم ترجمة الجملة عبر Google Translate، فقط إذا ضغطت على ذلك الرابط.</p>
+<p>نستخدم مشغّل YouTube لعرض الفيديوهات. إذا شاهدت فيديو، تسري أيضًا <a href="https://www.youtube.com/t/terms" rel="noopener">شروط خدمة YouTube ↗</a>، ويستخدم YouTube (Google) بياناتك وفق <a href="https://policies.google.com/privacy" rel="noopener">سياسة خصوصية Google ↗</a>. الفيديوهات والبودكاست ملك لصانعيها؛ يعرضها Bittertalen فقط ولا يكسب منها شيئًا.</p>
+
+<h2>ملفات تعريف الارتباط</h2>
+<p>لا يستخدم Bittertalen ملفات تعريف الارتباط ولا يتتبعك على مواقع أخرى. لكن التطبيق يحفظ بيانات في متصفحك (local storage وIndexedDB)، وذلك فقط لكي يعمل: تقدّمك وإعداداتك وهل سجّلت الدخول.</p>
+
+<h2>خارج الاتحاد الأوروبي</h2>
+<p>توجد Vercel وAnthropic وGoogle وApple في الولايات المتحدة. وقد تعالج Stripe البيانات أيضًا في الولايات المتحدة. لا تُرسل البيانات إلى هناك إلا بالضمانات التي تطلبها GDPR، مثل إطار خصوصية البيانات بين الاتحاد الأوروبي والولايات المتحدة أو البنود التعاقدية القياسية للمفوضية الأوروبية.</p>
+
+<h2>إلى متى</h2>
+<ul>
+<li>حسابك وتقدّمك: حتى تحذف حسابك. عندها يُمسح كل شيء لدى Supabase فورًا.</li>
+<li>النصوص التي تطلب تصحيحها: لا تُحفظ لدينا؛ ولدى Anthropic 30 يومًا كحد أقصى (انظر أعلاه).</li>
+<li>سجلات Vercel وSupabase وResend: لفترة قصيرة، للأمان ولحل المشكلات.</li>
+<li>على جهازك: حتى تمسح بيانات الموقع في متصفحك.</li>
+<li>رمز التصحيح المجاني بدون حساب: يومان كحد أقصى.</li>
+<li>النتيجة التي تقدّمها بنفسك: ثلاث سنوات كحد أقصى، أو حتى تزيلها.</li>
+<li>المدفوعات والفواتير: سبع سنوات، لأن قانون الضرائب يتطلب ذلك (لدى Stripe وفي سجلاتنا). يختفي اشتراكك لدينا مع حسابك.</li>
+</ul>
+
+<h2>حقوقك</h2>
+<p>يحق لك الاطلاع على بياناتك وتصحيحها وحذفها. ويحق لك أيضًا الحصول عليها في ملف يمكنك أخذه معك، والاعتراض على استخدامها. تحذف حسابك بنفسك: ملفي ← حذف الحساب. ولكل ما عدا ذلك راسل <a href="mailto:privacy@bittertalen.nl">privacy@bittertalen.nl</a>. ستحصل على رد خلال شهر.</p>
+<p>ألا توافق على طريقة تعاملنا مع بياناتك؟ يمكنك عندها تقديم شكوى إلى <a href="https://autoriteitpersoonsgegevens.nl" rel="noopener">هيئة حماية البيانات الهولندية (Autoriteit Persoonsgegevens) ↗</a>.</p>
+
+<h2>العمر</h2>
+<p>Bittertalen مخصص لمن بلغوا 16 عامًا فأكثر. هل عمرك أقل من ذلك؟ اطلب أولًا إذن والدك أو والدتك أو وصيّك قبل إنشاء حساب.</p>
+
+<h2>التغييرات</h2>
+<p>إذا تغيّر شيء في طريقة تعاملنا مع بياناتك، نعدّل هذه الصفحة. ويظهر في الأعلى تاريخ آخر تعديل.</p>
+</article>
+<article data-l="tr" lang="tr" hidden>
+<a class="back" href="/"><span aria-hidden="true">←</span>Bittertalen</a>
+<h1>Gizlilik bildirimi</h1>
+<p class="sub">Son güncelleme: 4 Kasım 2026</p>
+<p class="sub">Bu, anlamana yardımcı olmak için bir çeviridir. Resmî metin Hollandaca olandır.</p>
+
+<p>Bittertalen, A2 uyum sınavına (inburgeringsexamen) ve NT2 devlet sınavına (B1) hazırlanmak için bir uygulamadır. Alıştırma yapmak ücretsizdir; Claude ile kontrol ve deneme sınavları bir aboneliğe, Bittertalen Plus'a dahildir. Burada uygulamanın hangi verileri kullandığını, neden kullandığını, nerede sakladığını ve haklarının neler olduğunu okuyabilirsin.</p>
+
+<div class="box">
+<p><b>Kısaca</b></p>
+<ul>
+<li>Hesap olmadan her şey kendi telefonunda veya bilgisayarında kalır.</li>
+<li>Hesapla e-posta adresini, adını ve ilerlemeni AB içinde saklarız.</li>
+<li>Bir metni veya cevabı kontrol ettiriyor musun? O zaman o metin Anthropic'e (Claude) gider. Adın ve e-posta adresin onunla gitmez.</li>
+<li>Bittertalen Plus alırsan Stripe üzerinden ödersin. Banka veya kart bilgilerin bize ulaşmaz.</li>
+<li>Gerçek sınav sonucunu kendin mi söylüyorsun? O zaman adın veya e-posta adresin olmadan istatistiklerimize eklenir.</li>
+<li>Çerez yok, reklam yok, hiçbir şeyi başkasına satmayız.</li>
+<li>Hesabını ve içindeki her şeyi kendin silebilirsin.</li>
+</ul>
+</div>
+
+<h2>Sorumlu kim</h2>
+<p>Bittertalen'i Artem Matveev yapıyor. Verilerinden o sorumludur (veri sorumlusu). Verilerinle ilgili soruların mı var? <a href="mailto:privacy@bittertalen.nl">privacy@bittertalen.nl</a> adresine yaz. Bu adrese gelen e-postalar, uygulamayı yapan kişinin Apple'daki (iCloud Mail) posta kutusuna düşer.</p>
+
+<h2>Hesap olmadan</h2>
+<p>Bittertalen'i hesap olmadan kullanabilirsin. O zaman ilerlemen (cevapların, deneme sınavların, kelimelerin ve yazdıysan adın), kendi kitapların, yazma görevi taslakların ve bir podcast'te kaldığın yer yalnızca tarayıcında, kendi cihazında durur. Biz bunları görmeyiz. Konuşma bölümündeki kayıtlar ve yazıya dökülmüş cevaplar, sayfayı kapatana kadar yalnızca bellekte kalır.</p>
+
+<h2>Hesapla</h2>
+<p>Hesap zorunlu değildir. Hesap açarsan şunları saklarız:</p>
+<ul>
+<li>kodla giriş yapman için e-posta adresin;</li>
+<li>Google, Apple, Microsoft veya Facebook ile giriş yaparsan onlardan adını ve e-posta adresini (bazen de profil fotoğrafının bağlantısını) alırız. Onlar da Bittertalen'e giriş yaptığını görür ve onlar için kendi gizlilik kuralları geçerlidir;</li>
+<li>yazdıysan adın ve soyadın;</li>
+<li>tüm cihazlarında aynı olması için ilerlemen (kendi metinlerindeki hatalar dahil);</li>
+<li>günlük sınır için günde kaç kez kontrol ettirdiğin.</li>
+</ul>
+<p>Bunu, hesabı kendin istediğin için yaparız (sözleşmenin ifası, GDPR madde 6 fıkra 1 b). Veriler Supabase'de, Frankfurt'taki (Almanya) bir veri merkezinde durur. Supabase, kötüye kullanımı önlemek için girişlerin kaydını da (saat ve IP adresi gibi) tutar. Giriş kodunu içeren e-postaları İrlanda'dan Resend gönderir.</p>
+
+<h2>Claude ile kontrol</h2>
+<p>Yazma ve Konuşma bölümlerinde metnini veya yazıya dökülmüş cevabını kontrol ettirebilirsin. O zaman görev ve metnin, sunucumuz üzerinden Amerika Birleşik Devletleri'ndeki Anthropic'e, yani Claude'u yapan şirkete gider. Adın ve e-posta adresin onlarla gitmez. Metinlerini sunucumuzda saklamayız. Anthropic bunları model eğitmek için kullanmaz ve kendi kurallarına göre 30 gün içinde siler; kötüye kullanımı araştırmak için daha uzun süre gerekirse veya yasa gerektiriyorsa bu süre uzayabilir.</p>
+<p>Hesap olmadan günde birkaç kez ücretsiz kontrol ettirebilirsin. Bunu saymak için IP adresinden ürettiğimiz bir kodu (gizli anahtarlı bir özet, adresin kendisi değil) kullanım sayısıyla birlikte saklarız. Bu kodu bir gün sonra sileriz. Bunu kötüye kullanımı önlemek için yaparız (meşru menfaat, GDPR madde 6 fıkra 1 f).</p>
+<p><b>İpucu:</b> alıştırma metninde veya formunda gerçek bilgilerini kullanman gerekmez. Bir ad, adres veya telefon numarası uydurabilirsin.</p>
+
+<h2>Bittertalen Plus (ödeme)</h2>
+<p>Bittertalen Plus alırsan Stripe'ın (Stripe Payments Europe, İrlanda) ödeme sayfasında iDEAL veya kartla ödersin. Bunun için Stripe, ödemeyi yapmak ve dolandırıcılığı önlemek amacıyla e-posta adresini, ödeme bilgilerini (IBAN veya kart numaran gibi) ve cihazın ile IP adresin hakkındaki bilgileri alır. Banka veya kart bilgilerini biz görmeyiz. Bizde yalnızca Stripe'taki müşteri ve abonelik numaran, aboneliğinin devam edip etmediği, aylık mı yıllık mı olduğu ve ne zamana kadar geçerli olduğu durur. Bunu aboneliğini yürütmek için (sözleşmenin ifası, GDPR madde 6 fıkra 1 b) ve yasa kayıtlarımızı saklamamızı zorunlu kıldığı için (GDPR madde 6 fıkra 1 c) yaparız. Stripe, dolandırıcılık kontrolü için verilerini <a href="https://stripe.com/nl/privacy" rel="noopener">Stripe Gizlilik Politikası ↗</a> uyarınca kendisi de kullanır. Aboneliğini kendin yönetir ve durdurursun: Profil → Aboneliği yönet. Hesabını silersen önce aboneliğini durdururuz.</p>
+
+<h2>Gerçek sınav sonucun</h2>
+<p>Sınav → Sınavım bölümünde geçip geçmediğini kendin söyleyebilirsin. Bu zorunlu değildir. Söylersen, deneme sınavlarının ve alıştırma sonuçlarının durumunun doğru olup olmadığını görmek için sonucunu kullanırız. O zaman her bölüm için şunları saklarız:</p>
+<ul>
+<li>hangi bölüm olduğu ve geçip geçmediğin;</li>
+<li>o bölümün deneme sınavındaki son puanın ve o andaki durumun;</li>
+<li>ay (gün değil);</li>
+<li>sonucunu düzeltebilmen veya kaldırabilmen için rastgele bir numara. Bu numara başka yerde değil, yalnızca kendi cihazında durur.</li>
+</ul>
+<p>Bunların yanında ad, e-posta adresi, hesap veya IP adresi saklamayız. Veriler Supabase'de, Frankfurt'ta durur. Hesabın varsa sonucun, diğer sonuçların gibi ilerlemende de bulunur, ama bu ikisini birbirine bağlamayız. Bunu, sonucunu kendin bildirdiğin için yaparız (rıza, GDPR madde 6 fıkra 1 a). Aynı cihazda sonucuna tekrar dokunarak rızanı geri alırsın. O numara olmadan biz de sonucunu bulamayız, çünkü sana bağlı değildir.</p>
+
+<h2>Konuşma tanıma</h2>
+<p>Konuşma bölümünde telefonun veya tarayıcın sesini yazıya çevirir. Bunu Bittertalen değil, tarayıcın yapar: Safari bunun için Apple'ı, Chrome ise Google'ı kullanır. Onların kendi gizlilik kuralları geçerlidir. Bittertalen yalnızca metni alır.</p>
+
+<h2>Web sitesi ve ziyaretçi sayımı</h2>
+<p>Bittertalen, Vercel'de çalışır. Sunucumuz Amerika Birleşik Devletleri'ndedir. Siteyi sunmak ve korumak için Vercel her ziyarette IP adresini, tarayıcını ve açtığın sayfayı işler ve bunu kısa süre bir kayıtta tutar. Ziyaretleri Vercel Web Analytics ile sayarız: çerez olmadan ve seni kişi olarak gösteren veriler olmadan. Bunu, uygulamanın güvenli ve çalışır kalmasını istediğimiz için yaparız (meşru menfaat, GDPR madde 6 fıkra 1 f).</p>
+
+<h2>Başkalarının içeriği</h2>
+<p>Dinle ve izle bölümünde YouTube videolarını ve Hollandalı yapımcıların podcast'lerini görürsün. Listedeki resimleri kendi sunucumuz üzerinden alırız, yani YouTube listeye baktığını görmez. Bir video youtube-nocookie.com'dan, bir podcast ise yapımcısının sunucusundan, ancak onu açtığında gelir. O zaman bu taraflar IP adresini görür. Sözlük kendi sunucumuzdadır. Bir cümleyi çevirmek Google Translate üzerinden olur, ancak o bağlantıya dokunursan.</p>
+<p>Videolar için YouTube'un oynatıcısını kullanırız. Bir video izlersen <a href="https://www.youtube.com/t/terms" rel="noopener">YouTube Hizmet Şartları ↗</a> da geçerlidir ve YouTube (Google) verilerini <a href="https://policies.google.com/privacy" rel="noopener">Google Gizlilik Politikası ↗</a> uyarınca kullanır. Videolar ve podcast'ler yapımcılarına aittir; Bittertalen yalnızca gösterir ve bunlardan para kazanmaz.</p>
+
+<h2>Çerezler</h2>
+<p>Bittertalen çerez kullanmaz ve seni başka web sitelerinde izlemez. Uygulama tarayıcında veri saklar (local storage ve IndexedDB), ama yalnızca çalışmak için: ilerlemen, ayarların ve giriş yapıp yapmadığın.</p>
+
+<h2>AB dışında</h2>
+<p>Vercel, Anthropic, Google ve Apple Amerika Birleşik Devletleri'ndedir. Stripe da verileri Amerika Birleşik Devletleri'nde işleyebilir. Veriler oraya yalnızca GDPR'ın istediği güvencelerle gider; örneğin AB-ABD Veri Gizliliği Çerçevesi veya Avrupa Komisyonu'nun standart sözleşme maddeleri.</p>
+
+<h2>Ne kadar süre</h2>
+<ul>
+<li>Hesabın ve ilerlemen: hesabını silene kadar. O zaman Supabase'deki her şey hemen silinir.</li>
+<li>Kontrol ettirdiğin metinler: bizde durmaz; Anthropic'te en fazla 30 gün (yukarıya bak).</li>
+<li>Vercel, Supabase ve Resend kayıtları: güvenlik ve sorun çözmek için kısa süre.</li>
+<li>Kendi cihazında: tarayıcında sitenin verilerini silene kadar.</li>
+<li>Hesapsız ücretsiz kontrol kodu: en fazla iki gün.</li>
+<li>Kendin bildirdiğin sonuç: en fazla üç yıl veya sen kaldırana kadar.</li>
+<li>Ödemeler ve faturalar: vergi kanunu gerektirdiği için yedi yıl (Stripe'ta ve kayıtlarımızda). Bizdeki aboneliğin hesabınla birlikte silinir.</li>
+</ul>
+
+<h2>Hakların</h2>
+<p>Verilerini görebilir, düzelttirebilir veya sildirebilirsin. Ayrıca yanında götürebileceğin bir dosya olarak alabilir ve kullanımına itiraz edebilirsin. Hesabını kendin silersin: Profil → Hesabı sil. Diğer her şey için <a href="mailto:privacy@bittertalen.nl">privacy@bittertalen.nl</a> adresine yaz. Bir ay içinde cevap alırsın.</p>
+<p>Verilerini kullanma şeklimize katılmıyor musun? O zaman <a href="https://autoriteitpersoonsgegevens.nl" rel="noopener">Autoriteit Persoonsgegevens'e (Hollanda veri koruma kurumu) ↗</a> şikâyette bulunabilirsin.</p>
+
+<h2>Yaş</h2>
+<p>Bittertalen 16 yaş ve üzeri kişiler içindir. Daha mı küçüksün? O zaman hesap açmadan önce anne, baba veya vasinden izin al.</p>
+
+<h2>Değişiklikler</h2>
+<p>Verilerini kullanma şeklimizde bir şey değişirse bu sayfayı güncelleriz. En son ne zaman olduğu en üstte yazar.</p>
+</article>
+<article data-l="hi" lang="hi" hidden>
+<a class="back" href="/"><span aria-hidden="true">←</span>Bittertalen</a>
+<h1>गोपनीयता कथन</h1>
+<p class="sub">अंतिम अपडेट: 4 नवंबर 2026</p>
+<p class="sub">यह अनुवाद आपकी समझ के लिए है। आधिकारिक पाठ डच में है।</p>
+
+<p>Bittertalen, A2 इंटीग्रेशन परीक्षा (inburgeringsexamen) और NT2 राज्य परीक्षा (B1) की तैयारी के लिए एक ऐप है। अभ्यास मुफ़्त है; Claude द्वारा जाँच और अभ्यास परीक्षाएँ एक सदस्यता, Bittertalen Plus, का हिस्सा हैं। यहाँ आप पढ़ सकते हैं कि ऐप कौन-सा डेटा इस्तेमाल करता है, क्यों, वह कहाँ रखा जाता है और आपके अधिकार क्या हैं।</p>
+
+<div class="box">
+<p><b>संक्षेप में</b></p>
+<ul>
+<li>बिना खाते के सब कुछ आपके अपने फ़ोन या कंप्यूटर पर रहता है।</li>
+<li>खाते के साथ हम आपका ई-मेल पता, नाम और प्रगति EU में रखते हैं।</li>
+<li>क्या आप कोई पाठ या उत्तर जँचवाते हैं? तब वह पाठ Anthropic (Claude) को जाता है। आपका नाम और ई-मेल पता उसके साथ नहीं जाते।</li>
+<li>अगर आप Bittertalen Plus लेते हैं, तो भुगतान Stripe के ज़रिए होता है। आपके बैंक या कार्ड की जानकारी हम तक नहीं पहुँचती।</li>
+<li>क्या आप खुद अपनी असली परीक्षा का परिणाम बताते हैं? तब वह आपके नाम या ई-मेल पते के बिना हमारे आँकड़ों में गिना जाता है।</li>
+<li>कोई कुकी नहीं, कोई विज्ञापन नहीं, और हम कुछ भी आगे नहीं बेचते।</li>
+<li>आप अपना खाता और उसमें मौजूद सब कुछ खुद हटा सकते हैं।</li>
+</ul>
+</div>
+
+<h2>ज़िम्मेदार कौन है</h2>
+<p>Bittertalen को Artem Matveev बनाते हैं। आपके डेटा की ज़िम्मेदारी उन्हीं की है (डेटा नियंत्रक)। अपने डेटा के बारे में कोई प्रश्न है? <a href="mailto:privacy@bittertalen.nl">privacy@bittertalen.nl</a> पर ई-मेल करें। इस पते पर आने वाले ई-मेल Apple (iCloud Mail) पर निर्माता के मेलबॉक्स में पहुँचते हैं।</p>
+
+<h2>बिना खाते के</h2>
+<p>आप Bittertalen को बिना खाते के इस्तेमाल कर सकते हैं। तब आपकी प्रगति (आपके उत्तर, अभ्यास परीक्षाएँ, शब्द और अगर आपने भरा हो तो आपका नाम), आपकी अपनी किताबें, लिखने के कार्यों के ड्राफ़्ट और पॉडकास्ट में आप जहाँ तक पहुँचे थे, वह सब केवल आपके ब्राउज़र में, आपके अपने डिवाइस पर रहता है। हम उसे नहीं देखते। बोलने वाले भाग की रिकॉर्डिंग और लिखे गए उत्तर पेज बंद करने तक केवल मेमोरी में रहते हैं।</p>
+
+<h2>खाते के साथ</h2>
+<p>खाता ज़रूरी नहीं है। अगर आप खाता बनाते हैं, तो हम ये रखते हैं:</p>
+<ul>
+<li>कोड से लॉग इन करने के लिए आपका ई-मेल पता;</li>
+<li>अगर आप Google, Apple, Microsoft या Facebook से लॉग इन करते हैं, तो हमें उनसे आपका नाम और ई-मेल पता (और कभी-कभी आपकी प्रोफ़ाइल फ़ोटो का लिंक) मिलता है। उन्हें भी दिखता है कि आप Bittertalen में लॉग इन करते हैं, और उन पर उनके अपने गोपनीयता नियम लागू होते हैं;</li>
+<li>आपका पहला नाम और उपनाम, अगर आप उन्हें भरते हैं;</li>
+<li>आपकी प्रगति, ताकि वह आपके सभी डिवाइसों पर एक जैसी रहे (आपके अपने पाठों की गलतियों सहित);</li>
+<li>दैनिक सीमा के लिए, आपने दिन में कितनी बार जाँच करवाई।</li>
+</ul>
+<p>हम ऐसा इसलिए करते हैं क्योंकि आप खुद खाता माँगते हैं (अनुबंध का पालन, GDPR का अनुच्छेद 6(1)(b))। डेटा Supabase के पास, फ़्रैंकफ़र्ट (जर्मनी) के एक डेटा सेंटर में रहता है। दुरुपयोग रोकने के लिए Supabase लॉग इन का एक लॉग (जैसे समय और IP पता) भी रखता है। आपके लॉग इन कोड वाले ई-मेल Resend आयरलैंड से भेजता है।</p>
+
+<h2>Claude द्वारा जाँच</h2>
+<p>लिखने और बोलने वाले भागों में आप अपना पाठ या लिखा गया उत्तर जँचवा सकते हैं। तब कार्य और आपका पाठ हमारे सर्वर के ज़रिए संयुक्त राज्य अमेरिका में Anthropic को जाते हैं, जो Claude बनाने वाली कंपनी है। आपका नाम और ई-मेल पता साथ नहीं जाते। हम आपके पाठ अपने सर्वर पर नहीं रखते। Anthropic उनसे मॉडल प्रशिक्षित नहीं करता और अपने नियमों के अनुसार उन्हें 30 दिनों के भीतर हटा देता है, सिवाय इसके कि दुरुपयोग की जाँच के लिए उसे उनकी ज़्यादा समय तक ज़रूरत हो या कानून ऐसा माँगे।</p>
+<p>बिना खाते के आप दिन में कुछ बार मुफ़्त जाँच करवा सकते हैं। इसे गिनने के लिए हम आपके IP पते से बना एक कोड (गुप्त कुंजी वाला हैश, पता खुद नहीं) और बारों की संख्या रखते हैं। वह कोड हम एक दिन बाद मिटा देते हैं। हम ऐसा दुरुपयोग रोकने के लिए करते हैं (वैध हित, GDPR का अनुच्छेद 6(1)(f))।</p>
+<p><b>सुझाव:</b> अभ्यास के पाठ या फ़ॉर्म में असली जानकारी देना ज़रूरी नहीं है। आप कोई भी नाम, पता या फ़ोन नंबर बना सकते हैं।</p>
+
+<h2>Bittertalen Plus (भुगतान)</h2>
+<p>अगर आप Bittertalen Plus लेते हैं, तो आप Stripe (Stripe Payments Europe, आयरलैंड) के भुगतान पेज पर iDEAL या कार्ड से भुगतान करते हैं। इसके लिए Stripe को भुगतान करने और धोखाधड़ी रोकने के लिए आपका ई-मेल पता, भुगतान की जानकारी (जैसे IBAN या कार्ड नंबर) और आपके डिवाइस और IP पते की जानकारी मिलती है। आपके बैंक या कार्ड की जानकारी हमें नहीं दिखती। हमारे पास केवल Stripe पर आपका ग्राहक और सदस्यता नंबर रहता है, और यह कि सदस्यता चल रही है या नहीं, मासिक है या वार्षिक, और कब तक है। हम ऐसा आपकी सदस्यता चलाने के लिए करते हैं (अनुबंध का पालन, GDPR का अनुच्छेद 6(1)(b)) और इसलिए कि कानून हमें अपना रिकॉर्ड रखने के लिए बाध्य करता है (GDPR का अनुच्छेद 6(1)(c))। धोखाधड़ी की जाँच के लिए Stripe आपके डेटा का खुद भी उपयोग करता है, <a href="https://stripe.com/nl/privacy" rel="noopener">Stripe की गोपनीयता नीति ↗</a> के अनुसार। अपनी सदस्यता आप खुद प्रबंधित करते और रोकते हैं: प्रोफ़ाइल → सदस्यता प्रबंधित करें। अगर आप अपना खाता हटाते हैं, तो हम पहले आपकी सदस्यता रोक देते हैं।</p>
+
+<h2>असली परीक्षा का आपका परिणाम</h2>
+<p>परीक्षा → मेरी परीक्षा में आप खुद बता सकते हैं कि आप उत्तीर्ण हुए या नहीं। यह ज़रूरी नहीं है। अगर आप बताते हैं, तो हम आपके परिणाम से देखते हैं कि अभ्यास परीक्षाएँ और आपके अभ्यास परिणामों की स्थिति सही हैं या नहीं। तब हम हर भाग के लिए ये रखते हैं:</p>
+<ul>
+<li>वह कौन-सा भाग था और आप उत्तीर्ण हुए या नहीं;</li>
+<li>उस भाग की अभ्यास परीक्षा में आपका अंतिम स्कोर और उस समय आपकी स्थिति;</li>
+<li>महीना (दिन नहीं);</li>
+<li>एक यादृच्छिक नंबर, ताकि आप अपना परिणाम सुधार या हटा सकें। यह नंबर और कहीं नहीं, केवल आपके अपने डिवाइस पर रहता है।</li>
+</ul>
+<p>इसके साथ हम कोई नाम, ई-मेल पता, खाता या IP पता नहीं रखते। डेटा फ़्रैंकफ़र्ट में Supabase के पास रहता है। अगर आपका खाता है, तो आपका परिणाम आपके दूसरे परिणामों की तरह आपकी प्रगति में भी रहता है, लेकिन हम इन दोनों को आपस में नहीं जोड़ते। हम ऐसा इसलिए करते हैं क्योंकि आप अपना परिणाम खुद देते हैं (सहमति, GDPR का अनुच्छेद 6(1)(a))। उसी डिवाइस पर अपने परिणाम पर फिर से टैप करके आप सहमति वापस ले सकते हैं। उस नंबर के बिना हम भी आपका परिणाम नहीं ढूँढ सकते, क्योंकि वह आपसे जुड़ा नहीं है।</p>
+
+<h2>वाक् पहचान</h2>
+<p>बोलने वाले भाग में आपका फ़ोन या ब्राउज़र आपकी आवाज़ को पाठ में बदलता है। यह Bittertalen नहीं, आपका ब्राउज़र करता है: Safari इसके लिए Apple का और Chrome, Google का इस्तेमाल करता है। उनके अपने गोपनीयता नियम लागू होते हैं। Bittertalen को केवल पाठ मिलता है।</p>
+
+<h2>वेबसाइट और आगंतुकों की गिनती</h2>
+<p>Bittertalen, Vercel पर चलता है। हमारा सर्वर संयुक्त राज्य अमेरिका में है। साइट उपलब्ध कराने और सुरक्षित रखने के लिए Vercel हर विज़िट पर आपका IP पता, ब्राउज़र और खोला गया पेज प्रोसेस करता है और उसे थोड़े समय के लिए लॉग में रखता है। हम विज़िट Vercel Web Analytics से गिनते हैं: बिना कुकी के और बिना ऐसे डेटा के जिससे आपकी व्यक्तिगत पहचान हो। हम ऐसा ऐप को सुरक्षित और चालू रखने के लिए करते हैं (वैध हित, GDPR का अनुच्छेद 6(1)(f))।</p>
+
+<h2>दूसरों की सामग्री</h2>
+<p>सुनें और देखें में आपको YouTube के वीडियो और डच रचनाकारों के पॉडकास्ट दिखते हैं। सूची की तस्वीरें हम अपने सर्वर से लाते हैं, इसलिए YouTube को नहीं दिखता कि आप सूची देख रहे हैं। वीडियो youtube-nocookie.com से और पॉडकास्ट रचनाकार के सर्वर से तभी आता है जब आप उसे खोलते हैं। तब उन्हें आपका IP पता दिखता है। शब्दकोश हमारे अपने सर्वर पर है। किसी वाक्य का अनुवाद Google Translate से होता है, केवल तब जब आप उस लिंक पर टैप करें।</p>
+<p>वीडियो के लिए हम YouTube का प्लेयर इस्तेमाल करते हैं। अगर आप वीडियो देखते हैं, तो <a href="https://www.youtube.com/t/terms" rel="noopener">YouTube की सेवा की शर्तें ↗</a> भी लागू होती हैं, और YouTube (Google) आपका डेटा <a href="https://policies.google.com/privacy" rel="noopener">Google की गोपनीयता नीति ↗</a> के अनुसार इस्तेमाल करता है। वीडियो और पॉडकास्ट उनके रचनाकारों के हैं; Bittertalen उन्हें केवल दिखाता है और उनसे कुछ नहीं कमाता।</p>
+
+<h2>कुकी</h2>
+<p>Bittertalen कुकी इस्तेमाल नहीं करता और दूसरी वेबसाइटों पर आपका पीछा नहीं करता। ऐप आपके ब्राउज़र में डेटा रखता है (local storage और IndexedDB), लेकिन केवल काम करने के लिए: आपकी प्रगति, सेटिंग और यह कि आप लॉग इन हैं या नहीं।</p>
+
+<h2>EU के बाहर</h2>
+<p>Vercel, Anthropic, Google और Apple संयुक्त राज्य अमेरिका में हैं। Stripe भी संयुक्त राज्य अमेरिका में डेटा प्रोसेस कर सकता है। डेटा वहाँ केवल उन सुरक्षा उपायों के साथ जाता है जो GDPR माँगता है, जैसे EU-US Data Privacy Framework या यूरोपीय आयोग के मानक संविदात्मक खंड।</p>
+
+<h2>कितने समय तक</h2>
+<ul>
+<li>आपका खाता और प्रगति: जब तक आप खाता नहीं हटाते। तब Supabase पर सब कुछ तुरंत मिटा दिया जाता है।</li>
+<li>जाँच के लिए दिए गए पाठ: हमारे पास नहीं; Anthropic के पास अधिकतम 30 दिन (ऊपर देखें)।</li>
+<li>Vercel, Supabase और Resend के लॉग: थोड़े समय के लिए, सुरक्षा और समस्याएँ हल करने के लिए।</li>
+<li>आपके अपने डिवाइस पर: जब तक आप ब्राउज़र में साइट का डेटा नहीं मिटाते।</li>
+<li>बिना खाते की मुफ़्त जाँच का कोड: अधिकतम दो दिन।</li>
+<li>आपका खुद दिया गया परिणाम: अधिकतम तीन साल, या जब तक आप उसे नहीं हटाते।</li>
+<li>भुगतान और चालान: सात साल, क्योंकि कर कानून ऐसा माँगता है (Stripe के पास और हमारे रिकॉर्ड में)। हमारे पास आपकी सदस्यता आपके खाते के साथ हट जाती है।</li>
+</ul>
+
+<h2>आपके अधिकार</h2>
+<p>आप अपना डेटा देख सकते हैं, उसे सुधरवा सकते हैं या हटवा सकते हैं। आप उसे ऐसी फ़ाइल में भी ले सकते हैं जिसे साथ ले जा सकें, और उसके उपयोग पर आपत्ति कर सकते हैं। अपना खाता आप खुद हटाते हैं: प्रोफ़ाइल → खाता हटाएँ। बाकी सब के लिए <a href="mailto:privacy@bittertalen.nl">privacy@bittertalen.nl</a> पर ई-मेल करें। आपको एक महीने के भीतर उत्तर मिलेगा।</p>
+<p>क्या आप हमारे डेटा संभालने के तरीके से सहमत नहीं हैं? तब आप <a href="https://autoriteitpersoonsgegevens.nl" rel="noopener">Autoriteit Persoonsgegevens (डच डेटा संरक्षण प्राधिकरण) ↗</a> में शिकायत कर सकते हैं।</p>
+
+<h2>आयु</h2>
+<p>Bittertalen 16 वर्ष और उससे अधिक आयु के लोगों के लिए है। क्या आप छोटे हैं? तब खाता बनाने से पहले अपने माता-पिता या अभिभावक से अनुमति लें।</p>
+
+<h2>बदलाव</h2>
+<p>अगर हमारे डेटा संभालने के तरीके में कुछ बदलता है, तो हम यह पेज अपडेट करते हैं। ऊपर लिखा रहता है कि आखिरी बार ऐसा कब हुआ।</p>
+</article>
+<article data-l="zh" lang="zh-Hans" hidden>
+<a class="back" href="/"><span aria-hidden="true">←</span>Bittertalen</a>
+<h1>隐私声明</h1>
+<p class="sub">最后更新：2026年11月4日</p>
+<p class="sub">这是帮助你理解的译文。正式文本为荷兰语版本。</p>
+
+<p>Bittertalen 是一款用于练习 A2 融入考试（inburgeringsexamen）和 NT2 国家考试（B1）的应用。练习是免费的；Claude 批改和模拟考试属于订阅服务 Bittertalen Plus。你可以在这里了解应用使用哪些数据、为什么使用、存放在哪里，以及你有哪些权利。</p>
+
+<div class="box">
+<p><b>简而言之</b></p>
+<ul>
+<li>没有账户时，所有内容都保存在你自己的手机或电脑上。</li>
+<li>有账户时，我们在欧盟境内保存你的电子邮箱、姓名和进度。</li>
+<li>你要批改文字或回答吗？那么这段文字会发送给 Anthropic（Claude）。你的姓名和电子邮箱不会一起发送。</li>
+<li>如果你开通 Bittertalen Plus，将通过 Stripe 付款。你的银行或银行卡信息不会到我们这里。</li>
+<li>你主动告诉我们真实考试的结果吗？那么它会计入我们的统计，不含姓名和电子邮箱。</li>
+<li>没有 Cookie，没有广告，我们也不转卖任何内容。</li>
+<li>你可以自己删除账户及其中的所有内容。</li>
+</ul>
+</div>
+
+<h2>谁负责</h2>
+<p>Bittertalen 由 Artem Matveev 制作。他对你的数据负责（数据控制者）。对你的数据有疑问？请发邮件至 <a href="mailto:privacy@bittertalen.nl">privacy@bittertalen.nl</a>。发往该地址的邮件会进入制作者在 Apple（iCloud Mail）的邮箱。</p>
+
+<h2>没有账户时</h2>
+<p>你可以不用账户使用 Bittertalen。这时你的进度（你的回答、模拟考试、单词以及你填写的姓名）、你自己的书、写作任务草稿和播客的收听位置都只保存在你设备上的浏览器里。我们看不到这些内容。口语部分的录音和转写的回答只保留在内存中，直到你关闭页面。</p>
+
+<h2>有账户时</h2>
+<p>账户不是必需的。如果你创建账户，我们会保存：</p>
+<ul>
+<li>你的电子邮箱，用于通过验证码登录；</li>
+<li>如果你用 Google、Apple、Microsoft 或 Facebook 登录，我们会从它们那里得到你的姓名和电子邮箱（有时还有头像链接）。它们也会看到你登录了 Bittertalen，并适用它们自己的隐私规则；</li>
+<li>你填写的名字和姓氏；</li>
+<li>你的进度，让它在你所有设备上保持一致（包括你自己文字中的错误）；</li>
+<li>你每天批改的次数，用于每日限额。</li>
+</ul>
+<p>我们这样做是因为账户是你自己要求的（履行合同，GDPR 第 6 条第 1 款 b 项）。数据保存在 Supabase，位于德国法兰克福的数据中心。Supabase 还会保存登录日志（如时间和 IP 地址）以防止滥用。含登录验证码的邮件由 Resend 从爱尔兰发送。</p>
+
+<h2>由 Claude 批改</h2>
+<p>在写作和口语部分，你可以让系统批改你的文字或转写的回答。这时任务和你的文字会通过我们的服务器发送给美国的 Anthropic，也就是开发 Claude 的公司。你的姓名和电子邮箱不会一起发送。我们不在服务器上保存你的文字。Anthropic 不会用它们训练模型，并按其规则在 30 天内删除，除非为调查滥用或依法需要保留更长时间。</p>
+<p>没有账户时，你每天可以免费批改几次。为了计数，我们保存一个由你的 IP 地址生成的代码（使用密钥的哈希值，不是地址本身）和次数。这个代码在一天后删除。我们这样做是为了防止滥用（正当利益，GDPR 第 6 条第 1 款 f 项）。</p>
+<p><b>提示：</b>在练习文字或表格中，你不必使用真实信息。可以随意编一个姓名、地址或电话号码。</p>
+
+<h2>Bittertalen Plus（付款）</h2>
+<p>如果你开通 Bittertalen Plus，你将在 Stripe（Stripe Payments Europe，爱尔兰）的付款页面上用 iDEAL 或银行卡付款。为此，Stripe 会获得你的电子邮箱、付款信息（如 IBAN 或卡号）以及设备和 IP 地址信息，用于完成付款和防止欺诈。我们看不到你的银行或银行卡信息。我们只保存你在 Stripe 的客户号和订阅号、订阅是否有效、按月还是按年以及到期时间。我们这样做是为了履行你的订阅（履行合同，GDPR 第 6 条第 1 款 b 项），也因为法律要求我们保存记录（GDPR 第 6 条第 1 款 c 项）。Stripe 还会自行使用你的数据进行欺诈检查，依据 <a href="https://stripe.com/nl/privacy" rel="noopener">Stripe 隐私政策 ↗</a>。你可以自己管理和停止订阅：我的 → 管理订阅。如果你删除账户，我们会先停止你的订阅。</p>
+
+<h2>你的真实考试结果</h2>
+<p>在“考试 → 我的考试”中，你可以自己告诉我们是否通过。这不是必需的。如果你这样做，我们会用你的结果检验模拟考试和你练习结果的状态是否准确。这时我们为每个部分保存：</p>
+<ul>
+<li>是哪个部分以及你是否通过；</li>
+<li>你在该部分模拟考试中的最后得分和当时的状态；</li>
+<li>月份（不含日期）；</li>
+<li>一个随机号码，让你可以修改或删除结果。这个号码只保存在你自己的设备上。</li>
+</ul>
+<p>我们不会同时保存姓名、电子邮箱、账户或 IP 地址。数据保存在法兰克福的 Supabase。如果你有账户，你的结果也会和其他成绩一样保存在你的进度中，但我们不会把两者关联起来。我们这样做是因为结果是你自己提供的（同意，GDPR 第 6 条第 1 款 a 项）。在同一设备上再次点击结果即可撤回。没有那个号码，我们也找不到你的结果，因为它与你没有关联。</p>
+
+<h2>语音识别</h2>
+<p>在口语部分，你的手机或浏览器会把语音转成文字。这不是 Bittertalen 做的，而是你的浏览器：Safari 使用 Apple，Chrome 使用 Google。它们适用自己的隐私规则。Bittertalen 只收到文字。</p>
+
+<h2>网站和访客统计</h2>
+<p>Bittertalen 运行在 Vercel 上。我们的服务器在美国。为了提供和保护网站，Vercel 在每次访问时都会处理你的 IP 地址、浏览器和打开的页面，并在日志中短期保存。我们用 Vercel Web Analytics 统计访问量：不使用 Cookie，也没有能识别你个人的数据。我们这样做是为了让应用保持安全和正常运行（正当利益，GDPR 第 6 条第 1 款 f 项）。</p>
+
+<h2>他人的内容</h2>
+<p>在“听和看”中，你会看到 YouTube 视频和荷兰创作者的播客。列表中的图片通过我们自己的服务器获取，所以 YouTube 看不到你在浏览列表。视频来自 youtube-nocookie.com，播客来自创作者的服务器，只有在你打开时才会加载。这时这些方会看到你的 IP 地址。词典在我们自己的服务器上。翻译句子通过 Google Translate 进行，只有在你点击该链接时才会发生。</p>
+<p>视频使用 YouTube 的播放器。如果你观看视频，<a href="https://www.youtube.com/t/terms" rel="noopener">YouTube 服务条款 ↗</a>同样适用，YouTube（Google）会按照 <a href="https://policies.google.com/privacy" rel="noopener">Google 隐私政策 ↗</a>使用你的数据。视频和播客属于其创作者；Bittertalen 只是展示它们，并不从中获利。</p>
+
+<h2>Cookie</h2>
+<p>Bittertalen 不使用 Cookie，也不会在其他网站上跟踪你。应用确实会在你的浏览器中保存数据（local storage 和 IndexedDB），但只是为了正常运行：你的进度、设置以及是否已登录。</p>
+
+<h2>欧盟以外</h2>
+<p>Vercel、Anthropic、Google 和 Apple 位于美国。Stripe 也可能在美国处理数据。数据只有在具备 GDPR 要求的保障措施时才会传送到那里，例如欧盟-美国数据隐私框架或欧盟委员会的标准合同条款。</p>
+
+<h2>保存多久</h2>
+<ul>
+<li>你的账户和进度：直到你删除账户。届时 Supabase 上的所有内容会立即删除。</li>
+<li>你批改的文字：我们不保存；Anthropic 最多保存 30 天（见上文）。</li>
+<li>Vercel、Supabase 和 Resend 的日志：短期保存，用于安全和解决问题。</li>
+<li>你自己的设备上：直到你在浏览器中清除网站数据。</li>
+<li>无账户免费批改的代码：最多两天。</li>
+<li>你自己提供的结果：最多三年，或直到你删除它。</li>
+<li>付款和发票：七年，因为税法有此要求（保存在 Stripe 和我们的记录中）。你在我们这里的订阅信息随账户一起删除。</li>
+</ul>
+
+<h2>你的权利</h2>
+<p>你可以查看、更正或删除你的数据。你也可以获得一份可以带走的文件，并反对对数据的使用。账户由你自己删除：我的 → 删除账户。其他事项请发邮件至 <a href="mailto:privacy@bittertalen.nl">privacy@bittertalen.nl</a>。你会在一个月内收到答复。</p>
+<p>不同意我们处理你数据的方式？你可以向 <a href="https://autoriteitpersoonsgegevens.nl" rel="noopener">Autoriteit Persoonsgegevens（荷兰数据保护局）↗</a>投诉。</p>
+
+<h2>年龄</h2>
+<p>Bittertalen 面向 16 岁及以上的人。你更小吗？请在创建账户前先征得父母或监护人的同意。</p>
+
+<h2>变更</h2>
+<p>如果我们处理数据的方式发生变化，我们会更新此页面。页面顶部写明最后更新时间。</p>
+</article>
 </main>
+<script>
+// The page follows the language of the app (ww-ui); the Dutch text is the official one and shows without a script
+(function(){
+  var S={nl:["nl","NL"],en:["en","EN"],ar:["ar","عربي"],tr:["tr","TR"],hi:["hi","हिं"],zh:["zh-Hans","中文"]},sel=document.getElementById("lang"),l=null,suffix=" — Bittertalen";
+  try{l=localStorage.getItem("ww-ui")}catch(e){}
+  function show(k){if(!S[k])k="nl";var h=document.documentElement;
+    document.querySelectorAll("article").forEach(function(a){var on=a.getAttribute("data-l")===k;a.hidden=!on;if(on)document.title=a.querySelector("h1").textContent+suffix});
+    h.lang=S[k][0];h.dir=k==="ar"?"rtl":"ltr";sel.value=k;document.getElementById("langs").textContent=S[k][1]}
+  show(l);
+  sel.onchange=function(){try{sel.value==="nl"?localStorage.removeItem("ww-ui"):localStorage.setItem("ww-ui",sel.value)}catch(e){}show(sel.value)};
+})();
+</script>
+
 </body>
 </html>
 
