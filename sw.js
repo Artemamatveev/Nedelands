@@ -5,7 +5,7 @@
 // app's background work, so the refresh of the 1 MB page often never finished. With nothing cached yet: the network. Other pages (privacy, over) the same, cached under their own address, never as "/".
 // Paintings, photos and icons: from the cache, refreshed in the background. The dictionary (7 MB): cache only.
 // Recorded voices (audio/): cached on first play. api/ (grading, new texts) always goes to the network.
-const CACHE = "nl-a2-v7", CORE = ["/", "/manifest.json", "/apple-touch-icon.png", "/study/language-v1.js", "/study/progress-v1.js", "/study/writing-v1.js"];
+const CACHE = "nl-a2-v8", CORE = ["/", "/manifest.json", "/apple-touch-icon.png", "/study/language-v1.js", "/study/progress-v1.js", "/study/writing-v1.js"];
 
 // Install must not fail: on the user's iPhone a new sw.js never took over, most likely because caching the 1 MB page
 // at install did not finish. So each file is tried on its own and a miss is fine (the page comes from the network at the
@@ -23,12 +23,16 @@ self.addEventListener("install", e => {
     }
   }).catch(() => {}));
 });
-// A new sw.js comes with a new version of the page (its cache was filled at install): the open windows offer to reload.
+// A new sw.js that replaces an older one comes with a new version of the page: the open windows offer to reload. Not on
+// the first visit (no older cache), or a new learner would see "nieuwe versie" at once.
 self.addEventListener("activate", e => {
-  e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k))))
-    .then(() => self.clients.claim())
-    .then(() => self.clients.matchAll({ type: "window", includeUncontrolled: true }))
-    .then(ws => ws.forEach(w => w.postMessage({ fresh: true }))));
+  e.waitUntil(caches.keys().then(async ks => {
+    const old = ks.filter(k => k !== CACHE);
+    await Promise.all(old.map(k => caches.delete(k)));
+    await self.clients.claim();
+    if (!old.length) return;
+    (await self.clients.matchAll({ type: "window", includeUncontrolled: true })).forEach(w => w.postMessage({ fresh: true }));
+  }));
 });
 // The page sends the list of paintings and photos, so they are there offline before they are first shown
 self.addEventListener("message", e => {
