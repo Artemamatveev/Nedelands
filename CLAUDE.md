@@ -119,7 +119,7 @@ can only be taken back on the device that sent it. `OUTCOME_CAP` new rows a mont
 - **Oefenen**: "Examenonderdelen" (Lezen, Luisteren, Schrijven, Spreken, KNM: practice without the clock) and
 "Grammatica en woorden" under it, "Lezen, luisteren en spreken" beside them on a computer.
 - **Herhalen**: Mijn zwakke punten, Mijn fouten and Mijn woorden (the last two once there is something in them).
-- **Profiel**: first and last name, the level (A2 or B1, see B1) (`S.me` `{name, last}`, so they sync, and they also go to the account's
+- **Profiel**: first and last name, the level (A2 or B1, a list, see B1) (`S.me` `{name, last}`, so they sync, and they also go to the account's
 `user_metadata` by `syncMeta()`; an exam date was asked here once and removed at the user's wish, an old `exam` field is
 kept as it is but not shown), the account
 (see Accounts) and "Mijn resultaten": every proefexamen with its date and score against the pass line, and a few counts.
@@ -295,14 +295,14 @@ stored progress: append new items, don't reorder or rename existing ones.
 
 ## B1 (Staatsexamen NT2, programma I)
 
-Built part by part: Lezen, Luisteren, Schrijven and Spreken. The level is `S.lvl` ("A2" by default, "B1"; it syncs with the progress), chosen
-under "Ik oefen voor" in Profiel and on the welcome screen (`.seg`, two halves of one outlined button, the chosen one
-filled). `parts()` gives the exam parts of the level: at B1 `l1` replaces `lz`, `lb` replaces `ls`, `wb` replaces `wr` and `sb` replaces `sp`; KNM
-belongs to both routes. Examen and Oefenen have two tabs at the top (`.seg.lvt`, "Inburgering A2" |
-"Staatsexamen B1"), showing one level at a time; they open on the level you practise for, and the tab you pick (`exV`,
-not stored) stays until the level changes. The B1 tab shows Lezen B1, Luisteren B1, Schrijven B1, Spreken B1 and KNM (with a
-row to the official oefenexamens NT2 ↗); looking at the other level's tab says which
-level today's lesson follows. At B1 the Grammatica tile shows the B1 rounds first and the A2 ones under "Herhalen op
+Built part by part: Lezen, Luisteren, Schrijven and Spreken. The level is `S.lvl` ("A2" by default, "B1"; it syncs with the progress).
+The user wants it chosen once, at the start: on the welcome screen ("Ik oefen voor", `.seg`, `segHTML()`) and as the first
+step of the starttest (`startTest()`'s `intro()`, `.seg.tlv`; at B1 the test, which checks the A2 basics, is skipped and the
+button goes to today's lesson). After that the app shows only that level: Examen, Oefenen and Mijn examen have no A2/B1
+tabs (they were removed at the user's wish; don't bring them back). It is changed only in Profiel, with a list: a native
+`<select id="plvl">` under a field-like box (`.pick`, like the language pill). `setLvl()` sets it. `parts()` gives the exam parts of the level: at B1 `l1` replaces `lz`, `lb` replaces `ls`, `wb` replaces `wr` and `sb` replaces `sp`; KNM
+belongs to both routes. At B1 Examen and Oefenen show Lezen B1, Luisteren B1, Schrijven B1, Spreken B1 and KNM (with a
+row to the official oefenexamens NT2 ↗). At B1 the Grammatica tile shows the B1 rounds first and the A2 ones under "Herhalen op
 A2-niveau", and today's grammar step helps with a B1 round. The page title, description, Open Graph tags, JSON-LD and
 `manifest.json` name both levels.
 - Grammatica B1: `G1` (`[topic, sentence with ___, right, wrong, wrong, why]`, section `g1`, keys `g1|<i>`): die/dat/
@@ -404,7 +404,7 @@ and `w` words as `Dutch=English` split by `|`, both recorded; `q` questions `[qu
 question was answered right once (`bgDone()`). Twelve lessons are the basics, not A2: don't promise more on screen. Screens in
 `#talk`: `bgList()` (a row at the top of Grammatica en woorden, A2), `bgLes()`, `startTest()`.
 
-The starttest (`START`: one question per lesson, easy to hard, each with "Ik weet het niet"; no right or wrong shown; three misses
+The starttest first asks the level (see B1), then (`START`: one question per lesson, easy to hard, each with "Ik weet het niet"; no right or wrong shown; three misses
 in a row offer an early recommendation and a continuation button) gives `S.start` `{at, lv, miss, untested, asked}`. Only asked questions count in the displayed score. Untested lessons can be recommended, but are not counted as errors. The routing is: 10+ right `lv` 2, needs no lessons; 5+ `lv` 1, the
 lessons in `miss`, one a day instead of the grammar round; fewer `lv` 0, all lessons in order, and today's lesson is only the
 lesson of the day plus "Herhalen" (`SHORT.bg`, `bgDue()`, the lesson questions that are due), without the Mix, until the lessons
