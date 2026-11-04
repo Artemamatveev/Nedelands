@@ -205,8 +205,11 @@ Writing feedback recommends at most two actions, prioritising unfinished tasks a
 
 Run `npm ci --ignore-scripts` and `npm test` after changes. The workflow checks learner verb forms, order alternatives, normal UI entry points, diagnostic counts, time budgets, drafts and deadlines, account isolation, offline merges, conditional-write races, lost acknowledgements and grading-quota failures. Browser/microphone behaviour and human NT2 review still require separate validation.
 
-`sw.js` makes the app work offline and start at once: the page cache-first (`cacheFirst()`: on a slow connection
-people waited for ~300 KB), fetched again in the background; when it changed (another ETag) the open page gets
+`sw.js` makes the app work offline and start quickly: the page from the network if it answers within `FAST` (2.5 s),
+else the cached copy (`cacheFirst()`: on a slow connection people waited for the page). Pure cache-first left the user's
+iPhone on an old version in November 2026 (iOS stops a home-screen app's background work, so the background refresh of
+the 1 MB page never finished), so don't go back to it. A new `sw.js` (bump `CACHE`) tells the open windows at activate. When
+the cached copy was shown and the network's differs (another ETag), the open page gets
 `{fresh:true}`, and because a page that is still starting can miss that, the time of the change is also kept at
 `/__changed`, which the page asks after 4 and 15 s and when it comes back (`freshCheck()`); then a glass bar above the
 tab bar says "Er is een nieuwe versie van Bittertalen" with "Vernieuwen" (`showFresh()`). So a push shows on the next
