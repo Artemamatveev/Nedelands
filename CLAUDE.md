@@ -24,10 +24,10 @@ because clear glass got lost on light paintings, with a globe and a ⌄; a nativ
 order of `LCODE`) and `UIR` (patterns: "2 van 6 klaar", dates, "nodig: 76%"…) translate text
 nodes, `aria-label` and `placeholder` after every render (a MutationObserver; the Dutch original is kept in `UIO`, so
 switching back restores it). The user's rule: only the menus, the privacy statement and sections like it are translated, exercises stay Dutch.
-So never inside `#play` (exercises) or `#read` (the reader), and not content: texts, stories, conversations, chapters, chapter
-and conversation titles in lists, museum labels, the ONA text and questions stay Dutch. `lang="nl"` marks Dutch content (`DUTCH`: never translated, always
-left to right): a conversation, a chapter and the ONA screen wrap their own content in `<div lang="nl">`, because `#tbody` and `#hbody` also hold
-menus; `#vbody` has it always. A new menu string needs all five translations in `UI`. The
+So never inside `#play` (exercises), conversations or the text of what you read: books, chapters, painting stories and the museum label stay Dutch, with
+their titles on their own page. Everything around them is translated: list rows (conversation, chapter and book titles and descriptions), back buttons,
+the reader's buttons, and information such as the ONA screen. `lang="nl"` marks Dutch content (`DUTCH`: never translated, always
+left to right): a conversation wraps its content in `<div lang="nl">`, because `#tbody` and `#hbody` also hold menus. A new menu string needs all five translations in `UI`. The
 translations were made by Claude and not yet checked by native speakers.
 Arabic runs right to left (`<html dir="rtl">`, set by `applyLang()`): use logical CSS (`padding-inline-start`,
 `inset-inline-start`, `text-align:var(--ta)` and `var(--te)` for left and right), not physical sides, for anything in the menus. Dutch
