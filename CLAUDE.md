@@ -256,7 +256,7 @@ vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one comin
   server answers `login` as before. `/api/config` gives `free`; the page shows how many are left (`acc.free`,
   `freeNote()`) and asks to log in when they are used up.
 - Grading: with accounts on, `/api/check` needs the user's access token (or a free check, above) and takes checks from `CHECK_LIMIT` a day
-  (default 20, Amsterdam days, `check_usage`): one task 1, a Schrijven proefexamen 2, Schrijven B1 4, a Spreken proefexamen 6
+  (default 5 when Plus is set up, else 20, Amsterdam days, `check_usage`; `PLUS_LIMIT`, default 60, with Bittertalen Plus): one task 1, a Schrijven proefexamen 2, Schrijven B1 4, a Spreken proefexamen 6
   (`checkCost()`; the page's `examGate()` uses the same numbers and warns before such a proefexamen). A failed grading
   gives them back. The answer has `left`.
 - Welcome screen = the login window (`#welcome`, `drawWelcome()`): a fixed full screen with the painting of the day
@@ -275,6 +275,19 @@ vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one comin
   (microphone only for the site, no camera or location) and COOP. A new outside service (a script, an API, an embed)
   needs its host in the CSP, or the browser blocks it.
 - `/api/account` (DELETE) deletes the user and, by cascade, their rows; the progress on the device stays.
+- Bittertalen Plus (the user's choice, November 2026): a monthly Stripe subscription, €9,99, that only raises the daily
+  Claude checks (`PLUS_LIMIT` instead of `CHECK_LIMIT`); everything else stays free, and no video or podcast may ever go behind
+  it (YouTube's policies). Plain fetch to Stripe's API, no SDK (`stripe()` in `api/_supa.js`). `/api/plus` (`{go:"buy"}`
+  → a Stripe Checkout URL, `{go:"manage"}` → the customer portal: cancel, payment method, invoices) sends the page to
+  Stripe's own pages and back to `/?plus=ok|stop|back` (`initAccount()` opens `plusScreen()` and `plusWait()` looks again
+  a few times). `/api/stripe` is the webhook (`customer.subscription.*`, signature checked on the raw body, the subscription
+  read again from Stripe) and keeps the user's row of `plus` (`supabase/schema.sql`; the page reads its own row in `usage()`,
+  `isPlus()`). The user id travels as the subscription's `metadata.uid`. Plus checks don't count against `CHECK_CAP`.
+  Deleting the account cancels the subscription first. Off unless `STRIPE_SECRET_KEY`, `STRIPE_PRICE` (the monthly price's
+  id, `price_…`) and `STRIPE_WEBHOOK_SECRET` are set; `PLUS_PRICE` is only the shown price; `STRIPE_TERMS=1` makes
+  Checkout ask to accept the terms (set their URL in Stripe first). The profile row and `plusScreen()` (in `#talk`) are the
+  one entry point. Stripe's pages are navigations, so the CSP needs nothing new. Taking money needs a KVK registration
+  (within a week of the start), and Stripe needs the business verified.
 
 ## Content
 

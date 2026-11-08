@@ -2125,7 +2125,11 @@ async function initCloud(){
 // Optional account (Supabase): the progress on every device, and Claude's checks for signed-in users, a few a day.
 // /api/config says whether accounts are set up and which ways to log in are on; without it the app works as before,
 // on this device only. The library (lib/) only loads when there is, or may be, a session.
-const acc={cfg:null,sb:null,user:null,left:null,saved:0,msg:"",step:null,mail:"",load:null};
+const acc={cfg:null,sb:null,user:null,left:null,plus:null,saved:0,msg:"",step:null,mail:"",load:null};
+// Bittertalen Plus (api/plus.js): while the Stripe subscription runs, Claude checks cfg.plus.limit times a day
+const LIVE=["active","trialing","past_due"];
+const isPlus=()=>!!(acc.cfg&&acc.cfg.plus&&acc.plus&&LIVE.includes(acc.plus.status)&&(!acc.plus.until||Date.parse(acc.plus.until)+864e5>Date.now()));
+const myLimit=()=>acc.cfg?(isPlus()?acc.cfg.plus.limit:acc.cfg.limit):20;
 const ACFG="ww-acc-cfg",ALINK="ww-acc"; // the config, and which account this device's progress was last joined with
 const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
 const lsSet=(k,v)=>{try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}};
@@ -2156,10 +2160,14 @@ async function initAccount(){
     if(q.get("error"))acc.msg="Inloggen is niet gelukt. Probeer het nog een keer.";
     history.replaceState(null,"",location.pathname); setTab("profiel"); drawProfile()}
   if(handOf())claimHand();
+  const pq=q.get("plus"); // back from Stripe (api/plus.js)
+  if(pq){history.replaceState(null,"",location.pathname);setTab("profiel");
+    plusMsg=pq==="ok"?"Je betaling wordt verwerkt…":pq==="stop"?"Betalen is gestopt. Er is niets afgeschreven.":"";
+    plusScreen();if(pq==="ok")plusWait(0);return}
   if(!acc.user&&!back&&!lsGet(WEL)&&!$("home").hidden&&(acc.cfg.login||[]).length&&!/bot|crawl|spider|slurp|lighthouse/i.test(navigator.userAgent))welcome();
 }
 async function setUser(u){
-  acc.user=u; acc.left=null; acc.step=null;
+  acc.user=u; acc.left=null; acc.plus=null; acc.step=null;
   if(!u){cloud=null;return drawProfile()}
   const uid=u.id;
   cloud={set:o=>acc.sb.from("progress").upsert({user_id:uid,data:o,t:o.t||0,updated_at:new Date().toISOString()})
@@ -2200,9 +2208,13 @@ function mergeS(a,b){
 }
 async function usage(){
   if(!acc.user||!acc.cfg)return;
-  const{data,error}=await acc.sb.from("check_usage").select("n").eq("user_id",acc.user.id).eq("day",amsDay()).maybeSingle();
-  if(!error){acc.left=acc.cfg.limit-((data&&data.n)||0);drawProfile()}
+  const uid=acc.user.id;
+  if(acc.cfg.plus){const{data,error}=await acc.sb.from("plus").select("status,until,ends").eq("user_id",uid).maybeSingle();if(!error&&acc.user&&acc.user.id===uid)acc.plus=data}
+  const{data,error}=await acc.sb.from("check_usage").select("n").eq("user_id",uid).eq("day",amsDay()).maybeSingle();
+  if(!error){acc.left=myLimit()-((data&&data.n)||0);drawProfile();if($("plusS")&&!$("talk").hidden)plusScreen()}
 }
+// Stripe tells the server a few seconds after paying (api/stripe.js): look again a few times
+const plusWait=n=>usage().then(()=>{if(isPlus()){plusMsg="Bedankt! Je hebt nu Bittertalen Plus.";if($("plusS"))plusScreen()}else if(n<8)setTimeout(()=>plusWait(n+1),2000)},()=>{});
 // Another device may have practised in between: look again when the app comes back; send what is waiting when it goes
 document.addEventListener("visibilitychange",()=>{if(!acc.user)return;if(document.visibilityState==="visible"){pull().catch(()=>{});usage()}else if(pushT)push()});
 const loginErr=e=>{const m=String(e&&(e.message||e.name)||"");
@@ -2334,7 +2346,7 @@ async function authHead(){
   return{Authorization:"Bearer "+t};
 }
 // Why Claude can't grade now, or null
-const noCheck=c=>c==="login"?(acc.free===0?`Je gratis nakijkbeurten van vandaag zijn op. Log in bij Profiel: dan kijkt Claude ${acc.cfg?acc.cfg.limit:20} keer per dag na.`:"Log in bij Profiel om dit door Claude te laten nakijken."):c==="limit"?`Je hebt vandaag al ${acc.cfg?acc.cfg.limit+" keer":"vaak"} laten nakijken. Morgen kan het weer.`:c==="busy"?"Claude heeft vandaag al heel veel teksten nagekeken. Morgen kan het weer.":null;
+const noCheck=c=>c==="login"?(acc.free===0?`Je gratis nakijkbeurten van vandaag zijn op. Log in bij Profiel: dan kijkt Claude ${acc.cfg?acc.cfg.limit:20} keer per dag na.`:"Log in bij Profiel om dit door Claude te laten nakijken."):c==="limit"?`Je hebt vandaag al ${acc.cfg?myLimit()+" keer":"vaak"} laten nakijken. Morgen kan het weer.${acc.cfg&&acc.cfg.plus&&!isPlus()?` Met Bittertalen Plus ${acc.cfg.plus.limit} keer per dag (Profiel).`:""}`:c==="busy"?"Claude heeft vandaag al heel veel teksten nagekeken. Morgen kan het weer.":null;
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const answer=(v,t)=>t==="past"?v[2]:t==="pastpl"?v[3]:t==="pp"?v[4]:v[5];
 
@@ -3406,6 +3418,7 @@ const IC={
   stats:'<rect x="2.5" y="12" width="5" height="9.5" rx="1.3"/><rect x="9.5" y="3.5" width="5" height="18" rx="1.3"/><rect x="16.5" y="8.5" width="5" height="13" rx="1.3"/>',
   errs:'<path fill-rule="evenodd" d="M10.2 3.4a2.1 2.1 0 0 1 3.6 0l8.2 14.1a2.1 2.1 0 0 1-1.8 3.1H3.8A2.1 2.1 0 0 1 2 17.5zM11 9v5.5h2V9zm0 7v2h2v-2z"/>',
   hist:'<path d="M5.5 2.5h13v2.2h-1.2v2.1c0 2.2-1.8 3.8-3.6 5.2 1.8 1.4 3.6 3 3.6 5.2v2.1h1.2v2.2h-13v-2.2h1.2v-2.1c0-2.2 1.8-3.8 3.6-5.2C8.5 10.6 6.7 9 6.7 6.8V4.7H5.5z"/>',
+  plus:'<path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z"/>',
   uit:'<path d="M12 4 1.5 9.5 12 15l8.5-4.45V16h2V9.5z"/><path d="M6 14.2V17c0 1.6 2.7 3 6 3s6-1.4 6-3v-2.8l-6 3.1z"/>',
 ona:'<path d="M9 3.5h6A1.5 1.5 0 0 1 16.5 5v1.5h3.5A2 2 0 0 1 22 8.5V12H2V8.5a2 2 0 0 1 2-2h3.5V5A1.5 1.5 0 0 1 9 3.5zm.5 3h5V5.5h-5zM2 13.5h8.5v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1H22v5a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2z"/>',
   talk:'<path d="M3.5 2.5h10A1.6 1.6 0 0 1 15 4.1v6.3a1.6 1.6 0 0 1-1.5 1.6H8.2l-3.7 3.2V12h-1A1.6 1.6 0 0 1 2 10.4V4.1a1.6 1.6 0 0 1 1.5-1.6z"/><path d="M16.7 7.5h3.8A1.6 1.6 0 0 1 22 9.1v6.3a1.6 1.6 0 0 1-1.5 1.6h-1v3.2L15.8 17H10.5A1.6 1.6 0 0 1 9 15.4V13.6h4.6a3.1 3.1 0 0 0 3.1-3.1z"/>',
@@ -3638,8 +3651,9 @@ function drawProfile(){
   let h="";
   if(c){
     h=`<h3 class="lh">Account</h3>`;
+    const pr=c.plus?`<div class="list" style="margin-bottom:10px">${itHTML(`id="aplus"`,"Bittertalen Plus",plusLine(),{ic:"plus"})}</div>`:"";
     if(u){
-      h+=`<p class="sub">Ingelogd${u.email?` als <b>${esc(u.email)}</b>`:""}<br>Nakijken vandaag: ${acc.left==null?"…":`nog ${Math.max(0,acc.left)} van de ${c.limit}`}</p>
+      h+=`<p class="sub">Ingelogd${u.email?` als <b>${esc(u.email)}</b>`:""}<br>Nakijken vandaag: ${acc.left==null?"…":`nog ${Math.max(0,acc.left)} van de ${myLimit()}`}</p>${pr}
         ${L.includes("passkey")?`<button class="ghost wide" id="apk">Passkey toevoegen</button>`:""}
         <button class="ghost wide" id="aout">Uitloggen</button>
         <button class="ghost wide" id="adel">Account verwijderen</button>`;
@@ -3648,6 +3662,7 @@ function drawProfile(){
     if(acc.msg)h+=`<p class="note">${esc(acc.msg)}</p>`;
   }
   el.innerHTML=h;
+  if($("aplus"))$("aplus").onclick=()=>{plusMsg="";plusScreen()};
   if($("alogin"))$("alogin").onclick=()=>{acc.msg="";welcome()};
   if($("apk"))$("apk").onclick=async()=>{
     try{const{error}=await acc.sb.auth.registerPasskey();if(error)throw error;acc.msg="Je passkey is gemaakt. Nu kun je ook met Face ID, Touch ID of je vingerafdruk inloggen."}
@@ -5068,6 +5083,36 @@ function uitScreen(y=0){
   document.querySelectorAll("#tbody .uit button").forEach(b=>b.onclick=()=>setUit(b.dataset.k,b.dataset.ok==="1"));
   window.scrollTo(0,y);
 }
+// Bittertalen Plus: what it gives, and the way to Stripe's own pages (Checkout to start, the portal to cancel or change)
+let plusMsg="";
+const plusDay=t=>new Date(t).toLocaleDateString("nl-NL",{day:"numeric",month:"long"});
+const plusLine=()=>{const p=acc.plus,c=acc.cfg.plus;
+  if(!isPlus())return`${c.limit} keer per dag nakijken voor € ${c.price} per maand`;
+  return p.status==="past_due"?"Je betaling is niet gelukt":!p.until?"Actief":p.ends?`Loopt af op ${plusDay(p.until)}`:`Actief · verlengt op ${plusDay(p.until)}`};
+function plusScreen(){
+  if(!acc.cfg||!acc.cfg.plus)return home();
+  closePop();hush();TK=null;$("card").innerHTML="";
+  $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;window.scrollTo(0,0);
+  tBack(TABN[tab],home);
+  const c=acc.cfg.plus,p=acc.plus,on=isPlus();
+  $("tbody").innerHTML=`<h2 id="plusS">Bittertalen Plus</h2>`
+    +(on?(p.status==="past_due"?"":`<p class="sub">${plusLine()}</p>`)
+      :`<p class="sub">Claude kijkt je teksten en antwoorden ${c.limit} keer per dag na, in plaats van ${acc.cfg.limit}.</p><p class="sub">Al het andere in Bittertalen blijft gratis.</p><p class="sub">€ ${c.price} per maand. Je kunt elke maand opzeggen.</p>`)
+    +(on&&p.status==="past_due"?`<p class="note">Je laatste betaling is niet gelukt. Stripe probeert het nog een paar keer.</p>`:"")
+    +(plusMsg?`<p class="note" role="status">${esc(plusMsg)}</p>`:"")
+    +(!acc.user?`<p class="note">Log in om Plus te nemen.</p><button class="btn wide" id="pgo">Inloggen</button>`
+      :on||p&&p.status!=="canceled"?`<button class="ghost wide" id="pman">Abonnement beheren</button><p class="note">Opzeggen, je betaalmethode veranderen en je facturen: bij Abonnement beheren.</p>`
+      :`<button class="btn wide" id="pbuy">Word Plus</button>`)
+    +`<p class="note">Je betaalt bij Stripe. Bittertalen ziet je kaart- of bankgegevens niet.</p><p class="note"><a href="/privacy">Privacyverklaring</a></p>`;
+  const go=async(w,b)=>{b.disabled=true;plusMsg="";
+    try{const r=await fetch("/api/plus",{method:"POST",headers:{"Content-Type":"application/json",...await authHead()},body:JSON.stringify({go:w})});
+      const j=await r.json().catch(()=>({}));if(!r.ok||!j.url)throw 0;
+      if(pushT)push(); location.href=j.url}
+    catch(e){plusMsg="Dat lukt nu niet. Probeer het later opnieuw.";plusScreen()}};
+  if($("pbuy"))$("pbuy").onclick=()=>go("buy",$("pbuy"));
+  if($("pman"))$("pman").onclick=()=>go("manage",$("pman"));
+  if($("pgo"))$("pgo").onclick=()=>{acc.msg="";welcome()};
+}
 function onaScreen(){
   closePop();hush();TK=null;$("card").innerHTML="";
   $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;window.scrollTo(0,0);
@@ -5603,6 +5648,19 @@ const UI={
 "Bewaar je voortgang en laat je teksten nakijken.":["Keep your progress and get your texts checked.","احفظ تقدّمك واطلب تصحيح نصوصك.","İlerlemeni kaydet, metinlerini kontrol ettir.","अपनी प्रगति सहेजें और अपने पाठ जँचवाएँ।","保存进度，并批改你的文章。"],
 "Inloggen of account maken":["Log in or create an account","تسجيل الدخول أو إنشاء حساب","Giriş yap veya hesap oluştur","लॉग इन करें या खाता बनाएँ","登录或创建账户"],
 "Uitloggen":["Log out","تسجيل الخروج","Çıkış yap","लॉग आउट","退出登录"],
+"Al het andere in Bittertalen blijft gratis.":["Everything else in Bittertalen stays free.","كل شيء آخر في Bittertalen يبقى مجانيًا.","Bittertalen'deki diğer her şey ücretsiz kalır.","Bittertalen में बाकी सब मुफ़्त रहता है।","Bittertalen 的其他功能仍然免费。"],
+"Word Plus":["Get Plus","اشترك في Plus","Plus'a geç","Plus लें","开通 Plus"],
+"Abonnement beheren":["Manage subscription","إدارة الاشتراك","Aboneliği yönet","सदस्यता प्रबंधित करें","管理订阅"],
+"Opzeggen, je betaalmethode veranderen en je facturen: bij Abonnement beheren.":["Cancel, change your payment method and see your invoices: under Manage subscription.","الإلغاء وتغيير طريقة الدفع والفواتير: في إدارة الاشتراك.","İptal, ödeme yöntemini değiştirme ve faturalar: Aboneliği yönet bölümünde.","रद्द करना, भुगतान का तरीका बदलना और बिल: सदस्यता प्रबंधित करें में।","取消、更换付款方式和查看发票：在“管理订阅”中。"],
+"Je betaalt bij Stripe. Bittertalen ziet je kaart- of bankgegevens niet.":["You pay at Stripe. Bittertalen never sees your card or bank details.","تدفع عبر Stripe. لا يرى Bittertalen بيانات بطاقتك أو حسابك البنكي.","Ödemeyi Stripe'ta yaparsın. Bittertalen kart veya banka bilgilerini görmez.","आप Stripe पर भुगतान करते हैं। Bittertalen आपके कार्ड या बैंक की जानकारी नहीं देखता।","你在 Stripe 付款。Bittertalen 看不到你的银行卡或银行信息。"],
+"Log in om Plus te nemen.":["Log in to get Plus.","سجّل الدخول للاشتراك في Plus.","Plus için giriş yap.","Plus लेने के लिए लॉग इन करें।","登录后开通 Plus。"],
+"Je betaling wordt verwerkt…":["Your payment is being processed…","جارٍ معالجة الدفع…","Ödemen işleniyor…","आपका भुगतान हो रहा है…","正在处理你的付款…"],
+"Bedankt! Je hebt nu Bittertalen Plus.":["Thank you! You now have Bittertalen Plus.","شكرًا! لديك الآن Bittertalen Plus.","Teşekkürler! Artık Bittertalen Plus'ın var.","धन्यवाद! अब आपके पास Bittertalen Plus है।","谢谢！你现在有 Bittertalen Plus 了。"],
+"Betalen is gestopt. Er is niets afgeschreven.":["Payment stopped. Nothing was charged.","توقّف الدفع. لم يُخصم أي مبلغ.","Ödeme durduruldu. Hiçbir ücret alınmadı.","भुगतान रुक गया। कोई पैसा नहीं कटा।","付款已停止，没有扣款。"],
+"Dat lukt nu niet. Probeer het later opnieuw.":["That doesn't work right now. Please try again later.","لا يمكن ذلك الآن. حاول مرة أخرى لاحقًا.","Şu an olmuyor. Daha sonra tekrar dene.","अभी यह नहीं हो पा रहा। बाद में फिर कोशिश करें।","现在无法完成，请稍后再试。"],
+"Je betaling is niet gelukt":["Your payment failed","لم ينجح الدفع","Ödemen başarısız oldu","आपका भुगतान नहीं हो पाया","你的付款未成功"],
+"Je laatste betaling is niet gelukt. Stripe probeert het nog een paar keer.":["Your last payment failed. Stripe will try again a few times.","لم ينجح آخر دفع. سيحاول Stripe مرة أخرى عدة مرات.","Son ödemen başarısız oldu. Stripe birkaç kez daha deneyecek.","आपका पिछला भुगतान नहीं हो पाया। Stripe कुछ बार फिर कोशिश करेगा।","你上次的付款未成功，Stripe 会再尝试几次。"],
+"Actief":["Active","نشط","Etkin","सक्रिय","有效"],
 "Account verwijderen":["Delete account","حذف الحساب","Hesabı sil","खाता हटाएँ","删除账户"],
 "Passkey toevoegen":["Add a passkey","إضافة مفتاح مرور","Geçiş anahtarı ekle","पासकी जोड़ें","添加通行密钥"],
 "Ingelogd als":["Logged in as","تم الدخول باسم","Giriş yapan:","इस रूप में लॉग इन:","当前登录："],
@@ -5692,6 +5750,11 @@ const UIR=[
  [/^Gestart in ([\d,]+) s$/,(m,a)=>{const p=a.replace(",",".");return[`Started in ${p} s`,`بدأ التشغيل في ${p} ثانية`,`${a} sn'de açıldı`,`${p} सेकंड में शुरू हुआ`,`${p} 秒启动`][LI]}],
  [/^(maandag|dinsdag|woensdag|donderdag|vrijdag|zaterdag|zondag) (\d+) (\w+)$/i,(m,d,n,mo)=>{const w=lName({weekday:"long"},new Date(2026,0,5+NLD.indexOf(d.toLowerCase()))),a=dayMon(n,mo);return LANG==="tr"||LANG==="zh"?`${a} ${w}`:`${w} ${a}`}],
  [/^Proefexamen (\d+) (\w+)$/,(m,n,mo)=>["Practice exam ","امتحان تجريبي ","Deneme sınavı ","अभ्यास परीक्षा ","模拟考试 "][LI]+dayMon(n,mo)],
+ [/^(\d+) keer per dag nakijken voor € ([\d,]+) per maand$/,(m,n,p)=>{const e=p.replace(",",".");return[`${n} checks a day for €${e} a month`,`${n} تصحيحًا في اليوم مقابل ${p} € شهريًا`,`Ayda ${p} € karşılığında günde ${n} kontrol`,`€${e} प्रति माह में रोज़ ${n} जाँचें`,`每月 €${e}，每天批改 ${n} 次`][LI]}],
+ [/^Claude kijkt je teksten en antwoorden (\d+) keer per dag na, in plaats van (\d+)\.$/,["Claude checks your texts and answers $1 times a day, instead of $2.","يصحّح Claude نصوصك وإجاباتك $1 مرة في اليوم بدلًا من $2.","Claude metinlerini ve cevaplarını günde $2 yerine $1 kez kontrol eder.","Claude आपके लेख और उत्तर रोज़ $2 की जगह $1 बार जाँचता है।","Claude 每天批改你的文章和回答 $1 次，而不是 $2 次。"]],
+ [/^€ ([\d,]+) per maand\. Je kunt elke maand opzeggen\.$/,(m,p)=>{const e=p.replace(",",".");return[`€${e} a month. You can cancel every month.`,`${p} € شهريًا. يمكنك الإلغاء كل شهر.`,`Ayda ${p} €. Her ay iptal edebilirsin.`,`€${e} प्रति माह। आप हर महीने रद्द कर सकते हैं।`,`每月 €${e}，每月都可以取消。`][LI]}],
+ [/^Loopt af op (\d+) (\w+)$/,(m,n,mo)=>{const d=dayMon(n,mo);return[`Ends on ${d}`,`ينتهي في ${d}`,`${d} tarihinde biter`,`${d} को समाप्त`,`${d}到期`][LI]}],
+ [/^Actief · verlengt op (\d+) (\w+)$/,(m,n,mo)=>{const d=dayMon(n,mo);return[`Active · renews on ${d}`,`نشط · يتجدد في ${d}`,`Etkin · ${d} tarihinde yenilenir`,`सक्रिय · ${d} को नवीनीकरण`,`有效 · ${d}续订`][LI]}],
  [/^Nakijken vandaag: nog (\d+) van de (\d+)$/,["Checks left today: $1 of $2","التصحيحات المتبقية اليوم: $1 من $2","Bugün kalan kontrol: $1/$2","आज बची जाँचें: $2 में से $1","今天剩余批改：$1/$2"]],
  [/^Je les van vandaag is voor (.+) \(kies in Profiel\)\.$/,(m,l)=>{const v=uiT(l)||l;return[`Today's lesson is for ${v} (choose in Profile).`,`درس اليوم مخصص لـ ${v} (اختر في ملفك).`,`Bugünkü ders ${v} için (Profil'den seç).`,`आज का पाठ ${v} के लिए है (प्रोफ़ाइल में चुनें)।`,`今天的课程针对 ${v}（在“我的”中选择）。`][LI]}],
  [/^Zonder account kijkt Claude (\d+) keer per dag gratis na\. Met een account (\d+) keer per dag \(Profiel\)\.$/,["Without an account Claude checks $1 times a day for free. With an account $2 times a day (Profile).","بدون حساب يصحّح Claude مجانًا $1 مرات في اليوم. وبحساب $2 مرة في اليوم (ملفي).","Hesapsız Claude günde $1 kez ücretsiz kontrol eder. Hesapla günde $2 kez (Profil).","बिना खाते के Claude दिन में $1 बार मुफ़्त जाँच करता है। खाते के साथ दिन में $2 बार (प्रोफ़ाइल)।","没有账户时，Claude 每天免费批改 $1 次。有账户时每天 $2 次（我的）。"]],

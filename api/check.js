@@ -10,10 +10,10 @@
 // POST {part:"sb", tasks:[{kind, task, text}]} (1–16, Spreken B1, transcribed by the phone) -> the same shape; kind k (short
 // task, 20 s: inhoud 0–2, grammatica 0–1) or m (medium, 30 s: inhoud 0–3, woorden 0–1, grammatica 0–2, samenhang 0–1)
 // Needs ANTHROPIC_API_KEY in the Vercel project's environment variables.
-// With accounts set up (Supabase, see _supa.js) only a signed-in user may grade, CHECK_LIMIT checks a day;
-// the answer then also has `left`, the checks left today.
+// With accounts set up (Supabase, see _supa.js) only a signed-in user may grade, CHECK_LIMIT checks a day (PLUS_LIMIT
+// with Bittertalen Plus); the answer then also has `left`, the checks left today.
 import Anthropic from "@anthropic-ai/sdk";
-import { accounts, caller, checkCost, useChecks, LIMIT, sameOrigin, FREE, visitor, useFree, useTotal } from "./_supa.js";
+import { accounts, caller, checkCost, useChecks, LIMIT, PLUS, plusOn, plusOf, isPlus, sameOrigin, FREE, visitor, useFree, useTotal } from "./_supa.js";
 
 // Created only when the key is set, so a missing key gives a clear error instead of a crash
 // (trimmed: a key pasted into the dashboard with a trailing newline breaks the request header)
@@ -161,7 +161,7 @@ export default async function handler(req, res) {
   if (!input.length) return res.status(400).json({ error: "no_tasks" });
 
   // Accounts: who is asking, and take the checks before calling Claude (given back if grading fails)
-  let uid = null, left;
+  let uid = null, left, lim = LIMIT, plus = false;
   const cost = checkCost(input.length);
   let who = null, free;
   if (accounts) {
@@ -175,14 +175,17 @@ export default async function handler(req, res) {
       if (free < 0) return res.status(401).json({ error: "login", free: 0 });
     } else {
       uid = user.id;
-      left = await useChecks(uid, cost).catch(() => null);
+      plus = plusOn && isPlus(await plusOf(uid).catch(() => null));
+      if (plus) lim = PLUS;
+      left = await useChecks(uid, cost, lim).catch(() => null);
       if (left == null) return res.status(502).json({ error: "failed" });
-      if (left < 0) return res.status(429).json({ error: "limit", limit: LIMIT });
+      if (left < 0) return res.status(429).json({ error: "limit", limit: lim, plus });
     }
   }
-  const mine = () => (uid ? useChecks(uid, -cost).catch(() => {}) : who ? useFree(who, -cost).catch(() => {}) : null);
-  // Everyone's checks of today together: when the day is full, give this one back and ask to come back tomorrow
-  const total = accounts ? await useTotal(cost) : null;
+  const mine = () => (uid ? useChecks(uid, -cost, lim).catch(() => {}) : who ? useFree(who, -cost).catch(() => {}) : null);
+  // Everyone's checks of today together: when the day is full, give this one back and ask to come back tomorrow.
+  // Plus checks are paid for, so they neither count nor stop at that ceiling.
+  const total = accounts && !plus ? await useTotal(cost) : null;
   if (total != null && total < 0) { await mine(); return res.status(429).json({ error: "busy" }); }
   const giveBack = () => Promise.all([mine(), total != null ? useTotal(-cost) : null]);
   const tasks = input.map((t) => ({
