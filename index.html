@@ -3616,14 +3616,15 @@ const mmss=s=>Math.floor(s/60)+":"+String(s%60).padStart(2,"0");
 // What Claude gets for a Spreken task: the question, and what the photos show (it can't see them)
 const spTask=q=>spoken(q.big)+(q.text?` (Tekst bij de opdracht: ${q.text.replace(/\n/g," · ")})`:"")+(q.pics?` (Op de foto${q.pics.length>1?"'s":""}: ${q.pics.map((f,i)=>(q.pics.length>1?i+1+". ":"")+(FOTO[f]||f)).join("; ")})`:"");
 // Points as in DUO's Spreken criteria, as far as a transcript shows them (max 8 of DUO's 12: pronunciation and fluency need sound);
-// Schrijven has DUO's criteria with spelling (max 10; voldoende: inhoud 2 or more and 7 points, decided by api/check.js)
-const SCMAX={inhoud:3,woorden:2,grammatica:2,spelling:2,samenhang:1}, SPMAX=8, WRMAX=10, spPts=t=>t&&t.scores?Object.values(t.scores).reduce((a,b)=>a+(+b||0),0):null;
+// Schrijven has DUO's criteria with spelling (max 10; voldoende: inhoud 2 or more and 7 points, decided by api/check.js);
+// a form has DUO's form model, WRFMAX (7 points, no grammar or coherence; voldoende 5)
+const SCMAX={inhoud:3,woorden:2,grammatica:2,spelling:2,samenhang:1}, WRFMAX={inhoud:3,woorden:2,spelling:2}, SPMAX=8, WRMAX=10, spPts=t=>t&&t.scores?Object.values(t.scores).reduce((a,b)=>a+(+b||0),0):null;
 const mxPts=M=>Object.values(M).reduce((a,b)=>a+b,0);
 // DUO's points as bars: one per criterion (full green, some oranje, none red), then the total and what is voldoende
 const scoreHTML=(sc,M)=>{if(!sc)return""; const wr="spelling" in sc,X=M||SCMAX,n=M?mxPts(M):wr?WRMAX:SPMAX;
   return`<div class="dpts">${Object.keys(X).filter(k=>k in sc).map(k=>{const v=+sc[k]||0,m=X[k];
       return`<div class="pt"><span>${k[0].toUpperCase()+k.slice(1)}</span><i><b class="${v>=m?"full":v>0?"some":"none"}" style="width:${m?Math.max(v/m*100,v?0:4):0}%"></b></i><em>${v}/${m}</em></div>`}).join("")}
-    <p class="ptt">Samen <b>${spPts({scores:sc})} van ${n}</b></p></div><p class="note">${M?M.spelling?`Voldoende is ${Math.ceil(n*.7)} punten, met inhoud minstens 2.`:M===WBMAX.z?"Eén punt voor de inhoud, één voor de grammatica. Past de inhoud niet, dan telt de grammatica ook niet.":`Voldoende is ${Math.ceil(n*.6)} punten, met inhoud minstens 2. Uitspraak en spreektempo kan ik niet horen: oefen die met Zeg het na.`:wr?"Voldoende is 7 punten, met inhoud minstens 2.":"Uitspraak en vloeiendheid kan ik niet horen: oefen die met Zeg het na."}</p>`};
+    <p class="ptt">Samen <b>${spPts({scores:sc})} van ${n}</b></p></div><p class="note">${M?M.spelling?`Voldoende is ${Math.ceil(n*.7)} punten, met inhoud minstens 2.`:M===WBMAX.z?"Eén punt voor de inhoud, één voor de grammatica. Past de inhoud niet, dan telt de grammatica ook niet.":M===SBMAX.k?"Eén punt voor de inhoud, één voor goede woorden en zinnen. Voldoende als je doet wat er gevraagd wordt. Uitspraak en spreektempo kan ik niet horen: oefen die met Zeg het na.":`Voldoende is ${Math.ceil(n*.6)} punten, met inhoud minstens 2. Uitspraak en spreektempo kan ik niet horen: oefen die met Zeg het na.`:wr?"Voldoende is 7 punten, met inhoud minstens 2.":"Uitspraak en vloeiendheid kan ik niet horen: oefen die met Zeg het na."}</p>`};
 // The learner's own text with each error marked where it is (numbered like the list under it). Claude returns the
 // wrong words as they stand in the text; one that can't be found (a missing word) is only in the list.
 function markErrs(text,errs){
@@ -3747,12 +3748,13 @@ function spNext(q,r){
 let tmr=null,tEnd=0;
 function tick(){const s=Math.max(0,Math.round((tEnd-Date.now())/1000));$("timer").textContent=tEnd?Math.floor(s/60)+":"+String(s%60).padStart(2,"0"):"";if(tEnd&&s<=0&&cur&&cur.exam){if(cur.nav)return submitExam();const q=queue[pos];if(q&&q.type==="write"&&cur.ans.length===pos)cur.ans.push(grab(q));pos=queue.length;finish()}}
 function clock(min){clearInterval(tmr);tmr=null;tEnd=min?Date.now()+min*6e4:0;tick();if(min)tmr=setInterval(tick,1000)}
-WR.forEach((p,i)=>ITEMS.push({sec:"wr",k:"wr|"+i,ord:i,type:"write",label:p[2]?"Schrijfopdracht: formulier":"Schrijfopdracht",big:p[0],sub:"",right:p[1],fields:p[2],open:p[3]}));
+WR.forEach((p,i)=>ITEMS.push({sec:"wr",k:"wr|"+i,ord:i,type:"write",label:p[2]?"Schrijfopdracht: formulier":"Schrijfopdracht",big:p[0],sub:"",right:p[1],fields:p[2],open:p[3],...(p[2]?{kind:"f",mx:WRFMAX}:{})}));
 // Schrijven B1: mx = the points per criterion of this kind of task (as api/check.js scores them), 47 in a proefexamen of 8 + 1 + 3
 const WBMAX={z:{inhoud:1,grammatica:1},f:{inhoud:3,woorden:1,grammatica:2,spelling:1},m:{inhoud:3,woorden:1,grammatica:2,spelling:1,samenhang:1}},WBL={z:"Zinsopdracht",f:"Formulier",m:"E-mail"};
 WRB.forEach((p,i)=>ITEMS.push({sec:"wb",k:"wb|"+i,ord:p.k==="z"?0:1,type:"write",kind:p.k,label:WBL[p.k]+" (B1)",intro:p.i,text:p.d,pics:p.f,big:p.t,ctx:p.c,pts:p.p,fields:p.fl,open:p.o,sub:"",right:p.m,mx:WBMAX[p.k]}));
-// Spreken B1: spk = seconds to speak; mx = points per criterion (api/check.js), 8 × 3 + 8 × 7 = 80 in a proefexamen
-const SBMAX={k:{inhoud:2,grammatica:1},m:{inhoud:3,woorden:1,grammatica:2,samenhang:1}};
+// Spreken B1: spk = seconds to speak; mx = points per criterion (api/check.js), 8 × 2 + 8 × 7 = 72 in a proefexamen. A short
+// task has 2 points, inhoud and woord- en zinsvorming 0–1 each, as in the Regeling beoordelingsnormen Staatsexamen Nt2
+const SBMAX={k:{inhoud:1,grammatica:1},m:{inhoud:3,woorden:1,grammatica:2,samenhang:1}};
 SPB.forEach((p,i)=>ITEMS.push({sec:"sb",k:"sb|"+i,ord:p.k==="k"?0:1,type:"reveal",kind:p.k,label:p.k==="k"?"Korte opdracht (B1): 20 seconden":"Middellange opdracht (B1): 30 seconden",big:p.t,sub:"",right:p.m,pics:p.f,text:p.d,spk:p.k==="k"?20:30,prep:p.k==="m"?15:p.f?5:0,mx:SBMAX[p.k]}));
 // the whole task as Claude needs it, with the sentence to finish, the points, the information and the photos
 const wrTask=q=>q.big+(q.open?" "+q.open:"")+(q.ctx?(/___/.test(q.ctx)?"\nTekst met een open plek (___); de cursist schrijft alleen wat op de open plek komt:\n":"\nDe cursist maakt deze zin af: ")+q.ctx:"")
@@ -4092,7 +4094,8 @@ function startExam(e,go){
 // Pass mark for the computer-marked parts: about 7 in 10 (e.g. 18 of 25 for Lezen, 28 of 40 for KNM); DUO sets it per exam version
 const PASS=.7;
 // Lezen and Luisteren: most sources give 19 of 25 (DUO puts the line on the result, not on a public page); KNM 28 of 40
-const PASSP={lz:19/25,ls:19/25,knm:28/40,wb:25/47}, passOf=k=>PASSP[k]||PASS, passPc=k=>Math.round(passOf(k)*100);
+// B1: what the public exams (openbare examens) of the Staatsexamen needed for 500: Lezen I 2024 24 of 36, Luisteren I 2025 26 of 39
+const PASSP={lz:19/25,ls:19/25,knm:28/40,wb:25/47,l1:24/36,lb:26/39}, passOf=k=>PASSP[k]||PASS, passPc=k=>Math.round(passOf(k)*100);
 // Proefexamen results per part (S.res, last 10): {at, pc, nw}, nw = % of the questions that were new (missing in older results).
 // Ready = the last two average 80% or more, and at least one of them was mostly new questions
 function keepRes(k,pc,writing){if(k){S.res=S.res||{};S.res[k]=(S.res[k]||[]).concat({id:crypto.randomUUID(),at:Date.now(),pc,nw:cur.nw,...(writing?{writing}:{})}).slice(-10)}save()}
@@ -4929,7 +4932,7 @@ function finish(){
       .map(t=>`<li>${t}<span>${by[t].r} van ${by[t].n} goed</span></li>`).join(""):"";
     $("card").innerHTML=`<div class="done"><p class="ask">${cur.t}: uitslag</p><div class="big">${pc}%</div><p class="ru">${right} van ${total} goed</p></div>
       <p><b class="${pass?"good":"bad"}">${pass?"Oefendoel bereikt":"Meer oefenen"}</b></p>
-      <p class="note">${cur.part==="l1"||cur.part==="lb"?"Bij het Staatsexamen heb je een score van 500 nodig. Hoeveel vragen dat zijn, maakt DUO niet bekend: mik op 7 van de 10.":cur.part==="lz"||cur.part==="ls"?"Op het examen heb je waarschijnlijk 19 van de 25 vragen goed nodig. DUO zet de grens op je uitslag.":cur.part==="knm"?"Op het examen heb je 28 van de 40 vragen goed nodig.":"Op het examen heb je ongeveer 7 van de 10 vragen goed nodig."} Hier is dat ${need} van ${total}.</p>
+      <p class="note">${cur.part==="l1"||cur.part==="lb"?`Bij het Staatsexamen heb je een score van 500 nodig. Hoeveel vragen dat zijn, verschilt per examen: bij het openbare examen was het ${cur.part==="l1"?"24 van de 36":"26 van de 39"}.`:cur.part==="lz"||cur.part==="ls"?"Op het examen heb je waarschijnlijk 19 van de 25 vragen goed nodig. DUO zet de grens op je uitslag.":cur.part==="knm"?"Op het examen heb je 28 van de 40 vragen goed nodig.":"Op het examen heb je ongeveer 7 van de 10 vragen goed nodig."} Hier is dat ${need} van ${total}.</p>
       ${themes?`<p class="ask">Per thema</p><ul class="errs">${themes}</ul>`:""}
       ${cur.miss.length?`<p class="ask">Fout beantwoord</p><ul class="errs">${cur.miss.slice(0,20).map(m=>`<li>${m.q}<span>Goed is: ${m.r}</span></li>`).join("")}</ul>`:""}
       <div class="two"><button class="ghost" id="tohome">Alle onderdelen</button><button class="btn" id="more">Nog een keer</button></div>`;

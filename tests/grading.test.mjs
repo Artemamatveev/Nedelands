@@ -32,7 +32,7 @@ async function handler(options={}){
   const supa=new vm.SyntheticModule(Object.keys(values),function(){for(const [key,value]of Object.entries(values))this.setExport(key,value)},{context});
   const module=new vm.SourceTextModule(fs.readFileSync(new URL('api/check.js',root),'utf8'),{context});
   await module.link(name=>name==='@anthropic-ai/sdk'?sdk:supa);await module.evaluate();
-  const req={method:'POST',headers:{host:'example.test',origin:'https://example.test'},body:{...(options.part?{part:options.part}:{}),tasks:[{...(options.part?{kind:options.kind||'z'}:{}),task:'Stuur een bericht',text:'Ik kom later. Personal test content.'}]}};
+  const req={method:'POST',headers:{host:'example.test',origin:'https://example.test'},body:{...(options.part?{part:options.part}:{}),tasks:[{...(options.part?{kind:options.kind||'z'}:options.kind?{kind:options.kind}:{}),task:'Stuur een bericht',text:'Ik kom later. Personal test content.'}]}};
   const res={statusCode:200,status(n){this.statusCode=n;return this},json(body){this.body=body;return this}};
   await module.namespace.default(req,res);
   return {res,usage,quotas,logs,lims,modelCalls};
@@ -106,7 +106,7 @@ test('Scores outside the scale are clamped, and inhoud 0 makes every score 0',as
   assert.deepEqual({...zero.res.body.tasks[0].scores},{inhoud:0,woorden:0,grammatica:0,spelling:0,samenhang:0});
   assert.equal(zero.res.body.tasks[0].passed,false);
 });
-test('B1 rules: a sentence task needs both points, an e-mail 70% with inhoud 2, a short spoken task 2 of 3',async()=>{
+test('B1 rules: a sentence task needs both points, an e-mail 70% with inhoud 2, a short spoken task needs its content point',async()=>{
   const z1=await handler({part:'wb',kind:'z',scores:{inhoud:1,grammatica:1}});
   assert.equal(z1.res.body.tasks[0].passed,true);
   const z0=await handler({part:'wb',kind:'z',scores:{inhoud:1,grammatica:0}});
@@ -115,8 +115,20 @@ test('B1 rules: a sentence task needs both points, an e-mail 70% with inhoud 2, 
   assert.equal(mail.res.body.tasks[0].passed,true); // 6 of 8 >= ceil(5.6)
   const mailLow=await handler({part:'wb',kind:'m',scores:{inhoud:2,woorden:1,grammatica:1,spelling:0,samenhang:1}});
   assert.equal(mailLow.res.body.tasks[0].passed,false); // 5 of 8
-  const k=await handler({part:'sb',kind:'k',scores:{inhoud:2,grammatica:0}});
+  const k=await handler({part:'sb',kind:'k',scores:{inhoud:1,grammatica:0}});
   assert.equal(k.res.body.tasks[0].passed,true);
-  const k1=await handler({part:'sb',kind:'k',scores:{inhoud:1,grammatica:1}});
-  assert.equal(k1.res.body.tasks[0].passed,false);
+  assert.deepEqual({...k.res.body.tasks[0].scores},{inhoud:1,grammatica:0});
+  const k2=await handler({part:'sb',kind:'k',scores:{inhoud:2,grammatica:1}});
+  assert.deepEqual({...k2.res.body.tasks[0].scores},{inhoud:1,grammatica:1}); // clamped to the 2-point scale
+  const k0=await handler({part:'sb',kind:'k',scores:{inhoud:0,grammatica:1}});
+  assert.equal(k0.res.body.tasks[0].passed,false);
+});
+test('A2 form: DUO form model, 7 points without grammar or coherence, voldoende with 5',async()=>{
+  const f=await handler({kind:'f',scores:{inhoud:2,woorden:1,grammatica:2,spelling:2,samenhang:1}});
+  assert.deepEqual({...f.res.body.tasks[0].scores},{inhoud:2,woorden:1,spelling:2});
+  assert.equal(f.res.body.tasks[0].passed,true);
+  const f4=await handler({kind:'f',scores:{inhoud:2,woorden:1,grammatica:2,spelling:1,samenhang:1}});
+  assert.equal(f4.res.body.tasks[0].passed,false); // 4 of 7
+  const t=await handler({scores:{inhoud:2,woorden:1,grammatica:2,spelling:1,samenhang:1}});
+  assert.equal(t.res.body.tasks[0].passed,true); // a text: 7 of 10
 });

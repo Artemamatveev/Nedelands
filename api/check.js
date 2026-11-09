@@ -1,14 +1,15 @@
 // Grades Schrijven (writing) and Spreken (speaking) answers with Claude.
 // POST {tasks:[{task, form, text}]} (1–4 tasks) -> {tasks:[{passed, verdict, corrected, errors, scores}]}
-// scores {inhoud 0–3, woorden 0–2, grammatica 0–2, spelling 0–2, samenhang 0–1}: DUO's Schrijven criteria; a task is
-// voldoende with inhoud 2 or more and 7 of the 10 points
+// scores {inhoud 0–3, woorden 0–2, grammatica 0–2, spelling 0–2, samenhang 0–1}: DUO's Schrijven criteria for a text; a
+// form (kind f, or a task with form fields) has DUO's form model: inhoud 0–3, woorden 0–2, spelling 0–2 (7 points). A task
+// is voldoende with inhoud 2 or more and 70% of its points (7 of 10, 5 of 7)
 // POST {part:"sp", tasks:[{task, text}]} (1–16 spoken answers, transcribed by the phone) -> the same shape plus
 // scores {inhoud 0–3, woorden 0–2, grammatica 0–2, samenhang 0–1}: the parts of DUO's Spreken criteria that can be
 // judged from a transcript (pronunciation and fluency can't)
 // POST {part:"wb", tasks:[{kind, task, form, text}]} (1–12, Schrijven B1 of the Staatsexamen NT2 programma I) -> the same
 // shape; kind z (zinsopdracht: inhoud 0–1, grammatica 0–1), f (formulier, 7 points) or m (e-mail, 8 points); 47 in all
 // POST {part:"sb", tasks:[{kind, task, text}]} (1–16, Spreken B1, transcribed by the phone) -> the same shape; kind k (short
-// task, 20 s: inhoud 0–2, grammatica 0–1) or m (medium, 30 s: inhoud 0–3, woorden 0–1, grammatica 0–2, samenhang 0–1)
+// task, 20 s: inhoud 0–1, grammatica 0–1 (woord- en zinsvorming), 2 points as in the Regeling beoordelingsnormen) or m (medium, 30 s: inhoud 0–3, woorden 0–1, grammatica 0–2, samenhang 0–1)
 // Needs ANTHROPIC_API_KEY in the Vercel project's environment variables.
 // With accounts set up (Supabase, see _supa.js) only a signed-in user may grade, CHECK_LIMIT checks a day;
 // the answer then also has `left`, the checks left today. With Bittertalen Plus (api/plus.js) PLUS_LIMIT a day.
@@ -48,6 +49,7 @@ const SCHEMA = {
 // Structured outputs don't support minimum/maximum, so the ranges are in the prompt and clamped below
 const SCORES_SP = { inhoud: 3, woorden: 2, grammatica: 2, samenhang: 1 };
 const SCORES_WR = { inhoud: 3, woorden: 2, grammatica: 2, spelling: 2, samenhang: 1 };
+const SCORES_WRF = { inhoud: 3, woorden: 2, spelling: 2 }; // an A2 form: grammar and coherence are not scored
 const withScores = (SC) => {
   const result = {
     ...RESULT,
@@ -71,7 +73,7 @@ const clampScores = (sc, SC) => {
 };
 // Schrijven: voldoende follows from the points, not from Claude's overall impression
 const sum = (o) => Object.values(o).reduce((a, b) => a + b, 0);
-const wrPassed = (sc) => sc.inhoud >= 2 && sum(sc) >= 7;
+const wrPassed = (sc, SC) => sc.inhoud >= 2 && sum(sc) >= Math.ceil(sum(SC) * 0.7);
 // Schrijven B1: the points per kind of task, as on the Staatsexamen (8 zinsopdrachten, a form and three e-mails = 47)
 const SCORES_WB = {
   z: { inhoud: 1, grammatica: 1 },
@@ -80,9 +82,10 @@ const SCORES_WB = {
 };
 const KIND_WB = { z: "zinsopdracht", f: "formulier", m: "e-mail" };
 // Spreken B1: what a transcript shows of the Staatsexamen's criteria (pronunciation and pace need sound)
-const SCORES_SB = { k: { inhoud: 2, grammatica: 1 }, m: { inhoud: 3, woorden: 1, grammatica: 2, samenhang: 1 } };
+const SCORES_SB = { k: { inhoud: 1, grammatica: 1 }, m: { inhoud: 3, woorden: 1, grammatica: 2, samenhang: 1 } };
 const KIND_SB = { k: "korte opdracht, 20 seconden", m: "middellange opdracht, 30 seconden" };
-const sbPassed = (sc, SC) => sc.inhoud >= 2 && sum(sc) >= Math.ceil(sum(SC) * 0.6);
+// a short task is voldoende when it does what is asked; a medium one with inhoud 2 and 60% of the points
+const sbPassed = (sc, SC) => (SC.inhoud === 1 ? sc.inhoud === 1 : sc.inhoud >= 2 && sum(sc) >= Math.ceil(sum(SC) * 0.6));
 const wbPassed = (sc, SC) => (SC.spelling ? sc.inhoud >= 2 && sum(sc) >= Math.ceil(sum(SC) * 0.7) : sum(sc) === sum(SC));
 
 const SYSTEM = `Je bent examinator voor het inburgeringsexamen Schrijven, niveau A2.
@@ -94,6 +97,7 @@ Geef voor elke opdracht, in dezelfde volgorde:
 - errors: de fouten, de belangrijkste eerst (woordvolgorde, werkwoordsvormen, de/het, spelling). wrong = het foute fragment uit de tekst, right = de juiste versie, why = korte uitleg van de regel in eenvoudig Nederlands (A2). Geen fouten: lege lijst.
 - scores: punten volgens het beoordelingsmodel Schrijven van DUO. Wees streng zoals een examinator: tel voor de punten alle fouten in de tekst, ook als je ze niet allemaal noemt.
   inhoud (adequaatheid en begrijpelijkheid, 0–3): 3 = alle punten van de opdracht gedaan, goed begrijpelijk en passend (ook de toon, bijvoorbeeld een aanhef en een groet in een e-mail); 2 = bijna alles gedaan, één punt ontbreekt of is onduidelijk; 1 = maar een deel van de opdracht gedaan of moeilijk te begrijpen; 0 = onleesbaar, leeg of geen antwoord op de opdracht. Bij een formulier hoort bij inhoud ook of alle velden ingevuld en logisch zijn.
+  Bij een formulier tellen alleen inhoud (0–3), woorden (0–2) en spelling (0–2), zoals in het beoordelingsmodel formulieren van DUO (7 punten): geef grammatica en samenhang daar 0.
   woorden (woordenschat, 0–2): 2 = genoeg en passende woorden voor het onderwerp; 1 = weinig woorden of soms een verkeerd woord, maar begrijpelijk; 0 = zo weinig of zulke verkeerde woorden dat de tekst moeilijk te begrijpen is.
   grammatica (0–2): 2 = geen of bijna geen grammaticafouten (hoogstens 2 in een korte tekst); 1 = vrij veel fouten (3 tot 5); 0 = veel fouten (6 of meer), of fouten die het begrijpen moeilijk maken. Grammaticafouten zijn woordvolgorde, werkwoordsvormen, de/het, meervoud, lidwoorden en voorzetsels.
   spelling (0–2): 2 = de spelling is redelijk correct (hoogstens 2 spelfouten) en de fouten hinderen het begrijpen niet; 1 = meer spelfouten (3 tot 5), maar gewone woorden zijn goed te herkennen en persoonlijke gegevens zijn goed geschreven; 0 = veel spelfouten (6 of meer) of woorden die je niet herkent. Hoofdletters en leestekens horen bij spelling.
@@ -128,7 +132,7 @@ Geef voor elk antwoord, in dezelfde volgorde:
 - corrected: het antwoord van de kandidaat, verbeterd, zoals je het goed zegt; verander alleen wat fout is en voeg geen nieuwe informatie toe.
 - errors: de fouten, de belangrijkste eerst (woordvolgorde, ook in bijzinnen, werkwoordsvormen, de/het, voorzetsels, verkeerde woorden). wrong = het foute fragment, right = de juiste versie, why = korte uitleg van de regel in duidelijk Nederlands (B1). Geen fouten: lege lijst.
 - scores: punten, alleen wat je uit de tekst kunt halen. Geef 0 voor een onderdeel dat bij deze soort opdracht niet meetelt.
-  Korte opdracht (3 punten): inhoud 0–2: 2 = het antwoord doet precies wat gevraagd wordt, past bij de situatie en de persoon (beleefd waar dat hoort) en geeft de gevraagde informatie; 1 = maar een deel, of het past niet goed; 0 = geen antwoord, niet over de opdracht, of alleen de opdracht herhaald. grammatica 0–1: 1 = hoogstens één kleine fout; 0 = meer fouten. woorden en samenhang zijn 0.
+  Korte opdracht (2 punten): inhoud 0–1: 1 = het antwoord doet wat gevraagd wordt, past bij de situatie en de persoon (beleefd waar dat hoort) en geeft de gevraagde informatie; 0 = geen antwoord, maar een deel, niet over de opdracht, of alleen de opdracht herhaald. grammatica (woord- en zinsvorming) 0–1: 1 = goede zinnen met hoogstens één kleine fout; 0 = meer fouten. woorden en samenhang zijn 0.
   Middellange opdracht (7 punten): inhoud 0–3: 3 = alle onderdelen (bijvoorbeeld de mening én twee redenen, alle drie de foto's in de goede volgorde, beide dingen vergeleken én een keuze), duidelijk en passend; 2 = één onderdeel ontbreekt of is onduidelijk; 1 = een deel; 0 = geen antwoord of niet over de opdracht. woorden 0–1: 1 = gevarieerde en passende woorden op B1-niveau. grammatica 0–2: 2 = hoogstens 2 fouten en ook langere zinnen met bijzinnen; 1 = 3 tot 5 fouten; 0 = meer. samenhang 0–1: 1 = de zinnen hangen logisch samen (omdat, daarom, maar, eerst, daarna, bovendien).
   Is inhoud 0, dan zijn alle punten 0.
 Bij een opdracht met foto's of een tekst staat tussen haakjes wat erop staat.`;
@@ -195,7 +199,7 @@ export default async function handler(req, res) {
   let providerStarted = false;
   const giveBack = () => Promise.all([mine(), providerStarted || plus ? null : useTotal(-cost).catch(() => null)]);
   const tasks = input.map((t) => ({
-    kind: wb ? (SCORES_WB[t?.kind] ? t.kind : "m") : sb ? (SCORES_SB[t?.kind] ? t.kind : "m") : "",
+    kind: wb ? (SCORES_WB[t?.kind] ? t.kind : "m") : sb ? (SCORES_SB[t?.kind] ? t.kind : "m") : !sp && (t?.kind === "f" || str(t?.form, 1500)) ? "f" : "",
     task: str(t?.task, wb ? 2000 : 1200), form: sp ? "" : str(t?.form, 1500), text: str(t?.text, 2500),
   }));
   const max = !sp ? 8 : tasks.length === 1 ? 8 : tasks.length <= 4 ? 5 : 3;
@@ -219,7 +223,7 @@ export default async function handler(req, res) {
     : tasks
       .map(
         (t, i) =>
-          `OPDRACHT ${i + 1}: ${t.task}` +
+          `OPDRACHT ${i + 1}${t.kind === "f" ? " (formulier, 7 punten)" : ""}: ${t.task}` +
           (t.form ? `\nIngevuld formulier (controleer of alle velden zijn ingevuld en logisch zijn):\n${t.form}` : "") +
           `\nTEKST VAN DE CURSIST ${i + 1}:\n<<<\n${t.text || "(leeg)"}\n>>>`,
       )
@@ -246,9 +250,9 @@ export default async function handler(req, res) {
       left: who ? free : left,
       ...(who ? { free } : {}),
       tasks: out.map((t, i) => {
-        const SC = wb ? SCORES_WB[tasks[i].kind] : sb ? SCORES_SB[tasks[i].kind] : sp ? SCORES_SP : SCORES_WR;
+        const SC = wb ? SCORES_WB[tasks[i].kind] : sb ? SCORES_SB[tasks[i].kind] : sp ? SCORES_SP : tasks[i].kind === "f" ? SCORES_WRF : SCORES_WR;
         const scores = clampScores(t.scores, SC);
-        return { ...t, scores, passed: sb ? sbPassed(scores, SC) : sp ? t.passed : wb ? wbPassed(scores, SC) : wrPassed(scores) };
+        return { ...t, scores, passed: sb ? sbPassed(scores, SC) : sp ? t.passed : wb ? wbPassed(scores, SC) : wrPassed(scores, SC) };
       }),
     });
   } catch (error) {

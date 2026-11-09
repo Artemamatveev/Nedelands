@@ -368,7 +368,7 @@ A2-niveau", and today's grammar step helps with a B1 round. The page title, desc
   label "Lees de tekst (B1)". Six questions per text with three options; question types like the exam: main point,
   purpose, details, the writer's opinion, a word or phrase in context, what you should do. The proefexamen (`EX.l1`) is
   6 whole texts, 36 questions, 110 minutes, with Overzicht and going back, like Lezen A2. DUO publishes no raw pass mark
-  (a scaled 500), so the pass line is the default 70%. Places, organisations and people are made up; facts about the
+  (a scaled 500); the pass line is what the public exam (openbaar examen) of 2024 needed, 24 of 36 (`PASSP.l1`). Places, organisations and people are made up; facts about the
   Netherlands in the texts are real. The first eight texts are about 220 words, the later ones about 300; the exam's
   texts are longer still, so new ones may be longer.
 - Luisteren B1: `LSB` (`[text, photo|null, [[q, right, wrong, wrong], …], intro]`, like `LSM`), section `lb`, keys
@@ -376,7 +376,7 @@ A2-niveau", and today's grammar step helps with a B1 round. The page title, desc
   words, three or four questions each (main point, details, an opinion, what to do). The proefexamen (`EX.lb`) takes
   whole fragments up to 39 questions in 90 minutes, with Overzicht; each fragment is heard once (A2: twice), and before
   listening the screen lists every question of the fragment (`qs`), like the reading time on the exam. Practice takes
-  two whole fragments (`someTexts()`) and may replay. Pass line the default 70%.
+  two whole fragments (`someTexts()`) and may replay. Pass line 26 of 39, what the public exam of 2025 needed (`PASSP.lb`).
 - Schrijven B1: `WRB` (objects: `k` kind, `t` task, `m` example; `c` the sentence to finish (ends with …) or a text with
   an open place `___`; `fl`/`o` form questions; `i` situation, `d` information rendered by `docHTML()`, `f` photos, `p`
   the points to write about), section `wb`, keys `wb|<i>`. Three kinds, as on the exam: zinsopdracht (`z`, 2 points:
@@ -390,12 +390,13 @@ A2-niveau", and today's grammar step helps with a B1 round. The page title, desc
   `cur.zs`: one check instead of three). `wrTask()` builds the full task text for Claude (and the Word file) from all these fields.
 - Spreken B1: `SPB` (objects: `k` kind, `t` situation and task, `f` photos, `d` a short text, `m` example), section
   `sb`, keys `sb|<i>`, type `reveal` like Spreken A2 but with `spk`, the seconds to speak (`listen(mode, done, lim)`).
-  Two kinds, as on the exam: korte opdracht (`k`, 20 seconds: asking, choosing, explaining, apologising; inhoud 0–2,
-  grammatica 0–1) and middellange opdracht (`m`, 15 seconds to think, which is only said, and 30 to speak: advice, an
+  Two kinds, as on the exam: korte opdracht (`k`, 20 seconds: asking, choosing, explaining, apologising; 2 points as in the Regeling
+  beoordelingsnormen Staatsexamen Nt2: inhoud 0–1 and woord- en zinsvorming, key `grammatica`, 0–1; voldoende with the content point) and middellange opdracht (`m`, 15 seconds to think, which is only said, and 30 to speak: advice, an
   opinion with reasons, comparing two photos and choosing, a story about three photos in order; inhoud 0–3, woorden
   0–1, grammatica 0–2, samenhang 0–1) (`SBMAX`, `SCORES_SB` in `api/check.js`, `part:"sb"`, its own B1 prompt;
-  voldoende is inhoud 2 and 60% of the points). The proefexamen (`EX.sb`, `sbTasks(8,8)`) is 8 short and 8 medium
-  tasks, 80 points, 25 minutes, costs 6 checks; pass line the default 70% (DUO publishes no raw mark). In the
+  a medium task is voldoende with inhoud 2 and 60% of the points; on the exam a medium task has 9–12 points, some for
+  pronunciation and fluency, which a transcript can't show). The proefexamen (`EX.sb`, `sbTasks(8,8)`) is 8 short and 8 medium
+  tasks, 72 points, 25 minutes, costs 6 checks; pass line the default 70% (one prep site says the public exam of 2025 needed 75 of 128, unconfirmed). In the
   proefexamen the question is read aloud, then the thinking time (`prep`: 15 s for a medium task, 5 for a short one with
   a photo) counts down and the answer starts by itself (`prepThen()`); if the phone won't open the microphone without
   a tap, the take is dropped and the button asks for one.
@@ -424,8 +425,10 @@ structured JSON output, server-side refusal fallback). The page posts
 `{tasks:[{task, form, text}]}` and gets `{tasks:[{passed, verdict, corrected, errors, scores}]}`;
 the prompt is built on the server, so the page can't send arbitrary prompts. Schrijven is scored on DUO's
 beoordelingsmodel: inhoud 0–3, woorden 0–2, grammatica 0–2, spelling 0–2, samenhang 0–1 (inhoud 0 makes everything 0;
-the prompt counts errors: 0–2 = 2, 3–5 = 1, 6+ = 0). `passed` is set by the server from the points (inhoud 2+ and 7 of 10),
-not by Claude, and the Schrijven proefexamen score is points of all 4 tasks against the 70% line. It only
+the prompt counts errors: 0–2 = 2, 3–5 = 1, 6+ = 0). A form has DUO's own model for forms: inhoud 0–3, woorden 0–2,
+spelling 0–2, 7 points, no grammar or coherence (`WRFMAX`, `SCORES_WRF`, kind `f`, also when a task sends form fields).
+`passed` is set by the server from the points (inhoud 2+ and 70%: 7 of 10, 5 of 7), not by Claude, and the Schrijven
+proefexamen score is points of all 4 tasks (37) against the 70% line. It only
 accepts requests whose Origin is the site itself, and with accounts on only from a logged-in user (see Accounts). It needs `ANTHROPIC_API_KEY` in the
 Vercel project's environment variables (the user adds it in the dashboard; never handle
 the key in chat). Without it the page falls back to showing the example answer.
