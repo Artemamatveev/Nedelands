@@ -4040,22 +4040,34 @@ let tab="vandaag";
 // Profiel's avatars: Dutch characters and the bitterbal (the default), drawn in a 100 × 100 viewBox.
 // The learner's choice is stored in S.me.av. The names are Dutch, as content.
 const AVINK="#2B2F3A";
-const avFace=(sk,o={})=>{const y=50;
-  const eyes=o.open
-    ?`<circle cx="41" cy="${y+2}" r="2.6" fill="${AVINK}"/><circle cx="59" cy="${y+2}" r="2.6" fill="${AVINK}"/><circle cx="41.9" cy="${y+1}" r=".8" fill="#fff"/><circle cx="59.9" cy="${y+1}" r=".8" fill="#fff"/>`
-    :`<path d="M37.6 ${y+3}q3.4-3.8 6.8 0M55.6 ${y+3}q3.4-3.8 6.8 0" fill="none" stroke="${AVINK}" stroke-width="2.1" stroke-linecap="round"/>`;
-  return `<circle cx="50" cy="${y}" r="23" fill="${sk}"/>`
-    +`<ellipse cx="35.5" cy="${y+9}" rx="4" ry="2.4" fill="#F08C8C" opacity=".55"/><ellipse cx="64.5" cy="${y+9}" rx="4" ry="2.4" fill="#F08C8C" opacity=".55"/>`
-    +eyes+(o.mouth===0?"":`<path d="M45.5 ${y+10}q4.5 4 9 0" fill="none" stroke="${AVINK}" stroke-width="2" stroke-linecap="round"/>`);
+const avFace=(skin,{open,mouth}={})=>{
+  const eyes=open
+    ?`<g fill="${AVINK}"><ellipse cx="40" cy="52" rx="3.3" ry="4.2"/><ellipse cx="60" cy="52" rx="3.3" ry="4.2"/></g>
+      <g fill="#FFF8ED"><circle cx="39" cy="50.5" r="1.2"/><circle cx="59" cy="50.5" r="1.2"/></g>`
+    :`<path d="M35.5 53q4.5-5 9 0m11 0q4.5-5 9 0" fill="none" stroke="${AVINK}" stroke-width="2.5" stroke-linecap="round"/>`;
+  return `<path d="M26 50c0-15 10-23 24-23s24 8 24 23c0 14-10 24-24 24S26 64 26 50z" fill="${skin}"/>
+    <g fill="#DF767D" opacity=".55"><ellipse cx="34" cy="59" rx="5" ry="3"/><ellipse cx="66" cy="59" rx="5" ry="3"/></g>`
+    +eyes+(mouth===0?"":`<path d="M45 60q5 2 10 0-1 7-5 7t-5-7z" fill="#693B42"/><path d="M48 65q2-2 4 0" fill="none" stroke="#F4A19F" stroke-width="1.4" stroke-linecap="round"/>`);
 };
 const avBody=(c,extra="")=>`<path d="M14 100c1-14 15-22 36-22s35 8 36 22z" fill="${c}"/>`+extra;
-const avBg=c=>`<rect width="100" height="100" fill="${c}"/>`;
+const avBg=c=>`<rect width="100" height="100" fill="${c}"/><circle cx="50" cy="47" r="37" fill="#fff" opacity=".28"/>`;
 const AVS={
   bal:{n:"de bitterbal",s:avBg("#FBE3CC")
-    +`<circle cx="50" cy="54" r="32" fill="#C8500C"/><ellipse cx="41" cy="42" rx="17" ry="13" fill="#E07A2E" opacity=".75"/><ellipse cx="38" cy="38" rx="8" ry="5.5" fill="#F29A4A" opacity=".8"/>`
-    +[[29,38],[37,28],[51,25],[65,30],[73,43],[25,54],[75,61],[32,73],[45,82],[61,80],[70,72],[40,38],[60,38],[27,64]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="1.7" fill="#F6C08A"/>`).join("")
-    +`<circle cx="41" cy="54" r="2.8" fill="${AVINK}"/><circle cx="59" cy="54" r="2.8" fill="${AVINK}"/><circle cx="42" cy="53" r=".9" fill="#fff"/><circle cx="60" cy="53" r=".9" fill="#fff"/>`
-    +`<ellipse cx="34.5" cy="61" rx="4" ry="2.4" fill="#F08C8C" opacity=".6"/><ellipse cx="65.5" cy="61" rx="4" ry="2.4" fill="#F08C8C" opacity=".6"/><path d="M45 61q5 4.6 10 0" fill="none" stroke="${AVINK}" stroke-width="2.1" stroke-linecap="round"/>`},
+    +`<ellipse cx="48" cy="86" rx="27" ry="4" fill="#B75D30" opacity=".18"/>
+    <path d="M24 54q-10 7-11 2m61-6q9-1 10-11M37 74l-4 10h-7m32-10 4 10h7" fill="none" stroke="#8F411E" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M83 40q-6-1-5-6 1-3 4-1-1-6 3-6 3 0 4 5 5 0 4 4-1 5-10 4z" fill="#F4A047" stroke="#8F411E" stroke-width="2"/>
+    <path d="M18 47c0-18 12-31 30-31s31 13 31 32c0 19-13 32-31 32S18 66 18 47z" fill="#E88936" stroke="#8F411E" stroke-width="2.5"/>
+    <path d="M20 52c5 12 16 19 29 19 13 0 24-7 28-18-2 16-14 25-29 25-15 0-26-10-28-26z" fill="#C45C2C"/>
+    <path d="M27 37q7-15 23-15" fill="none" stroke="#FFC77E" stroke-width="3.5" stroke-linecap="round"/>`
+    +[[32,31],[46,28],[55,24],[63,32],[69,37],[24,46],[29,65],[37,72],[61,70],[73,56]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="1.6" fill="#FFE0A5"/>`).join("")
+    +`<path d="M33 41q5-4 10-1m10-3q6-5 11 0" fill="none" stroke="#82421F" stroke-width="2.4" stroke-linecap="round"/>
+    <g fill="#392721"><ellipse cx="39" cy="48" rx="3.8" ry="5"/><ellipse cx="59" cy="46" rx="3.8" ry="5"/></g>
+    <g fill="#FFF8E9"><circle cx="38" cy="46" r="1.4"/><circle cx="58" cy="44" r="1.4"/></g>
+    <g fill="#F8A285"><ellipse cx="31" cy="55" rx="5" ry="3"/><ellipse cx="67" cy="53" rx="5" ry="3"/></g>
+    <path d="M41 56q8 3 16-2-1 10-8 10-5 0-8-8z" fill="#713322"/>
+    <path d="M46 62q3-4 7-2" fill="none" stroke="#F5A18C" stroke-width="2" stroke-linecap="round"/>
+    <path d="M35 73q12 4 25-1l4 5-9 3 4 8-7 1-5-8q-8 0-14-4z" fill="#3C65A7"/>
+    <path d="M37 76q11 3 22-1m-7 7 3 4" fill="none" stroke="#D9E9FA" stroke-width="1.5" stroke-linecap="round"/>`},
   volv:{n:"het meisje uit Volendam",s:avBg("#DCE6F7")
     +avBody("#232B45",`<path d="M37 78l13 10 13-10" fill="#fff"/>`+[37,41.5,46,50.5,55,59.5,64].map((x,i)=>`<circle cx="${x}" cy="${80+(3-Math.abs(3-i))*0.9}" r="2" fill="#C0392B"/>`).join(""))
     +`<path d="M26 50c0-16 10-24 24-24s24 8 24 24v6H26z" fill="#D9A441"/>`
@@ -4165,13 +4177,8 @@ const AVS={
     <path d="M28 39q17-13 40-9" fill="none" stroke="#5286B2" stroke-width="3" stroke-linecap="round"/>
     <ellipse cx="69" cy="66" rx="4.5" ry="6" fill="#FFFDF1" stroke="#BEBBBA" stroke-width="1"/>`},
 };
-// The artwork follows AVS order in a four-by-four sheet. The vectors underneath work offline before the sheet is cached.
-const AVATAR_ART="/art/avatars-v2.jpg",avatarOrder=Object.keys(AVS);
-function avSVG(id){
-  const tile=Math.max(0,avatarOrder.indexOf(id));
-  const x=-(tile%4)*100,y=-Math.floor(tile/4)*100;
-  return `<svg viewBox="0 0 100 100" overflow="hidden" aria-hidden="true">${AVS[avatarOrder[tile]].s}<image href="${AVATAR_ART}" x="${x}" y="${y}" width="400" height="400"/></svg>`;
-}
+const avatarOrder=Object.keys(AVS);
+const avSVG=id=>`<svg viewBox="0 0 100 100" aria-hidden="true">${(AVS[id]||AVS.bal).s}</svg>`;
 const TABN={vandaag:"Vandaag",examen:"Examen",oefenen:"Oefenen",herhalen:"Herhalen",profiel:"Profiel"};
 const backHTML=()=>`<span aria-hidden="true">←</span>${TABN[tab]}`;
 const TABS=Object.keys(TABN);
@@ -7197,7 +7204,7 @@ if("serviceWorker" in navigator&&window.isSecureContext&&!window.claude){
   navigator.serviceWorker.register("/sw.js").then(r=>{r.update().catch(()=>{});
     document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update().catch(()=>{})});
     return navigator.serviceWorker.ready}).then(r=>new Promise(ok=>setTimeout(()=>ok(r),10000)))
-    .then(r=>{if(r.active)r.active.postMessage({warm:[AVATAR_ART].concat(ART.map(p=>"/art/"+p.f+".jpg"),Object.keys(FOTO).map(f=>"/foto/"+f+".jpg"),GS.flatMap(c=>(c.p?[c.p]:[]).concat((c.f||[]).map(f=>f[0]))).map(f=>"/"+f))})}).catch(()=>{});
+    .then(r=>{if(r.active)r.active.postMessage({warm:ART.map(p=>"/art/"+p.f+".jpg").concat(Object.keys(FOTO).map(f=>"/foto/"+f+".jpg"),GS.flatMap(c=>(c.p?[c.p]:[]).concat((c.f||[]).map(f=>f[0]))).map(f=>"/"+f))})}).catch(()=>{});
 }
 </script>
 </body>
