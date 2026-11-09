@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 // Supabase from the server, by plain fetch (no SDK): who is calling, the daily check allowance, deleting an account.
 // Files starting with _ are not routes on Vercel. The env vars come from the Supabase integration in the Vercel
-// Marketplace; without them accounts are off and everything works as before (no login needed for grading).
+// Marketplace; without them accounts and paid grading are unavailable.
 const URL_ = (process.env.SUPABASE_URL || "").trim().replace(/\/$/, "");
 const ANON = (process.env.SUPABASE_ANON_KEY || "").trim();
 const SERVICE = (process.env.SUPABASE_SERVICE_ROLE_KEY || "").trim();
@@ -36,7 +36,9 @@ export async function useChecks(uid, cost, lim = LIMIT) {
     body: JSON.stringify({ uid, cost, lim }),
   });
   if (!r.ok) throw new Error(`use_checks ${r.status}`);
-  return Number(await r.json());
+  const value = await r.json();
+  if (!Number.isSafeInteger(value)) throw new Error("Invalid quota counter");
+  return value;
 }
 
 // Free checks without an account: FREE_CHECKS a day per visitor (default 2, 0 turns it off) and FREE_CAP a day for
@@ -57,12 +59,14 @@ export async function useFree(who, cost) {
     body: JSON.stringify({ who, cost, lim: FREE, cap: FREE_CAP }),
   });
   if (!r.ok) throw new Error(`use_free_checks ${r.status}`);
-  return Number(await r.json());
+  const value = await r.json();
+  if (!Number.isSafeInteger(value)) throw new Error("Invalid quota counter");
+  return value;
 }
 
 // All checks of a day together, logged-in and free (default 400, CHECK_CAP): a ceiling on what Claude can cost in a
 // day, even if someone makes many accounts. Takes `cost` (negative gives back); what is left, -1 when the day is full;
-// null when use_total is not in the database yet (then nothing is counted, as before).
+// null when the counter is unavailable; the caller must refuse paid grading.
 const CAP = Math.max(1, parseInt(process.env.CHECK_CAP, 10) || 400);
 export async function useTotal(cost) {
   const r = await fetch(`${URL_}/rest/v1/rpc/use_total`, {
@@ -71,7 +75,9 @@ export async function useTotal(cost) {
     body: JSON.stringify({ cost, cap: CAP }),
   }).catch(() => null);
   if (!r || !r.ok) return null;
-  return Number(await r.json());
+  const value = await r.json();
+  if (!Number.isSafeInteger(value)) throw new Error("Invalid quota counter");
+  return value;
 }
 
 // Deletes the user; their progress and usage rows go with them (on delete cascade)

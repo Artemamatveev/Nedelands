@@ -8,6 +8,19 @@ import { plusOn, HOOK, stripe, plusOf, putPlus, isPlus, LIVE } from "./_supa.js"
 // The signature is over the exact bytes Stripe sent, so Vercel must not parse the body
 export const config = { api: { bodyParser: false } };
 
+// The body as Stripe sent it: a stream normally, a string or Buffer when something read it already; at most 1 MB
+const rawBody = async (req) => {
+  if (typeof req.body === "string") return req.body;
+  if (Buffer.isBuffer(req.body)) return req.body.toString("utf8");
+  const chunks = [];
+  let n = 0;
+  for await (const c of req) {
+    if ((n += c.length) > 1e6) throw new Error("too_large");
+    chunks.push(c);
+  }
+  return Buffer.concat(chunks).toString("utf8");
+};
+
 // Stripe-Signature: t=<seconds>,v1=<hex hmac-sha256 of "t.body">; at most 5 minutes old
 const signed = (raw, head) => {
   const parts = String(head || "").split(","), t = (parts.find((p) => p.startsWith("t=")) || "").slice(2);
@@ -22,13 +35,8 @@ const signed = (raw, head) => {
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "method_not_allowed" });
   if (!plusOn) return res.status(503).json({ error: "not_configured" });
-  const chunks = [];
-  let n = 0;
-  for await (const c of req) {
-    if ((n += c.length) > 1e6) return res.status(413).json({ error: "too_large" });
-    chunks.push(c);
-  }
-  const raw = Buffer.concat(chunks).toString("utf8");
+  const raw = await rawBody(req).catch(() => null);
+  if (raw == null) return res.status(413).json({ error: "too_large" });
   if (!signed(raw, req.headers["stripe-signature"])) return res.status(400).json({ error: "signature" });
   let ev;
   try { ev = JSON.parse(raw); } catch { return res.status(400).json({ error: "bad_request" }); }

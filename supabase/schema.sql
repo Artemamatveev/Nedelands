@@ -198,3 +198,4 @@ end;
 $$;
 revoke execute on function public.put_outcome(uuid, text, boolean, int, int, int) from public, anon, authenticated;
 grant execute on function public.put_outcome(uuid, text, boolean, int, int, int) to service_role;
+

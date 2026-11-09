@@ -1,17 +1,38 @@
 // Offline: the app keeps working without a connection (on the train, abroad).
-// The page itself: from the cache at once (a slow connection made people wait), and fetched again in the background;
-// when the new one differs (another ETag), the open page is told, and it offers to reload. With nothing cached yet:
-// the network. Other pages (privacy, over) the same, cached under their own address, never as "/".
+// The page itself: from the network first, but never waiting more than FAST ms (a slow connection made people wait);
+// then the cached copy, and the network refreshes it in the background: when the new one differs (another ETag), the
+// open page is told, and it offers to reload. Cache-first alone left iPhones on an old version: iOS stops a home-screen
+// app's background work, so the refresh of the 1 MB page often never finished. With nothing cached yet: the network. Other pages (privacy, over) the same, cached under their own address, never as "/".
 // Paintings, photos and icons: from the cache, refreshed in the background. The dictionary (7 MB): cache only.
 // Recorded voices (audio/): cached on first play. api/ (grading, new texts) always goes to the network.
-const CACHE = "nl-a2-v2", CORE = ["/", "/manifest.json", "/apple-touch-icon.png"];
+const CACHE = "nl-a2-v8", CORE = ["/", "/manifest.json", "/apple-touch-icon.png", "/study/language-v1.js", "/study/progress-v1.js", "/study/writing-v1.js"];
 
+// Install must not fail: on the user's iPhone a new sw.js never took over, most likely because caching the 1 MB page
+// at install did not finish. So each file is tried on its own and a miss is fine (the page comes from the network at the
+// next start anyway); without a fresh page the one from the old cache is carried over, so the app still opens offline.
 self.addEventListener("install", e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));
+  self.skipWaiting();
+  e.waitUntil(caches.open(CACHE).then(async c => {
+    await Promise.all(CORE.map(u => c.add(new Request(u, { cache: "no-store" })).catch(() => {})));
+    if (!(await c.match("/"))) {
+      for (const k of await caches.keys()) {
+        if (k === CACHE) continue;
+        const old = await (await caches.open(k)).match("/");
+        if (old) { await c.put("/", old); break }
+      }
+    }
+  }).catch(() => {}));
 });
+// A new sw.js that replaces an older one comes with a new version of the page: the open windows offer to reload. Not on
+// the first visit (no older cache), or a new learner would see "nieuwe versie" at once.
 self.addEventListener("activate", e => {
-  e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k))))
-    .then(() => self.clients.claim()));
+  e.waitUntil(caches.keys().then(async ks => {
+    const old = ks.filter(k => k !== CACHE);
+    await Promise.all(old.map(k => caches.delete(k)));
+    await self.clients.claim();
+    if (!old.length) return;
+    (await self.clients.matchAll({ type: "window", includeUncontrolled: true })).forEach(w => w.postMessage({ fresh: true }));
+  }));
 });
 // The page sends the list of paintings and photos, so they are there offline before they are first shown
 self.addEventListener("message", e => {
@@ -48,27 +69,31 @@ self.addEventListener("fetch", e => {
     return net();
   })));
 });
-// The cached page at once; the network refreshes the cache in the background and, when the page changed, tells the
-// open windows ({fresh: true}). Nothing cached (the first visit): wait for the network, else the start page.
+// The network if it answers within FAST ms, else the cached page; the network still refreshes the cache in the
+// background and, when the page changed, tells the open windows ({fresh: true}). Nothing cached (the first visit):
+// wait for the network, else the start page.
+const FAST = 2500;
 async function cacheFirst(e, r, key) {
-  const c = await caches.open(CACHE), hit = await c.match(key), old = hit && hit.clone(); // hit goes to the page, old is compared
+  const c = await caches.open(CACHE), hit = await c.match(key), old = hit && hit.clone(); // hit may go to the page, old is compared
   // by its address: a navigation request itself can't be fetched with other options
   const net = fetch(r.url, { cache: "no-store", credentials: "same-origin" }).then(async res => {
-    if (!res.ok) return res;
-    await c.put(key, res.clone());
-    if (hit) {
-      const a = old.headers.get("etag"), b = res.headers.get("etag");
-      const changed = a && b ? a !== b : (await old.text()) !== (await res.clone().text());
-      if (changed) {
-        // remembered too (the page that is still starting may miss the message, so it asks /__changed)
-        await c.put("/__changed", new Response(String(Date.now())));
-        (await self.clients.matchAll({ type: "window", includeUncontrolled: true })).forEach(w => w.postMessage({ fresh: true }));
-      }
-    }
+    if (res.ok) await c.put(key, res.clone());
     return res;
   });
-  if (hit) { e.waitUntil(net.catch(() => {})); return hit }
-  return net.catch(() => caches.match("/").then(h => h || Response.error()));
+  if (!hit) return net.catch(() => caches.match("/").then(h => h || Response.error()));
+  const quick = net.then(res => res.ok ? res : hit, () => hit);
+  const page = Promise.race([quick, new Promise(ok => setTimeout(() => ok(hit), FAST))]);
+  e.waitUntil(net.then(async res => {
+    // the window got the network's page, so it is already new: nothing to offer
+    if ((await page) !== hit || !res.ok) return;
+    const a = old.headers.get("etag"), b = res.headers.get("etag");
+    const changed = a && b ? a !== b : (await old.text()) !== (await res.clone().text());
+    if (!changed) return;
+    // remembered too (the page that is still starting may miss the message, so it asks /__changed)
+    await c.put("/__changed", new Response(String(Date.now())));
+    (await self.clients.matchAll({ type: "window", includeUncontrolled: true })).forEach(w => w.postMessage({ fresh: true }));
+  }).catch(() => {}));
+  return page;
 }
 async function ranged(r, res) {
   const m = /^bytes=(\d+)-(\d*)$/.exec(r.headers.get("range") || "");
@@ -78,3 +103,4 @@ async function ranged(r, res) {
   return new Response(b.slice(s, end + 1), { status: 206, headers: { "Content-Type": "audio/mpeg",
     "Content-Range": `bytes ${s}-${end}/${b.byteLength}`, "Content-Length": String(end - s + 1), "Accept-Ranges": "bytes" } });
 }
+
