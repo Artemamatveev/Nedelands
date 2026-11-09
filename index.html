@@ -4178,7 +4178,11 @@ const AVS={
     <ellipse cx="69" cy="66" rx="4.5" ry="6" fill="#FFFDF1" stroke="#BEBBBA" stroke-width="1"/>`},
 };
 const avatarOrder=Object.keys(AVS);
-const avSVG=id=>`<svg viewBox="0 0 100 100" aria-hidden="true">${(AVS[id]||AVS.bal).s}</svg>`;
+function avSVG(id){
+  const avatar=AVS[id]||AVS.bal;
+  const portrait=avatar===AVS.bal?'<image href="/art/bitterbal-scarf.jpg" width="100" height="100"/>':"";
+  return `<svg viewBox="0 0 100 100" aria-hidden="true">${avatar.s}${portrait}</svg>`;
+}
 const TABN={vandaag:"Vandaag",examen:"Examen",oefenen:"Oefenen",herhalen:"Herhalen",profiel:"Profiel"};
 const backHTML=()=>`<span aria-hidden="true">←</span>${TABN[tab]}`;
 const TABS=Object.keys(TABN);
