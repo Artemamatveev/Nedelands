@@ -611,8 +611,12 @@ body.vfull{overflow:hidden}
 .pmail{margin:0;color:var(--soft);font-size:var(--fs-m);word-break:break-all}
 .pidentity{min-width:0;max-width:100%;overflow-wrap:anywhere}
 :root[data-desktop] .phero{flex-direction:row;gap:14px;text-align:start;padding:0}
-:root[data-desktop] .phero .pav{flex:none;width:56px;height:56px}
+:root[data-desktop] .phero .pav{flex:none;width:72px;height:72px}
 :root[data-desktop] .phero h2{margin:0}
+:root[data-desktop] .phead:has(#alogin){
+  display:grid;grid-template-columns:fit-content(38%) minmax(0,1fr);align-items:center;gap:20px;
+}
+:root[data-desktop] #alogin{margin:0}
 .pg{margin:14px 0 0;padding:0 16px;background:var(--surface);border-radius:var(--rc)}
 .pg:empty{display:none}
 .pg>*{border-bottom:1px solid var(--line)} .pg>:last-child{border-bottom:0}
@@ -703,14 +707,16 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
       <section class="tile"><h2>Lezen, luisteren en spreken</h2><div class="list" id="books"></div></section>
     </div>
     <section class="tile" id="prof" data-tab="profiel">
-      <div class="phero">
-        <button type="button" class="pav" id="pav" aria-label="Kies je avatar"><span id="pavi"></span></button>
-        <div class="pidentity">
-          <h2 id="pnm">Profiel</h2>
-          <p class="pmail" id="pmail" hidden></p>
+      <div class="phead">
+        <div class="phero">
+          <button type="button" class="pav" id="pav" aria-label="Kies je avatar"><span id="pavi"></span></button>
+          <div class="pidentity">
+            <h2 id="pnm">Profiel</h2>
+            <p class="pmail" id="pmail" hidden></p>
+          </div>
         </div>
+        <div id="pban"></div>
       </div>
-      <div id="pban"></div>
       <div class="pg">
         <label class="prow"><span>Voornaam</span><input id="pname" autocomplete="given-name" maxlength="40"></label>
         <label class="prow"><span>Achternaam</span><input id="plast" autocomplete="family-name" maxlength="60"></label>
