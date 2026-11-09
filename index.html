@@ -564,6 +564,8 @@ body.vfull{overflow:hidden}
 :root[dir=rtl] :is(p,h2,h3,b,small,li,.d){unicode-bidi:plaintext}
 :root[dir=rtl] :is(header,#play,#read,[lang=nl],.book,.doc,.sample,.msum,.tl,.bgl,input[type=email]){direction:ltr;text-align:left;--ta:left;--te:right}
 :root[dir=rtl] .tabs .lens{left:auto;right:5px;transform:translateX(calc(var(--i,0) * -100%))}
+:root[data-desktop] main{overflow-x:visible}
+:root[data-desktop] header{border-image:linear-gradient(#132A6E 0 0) fill 0 // 0 100vmax}
 :root[data-desktop] main:is(:not(.big),:has(#home[hidden])) header{height:168px}
 :root[data-desktop] main:is(:not(.big),:has(#home[hidden])) header h1{top:50%;bottom:auto;transform:translateY(-50%)}
 :root[data-desktop] header .art{max-width:calc(100% - 460px)}
