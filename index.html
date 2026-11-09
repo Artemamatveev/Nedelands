@@ -39,6 +39,16 @@ if(navigator.serviceWorker){navigator.serviceWorker.addEventListener("message",f
 "educationalLevel":["A2","B1"],"teaches":["Nederlands als tweede taal","Kennis van de Nederlandse Maatschappij"],
 "offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}
 </script>
+<script>
+(() => {
+  const desktop=matchMedia("(min-width:960px) and (hover:hover) and (pointer:fine)");
+  const installed=matchMedia("(display-mode: standalone)");
+  const update=()=>document.documentElement.toggleAttribute("data-desktop",desktop.matches&&!installed.matches&&navigator.standalone!==true);
+  desktop.addEventListener("change",update);
+  installed.addEventListener("change",update);
+  update();
+})();
+</script>
 <style>
 /* Delfts blauw: tin-glaze white, cobalt, and oranje as the one accent.
    Type: the phone's own system font (SF Pro on iPhone), so it reads like a native app. */
@@ -53,16 +63,17 @@ if(navigator.serviceWorker){navigator.serviceWorker.addEventListener("message",f
   --card:#FFFFFF; --glass:rgba(240,244,252,.5); --lift:0 1px 2px rgba(8,16,40,.06),0 8px 24px rgba(8,16,40,.10);
   box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
 }
-@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"],[data-desktop]){
   --bg:#0B1430; --surface:#14204A; --wash:#2A3D7A; --ink:#E8EEFA; --soft:#A6B2CF; --line:#24346A;
   --blue:#8EADF5; --deep:#B9CCF8; --oranje:#FF8A3D; --good:#7CCB93; --bad:#FF8A7A; --on:#0B1430;
   --fill:#3D63D6; --fill-press:#2F51B8; --on-fill:#FFFFFF;
   --card:#111C42; --glass:rgba(8,14,36,.6); --lift:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.4); } }
-:root[data-theme="dark"]{
+:root[data-theme="dark"]:not([data-desktop]){
   --bg:#0B1430; --surface:#14204A; --wash:#2A3D7A; --ink:#E8EEFA; --soft:#A6B2CF; --line:#24346A;
   --blue:#8EADF5; --deep:#B9CCF8; --oranje:#FF8A3D; --good:#7CCB93; --bad:#FF8A7A; --on:#0B1430;
   --fill:#3D63D6; --fill-press:#2F51B8; --on-fill:#FFFFFF;
   --card:#111C42; --glass:rgba(8,14,36,.6); --lift:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.4); }
+:root[data-desktop]{color-scheme:light}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
@@ -553,23 +564,21 @@ main:is(:not(.big),:has(#home[hidden])) header .lang{top:6px;height:32px} /* the
 :root[dir=rtl] :is(p,h2,h3,b,small,li,.d){unicode-bidi:plaintext}
 :root[dir=rtl] :is(header,#play,#read,[lang=nl],.book,.doc,.sample,.msum,.tl,.bgl,input[type=email]){direction:ltr;text-align:left;--ta:left;--te:right}
 :root[dir=rtl] .tabs .lens{left:auto;right:5px;transform:translateX(calc(var(--i,0) * -100%))}
-@media (min-width:960px) and (hover:hover) and (pointer:fine){
-  :root:not([data-installed]) main:has(#home:not([hidden])){
-    width:calc(100% - 128px);
-    margin-right:max(112px,calc((100% - 1160px)/2));
-    padding-bottom:64px;
-  }
-  :root:not([data-installed]) .tabs{
-    left:auto;right:16px;top:50%;bottom:auto;transform:translateY(-50%);
-    flex-direction:column;width:96px;padding:5px;border-radius:var(--r);
-    touch-action:auto;transition:none;
-  }
-  :root:not([data-installed]) .tabs button{flex:0 0 56px;justify-content:center;padding:4px;border-radius:var(--rc)}
-  :root:not([data-installed]) .tabs.min span{display:block}
-  :root:not([data-installed]) .tabs .lens{
-    left:5px;right:5px;bottom:auto;width:auto;height:56px;border-radius:var(--rc);
-    transform:translateY(calc(var(--i,0) * 100%));
-  }
+:root[data-desktop] main:has(#home:not([hidden])){
+  width:calc(100% - 128px);
+  margin-right:max(112px,calc((100% - 1160px)/2));
+  padding-bottom:64px;
+}
+:root[data-desktop] .tabs{
+  left:auto;right:16px;top:50%;bottom:auto;transform:translateY(-50%);
+  flex-direction:column;width:96px;padding:5px;border-radius:var(--r);
+  touch-action:auto;transition:none;
+}
+:root[data-desktop] .tabs button{flex:0 0 56px;justify-content:center;padding:4px;border-radius:var(--rc)}
+:root[data-desktop] .tabs.min span{display:block}
+:root[data-desktop] .tabs .lens{
+  left:5px;right:5px;bottom:auto;width:auto;height:56px;border-radius:var(--rc);
+  transform:translateY(calc(var(--i,0) * 100%));
 }
 :root[dir=rtl] :not(#read *).back>span{display:inline-block;transform:scaleX(-1)}
 /* spacing between letters breaks joined Arabic and Devanagari */
@@ -2285,7 +2294,6 @@ const logins=()=>acc.cfg&&acc.cfg.login||[];
 // app takes it from there when you return and exchanges it itself (PKCE: the code is useless without the secret that
 // only the app holds). If the login comes back in the app itself, nothing changes.
 const HAND="ww-hand",inApp=()=>navigator.standalone===true||matchMedia("(display-mode: standalone)").matches;
-document.documentElement.toggleAttribute("data-installed",inApp());
 const handOf=()=>{try{const o=JSON.parse(lsGet(HAND));return o&&o.h&&Date.now()-o.t<6e5?o:null}catch(e){return null}};
 let handBusy=false;
 async function claimHand(){

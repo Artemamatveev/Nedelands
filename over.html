@@ -7,18 +7,29 @@
 <meta name="description" content="Wat Bittertalen is, wie het maakt en waar alles vandaan komt.">
 <link rel="canonical" href="https://bittertalen.nl/over">
 <link rel="icon" type="image/png" href="/apple-touch-icon.png">
+<script>
+(() => {
+  const desktop=matchMedia("(min-width:960px) and (hover:hover) and (pointer:fine)");
+  const installed=matchMedia("(display-mode: standalone)");
+  const update=()=>document.documentElement.toggleAttribute("data-desktop",desktop.matches&&!installed.matches&&navigator.standalone!==true);
+  desktop.addEventListener("change",update);
+  installed.addEventListener("change",update);
+  update();
+})();
+</script>
 <style>
 /* The same Delfts blauw as the app: tin-glaze white, cobalt, the system font, one plain tile on the frosted windmill */
 :root{
   --surface:#EEF2FA; --wash:#C9D6F2; --ink:#14213D; --soft:#56617C; --line:#D6DDEB; --blue:#1F3C96; --oranje:#C8500C;
   --card:#FFFFFF; --glass:rgba(240,244,252,.5); --lift:0 1px 2px rgba(8,16,40,.06),0 8px 24px rgba(8,16,40,.10);
 }
-@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"],[data-desktop]){
   --surface:#14204A; --wash:#2A3D7A; --ink:#E8EEFA; --soft:#A6B2CF; --line:#24346A; --blue:#8EADF5; --oranje:#FF8A3D;
   --card:#111C42; --glass:rgba(8,14,36,.6); --lift:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.4); } }
-:root[data-theme="dark"]{
+:root[data-theme="dark"]:not([data-desktop]){
   --surface:#14204A; --wash:#2A3D7A; --ink:#E8EEFA; --soft:#A6B2CF; --line:#24346A; --blue:#8EADF5; --oranje:#FF8A3D;
   --card:#111C42; --glass:rgba(8,14,36,.6); --lift:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.4); }
+:root[data-desktop]{color-scheme:light}
 *{box-sizing:border-box}
 body{margin:0;background:var(--surface);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.55}
 body::before{content:"";position:fixed;inset:-24px;z-index:-2;background:url(/art/molen-glass.jpg) 70% 40%/cover}
