@@ -580,6 +580,11 @@ main:is(:not(.big),:has(#home[hidden])) header .lang{top:6px;height:32px} /* the
   left:5px;right:5px;bottom:auto;width:auto;height:56px;border-radius:var(--rc);
   transform:translateY(calc(var(--i,0) * 100%));
 }
+:root[data-desktop] .duo{align-items:stretch}
+:root[data-desktop] .duo>div{display:contents}
+:root[data-desktop] .duo>.tile{grid-column:1/-1}
+:root[data-desktop] #books{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:28px}
+:root[data-desktop] #books>.it:nth-last-child(-n+2){border-bottom:0;padding-bottom:0}
 :root[dir=rtl] :not(#read *).back>span{display:inline-block;transform:scaleX(-1)}
 /* spacing between letters breaks joined Arabic and Devanagari */
 :root:is([lang=ar],[lang=hi],[lang=zh-Hans]) *{letter-spacing:0!important}
