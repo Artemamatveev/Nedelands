@@ -613,6 +613,10 @@ body.vfull{overflow:hidden}
 :root[data-desktop] .phero{flex-direction:row;gap:14px;text-align:start;padding:0}
 :root[data-desktop] .phero .pav{flex:none;width:72px;height:72px}
 :root[data-desktop] .phero h2{margin:0}
+:root[data-desktop] .pidentity:has(h2[data-placeholder]):has(.pmail[hidden]),
+:root[data-desktop] #pnm[data-placeholder]{
+  position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;
+}
 :root[data-desktop] .phead:has(#alogin){
   display:grid;grid-template-columns:fit-content(38%) minmax(0,1fr);align-items:center;gap:20px;
 }
@@ -4267,7 +4271,9 @@ function drawProfile(){
   // the portrait: a Dutch woman or man in Golden Age dress (S.me.av, so it goes along); tap to switch
   // the avatar the learner picked (an earlier portrait, "v" or "m", falls back to the bitterbal)
   $("pavi").innerHTML=avSVG(me.av); $("pav").onclick=avScreen;
-  $("pnm").textContent=[me.name,me.last].filter(Boolean).join(" ")||"Profiel";
+  const profileName=[me.name,me.last].filter(Boolean).join(" ");
+  $("pnm").textContent=profileName||"Profiel";
+  $("pnm").toggleAttribute("data-placeholder",!profileName);
   // the level: chosen at the start (welcome screen, starttest), changed here with a list; the other tabs show only this level
   // the options are not translated by the observer (it skips <select>); uiT is defined further down, so it may not exist yet at the first render
   const trLvl=v=>{try{return uiT(LVL[v])||LVL[v]}catch(e){return LVL[v]}};
