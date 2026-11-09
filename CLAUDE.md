@@ -266,7 +266,7 @@ vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one comin
   server answers `login` as before. `/api/config` gives `free`; the page shows how many are left (`acc.free`,
   `freeNote()`) and asks to log in when they are used up.
 - Grading: with accounts on, `/api/check` needs the user's access token (or a free check, above) and takes checks from `CHECK_LIMIT` a day
-  (default 20, Amsterdam days, `check_usage`): one task 1, a Schrijven proefexamen 2, Schrijven B1 4, a Spreken proefexamen 6
+  (default 5 when Plus is set up, else 20, Amsterdam days, `check_usage`; `PLUS_LIMIT`, default 60, with Bittertalen Plus): one task 1, a Schrijven proefexamen 2, Schrijven B1 4, a Spreken proefexamen 6
   (`checkCost()`; the page's `examGate()` uses the same numbers and warns before such a proefexamen). A failed grading gives the learner their checks back. Once the provider call starts, its global reservation is retained even if the reply is lost, since that request may have incurred cost. Structured `grading_usage` logs record model/token usage without learner text. Configure deployment-log alerts for `grading_quota_unavailable` and review token usage in the provider dashboard. The code does not configure external alert recipients. The answer has `left`.
 - Welcome screen = the login window (`#welcome`, `drawWelcome()`): a fixed full screen with the painting of the day
   behind a rounded white card (the logo, "Inloggen of account maken", the login block (no level), "Eerst rondkijken"
@@ -286,35 +286,31 @@ vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one comin
 
 ## Bittertalen Plus (payments)
 
-The user chose Stripe (November 2026): practice is free; Claude's grading and every proefexamen are Bittertalen Plus,
-priced by level (chosen in November 2026, still the cheapest monthly offers without a long contract): Plus A2 €9,99 a
-month or €99,90 a year, Plus B1 €14,99 or €149,90 (two months free a year), the first time with 7 days free (once per
-person, `trial_used`). Plus B1 covers both levels; Plus A2 covers A2 and KNM, and B1's parts (`l1`, `lb`, `wb`, `sb`)
-need Plus B1 (`covers()` in `_stripe.js`, `plusNow(need)` and `needOf()` in the page; `plans.tier`, from the price).
-The B1 prices (`STRIPE_PRICE_B1_MONTH`, `STRIPE_PRICE_B1_YEAR`) are optional: without them one Plus covers both levels
-at the A2 price. A Plus A2 learner who picks B1 gets "Upgrade naar Plus B1": the portal's `subscription_update_confirm`
-page for the B1 price (Stripe settles the difference), never a second subscription. Stripe by plain
-fetch, no SDK (`api/_stripe.js`: form encoding, `verify()` of the `Stripe-Signature` header, `PLUS` statuses: active,
-trialing, past_due). Off until all four env vars are set (`STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`,
-`STRIPE_PRICE_MONTH`, `STRIPE_PRICE_YEAR`; never in the repository or the chat); then `/api/config` gives `plus`
-`{month, year, trial, b1?:{month, year}}` with the prices from Stripe, and without it everything stays as before.
-- `api/pay.js` (POST, logged in): `checkout` → a Stripe Checkout url (subscription, `subscription_data.metadata.user_id`,
-  the trial unless used, iDEAL and cards through the Dashboard's payment methods, back to `/?plus=ok` or `/?plus=terug`);
-  `portal`, or checkout while already Plus → the customer portal (never a second subscription).
-- `api/stripe.js`: the webhook (raw body, `bodyParser:false`), events checkout.session.completed and
-  customer.subscription.created/updated/deleted. Every event fetches the subscription from Stripe again and saves it in
-  table `plans` (`supabase/schema.sql`; RLS: read own row; written only by the server), so late or repeated events
-  leave the latest state.
-- `api/check.js`: with payments on, a logged-in learner without Plus is graded like a visitor (the free single checks,
-  `FREE`), then 402 `plus`; Plus gets `CHECK_LIMIT`. `api/account.js` cancels the subscription at Stripe before it
-  deletes the account.
-- The page: `payOn()`, `plusNow()`, `acc.plan` (read in `usage()`), `plusScreen()` (in `#talk`: what is in it, Per maand
-  | Per jaar, "Probeer 7 dagen gratis" or "Word Plus-lid", or "Abonnement beheren"), a Plus block in Profiel, the note
-  "Proefexamens horen bij Bittertalen Plus." on Examen, and `startExam()` opens the Plus screen instead of a proefexamen.
-  The proefexamens are only kept back in the page (Lezen, Luisteren and KNM need no server). `plusBack()` handles the
-  return and looks for the plan a few times, because the webhook may be later than the learner.
-- privacy.html has a Stripe section (Stripe Payments Europe, seven years for payment records). Before going live: KvK,
-  live keys, algemene voorwaarden and the right of withdrawal for digital services.
+The user chose (9 November 2026, replacing the earlier version with levels, a yearly price and a free week): practice,
+the proefexamens and `CHECK_LIMIT` Claude checks a day (default 5) stay free with an account; Bittertalen Plus, a monthly
+Stripe subscription of €9,99, only raises the daily Claude checks to `PLUS_LIMIT` (default 60). No trial, no yearly price,
+one Plus for both levels. No video or podcast may ever go behind it (YouTube's policies).
+- Stripe by plain fetch, no SDK (`stripe()` in `api/_supa.js`). Off unless `STRIPE_SECRET_KEY`, `STRIPE_PRICE` (the
+  monthly price's id, `price_…`) and `STRIPE_WEBHOOK_SECRET` are set (never in the repository or the chat); without them
+  Plus is hidden and the free limit stays 20. `PLUS_PRICE` is only the shown price (default "9,99"); `STRIPE_TERMS=1`
+  makes Checkout ask to accept the terms (set their URL in Stripe first).
+- `api/plus.js` (POST, logged in): `{go:"buy"}` → a Stripe Checkout URL (subscription, `subscription_data.metadata.uid`,
+  back to `/?plus=ok` or `/?plus=stop`), or the portal when Plus already runs; `{go:"manage"}` → the customer portal
+  (cancel, payment method, invoices; back to `/?plus=back`). Never a second subscription.
+- `api/stripe.js`: the webhook (raw body, `bodyParser:false`), events `customer.subscription.created`, `.updated` and
+  `.deleted` (Snapshot payloads). Every event reads the subscription from Stripe again and keeps the user's row of table
+  `plus` (`supabase/schema.sql`; RLS: read own row; written only by the server): customer, sub, status, `until` (end of
+  the paid month), `ends` (cancelled). An old subscription that ends never hides a newer one; an event for a deleted
+  account cancels the subscription.
+- `api/check.js`: Plus (`isPlus()`: active, trialing or past_due, until `until` plus a day) gets `PLUS_LIMIT`; Plus checks
+  don't count against `CHECK_CAP`. `api/account.js` cancels the subscription at Stripe before it deletes the account.
+- The page: `acc.plus` (read in `usage()`), `isPlus()`, `myLimit()`, a "Bittertalen Plus" row in Profiel under the
+  checks counter (`plusLine()`) and `plusScreen()` in `#talk` (the one entry point). `plusBack()` handles the return from
+  Stripe and `plusWait()` looks again a few times, because the webhook may be later than the learner. Stripe's pages are
+  navigations, so the CSP needs nothing new.
+- privacy.html has a Stripe section (Stripe Payments Europe, seven years for payment records). Before taking real
+  money: KVK (within a week of the start), Stripe's account verification, live keys, algemene voorwaarden and the right
+  of withdrawal for digital services.
 
 ## Content
 

@@ -9,8 +9,12 @@ const SERVICE = (process.env.SUPABASE_SERVICE_ROLE_KEY || "").trim();
 export const accounts = !!(URL_ && ANON && SERVICE);
 export const supaUrl = URL_;
 export const anonKey = ANON;
-// Claude checks per person per day; a proefexamen costs more than one task (see checkCost)
-export const LIMIT = Math.max(1, parseInt(process.env.CHECK_LIMIT, 10) || 20);
+// Claude checks per person per day; a proefexamen costs more than one task (see checkCost). Default 5 once Plus can be
+// bought (the Stripe env vars below), 20 until then
+const STRIPE_SET = ["STRIPE_SECRET_KEY", "STRIPE_PRICE", "STRIPE_WEBHOOK_SECRET"].every((k) => (process.env[k] || "").trim());
+export const LIMIT = Math.max(1, parseInt(process.env.CHECK_LIMIT, 10) || (STRIPE_SET ? 5 : 20));
+// With Bittertalen Plus (a Stripe subscription, see below) PLUS_LIMIT a day instead
+export const PLUS = Math.max(1, parseInt(process.env.PLUS_LIMIT, 10) || 60);
 // One task is 1; a proefexamen Schrijven (4 tasks) 2, Schrijven B1 (12) 4, Spreken A2 or B1 (16 answers) 6: roughly what they cost in tokens
 export const checkCost = (tasks) => Math.max(1, Math.ceil(tasks / 3));
 
@@ -25,11 +29,11 @@ export async function caller(req) {
 }
 
 // Takes `cost` checks from today's allowance (negative gives them back); returns what is left, -1 when not enough
-export async function useChecks(uid, cost) {
+export async function useChecks(uid, cost, lim = LIMIT) {
   const r = await fetch(`${URL_}/rest/v1/rpc/use_checks`, {
     method: "POST",
     headers: { apikey: SERVICE, authorization: `Bearer ${SERVICE}`, "content-type": "application/json" },
-    body: JSON.stringify({ uid, cost, lim: LIMIT }),
+    body: JSON.stringify({ uid, cost, lim }),
   });
   if (!r.ok) throw new Error(`use_checks ${r.status}`);
   const value = await r.json();
@@ -134,29 +138,49 @@ export async function takeHand(h) {
   return row && Date.now() - Date.parse(row.at) < HAND_MS ? row.code : null;
 }
 
-
-// Bittertalen Plus (table plans, schema.sql): one row per user, written only by the server from Stripe's webhook.
-// {user_id, customer, sub, status, period, ends_at, cancel_at_end, trial_used}
-export async function getPlan(uid) {
-  const r = await rest(`plans?user_id=eq.${encodeURIComponent(uid)}&select=*`);
-  if (!r.ok) throw new Error(`plans ${r.status}`);
-  return (await r.json())[0] || null;
-}
-export async function planByCustomer(customer) {
-  const r = await rest(`plans?customer=eq.${encodeURIComponent(customer)}&select=*`);
-  if (!r.ok) throw new Error(`plans ${r.status}`);
-  return (await r.json())[0] || null;
-}
-export async function putPlan(row) {
-  const r = await rest("plans", {
-    method: "POST",
-    headers: { prefer: "resolution=merge-duplicates,return=minimal" },
-    body: JSON.stringify({ ...row, updated_at: new Date().toISOString() }),
+// Bittertalen Plus: a monthly Stripe subscription (api/plus.js starts it, api/stripe.js hears from Stripe). Plain fetch
+// to Stripe's API, no SDK. Off unless STRIPE_SECRET_KEY, STRIPE_PRICE (the price id of the monthly price) and
+// STRIPE_WEBHOOK_SECRET are set; PLUS_PRICE is only what the page shows (default "9,99").
+const SK = (process.env.STRIPE_SECRET_KEY || "").trim();
+export const PRICE = (process.env.STRIPE_PRICE || "").trim();
+export const HOOK = (process.env.STRIPE_WEBHOOK_SECRET || "").trim();
+export const plusOn = !!(accounts && SK && PRICE && HOOK);
+export const PLUS_PRICE = (process.env.PLUS_PRICE || "9,99").trim();
+// Stripe's form encoding: {a:{b:1}, c:[{d:2}]} -> a[b]=1&c[0][d]=2
+const form = (o, pre = "", out = new URLSearchParams()) => {
+  for (const [k, v] of Object.entries(o)) {
+    if (v == null) continue;
+    const key = pre ? `${pre}[${k}]` : k;
+    if (typeof v === "object") form(v, key, out);
+    else out.append(key, String(v));
+  }
+  return out;
+};
+export async function stripe(path, params, method = params ? "POST" : "GET") {
+  const r = await fetch(`https://api.stripe.com/v1/${path}`, {
+    method,
+    headers: { authorization: `Bearer ${SK}`, ...(params ? { "content-type": "application/x-www-form-urlencoded" } : {}) },
+    body: params ? form(params) : undefined,
   });
-  if (!r.ok) throw new Error(`plans ${r.status}`);
+  const j = await r.json().catch(() => ({}));
+  // Only the path's first part and Stripe's error code: never the key or the request
+  if (!r.ok) throw new Error(`stripe ${path.split("/")[0]} ${r.status} ${(j.error && j.error.code) || ""}`);
+  return j;
 }
-// Plus now? Paying, in the trial, or a renewal Stripe is still retrying (see PLUS in _stripe.js)
-export const plusRow = (p) => !!p && ["active", "trialing", "past_due"].includes(p.status);
-export async function isPlus(uid) {
-  return plusRow(await getPlan(uid));
+// The user's row of `plus` (schema.sql), or null
+export async function plusOf(uid) {
+  const r = await rest(`plus?user_id=eq.${encodeURIComponent(uid)}&select=customer,sub,status,until,ends`);
+  if (!r.ok) throw new Error(`plus ${r.status}`);
+  return (await r.json())[0] || null;
+}
+// Statuses that still give Plus (past_due: Stripe is still trying to charge); a day's grace after the period's end,
+// in case the renewal reaches us a little late
+export const LIVE = new Set(["active", "trialing", "past_due"]);
+export const isPlus = (p) => !!p && LIVE.has(p.status) && (!p.until || Date.parse(p.until) + 864e5 > Date.now());
+// Keeps the row: true, "gone" when the user no longer exists (the account was deleted), false when it failed
+export async function putPlus(row) {
+  const r = await rest("plus", { method: "POST", headers: { prefer: "resolution=merge-duplicates,return=minimal" }, body: JSON.stringify(row) });
+  if (r.ok) return true;
+  const j = await r.json().catch(() => ({}));
+  return j.code === "23503" ? "gone" : false;
 }

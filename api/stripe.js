@@ -1,61 +1,73 @@
-// Stripe's webhook for Bittertalen Plus: POST /api/stripe, signed with STRIPE_WEBHOOK_SECRET.
-// In Stripe: Developers → Webhooks → endpoint https://bittertalen.nl/api/stripe with the events
-// checkout.session.completed, customer.subscription.created, customer.subscription.updated, customer.subscription.deleted.
-// Every event fetches the subscription again from Stripe, so events that arrive late or twice still leave the latest state.
-import { accounts, putPlan, getPlan, planByCustomer } from "./_supa.js";
-import { pay, stripe, verify, periodOf, tierOf } from "./_stripe.js";
+// Stripe's webhook: Dashboard → Developers → Webhooks → endpoint https://bittertalen.nl/api/stripe with the events
+// customer.subscription.created, .updated and .deleted; its signing secret is STRIPE_WEBHOOK_SECRET.
+// Keeps the user's row of `plus` (schema.sql) up to date. The subscription is read again from Stripe every time, so an
+// event that comes late or twice can't leave an old state behind.
+import { createHmac, timingSafeEqual } from "node:crypto";
+import { plusOn, HOOK, stripe, plusOf, putPlus, isPlus, LIVE } from "./_supa.js";
 
-// The signature is over the raw body, so Vercel must not parse it first
+// The signature is over the exact bytes Stripe sent, so Vercel must not parse the body
 export const config = { api: { bodyParser: false } };
-const rawBody = (req) =>
-  typeof req.body === "string" ? Promise.resolve(req.body)
-    : Buffer.isBuffer(req.body) ? Promise.resolve(req.body.toString("utf8"))
-    : new Promise((ok, no) => { const c = []; req.on("data", (d) => c.push(d)); req.on("end", () => ok(Buffer.concat(c).toString("utf8"))); req.on("error", no); });
 
-const iso = (s) => (s ? new Date(s * 1000).toISOString() : null);
+// The body as Stripe sent it: a stream normally, a string or Buffer when something read it already; at most 1 MB
+const rawBody = async (req) => {
+  if (typeof req.body === "string") return req.body;
+  if (Buffer.isBuffer(req.body)) return req.body.toString("utf8");
+  const chunks = [];
+  let n = 0;
+  for await (const c of req) {
+    if ((n += c.length) > 1e6) throw new Error("too_large");
+    chunks.push(c);
+  }
+  return Buffer.concat(chunks).toString("utf8");
+};
 
-// Saves the subscription's current state on its user's row
-export async function save(subId, hint = {}) {
-  const sub = await stripe(`subscriptions/${encodeURIComponent(subId)}`);
-  const customer = typeof sub.customer === "string" ? sub.customer : sub.customer?.id;
-  let uid = sub.metadata?.user_id || hint.uid;
-  const known = uid ? await getPlan(uid) : customer ? await planByCustomer(customer) : null;
-  uid = uid || known?.user_id;
-  if (!uid) return false;
-  const end = sub.status === "trialing" && sub.trial_end ? sub.trial_end
-    : sub.current_period_end ?? sub.items?.data?.[0]?.current_period_end;
-  await putPlan({
-    user_id: uid,
-    customer,
-    sub: sub.id,
-    status: sub.status,
-    period: periodOf(sub),
-    tier: tierOf(sub),
-    ends_at: iso(end),
-    cancel_at_end: !!(sub.cancel_at_period_end || sub.cancel_at),
-    trial_used: !!(known?.trial_used || sub.trial_start),
+// Stripe-Signature: t=<seconds>,v1=<hex hmac-sha256 of "t.body">; at most 5 minutes old
+const signed = (raw, head) => {
+  const parts = String(head || "").split(","), t = (parts.find((p) => p.startsWith("t=")) || "").slice(2);
+  if (!t || Math.abs(Date.now() / 1000 - Number(t)) > 300) return false;
+  const want = createHmac("sha256", HOOK).update(`${t}.${raw}`).digest();
+  return parts.filter((p) => p.startsWith("v1=")).some((p) => {
+    const got = Buffer.from(p.slice(3), "hex");
+    return got.length === want.length && timingSafeEqual(got, want);
   });
-  return true;
-}
+};
 
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "method_not_allowed" });
-  if (!accounts || !pay) return res.status(503).json({ error: "not_configured" });
-  const raw = await rawBody(req).catch(() => "");
-  if (!verify(raw, req.headers["stripe-signature"])) return res.status(400).json({ error: "bad_signature" });
+  if (!plusOn) return res.status(503).json({ error: "not_configured" });
+  const raw = await rawBody(req).catch(() => null);
+  if (raw == null) return res.status(413).json({ error: "too_large" });
+  if (!signed(raw, req.headers["stripe-signature"])) return res.status(400).json({ error: "signature" });
   let ev;
-  try { ev = JSON.parse(raw); } catch { return res.status(400).json({ error: "bad_json" }); }
-  const o = ev.data?.object || {};
+  try { ev = JSON.parse(raw); } catch { return res.status(400).json({ error: "bad_request" }); }
+  if (!/^customer\.subscription\./.test(ev.type || "")) return res.status(200).json({ ok: true });
   try {
-    if (ev.type === "checkout.session.completed" && o.mode === "subscription" && o.subscription) {
-      await save(o.subscription, { uid: o.client_reference_id || o.metadata?.user_id });
-    } else if (/^customer\.subscription\.(created|updated|deleted)$/.test(ev.type) && o.id) {
-      await save(o.id);
+    const sub = await stripe(`subscriptions/${encodeURIComponent(ev.data.object.id)}`);
+    const uid = sub.metadata && sub.metadata.uid;
+    if (!uid) return res.status(200).json({ ok: true }); // not made by api/plus.js
+    // An old subscription that ends must not hide a newer one that runs
+    const old = await plusOf(uid);
+    if (old && old.sub !== sub.id && isPlus(old) && !LIVE.has(sub.status)) return res.status(200).json({ ok: true });
+    // Since Stripe's API of 2025 the period's end is on the item
+    const end = sub.current_period_end || (sub.items && sub.items.data && sub.items.data[0] && sub.items.data[0].current_period_end);
+    const kept = await putPlus({
+      user_id: uid,
+      customer: typeof sub.customer === "string" ? sub.customer : sub.customer.id,
+      sub: sub.id,
+      status: sub.status,
+      until: end ? new Date(end * 1000).toISOString() : null,
+      ends: !!(sub.cancel_at_period_end || sub.cancel_at),
+      updated_at: new Date().toISOString(),
+    });
+    // The account was deleted in between: stop the subscription too
+    if (kept === "gone") {
+      if (sub.status !== "canceled") await stripe(`subscriptions/${encodeURIComponent(sub.id)}`, null, "DELETE");
+      return res.status(200).json({ ok: true });
     }
-    return res.status(200).json({ received: true });
+    if (!kept) return res.status(500).json({ error: "failed" }); // Stripe tries again later
+    return res.status(200).json({ ok: true });
   } catch (e) {
-    // a 500 makes Stripe send the event again later
-    console.error(JSON.stringify({ event: "stripe_webhook_failed", type: ev.type, status: e.status, message: String(e.message).slice(0, 200) }));
+    console.error(e.message);
     return res.status(500).json({ error: "failed" });
   }
 }

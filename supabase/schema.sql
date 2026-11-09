@@ -56,6 +56,23 @@ $$;
 revoke execute on function public.use_checks(uuid, int, int) from public, anon, authenticated;
 grant execute on function public.use_checks(uuid, int, int) to service_role;
 
+-- Bittertalen Plus: the user's Stripe subscription (api/plus.js starts it, api/stripe.js keeps this row up to date from
+-- Stripe's webhook). While status is active, trialing or past_due and `until` (the end of the paid month) has not passed,
+-- Claude checks PLUS_LIMIT a day instead of CHECK_LIMIT. Only the server writes it; the page may read its own row.
+-- No payment details: those stay at Stripe. Deleting the account cancels the subscription first (api/account.js).
+create table if not exists public.plus (
+  user_id uuid primary key references auth.users on delete cascade,
+  customer text not null,                     -- Stripe's customer id (cus_…)
+  sub text not null,                          -- Stripe's subscription id (sub_…)
+  status text not null,                       -- Stripe's status: active, past_due, canceled, …
+  until timestamptz,                          -- end of the paid period
+  ends boolean not null default false,        -- cancelled, runs until `until`
+  updated_at timestamptz not null default now()
+);
+alter table public.plus enable row level security;
+drop policy if exists "own plus: read" on public.plus;
+create policy "own plus: read" on public.plus for select to authenticated using ((select auth.uid()) = user_id);
+
 -- Free checks without an account: a few a day per visitor and a cap for everyone together, so people can try Claude's
 -- grading before they make an account. "who" is a hash of the visitor's IP address with a secret (never the address
 -- itself), '*' is everyone together. Rows older than yesterday are deleted on every call. Only the server uses it.
@@ -182,20 +199,3 @@ $$;
 revoke execute on function public.put_outcome(uuid, text, boolean, int, int, int) from public, anon, authenticated;
 grant execute on function public.put_outcome(uuid, text, boolean, int, int, int) to service_role;
 
--- Bittertalen Plus: one row per user, written only by the server (api/stripe.js, Stripe's webhook). The page may read
--- its own row to show the subscription in Profiel. Payment details stay at Stripe; here only the ids and the status.
-create table if not exists public.plans (
-  user_id uuid primary key references auth.users on delete cascade,
-  customer text unique,                       -- Stripe customer id (cus_…)
-  sub text,                                   -- Stripe subscription id (sub_…)
-  status text,                                -- trialing, active, past_due, canceled, …
-  period text,                                -- month or year
-  ends_at timestamptz,                        -- end of the trial or of the paid period
-  cancel_at_end boolean not null default false,
-  trial_used boolean not null default false,  -- one free week per person
-  updated_at timestamptz not null default now()
-);
-alter table public.plans add column if not exists tier text not null default 'A2'; -- A2, or B1 (covers both levels)
-alter table public.plans enable row level security;
-drop policy if exists "own plan: read" on public.plans;
-create policy "own plan: read" on public.plans for select to authenticated using ((select auth.uid()) = user_id);

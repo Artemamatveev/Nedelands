@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import {root} from './app-harness.mjs';
 
 async function handler(options={}){
-  const usage=[],quotas=[],logs=[];let modelCalls=0;
+  const usage=[],quotas=[],logs=[],lims=[];let modelCalls=0;
   class APIError extends Error{}
   class AuthenticationError extends APIError{}
   class RateLimitError extends APIError{}
@@ -20,22 +20,22 @@ async function handler(options={}){
   const values={
     accounts:options.accounts??true,caller:async()=>options.guest?null:{id:'test-user'},
     checkCost:n=>Math.max(1,Math.ceil(n/3)),LIMIT:20,FREE:2,visitor:()=> 'test-visitor',sameOrigin:()=>true,
-    useChecks:async(_id,cost)=>{usage.push(cost);return options.userLeft??19},
+    useChecks:async(_id,cost,lim)=>{usage.push(cost);lims.push(lim);return options.userLeft??19},
     useFree:async(_id,cost)=>{usage.push(cost);return options.freeLeft??1},
     useTotal:async cost=>{quotas.push(cost);return 'total' in options?options.total:399},
-    getPlan:async()=>{if(options.plusFails)throw Error('down');return options.plan??null}
+    PLUS:60,plusOn:!!options.pay,
+    plusOf:async()=>{if(options.plusFails)throw Error('down');return options.plan??null},
+    isPlus:p=>!!p&&['active','trialing','past_due'].includes(p.status)
   };
   const context=vm.createContext({process:{env:{ANTHROPIC_API_KEY:'test-only'}},console:{info:x=>logs.push(x),error:x=>logs.push(x)}});
   const sdk=new vm.SyntheticModule(['default'],function(){this.setExport('default',Anthropic)},{context});
   const supa=new vm.SyntheticModule(Object.keys(values),function(){for(const [key,value]of Object.entries(values))this.setExport(key,value)},{context});
-  const covers=(p,need)=>!!p&&['active','trialing','past_due'].includes(p.status)&&(need!=='B1'||p.tier==='B1');
-  const stripeMod=new vm.SyntheticModule(['pay','covers'],function(){this.setExport('pay',!!options.pay);this.setExport('covers',(p,n)=>{(options.needs||[]).push(n);return covers(p,n)})},{context});
   const module=new vm.SourceTextModule(fs.readFileSync(new URL('api/check.js',root),'utf8'),{context});
-  await module.link(name=>name==='@anthropic-ai/sdk'?sdk:name==='./_stripe.js'?stripeMod:supa);await module.evaluate();
+  await module.link(name=>name==='@anthropic-ai/sdk'?sdk:supa);await module.evaluate();
   const req={method:'POST',headers:{host:'example.test',origin:'https://example.test'},body:{...(options.part?{part:options.part}:{}),tasks:[{...(options.part?{kind:'z'}:{}),task:'Stuur een bericht',text:'Ik kom later. Personal test content.'}]}};
   const res={statusCode:200,status(n){this.statusCode=n;return this},json(body){this.body=body;return this}};
   await module.namespace.default(req,res);
-  return {res,usage,quotas,logs,modelCalls};
+  return {res,usage,quotas,logs,lims,modelCalls};
 }
 
 test('Missing account configuration blocks the paid provider',async()=>{
@@ -73,18 +73,20 @@ test('The real quota reader rejects JSON values that could otherwise coerce into
   }
 });
 
-test('With payments on, a logged-in learner without Plus gets only the free single checks, then a Plus answer',async()=>{
-  const free=await handler({pay:true,plan:null});assert.equal(free.res.statusCode,200);assert.equal(free.res.body.free,1);assert.equal(free.modelCalls,1);
-  const plus=await handler({pay:true,plan:{status:'active',tier:'A2'}});assert.equal(plus.res.statusCode,200);assert.equal(plus.res.body.left,19);
-  const used=await handler({pay:true,plan:null,freeLeft:-1});assert.equal(used.res.statusCode,402);assert.equal(used.res.body.error,'plus');assert.equal(used.modelCalls,0);
-  const down=await handler({pay:true,plusFails:true});assert.equal(down.res.statusCode,502);assert.equal(down.modelCalls,0);
+test('Without Plus a logged-in learner gets CHECK_LIMIT a day; with Plus PLUS_LIMIT, outside the global cap',async()=>{
+  const free=await handler({pay:true,plan:null});assert.equal(free.res.statusCode,200);assert.deepEqual(free.lims,[20]);assert.deepEqual(free.quotas,[1]);
+  const plus=await handler({pay:true,plan:{status:'active'}});assert.equal(plus.res.statusCode,200);assert.deepEqual(plus.lims,[60]);assert.deepEqual(plus.quotas,[]);
+  const ended=await handler({pay:true,plan:{status:'canceled'}});assert.deepEqual(ended.lims,[20]);
+  const off=await handler({pay:false,plan:{status:'active'}});assert.deepEqual(off.lims,[20]);
 });
-test('Without payments set up, grading works as before for every logged-in learner',async()=>{
-  const r=await handler({pay:false,plan:null});assert.equal(r.res.statusCode,200);assert.equal(r.res.body.left,19);
+test('A full Plus day says limit with the Plus allowance; a failed Plus lookup grades with the free allowance',async()=>{
+  const full=await handler({pay:true,plan:{status:'active'},userLeft:-1});assert.equal(full.res.statusCode,429);assert.equal(full.res.body.limit,60);assert.equal(full.res.body.plus,true);assert.equal(full.modelCalls,0);
+  const down=await handler({pay:true,plusFails:true});assert.equal(down.res.statusCode,200);assert.deepEqual(down.lims,[20]);
 });
-
-test('Schrijven B1 asks for Plus B1; Plus A2 grades it only as a free check',async()=>{
-  const needs=[];const a2=await handler({pay:true,plan:{status:'active',tier:'A2'},part:'wb',needs,freeLeft:-1});
-  assert.equal(a2.res.statusCode,402);assert.deepEqual(needs,['B1']);assert.equal(a2.modelCalls,0);
-  const b1=await handler({pay:true,plan:{status:'trialing',tier:'B1'},part:'wb'});assert.equal(b1.res.statusCode,200);assert.equal(b1.res.body.left,19);
+test('A Plus check that fails gives the learner the check back at the Plus allowance and reserves nothing globally',async()=>{
+  const r=await handler({pay:true,plan:{status:'trialing'},providerFailure:true});assert.equal(r.res.statusCode,502);assert.deepEqual(r.usage,[1,-1]);assert.deepEqual(r.lims,[60,60]);assert.deepEqual(r.quotas,[]);
+});
+test('Without a login only the free single checks, then a login answer',async()=>{
+  const guest=await handler({guest:true});assert.equal(guest.res.statusCode,200);assert.equal(guest.res.body.free,1);
+  const used=await handler({guest:true,freeLeft:-1});assert.equal(used.res.statusCode,401);assert.equal(used.res.body.error,'login');assert.equal(used.modelCalls,0);
 });

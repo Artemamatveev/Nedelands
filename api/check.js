@@ -11,11 +11,9 @@
 // task, 20 s: inhoud 0–2, grammatica 0–1) or m (medium, 30 s: inhoud 0–3, woorden 0–1, grammatica 0–2, samenhang 0–1)
 // Needs ANTHROPIC_API_KEY in the Vercel project's environment variables.
 // With accounts set up (Supabase, see _supa.js) only a signed-in user may grade, CHECK_LIMIT checks a day;
-// the answer then also has `left`, the checks left today. With payments on (Stripe, see _stripe.js) that allowance is
-// for Bittertalen Plus; everyone else, logged in or not, gets the free single checks (FREE a day) and then {error:"plus"}.
+// the answer then also has `left`, the checks left today. With Bittertalen Plus (api/plus.js) PLUS_LIMIT a day.
 import Anthropic from "@anthropic-ai/sdk";
-import { accounts, caller, checkCost, useChecks, LIMIT, sameOrigin, FREE, visitor, useFree, useTotal, getPlan } from "./_supa.js";
-import { pay, covers } from "./_stripe.js";
+import { accounts, caller, checkCost, useChecks, LIMIT, PLUS, plusOn, plusOf, isPlus, sameOrigin, FREE, visitor, useFree, useTotal } from "./_supa.js";
 
 // Created only when the key is set, so a missing key gives a clear error instead of a crash
 // (trimmed: a key pasted into the dashboard with a trailing newline breaks the request header)
@@ -163,37 +161,31 @@ export default async function handler(req, res) {
   if (!input.length) return res.status(400).json({ error: "no_tasks" });
 
   // Accounts: who is asking, and take the checks before calling Claude (given back if grading fails)
-  let uid = null, left;
+  let uid = null, left, lim = LIMIT, plus = false;
   const cost = checkCost(input.length);
   let who = null, free;
   {
     const user = await caller(req).catch(() => null);
-    // Bittertalen Plus (only when payments are set up): a logged-in learner without it is graded like a visitor
-    // Schrijven B1 and Spreken B1 need Plus B1 (when B1 has its own price); everything else Plus A2 or B1
-    let plus = !pay;
-    if (user && pay) {
-      const plan = await getPlan(user.id).catch(() => undefined);
-      if (plan === undefined) return res.status(502).json({ error: "failed" });
-      plus = covers(plan, wb || sb ? "B1" : "A2");
-    }
-    if (!user || !plus) {
-      // Without a login (or without Plus): a few single tasks a day for free (no proefexamens), counted per visitor
-      const no = (n) => res.status(user ? 402 : 401).json({ error: user ? "plus" : "login", ...(n === 0 ? { free: 0 } : {}) });
+    if (!user) {
+      // Without a login: a few single tasks a day for free (no proefexamens), counted per visitor
       who = FREE && cost === 1 ? visitor(req) : "";
-      if (!who) return no();
+      if (!who) return res.status(401).json({ error: "login" });
       free = await useFree(who, cost).catch(() => null);
-      if (free == null) return no(); // not set up in the database yet
-      if (free < 0) return no(0);
+      if (free == null) return res.status(401).json({ error: "login" }); // not set up in the database yet
+      if (free < 0) return res.status(401).json({ error: "login", free: 0 });
     } else {
       uid = user.id;
-      left = await useChecks(uid, cost).catch(() => null);
+      plus = plusOn && isPlus(await plusOf(uid).catch(() => null));
+      if (plus) lim = PLUS;
+      left = await useChecks(uid, cost, lim).catch(() => null);
       if (left == null) return res.status(502).json({ error: "failed" });
-      if (left < 0) return res.status(429).json({ error: "limit", limit: LIMIT });
+      if (left < 0) return res.status(429).json({ error: "limit", limit: lim, plus });
     }
   }
-  const mine = () => (uid ? useChecks(uid, -cost).catch(() => {}) : who ? useFree(who, -cost).catch(() => {}) : null);
-  // Everyone's checks of today together: when the day is full, give this one back and ask to come back tomorrow
-  const total = await useTotal(cost).catch(() => null);
+  const mine = () => (uid ? useChecks(uid, -cost, lim).catch(() => {}) : who ? useFree(who, -cost).catch(() => {}) : null);
+  // Everyone's checks of today together: when the day is full, give this one back and ask to come back tomorrow.
+  // Plus checks are paid for, so they neither count nor stop at that ceiling.
+  const total = plus ? 0 : await useTotal(cost).catch(() => null);
   if (!Number.isSafeInteger(total)) {
     await mine();
     console.error("grading_quota_unavailable");
@@ -201,7 +193,7 @@ export default async function handler(req, res) {
   }
   if (total != null && total < 0) { await mine(); return res.status(429).json({ error: "busy" }); }
   let providerStarted = false;
-  const giveBack = () => Promise.all([mine(), providerStarted ? null : useTotal(-cost).catch(() => null)]);
+  const giveBack = () => Promise.all([mine(), providerStarted || plus ? null : useTotal(-cost).catch(() => null)]);
   const tasks = input.map((t) => ({
     kind: wb ? (SCORES_WB[t?.kind] ? t.kind : "m") : sb ? (SCORES_SB[t?.kind] ? t.kind : "m") : "",
     task: str(t?.task, wb ? 2000 : 1200), form: sp ? "" : str(t?.form, 1500), text: str(t?.text, 2500),
