@@ -4062,7 +4062,12 @@ const AVS={
   volm:{n:"de jongen uit Volendam",s:avBg("#E3ECF9")
     +avBody("#20263A",`<path d="M44 78h12l-6 7z" fill="#C0392B"/>`+[86,92,98].map(y=>`<circle cx="43" cy="${y}" r="1.7" fill="#D5DCE8"/><circle cx="57" cy="${y}" r="1.7" fill="#D5DCE8"/>`).join(""))
     +avFace("#EFC7A6",{open:1})
-    +`<path d="M25 41c0-14 10-21 25-21s25 7 25 21z" fill="#20263A"/><rect x="23" y="37" width="54" height="7" rx="3.5" fill="#33405F"/>`},
+    +`<path d="M25 41c0-14 10-21 25-21s25 7 25 21z" fill="#20263A"/><rect x="23" y="37" width="54" height="7" rx="3.5" fill="#33405F"/>
+    <path d="M65 92l12-56q2-12 9-12" fill="none" stroke="#805633" stroke-width="3" stroke-linecap="round"/>
+    <path d="M86 24v33" stroke="#687B91" stroke-width="1.3"/>
+    <ellipse cx="86" cy="58" rx="2.5" ry="5" fill="#D84E30"/>
+    <path d="M57 87l12-11" stroke="#33405F" stroke-width="9" stroke-linecap="round"/>
+    <circle cx="69" cy="76" r="4.5" fill="#EFC7A6"/>`},
   fanv:{n:"de supporter",s:avBg("#FFE6D1")
     +avBody("#E8731A",`<path d="M50 78v22" stroke="#fff" stroke-width="2.2"/><path d="M42 78l8 5 8-5" fill="#fff"/>`)
     +`<path d="M25 50c0-14 10-22 25-22s25 8 25 22v18c-3 3-6 3-9 0V52H34v16c-3 3-6 3-9 0z" fill="#7A4A2A"/>`
@@ -4106,11 +4111,19 @@ const AVS={
     <g transform="translate(21 -4) scale(.58)">`+avFace("#B77B59",{open:1})+`</g>
     <path d="M37 23q3-15 14-13 10 2 14 12-12-5-28 1z" fill="#F6CA63"/>`},
   schaatser:{n:"de schaatser",s:avBg("#E1EDF9")
-    +avBody("#245A79")+avFace("#F1C6A4")
-    +`<circle cx="51" cy="17" r="7" fill="#D84E30"/><path d="M27 41c0-13 9-22 23-22s23 9 23 22z" fill="#D84E30"/>
-    <rect x="25" y="36" width="50" height="8" rx="4" fill="#AB3627"/>
-    <path d="M33 72q17 8 34 0l2 8-8 4v14H51V84q-12-1-20-5z" fill="#D84E30"/>
-    <path d="M66 89h4v4h8v3H66zm0 9h14" fill="none" stroke="#FFF4DD" stroke-width="1.5" stroke-linejoin="round"/>`},
+    +`<path d="M24 88h43m-34 5h32" stroke="#B3CFEB" stroke-width="2" stroke-linecap="round"/>
+    <path d="M45 54l13 10-7 17M43 54l-9 11-11 5" fill="none" stroke="#35455D" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M48 77h6l2 5 8 1v4H47zM23 66l4 6-8 4-6-1 4-4z" fill="#253440"/>
+    <path d="M48 87v3h14l3-3M16 75l2 4 11-6" fill="none" stroke="#667D96" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M39 48l16-16 9 8-15 17q-6 4-10-1z" fill="#245A79"/>
+    <path d="M55 39l8 10 11 2M47 41l-10 5-9-3" fill="none" stroke="#245A79" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="75" cy="51" r="3" fill="#F1C6A4"/><circle cx="27" cy="43" r="3" fill="#F1C6A4"/>
+    <path d="M55 32q-10 4-20 1l2 5q10 2 20-2z" fill="#D84E30"/>
+    <g transform="translate(30 0) scale(.62)">`+avFace("#F1C6A4")+`
+      <circle cx="51" cy="17" r="7" fill="#D84E30"/>
+      <path d="M27 41c0-13 9-22 23-22s23 9 23 22z" fill="#D84E30"/>
+      <rect x="25" y="36" width="50" height="8" rx="4" fill="#AB3627"/>
+    </g>`},
   haringverkoper:{n:"de haringverkoper",s:avBg("#F4E9DF")
     +avBody("#2E6663",`<path d="M37 80h26l5 20H32z" fill="#F8F5ED"/>`)
     +avFace("#D29B73",{open:1})
