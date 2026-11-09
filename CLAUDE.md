@@ -18,27 +18,26 @@ Delfts blauw; controller Artem Matveev, contact privacy@bittertalen.nl (an iClou
 its MX, SPF, DKIM and apple-domain records are in Vercel DNS next to Resend's). Linked from Profiel (a list row) and the welcome
 screen. Keep it true: when data goes somewhere new (a new service, a new field in the account, analytics), update it
 and its date. `sw.js` caches other pages under their own address, never as "/".
-The app's UI language is Dutch; the user talks to Claude in Russian. There is no Russian anywhere in the app: a word's meaning is
-a short Dutch description (A2), or English from the dictionary. For beginners the menus and navigation can switch to
-English, Arabic, Turkish, Hindi or simplified Chinese (the groups CBS counts most among inburgeraars, plus the user's choice of
-Hindi and Chinese; the language pill top left on the painting and on the login card, where the user wanted it: filled cobalt with a white edge,
-because clear glass got lost on light paintings, with a globe and a ⌄; a native `<select>` over the pill, `langHTML()`; `ww-ui` per device, Dutch by default): `UI` (exact Dutch string → `[en, ar, tr, hi, zh]`, the
+The app defaults to Dutch. A word's meaning is a short Dutch description (A2) or English from the dictionary.
+The menus can switch to English, Arabic, Turkish, Hindi, simplified Chinese, Spanish or Russian.
+The native language selector (`langHTML()`) appears on the painting and login card and saves the selection in `ww-ui`.
+`UI` (exact Dutch string → `[en, ar, tr, hi, zh, es, ru]`, the
 order of `LCODE`) and `UIR` (patterns: "2 van 6 klaar", dates, "nodig: 76%"…) translate text
 nodes, `aria-label` and `placeholder` after every render (a MutationObserver; the Dutch original is kept in `UIO`, so
 switching back restores it). The user's rule: only the menus, the privacy statement and sections like it are translated, exercises stay Dutch.
 So never inside `#play` (exercises), conversations or the text of what you read: books, chapters, painting stories and the museum label stay Dutch, with
 their titles on their own page. Everything around them is translated: list rows (conversation, chapter and book titles and descriptions), back buttons,
 the reader's buttons, and information such as the ONA screen. `lang="nl"` marks Dutch content (`DUTCH`: never translated, always
-left to right): a conversation wraps its content in `<div lang="nl">`, because `#tbody` and `#hbody` also hold menus. A new menu string needs all five translations in `UI`. The
+left to right): a conversation wraps its content in `<div lang="nl">`, because `#tbody` and `#hbody` also hold menus. A new menu string needs all seven translations in `UI`. The
 translations were made by Claude and not yet checked by native speakers.
 Arabic runs right to left (`<html dir="rtl">`, set by `applyLang()`): use logical CSS (`padding-inline-start`,
 `inset-inline-start`, `text-align:var(--ta)` and `var(--te)` for left and right), not physical sides, for anything in the menus. Dutch
 content stays left to right (`#play`, `#read`, the header, `[lang=nl]`, `.book`, `.doc`, `.sample`, `.msum`, `.tl`, `.bgl`, in one CSS rule). In Arabic the
 tab bar, its lens and the swipe back are mirrored; `unicode-bidi:plaintext` keeps Dutch titles readable in a right-to-left list.
 No letter spacing in Arabic, Hindi or Chinese: it breaks joined letters.
-`privacy.html` and `over.html` hold the same text six times: one `<article data-l>` per language with the same sections, points and
+`privacy.html` and `over.html` hold the same text in eight languages: one `<article data-l>` per language with the same sections, points and
 links, only the one matching `ww-ui` shown (a small script; Dutch without a script), with their own language pill. The Dutch text of the
-privacy statement is the official one and each translation says so. When either page changes, change all six.
+privacy statement is the official one and each translation says so. When either page changes, update every translation.
 
 ## Design: Delfts blauw
 
