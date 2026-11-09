@@ -5,13 +5,14 @@ import fs from 'node:fs';
 import {root} from './app-harness.mjs';
 
 async function handler(options={}){
-  const usage=[],quotas=[],logs=[],lims=[];let modelCalls=0;
+  const usage=[],quotas=[],logs=[],lims=[],prompts=[];let modelCalls=0;
   class APIError extends Error{}
   class AuthenticationError extends APIError{}
   class RateLimitError extends APIError{}
   class Anthropic {
     static APIError=APIError;static AuthenticationError=AuthenticationError;static RateLimitError=RateLimitError;
-    beta={messages:{create:async()=>{
+    beta={messages:{create:async request=>{
+      prompts.push(request.messages[0].content);
       modelCalls++;
       if(options.providerFailure)throw Error('connection interrupted');
       return {stop_reason:options.stopReason||'end_turn',model:'test-model',usage:{input_tokens:100,output_tokens:30},content:[{type:'text',text:JSON.stringify({tasks:[{passed:options.claimPassed??true,verdict:'Goed',corrected:'Ik kom later.',errors:[],scores:options.scores||{inhoud:3,woorden:2,grammatica:2,spelling:2,samenhang:1}}]})}]};
@@ -33,9 +34,10 @@ async function handler(options={}){
   const module=new vm.SourceTextModule(fs.readFileSync(new URL('api/check.js',root),'utf8'),{context});
   await module.link(name=>name==='@anthropic-ai/sdk'?sdk:supa);await module.evaluate();
   const req={method:'POST',headers:{host:'example.test',origin:'https://example.test'},body:{...(options.part?{part:options.part}:{}),tasks:[{...(options.part?{kind:options.kind||'z'}:{}),task:'Stuur een bericht',text:'Ik kom later. Personal test content.'}]}};
+  if(options.tasks)req.body.tasks=options.tasks;
   const res={statusCode:200,status(n){this.statusCode=n;return this},json(body){this.body=body;return this}};
   await module.namespace.default(req,res);
-  return {res,usage,quotas,logs,lims,modelCalls};
+  return {res,usage,quotas,logs,lims,modelCalls,prompts};
 }
 
 test('Missing account configuration blocks the paid provider',async()=>{
@@ -119,4 +121,24 @@ test('B1 rules: a sentence task needs both points, an e-mail 70% with inhoud 2, 
   assert.equal(k.res.body.tasks[0].passed,true);
   const k1=await handler({part:'sb',kind:'k',scores:{inhoud:1,grammatica:1}});
   assert.equal(k1.res.body.tasks[0].passed,false);
+});
+
+
+test('Oversized answers and fields are rejected before quota or provider calls, including a late task in a batch',async()=>{
+  for(const [field,limit] of [['text',2500],['form',1500],['task',1200]]){
+    const tasks=[{task:'Schrijf een bericht',text:'Ik kom later.'},{task:'Tweede opdracht',text:'Nog een antwoord.',[field]:'x'.repeat(limit+1)}];
+    const r=await handler({tasks});
+    assert.equal(r.res.statusCode,413);assert.equal(r.res.body.error,'answer_too_long');
+    assert.equal(r.res.body.field,field);assert.equal(r.res.body.index,1);assert.equal(r.res.body.limit,limit);
+    assert.deepEqual(r.usage,[]);assert.deepEqual(r.quotas,[]);assert.equal(r.modelCalls,0);
+  }
+  const b1=await handler({part:'wb',tasks:[{kind:'z',task:'x'.repeat(2001),text:'ik werk'}]});
+  assert.equal(b1.res.body.limit,2000);assert.deepEqual(b1.usage,[]);
+});
+test('Boundary-length answers, form and task reach the model intact',async()=>{
+  const text='a'.repeat(2491)+'END-MARK!',form='b'.repeat(1491)+'FORM-END!',task='c'.repeat(1191)+'TASK-END!';
+  assert.equal(text.length,2500);assert.equal(form.length,1500);assert.equal(task.length,1200);
+  const r=await handler({tasks:[{task,text,form}]});
+  assert.equal(r.res.statusCode,200);assert.equal(r.modelCalls,1);
+  for(const full of [text,form,task])assert.ok(r.prompts[0].includes(full));
 });

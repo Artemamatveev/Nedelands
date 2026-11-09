@@ -965,8 +965,8 @@ const KNM=[
 ["Instanties", "Welke toeslag is er voor de kosten van de kinderopvang?", "de kinderopvangtoeslag", "het kindgebonden budget", "de kinderbijslag", "Toeslagen vraag je aan bij de Belastingdienst."],
 ["Geschiedenis en geografie", "Tegen welk land vocht Nederland in de Tachtigjarige Oorlog?", "Spanje", "Frankrijk", "Engeland", "In die tijd hoorden de Nederlanden bij Spanje."],
 ["Geschiedenis en geografie", "In welk jaar eindigde de Tachtigjarige Oorlog?", "1648", "1568", "1813", "De oorlog tegen Spanje duurde tot 1648."],
-["Geschiedenis en geografie", "Welke landen waren vroeger koloniën van Nederland?", "Indonesië en Suriname", "België en Luxemburg", "India en Kenia", "Indonesië werd vrij in 1949 en Suriname in 1975."],
-["Geschiedenis en geografie", "In welk jaar werd Suriname een vrij land?", "1975", "1949", "1863", "Indonesië werd in 1949 een vrij land."],
+["Geschiedenis en geografie", "Welke landen waren vroeger koloniën van Nederland?", "Indonesië en Suriname", "België en Luxemburg", "India en Kenia", "Indonesië riep op 17 augustus 1945 de onafhankelijkheid uit. Nederland droeg op 27 december 1949 de soevereiniteit over. Suriname werd op 25 november 1975 onafhankelijk."],
+["Geschiedenis en geografie", "In welk jaar werd Suriname een vrij land?", "1975", "1949", "1863", "Suriname werd op 25 november 1975 onafhankelijk."],
 ["Geschiedenis en geografie", "Wat is de Holocaust?", "de moord op zes miljoen Joden in de Tweede Wereldoorlog", "de bezetting van Nederland door Duitsland in de oorlog", "de Hongerwinter in het westen van Nederland in 1944", "Discriminatie van Joden heet antisemitisme."],
 ["Geschiedenis en geografie", "Hoe noemen we de winter van 1944 in Nederland?", "de Hongerwinter", "de Watersnoodramp", "de Februaristaking", "In die winter gingen veel mensen dood van de honger."],
 ["Geschiedenis en geografie", "Wie waren de gastarbeiders?", "mensen uit Turkije en Marokko die hier kwamen werken", "mensen uit Indonesië die na 1949 naar Nederland kwamen", "mensen uit Suriname die rond 1975 naar Nederland kwamen", "Rond 1970 waren er te weinig mensen voor al het werk.", "gastarbeiders"],
@@ -1124,7 +1124,7 @@ const KNM=[
 ["Geschiedenis en geografie", "In 1848 kreeg Nederland een nieuwe Grondwet. Wat veranderde er?", "De ministers werden verantwoordelijk, niet de koning.", "Vrouwen kregen voor het eerst stemrecht.", "De slavernij in Suriname en op de Antillen werd afgeschaft.", "Thorbecke schreef de Grondwet van 1848. Vrouwen kregen stemrecht in 1919, en de slavernij werd afgeschaft in 1863.", "thorbecke"],
 ["Geschiedenis en geografie", "Sinds wanneer hebben vrouwen in Nederland stemrecht?", "sinds 1919", "sinds 1848", "sinds 1945", "In 1917 mochten vrouwen gekozen worden, in 1919 kregen ze ook stemrecht.", "aletta"],
 ["Geschiedenis en geografie", "Wat was de verzuiling?", "Katholieken, protestanten en socialisten hadden eigen scholen, kranten en clubs.", "Nederland bouwde dijken en dammen om het land te beschermen tegen het water.", "Katholieken en protestanten voerden lang oorlog met elkaar in Nederland.", "Tot in de jaren zestig leefden veel groepen apart, in hun eigen 'zuil'."],
-["Geschiedenis en geografie", "Waarom kwamen veel Indische Nederlanders en Molukkers na 1945 naar Nederland?", "Indonesië werd een onafhankelijk land.", "Er was veel werk in de Nederlandse fabrieken.", "De Hongerwinter in Indonesië was voorbij.", "Na de onafhankelijkheid van Indonesië in 1949 kwamen ongeveer 300.000 mensen naar Nederland.", "indonesie"],
+["Geschiedenis en geografie", "Waarom kwamen veel Indische Nederlanders en Molukkers na 1945 naar Nederland?", "Indonesië werd een onafhankelijk land.", "Er was veel werk in de Nederlandse fabrieken.", "De Hongerwinter in Indonesië was voorbij.", "Na de Indonesische onafhankelijkheidsstrijd kwamen veel Indische Nederlanders en Molukkers naar Nederland.", "indonesie"],
 ["Geschiedenis en geografie", "Wat gebeurde er op 14 mei 1940 in Rotterdam?", "Duitse vliegtuigen bombardeerden het centrum.", "Canadese soldaten bevrijdden de stad.", "Er was een grote overstroming in de stad.", "Na het bombardement gaf Nederland zich over. Het centrum van Rotterdam is daarna opnieuw gebouwd."],
 ["Geschiedenis en geografie", "Welke rol had Nederland in de trans-Atlantische slavenhandel?", "Nederlandse schepen brachten mensen uit Afrika als slaaf naar Amerika.", "Nederland deed niet mee aan de slavenhandel.", "Nederland stopte als eerste land in Europa met de slavenhandel.", "Nederlandse handelaren vervoerden ruim 500.000 mensen uit Afrika naar onder andere Suriname en Curaçao."],
 ["Geschiedenis en geografie", "Wat is de Randstad?", "het gebied met de grote steden in het westen van Nederland", "een natuurgebied met bossen in het oosten van Nederland", "de rij duinen langs de kust van de Noordzee", "Amsterdam, Rotterdam, Den Haag en Utrecht liggen in de Randstad. Daar wonen veel mensen."],
@@ -2334,7 +2334,7 @@ function drawWelcome(){
     <h2>${acc.step==="code"?"Vul de code in":first?"Welkom bij Bittertalen":"Inloggen of account maken"}</h2>`
     +(first && !acc.step?`<p>Oefen Nederlands met een korte leesopdracht.</p><button class="btn wide" id="wtry">Probeer één vraag</button><details><summary>Inloggen of account maken</summary>${loginHTML("w")}</details>`:loginHTML("w"))+(acc.msg?`<p class="note">${esc(acc.msg)}</p>`:"")
     +`<button class="ghost wide" id="wlater">${first?"Eerst rondkijken":"Terug"}</button></div>
-    <div class="wfoot"><p>Met een account blijft je voortgang bewaard, ook op je andere apparaten, en kijkt Claude je teksten en antwoorden na.</p>
+    <div class="wfoot"><p>Je kunt ook zonder account losse antwoorden laten nakijken, binnen de daglimiet. Met een account blijft je voortgang bewaard op je andere apparaten.</p>
     <p><a href="/privacy" target="_blank" rel="noopener">Privacyverklaring</a></p><p class="wart">${p.a} · ${p.t} · ${p.m}</p></div>`;
   if($("wtry"))$("wtry").onclick=()=>{
     lsSet(WEL,"1"); home();const section=lvl()==="B1"?"l1":"lz";
@@ -3611,15 +3611,15 @@ const mmss=s=>Math.floor(s/60)+":"+String(s%60).padStart(2,"0");
 // The question as it is read aloud and sent for grading: without the picture emoji
 // What Claude gets for a Spreken task: the question, and what the photos show (it can't see them)
 const spTask=q=>spoken(q.big)+(q.text?` (Tekst bij de opdracht: ${q.text.replace(/\n/g," · ")})`:"")+(q.pics?` (Op de foto${q.pics.length>1?"'s":""}: ${q.pics.map((f,i)=>(q.pics.length>1?i+1+". ":"")+(FOTO[f]||f)).join("; ")})`:"");
-// Points as in DUO's Spreken criteria, as far as a transcript shows them (max 8 of DUO's 12: pronunciation and fluency need sound);
+// Practice points for Spreken, as far as a transcript shows them (max 8 of DUO's 12: pronunciation and fluency need sound);
 // Schrijven has DUO's criteria with spelling (max 10; voldoende: inhoud 2 or more and 7 points, decided by api/check.js)
 const SCMAX={inhoud:3,woorden:2,grammatica:2,spelling:2,samenhang:1}, SPMAX=8, WRMAX=10, spPts=t=>t&&t.scores?Object.values(t.scores).reduce((a,b)=>a+(+b||0),0):null;
 const mxPts=M=>Object.values(M).reduce((a,b)=>a+b,0);
-// DUO's points as bars: one per criterion (full green, some oranje, none red), then the total and what is voldoende
+// Practice points as bars: one per criterion (full green, some oranje, none red), then the total and what is voldoende
 const scoreHTML=(sc,M)=>{if(!sc)return""; const wr="spelling" in sc,X=M||SCMAX,n=M?mxPts(M):wr?WRMAX:SPMAX;
-  return`<div class="dpts">${Object.keys(X).filter(k=>k in sc).map(k=>{const v=+sc[k]||0,m=X[k];
+  return`<p class="note">Dit is oefenfeedback van Claude, geen officiële beoordeling van DUO.</p><div class="dpts">${Object.keys(X).filter(k=>k in sc).map(k=>{const v=+sc[k]||0,m=X[k];
       return`<div class="pt"><span>${k[0].toUpperCase()+k.slice(1)}</span><i><b class="${v>=m?"full":v>0?"some":"none"}" style="width:${m?Math.max(v/m*100,v?0:4):0}%"></b></i><em>${v}/${m}</em></div>`}).join("")}
-    <p class="ptt">Samen <b>${spPts({scores:sc})} van ${n}</b></p></div><p class="note">${M?M.spelling?`Voldoende is ${Math.ceil(n*.7)} punten, met inhoud minstens 2.`:M===WBMAX.z?"Eén punt voor de inhoud, één voor de grammatica. Past de inhoud niet, dan telt de grammatica ook niet.":`Voldoende is ${Math.ceil(n*.6)} punten, met inhoud minstens 2. Uitspraak en spreektempo kan ik niet horen: oefen die met Zeg het na.`:wr?"Voldoende is 7 punten, met inhoud minstens 2.":"Uitspraak en vloeiendheid kan ik niet horen: oefen die met Zeg het na."}</p>`};
+    <p class="ptt">Samen <b>${spPts({scores:sc})} van ${n}</b></p></div><p class="note">${M?M.spelling?`Ons oefendoel is ${Math.ceil(n*.7)} punten, met inhoud minstens 2.`:M===WBMAX.z?"Eén punt voor de inhoud, één voor de grammatica. Past de inhoud niet, dan telt de grammatica ook niet.":`Ons oefendoel is ${Math.ceil(n*.6)} punten, met inhoud minstens 2. Uitspraak en spreektempo kan ik niet horen: oefen die met Zeg het na.`:wr?"Ons oefendoel is 7 punten, met inhoud minstens 2.":"Uitspraak en vloeiendheid kan ik niet horen: oefen die met Zeg het na."}</p>`};
 // The learner's own text with each error marked where it is (numbered like the list under it). Claude returns the
 // wrong words as they stand in the text; one that can't be found (a missing word) is only in the list.
 function markErrs(text,errs){
@@ -3923,9 +3923,9 @@ function home(){
   // ONA and the participatieverklaring: on both levels (with the Staatsexamen you still do them apart)
   const onaRow=`<div class="list">${itHTML(`data-x="ona"`,"ONA en participatieverklaring","Niet voor iedereen: kijk of jij ze nodig hebt.",{ic:"ona",n:(n=>n?`${n} van 4`:null)(GP.filter(c=>c.ona&&(S.gp||{})[c.id]).length)})}</div>`;
   if(v==="B1"){
-    $("exam").innerHTML=`<h2>Naar het examen</h2><p class="sub">Je score is het percentage goede antwoorden of punten. Het streepje is je oefendoel.</p><div class="list">${["l1","lb","wb","sb","knm"].map(part).join("")}</div>`
+    $("exam").innerHTML=`<h2>Naar het examen</h2><p class="sub">Je score is het percentage goede antwoorden of punten. Het streepje is je oefendoel.</p><div class="list">${["l1","lb","wb","sb"].map(part).join("")}</div><h3 class="lh">Extra voor inburgering</h3><p class="note">KNM hoort niet bij het Staatsexamen NT2. Oefen dit onderdeel als je het nodig hebt voor je inburgering.</p><div class="list">${part("knm")}</div>`
       +`<div class="list"><a class="it ext" href="https://oefenexamensnt2.nl" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens Staatsexamen NT2 ↗</b></span><span class="d">Officieel, voor programma I. Liefst op een computer.</span></span></a></div>`+onaRow+uitRow;
-    $("parts").innerHTML=`<h2>Examenonderdelen</h2><p class="sub">Zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["l1","lb","wb","sb","knm"].map(row).join("")}</div>`;
+    $("parts").innerHTML=`<h2>Examenonderdelen</h2><p class="sub">Zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["l1","lb","wb","sb"].map(row).join("")}</div><h3 class="lh">Extra voor inburgering</h3><p class="note">KNM hoort niet bij het Staatsexamen NT2. Oefen dit onderdeel als je het nodig hebt voor je inburgering.</p><div class="list">${row("knm")}</div>`;
   }else{
     $("exam").innerHTML=`<h2>Naar het examen</h2><p class="sub">Je score is het percentage goede antwoorden of punten. Het streepje is je oefendoel.</p><div class="list">${["lz","ls","wr","sp","knm"].map(part).join("")}</div>`
       +`<div class="list"><a class="it ext" href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens van DUO ↗</b><small>15</small></span><span class="d">De echte, met echte stemmen. Liefst op een computer.</span></span></a></div>`+onaRow+uitRow;
@@ -4360,7 +4360,7 @@ function show(){
   let o;
   if(q.type==="order")h+=`<p class="note">Maak een zin. Je kunt beginnen met <b>${esc(q.right.split(" ")[0])}</b>.</p>`+`<div class="line" id="line"></div><div class="pool" id="pool"></div><div class="act"><button class="btn wide" id="chk" disabled>Controleer</button></div>`;
   else if(q.type==="write")h+=(q.pts?`<ul class="pts">${q.pts.map(x=>`<li>${x}</li>`).join("")}</ul>`:"")
-    +(q.ctx?`<div class="sample">${esc(q.ctx).replace("___",'<b class="gapw">______</b>')}</div>`:"")+(q.fields?q.fields.map((f,i)=>`<label class="fld"><span>${f}</span><input id="f${i}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></label>`).join("")+`<p class="ask">${q.open}</p>`:"")+`<textarea id="txt" rows="${q.kind==="z"?3:7}" placeholder="${q.kind==="z"?q.ctx&&!/___/.test(q.ctx)?"Schrijf hier het einde van de zin…":"Schrijf hier je zin…":"Schrijf hier je tekst…"}" aria-label="Je tekst" spellcheck="false" autocorrect="off" autocapitalize="off"></textarea>`
+    +(q.ctx?`<div class="sample">${esc(q.ctx).replace("___",'<b class="gapw">______</b>')}</div>`:"")+(q.fields?q.fields.map((f,i)=>`<label class="fld"><span>${f}</span><input id="f${i}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></label>`).join("")+`<p class="ask">${q.open}</p>`:"")+`<textarea id="txt" rows="${q.kind==="z"?3:7}" placeholder="${q.kind==="z"?q.ctx&&!/___/.test(q.ctx)?"Schrijf hier het einde van de zin…":"Schrijf hier je zin…":"Schrijf hier je tekst…"}" aria-label="Je tekst" aria-describedby="writingLimit" spellcheck="false" autocorrect="off" autocapitalize="off"></textarea><p class="note" id="writingLimit" aria-live="polite"></p>`
     +(!cur.exam&&acc.cfg&&!acc.user?(acc.cfg.free?freeNote():`<p class="note">Claude kijkt je tekst na als je bent ingelogd (Profiel).</p>`):"")
     +(cur.nav?navHTML():`<div class="act"><button class="btn wide" id="chk">${cur.exam?"Volgende opdracht":zNext(q)?"Volgende zin":q.kind==="z"&&(cur.zs||[]).length?"Controleer mijn zinnen":"Controleer mijn tekst"}</button></div>`);
   else if(q.type==="reveal")h+=(canSpeak?`<button class="hint" id="sayq">▶ Luister naar de vraag</button>`:"")
@@ -4388,8 +4388,9 @@ function show(){
     const w=answers[pos]||{f:[],t:""};
     const status=document.createElement("small");status.id="draftStatus";status.setAttribute("role","status");$("txt").after(status);
     if(w.t||w.f.some(Boolean))status.textContent="Concept op dit apparaat";
-    const keep=()=>{answers[pos]={f:(q.fields||[]).map((f,i)=>$("f"+i).value),t:$("txt").value};status.textContent="Concept op dit apparaat";persistWriting();head()};
-    (q.fields||[]).forEach((f,i)=>{$("f"+i).value=w.f[i]||"";$("f"+i).oninput=keep});$("txt").value=w.t;$("txt").oninput=keep;
+    const count=()=>{$("writingLimit").textContent=`${$("txt").value.length} / ${CHECK_LIMITS.text} tekens`+(q.fields?`. Formulier: maximaal ${CHECK_LIMITS.form} tekens samen, inclusief de veldnamen.`:"");};
+    const keep=()=>{count();answers[pos]={f:(q.fields||[]).map((f,i)=>$("f"+i).value),t:$("txt").value};status.textContent="Concept op dit apparaat";persistWriting();head()};
+    (q.fields||[]).forEach((f,i)=>{$("f"+i).value=w.f[i]||"";$("f"+i).oninput=keep});$("txt").value=w.t;$("txt").oninput=keep;count();
     if(cur.expired){$("txt").readOnly=true;(q.fields||[]).forEach((f,i)=>$("f"+i).readOnly=true)}
     if(cur.nav){navBind();return}}
   if(q.type==="write"){$("chk").onclick=()=>{if(cur.exam){cur.ans.push(grab(q));pos++;show()}else if(q.kind==="z")checkZ(q);else check(q)};return}
@@ -4475,7 +4476,26 @@ function overview(){
   $("lever").onclick=()=>{if(open&&!$("lever").dataset.ok){$("lever").dataset.ok=1;$("lever").textContent="Toch inleveren";return}submitExam()};
 }
 function submitExam(){
-  if(cur.sent)return; cur.sent=true;
+  if(cur.sent)return;
+  if(isWr(cur.part)){
+    const invalid=queue.findIndex((q,i)=>{const w=cur.pick[i]||{f:[],t:""};return checkLength([{task:wrTask(q),text:w.t,form:q.fields?q.fields.map((f,j)=>f+": "+(w.f[j]||"").trim()).join("\n"):""}],cur.part==="wb"?"wb":undefined)});
+    if(invalid>=0){
+      pos=invalid;show();writingLength(queue[pos]);
+      if(cur.expired){
+        $("fb").innerHTML+=`<p class="note">De examentijd is voorbij. Je kunt de volledige tekst downloaden en daarna alleen inkorten tot de aangegeven limieten.</p><button class="ghost wide" id="shorten">Download volledige tekst en kort in</button>`;
+        $("shorten").onclick=()=>{
+          const q=queue[pos],w=cur.pick[pos];
+          saveDocx([{task:wrTask(q),text:w.t,form:(q.fields||[]).map((f,i)=>f+": "+(w.f[i]||"")).join("\n")}]);
+          const budget=CHECK_LIMITS.form-(q.fields||[]).map(f=>f+": ").join("\n").length;
+          let left=Math.max(0,budget);
+          cur.pick[pos]={t:w.t.slice(0,CHECK_LIMITS.text),f:w.f.map(v=>{const trimmed=v.trim().slice(0,left);left-=trimmed.length;return trimmed})};
+          persistWriting();show();
+        };
+      }
+      return;
+    }
+  }
+  cur.sent=true;
   // Schrijven: the written tasks go to Claude; an empty task is not sent and counts as not passed
   if(isWr(cur.part)){cur.ans=queue.map((q,i)=>{const w=cur.pick[i]||{f:[],t:""};return{q,form:q.fields?q.fields.map((f,j)=>f+": "+(w.f[j]||"").trim()).join("\n"):"",text:w.t.trim()}}).filter((a,i)=>picked(i));pos=queue.length;return finish()}
   queue.forEach((q,i)=>{const ok=cur.pick[i]===q.right;record(ok,q);cur.log.push({l:q.label,ok});if(!ok)cur.miss.push({q:q.big,r:q.right})});
@@ -4629,13 +4649,31 @@ function keepErrs(errs){
   errs.forEach(e=>{if(e&&e.wrong&&e.right&&e.wrong!==e.right&&String(e.wrong).length<90&&String(e.right).length<90&&!S.errs.some(x=>x.r===e.right))S.errs.unshift({w:String(e.wrong),r:String(e.right),y:String(e.why||"")})});
   S.errs=S.errs.slice(0,40);
 }
+const CHECK_LIMITS={text:2500,form:1500};
+function checkLength(tasks,part){
+  const limits={...CHECK_LIMITS,task:part==="wb"?2000:1200};
+  for(let index=0;index<tasks.length;index++)for(const [field,limit] of Object.entries(limits)){
+    if(String(tasks[index][field]||"").length>limit)return{code:"answer_too_long",field,limit,index};
+  }
+  return null;
+}
+const lengthMessage=e=>e.field==="text"?`Je antwoord is te lang. Gebruik maximaal ${e.limit||CHECK_LIMITS.text} tekens. Je volledige tekst blijft in je concept.`
+  :e.field==="form"?`Je formulier is te lang. Gebruik samen maximaal ${e.limit||CHECK_LIMITS.form} tekens, inclusief de veldnamen. Je gegevens blijven in je concept.`
+  :"Deze opdracht is te lang om na te kijken. Je antwoord blijft in je concept.";
+function writingLength(q){
+  const task={task:wrTask(q),text:$("txt").value,form:q.fields?q.fields.map((f,i)=>f+": "+$("f"+i).value.trim()).join("\n"):""};
+  const error=checkLength([task],q.sec==="wb"?"wb":undefined);
+  if(error){$("fb").innerHTML=`<p class="note" role="alert">${lengthMessage(error)}</p>`;return false}
+  return true;
+}
 async function nakijken(tasks,part){
+  const error=checkLength(tasks,part);if(error)throw error;
   const h=await authHead();
   const r=await fetch("/api/check",{method:"POST",headers:{"Content-Type":"application/json",...h},body:JSON.stringify(part?{part,tasks}:{tasks})});
   const j=await r.json().catch(()=>({}));
   if(typeof j.free==="number")acc.free=j.free; // checks left today without an account
   if(acc.user){if(typeof j.left==="number")acc.left=j.left; else if(j.error==="limit")acc.left=0}
-  if(!r.ok||!Array.isArray(j.tasks))throw{code:j.error||"failed"};
+  if(!r.ok||!Array.isArray(j.tasks))throw{code:j.error||"failed",field:j.field,limit:j.limit,index:j.index};
   return j.tasks;
 }
 // Without an account: how many free checks are left today, and what an account gives
@@ -4709,7 +4747,8 @@ function redo(items,back){
 const zWhole=z=>{const c=z.q.ctx,b=c&&!/___/.test(c)?c.replace(/[….\s]+$/,""):"";return b&&!z.text.startsWith(b)?b+" "+z.text:z.text};
 async function check(q){
   const text=$("txt").value.trim();
-  if(text.split(/\s+/).length<(q.kind==="z"?3:5)){$("fb").innerHTML=`<p class="note">${q.kind==="z"?"Schrijf een hele zin.":"Schrijf minimaal een paar zinnen."}</p>`;return}
+  if(!writingLength(q))return;
+  if(q.kind==="z"?!text:text.split(/\s+/).length<5){$("fb").innerHTML=`<p class="note">${q.kind==="z"?"Schrijf een hele zin.":"Schrijf minimaal een paar zinnen."}</p>`;return}
   const form=q.fields?q.fields.map((f,i)=>f+": "+$("f"+i).value.trim()).join("\n"):"";
   const task=wrTask(q), btn=$("chk"); btn.disabled=true; $("txt").readOnly=true;
   $("fb").innerHTML=`<p class="note">Ik kijk je tekst na… Dit duurt meestal minder dan een minuut.</p>`;
@@ -4730,6 +4769,7 @@ async function check(q){
     $("docx").onclick=()=>saveDocx([{task,form,text}]);
   }catch(e){
     const c=e&&e.code;
+    if(c==="answer_too_long"){btn.disabled=false;$("txt").readOnly=false;$("fb").innerHTML=`<p class="note" role="alert">${lengthMessage(e)}</p>`;return}
     if(c==="rate_limited"){btn.disabled=false;$("txt").readOnly=false;$("fb").innerHTML=`<p class="note">Te veel verzoeken achter elkaar. Wacht een minuut en probeer het opnieuw.</p>`;return}
     btn.hidden=true;
     selfGrade(q,noCheck(c)?noCheck(c)+" Vergelijk je tekst nu met het voorbeeld.":c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je tekst met het voorbeeld.":"Het nakijken is niet gelukt. Vergelijk je tekst met het voorbeeld.",{task,form,text});
@@ -4739,7 +4779,8 @@ async function check(q){
 const zNext=q=>q.kind==="z"&&!cur.exam&&queue[pos+1]&&queue[pos+1].kind==="z";
 async function checkZ(q){
   const text=$("txt").value.trim();
-  if(text.split(/\s+/).length<3){$("fb").innerHTML=`<p class="note">Schrijf een hele zin.</p>`;return}
+  if(!writingLength(q))return;
+  if(!text){$("fb").innerHTML=`<p class="note">Vul je antwoord in.</p>`;return}
   const Z=(cur.zs||[]).concat({q,task:wrTask(q),text});
   if(zNext(q)){cur.zs=Z;pos++;persistWriting();return show()}
   cur.zs=[]; const btn=$("chk"); btn.disabled=true; $("txt").readOnly=true;
@@ -4759,6 +4800,7 @@ async function checkZ(q){
     if(RD.length)$("redo").onclick=()=>redo(RD);
   }catch(e){
     const c=e&&e.code;
+    if(c==="answer_too_long"){cur.zs=Z.slice(0,-1);btn.disabled=false;$("txt").readOnly=false;$("fb").innerHTML=`<p class="note" role="alert">${lengthMessage(e)}</p>`;return}
     if(c==="rate_limited"){cur.zs=Z.slice(0,-1);btn.disabled=false;$("txt").readOnly=false;$("fb").innerHTML=`<p class="note">Te veel verzoeken achter elkaar. Wacht een minuut en probeer het opnieuw.</p>`;return}
     btn.hidden=true;
     const msg=noCheck(c)?noCheck(c)+" Vergelijk je zinnen nu met de voorbeelden.":c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je zinnen met de voorbeelden.":"Het nakijken is niet gelukt. Vergelijk je zinnen met de voorbeelden.";
@@ -4925,7 +4967,7 @@ function finish(){
       .map(t=>`<li>${t}<span>${by[t].r} van ${by[t].n} goed</span></li>`).join(""):"";
     $("card").innerHTML=`<div class="done"><p class="ask">${cur.t}: uitslag</p><div class="big">${pc}%</div><p class="ru">${right} van ${total} goed</p></div>
       <p><b class="${pass?"good":"bad"}">${pass?"Oefendoel bereikt":"Meer oefenen"}</b></p>
-      <p class="note">${cur.part==="l1"||cur.part==="lb"?"Bij het Staatsexamen heb je een score van 500 nodig. Hoeveel vragen dat zijn, maakt DUO niet bekend: mik op 7 van de 10.":cur.part==="lz"||cur.part==="ls"?"Op het examen heb je waarschijnlijk 19 van de 25 vragen goed nodig. DUO zet de grens op je uitslag.":cur.part==="knm"?"Op het examen heb je 28 van de 40 vragen goed nodig.":"Op het examen heb je ongeveer 7 van de 10 vragen goed nodig."} Hier is dat ${need} van ${total}.</p>
+      <p class="note">Het oefendoel in Bittertalen is ${need} van ${total} antwoorden goed (${passPc(cur.part)}%). Dit is onze oefengrens, geen officiële slaaggrens. De officiële beoordeling en uitslag worden door DUO bepaald.</p>
       ${themes?`<p class="ask">Per thema</p><ul class="errs">${themes}</ul>`:""}
       ${cur.miss.length?`<p class="ask">Fout beantwoord</p><ul class="errs">${cur.miss.slice(0,20).map(m=>`<li>${m.q}<span>Goed is: ${m.r}</span></li>`).join("")}</ul>`:""}
       <div class="two"><button class="ghost" id="tohome">Alle onderdelen</button><button class="btn" id="more">Nog een keer</button></div>`;
@@ -5316,14 +5358,14 @@ Een deel van het zuiden was in 1944 al bevrijd. Op 5 mei 1945 was heel Nederland
 q:[["Welke stad werd op 14 mei 1940 gebombardeerd?","Rotterdam","Amsterdam","Utrecht","Het centrum van Rotterdam werd bijna helemaal verwoest."],
 ["Waar ging koningin Wilhelmina in de oorlog naartoe?","naar Londen","naar Berlijn","naar Parijs","Via Radio Oranje sprak ze vanuit Londen tegen de Nederlanders."],
 ["Wat moesten Joden in de oorlog dragen?","een gele ster","een oranje hoed","een uniform","Ongeveer 102.000 Joden uit Nederland werden vermoord."]]},
-{id:"indonesie",y:"1945–1949",t:"Indonesië wordt vrij",s:"Het einde van een kolonie",p:"foto/indonesie.jpg",py:45,pc:"Koningin Juliana tekent de papieren: Indonesië is vrij (27 december 1949)",f:[["foto/proklamasi.jpg","17 augustus 1945: Soekarno leest de onafhankelijkheid voor. Rechts staat Hatta.",1]],
+{id:"indonesie",y:"1945–1949",t:"Indonesië wordt vrij",s:"Het einde van een kolonie",p:"foto/indonesie.jpg",py:45,pc:"Koningin Juliana tekent de soevereiniteitsoverdracht (27 december 1949)",f:[["foto/proklamasi.jpg","17 augustus 1945: Soekarno leest de onafhankelijkheid voor. Rechts staat Hatta.",1]],
 x:`Al sinds de zeventiende eeuw had Nederland macht in Indonesië. Het land werd een kolonie: Nederlands-Indië. Nederland verdiende er veel geld aan, bijvoorbeeld met koffie, suiker, tabak en olie. De Indonesiërs zelf hadden weinig rechten.
 In de Tweede Wereldoorlog bezette Japan het land. Op 17 augustus 1945, twee dagen na het einde van de oorlog met Japan, riepen Soekarno en Hatta de onafhankelijkheid uit.
 Nederland wilde de kolonie niet kwijt. Het stuurde meer dan honderdduizend soldaten. Er kwam een oorlog die vier jaar duurde. Ook het Nederlandse leger gebruikte daarbij veel geweld. Er stierven heel veel Indonesiërs en ongeveer vijfduizend Nederlandse soldaten.
-Op 27 december 1949 werd Indonesië officieel vrij. Koningin Juliana tekende de papieren in het paleis op de Dam in Amsterdam.
+Op 27 december 1949 droeg Nederland de soevereiniteit over aan Indonesië. De onafhankelijkheid was al op 17 augustus 1945 uitgeroepen. Koningin Juliana tekende de papieren in het paleis op de Dam in Amsterdam.
 Na de oorlog kwamen veel mensen uit Indonesië naar Nederland, onder wie Indische Nederlanders en Molukkers. Veel van hun kinderen en kleinkinderen wonen nu in Nederland.`,
-q:[["Hoe heette Indonesië toen het een kolonie was?","Nederlands-Indië","Suriname","Nieuw-Nederland","Indonesië is sinds 1949 een vrij land."],
-["Wanneer werd Indonesië officieel vrij?","op 27 december 1949","op 5 mei 1945, na de oorlog","op 1 juli 1863","Koningin Juliana tekende de papieren in Amsterdam."],
+q:[["Hoe heette Indonesië toen het een kolonie was?","Nederlands-Indië","Suriname","Nieuw-Nederland","Indonesië riep in 1945 de onafhankelijkheid uit; Nederland droeg in 1949 de soevereiniteit over."],
+["Wanneer droeg Nederland de soevereiniteit over aan Indonesië?","op 27 december 1949","op 5 mei 1945, na de oorlog","op 1 juli 1863","Koningin Juliana tekende de papieren in Amsterdam."],
 ["Wie riepen in 1945 de onafhankelijkheid van Indonesië uit?","Soekarno en Hatta","Juliana en Drees","Thorbecke en Willem I","Dat was op 17 augustus 1945."]]},
 {id:"watersnood",y:"1953–1997",t:"De Watersnood en de Deltawerken",s:"Een grote ramp, en nooit meer",p:"foto/watersnood.jpg",py:50,pc:"Na de watersnood brengen mensen hun koeien in veiligheid (1953)",f:[["foto/deltawerken.jpg","De bouw van de Oosterscheldekering",3]],
 x:`In de nacht van 31 januari op 1 februari 1953 was er een zware storm. Het was ook springtij: het water in de zee stond extra hoog. Op veel plaatsen in Zeeland, Zuid-Holland en Noord-Brabant braken de dijken.
@@ -5443,7 +5485,7 @@ const GP=[
  e:"Graag gedaan. Beterschap, en tot morgen!"},
 {id:"werk",t:"Je ziek melden op je werk",s:"Bel je leidinggevende: je bent ziek.",w:"Peter",p:"bellen",
  o:"Je werkt bij Bakkerij Smit. Vandaag ben je ziek: je hebt griep. Bel je leidinggevende Peter. Morgen ga je naar de dokter.",
- d:[{a:"Bakkerij Smit, met Peter.",k:["ziek|griep|koorts|lekker"],m:"Hallo Peter, met [je naam]. Ik bel omdat ik ziek ben.",r:"Hallo? Wat is er aan de hand?"},
+ d:[{a:"Bakkerij Smit, met Peter.",k:["ziek|griep|koorts|niet lekker|onwel"],m:"Hallo Peter, met [je naam]. Ik bel omdat ik ziek ben.",r:"Hallo? Wat is er aan de hand?"},
   {a:"O, wat vervelend. Wat heb je?",x:1,k:["griep|koorts|hoofdpijn|buikpijn|verkouden|keel|misselijk"],m:"Ik heb griep. Ik heb koorts en hoofdpijn.",r:"Wat heb je precies? Heb je koorts?"},
   {a:"Ben je al naar de dokter geweest?",k:["morgen|nee|nog niet"],m:"Nee, nog niet. Morgen ga ik naar de dokter.",r:"Ga je naar de dokter?"},
   {a:"Hoe lang denk je dat je ziek bent?",k:["dag|week|weet|lang"],m:"Ik weet het nog niet. Misschien twee of drie dagen.",r:"Weet je hoe lang het duurt? Een paar dagen?"},
@@ -5711,10 +5753,30 @@ const GP=[
  e:"Dank u wel. Dat was het eindgesprek. De uitslag krijgt u later van DUO."}
 ];
 const gpWords=s=>String(s).toLowerCase().split(/[^\p{L}\d]+/u).filter(Boolean);
-function gpFits(k,said){
-  const W=gpWords(said); if(!k.length)return W.length>0;
-  const has=w=>W.some(t=>w.length<3?t===w:w.length<4?t.startsWith(w):t.includes(w));
-  return k.every(g=>g.split("|").some(alt=>alt.split(" ").every(has)));
+// Keyword cues help follow a script; they are not a language or meaning assessment.
+// Compare a cue's polarity with the example, keeping negation within its clause.
+function gpCue(k,said){
+  const clauses=String(said).toLowerCase().split(/[.!?;,]|\b(?:maar|want|omdat|dus)\b/u);
+  const terms=gpWords(k), negative=w=>/^(?:niet|geen|nooit|nee|zonder)$/.test(w);
+  const matches=(t,w)=>w.length<3?t===w:w.length<4?t.startsWith(w):t.includes(w);
+  const out=[];
+  for(const clause of clauses){const words=gpWords(clause);
+    if(!terms.every(w=>words.some(t=>matches(t,w))))continue;
+    // An explicitly negative alternative ("kan niet") already has its intended meaning.
+    if(terms.some(negative)){out.push(false);continue}
+    for(let i=0;i<words.length;i++)if(matches(words[i],terms[0])){
+      const before=words.slice(Math.max(0,i-3),i),after=words.slice(i+1,i+4);
+      out.push(before.some(negative)||(after.some(negative)&&/^(?:ben|bent|is|zijn|heb|hebt|heeft)$/.test(after[0]||"")));
+    }
+  }
+  return out;
+}
+function gpFits(k,said,example=""){
+  if(!gpWords(said).length)return false;
+  return k.every(g=>g.split("|").some(alt=>{
+    const expected=gpCue(alt,example);
+    return gpCue(alt,said).some(neg=>expected.length?expected.includes(neg):!neg);
+  }));
 }
 const gpGroup=i=>{while(i>0&&!GP[i].g)i--;return GP[i].g};
 let TK=null,tGo=null; // the open conversation; where the back button (and a swipe) on the screen goes
@@ -5723,7 +5785,7 @@ function talks(){
   closePop();hush();TK=null;$("card").innerHTML=""; // the card may hold an old #rec, which listen() would find first
   $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;window.scrollTo(0,0);
   tBack(TABN[tab],home);
-  const st=c=>{const g=(S.gp||{})[c.id];return g?`<span class="good">Gelukt</span>`:null};
+  const st=c=>{const g=(S.gp||{})[c.id];return g?`<span>Afgerond</span>`:null};
   let h=`<h2>Gesprekken</h2><p class="sub">Je hoort de ander en je antwoordt hardop${SR?"":" (of je typt)"}.</p>`;
   const L=GP.map((c,i)=>[c,i]).filter(x=>!x[0].ona),O=lvl()==="B1"?L.filter(x=>x[0].b1).concat(L.filter(x=>!x[0].b1)):L; // at B1 the B1 group first
   O.forEach(([c,i],n)=>{if(c.g)h+=(n?"</div>":"")+`<h3 class="lh">${c.g}</h3><div class="list">`;h+=itHTML(`data-t="${i}"`,c.t,c.s,{n:st(c)})});
@@ -5888,12 +5950,12 @@ function onaScreen(){
   closePop();hush();TK=null;$("card").innerHTML="";
   $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;window.scrollTo(0,0);
   tBack(TABN[tab],home);
-  const st=c=>(S.gp||{})[c.id]?`<span class="good">Gelukt</span>`:null;
+  const st=c=>(S.gp||{})[c.id]?`<span>Afgerond</span>`:null;
   const K=["Beroepenoriëntatie","Realistisch beroepsbeeld","Je eigenschappen kennen","Beroepskansen","Beroepscompetenties","Netwerk opbouwen","Werk vinden","Werkcultuur"];
   $("tbody").innerHTML=`<h2>ONA en participatieverklaring</h2><p class="sub">Twee onderdelen van inburgeren die niet iedereen hoeft te doen.</p>
     <h3 class="lh">Wat is ONA?</h3><p>ONA betekent Oriëntatie op de Nederlandse Arbeidsmarkt. Je laat zien dat je weet welk werk bij je past, en hoe je in Nederland werk vindt.</p>
     <h3 class="lh">Wie doet ONA?</h3><p>Mensen die inburgeren volgens de wet van 2013, en mensen die vrijwillig inburgeren, bijvoorbeeld om Nederlander te worden. Inburger je volgens de wet van 2021? Dan doe je geen ONA, maar de MAP bij je gemeente.</p>
-    <p>Doe je het Staatsexamen NT2? Dat telt voor de taalexamens. KNM, ONA (of de MAP) en de participatieverklaring doe je dan apart.</p>
+    <p>Doe je het Staatsexamen NT2 voor je inburgering? Dan kunnen aanvullende onderdelen nodig zijn, zoals KNM, ONA of MAP en de participatieverklaring. Welke onderdelen jij moet doen, hangt af van jouw situatie. Vraag dit na bij DUO of je gemeente.</p>
     <h3 class="lh">Vrijstelling</h3><p>Heb je in de laatste 12 maanden minstens 6 maanden gewerkt in loondienst, minstens 48 uur per maand? Dan kun je vrijstelling vragen in Mijn Inburgering. Voor zelfstandigen is er een eigen formulier.</p>
     <h3 class="lh">Zo gaat het</h3><ol class="ona"><li>Je kiest drie beroepen, en daarna één beroep dat je wilt doen.</li><li>Je vult acht resultaatkaarten in, allemaal over dat beroep. Samen is dat je portfolio.</li><li>Je stuurt je portfolio naar DUO, via Mijn Inburgering.</li><li>Je hebt een eindgesprek bij DUO over je portfolio. Of je volgt een ONA-cursus van minstens 64 uur bij een school met het keurmerk Blik op Werk: dan is er geen eindgesprek.</li></ol>
     <h3 class="lh">De acht resultaatkaarten</h3><ol class="ona">${K.map(k=>`<li>${k}</li>`).join("")}</ol>
@@ -5909,7 +5971,7 @@ function talk(i){
   if(c.ona)tBack("ONA",onaScreen);else tBack("Gesprekken",talks);
   TK={i,c,n:0,log:[],miss:0,hint:false,self:0};
   $("tbody").innerHTML=`<div lang="nl"><p class="ask">${gpGroup(i)}</p><h2>${c.t}</h2>`+(c.p?picsHTML([c.p]):"")
-    +`<p class="ask">Jouw opdracht</p><div class="sample">${c.o}</div><div class="talk" id="tlog" aria-live="polite"></div><div id="tctl"></div></div>`;
+    +`<p class="note">Dit is een oefengesprek met vaste reacties. De app herkent enkele woorden, maar beoordeelt je inhoud en grammatica niet. Vergelijk je antwoorden achteraf met de voorbeelden.</p><p class="ask">Jouw opdracht</p><div class="sample">${c.o}</div><div class="talk" id="tlog" aria-live="polite"></div><div id="tctl"></div></div>`;
   document.querySelectorAll("#tbody [data-pic]").forEach(b=>b.onclick=()=>zoomPic(b.dataset.pic));
   $("tctl").innerHTML=`<button class="btn wide" id="tgo">Begin het gesprek</button>`
     +(canSpeak?"":`<p class="note">Geluid werkt hier niet: lees wat de ander zegt.</p>`);
@@ -5953,11 +6015,11 @@ function tHeard(r){
 }
 function tAnswer(said){
   const c=TK.c,s=c.d[TK.n];
-  if(!gpFits(s.k,said)){TK.log.push({me:1,t:said,no:1});TK.miss++;return tSay(s.r||GPNO)}
+  if(!gpFits(s.k,said,s.m)){TK.log.push({me:1,t:said,no:1});TK.miss++;return tSay(s.r||GPNO)}
   const own=!TK.hint; TK.log.push({me:1,t:said}); if(own)TK.self++;
   TK.n++; TK.miss=0; TK.hint=false;
   // an answer that already said what the next question asks: skip that question
-  while(TK.n<c.d.length&&c.d[TK.n].x&&gpFits(c.d[TK.n].k,said)){if(own)TK.self++;TK.n++}
+  while(TK.n<c.d.length&&c.d[TK.n].x&&gpFits(c.d[TK.n].k,said,c.d[TK.n].m)){if(own)TK.self++;TK.n++}
   if(TK.n<c.d.length)return tSay(c.d[TK.n].a);
   talkEnd();
 }
@@ -5966,7 +6028,7 @@ function talkEnd(){
   TK.log.push({t:c.e}); tDraw(); speak(c.e);
   S.gp=S.gp||{}; const g=S.gp[c.id]||{n:0,b:0}; S.gp[c.id]={n:g.n+1,b:Math.max(g.b,self),at:Date.now()}; complete();
   let nx=TK.i; do nx=(nx+1)%GP.length; while(!GP[nx].ona!==!c.ona); // the next one of the same kind
-  $("tctl").innerHTML=`<div class="tend"><b class="good">Gesprek gelukt!</b><p class="note">${self===N?"Je hebt alles zelf gezegd, zonder hulp. Heel goed!":`Je antwoordde ${self} van de ${N} keer zonder hulp.`}</p></div>
+  $("tctl").innerHTML=`<div class="tend"><b>Gesprek afgerond</b><p class="note">${self===N?"Je hebt alle stappen zonder voorbeeld doorlopen. Vergelijk hieronder wat je hebt gezegd.":`Je antwoordde ${self} van de ${N} keer zonder hulp.`}</p></div>
     <h3 class="lh">Zo kun je het zeggen</h3><ol class="tsum">${c.d.map((s,j)=>`<li><span>${esc(s.a)}</span><b>${esc(s.m)}</b>${canSpeak?`<button class="hint" data-m="${j}">▶ Luister</button>`:""}</li>`).join("")}</ol>
     <button class="btn wide" id="tnx">Volgende: ${GP[nx].t}</button><button class="ghost wide" id="tre">Nog een keer</button>`;
   document.querySelectorAll("#tctl [data-m]").forEach(b=>b.onclick=()=>speak(c.d[b.dataset.m].m.replace(/\[|\]/g,"")));
@@ -6486,7 +6548,7 @@ const UI={
 "Inloggen":["Log in","تسجيل الدخول","Giriş yap","लॉग इन","登录"],
 "Ander e-mailadres":["Another e-mail address","بريد إلكتروني آخر","Başka e-posta adresi","दूसरा ई-मेल पता","其他邮箱"],
 "Code van 6 cijfers":["6-digit code","رمز من 6 أرقام","6 haneli kod","6 अंकों का कोड","6 位验证码"],
-"Met een account blijft je voortgang bewaard, ook op je andere apparaten, en kijkt Claude je teksten en antwoorden na.":["With an account your progress is kept, also on your other devices, and Claude checks your texts and answers.","بالحساب يبقى تقدّمك محفوظًا، حتى على أجهزتك الأخرى، ويصحّح Claude نصوصك وإجاباتك.","Hesapla ilerlemen diğer cihazlarında da saklanır ve Claude metinlerini ve cevaplarını kontrol eder.","खाते से आपकी प्रगति आपके दूसरे डिवाइसों पर भी सुरक्षित रहती है, और Claude आपके पाठ और उत्तर जाँचता है।","有了账户，你的进度会保存，其他设备上也能用，Claude 还会批改你的文字和回答。"],
+"Je kunt ook zonder account losse antwoorden laten nakijken, binnen de daglimiet. Met een account blijft je voortgang bewaard op je andere apparaten.":["With an account your progress is kept, also on your other devices, and Claude checks your texts and answers.","بالحساب يبقى تقدّمك محفوظًا، حتى على أجهزتك الأخرى، ويصحّح Claude نصوصك وإجاباتك.","Hesapla ilerlemen diğer cihazlarında da saklanır ve Claude metinlerini ve cevaplarını kontrol eder.","खाते से आपकी प्रगति आपके दूसरे डिवाइसों पर भी सुरक्षित रहती है, और Claude आपके पाठ और उत्तर जाँचता है।","有了账户，你的进度会保存，其他设备上也能用，Claude 还会批改你的文字和回答。"],
 "Er is een nieuwe versie van Bittertalen.":["There is a new version of Bittertalen.","يتوفر إصدار جديد من Bittertalen.","Bittertalen'in yeni bir sürümü var.","Bittertalen का नया संस्करण उपलब्ध है।","Bittertalen 有新版本。"],
 "Vernieuwen":["Refresh","تحديث","Yenile","रीफ़्रेश करें","刷新"],
 "Zet Bittertalen op je beginscherm":["Put Bittertalen on your home screen","أضف Bittertalen إلى شاشتك الرئيسية","Bittertalen'i ana ekranına ekle","Bittertalen को अपनी होम स्क्रीन पर रखें","把 Bittertalen 添加到主屏幕"],
@@ -6764,7 +6826,7 @@ const UI={
 "ONA betekent Oriëntatie op de Nederlandse Arbeidsmarkt. Je laat zien dat je weet welk werk bij je past, en hoe je in Nederland werk vindt.":["ONA means Orientation on the Dutch Labour Market. You show that you know what work suits you and how to find work in the Netherlands.","ONA تعني التوجّه في سوق العمل الهولندي. تُظهر أنك تعرف أي عمل يناسبك، وكيف تجد عملًا في هولندا.","ONA, Hollanda İş Piyasasına Yönelim anlamına gelir. Sana hangi işin uyduğunu ve Hollanda'da nasıl iş bulacağını bildiğini gösterirsin.","ONA का अर्थ है डच श्रम बाज़ार की जानकारी। आप दिखाते हैं कि आप जानते हैं कि कौन-सा काम आपके लिए सही है और नीदरलैंड में काम कैसे ढूँढें।","ONA 的意思是荷兰劳动力市场导向。你要证明自己知道什么工作适合你，以及如何在荷兰找工作。"],
 "Wie doet ONA?":["Who does ONA?","من يؤدي ONA؟","ONA'yı kim yapar?","ONA कौन करता है?","谁要做 ONA？"],
 "Mensen die inburgeren volgens de wet van 2013, en mensen die vrijwillig inburgeren, bijvoorbeeld om Nederlander te worden. Inburger je volgens de wet van 2021? Dan doe je geen ONA, maar de MAP bij je gemeente.":["People doing civic integration under the 2013 law, and people doing it voluntarily, for example to become Dutch. Are you under the 2021 law? Then you do not do ONA, but the MAP at your municipality.","من يندمجون وفق قانون 2013، ومن يندمجون طوعًا، مثلًا للحصول على الجنسية الهولندية. هل تندمج وفق قانون 2021؟ عندها لا تؤدي ONA، بل MAP لدى بلديتك.","2013 yasasına göre uyum sürecinde olanlar ve örneğin Hollandalı olmak için gönüllü olarak bu süreçten geçenler. 2021 yasasına göre mi uyum yapıyorsun? O zaman ONA yapmazsın, belediyende MAP yaparsın.","जो लोग 2013 के कानून के अनुसार इंटीग्रेशन करते हैं, और जो स्वेच्छा से करते हैं, जैसे डच नागरिक बनने के लिए। क्या आप 2021 के कानून के अनुसार कर रहे हैं? तब आप ONA नहीं, बल्कि अपनी नगरपालिका में MAP करते हैं।","依照 2013 年法律参加融入的人，以及自愿参加融入的人，例如为了成为荷兰人。你依照 2021 年法律参加融入？那么你不做 ONA，而是在市政府做 MAP。"],
-"Doe je het Staatsexamen NT2? Dat telt voor de taalexamens. KNM, ONA (of de MAP) en de participatieverklaring doe je dan apart.":["Are you taking the State exam NT2? That counts for the language exams. You then do KNM, ONA (or the MAP) and the participation statement separately.","هل تؤدي امتحان الدولة NT2؟ هذا يُحتسب لامتحانات اللغة. أما KNM وONA (أو MAP) وبيان المشاركة فتؤديها على حدة.","NT2 devlet sınavına mı giriyorsun? Bu, dil sınavları için geçerlidir. KNM, ONA (veya MAP) ve katılım beyanını ayrıca yaparsın.","क्या आप NT2 राज्य परीक्षा दे रहे हैं? वह भाषा परीक्षाओं के लिए गिनी जाती है। KNM, ONA (या MAP) और सहभागिता घोषणा आप अलग से करते हैं।","你参加 NT2 国家考试吗？它可算作语言考试。KNM、ONA（或 MAP）和参与声明需要另外完成。"],
+"Doe je het Staatsexamen NT2 voor je inburgering? Dan kunnen aanvullende onderdelen nodig zijn, zoals KNM, ONA of MAP en de participatieverklaring. Welke onderdelen jij moet doen, hangt af van jouw situatie. Vraag dit na bij DUO of je gemeente.":["Are you taking the State exam NT2? That counts for the language exams. You then do KNM, ONA (or the MAP) and the participation statement separately.","هل تؤدي امتحان الدولة NT2؟ هذا يُحتسب لامتحانات اللغة. أما KNM وONA (أو MAP) وبيان المشاركة فتؤديها على حدة.","NT2 devlet sınavına mı giriyorsun? Bu, dil sınavları için geçerlidir. KNM, ONA (veya MAP) ve katılım beyanını ayrıca yaparsın.","क्या आप NT2 राज्य परीक्षा दे रहे हैं? वह भाषा परीक्षाओं के लिए गिनी जाती है। KNM, ONA (या MAP) और सहभागिता घोषणा आप अलग से करते हैं।","你参加 NT2 国家考试吗？它可算作语言考试。KNM、ONA（或 MAP）和参与声明需要另外完成。"],
 "Vrijstelling":["Exemption","الإعفاء","Muafiyet","छूट","免除"],
 "Heb je in de laatste 12 maanden minstens 6 maanden gewerkt in loondienst, minstens 48 uur per maand? Dan kun je vrijstelling vragen in Mijn Inburgering. Voor zelfstandigen is er een eigen formulier.":["Have you worked as an employee for at least 6 of the last 12 months, at least 48 hours a month? Then you can ask for an exemption in Mijn Inburgering. Self-employed people have their own form.","هل عملت موظفًا 6 أشهر على الأقل خلال آخر 12 شهرًا، بواقع 48 ساعة في الشهر على الأقل؟ عندها يمكنك طلب الإعفاء في Mijn Inburgering. وللعاملين لحسابهم الخاص نموذج خاص.","Son 12 ayda en az 6 ay, ayda en az 48 saat ücretli çalıştın mı? O zaman Mijn Inburgering'de muafiyet isteyebilirsin. Serbest çalışanlar için ayrı bir form vardır.","क्या आपने पिछले 12 महीनों में कम से कम 6 महीने, हर महीने कम से कम 48 घंटे नौकरी की है? तब आप Mijn Inburgering में छूट माँग सकते हैं। स्वरोज़गार वालों के लिए अलग फ़ॉर्म है।","在过去 12 个月中，你是否受雇工作至少 6 个月、每月至少 48 小时？那么你可以在 Mijn Inburgering 申请免除。自雇人士有单独的表格。"],
 "Zo gaat het":["How it works","كيف يتم ذلك","Nasıl işler","यह कैसे होता है","流程"],
@@ -6788,6 +6850,43 @@ const UI={
 "Welke examens jij moet doen: inburgeren.nl ↗":["Which exams you must do: inburgeren.nl ↗","الامتحانات التي عليك أداؤها: inburgeren.nl ↗","Hangi sınavlara girmen gerektiği: inburgeren.nl ↗","आपको कौन-सी परीक्षाएँ देनी हैं: inburgeren.nl ↗","你需要参加哪些考试：inburgeren.nl ↗"],
 "Vrijstelling voor ONA: inburgeren.nl ↗":["Exemption from ONA: inburgeren.nl ↗","الإعفاء من ONA: inburgeren.nl ↗","ONA muafiyeti: inburgeren.nl ↗","ONA से छूट: inburgeren.nl ↗","ONA 免除：inburgeren.nl ↗"],
 "Taal":["Language","اللغة","Dil","भाषा","语言"]};
+Object.assign(UI,{
+  "Je kunt ook zonder account losse antwoorden laten nakijken, binnen de daglimiet. Met een account blijft je voortgang bewaard op je andere apparaten.": [
+    "You can also get individual answers checked without an account, within the daily limit. An account keeps your progress across your devices.",
+    "يمكنك أيضًا تصحيح إجابات منفردة بدون حساب ضمن الحد اليومي. مع الحساب يُحفظ تقدّمك على أجهزتك الأخرى.",
+    "Hesap olmadan da günlük sınır içinde tek tek yanıtlarını kontrol ettirebilirsin. Hesapla ilerlemen diğer cihazlarında da saklanır.",
+    "बिना खाते के भी दैनिक सीमा के भीतर अलग-अलग उत्तर जँचवा सकते हैं। खाते के साथ आपकी प्रगति आपके दूसरे डिवाइसों पर भी सुरक्षित रहती है।",
+    "不用账户也可以在每日限额内批改单个回答。有账户时，你的进度会在其他设备上保留。"
+  ],
+  "Doe je het Staatsexamen NT2 voor je inburgering? Dan kunnen aanvullende onderdelen nodig zijn, zoals KNM, ONA of MAP en de participatieverklaring. Welke onderdelen jij moet doen, hangt af van jouw situatie. Vraag dit na bij DUO of je gemeente.": [
+    "Are you taking the State exam NT2 for civic integration? You may need additional parts, such as KNM, ONA or MAP and the participation statement. What you need depends on your situation. Check with DUO or your municipality.",
+    "هل تؤدي امتحان الدولة NT2 من أجل الاندماج؟ قد تحتاج إلى أجزاء إضافية مثل KNM وONA أو MAP وبيان المشاركة. يتوقف ما يلزمك على وضعك. تحقّق لدى DUO أو بلديتك.",
+    "NT2 devlet sınavına uyum yükümlülüğün için mi giriyorsun? KNM, ONA veya MAP ve katılım beyanı gibi ek bölümler gerekebilir. Hangilerinin gerektiği durumuna bağlıdır. DUO veya belediyene sor.",
+    "क्या आप नागरिक एकीकरण के लिए NT2 राज्य परीक्षा दे रहे हैं? तब KNM, ONA या MAP और सहभागिता घोषणा जैसे अतिरिक्त भाग आवश्यक हो सकते हैं। आपके लिए क्या ज़रूरी है, यह आपकी स्थिति पर निर्भर है। DUO या अपनी नगरपालिका से पूछें।",
+    "你是为了履行融入义务参加 NT2 国家考试吗？你可能还需要 KNM、ONA 或 MAP 以及参与声明等额外项目。具体要求取决于你的情况，请向 DUO 或市政府确认。"
+  ],
+  "Extra voor inburgering": [
+    "Extra for civic integration",
+    "إضافات للاندماج",
+    "Uyum için ek bölüm",
+    "नागरिक एकीकरण के अतिरिक्त भाग",
+    "融入所需的额外项目"
+  ],
+  "KNM hoort niet bij het Staatsexamen NT2. Oefen dit onderdeel als je het nodig hebt voor je inburgering.": [
+    "KNM is not part of the State exam NT2. Practise it if you need it for civic integration.",
+    "KNM ليس جزءًا من امتحان الدولة NT2. تدرّب عليه إذا كنت تحتاجه للاندماج.",
+    "KNM, NT2 devlet sınavının bir parçası değildir. Uyum yükümlülüğün için gerekiyorsa çalış.",
+    "KNM, NT2 राज्य परीक्षा का भाग नहीं है। नागरिक एकीकरण के लिए ज़रूरत हो तो इसका अभ्यास करें।",
+    "KNM 不属于 NT2 国家考试。如果融入要求中需要它，可以在这里练习。"
+  ],
+  "Afgerond": [
+    "Completed",
+    "مكتمل",
+    "Tamamlandı",
+    "पूरा हुआ",
+    "已完成"
+  ]
+});
 let LANG=LANGS[lsGet("ww-ui")]?lsGet("ww-ui"):"nl", LI=LCODE.indexOf(LANG);
 // Month and day names come from the browser; only the order differs per language
 const NLM=["januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december"];

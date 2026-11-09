@@ -550,3 +550,14 @@ not in `ww-v1`.
 ## Audit follow-up validation
 
 `supabase/calibration.sql` is a read-only owner report of self-reported real exam outcomes by practice-score band, with sample sizes and Wilson intervals. It does not expose a public view or change the schema. Do not claim the training targets have been empirically calibrated until this report and a qualified NT2 review have been completed against the correct project. Keep historical label changes in mind when analysing outcomes.
+
+
+## Launch-readiness fixes
+
+AI scores and pass thresholds are Bittertalen practice indications, not official DUO assessments. Keep that distinction in `over.html`, `scoreHTML()` and exam results. KNM remains available at B1 but is listed separately from the four NT2 language parts; additional integration requirements depend on the learner's situation.
+
+Sentence-completion tasks accept any non-empty ending: do not impose a minimum word count on the ending. `checkLength()` and `api/check.js` validate the complete task, answer and form before quota use; limits are 2,500 answer characters, 1,500 form characters including labels, and 1,200 task characters (2,000 for B1 writing). Never silently truncate a grading request. The editor keeps oversized drafts intact and displays its counter. An expired oversized exam offers an explicit full-text Word download before the learner chooses shortening.
+
+Conversations remain free and offline. `gpFits(k, said, example)` compares keyword polarity with the example and rejects negated illness, while the UI describes script completion rather than a correctness assessment. Open answers are not semantically graded; do not label script completion as proof of correct content or grammar. Keep every example compatible with its cues and test negative and positive replies together.
+
+The guest quota cleanup is request-triggered (`use_free_checks`): each new free check removes rows dated before yesterday. Do not promise an automatic one-day deletion or a guaranteed two-day retention in privacy copy without implementing scheduled cleanup. Public guest-mode and privacy descriptions must agree in all six languages.
