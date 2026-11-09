@@ -16,7 +16,7 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), ".."), OUT = join(ROOT, "audio");
 const DRY = process.argv.includes("--dry");
-const CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+const CHROME = process.env.CHROME_PATH || "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"; // elsewhere: CHROME_PATH
 
 // The voices (chosen by ear in November 2026). F and M speak; F2 and M2 only when two women or two men talk together.
 const V = { F: "Vindemiatrix", M: "Charon", F2: "Aoede", M2: "Orus" };
@@ -63,10 +63,22 @@ async function pageTexts() {
     catch { s.writeHead(404); s.end() }
   });
   await new Promise(r => srv.listen(0, "127.0.0.1", r));
+  const url = `http://127.0.0.1:${srv.address().port}/__voice`;
+  // Where Playwright is installed (a cloud session), use it: headless Chrome's --dump-dom never returned there
+  const pw = await import("node:module").then(m => m.createRequire(import.meta.url)("playwright")).catch(() => null);
+  if (pw) {
+    const b = await pw.chromium.launch();
+    try {
+      const pg = await b.newPage({ serviceWorkers: "block" }); await pg.goto(url); await pg.waitForSelector("#out, #err", { state: "attached", timeout: 60000 });
+      const out = await pg.$eval("#out", e => e.textContent).catch(() => null);
+      if (!out) throw new Error("the page did not give its texts: " + await pg.$eval("#err", e => e.textContent).catch(() => "does index.html still load?"));
+      return JSON.parse(Buffer.from(out, "base64").toString("utf8"));
+    } finally { await b.close(); srv.close() }
+  }
   const prof = await mkdtemp(join(tmpdir(), "bt-chrome-"));
   try {
     const dom = await new Promise((ok, no) => execFile(CHROME, ["--headless=new", "--disable-gpu", `--user-data-dir=${prof}`,
-      "--virtual-time-budget=15000", "--dump-dom", `http://127.0.0.1:${srv.address().port}/__voice`],
+      "--virtual-time-budget=15000", "--dump-dom", url],
       { maxBuffer: 1 << 28 }, (e, out) => e ? no(e) : ok(out)));
     const m = dom.match(/<pre id="out">([^<]+)<\/pre>/);
     if (!m) throw new Error("the page did not give its texts: " + ((dom.match(/<pre id="err">([^<]*)/) || [])[1] || "does index.html still load?"));
@@ -124,7 +136,8 @@ if (process.argv.includes("--who")) { // who says what, to check the voices
 }
 if (DRY) process.exit(0);
 
-const { GOOGLE_TTS_KEY: key } = await env();
+// GOOGLE_TTS_KEY in the environment wins (a cloud session, where a proxy puts the real key in the header); else the file
+const key = process.env.GOOGLE_TTS_KEY || (await env().catch(() => ({}))).GOOGLE_TTS_KEY;
 if (!key) throw new Error("GOOGLE_TTS_KEY missing in ~/.config/bittertalen/tts.env");
 const keep = {}; for (const [k, [v, l]] of lines) if (files.has(k) && old[k] && old[k][0] === v && old[k][1] === l) keep[k] = old[k];
 let done = 0, failed = 0;
