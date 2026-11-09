@@ -551,7 +551,7 @@ body.vfull{overflow:hidden}
 /* The language of the menus: a small glass pill top left on the painting (and on the login card), a native list over it */
 .lang{position:absolute;top:10px;left:14px;z-index:3;display:flex;align-items:center;justify-content:center;gap:5px;height:36px;padding:0 8px 0 9px;border-radius:999px;border:1.5px solid #fff;
   background:var(--fill);color:var(--on-fill);font-size:var(--fs-m);font-weight:600;box-shadow:0 2px 10px rgba(8,16,40,.4)}
-main:is(:not(.big),:has(#home[hidden])) header .lang{top:6px;height:32px} /* the narrow strip: clear of the logo */
+:root:not([data-desktop]) main:is(:not(.big),:has(#home[hidden])) header .lang{top:6px;height:32px} /* the narrow strip: clear of the logo */
 .wcard{position:relative} .wcard .lang{top:12px;left:12px;height:34px;border-color:transparent;box-shadow:none} .wcard .wlogo{margin-top:24px} /* under the pill */
 .lang svg{flex:none;width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8}
 .lang svg.dn{width:12px;height:12px;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
@@ -564,6 +564,12 @@ main:is(:not(.big),:has(#home[hidden])) header .lang{top:6px;height:32px} /* the
 :root[dir=rtl] :is(p,h2,h3,b,small,li,.d){unicode-bidi:plaintext}
 :root[dir=rtl] :is(header,#play,#read,[lang=nl],.book,.doc,.sample,.msum,.tl,.bgl,input[type=email]){direction:ltr;text-align:left;--ta:left;--te:right}
 :root[dir=rtl] .tabs .lens{left:auto;right:5px;transform:translateX(calc(var(--i,0) * -100%))}
+:root[data-desktop] main:is(:not(.big),:has(#home[hidden])) header{height:168px}
+:root[data-desktop] main:is(:not(.big),:has(#home[hidden])) header h1{top:50%;bottom:auto;transform:translateY(-50%)}
+:root[data-desktop] header .art{max-width:calc(100% - 460px)}
+:root[data-desktop] header .art img{max-width:100%}
+:root[data-desktop] header .lang{top:20px;left:auto;right:40px;height:36px}
+:root[data-desktop] header:has(.streak:not(:empty)) .lang{top:110px}
 :root[data-desktop] main:has(#home:not([hidden])){
   width:calc(100% - 128px);
   margin-right:max(112px,calc((100% - 1160px)/2));
