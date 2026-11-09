@@ -653,7 +653,6 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
       </div>
       <div id="acct"></div>
       <div class="pg" id="plinks"></div>
-      <p class="note" id="pstart" style="margin:10px 0 0;text-align:center"></p>
     </section>
     <section class="tile" data-tab="herhalen"><h2>Herhalen</h2><div class="list" id="mine"></div></section>
   </div>
@@ -3792,8 +3791,6 @@ function drawProfile(){
       acc.msg="Je account is verwijderd. Je voortgang op dit apparaat blijft.";await setUser(null)}
     catch(e){acc.msg="Verwijderen is niet gelukt. Probeer het later opnieuw.";drawProfile()}};
   if(canBuzz()){$("ptrilw").hidden=false;$("ptril").checked=lsGet("ww-tril")!=="0";$("ptril").onchange=()=>{lsSet("ww-tril",$("ptril").checked?"1":"0");if($("ptril").checked)buzz("good")}}
-  const nt=performance.getEntriesByType&&performance.getEntriesByType("navigation")[0];
-  if(nt&&$("pstart"))$("pstart").textContent=`Gestart in ${(nt.domContentLoadedEventEnd/1000).toFixed(1).replace(".",",")} s${navigator.serviceWorker&&navigator.serviceWorker.controller?" · uit het geheugen van je telefoon":""}`;
   $("plinks").innerHTML=itHTML(`data-x="over"`,"Over Bittertalen","Wie het maakt, waarom, en wat erin zit.",{ic:"over"})
     +itHTML(`data-x="privacy"`,"Privacyverklaring","Welke gegevens Bittertalen gebruikt, waarom en waar ze staan.",{ic:"privacy"});
   $("plinks").querySelectorAll("button").forEach(b=>b.onclick=()=>{location.href="/"+b.dataset.x});
@@ -5996,7 +5993,6 @@ const UI={
 "Vragen geoefend":["Questions practised","الأسئلة التي تدرّبت عليها","Çalışılan sorular","अभ्यास किए गए प्रश्न","已练习的问题"],
 "Bewaarde woorden":["Saved words","الكلمات المحفوظة","Kaydedilen kelimeler","सहेजे गए शब्द","已保存的单词"],
 "Gesprekken gevoerd":["Conversations held","المحادثات المنجزة","Yapılan konuşmalar","की गई बातचीत","完成的对话"],
-"uit het geheugen van je telefoon":["from your phone's memory","من ذاكرة هاتفك","telefonunun belleğinden","आपके फ़ोन की मेमोरी से","来自手机内存"],
 "De onderdelen met de meeste fouten staan bovenaan.":["The parts with the most mistakes are at the top.","الأقسام التي فيها أكثر الأخطاء في الأعلى.","En çok hata yapılan bölümler en üstte.","सबसे ज़्यादा गलतियों वाले भाग सबसे ऊपर हैं।","错误最多的部分排在最上面。"],
 "Nog te weinig antwoorden. Maak eerst een paar rondes; daarna zie je hier je zwakke punten.":["Not enough answers yet. Do a few rounds first; then your weak points show here.","الإجابات قليلة حتى الآن. أكمل بعض الجولات أولًا، ثم ستظهر نقاط ضعفك هنا.","Henüz yeterince cevap yok. Önce birkaç tur yap; sonra zayıf noktaların burada görünür.","अभी बहुत कम उत्तर हैं। पहले कुछ दौर पूरे करें; फिर आपकी कमज़ोरियाँ यहाँ दिखेंगी।","回答还太少。先做几轮，然后这里会显示你的弱项。"],
 "Tik op een woord voor de betekenis.":["Tap a word for its meaning.","اضغط على كلمة لمعرفة معناها.","Anlamı için kelimeye dokun.","अर्थ के लिए शब्द पर टैप करें।","点击单词查看意思。"],
@@ -6522,7 +6518,6 @@ const UIR=[
  [/^blz\. (\d+) \/ (\d+)$/,["p. $1 / $2","ص $1 / $2","s. $1 / $2","पृ. $1 / $2","第 $1/$2 页"]],
  [/^nodig: (\d+)%$/,["needed: $1%","المطلوب: $1%","gerekli: %$1","आवश्यक: $1%","需要：$1%"]],
  [/^(\d+)\smin$/,["$1 min","$1 دقيقة","$1 dk","$1 मिनट","$1 分钟"]],
- [/^Gestart in ([\d,]+) s$/,(m,a)=>{const p=a.replace(",",".");return[`Started in ${p} s`,`بدأ التشغيل في ${p} ثانية`,`${a} sn'de açıldı`,`${p} सेकंड में शुरू हुआ`,`${p} 秒启动`][LI]}],
  [/^(maandag|dinsdag|woensdag|donderdag|vrijdag|zaterdag|zondag) (\d+) (\w+)$/i,(m,d,n,mo)=>{const w=lName({weekday:"long"},new Date(2026,0,5+NLD.indexOf(d.toLowerCase()))),a=dayMon(n,mo);return LANG==="tr"||LANG==="zh"?`${a} ${w}`:`${w} ${a}`}],
  [/^Proefexamen (\d+) (\w+)$/,(m,n,mo)=>["Practice exam ","امتحان تجريبي ","Deneme sınavı ","अभ्यास परीक्षा ","模拟考试 "][LI]+dayMon(n,mo)],
  [/^Je kunt vandaag nog (\d+) keer laten nakijken, en dit proefexamen telt als (\d+)\. Zonder nakijken zie je aan het eind alleen de voorbeeldantwoorden\.$/,["You can have $1 more checks today, and this practice exam counts as $2. Without checks you only see the example answers at the end.","يمكنك اليوم طلب $1 تصحيحات أخرى، وهذا الامتحان التجريبي يُحسب $2. بدون تصحيح سترى في النهاية الإجابات النموذجية فقط.","Bugün $1 kez daha kontrol ettirebilirsin ve bu deneme sınavı $2 sayılır. Kontrol olmadan sonunda yalnızca örnek cevapları görürsün.","आज आप $1 बार और जाँच करवा सकते हैं, और यह अभ्यास परीक्षा $2 के बराबर गिनी जाएगी। बिना जाँच के अंत में आपको केवल उदाहरण उत्तर दिखेंगे।","今天你还可以批改 $1 次，这次模拟考试算 $2 次。不批改的话，最后只能看到示例答案。"]],
