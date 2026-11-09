@@ -532,11 +532,14 @@ body.vfull{overflow:hidden}
 }
 /* motion: short and quiet, like iOS */
 @keyframes rise{from{opacity:0;transform:translateY(10px)}}
+@keyframes page-in{from{opacity:.45;transform:translateY(5px)}}
 @keyframes pop{40%{transform:scale(1.03)}}
 @keyframes shake{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
 @keyframes sheet{from{transform:translateY(24px);opacity:0}}
 @keyframes stamp{0%{transform:translateY(-100%)}65%{transform:translateY(6px)}85%{transform:translateY(-2px)}100%{transform:none}}
-#card.in,#home .in,#stats:not([hidden]),#lib:not([hidden]),#media:not([hidden]),#hist:not([hidden]),#talk:not([hidden]),#story:not([hidden]){animation:rise .24s cubic-bezier(.2,.8,.2,1)}
+#card.in{animation:rise .24s cubic-bezier(.2,.8,.2,1)}
+#home.tab-in,main>:is(#stats,#lib,#read,#media,#hist,#talk,#story,#move):not([hidden]),
+#welcome:not([hidden]) .wcard{animation:page-in .32s cubic-bezier(.2,.65,.3,1)}
 .opt.ok{animation:pop .3s ease} .opt.no{animation:shake .32s ease}
 #card>.fb.sheet{animation:sheet .26s cubic-bezier(.2,.8,.2,1)}
 .streak.stamp{animation:stamp .5s cubic-bezier(.3,1.4,.5,1)}
@@ -4200,14 +4203,18 @@ function setTab(t,top=true){
   if(t!==tab){L.classList.remove("go");void L.offsetWidth;L.classList.add("go")} // the lens stretches as it slides
   $("tabs").style.setProperty("--i",TABS.indexOf(t));
   tab=t; document.querySelector("main").classList.toggle("big",t==="vandaag");
-  document.querySelectorAll("#home [data-tab]").forEach(e=>{e.hidden=e.dataset.tab!==t;if(!e.hidden){e.classList.remove("in");void e.offsetWidth;e.classList.add("in")}});
+  document.querySelectorAll("#home [data-tab]").forEach(e=>{e.hidden=e.dataset.tab!==t});
+  const panel=$("home");
+  panel.classList.remove("tab-in");
+  void panel.offsetWidth;
+  panel.classList.add("tab-in");
   document.querySelectorAll("#tabs button").forEach(b=>b.toggleAttribute("aria-current",b.dataset.t===t));
   ["sback","vback","lback"].forEach(id=>$(id).innerHTML=backHTML());
   $("tabs").classList.remove("min"); if(top)window.scrollTo(0,0);
 }
 let tabSkip=0;
 document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>{if(Date.now()<tabSkip)return;
-  if(b.dataset.t===tab)window.scrollTo({top:0,behavior:"smooth"}); else setTab(b.dataset.t)});
+  if(b.dataset.t===tab)window.scrollTo({top:0,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth"}); else setTab(b.dataset.t)});
 // Drag the lens along the bar, like on iPhone: it follows the finger, and where you let go is the tab you open
 (()=>{
   const n=$("tabs"),L=n.querySelector(".lens"),B=[...n.querySelectorAll("button")];
