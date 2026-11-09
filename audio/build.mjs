@@ -4,7 +4,7 @@
 //   node audio/build.mjs            record what is new or changed, delete files no line uses any more
 //   node audio/build.mjs --dry      only count what would be recorded (--dry --who: and show who says what)
 //
-// The texts come from the page itself: voiceTexts() and sayKeys() in index.html, run in headless Chrome, so a key here is
+// The texts come from the page itself: voiceTexts() and sayKeys() in oefenen.html, run in headless Chrome, so a key here is
 // exactly the key speak() looks up. The Google key is read from ~/.config/bittertalen/tts.env (GOOGLE_TTS_KEY=…),
 // never from the repository.
 import { createServer } from "node:http";
@@ -58,7 +58,7 @@ async function pageTexts() {
     catch(e){const o=document.createElement("pre");o.id="err";o.textContent=e;document.documentElement.appendChild(o)}</script>`;
   const srv = createServer(async (q, s) => {
     const p = decodeURIComponent(new URL(q.url, "http://x").pathname);
-    if (p === "/__voice") { s.writeHead(200, { "Content-Type": "text/html" }); return s.end((await readFile(join(ROOT, "index.html"), "utf8")).replace(/<\/body>/, probe + "</body>")) }
+    if (p === "/__voice") { s.writeHead(200, { "Content-Type": "text/html" }); return s.end((await readFile(join(ROOT, "oefenen.html"), "utf8")).replace(/<\/body>/, probe + "</body>")) }
     try { const b = await readFile(join(ROOT, p === "/" ? "index.html" : p)); s.writeHead(200, { "Content-Type": types[extname(p)] || "application/octet-stream" }); s.end(b) }
     catch { s.writeHead(404); s.end() }
   });
@@ -71,7 +71,7 @@ async function pageTexts() {
     try {
       const pg = await b.newPage({ serviceWorkers: "block" }); await pg.goto(url); await pg.waitForSelector("#out, #err", { state: "attached", timeout: 60000 });
       const out = await pg.$eval("#out", e => e.textContent).catch(() => null);
-      if (!out) throw new Error("the page did not give its texts: " + await pg.$eval("#err", e => e.textContent).catch(() => "does index.html still load?"));
+      if (!out) throw new Error("the page did not give its texts: " + await pg.$eval("#err", e => e.textContent).catch(() => "does oefenen.html still load?"));
       return JSON.parse(Buffer.from(out, "base64").toString("utf8"));
     } finally { await b.close(); srv.close() }
   }
@@ -81,7 +81,7 @@ async function pageTexts() {
       "--virtual-time-budget=15000", "--dump-dom", url],
       { maxBuffer: 1 << 28 }, (e, out) => e ? no(e) : ok(out)));
     const m = dom.match(/<pre id="out">([^<]+)<\/pre>/);
-    if (!m) throw new Error("the page did not give its texts: " + ((dom.match(/<pre id="err">([^<]*)/) || [])[1] || "does index.html still load?"));
+    if (!m) throw new Error("the page did not give its texts: " + ((dom.match(/<pre id="err">([^<]*)/) || [])[1] || "does oefenen.html still load?"));
     return JSON.parse(Buffer.from(m[1], "base64").toString("utf8"));
   } finally { srv.close(); await rm(prof, { recursive: true, force: true }) }
 }

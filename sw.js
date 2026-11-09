@@ -2,10 +2,10 @@
 // The page itself: from the network first, but never waiting more than FAST ms (a slow connection made people wait);
 // then the cached copy, and the network refreshes it in the background: when the new one differs (another ETag), the
 // open page is told, and it offers to reload. Cache-first alone left iPhones on an old version: iOS stops a home-screen
-// app's background work, so the refresh of the 1 MB page often never finished. With nothing cached yet: the network. Other pages (privacy, over) the same, cached under their own address, never as "/".
+// app's background work, so the refresh of the 1 MB page often never finished. With nothing cached yet: the network. Other pages (including the landing page) are cached under their own address.
 // Paintings, photos and icons: from the cache, refreshed in the background. The dictionary (7 MB): cache only.
 // Recorded voices (audio/): cached on first play. api/ (grading, new texts) always goes to the network.
-const CACHE = "nl-a2-v11", CORE = ["/", "/manifest.json", "/apple-touch-icon.png", "/study/language-v1.js", "/study/progress-v1.js", "/study/writing-v1.js"];
+const APP = "/oefenen", CACHE = "nl-a2-v12", CORE = [APP, "/", "/landing.css", "/landing.js", "/art/delft.jpg", "/art/bitterbal-white.jpg", "/manifest.json", "/apple-touch-icon.png", "/study/language-v1.js", "/study/progress-v1.js", "/study/writing-v1.js"];
 
 // Install must not fail: on the user's iPhone a new sw.js never took over, most likely because caching the 1 MB page
 // at install did not finish. So each file is tried on its own and a miss is fine (the page comes from the network at the
@@ -14,11 +14,11 @@ self.addEventListener("install", e => {
   self.skipWaiting();
   e.waitUntil(caches.open(CACHE).then(async c => {
     await Promise.all(CORE.map(u => c.add(new Request(u, { cache: "no-store" })).catch(() => {})));
-    if (!(await c.match("/"))) {
+    if (!(await c.match(APP))) {
       for (const k of await caches.keys()) {
         if (k === CACHE) continue;
         const old = await (await caches.open(k)).match("/");
-        if (old) { await c.put("/", old); break }
+        if (old && (await old.clone().text()).includes('id="welcome"')) { await c.put(APP, old); break }
       }
     }
   }).catch(() => {}));
@@ -48,10 +48,11 @@ self.addEventListener("fetch", e => {
     e.respondWith(caches.open(CACHE).then(c => c.match("/__changed")).then(h => h || new Response("0")));
     return;
   }
-  const app = u.pathname === "/" || u.pathname === "/index.html";
-  // Another page of the site (privacy, over): network first, kept under its own address for offline
-  if (r.mode === "navigate" && !app) { e.respondWith(cacheFirst(e, r, r)); return }
-  if (r.mode === "navigate" || app) { e.respondWith(cacheFirst(e, r, "/")); return }
+  const app = u.pathname === APP || u.pathname === APP + ".html";
+  if (r.mode === "navigate" || app) {
+    const key = app ? APP : u.pathname === "/index.html" ? "/" : u.pathname;
+    e.respondWith(cacheFirst(e, r, key)); return;
+  }
   // Recorded voices: kept after the first play (a file never changes, its name is the hash of its line). The audio
   // element asks for byte ranges (Safari won't play without them), answered from the whole file.
   if (u.pathname.startsWith("/audio/") && u.pathname.endsWith(".mp3")) {
@@ -80,12 +81,12 @@ async function cacheFirst(e, r, key) {
     if (res.ok) await c.put(key, res.clone());
     return res;
   });
-  if (!hit) return net.catch(() => caches.match("/").then(h => h || Response.error()));
+  if (!hit) return net.catch(() => Response.error());
   const quick = net.then(res => res.ok ? res : hit, () => hit);
   const page = Promise.race([quick, new Promise(ok => setTimeout(() => ok(hit), FAST))]);
   e.waitUntil(net.then(async res => {
     // the window got the network's page, so it is already new: nothing to offer
-    if ((await page) !== hit || !res.ok) return;
+    if ((await page) !== hit || !res.ok || key !== APP) return;
     const a = old.headers.get("etag"), b = res.headers.get("etag");
     const changed = a && b ? a !== b : (await old.text()) !== (await res.clone().text());
     if (!changed) return;

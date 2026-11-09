@@ -134,7 +134,7 @@ test('The starttest asks the level first; at B1 it goes to today\'s lesson',asyn
 });
 test('No two top-level functions share a name (the later one silently replaced the Word export)',async()=>{
   const {readFileSync}=await import('node:fs');
-  const names=readFileSync(new URL('../index.html',import.meta.url),'utf8').split('\n')
+  const names=readFileSync(new URL('../oefenen.html',import.meta.url),'utf8').split('\n')
     .map(l=>/^(?:async )?function ([A-Za-z_$][\w$]*)/.exec(l)?.[1]).filter(Boolean);
   assert.deepEqual(names.filter((n,i)=>names.indexOf(n)!==i),[]);
   const a=await app();

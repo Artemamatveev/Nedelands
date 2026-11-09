@@ -1,4 +1,4 @@
-// The result of a real exam, as the learner tells it in Mijn examen (uitScreen in index.html), to see whether the
+// The result of a real exam, as the learner tells it in Mijn examen (uitScreen in oefenen.html), to see whether the
 // proefexamens predict it. POST {id, part, ok, pc, rd}: id is a random uuid that stays on the learner's device, pc the last
 // proefexamen score (0-100 or null), rd the status then (0 nog niet, 1 bijna, 2 klaar, or null). ok null takes it back.
 // Nothing about the person is stored: no name, e-mail, account or IP address.

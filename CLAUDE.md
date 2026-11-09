@@ -1,7 +1,7 @@
 # Bittertalen
 
 Bittertalen (a pun on bitterballen: "bitter languages", self-irony about learning Dutch) is a single-page study app for the Dutch A2 integration exam (inburgeringsexamen).
-The UI and most content live in `index.html`. `study/language-v1.js` holds stable verb and word-order data plus checking logic. `study/progress-v1.js` handles three-way progress merges and conditional cloud writes. `study/writing-v1.js` aggregates writing feedback without making another grading request. Paintings are in `art/`.
+The public homepage is `index.html` and reads Plus pricing from `/api/config`. The study app is served at `/oefenen` from `oefenen.html`. `study/language-v1.js` holds stable verb and word-order data plus checking logic. `study/progress-v1.js` handles three-way progress merges and conditional cloud writes. `study/writing-v1.js` aggregates writing feedback without making another grading request. Paintings are in `art/`.
 Deployed on Vercel from `main`: every push to `main` goes live at https://bittertalen.nl (push `main` first, then the working
 branch: in November 2026 a commit built first as a branch preview got no production build when it reached `main`; then
 start one by hand, a production deployment of `main` at that commit) (Vercel project
@@ -76,7 +76,7 @@ generic "AI app" look.
 - **Logo**: the name "Bittertalen" in the system font, with a bitterbal (`--oranje`, light crumbs) as the dot on
   the i, the size and place of a normal dot (`h1 .idot`). The app icon is a bitterbal too.
 - **Dutch motifs instead of decoration**:
-  - Header: the painting of the day (`ART` + `paint()` in `index.html`), with a museum
+  - Header: the painting of the day (`ART` + `paint()` in `oefenen.html`), with a museum
     label underneath: artist, title, year, museum and one A2 sentence in Dutch (no
     translation), all in one size (15px, no italics). The full painting and the label are on the Vandaag tab; the
     other tabs and inner screens get the narrow strip (`main.big` is only set on Vandaag). Tapping the painting on a
@@ -448,7 +448,7 @@ result was invisible). Items made earlier stay in `S.gen` and are still added by
 
 ## Beginnen (from nothing)
 
-For someone who starts from nothing, at A2 only. `BG` in `index.html` holds twelve short lessons (`t`, `s`; `x` the rule in very
+For someone who starts from nothing, at A2 only. `BG` in `oefenen.html` holds twelve short lessons (`t`, `s`; `x` the rule in very
 simple Dutch, a paragraph per line, `<b>` allowed; `e` the same in English, behind an "English" toggle and open when the menus
 are in English, the one place where an explanation is in English, because a beginner can't read the Dutch yet (there is no
 Arabic, Turkish, Hindi or Chinese version of the explanations); the lessons' own text has class `.bgl`: never translated, always
@@ -468,7 +468,7 @@ screen. Without a test nothing changes. The Mix only takes lesson questions that
 
 ## Boekenkast (reading)
 
-Built-in A2 stories live in `BOOKS` in `index.html` (original texts; check facts, they double
+Built-in A2 stories live in `BOOKS` in `oefenen.html` (original texts; check facts, they double
 as KNM material). Readers can add their own books (.epub without DRM, .txt, pasted text);
 those are stored only in IndexedDB (`books` list, `book:<id>` text), never in `ww-v1`.
 `S.bk` keeps reading positions and `S.words` the saved words (`{w, en, p, s, f}`; a few early
@@ -484,7 +484,7 @@ No Claude calls in the reader: whole sentences go to Google Translate via a link
 ## Geschiedenis van Nederland
 
 "Geschiedenis van Nederland" (a row under "Lezen en luisteren") is a timeline of short A2 chapters in
-`GS` in `index.html`, from the hunebedden to now, grouped by period (`g`). Each chapter has years, a text
+`GS` in `oefenen.html`, from the hunebedden to now, grouped by period (`g`). Each chapter has years, a text
 (one paragraph per line, tap a word for the dictionary popup, like in the reader), an optional picture at the top
 (`foto/` or `art/`, same rules as the photos, credited in `foto/CREDITS.md`), more historical paintings, prints and
 photos between the paragraphs (`f`: `[file, caption, after paragraph n]`, shown whole, tap to enlarge) and three questions, stored as
@@ -522,7 +522,7 @@ The whole app is about 240 000 characters, inside Google's free million per mont
 (huisarts, work, landlord, school, gemeente, 112, a language school), work, school and the doctor (a job interview,
 a day off, the teacher, the GP's consulting room), in town (bakker, apotheek, café, station, exchanging a jumper,
 the bike repairer, the market, the library, asking the way) and the neighbours. Free and
-offline, no Claude (the user chose this over an AI conversation partner). Each one in `GP` in `index.html` is a script:
+offline, no Claude (the user chose this over an AI conversation partner). Each one in `GP` in `oefenen.html` is a script:
 the other person's line is read aloud (`speak()`), the learner answers out loud through `listen("say")` or types,
 and `gpFits()` checks the answer for keywords (`k`, groups of alternatives); a line marked `x` is skipped when the
 answer already said it. Two misses show the example answer (`m`). At the end: how many answers needed no help and
@@ -531,7 +531,7 @@ Facts in the scripts double as KNM material: check them.
 
 ## Luisteren en kijken (real Dutch)
 
-Real speech from Dutch YouTube channels and podcasts, listed in `MEDIA` in `index.html` (id, name,
+Real speech from Dutch YouTube channels and podcasts, listed in `MEDIA` in `oefenen.html` (id, name,
 video or audio, level 1–3, a Dutch description). `api/feed.js` fetches the latest 15 episodes of
 the whitelisted feeds (YouTube channel RSS, podcast RSS; no key, cached by Vercel's CDN for 30 min)
 and returns `{link, items:[{t, d, s, v|a, n}]}`; to add a source, add it to both `MEDIA` and `FEEDS`.

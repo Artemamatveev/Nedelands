@@ -17,7 +17,7 @@ export function storage(initial = {}) {
   };
 }
 export async function app(options = {}) {
-  const html = fs.readFileSync(new URL('index.html', root), 'utf8');
+  const html = fs.readFileSync(new URL('oefenen.html', root), 'utf8');
   const {window, document} = parseHTML(html);
   const errors = [];
   const timers = new Map();
