@@ -4185,15 +4185,10 @@ const avatarPortraits={
   bal:"/art/bitterbal-white.jpg",
   volv:"/art/volendam-girl-white.jpg"
 };
-const avatarSheet="/art/plush-avatars.jpg";
 function avSVG(id){
-  const tile=Math.max(0,avatarOrder.indexOf(id));
-  const key=avatarOrder[tile];
-  const portrait=avatarPortraits[key];
-  const image=portrait
-    ?`<image href="${portrait}" width="100" height="100"/>`
-    :`<image href="${avatarSheet}" x="${-(tile%4)*100}" y="${-Math.floor(tile/4)*100}" width="400" height="400"/>`;
-  return `<svg viewBox="0 0 100 100" overflow="hidden" aria-hidden="true">${AVS[key].s}${image}</svg>`;
+  const key=avatarOrder.includes(id)?id:"bal";
+  const portrait=avatarPortraits[key]||`/art/avatars/${key}.jpg`;
+  return `<svg viewBox="0 0 100 100" aria-hidden="true">${AVS[key].s}<image href="${portrait}" width="100" height="100" preserveAspectRatio="none"/></svg>`;
 }
 const TABN={vandaag:"Vandaag",examen:"Examen",oefenen:"Oefenen",herhalen:"Herhalen",profiel:"Profiel"};
 const backHTML=()=>`<span aria-hidden="true">←</span>${TABN[tab]}`;
