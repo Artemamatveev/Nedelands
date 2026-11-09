@@ -382,7 +382,9 @@ A2-niveau", and today's grammar step helps with a B1 round. The page title, desc
   the points to write about), section `wb`, keys `wb|<i>`. Three kinds, as on the exam: zinsopdracht (`z`, 2 points:
   inhoud 0–1, grammatica 0–1), formulier (`f`, 7: inhoud 3, woorden 1, grammatica 2, spelling 1) and e-mail (`m`, 8:
   the same plus samenhang 1) (`WBMAX`, and `SCORES_WB` in `api/check.js`, which grades them with `part:"wb"` and its own
-  B1 prompt and sets `passed` from the points). The proefexamen (`EX.wb`, `wbTasks(8,3)`) is 12 tasks in 100 minutes:
+  B1 prompt and sets `passed` from the points; the prompt follows the Regeling beoordelingsnormen Staatsexamen Nt2
+  (BWBR0046169): all elements present is 2 for inhoud, quality gives 3 or 1; sentences copied whole from the task don't
+  count; de/het errors don't count for grammar). The proefexamen (`EX.wb`, `wbTasks(8,3)`) is 12 tasks in 100 minutes:
   8 zinsopdrachten, a form, an e-mail about two photos and two other e-mails, 47 points, with Overzicht; it costs 4
   checks. The pass line is 25 of 47 (`PASSP.wb`): the public exams of 2023–2025 needed about that. Practice is three
   zinsopdrachten and one longer task, each checked on its own; today's short round alternates three zinsopdrachten and
@@ -392,11 +394,13 @@ A2-niveau", and today's grammar step helps with a B1 round. The page title, desc
   `sb`, keys `sb|<i>`, type `reveal` like Spreken A2 but with `spk`, the seconds to speak (`listen(mode, done, lim)`).
   Two kinds, as on the exam: korte opdracht (`k`, 20 seconds: asking, choosing, explaining, apologising; 2 points as in the Regeling
   beoordelingsnormen Staatsexamen Nt2: inhoud 0–1 and woord- en zinsvorming, key `grammatica`, 0–1; voldoende with the content point) and middellange opdracht (`m`, 15 seconds to think, which is only said, and 30 to speak: advice, an
-  opinion with reasons, comparing two photos and choosing, a story about three photos in order; inhoud 0–3, woorden
-  0–1, grammatica 0–2, samenhang 0–1) (`SBMAX`, `SCORES_SB` in `api/check.js`, `part:"sb"`, its own B1 prompt;
-  a medium task is voldoende with inhoud 2 and 60% of the points; on the exam a medium task has 9–12 points, some for
-  pronunciation and fluency, which a transcript can't show). The proefexamen (`EX.sb`, `sbTasks(8,8)`) is 8 short and 8 medium
-  tasks, 72 points, 25 minutes, costs 6 checks; pass line the default 70% (one prep site says the public exam of 2025 needed 75 of 128, unconfirmed). In the
+  opinion with reasons, comparing two photos and choosing, a story about three photos in order; inhoud, woord- en
+  zinsvorming (key `grammatica`) and woordenschat (key `woorden`) 0–3 each, as in the Regeling: 9 of the exam's 9–12
+  points, the rest is uitspraak or tempo, which a transcript can't show; no samenhang in Spreken I) (`SBMAX`, `SCORES_SB`
+  in `api/check.js`, `part:"sb"`, its own B1 prompt with the Regeling's rules: argument quality not judged, the wrong
+  taalhandeling at most 1 for inhoud, small errors (lidwoord, verkleinwoord, meervoud) weigh less; a medium task is
+  voldoende with inhoud 2 and 60% of the points). The proefexamen (`EX.sb`, `sbTasks(8,8)`) is 8 short and 8 medium
+  tasks, 88 points, 25 minutes, costs 6 checks; pass line the default 70% (one prep site says the public exam of 2025 needed 75 of 128, unconfirmed). In the
   proefexamen the question is read aloud, then the thinking time (`prep`: 15 s for a medium task, 5 for a short one with
   a photo) counts down and the answer starts by itself (`prepThen()`); if the phone won't open the microphone without
   a tap, the take is dropped and the button asks for one.

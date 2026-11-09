@@ -122,6 +122,11 @@ test('B1 rules: a sentence task needs both points, an e-mail 70% with inhoud 2, 
   assert.deepEqual({...k2.res.body.tasks[0].scores},{inhoud:1,grammatica:1}); // clamped to the 2-point scale
   const k0=await handler({part:'sb',kind:'k',scores:{inhoud:0,grammatica:1}});
   assert.equal(k0.res.body.tasks[0].passed,false);
+  const m=await handler({part:'sb',kind:'m',scores:{inhoud:2,grammatica:2,woorden:2,samenhang:1}});
+  assert.deepEqual({...m.res.body.tasks[0].scores},{inhoud:2,grammatica:2,woorden:2}); // Spreken I has no samenhang
+  assert.equal(m.res.body.tasks[0].passed,true); // 6 of 9
+  const m5=await handler({part:'sb',kind:'m',scores:{inhoud:2,grammatica:2,woorden:1}});
+  assert.equal(m5.res.body.tasks[0].passed,false);
 });
 test('A2 form: DUO form model, 7 points without grammar or coherence, voldoende with 5',async()=>{
   const f=await handler({kind:'f',scores:{inhoud:2,woorden:1,grammatica:2,spelling:2,samenhang:1}});

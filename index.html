@@ -3752,9 +3752,10 @@ WR.forEach((p,i)=>ITEMS.push({sec:"wr",k:"wr|"+i,ord:i,type:"write",label:p[2]?"
 // Schrijven B1: mx = the points per criterion of this kind of task (as api/check.js scores them), 47 in a proefexamen of 8 + 1 + 3
 const WBMAX={z:{inhoud:1,grammatica:1},f:{inhoud:3,woorden:1,grammatica:2,spelling:1},m:{inhoud:3,woorden:1,grammatica:2,spelling:1,samenhang:1}},WBL={z:"Zinsopdracht",f:"Formulier",m:"E-mail"};
 WRB.forEach((p,i)=>ITEMS.push({sec:"wb",k:"wb|"+i,ord:p.k==="z"?0:1,type:"write",kind:p.k,label:WBL[p.k]+" (B1)",intro:p.i,text:p.d,pics:p.f,big:p.t,ctx:p.c,pts:p.p,fields:p.fl,open:p.o,sub:"",right:p.m,mx:WBMAX[p.k]}));
-// Spreken B1: spk = seconds to speak; mx = points per criterion (api/check.js), 8 × 2 + 8 × 7 = 72 in a proefexamen. A short
-// task has 2 points, inhoud and woord- en zinsvorming 0–1 each, as in the Regeling beoordelingsnormen Staatsexamen Nt2
-const SBMAX={k:{inhoud:1,grammatica:1},m:{inhoud:3,woorden:1,grammatica:2,samenhang:1}};
+// Spreken B1: spk = seconds to speak; mx = points per criterion (api/check.js), 8 × 2 + 8 × 9 = 88 in a proefexamen. As in the
+// Regeling beoordelingsnormen Staatsexamen Nt2: a short task has inhoud and woord- en zinsvorming 0–1 each; a medium task
+// inhoud, woord- en zinsvorming and woordenschat 0–3 each (on the exam also uitspraak or tempo: 9–12, which a transcript can't show)
+const SBMAX={k:{inhoud:1,grammatica:1},m:{inhoud:3,grammatica:3,woorden:3}};
 SPB.forEach((p,i)=>ITEMS.push({sec:"sb",k:"sb|"+i,ord:p.k==="k"?0:1,type:"reveal",kind:p.k,label:p.k==="k"?"Korte opdracht (B1): 20 seconden":"Middellange opdracht (B1): 30 seconden",big:p.t,sub:"",right:p.m,pics:p.f,text:p.d,spk:p.k==="k"?20:30,prep:p.k==="m"?15:p.f?5:0,mx:SBMAX[p.k]}));
 // the whole task as Claude needs it, with the sentence to finish, the points, the information and the photos
 const wrTask=q=>q.big+(q.open?" "+q.open:"")+(q.ctx?(/___/.test(q.ctx)?"\nTekst met een open plek (___); de cursist schrijft alleen wat op de open plek komt:\n":"\nDe cursist maakt deze zin af: ")+q.ctx:"")
