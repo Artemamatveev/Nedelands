@@ -132,3 +132,19 @@ test('The starttest asks the level first; at B1 it goes to today\'s lesson',asyn
   a.document.querySelector('#tgo').click();
   assert.match(a.document.querySelector('#tbody').textContent,/Vraag 1 van/);
 });
+test('No two top-level functions share a name (the later one silently replaced the Word export)',async()=>{
+  const {readFileSync}=await import('node:fs');
+  const names=readFileSync(new URL('../index.html',import.meta.url),'utf8').split('\n')
+    .map(l=>/^(?:async )?function ([A-Za-z_$][\w$]*)/.exec(l)?.[1]).filter(Boolean);
+  assert.deepEqual(names.filter((n,i)=>names.indexOf(n)!==i),[]);
+  const a=await app();
+  assert.equal(a.run('zipStored([["a.xml","<a/>"]],"application/zip") instanceof Blob'),true);
+});
+test('The right answer is not usually the longest option, so length gives nothing away',async()=>{
+  const a=await app();
+  const share=JSON.parse(a.run(`JSON.stringify(Object.fromEntries(["lz","l1","ls","lb","knm","gs"].map(sec=>{
+    const qs=ITEMS.filter(q=>q.sec===sec&&q.type==="choice"&&q.opts);
+    const longest=qs.filter(q=>{const o=q.opts().map(String),m=Math.max(...o.map(x=>x.length));return q.right.length===m&&o.filter(x=>x.length===m).length===1});
+    return [sec,longest.length/qs.length]})))`));
+  for(const [sec,s] of Object.entries(share))assert.ok(s<=0.42,`${sec}: the right answer is the longest in ${Math.round(s*100)}%`);
+});

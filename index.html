@@ -4210,7 +4210,7 @@ function esc(x){return String(x==null?"":x).replace(/[&<>"]/g,c=>({"&":"&amp;","
 // with three XML parts. The task and what the learner wrote, one entry per task: {task, form, text}
 const CRC=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
 const crc32=b=>{let c=~0;for(const x of b)c=CRC[(c^x)&255]^(c>>>8);return~c>>>0};
-function zip(files,type){
+function zipStored(files,type){
   const en=new TextEncoder(),loc=[],cen=[];let off=0;
   files.forEach(([n,d])=>{
     const name=en.encode(n),data=en.encode(d),crc=crc32(data),h=new DataView(new ArrayBuffer(30)),c=new DataView(new ArrayBuffer(46));
@@ -4230,7 +4230,7 @@ function saveDocx(items){
     body+=((it.form?it.form+"\n\n":"")+it.text).split("\n").map(l=>p(l)).join("");
   });
   const W='xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"';
-  const blob=zip([
+  const blob=zipStored([
     ["[Content_Types].xml",'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>'],
     ["_rels/.rels",'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>'],
     ["word/document.xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document ${W}><w:body>${body}<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134" w:header="708" w:footer="708" w:gutter="0"/></w:sectPr></w:body></w:document>`]
