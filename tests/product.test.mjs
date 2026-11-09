@@ -148,3 +148,8 @@ test('The right answer is not usually the longest option, so length gives nothin
     return [sec,longest.length/qs.length]})))`));
   for(const [sec,s] of Object.entries(share))assert.ok(s<=0.42,`${sec}: the right answer is the longest in ${Math.round(s*100)}%`);
 });
+test('Every example answer in Gesprekken passes its own keyword check',async()=>{
+  const a=await app();
+  const bad=JSON.parse(a.run(`JSON.stringify(GP.flatMap(c=>c.d.map((l,i)=>[c.id+"#"+i,l]).filter(([,l])=>!gpFits(l.k,l.m.replace(/\\[[^\\]]*\\]/g,"Sara"))).map(x=>x[0])))`));
+  assert.deepEqual(bad,[]);
+});

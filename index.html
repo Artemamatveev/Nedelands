@@ -4117,8 +4117,8 @@ function order(q){
     $("pool").innerHTML=pool.map((t,n)=>`<button class="tok" data-n="${n}">${t.w}</button>`).join("");
     $("chk").disabled=pool.length>0;
     if(answered)return document.querySelectorAll(".tok").forEach(b=>b.disabled=true);
-    $("line").querySelectorAll(".tok").forEach(b=>b.onclick=()=>{pool.push(picked.splice(b.dataset.n,1)[0]);draw()});
-    $("pool").querySelectorAll(".tok").forEach(b=>b.onclick=()=>{picked.push(pool.splice(b.dataset.n,1)[0]);draw()});
+    $("line").querySelectorAll(".tok").forEach(b=>b.onclick=()=>{const t=picked.splice(b.dataset.n,1)[0];if(t)pool.push(t);draw()});
+    $("pool").querySelectorAll(".tok").forEach(b=>b.onclick=()=>{const t=pool.splice(b.dataset.n,1)[0];if(t)picked.push(t);draw()});
   };
   draw();
   $("chk").onclick=()=>{
