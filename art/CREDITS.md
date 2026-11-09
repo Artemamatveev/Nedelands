@@ -19,8 +19,6 @@ Ze zijn verkleind en gecomprimeerd voor de app (max. 1000 px).
 | `oranje.jpg` | [William I, Prince of Orange by Adriaen Thomasz. Key Rijksmuseum Amsterdam SK-A-3148.jpg](https://commons.wikimedia.org/wiki/File:William_I,_Prince_of_Orange_by_Adriaen_Thomasz._Key_Rijksmuseum_Amsterdam_SK-A-3148.jpg) | Public domain |
 | `steen.jpg` | [Jan Havicksz. Steen - Het vrolijke huisgezin - Google Art Project.jpg](https://commons.wikimedia.org/wiki/File:Jan_Havicksz._Steen_-_Het_vrolijke_huisgezin_-_Google_Art_Project.jpg) | Public domain |
 | `leyster.jpg` | [Judith Leyster, Self-Portrait, c. 1630, NGA 37003.jpg](https://commons.wikimedia.org/wiki/File:Judith_Leyster,_Self-Portrait,_c._1630,_NGA_37003.jpg) | CC0 |
-| `av-v.jpg` | Uitsnede (gezicht) van `leyster.jpg`, de avatar in Profiel | CC0 |
-| `av-m.jpg` | [Frans Hals Portrait of a Bearded Man with a Ruff, 1625.jpg](https://commons.wikimedia.org/wiki/File:Frans_Hals_Portrait_of_a_Bearded_Man_with_a_Ruff,_1625.jpg) (Metropolitan Museum of Art), uitsnede van het gezicht, de avatar in Profiel | Public domain |
 | `erasmus.jpg` | [Hans Holbein d. J. - Erasmus - Louvre.jpg](https://commons.wikimedia.org/wiki/File:Hans_Holbein_d._J._-_Erasmus_-_Louvre.jpg) | Public domain |
 | `spinoza.jpg` | [Baruch Spinoza portrait HAB original.jpg](https://commons.wikimedia.org/wiki/File:Baruch_Spinoza_portrait_HAB_original.jpg) | Public domain |
 | `molen.jpg` | [De molen bij Wijk bij Duurstede, SK-C-211.jpg](https://commons.wikimedia.org/wiki/File:De_molen_bij_Wijk_bij_Duurstede,_SK-C-211.jpg) | Public domain |

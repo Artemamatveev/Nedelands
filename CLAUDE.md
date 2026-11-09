@@ -125,9 +125,14 @@ can only be taken back on the device that sent it. `OUTCOME_CAP` new rows a mont
 - **Oefenen**: "Examenonderdelen" (Lezen, Luisteren, Schrijven, Spreken, KNM: practice without the clock) and
 "Grammatica en woorden" under it, "Lezen, luisteren en spreken" beside them on a computer.
 - **Herhalen**: Mijn zwakke punten, Mijn fouten and Mijn woorden (the last two once there is something in them).
-- **Profiel** looks like an iPhone settings screen (the user's example, November 2026): on top a round portrait of a Dutch
-woman or man in Golden Age dress (`art/av-v.jpg`, Judith Leyster's self-portrait; `art/av-m.jpg`, Frans Hals, a bearded man
-with a ruff, 1625; tap to switch, `S.me.av`, with its museum label under the name in Dutch), the name (or "Profiel") and the
+- **Profiel** looks like an iPhone settings screen (the user's example, November 2026): on top a round avatar the learner
+picks (`avScreen()` in `#talk`, "Kies je avatar": a grid of three by three, the chosen one with an orange ring; `S.me.av`, so it
+goes along). The avatars are original chibi Dutch people drawn as inline SVG in `AVS` (`avSVG()`; head and shoulders,
+viewBox 0 0 100 100): four girls (Volendam with the white hul, a supporter in orange, a headscarf in Delfts blauw, braids with
+a tulip), four boys (Volendam, Koningsdag with a crown, a painter, a cheese carrier) and the bitterbal, the default; skin
+tones vary on purpose. Their names under them are Dutch content (`lang="nl"`). The user showed a Vexels set as the example:
+that set is copyrighted, so never copy it; no `<defs>`/gradients in them (a gradient defined in a hidden copy doesn't draw).
+Under it the name (or "Profiel") and the
 e-mail; then one filled cobalt banner (`.pban`: "Inloggen of account maken", or Bittertalen Plus when logged in), and
 rounded grey groups of rows on the white tile (`.pg`, `.prow`: the name fields with the value on the right, the level as a
 row with a native select over it, Trillen; the account with its status and Uitloggen / Account verwijderen as plain rows;

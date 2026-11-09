@@ -558,11 +558,15 @@ main:is(:not(.big),:has(#home[hidden])) header .lang{top:6px;height:32px} /* the
    rounded grey groups of rows on the white tile. The portrait is a Dutch person in Golden Age dress (AV), tap to switch. */
 .phero{display:flex;flex-direction:column;align-items:center;text-align:center;padding:4px 0 6px}
 .pav{width:104px;height:104px;padding:0;border:3px solid var(--card);border-radius:50%;overflow:hidden;background:var(--surface);box-shadow:var(--lift);cursor:pointer}
-.pav img{display:block;width:100%;height:100%;object-fit:cover}
+.pav span,.pav svg,.avg i svg{display:block;width:100%;height:100%}
+.avg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px 8px;margin:18px 0 6px}
+.avg button{display:flex;flex-direction:column;align-items:center;gap:8px;padding:0;background:none;border:0;font:inherit;font-size:var(--fs-s);color:var(--soft);line-height:1.3;cursor:pointer}
+.avg i{width:84px;height:84px;border-radius:50%;overflow:hidden;border:3px solid var(--card);box-shadow:var(--lift)}
+.avg [aria-pressed=true] i{border-color:var(--oranje)} .avg [aria-pressed=true]{color:var(--ink);font-weight:600}
+.avg button:active i{transform:scale(.96)}
 .pav:focus-visible{outline:3px solid var(--oranje);outline-offset:3px}
 .phero h2{margin:14px 0 2px;text-wrap:balance}
 .pmail{margin:0;color:var(--soft);font-size:var(--fs-m);word-break:break-all}
-.pcap{margin:6px 0 0;color:var(--soft);font-size:var(--fs-s)}
 .pg{margin:14px 0 0;padding:0 16px;background:var(--surface);border-radius:var(--rc)}
 .pg:empty{display:none}
 .pg>*{border-bottom:1px solid var(--line)} .pg>:last-child{border-bottom:0}
@@ -637,10 +641,9 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
     </div>
     <section class="tile" id="prof" data-tab="profiel">
       <div class="phero">
-        <button type="button" class="pav" id="pav" aria-label="Ander portret"><img id="pavi" src="/art/av-v.jpg" alt="" width="104" height="104"></button>
+        <button type="button" class="pav" id="pav" aria-label="Kies je avatar"><span id="pavi"></span></button>
         <h2 id="pnm">Profiel</h2>
         <p class="pmail" id="pmail" hidden></p>
-        <p class="pcap" lang="nl" id="pcap"></p>
       </div>
       <div id="pban"></div>
       <div class="pg">
@@ -3575,6 +3578,66 @@ function home(){
 // The tab you were on is kept while you practise: every back button goes back to it and is named after it.
 // Only Vandaag has the big painting and its label; the other tabs get the narrow strip, like an inner screen.
 let tab="vandaag";
+// Profiel's avatars: original chibi Dutch people, drawn here (head and shoulders, viewBox 0 0 100 100), four girls, four
+// boys and the bitterbal (the default); the learner picks one (S.me.av). The names are Dutch, as content.
+const AVINK="#2B2F3A";
+const avFace=(sk,o={})=>{const y=50;
+  const eyes=o.open
+    ?`<circle cx="41" cy="${y+2}" r="2.6" fill="${AVINK}"/><circle cx="59" cy="${y+2}" r="2.6" fill="${AVINK}"/><circle cx="41.9" cy="${y+1}" r=".8" fill="#fff"/><circle cx="59.9" cy="${y+1}" r=".8" fill="#fff"/>`
+    :`<path d="M37.6 ${y+3}q3.4-3.8 6.8 0M55.6 ${y+3}q3.4-3.8 6.8 0" fill="none" stroke="${AVINK}" stroke-width="2.1" stroke-linecap="round"/>`;
+  return `<circle cx="50" cy="${y}" r="23" fill="${sk}"/>`
+    +`<ellipse cx="35.5" cy="${y+9}" rx="4" ry="2.4" fill="#F08C8C" opacity=".55"/><ellipse cx="64.5" cy="${y+9}" rx="4" ry="2.4" fill="#F08C8C" opacity=".55"/>`
+    +eyes+(o.mouth===0?"":`<path d="M45.5 ${y+10}q4.5 4 9 0" fill="none" stroke="${AVINK}" stroke-width="2" stroke-linecap="round"/>`);
+};
+const avBody=(c,extra="")=>`<path d="M14 100c1-14 15-22 36-22s35 8 36 22z" fill="${c}"/>`+extra;
+const avBg=c=>`<rect width="100" height="100" fill="${c}"/>`;
+const AVS={
+  bal:{n:"de bitterbal",s:avBg("#FBE3CC")
+    +`<circle cx="50" cy="54" r="32" fill="#C8500C"/><ellipse cx="41" cy="42" rx="17" ry="13" fill="#E07A2E" opacity=".75"/><ellipse cx="38" cy="38" rx="8" ry="5.5" fill="#F29A4A" opacity=".8"/>`
+    +[[29,38],[37,28],[51,25],[65,30],[73,43],[25,54],[75,61],[32,73],[45,82],[61,80],[70,72],[40,38],[60,38],[27,64]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="1.7" fill="#F6C08A"/>`).join("")
+    +`<circle cx="41" cy="54" r="2.8" fill="${AVINK}"/><circle cx="59" cy="54" r="2.8" fill="${AVINK}"/><circle cx="42" cy="53" r=".9" fill="#fff"/><circle cx="60" cy="53" r=".9" fill="#fff"/>`
+    +`<ellipse cx="34.5" cy="61" rx="4" ry="2.4" fill="#F08C8C" opacity=".6"/><ellipse cx="65.5" cy="61" rx="4" ry="2.4" fill="#F08C8C" opacity=".6"/><path d="M45 61q5 4.6 10 0" fill="none" stroke="${AVINK}" stroke-width="2.1" stroke-linecap="round"/>`},
+  volv:{n:"het meisje uit Volendam",s:avBg("#DCE6F7")
+    +avBody("#232B45",`<path d="M37 78l13 10 13-10" fill="#fff"/>`+[37,41.5,46,50.5,55,59.5,64].map((x,i)=>`<circle cx="${x}" cy="${80+(3-Math.abs(3-i))*0.9}" r="2" fill="#C0392B"/>`).join(""))
+    +`<path d="M26 50c0-16 10-24 24-24s24 8 24 24v6H26z" fill="#D9A441"/>`
+    +avFace("#F6D7BE")
+    +`<path d="M50 5c5 6 9 14 11 22 8-2 18 0 26 7-7 4-11 11-13 21-2-12-10-20-24-20s-22 8-24 20c-2-10-6-17-13-21 8-7 18-9 26-7 2-8 6-16 11-22z" fill="#fff" stroke="#AEB9CF" stroke-width="1.4" stroke-linejoin="round"/><path d="M39 28q11 4 22 0" fill="none" stroke="#AEB9CF" stroke-width="1.2"/>`},
+  volm:{n:"de jongen uit Volendam",s:avBg("#E3ECF9")
+    +avBody("#20263A",`<path d="M44 78h12l-6 7z" fill="#C0392B"/>`+[86,92,98].map(y=>`<circle cx="43" cy="${y}" r="1.7" fill="#D5DCE8"/><circle cx="57" cy="${y}" r="1.7" fill="#D5DCE8"/>`).join(""))
+    +avFace("#EFC7A6",{open:1})
+    +`<path d="M25 41c0-14 10-21 25-21s25 7 25 21z" fill="#20263A"/><rect x="23" y="37" width="54" height="7" rx="3.5" fill="#33405F"/>`},
+  fanv:{n:"de supporter",s:avBg("#FFE6D1")
+    +avBody("#E8731A",`<path d="M50 78v22" stroke="#fff" stroke-width="2.2"/><path d="M42 78l8 5 8-5" fill="#fff"/>`)
+    +`<path d="M25 50c0-14 10-22 25-22s25 8 25 22v18c-3 3-6 3-9 0V52H34v16c-3 3-6 3-9 0z" fill="#7A4A2A"/>`
+    +avFace("#C98C5E")
+    +`<path d="M28 39c1-14 10-21 22-21s21 7 22 21z" fill="#E8731A"/><rect x="28" y="31" width="44" height="2.8" fill="#AE1C28"/><rect x="28" y="33.8" width="44" height="2.8" fill="#fff"/><rect x="28" y="36.6" width="44" height="2.8" fill="#21468B"/><path d="M19 42q31-7 62 0l-2 4.5q-29-6-58 0z" fill="#D9640F"/>`},
+  fanm:{n:"op Koningsdag",s:avBg("#FFF0D6")
+    +avBody("#E8731A",`<path d="M41 78q9 7 18 0" fill="none" stroke="#C85F0E" stroke-width="2.2"/>`)
+    +[[29,40,7],[37,31,7.5],[50,27,8.5],[63,31,7.5],[71,40,7]].map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="#2A1A12"/>`).join("")
+    +avFace("#8D5A3B",{open:1})
+    +`<path d="M32 25l4-14 8 9 6-12 6 12 8-9 4 14z" fill="#F5A623" stroke="#D4780C" stroke-width="1.3" stroke-linejoin="round"/><circle cx="36" cy="11" r="2" fill="#F5A623"/><circle cx="50" cy="8" r="2" fill="#F5A623"/><circle cx="64" cy="11" r="2" fill="#F5A623"/>`},
+  delft:{n:"in Delfts blauw",s:avBg("#E9EEF8")
+    +`<path d="M10 100c2-20 16-32 40-32s38 12 40 32z" fill="#1F3C96"/>`
+    +`<path d="M23 52c0-19 12-30 27-30s27 11 27 30c0 11-4 19-11 24H34c-7-5-11-13-11-24z" fill="#1F3C96"/>`
+    +[[29,64],[36,75],[64,75],[71,64],[26,88],[50,92],[74,88],[38,98],[62,98],[30,46],[70,46],[50,27]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="1.6" fill="#fff" opacity=".9"/>`).join("")
+    +avFace("#D9A47C")},
+  tulp:{n:"met een tulp",s:avBg("#FDE3E6")
+    +avBody("#C0392B",`<path d="M37 79q13 9 26 0v4q-13 8-26 0z" fill="#fff"/>`)
+    +`<path d="M24 50c0-17 11-27 26-27s26 10 26 27c0 6-2 11-4 13V50c-4-6-11-10-22-10s-18 4-22 10v13c-2-2-4-7-4-13z" fill="#E0B048"/><path d="M28 60q-6 10 0 19M72 60q6 10 0 19" fill="none" stroke="#E0B048" stroke-width="6.5" stroke-linecap="round"/>`
+    +avFace("#F3CDB0",{open:1})+`<path d="M50 27q-3 6-12 9M50 27q3 6 12 9" fill="none" stroke="#E0B048" stroke-width="5" stroke-linecap="round"/>`
+    +`<g transform="translate(73 31) rotate(18)"><path d="M0 9v10" stroke="#3E8E4E" stroke-width="2.2" stroke-linecap="round"/><path d="M-6 -2c0 7 3 11 6 11s6-4 6-11l-3 3-3-6-3 6z" fill="#E33B4C"/></g>`},
+  schilder:{n:"de schilder",s:avBg("#E4F0EA")
+    +avBody("#4F79B5",`<path d="M41 78l9 8 9-8" fill="#F2C94C"/>`)
+    +avFace("#F1CBAA",{open:1,mouth:0})
+    +`<path d="M27 54c1 16 10 23 23 23s22-7 23-23c-5 7-12 8-23 8s-18-1-23-8z" fill="#8A5A3B"/><path d="M45 60q5 3.4 10 0" fill="none" stroke="${AVINK}" stroke-width="2" stroke-linecap="round"/>`
+    +`<path d="M22 37c2-11 14-17 28-16 15 1 25 7 26 15-9 5-45 7-54 1z" fill="#2E3A66"/><circle cx="51" cy="20.5" r="2.4" fill="#2E3A66"/>`},
+  kaas:{n:"de kaasdrager",s:avBg("#FFF7DA")
+    +avBody("#FBFBF7",`<path d="M42 78l8 6 8-6" fill="none" stroke="#D7D9E0" stroke-width="1.6"/><path d="M29 84l9 16M71 84l-9 16" stroke="#3A7BC8" stroke-width="3.2"/>`)
+    +`<path d="M27 46c0-12 10-18 23-18s23 6 23 18z" fill="#2A2222"/>`
+    +avFace("#F2D2B3",{open:1})
+    +`<ellipse cx="50" cy="35" rx="35" ry="7" fill="#E8C36A"/><path d="M32 34c0-11 8-16 18-16s18 5 18 16z" fill="#F0CF7A"/><rect x="32" y="28" width="36" height="5" fill="#3A7BC8"/>`},
+};
+const avSVG=id=>`<svg viewBox="0 0 100 100" aria-hidden="true">${(AVS[id]||AVS.bal).s}</svg>`;
 const TABN={vandaag:"Vandaag",examen:"Examen",oefenen:"Oefenen",herhalen:"Herhalen",profiel:"Profiel"};
 const backHTML=()=>`<span aria-hidden="true">←</span>${TABN[tab]}`;
 const TABS=Object.keys(TABN);
@@ -3748,10 +3811,8 @@ function drawProfile(){
   if(document.activeElement!==n)n.value=me.name||""; if(document.activeElement!==l)l.value=me.last||"";
   n.onchange=l.onchange=()=>{S.me={...(S.me||{}),name:n.value.trim().slice(0,40),last:l.value.trim().slice(0,60)};save();syncMeta();drawProfile()};
   // the portrait: a Dutch woman or man in Golden Age dress (S.me.av, so it goes along); tap to switch
-  const AV={v:"Judith Leyster, Zelfportret, ca. 1630",m:"Frans Hals, Portret van een man met een plooikraag, 1625"};
-  const av=AV[me.av]?me.av:"v";
-  $("pavi").src=`/art/av-${av}.jpg`; $("pcap").textContent=AV[av];
-  $("pav").onclick=()=>{S.me={...(S.me||{}),av:av==="v"?"m":"v"};save();drawProfile()};
+  // the avatar the learner picked (an earlier portrait, "v" or "m", falls back to the bitterbal)
+  $("pavi").innerHTML=avSVG(me.av); $("pav").onclick=avScreen;
   $("pnm").textContent=[me.name,me.last].filter(Boolean).join(" ")||"Profiel";
   // the level: chosen at the start (welcome screen, starttest), changed here with a list; the other tabs show only this level
   // the options are not translated by the observer (it skips <select>); uiT is defined further down, so it may not exist yet at the first render
@@ -5407,6 +5468,15 @@ const plusDay=t=>new Date(t).toLocaleDateString("nl-NL",{day:"numeric",month:"lo
 const plusLine=()=>{const p=acc.plus,c=acc.cfg.plus;
   if(!isPlus())return`${c.limit} keer per dag nakijken voor € ${c.price} per maand`;
   return p.status==="past_due"?"Je betaling is niet gelukt":!p.until?"Actief":p.ends?`Loopt af op ${plusDay(p.until)}`:`Actief · verlengt op ${plusDay(p.until)}`};
+// Kies je avatar: a grid of the avatars, the chosen one with an orange ring; a tap picks it and goes back to Profiel
+function avScreen(){
+  closePop();hush();TK=null;$("card").innerHTML="";
+  $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;window.scrollTo(0,0);
+  tBack(TABN[tab],home);
+  const cur=AVS[(S.me||{}).av]?S.me.av:"bal";
+  $("tbody").innerHTML=`<h2>Kies je avatar</h2><div class="avg">${Object.keys(AVS).map(k=>`<button type="button" data-av="${k}" aria-pressed="${k===cur}"><i>${avSVG(k)}</i><span lang="nl">${AVS[k].n}</span></button>`).join("")}</div>`;
+  document.querySelectorAll("#tbody [data-av]").forEach(b=>b.onclick=()=>{S.me={...(S.me||{}),av:b.dataset.av};save();home()});
+}
 function plusScreen(){
   if(!acc.cfg||!acc.cfg.plus)return home();
   closePop();hush();TK=null;$("card").innerHTML="";
@@ -5966,7 +6036,7 @@ const UI={
 "Bewaar je voortgang en laat je teksten nakijken.":["Keep your progress and get your texts checked.","احفظ تقدّمك واطلب تصحيح نصوصك.","İlerlemeni kaydet, metinlerini kontrol ettir.","अपनी प्रगति सहेजें और अपने पाठ जँचवाएँ।","保存进度，并批改你的文章。"],
 "Inloggen of account maken":["Log in or create an account","تسجيل الدخول أو إنشاء حساب","Giriş yap veya hesap oluştur","लॉग इन करें या खाता बनाएँ","登录或创建账户"],
 "Uitloggen":["Log out","تسجيل الخروج","Çıkış yap","लॉग आउट","退出登录"],
-"Ander portret":["Other portrait","صورة أخرى","Başka portre","दूसरा चित्र","换一幅肖像"],
+"Kies je avatar":["Choose your avatar","اختر صورتك الرمزية","Avatarını seç","अपना अवतार चुनें","选择你的头像"],
 "Al het andere in Bittertalen blijft gratis.":["Everything else in Bittertalen stays free.","كل شيء آخر في Bittertalen يبقى مجانيًا.","Bittertalen'deki diğer her şey ücretsiz kalır.","Bittertalen में बाकी सब मुफ़्त रहता है।","Bittertalen 的其他功能仍然免费。"],
 "Word Plus":["Get Plus","اشترك في Plus","Plus'a geç","Plus लें","开通 Plus"],
 "Abonnement beheren":["Manage subscription","إدارة الاشتراك","Aboneliği yönet","सदस्यता प्रबंधित करें","管理订阅"],
