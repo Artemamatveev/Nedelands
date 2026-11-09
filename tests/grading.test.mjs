@@ -14,7 +14,7 @@ async function handler(options={}){
     beta={messages:{create:async()=>{
       modelCalls++;
       if(options.providerFailure)throw Error('connection interrupted');
-      return {stop_reason:options.stopReason||'end_turn',model:'test-model',usage:{input_tokens:100,output_tokens:30},content:[{type:'text',text:JSON.stringify({tasks:[{passed:true,verdict:'Goed',corrected:'Ik kom later.',errors:[],scores:{inhoud:3,woorden:2,grammatica:2,spelling:2,samenhang:1}}]})}]};
+      return {stop_reason:options.stopReason||'end_turn',model:'test-model',usage:{input_tokens:100,output_tokens:30},content:[{type:'text',text:JSON.stringify({tasks:[{passed:options.claimPassed??true,verdict:'Goed',corrected:'Ik kom later.',errors:[],scores:options.scores||{inhoud:3,woorden:2,grammatica:2,spelling:2,samenhang:1}}]})}]};
     }}};
   }
   const values={
@@ -32,7 +32,7 @@ async function handler(options={}){
   const supa=new vm.SyntheticModule(Object.keys(values),function(){for(const [key,value]of Object.entries(values))this.setExport(key,value)},{context});
   const module=new vm.SourceTextModule(fs.readFileSync(new URL('api/check.js',root),'utf8'),{context});
   await module.link(name=>name==='@anthropic-ai/sdk'?sdk:supa);await module.evaluate();
-  const req={method:'POST',headers:{host:'example.test',origin:'https://example.test'},body:{...(options.part?{part:options.part}:{}),tasks:[{...(options.part?{kind:'z'}:{}),task:'Stuur een bericht',text:'Ik kom later. Personal test content.'}]}};
+  const req={method:'POST',headers:{host:'example.test',origin:'https://example.test'},body:{...(options.part?{part:options.part}:{}),tasks:[{...(options.part?{kind:options.kind||'z'}:{}),task:'Stuur een bericht',text:'Ik kom later. Personal test content.'}]}};
   const res={statusCode:200,status(n){this.statusCode=n;return this},json(body){this.body=body;return this}};
   await module.namespace.default(req,res);
   return {res,usage,quotas,logs,lims,modelCalls};
@@ -89,4 +89,34 @@ test('A Plus check that fails gives the learner the check back at the Plus allow
 test('Without a login only the free single checks, then a login answer',async()=>{
   const guest=await handler({guest:true});assert.equal(guest.res.statusCode,200);assert.equal(guest.res.body.free,1);
   const used=await handler({guest:true,freeLeft:-1});assert.equal(used.res.statusCode,401);assert.equal(used.res.body.error,'login');assert.equal(used.modelCalls,0);
+});
+
+test('Points decide voldoende, not the model: Schrijven A2 needs inhoud 2 and 7 of 10',async()=>{
+  const low=await handler({scores:{inhoud:2,woorden:1,grammatica:1,spelling:1,samenhang:1},claimPassed:true});
+  assert.equal(low.res.body.tasks[0].passed,false);
+  const ok=await handler({scores:{inhoud:2,woorden:2,grammatica:1,spelling:1,samenhang:1},claimPassed:false});
+  assert.equal(ok.res.body.tasks[0].passed,true);
+  const noContent=await handler({scores:{inhoud:1,woorden:2,grammatica:2,spelling:2,samenhang:1}});
+  assert.equal(noContent.res.body.tasks[0].passed,false);
+});
+test('Scores outside the scale are clamped, and inhoud 0 makes every score 0',async()=>{
+  const wild=await handler({scores:{inhoud:9,woorden:-3,grammatica:'2',spelling:1.6,samenhang:null}});
+  assert.deepEqual({...wild.res.body.tasks[0].scores},{inhoud:3,woorden:0,grammatica:2,spelling:2,samenhang:0});
+  const zero=await handler({scores:{inhoud:0,woorden:2,grammatica:2,spelling:2,samenhang:1}});
+  assert.deepEqual({...zero.res.body.tasks[0].scores},{inhoud:0,woorden:0,grammatica:0,spelling:0,samenhang:0});
+  assert.equal(zero.res.body.tasks[0].passed,false);
+});
+test('B1 rules: a sentence task needs both points, an e-mail 70% with inhoud 2, a short spoken task 2 of 3',async()=>{
+  const z1=await handler({part:'wb',kind:'z',scores:{inhoud:1,grammatica:1}});
+  assert.equal(z1.res.body.tasks[0].passed,true);
+  const z0=await handler({part:'wb',kind:'z',scores:{inhoud:1,grammatica:0}});
+  assert.equal(z0.res.body.tasks[0].passed,false);
+  const mail=await handler({part:'wb',kind:'m',scores:{inhoud:2,woorden:1,grammatica:1,spelling:1,samenhang:1}});
+  assert.equal(mail.res.body.tasks[0].passed,true); // 6 of 8 >= ceil(5.6)
+  const mailLow=await handler({part:'wb',kind:'m',scores:{inhoud:2,woorden:1,grammatica:1,spelling:0,samenhang:1}});
+  assert.equal(mailLow.res.body.tasks[0].passed,false); // 5 of 8
+  const k=await handler({part:'sb',kind:'k',scores:{inhoud:2,grammatica:0}});
+  assert.equal(k.res.body.tasks[0].passed,true);
+  const k1=await handler({part:'sb',kind:'k',scores:{inhoud:1,grammatica:1}});
+  assert.equal(k1.res.body.tasks[0].passed,false);
 });
