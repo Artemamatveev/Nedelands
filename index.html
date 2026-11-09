@@ -227,6 +227,9 @@ a.it{text-decoration:none} .it.ext::after{content:none}
 /* scroll down and the bar shrinks to its icons; scroll up and the names come back */
 .tabs.min{width:min(300px,calc(100vw - 24px))}
 .gate{padding:2px 0 12px}
+.gate .two{display:flex;flex-wrap:wrap}.gate .two button{flex:1 0 auto}
+.gate h3{margin:8px 0;font-size:var(--fs-b)}
+#plan .lesson-start{margin-top:8px}
 /* the level: two halves of one outlined button, the chosen one filled */
 .seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;background:color-mix(in srgb,var(--ink) 8%,var(--card));border-radius:var(--rc);margin-top:2px}
 .seg.minutes{grid-template-columns:repeat(3,minmax(0,1fr))}
@@ -572,6 +575,7 @@ body.vfull{overflow:hidden}
 :root[dir=rtl] .tabs .lens{left:auto;right:5px;transform:translateX(calc(var(--i,0) * -100%))}
 :root[data-desktop] main{overflow-x:visible}
 :root[data-desktop] header{border-image:linear-gradient(#132A6E 0 0) fill 0 // 0 100vmax}
+:root[data-desktop] main.big:has(#home:not([hidden])) header{height:156px}
 :root[data-desktop] main:is(:not(.big),:has(#home[hidden])) header{height:168px}
 :root[data-desktop] main:is(:not(.big),:has(#home[hidden])) header h1{bottom:28px}
 :root[data-desktop] header .art{max-width:calc(100% - 460px)}
@@ -4064,8 +4068,9 @@ function home(){
     const need=`oefendoel: ${passPc(k)}%`;
     const speech=["sp","sb"].includes(k)?'<span class="st">Uitspraak en tempo zijn niet beoordeeld.</span>':"";
     const st=ex?`<span class="st ${r.cls==="good"?"good":r.cls===""?"near":""}"><i></i>${r.st} · ${need}${/kende/.test(r.t)?" · je kende de meeste vragen al":""}</span>`
-      :`<span class="st">${r.pc!=null?"Bij het oefenen":"Nog niet geoefend"} · ${need}</span>`;
-    return`<button class="rd" data-e="${k}" aria-label="${PART[k]}, ${EX[k].min} minuten${r.pc!=null?", "+r.pc+"% goed":""}${ex?", "+r.st:""}">${icHTML(k)}<span class="rm"><b>${PART[k]}</b><small>${EX[k].min}&nbsp;min</small></span><strong class="rp${r.pc==null?" none":""}">${r.pc==null?"–":r.pc+"%"}${r.pc==null?"":"<small>goed</small>"}</strong><span class="bar pass" style="--pass:${passPc(k)}%"><i style="width:${r.pc||0}%"></i></span>${st}${speech}</button>`};
+      :`<span class="st">${r.pc!=null?need:"Nog niet geoefend · "+need}</span>`;
+    const scoreSource=ex?"Laatste proefexamen":"Oefeningen";
+    return`<button class="rd" data-e="${k}" aria-expanded="false">${icHTML(k)}<span class="rm"><b>${PART[k]}</b><small><span>Bekijk proefexamen</span> · <span>${EX[k].min} min</span></small></span><strong class="rp${r.pc==null?" none":""}">${r.pc==null?"–":r.pc+"%"}${r.pc==null?"":`<small>${scoreSource}</small>`}</strong><span class="bar pass" aria-hidden="true" style="--pass:${passPc(k)}%"><i style="width:${r.pc||0}%"></i></span>${st}${speech}</button>`};
   const lb=Object.values(S.bk||{}).filter(b=>b.t).sort((a,b)=>b.at-a.at)[0];
   const hs=S.hs||{},lh=GS.filter(c=>hs[c.id]).sort((a,b)=>hs[b.id]-hs[a.id])[0],gsDone=GS.filter(c=>gsItems(c).every(x=>(S.items[x.k]||{}).r)).length;
   // one row per part: tap it for a proefexamen; on the right how far you are
@@ -4074,15 +4079,16 @@ function home(){
     uitRow=`<div class="list">${itHTML(`data-x="uit"`,"Mijn examen","Echt examen gedaan? Vertel hoe het ging.",{ic:"uit",n:(n=>n?`${n} van 5`:null)((v==="B1"?["l1","lb","wb","sb","knm"]:["lz","ls","wr","sp","knm"]).filter(k=>(S.uit||{})[k]&&S.uit[k].ok).length)})}</div>`;
   // ONA and the participatieverklaring: on both levels (with the Staatsexamen you still do them apart)
   const onaRow=`<div class="list">${itHTML(`data-x="ona"`,"ONA en participatieverklaring","Niet voor iedereen: kijk of jij ze nodig hebt.",{ic:"ona",n:(n=>n?`${n} van 4`:null)(GP.filter(c=>c.ona&&(S.gp||{})[c.id]).length)})}</div>`;
-  if(v==="B1"){
-    $("exam").innerHTML=`<h2>Naar het examen</h2><p class="sub">Je score is het percentage goede antwoorden of punten. Het streepje is je oefendoel.</p><div class="list">${["l1","lb","wb","sb","knm"].map(part).join("")}</div>`
-      +`<div class="list"><a class="it ext" href="https://oefenexamensnt2.nl" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens Staatsexamen NT2 ↗</b></span><span class="d">Officieel, voor programma I. Liefst op een computer.</span></span></a></div>`+onaRow+uitRow;
-    $("parts").innerHTML=`<h2>Examenonderdelen</h2><p class="sub">Zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["l1","lb","wb","sb","knm"].map(row).join("")}</div>`;
-  }else{
-    $("exam").innerHTML=`<h2>Naar het examen</h2><p class="sub">Je score is het percentage goede antwoorden of punten. Het streepje is je oefendoel.</p><div class="list">${["lz","ls","wr","sp","knm"].map(part).join("")}</div>`
-      +`<div class="list"><a class="it ext" href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens van DUO ↗</b><small>15</small></span><span class="d">De echte, met echte stemmen. Liefst op een computer.</span></span></a></div>`+onaRow+uitRow;
-    $("parts").innerHTML=`<h2>Examenonderdelen</h2><p class="sub">Zonder tijd, met uitleg bij elk antwoord.</p><div class="list">${["lz","ls","wr","sp","knm"].map(row).join("")}</div>`;
-  }
+  const levelLabel=`<p class="ask">${LVL[v]}</p>`;
+  const officialExam=v==="B1"
+    ?`<div class="list"><a class="it ext" href="https://oefenexamensnt2.nl" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens Staatsexamen NT2 ↗</b></span><span class="d">Officieel, voor programma I. Liefst op een computer.</span></span></a></div>`
+    :`<div class="list"><a class="it ext" href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens van DUO ↗</b><small>15</small></span><span class="d">De echte, met echte stemmen. Liefst op een computer.</span></span></a></div>`;
+  $("exam").innerHTML=`${levelLabel}<h2>Proefexamens</h2>
+    <p class="sub">Oefen met een timer. Je krijgt je resultaat na afloop. Het streepje is je oefendoel.</p>
+    <div class="list">${parts().map(part).join("")}</div>`+officialExam+onaRow+uitRow;
+  $("parts").innerHTML=`${levelLabel}<h2>Oefenen zonder timer</h2>
+    <p class="sub">Korte oefeningen met feedback tijdens het oefenen.</p>
+    <div class="list">${parts().map(row).join("")}</div>`;
   $("gram").innerHTML=`<h2>Grammatica en woorden</h2><p class="sub">Rondes van 10 vragen.</p>`+(lvl()==="B1"
     ?`<div class="list">${["g1","w1","v1"].map(row).join("")}</div><h3 class="lh">Herhalen op A2-niveau</h3><div class="list">${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`
     :`<div class="list">${itHTML(`data-x="bg"`,"Beginnen","Twaalf korte lessen, voor als je net begint.",{ic:"bg",n:(n=>n?`${n} van ${BG.length}`:null)(BG.filter(bgDone).length)})}${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`);
@@ -4090,12 +4096,12 @@ function home(){
     +itHTML(`data-x="hist"`,"Geschiedenis van Nederland",lh?`Je was bij: ${lh.t}`:"Van de hunebedden tot nu.",{n:gsDone?`${gsDone} van ${GS.length}`:null,ic:"hist"})
     +itHTML(`data-x="media"`,"Luisteren en kijken","Nieuws, video's en podcasts.",{ic:"media"})
     +itHTML(`data-x="talk"`,"Gesprekken","Bel de dokter, koop brood, praat met de buren.",{n:(n=>n?`${n} van ${GP.filter(c=>!c.ona).length}`:null)(GP.filter(c=>!c.ona&&(S.gp||{})[c.id]).length),ic:"talk"});
-  $("mine").innerHTML=itHTML(`data-x="stats"`,"Mijn zwakke punten","Oefen waar je de meeste fouten maakt.",{ic:"stats"})
-    +((S.errs||[]).length?itHTML(`data-x="errs"`,"Mijn fouten","Uit je eigen teksten en antwoorden.",{n:S.errs.length,ic:"errs"}):"")
+  $("mine").innerHTML=itHTML(`data-x="stats"`,"Kies een lastig onderwerp","Bekijk waar je het vaakst fouten maakt en kies wat je wilt oefenen.",{ic:"stats"})
+    +((S.errs||[]).length?itHTML(`data-x="errs"`,"Oefen met je eigen fouten","Kies de juiste versie van zinnen uit je eerdere teksten en antwoorden.",{n:S.errs.length,ic:"errs"}):"")
     +((S.words||[]).length?itHTML(`data-x="words"`,"Mijn woorden","Die je bij het lezen hebt bewaard.",{n:S.words.length,ic:"words"}):"");
   document.querySelectorAll("#exam button,#parts button,#gram button,#books button,#mine button").forEach(b=>b.onclick=()=>{const d=b.dataset;
     if(d.s)build(d.s);
-    else if(d.e)startExam(d.e);
+    else if(d.e)examGate(d.e,true);
     else if(d.x==="stats")stats();
     else if(d.x==="books")library();
     else if(d.x==="media")media();
@@ -4317,10 +4323,13 @@ const wbTasks=(nz,no)=>{const a=byFresh(shuffle(ITEMS.filter(x=>x.sec==="wb"))),
 // Spreken B1: nk short tasks, then nm medium ones, the least-seen first; 8 + 8 as on the exam
 const sbTasks=(nk,nm)=>{const a=byFresh(shuffle(ITEMS.filter(x=>x.sec==="sb")));return a.filter(q=>q.kind==="k").slice(0,nk).concat(a.filter(q=>q.kind==="m").slice(0,nm))};
 const byFresh=a=>a.map(q=>[q,seenN(q)]).sort((x,y)=>x[1]-y[1]).map(x=>x[0]);
+function examCheckLimit(e){
+  const cost=e==="wr"?2:e==="wb"?4:e==="sp"||e==="sb"?6:0; // as checkCost() in api/_supa.js
+  return cost&&acc.cfg&&(!acc.user||acc.left!=null&&acc.left<cost)?cost:0;
+}
 // Schrijven and Spreken are graded by Claude: without a login, or with too few checks left today, say so first
 function startExam(e,go){
-  const cost=e==="wr"?2:e==="wb"?4:e==="sp"||e==="sb"?6:0; // as checkCost() in api/_supa.js
-  if(cost&&acc.cfg&&!go&&(!acc.user||acc.left!=null&&acc.left<cost))return examGate(e,cost);
+  if(!go&&examCheckLimit(e))return examGate(e);
   build("exam",{id:"exam",exam:1,part:e,keep:["lz","l1","ls","lb","sp","wb","sb"].includes(e),write:isWr(e),speak:e==="sp"||e==="sb",...EX[e],pool:()=>{if(e==="wb")return wbTasks(8,3);if(e==="sb")return sbTasks(8,8);const a=byFresh(shuffle(ITEMS.filter(x=>x.sec===e)));
     if(["lz","l1","ls","lb"].includes(e)){const g={};a.forEach(q=>{const t=q.text||q.say;(g[t]=g[t]||[]).push(q)}); // whole texts and fragments, as on the exam; the least-seen first
       let T=shuffle(Object.values(g)).map(x=>[x.sort((p,q)=>p.k<q.k?-1:1),x.reduce((s,q)=>s+seenN(q),0)/x.length]).sort((x,y)=>x[1]-y[1]).map(x=>x[0]);
@@ -4407,13 +4416,16 @@ function planHTML(){
   // new here at A2: where to begin. Gone after the test, or once someone has clearly been practising
   const first=lvl()==="A2"&&!S.start&&Object.keys(S.items).length<30?`<div class="list">${itHTML(`data-p="t:start"`,"Waar begin ik?","Twaalf korte vragen. Daarna weet je waar je kunt beginnen.",{ic:"bg"})}</div>`:"";
   const date=new Date().toLocaleDateString("nl-NL",{weekday:"long",day:"numeric",month:"long"});
-  // the next step is a big card with a detail of a painting; the others are small rows; above them how far you are today
-  return`<p class="ask">${date}</p><h2>Je les van vandaag</h2>
+  const next=steps[nx];
+  const quiet=next&&/^q:(sp|sb)$/.test(next.id)&&steps.find(t=>!done.includes(t.id)&&!/^q:(sp|sb)$/.test(t.id));
+  const lessonStart=next?`<button class="btn wide lesson-start" data-p="${next.id}"><span>${nd?"Ga verder met de les":"Start de les"}</span> · <span>${next.t}</span></button>`:"";
+  return`<p class="ask"><span>${date}</span> · <span>${LVL[lvl()]}</span></p><h2>Je les van vandaag</h2>
     ${writingDrafts().map(x=>`<button class="ghost wide" data-draft="${x.section}" data-exam="${Number(x.exam)}" data-draft-slot="${esc(x.slot)}"><span>Verder met je concept</span> · ${x.exam?EX[x.section].t:PART[x.section]}${x.slot?" · <span>Gerichte oefening</span>":""}</button>`).join("")}
     <span>Hoeveel tijd heb je?</span><div class="seg minutes" role="group" aria-label="Hoeveel tijd heb je?">${[10,20,40].map(n=>`<button data-budget="${n}" aria-pressed="${n===(S.minutes||20)}">${n} min</button>`).join("")}</div>
     <p class="note"><span>Geschatte duur</span> · ${P.minutes||steps.length*5} min</p>
     <div class="dayp"><span aria-hidden="true">${steps.map(t=>`<i${done.includes(t.id)?' class="on"':""}></i>`).join("")}</span><small>${nd} van ${steps.length} klaar</small></div>
-    <p class="sub">${intro}</p>${first}
+    <p class="sub">${intro}</p>${lessonStart}
+    ${quiet?`<button class="ghost wide" data-p="${quiet.id}"><span>Oefen zonder microfoon</span> · <span>${quiet.t}</span></button>`:""}${first}
     <ol class="steps">${steps.map((t,i)=>{const ok=done.includes(t.id),nxt=i===nx&&!ok,k=t.id.split(":")[1];
       return`<li><button class="step${ok?" ok":""}" data-p="${t.id}"${nxt?' aria-current="step"':""}><i class="sic">${ok?'<svg viewBox="0 0 24 24" aria-hidden="true"><path class="s" d="M5.5 12.5l4.2 4.2 8.8-9"/></svg>':IC[k]?`<svg viewBox="0 0 24 24" aria-hidden="true">${IC[k]}</svg>`:i+1}</i><b>${t.t}</b><span>${t.s}</span><em class="c">›</em></button></li>`}).join("")}</ol>
     ${P.bg?"":`<button class="ghost wide" data-p="s:mix">Meer tijd? Mix van de dag</button>`}`;
@@ -4700,14 +4712,27 @@ function feedback(ok,q){
   $("next").onclick=()=>{pos++;show()}; $("next").focus();
   if(q.tts&&q.big!==q.tts&&canSpeak)speak(q.tts); // description → word: hear the Dutch word
 }
-function examGate(e,cost){
+function examGate(e,preview=false){
   if(tab!=="examen")setTab("examen");
-  document.querySelectorAll("#exam .gate").forEach(x=>x.remove());
+  document.querySelectorAll("#exam .gate").forEach(x=>{
+    x.previousElementSibling.setAttribute("aria-expanded","false");x.remove()
+  });
   const row=document.querySelector(`#exam [data-e="${e}"]`),d=document.createElement("div"); d.className="gate";
-  d.innerHTML=`<p class="note">${acc.user?`Je kunt vandaag nog ${Math.max(0,acc.left)} keer laten nakijken, en dit proefexamen telt als ${cost}. Zonder nakijken zie je aan het eind alleen de voorbeeldantwoorden.`
-    :"Je bent niet ingelogd. Dan kijkt Claude je antwoorden niet na, en zie je aan het eind alleen de voorbeeldantwoorden."}</p>
-    <div class="two">${acc.user?"":`<button class="btn" id="glog">Inloggen</button>`}<button class="ghost" id="ggo">Toch beginnen</button></div>`;
-  row.after(d); d.scrollIntoView({block:"nearest",behavior:"smooth"});
+  const cost=examCheckLimit(e), exam=EX[e], draft=isWr(e)&&getDraft(e,true);
+  const countLabel=isWr(e)||e==="sp"||e==="sb"?"opdrachten":"vragen";
+  const countPrefix=["lz","l1","ls","lb"].includes(e)?"<span>Maximaal</span> ":"";
+  const details=preview?`<h3 id="exam-preview-title" tabindex="-1"><span>Proefexamen</span> · <span>${PART[e]}</span></h3>
+    <p class="note">${draft?`<span>Je hebt een opgeslagen concept.</span>`:`<span>${exam.min} min</span> · ${countPrefix}${exam.n} <span>${countLabel}</span><br><span>De timer start zodra je begint.</span>`}</p>
+    <p class="note"><span>Stoppen? Kies × en bevestig.</span></p>`:"";
+  const warning=cost?`<p class="note">${acc.user?`Je kunt vandaag nog ${Math.max(0,acc.left)} keer laten nakijken, en dit proefexamen telt als ${cost}. Zonder nakijken zie je aan het eind alleen de voorbeeldantwoorden.`
+    :"Je bent niet ingelogd. Dan kijkt Claude je antwoorden niet na, en zie je aan het eind alleen de voorbeeldantwoorden."}</p>`:"";
+  d.innerHTML=`${details}${warning}<div class="two"><button class="ghost" id="gback">Terug</button>
+    ${cost&&!acc.user?`<button class="ghost" id="glog">Inloggen</button>`:""}
+    <button class="btn" id="ggo">${draft?"Verder met je concept":cost?"Toch beginnen":"Start proefexamen"}</button></div>`;
+  d.id="exam-preview";
+  row.after(d);row.setAttribute("aria-expanded","true");d.scrollIntoView({block:"nearest"});
+  ($("exam-preview-title")||$("ggo")).focus({preventScroll:true});
+  $("gback").onclick=()=>{d.remove();row.setAttribute("aria-expanded","false");row.focus()};
   if($("glog"))$("glog").onclick=()=>setTab("profiel");
   $("ggo").onclick=()=>startExam(e,1);
 }
@@ -6591,13 +6616,23 @@ const UI={
 "Je kunt zonder account oefenen. Met een account kun je je voortgang op meerdere apparaten bewaren.":["You can practise without an account. An account saves your progress across devices.","يمكنك التدرّب من دون حساب. باستخدام حساب يمكنك حفظ تقدّمك على عدة أجهزة.","Hesap açmadan alıştırma yapabilirsin. Hesap açarsan ilerlemeni birden fazla cihazda saklayabilirsin.","आप बिना खाते के अभ्यास कर सकते हैं। खाते से आपकी प्रगति कई डिवाइस पर सहेजी जा सकती है।","无需账户即可练习。登录账户后可以在多台设备上保存进度。"],
 "Hoe zeg ik mijn abonnement op?":["How do I cancel my subscription?","كيف ألغي اشتراكي؟","Aboneliğimi nasıl iptal ederim?","मैं अपनी सदस्यता कैसे रद्द करूँ?","如何取消订阅？"],
 "Log in met het account waarmee je Plus hebt genomen. Open Bittertalen Plus in Profiel en kies Abonnement beheren.":["Sign in with the account you used to subscribe to Plus. Open Bittertalen Plus in Profile and select Manage subscription.","سجّل الدخول بالحساب الذي اشتركت به في Plus. افتح Bittertalen Plus من ملفك الشخصي واختر إدارة الاشتراك.","Plus aboneliğini başlattığın hesapla giriş yap. Profil’de Bittertalen Plus’ı aç ve Aboneliği yönet’i seç.","जिस खाते से आपने Plus लिया था, उससे लॉग इन करें। प्रोफ़ाइल में Bittertalen Plus खोलें और सदस्यता प्रबंधित करें चुनें।","使用订阅 Plus 的账户登录。在「我的」中打开 Bittertalen Plus，然后选择「管理订阅」。"],
-"Proefexamens":["Practice exams", "امتحانات تجريبية", "Deneme sınavları", "अभ्यास परीक्षाएँ", "模拟考试"],
 "Vandaag":["Today","اليوم","Bugün","आज","今天"],
 "Examen":["Exam","الامتحان","Sınav","परीक्षा","考试"],
 "Oefenen":["Practise","التدرّب","Alıştırma","अभ्यास","练习"],
 "Herhalen":["Review","المراجعة","Tekrar","दोहराएँ","复习"],
 "Profiel":["Profile","ملفي","Profil","प्रोफ़ाइल","我的"],
 "Onderdelen":["Sections","الأقسام","Bölümler","भाग","部分"],
+"Start de les":["Start the lesson", "ابدأ الدرس", "Derse başla", "पाठ शुरू करें", "开始课程"],
+"Ga verder met de les":["Continue the lesson", "تابع الدرس", "Derse devam et", "पाठ जारी रखें", "继续课程"],
+"Oefen zonder microfoon":["Practise without a microphone", "تدرّب بدون ميكروفون", "Mikrofonsuz alıştırma yap", "माइक्रोफ़ोन के बिना अभ्यास करें", "不用麦克风练习"],
+"Proefexamen":["Practice exam", "امتحان تجريبي", "Deneme sınavı", "अभ्यास परीक्षा", "模拟考试"],
+"Start proefexamen":["Start practice exam", "ابدأ الامتحان التجريبي", "Deneme sınavına başla", "अभ्यास परीक्षा शुरू करें", "开始模拟考试"],
+"Je hebt een opgeslagen concept.":["You have a saved draft.", "لديك مسودة محفوظة.", "Kaydedilmiş bir taslağın var.", "आपका एक ड्राफ़्ट सहेजा गया है।", "你有一份已保存的草稿。"],
+"Maximaal":["Up to", "حتى", "En fazla", "अधिकतम", "最多"],
+"vragen":["questions", "أسئلة", "soru", "प्रश्न", "道题"],
+"opdrachten":["tasks", "مهام", "görev", "कार्य", "项任务"],
+"De timer start zodra je begint.":["The timer starts when you begin.", "يبدأ المؤقت عند البدء.", "Başladığında süre işlemeye başlar.", "शुरू करते ही टाइमर चालू होगा।", "开始后计时器启动。"],
+"Stoppen? Kies × en bevestig.":["To stop, select × and confirm.", "للإيقاف، اختر × وأكّد.", "Bırakmak için × işaretini seç ve onayla.", "रोकने के लिए × चुनें और पुष्टि करें।", "要退出，请选择 × 并确认。"],
 "Je les van vandaag":["Today's lesson","درس اليوم","Bugünkü dersin","आज का पाठ","今天的课程"],
 "Van elk onderdeel een beetje.":["A little of every part.","القليل من كل قسم.","Her bölümden biraz.","हर भाग से थोड़ा-थोड़ा।","每个部分都练一点。"],
 "Alles is klaar. Tot morgen!":["All done. See you tomorrow!","تم كل شيء. إلى الغد!","Hepsi tamam. Yarın görüşürüz!","सब पूरा हुआ। कल मिलते हैं!","全部完成。明天见！"],
@@ -6626,6 +6661,17 @@ const UI={
 "Eén fragment met vragen":["One fragment with questions","مقطع واحد مع أسئلة","Sorulu bir kayıt","प्रश्नों वाला एक अंश","一段录音和问题"],
 "10 vragen uit alles":["10 questions from everything","10 أسئلة من كل شيء","Her konudan 10 soru","हर विषय से 10 प्रश्न","全部内容中的 10 个问题"],
 "Mix van de dag":["Mix of the day","مزيج اليوم","Günün karması","आज का मिक्स","今日混合练习"],
+"Bekijk proefexamen":["View practice exam", "اعرض الامتحان التجريبي", "Deneme sınavını gör", "अभ्यास परीक्षा देखें", "查看模拟考试"],
+"Laatste proefexamen":["Last practice exam", "آخر امتحان تجريبي", "Son deneme sınavı", "पिछली अभ्यास परीक्षा", "上次模拟考试"],
+"Oefeningen":["Exercises", "تمارين", "Alıştırmalar", "अभ्यास", "练习"],
+"Proefexamens":["Practice exams", "امتحانات تجريبية", "Deneme sınavları", "अभ्यास परीक्षाएँ", "模拟考试"],
+"Oefen met een timer. Je krijgt je resultaat na afloop. Het streepje is je oefendoel.":["Practise with a timer. You get your result at the end. The mark shows your practice target.", "تدرّب باستخدام مؤقت. تظهر نتيجتك في النهاية. تشير العلامة إلى هدفك في التدريب.", "Süre tutarak alıştırma yap. Sonucunu bitirince görürsün. Çizgi alıştırma hedefini gösterir.", "टाइमर के साथ अभ्यास करें। नतीजा अंत में मिलेगा। निशान आपका अभ्यास लक्ष्य दिखाता है।", "限时练习，结束后查看结果。短线表示练习目标。"],
+"Oefenen zonder timer":["Practise without a timer", "تدرّب بدون مؤقت", "Süre tutmadan alıştırma yap", "बिना टाइमर के अभ्यास करें", "不限时练习"],
+"Korte oefeningen met feedback tijdens het oefenen.":["Short exercises with feedback as you go.", "تمارين قصيرة مع ملاحظات أثناء التدريب.", "Alıştırma sırasında geri bildirim veren kısa çalışmalar.", "छोटे अभ्यास, साथ में फ़ीडबैक।", "简短练习，边做边获得反馈。"],
+"Kies een lastig onderwerp":["Choose a difficult topic", "اختر موضوعًا صعبًا", "Zorlandığın bir konu seç", "कोई कठिन विषय चुनें", "选择一个难点"],
+"Bekijk waar je het vaakst fouten maakt en kies wat je wilt oefenen.":["See where you make the most mistakes and choose what to practise.", "اطّلع على أكثر مواضع أخطائك واختر ما تريد التدرّب عليه.", "En sık nerede hata yaptığını gör ve ne çalışacağını seç.", "देखें कि सबसे ज़्यादा गलतियाँ कहाँ होती हैं और चुनें कि किसका अभ्यास करना है।", "查看最常出错的地方，再选择练习内容。"],
+"Oefen met je eigen fouten":["Practise with your own mistakes", "تدرّب على أخطائك", "Kendi hatalarınla alıştırma yap", "अपनी गलतियों से अभ्यास करें", "用自己的错题练习"],
+"Kies de juiste versie van zinnen uit je eerdere teksten en antwoorden.":["Choose the correct version of sentences from your earlier texts and answers.", "اختر الصيغة الصحيحة لجمل من نصوصك وإجاباتك السابقة.", "Önceki metin ve yanıtlarındaki cümlelerin doğru biçimini seç.", "अपने पिछले लेखों और जवाबों के वाक्यों का सही रूप चुनें।", "从你之前的文章和答案中选出句子的正确版本。"],
 "Naar het examen":["To the exam","نحو الامتحان","Sınava doğru","परीक्षा की ओर","备考进度"],
 "Inburgering A2":["Integration A2","الاندماج A2","Uyum A2","इंटीग्रेशन A2","融入考试 A2"],
 "Staatsexamen B1":["State exam B1","امتحان الدولة B1","Devlet sınavı B1","राज्य परीक्षा B1","国家考试 B1"],
