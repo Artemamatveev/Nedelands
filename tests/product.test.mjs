@@ -153,3 +153,12 @@ test('Every example answer in Gesprekken passes its own keyword check',async()=>
   const bad=JSON.parse(a.run(`JSON.stringify(GP.flatMap(c=>c.d.map((l,i)=>[c.id+"#"+i,l]).filter(([,l])=>!gpFits(l.k,l.m.replace(/\\[[^\\]]*\\]/g,"Sara"))).map(x=>x[0])))`));
   assert.deepEqual(bad,[]);
 });
+test('History chapter years are translated in the menus, Dutch stays as it is',async()=>{
+  const a=await app();
+  const t=(l,y)=>a.run(`LANG=${JSON.stringify(l)};LI=LCODE.indexOf(LANG);uiR(${JSON.stringify(y)})`);
+  assert.equal(t('en','ca. 3400–3100 v.Chr.'),'c. 3400–3100 BC');
+  assert.equal(t('en','12 v.Chr. – ca. 400'),'12 BC – c. 400');
+  assert.equal(t('tr','1957–nu'),'1957–bugün');
+  assert.equal(t('zh','ca. 1000–1500'),'约1000–1500');
+  assert.equal(t('en','1568–1648'),null);
+});

@@ -576,7 +576,8 @@ main:is(:not(.big),:has(#home[hidden])) header .lang{top:6px;height:32px} /* the
 .prow input:not([switch]){flex:1;min-width:0;height:44px;padding:0;border:0;border-radius:0;background:none;font-size:var(--fs-b);font-weight:400;text-align:var(--te);color:var(--soft)}
 .prow input:not([switch]):focus{color:var(--ink)}
 .pickrow{position:relative}
-.pickrow b{flex:1;min-width:0;font-weight:400;color:var(--soft);text-align:var(--te);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pickrow>span{flex:0 1 auto;min-width:0}
+.pickrow b{flex:1 0 auto;max-width:62%;font-weight:400;color:var(--soft);text-align:var(--te);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pickrow svg{flex:none;width:14px;height:14px;fill:none;stroke:var(--soft);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 .pickrow select{position:absolute;inset:0;width:100%;height:100%;opacity:0;font-size:16px;border:0;cursor:pointer}
 .pg .tog{margin:0}
@@ -6562,6 +6563,15 @@ Object.assign(UI,{
   "Schrijfopdracht":["Writing task","مهمة كتابة","Yazma görevi","लेखन कार्य","写作题"]
 });
 const UIR=[
+ // the years of a history chapter (GS .y): "ca. 3400–3100 v.Chr.", "12 v.Chr. – ca. 400", "ca. 1000–1500", "1957–nu"
+ [/^(ca\. )?(\d+)( v\.Chr\.)?(?:(\s?–\s?)(ca\. )?(\d+|nu)( v\.Chr\.)?)?$/,(m,c1,a,bc1,sep,c2,b,bc2)=>{
+   if(!c1&&!bc1&&!c2&&!bc2&&b!=="nu")return m;
+   const ca=["c. ","نحو ","yak. ","लगभग ","约"][LI], now=["now","الآن","bugün","अब","至今"][LI],
+     bc=n=>[`${n} BC`,`${n} ق.م.`,`MÖ ${n}`,`${n} ई.पू.`,`公元前${n}年`][LI];
+   if(!b)return(c1?ca:"")+(bc1?bc(a):a);
+   if(b==="nu")return(c1?ca:"")+a+"–"+now;
+   if(bc2&&!bc1)return(c1?ca:"")+bc(a+"–"+b); // one range before Christ
+   return(c1?ca:"")+(bc1?bc(a):a)+sep+(c2?ca:"")+(bc2?bc(b):b)}],
  [/^1 opdracht$/,["1 writing task","مهمة كتابة واحدة","1 yazma görevi","1 लेखन कार्य","1 道写作题"]],
  [/^(\d+) opdrachten$/,["$1 writing tasks","$1 مهام كتابة","$1 yazma görevi","$1 लेखन कार्य","$1 道写作题"]],
  [/^1 proefexamen$/,["1 practice exam","امتحان تجريبي واحد","1 deneme sınavı","1 अभ्यास परीक्षा","1 次模拟考试"]],
