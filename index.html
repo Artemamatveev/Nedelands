@@ -572,11 +572,11 @@ body.vfull{overflow:hidden}
 :root[data-desktop] header:has(.streak:not(:empty)) .lang{top:110px}
 :root[data-desktop] main:has(#home:not([hidden])){
   width:calc(100% - 128px);
-  margin-right:max(112px,calc((100% - 1160px)/2));
+  margin-left:max(112px,calc((100% - 1160px)/2));
   padding-bottom:64px;
 }
 :root[data-desktop] .tabs{
-  left:auto;right:16px;top:50%;bottom:auto;transform:translateY(-50%);
+  left:16px;top:50%;bottom:auto;transform:translateY(-50%);
   flex-direction:column;width:96px;padding:5px;border-radius:var(--r);
   touch-action:auto;transition:none;
 }
@@ -3995,7 +3995,7 @@ function home(){
   drawProfile();
   setTab(tab);
 }
-// The start screen has five tabs in a floating bar, placed on the right in desktop browsers.
+// The start screen has five tabs in a floating bar, placed on the left in desktop browsers.
 // The tab you were on is kept while you practise: every back button goes back to it and is named after it.
 // Only Vandaag has the big painting and its label; the other tabs get the narrow strip, like an inner screen.
 let tab="vandaag";
