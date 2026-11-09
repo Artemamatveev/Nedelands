@@ -5,7 +5,7 @@
 // app's background work, so the refresh of the 1 MB page often never finished. With nothing cached yet: the network. Other pages (privacy, over) the same, cached under their own address, never as "/".
 // Paintings, photos and icons: from the cache, refreshed in the background. The dictionary (7 MB): cache only.
 // Recorded voices (audio/): cached on first play. api/ (grading, new texts) always goes to the network.
-const CACHE = "nl-a2-v8", CORE = ["/", "/manifest.json", "/apple-touch-icon.png", "/study/language-v1.js", "/study/progress-v1.js", "/study/writing-v1.js"];
+const CACHE = "nl-a2-v9", CORE = ["/", "/manifest.json", "/apple-touch-icon.png", "/study/language-v1.js", "/study/progress-v1.js", "/study/writing-v1.js"];
 
 // Install must not fail: on the user's iPhone a new sw.js never took over, most likely because caching the 1 MB page
 // at install did not finish. So each file is tried on its own and a miss is fine (the page comes from the network at the
