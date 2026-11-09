@@ -698,6 +698,17 @@ h2,h3,.verb,.step b,.it b{text-wrap:balance} p,.d,.sub,.note{text-wrap:pretty}
 .writing-details{margin-block:18px}
 .writing-details h2{margin-block-start:24px}
 
+.site-footer{display:grid;gap:20px;margin-block-start:24px;padding-block:20px;color:var(--ink);font-size:var(--fs-m)}
+.site-footer p{margin:6px 0 0;color:var(--soft)}
+.site-footer h3{margin:0 0 4px;font-size:var(--fs-b);font-weight:600}
+.site-footer ul{list-style:none;padding:0;margin:0}
+.site-footer :is(a,button){display:inline-flex;align-items:center;min-height:44px;color:var(--blue);text-decoration:underline;text-underline-offset:3px}
+.site-footer button{background:none;border:0;padding:0;font:inherit;text-align:start;cursor:pointer}
+#welcome .site-footer{width:100%;max-width:400px;flex:none}
+@media(min-width:600px){#home .site-footer{grid-template-columns:1.4fr 1fr 1fr}}
+.site-help details{border-block-start:1px solid var(--line);padding-block:8px}
+.site-help summary{min-height:44px;padding-block:10px;cursor:pointer;font-weight:600}
+
 </style>
 </head>
 <body>
@@ -740,6 +751,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
       <div class="pg" id="plinks"></div>
     </section>
     <section class="tile" data-tab="herhalen"><h2>Herhalen</h2><div class="list" id="mine"></div></section>
+    <footer class="site-footer tile" id="site-footer"></footer>
   </div>
   <div id="welcome" hidden></div>
   <div id="move" hidden></div>
@@ -2402,9 +2414,70 @@ function bindLogin(el,x,pre,mail){
   el.querySelectorAll("[data-login]").forEach(b=>b.onclick=()=>{if(ok(b.dataset.login))login(b.dataset.login)});
 }
 function welcome(){$("home").hidden=true;$("welcome").hidden=false;window.scrollTo(0,0);drawWelcome()}
+function siteFooter(){
+  return `<div><h3>Bittertalen</h3><p>Oefen gratis voor het inburgeringsexamen A2 en het Staatsexamen NT2 B1.</p>
+    <a href="/over">Over Bittertalen</a></div>
+    <div><h3>Oefenen en examens</h3><ul>
+      <li><button type="button" data-site="A2">A2 oefenen</button></li>
+      <li><button type="button" data-site="B1">B1 oefenen</button></li>
+      <li><button type="button" data-site="free">Gratis oefenvraag</button></li>
+      <li><button type="button" data-site="exam">Uitleg over de examens</button></li>
+      <li><button type="button" data-site="prices">Prijzen</button></li>
+    </ul></div>
+    <div><h3>Hulp</h3><ul>
+      <li><button type="button" data-site="faq">Veelgestelde vragen</button></li>
+      <li><a href="mailto:privacy@bittertalen.nl">Contact</a></li>
+      <li><a href="/privacy">Privacyverklaring</a></li>
+      <li><button type="button" data-site="cancel">Abonnement opzeggen</button></li>
+    </ul></div>`;
+}
+function tryOne(){
+  const section=lvl()==="B1"?"l1":"lz";
+  build(section,{...SEC.find(x=>x.id===section),n:1});
+}
+function siteHelp(topic){
+  $("home").hidden=true;$("talk").hidden=false;window.scrollTo(0,0);
+  tBack(TABN[tab],home);
+  if(topic==="exam"){
+    $("tbody").innerHTML=`<h2 tabindex="-1">Uitleg over de examens</h2>
+      <p>Op A2 oefen je voor het inburgeringsexamen. Op B1 oefen je voor het Staatsexamen NT2, Programma I.</p>
+      <p>Bij Bittertalen kun je op beide niveaus lezen, luisteren, schrijven en spreken oefenen.</p>
+      <button class="btn wide" id="site-exams">Proefexamens</button>`;
+    $("site-exams").onclick=()=>{
+      setTab("examen");home();
+      const heading=$("exam").querySelector("h2");heading.setAttribute("tabindex","-1");heading.focus();
+    };
+  }else{
+    $("tbody").innerHTML=`<div class="site-help"><h2 tabindex="-1">${topic==="prices"?"Prijzen":"Veelgestelde vragen"}</h2>
+      <details${topic==="prices"?" open":""}><summary>Wat kost oefenen?</summary>
+      <p>Oefeningen en proefexamens zijn gratis. Met Bittertalen Plus kun je elke dag vaker teksten en antwoorden laten nakijken.</p></details>
+      <details><summary>Heb ik een account nodig?</summary>
+      <p>Je kunt zonder account oefenen. Met een account kun je je voortgang op meerdere apparaten bewaren.</p></details>
+      <details${topic==="cancel"?" open":""}><summary>Hoe zeg ik mijn abonnement op?</summary>
+      <p>Log in met het account waarmee je Plus hebt genomen. Open Bittertalen Plus in Profiel en kies Abonnement beheren.</p></details></div>`;
+  }
+  $("tbody").querySelector("h2").focus();
+}
+document.addEventListener("click",e=>{
+  const b=e.target.closest(".site-footer button[data-site]");
+  if(!b)return;
+  if(!$("welcome").hidden){lsSet(WEL,"1");acc.msg="";acc.step=null}
+  const action=b.dataset.site;
+  if(action==="A2"||action==="B1"){setLvl(action);setTab("oefenen")}
+  home();
+  if(action==="A2"||action==="B1"){
+    const h=$("parts").querySelector("h2");h.setAttribute("tabindex","-1");h.focus();
+  }else if(action==="free")tryOne();
+  else if(acc.cfg?.plus&&(action==="prices"||action==="cancel"&&acc.user&&acc.plus&&acc.plus.status!=="canceled")){
+    plusMsg="";plusScreen();
+    const target=action==="cancel"&&$("pman")||$("plusS");
+    if(target.id==="plusS")target.setAttribute("tabindex","-1");
+    target.focus();
+  }else siteHelp(action);
+});
 function drawWelcome(){
   // A window like Yandex ID (the user's wish): one rounded card on the painting of the day, the logo and the login
-  // block (no level: the starttest asks it, Profiel changes it); under the card on the painting what an account gives, the privacy link and the painting's name.
+  // block; under the card on the painting are the account benefits, the painting's name and the site footer.
   // No name here: the e-mail is enough, Google and the others bring theirs, and Profiel has the fields.
   const el=$("welcome"),p=ART[today()%ART.length],first=!lsGet(WEL),mail=$("wmail")?$("wmail").value:acc.mail||"";
   const logo=document.querySelector("header h1 [aria-hidden]");
@@ -2414,10 +2487,10 @@ function drawWelcome(){
     +(first && !acc.step?`<p>Oefen Nederlands met een korte leesopdracht.</p><button class="btn wide" id="wtry">Probeer één vraag</button><details><summary>Inloggen of account maken</summary>${loginHTML("w")}</details>`:loginHTML("w"))+(acc.msg?`<p class="note">${esc(acc.msg)}</p>`:"")
     +`<button class="ghost wide" id="wlater">${first?"Eerst rondkijken":"Terug"}</button></div>
     <div class="wfoot"><p>Met een account blijft je voortgang bewaard, ook op je andere apparaten, en kijkt Claude je teksten en antwoorden na.</p>
-    <p><a href="/privacy" target="_blank" rel="noopener">Privacyverklaring</a></p><p class="wart">${p.a} · ${p.t} · ${p.m}</p></div>`;
+    <p class="wart">${p.a} · ${p.t} · ${p.m}</p></div>
+    <footer class="site-footer tile">${siteFooter()}</footer>`;
   if($("wtry"))$("wtry").onclick=()=>{
-    lsSet(WEL,"1"); home();const section=lvl()==="B1"?"l1":"lz";
-    build(section,{...SEC.find(x=>x.id===section),n:1});
+    lsSet(WEL,"1");home();tryOne();
   };
   bindLogin(el,"w",null,mail);
   $("wlater").onclick=()=>{lsSet(WEL,"1");acc.msg="";acc.step=null;home()};
@@ -6499,6 +6572,26 @@ if(OLD==="nedelands.vercel.app")location.replace(NEWURL); else if(OLD==="bittert
 const LANGS={nl:{n:"Nederlands",s:"NL",c:"nl"},en:{n:"English",s:"EN",c:"en"},ar:{n:"العربية",s:"عربي",c:"ar"},tr:{n:"Türkçe",s:"TR",c:"tr"},hi:{n:"हिन्दी",s:"हिं",c:"hi"},zh:{n:"中文",s:"中文",c:"zh-Hans"}};
 const LCODE=["en","ar","tr","hi","zh"]; // the order of the translations in every row of UI and UIR
 const UI={
+"Oefen gratis voor het inburgeringsexamen A2 en het Staatsexamen NT2 B1.":["Practise for the A2 civic integration exam and the B1 State Exam NT2 for free.","تدرّب مجانًا لامتحان الاندماج A2 وامتحان الدولة NT2 B1.","A2 uyum sınavına ve B1 NT2 devlet sınavına ücretsiz hazırlan.","A2 नागरिक एकीकरण परीक्षा और B1 NT2 राज्य परीक्षा के लिए मुफ़्त अभ्यास करें।","免费练习 A2 公民融入考试和 B1 荷兰语国家考试（NT2）。"],
+"Oefenen en examens":["Practice and exams","التدريب والامتحانات","Alıştırmalar ve sınavlar","अभ्यास और परीक्षाएँ","练习与考试"],
+"A2 oefenen":["Practise A2","تدرّب على A2","A2 alıştırmaları","A2 का अभ्यास करें","练习 A2"],
+"B1 oefenen":["Practise B1","تدرّب على B1","B1 alıştırmaları","B1 का अभ्यास करें","练习 B1"],
+"Gratis oefenvraag":["Free practice question","سؤال تدريبي مجاني","Ücretsiz alıştırma sorusu","मुफ़्त अभ्यास प्रश्न","免费练习题"],
+"Uitleg over de examens":["About the exams","عن الامتحانات","Sınavlar hakkında","परीक्षाओं के बारे में","考试介绍"],
+"Prijzen":["Pricing","الأسعار","Fiyatlar","कीमतें","价格"],
+"Hulp":["Help","المساعدة","Yardım","सहायता","帮助"],
+"Veelgestelde vragen":["Frequently asked questions","الأسئلة الشائعة","Sık sorulan sorular","अक्सर पूछे जाने वाले सवाल","常见问题"],
+"Contact":["Contact","التواصل","İletişim","संपर्क","联系"],
+"Abonnement opzeggen":["Cancel subscription","إلغاء الاشتراك","Aboneliği iptal et","सदस्यता रद्द करें","取消订阅"],
+"Op A2 oefen je voor het inburgeringsexamen. Op B1 oefen je voor het Staatsexamen NT2, Programma I.":["A2 prepares you for the civic integration exam. B1 prepares you for the State Exam NT2, Programme I.","في مستوى A2 تتدرّب لامتحان الاندماج. وفي مستوى B1 تتدرّب لامتحان الدولة NT2، البرنامج الأول.","A2 seviyesinde uyum sınavına, B1 seviyesinde NT2 Devlet Sınavı Program I’e hazırlanırsın.","A2 में आप नागरिक एकीकरण परीक्षा की तैयारी करते हैं। B1 में आप NT2 राज्य परीक्षा, कार्यक्रम I की तैयारी करते हैं।","A2 练习面向公民融入考试，B1 练习面向荷兰语国家考试（NT2）项目 I。"],
+"Bij Bittertalen kun je op beide niveaus lezen, luisteren, schrijven en spreken oefenen.":["On Bittertalen you can practise reading, listening, writing and speaking at both levels.","يمكنك على Bittertalen التدرّب على القراءة والاستماع والكتابة والتحدث في كلا المستويين.","Bittertalen’de her iki seviyede de okuma, dinleme, yazma ve konuşma alıştırmaları yapabilirsin.","Bittertalen में आप दोनों स्तरों पर पढ़ने, सुनने, लिखने और बोलने का अभ्यास कर सकते हैं।","你可以在 Bittertalen 练习两个级别的阅读、听力、写作和口语。"],
+"Wat kost oefenen?":["How much does it cost to practise?","كم يكلف التدريب؟","Alıştırmalar ne kadar?","अभ्यास की कीमत क्या है?","练习需要付费吗？"],
+"Oefeningen en proefexamens zijn gratis. Met Bittertalen Plus kun je elke dag vaker teksten en antwoorden laten nakijken.":["Exercises and practice exams are free. Bittertalen Plus gives you more daily checks for your texts and answers.","التمارين والامتحانات التجريبية مجانية. مع Bittertalen Plus يمكنك تصحيح عدد أكبر من نصوصك وإجاباتك كل يوم.","Alıştırmalar ve deneme sınavları ücretsiz. Bittertalen Plus ile her gün daha fazla metnini ve yanıtını kontrol ettirebilirsin.","अभ्यास और मॉक परीक्षाएँ मुफ़्त हैं। Bittertalen Plus से आप रोज़ ज़्यादा लेख और जवाब जँचवा सकते हैं।","练习和模拟考试免费。Bittertalen Plus 提供更多每日批改次数，可用于作文和答题。"],
+"Heb ik een account nodig?":["Do I need an account?","هل أحتاج إلى حساب؟","Hesap açmam gerekiyor mu?","क्या मुझे खाते की ज़रूरत है?","需要注册账户吗？"],
+"Je kunt zonder account oefenen. Met een account kun je je voortgang op meerdere apparaten bewaren.":["You can practise without an account. An account saves your progress across devices.","يمكنك التدرّب من دون حساب. باستخدام حساب يمكنك حفظ تقدّمك على عدة أجهزة.","Hesap açmadan alıştırma yapabilirsin. Hesap açarsan ilerlemeni birden fazla cihazda saklayabilirsin.","आप बिना खाते के अभ्यास कर सकते हैं। खाते से आपकी प्रगति कई डिवाइस पर सहेजी जा सकती है।","无需账户即可练习。登录账户后可以在多台设备上保存进度。"],
+"Hoe zeg ik mijn abonnement op?":["How do I cancel my subscription?","كيف ألغي اشتراكي؟","Aboneliğimi nasıl iptal ederim?","मैं अपनी सदस्यता कैसे रद्द करूँ?","如何取消订阅？"],
+"Log in met het account waarmee je Plus hebt genomen. Open Bittertalen Plus in Profiel en kies Abonnement beheren.":["Sign in with the account you used to subscribe to Plus. Open Bittertalen Plus in Profile and select Manage subscription.","سجّل الدخول بالحساب الذي اشتركت به في Plus. افتح Bittertalen Plus من ملفك الشخصي واختر إدارة الاشتراك.","Plus aboneliğini başlattığın hesapla giriş yap. Profil’de Bittertalen Plus’ı aç ve Aboneliği yönet’i seç.","जिस खाते से आपने Plus लिया था, उससे लॉग इन करें। प्रोफ़ाइल में Bittertalen Plus खोलें और सदस्यता प्रबंधित करें चुनें।","使用订阅 Plus 的账户登录。在「我的」中打开 Bittertalen Plus，然后选择「管理订阅」。"],
+"Proefexamens":["Practice exams", "امتحانات تجريبية", "Deneme sınavları", "अभ्यास परीक्षाएँ", "模拟考试"],
 "Vandaag":["Today","اليوم","Bugün","आज","今天"],
 "Examen":["Exam","الامتحان","Sınav","परीक्षा","考试"],
 "Oefenen":["Practise","التدرّب","Alıştırma","अभ्यास","练习"],
@@ -7200,6 +7293,7 @@ function setLangBtns(){document.querySelectorAll("[data-langs]").forEach(b=>b.te
 function applyLang(){const h=document.documentElement;h.lang=LANGS[LANG].c;h.dir=LANG==="ar"?"rtl":"ltr";uiBusy=true;try{trNode(document.body)}finally{uiBusy=false}setLangBtns()}
 document.addEventListener("change",e=>{if(!e.target.matches("[data-lang]"))return;LANG=e.target.value;LI=LCODE.indexOf(LANG);lsSet("ww-ui",LI<0?null:LANG);applyLang()});
 document.querySelector("header .lang").outerHTML=langHTML();
+$("site-footer").innerHTML=siteFooter();
 if(LI>=0)applyLang();
 ready$.then(()=>location.hash.startsWith("#verhuis=")?arrive():0).then(initCloud).then(plusBack).finally(()=>{window.__up=1});
 // A newer version was fetched in the background: offer it (a reload takes it from the cache, so it is quick)
