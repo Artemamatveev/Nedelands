@@ -162,3 +162,19 @@ test('History chapter years are translated in the menus, Dutch stays as it is',a
   assert.equal(t('zh','ca. 1000–1500'),'约1000–1500');
   assert.equal(t('en','1568–1648'),null);
 });
+test('Word questions never offer a near word (NEAR) as a wrong option, and every NEAR word exists',async()=>{
+  const a=await app();
+  const r=JSON.parse(a.run(`(()=>{const all=[...VO,...VO1,...WT.flatMap(([t,l])=>l.split("|").map(x=>x.split("=")))],words=new Set(all.map(x=>x[0])),byD={};
+    all.forEach(([w,d])=>(byD[d]=byD[d]||[]).push(w));
+    const missing=Object.keys(NEAR).filter(w=>!words.has(w)),bad=[],short=[];
+    ITEMS.filter(q=>(q.sec==="vo"||q.sec==="v1")&&q.opts).forEach(q=>{for(let n=0;n<8;n++){const o=q.opts();
+      if(new Set(o).size!==4||!o.includes(q.right)){short.push(q.k);break}
+      const ws=o.filter(x=>x!==q.right).map(x=>words.has(x)?[x]:(byD[x]||[])),me=q.k.slice(q.k.indexOf("|")+1);
+      const isNear=w=>w!==me&&nearW(me,w)&&w.replace(/^(de|het) /,"")!==me.replace(/^(de|het) /,"");
+      const hit=ws.find(c=>c.length&&c.every(isNear));
+      if(hit){bad.push(q.k+" ~ "+hit[0]);break}}});
+    return JSON.stringify({missing,bad:[...new Set(bad)],short})})()`));
+  assert.deepEqual(r.missing,[]);
+  assert.deepEqual(r.short,[]);
+  assert.deepEqual(r.bad,[]);
+});
