@@ -147,12 +147,10 @@ h2{display:flex;align-items:center;gap:10px;font-size:var(--fs-xl);font-weight:6
 .today .sub{color:var(--ink);margin:0}
 .today .hint{margin:12px 0 0}
 .today>.ghost{margin-top:14px}
-#a2hs:empty{display:none}
 .intro{margin:6px 0 12px;font-weight:600}
 .pts{margin:0 0 14px;padding-left:22px} .pts li{margin:0 0 4px} .gapw{color:var(--blue)}
 .qs{margin:0 0 14px;padding-left:22px;color:var(--soft)} .qs li{margin:0 0 4px} .qs li.on{color:var(--ink);font-weight:600}
 #hear{margin:10px 0 4px}
-#a2hs ol{margin:10px 0 0;padding-inline-start:22px}#a2hs .two{margin-top:14px}
 .steps{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:8px}
 .ona{margin:0 0 12px;padding-inline-start:22px}.ona li{margin:0 0 6px}
 .step{display:grid;grid-template-columns:36px minmax(0,1fr) 36px;column-gap:14px;align-items:center;width:100%;height:100%;text-align:var(--ta);background:var(--bg);border:1.5px solid var(--line);border-radius:var(--rc);padding:12px 14px}
@@ -702,20 +700,11 @@ h2,h3,.verb,.step b,.it b{text-wrap:balance} p,.d,.sub,.note{text-wrap:pretty}
 .writing-details{margin-block:18px}
 .writing-details h2{margin-block-start:24px}
 
-.site-footer{display:grid;gap:20px;margin-block-start:24px;padding-block:20px;color:var(--ink);font-size:var(--fs-m)}
-.site-footer p{margin:6px 0 0;color:var(--soft)}
-.site-footer h3{margin:0 0 4px;font-size:var(--fs-b);font-weight:600}
+.site-footer{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-block-start:12px;border-block-start:1px solid var(--line);font-size:var(--fs-m)}
+.site-footer summary{min-height:44px;padding-block:10px;line-height:1.4;font-weight:600;cursor:pointer}
 .site-footer ul{list-style:none;padding:0;margin:0}
-.site-footer :is(a,button){display:inline-flex;align-items:center;min-height:44px;color:var(--blue);text-decoration:underline;text-underline-offset:3px}
+.site-footer :is(a,button){display:inline-flex;align-items:center;min-height:44px;max-inline-size:100%;color:var(--blue);text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}
 .site-footer button{background:none;border:0;padding:0;font:inherit;text-align:start;cursor:pointer}
-#welcome .site-footer{width:100%;max-width:400px;flex:none}
-@media(min-width:600px){#home .site-footer{grid-template-columns:1.4fr 1fr 1fr}}
-@media(max-width:599px){
-  .site-footer{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 14px;margin-block-start:16px;padding-block:12px}
-  .site-footer>div:first-child{grid-column:1/-1}
-  .site-footer h3{font-size:var(--fs-m);line-height:1.25}
-  .site-footer :is(a,button){max-inline-size:100%;line-height:1.25;overflow-wrap:anywhere}
-}
 .site-help details{border-block-start:1px solid var(--line);padding-block:8px}
 .site-help summary{min-height:44px;padding-block:10px;cursor:pointer;font-weight:600}
 
@@ -732,7 +721,6 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
   <div id="home">
     <div class="label" id="label" data-tab="vandaag" lang="nl"></div>
     <section class="today tile" id="plan" data-tab="vandaag"></section>
-    <section class="today tile" id="a2hs" data-tab="vandaag"></section>
     <section class="tile" id="exam" data-tab="examen"></section>
     <div class="duo" data-tab="oefenen">
       <div><section class="tile" id="parts"></section><section class="tile" id="gram"></section></div>
@@ -758,10 +746,9 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
         <label class="prow tog" id="ptrilw" hidden><span>Trillen bij een antwoord</span><input type="checkbox" switch id="ptril"></label>
       </div>
       <div id="acct"></div>
-      <div class="pg" id="plinks"></div>
+      <footer class="site-footer" id="site-footer"></footer>
     </section>
     <section class="tile" data-tab="herhalen"><h2>Herhalen</h2><div class="list" id="mine"></div></section>
-    <footer class="site-footer tile" id="site-footer"></footer>
   </div>
   <div id="welcome" hidden></div>
   <div id="move" hidden></div>
@@ -2425,21 +2412,20 @@ function bindLogin(el,x,pre,mail){
 }
 function welcome(){$("home").hidden=true;$("welcome").hidden=false;window.scrollTo(0,0);drawWelcome()}
 function siteFooter(){
-  return `<div><h3>Bittertalen</h3><p>Oefen gratis voor het inburgeringsexamen A2 en het Staatsexamen NT2 B1.</p>
-    <a href="/over">Over Bittertalen</a></div>
-    <div><h3>Oefenen en examens</h3><ul>
+  return `<details><summary>Oefenen en examens</summary><ul>
       <li><button type="button" data-site="A2">A2 oefenen</button></li>
       <li><button type="button" data-site="B1">B1 oefenen</button></li>
       <li><button type="button" data-site="free">Gratis oefenvraag</button></li>
       <li><button type="button" data-site="exam">Uitleg over de examens</button></li>
       <li><button type="button" data-site="prices">Prijzen</button></li>
-    </ul></div>
-    <div><h3>Hulp</h3><ul>
+    </ul></details>
+    <details><summary>Hulp</summary><ul>
       <li><button type="button" data-site="faq">Veelgestelde vragen</button></li>
       <li><a href="mailto:privacy@bittertalen.nl">Contact</a></li>
       <li><a href="/privacy">Privacyverklaring</a></li>
       <li><button type="button" data-site="cancel">Abonnement opzeggen</button></li>
-    </ul></div>`;
+      <li><a href="/over">Over Bittertalen</a></li>
+    </ul></details>`;
 }
 function tryOne(){
   const section=lvl()==="B1"?"l1":"lz";
@@ -2471,7 +2457,6 @@ function siteHelp(topic){
 document.addEventListener("click",e=>{
   const b=e.target.closest(".site-footer button[data-site]");
   if(!b)return;
-  if(!$("welcome").hidden){lsSet(WEL,"1");acc.msg="";acc.step=null}
   const action=b.dataset.site;
   if(action==="A2"||action==="B1"){setLvl(action);setTab("oefenen")}
   home();
@@ -2487,7 +2472,7 @@ document.addEventListener("click",e=>{
 });
 function drawWelcome(){
   // A window like Yandex ID (the user's wish): one rounded card on the painting of the day, the logo and the login
-  // block; under the card on the painting are the account benefits, the painting's name and the site footer.
+  // block; under the card on the painting are the account benefits, the privacy link and the painting's name.
   // No name here: the e-mail is enough, Google and the others bring theirs, and Profiel has the fields.
   const el=$("welcome"),p=ART[today()%ART.length],first=!lsGet(WEL),mail=$("wmail")?$("wmail").value:acc.mail||"";
   const logo=document.querySelector("header h1 [aria-hidden]");
@@ -2497,8 +2482,7 @@ function drawWelcome(){
     +(first && !acc.step?`<p>Oefen Nederlands met een korte leesopdracht.</p><button class="btn wide" id="wtry">Probeer één vraag</button><details><summary>Inloggen of account maken</summary>${loginHTML("w")}</details>`:loginHTML("w"))+(acc.msg?`<p class="note">${esc(acc.msg)}</p>`:"")
     +`<button class="ghost wide" id="wlater">${first?"Eerst rondkijken":"Terug"}</button></div>
     <div class="wfoot"><p>Met een account blijft je voortgang bewaard, ook op je andere apparaten, en kijkt Claude je teksten en antwoorden na.</p>
-    <p class="wart">${p.a} · ${p.t} · ${p.m}</p></div>
-    <footer class="site-footer tile">${siteFooter()}</footer>`;
+    <p><a href="/privacy">Privacyverklaring</a></p><p class="wart">${p.a} · ${p.t} · ${p.m}</p></div>`;
   if($("wtry"))$("wtry").onclick=()=>{
     lsSet(WEL,"1");home();tryOne();
   };
@@ -4062,7 +4046,7 @@ function itHTML(attr,t,d,o={}){
 }
 function home(){
   paint();
-  $("play").hidden=true;$("welcome").hidden=true;$("move").hidden=true;$("stats").hidden=true;$("lib").hidden=true;$("read").hidden=true;$("media").hidden=true;$("story").hidden=true;$("hist").hidden=true;$("talk").hidden=true;stopMedia();closePop();$("home").hidden=false;head();clock(0);hush();planId=null;drawPlan();drawA2hs();
+  $("play").hidden=true;$("welcome").hidden=true;$("move").hidden=true;$("stats").hidden=true;$("lib").hidden=true;$("read").hidden=true;$("media").hidden=true;$("story").hidden=true;$("hist").hidden=true;$("talk").hidden=true;stopMedia();closePop();$("home").hidden=false;head();clock(0);hush();planId=null;drawPlan();
   const sec=id=>SEC.find(x=>x.id===id);
   const row=id=>{const s=sec(id),p=ITEMS.filter(x=>x.sec===id),n=p.filter(x=>S.items[x.k]).length;
     return itHTML(`data-s="${id}"`,s.t,s.s,{n:n?n+" van "+p.length:null,bar:n?n/p.length*100:null,ic:id})};
@@ -4436,23 +4420,6 @@ function planHTML(){
       return`<li><button class="step${ok?" ok":""}" data-p="${t.id}"${nxt?' aria-current="step"':""}><i class="sic">${ok?'<svg viewBox="0 0 24 24" aria-hidden="true"><path class="s" d="M5.5 12.5l4.2 4.2 8.8-9"/></svg>':IC[k]?`<svg viewBox="0 0 24 24" aria-hidden="true">${IC[k]}</svg>`:i+1}</i><b>${t.t}</b><span>${t.s}</span><em class="c">›</em></button></li>`}).join("")}</ol>
     ${P.bg?"":`<button class="ghost wide" data-p="s:mix">Meer tijd? Mix van de dag</button>`}`;
 }
-// iPhone: Safari can wipe a site's storage after a week without a visit; on the home screen the app keeps it.
-// The home-screen app has its own storage, so the progress goes along by the clipboard (Kopieer / Plak).
-const A2K="ww-a2hs",a2Get=()=>{try{return localStorage.getItem(A2K)}catch(e){return"1"}},a2Set=()=>{try{localStorage.setItem(A2K,"1")}catch(e){}};
-function drawA2hs(){
-  const el=$("a2hs"),has=Object.keys(S.items).length>0,ios=/iPhone|iPad|iPod/.test(navigator.userAgent)&&!window.claude;
-  let h="";
-  if(ios&&navigator.standalone===false&&!a2Get())h=`<h2>Zet Bittertalen op je beginscherm</h2><p class="sub">In Safari kan je voortgang verdwijnen als je de site een week niet opent. Op het beginscherm blijft hij bewaard.</p><ol>${has?"<li>Tik op Kopieer mijn voortgang.</li>":""}<li>Tik onderaan op Deel en dan op Zet op beginscherm.</li><li>Open Bittertalen met het nieuwe icoon${has?" en tik op Plak mijn voortgang":""}.</li></ol><div class="two">${has?`<button class="ghost" id="a2cp">Kopieer mijn voortgang</button>`:""}<button class="ghost" id="a2ok">Begrepen</button></div>`;
-  else if(ios&&navigator.standalone===true&&!has&&!a2Get())h=`<h2>Al geoefend in Safari?</h2><p class="sub">Kopieer je voortgang in Safari en plak hem hier. Dan ga je verder waar je was.</p><div class="two"><button class="ghost" id="a2ps">Plak mijn voortgang</button><button class="ghost" id="a2ok">Nee, ik begin nieuw</button></div>`;
-  el.innerHTML=h;
-  if($("a2ok"))$("a2ok").onclick=()=>{a2Set();el.innerHTML=""};
-  if($("a2cp"))$("a2cp").onclick=async()=>{const t="bittertalen:"+JSON.stringify(S);
-    try{await navigator.clipboard.writeText(t);$("a2cp").textContent="Gekopieerd ✓"}catch(e){$("a2cp").textContent="Kopiëren lukt niet"}};
-  if($("a2ps"))$("a2ps").onclick=async()=>{let r=null;
-    try{const t=await navigator.clipboard.readText();if(t.startsWith("bittertalen:"))r=JSON.parse(t.slice(12))}catch(e){}
-    if(!r||!r.items){$("a2ps").textContent="Niets gevonden. Kopieer eerst in Safari.";return}
-    S=Object.assign(S,r);save();a2Set();home()};
-}
 // Profiel: your name and exam date (kept in the progress, so they go along to your other devices), the account and your results.
 // Only #acct is redrawn when the account changes, so typing in the fields is never interrupted.
 function drawProfile(){
@@ -4504,9 +4471,6 @@ function drawProfile(){
       acc.msg="Je account is verwijderd. Je voortgang op dit apparaat blijft.";await setUser(null)}
     catch(e){acc.msg="Verwijderen is niet gelukt. Probeer het later opnieuw.";drawProfile()}};
   if(canBuzz()){$("ptrilw").hidden=false;$("ptril").checked=lsGet("ww-tril")!=="0";$("ptril").onchange=()=>{lsSet("ww-tril",$("ptril").checked?"1":"0");if($("ptril").checked)buzz("good")}}
-  $("plinks").innerHTML=itHTML(`data-x="over"`,"Over Bittertalen","Wie het maakt, waarom, en wat erin zit.",{ic:"over"})
-    +itHTML(`data-x="privacy"`,"Privacyverklaring","Welke gegevens Bittertalen gebruikt, waarom en waar ze staan.",{ic:"privacy"});
-  $("plinks").querySelectorAll("button").forEach(b=>b.onclick=()=>{location.href="/"+b.dataset.x});
 }
 function drawPlan(){
   $("plan").innerHTML=planHTML();
@@ -6603,7 +6567,6 @@ if(OLD==="nedelands.vercel.app")location.replace(NEWURL); else if(OLD==="bittert
 const LANGS={nl:{n:"Nederlands",s:"NL",c:"nl"},en:{n:"English",s:"EN",c:"en"},ar:{n:"العربية",s:"عربي",c:"ar"},tr:{n:"Türkçe",s:"TR",c:"tr"},hi:{n:"हिन्दी",s:"हिं",c:"hi"},zh:{n:"中文",s:"中文",c:"zh-Hans"}};
 const LCODE=["en","ar","tr","hi","zh"]; // the order of the translations in every row of UI and UIR
 const UI={
-"Oefen gratis voor het inburgeringsexamen A2 en het Staatsexamen NT2 B1.":["Practise for the A2 civic integration exam and the B1 State Exam NT2 for free.","تدرّب مجانًا لامتحان الاندماج A2 وامتحان الدولة NT2 B1.","A2 uyum sınavına ve B1 NT2 devlet sınavına ücretsiz hazırlan.","A2 नागरिक एकीकरण परीक्षा और B1 NT2 राज्य परीक्षा के लिए मुफ़्त अभ्यास करें।","免费练习 A2 公民融入考试和 B1 荷兰语国家考试（NT2）。"],
 "Oefenen en examens":["Practice and exams","التدريب والامتحانات","Alıştırmalar ve sınavlar","अभ्यास और परीक्षाएँ","练习与考试"],
 "A2 oefenen":["Practise A2","تدرّب على A2","A2 alıştırmaları","A2 का अभ्यास करें","练习 A2"],
 "B1 oefenen":["Practise B1","تدرّب على B1","B1 alıştırmaları","B1 का अभ्यास करें","练习 B1"],
@@ -6812,12 +6775,7 @@ const UI={
 "Met een account blijft je voortgang bewaard, ook op je andere apparaten, en kijkt Claude je teksten en antwoorden na.":["With an account your progress is kept, also on your other devices, and Claude checks your texts and answers.","بالحساب يبقى تقدّمك محفوظًا، حتى على أجهزتك الأخرى، ويصحّح Claude نصوصك وإجاباتك.","Hesapla ilerlemen diğer cihazlarında da saklanır ve Claude metinlerini ve cevaplarını kontrol eder.","खाते से आपकी प्रगति आपके दूसरे डिवाइसों पर भी सुरक्षित रहती है, और Claude आपके पाठ और उत्तर जाँचता है।","有了账户，你的进度会保存，其他设备上也能用，Claude 还会批改你的文字和回答。"],
 "Er is een nieuwe versie van Bittertalen.":["There is a new version of Bittertalen.","يتوفر إصدار جديد من Bittertalen.","Bittertalen'in yeni bir sürümü var.","Bittertalen का नया संस्करण उपलब्ध है।","Bittertalen 有新版本。"],
 "Vernieuwen":["Refresh","تحديث","Yenile","रीफ़्रेश करें","刷新"],
-"Zet Bittertalen op je beginscherm":["Put Bittertalen on your home screen","أضف Bittertalen إلى شاشتك الرئيسية","Bittertalen'i ana ekranına ekle","Bittertalen को अपनी होम स्क्रीन पर रखें","把 Bittertalen 添加到主屏幕"],
-"Al geoefend in Safari?":["Already practised in Safari?","هل تدرّبت في Safari من قبل؟","Safari'de çalıştın mı?","क्या Safari में पहले अभ्यास किया है?","已经在 Safari 里练习过了？"],
-"Kopieer mijn voortgang":["Copy my progress","انسخ تقدّمي","İlerlememi kopyala","मेरी प्रगति कॉपी करें","复制我的进度"],
-"Plak mijn voortgang":["Paste my progress","الصق تقدّمي","İlerlememi yapıştır","मेरी प्रगति चिपकाएँ","粘贴我的进度"],
 "Begrepen":["Got it","فهمت","Anladım","ठीक है","知道了"],
-"Nee, ik begin nieuw":["No, I'm starting fresh","لا، سأبدأ من جديد","Hayır, yeniden başlıyorum","नहीं, नई शुरुआत करें","不，我要重新开始"],
 "Toch beginnen":["Start anyway","ابدأ على أي حال","Yine de başla","फिर भी शुरू करें","仍然开始"],
 "Verhaal op A2-niveau":["Story at A2 level","قصة بمستوى A2","A2 düzeyinde hikâye","A2 स्तर की कहानी","A2 水平的故事"],
 "Verhaal op B1-niveau":["Story at B1 level","قصة بمستوى B1","B1 düzeyinde hikâye","B1 स्तर की कहानी","B1 水平的故事"],
