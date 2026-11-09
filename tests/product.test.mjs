@@ -162,3 +162,21 @@ test('History chapter years are translated in the menus, Dutch stays as it is',a
   assert.equal(t('zh','ca. 1000–1500'),'约1000–1500');
   assert.equal(t('en','1568–1648'),null);
 });
+
+
+test('Conversation cues reject negated illness without blocking valid symptoms, negative requests or the examples',async()=>{
+  const a=await app();
+  const fits=(id,turn,text)=>a.run(`(()=>{const line=GP.find(c=>c.id===${JSON.stringify(id)}).d[${turn}];return gpFits(line.k,${JSON.stringify(text)},line.m)})()`);
+  assert.equal(fits('werk',0,'Ik ben niet ziek. Ik heb geen griep en geen koorts.'),false);
+  assert.equal(fits('school',0,'Mijn zoon is niet ziek en hij heeft geen koorts.'),false);
+  assert.equal(fits('werk',0,'Ik kan niet komen, omdat ik griep heb.'),true);
+  assert.equal(fits('werk',0,'Ik voel me niet lekker.'),true);
+  assert.equal(fits('werk',0,'Ik ben ziek, maar ik heb geen koorts.'),true);
+  assert.equal(fits('huis',0,'De verwarming werkt niet.'),true);
+  assert.equal(fits('huis',3,"Nee, ik werk. Kan het in de middag?"),true);
+  const bad=JSON.parse(a.run('JSON.stringify(GP.flatMap(c=>c.d.flatMap((line,i)=>gpFits(line.k,line.m,line.m)?[]:[c.id+"#"+i])))'));
+  assert.deepEqual(bad,[]);
+  a.run('talk(GP.findIndex(c=>c.id==="werk"))');a.document.querySelector('#tgo').click();
+  a.document.querySelector('#tin').value='Ik ben niet ziek. Ik heb geen griep en geen koorts.';a.document.querySelector('#tsend').click();
+  assert.equal(a.run('TK.n'),0);assert.ok(a.document.querySelector('.tl.no'));
+});

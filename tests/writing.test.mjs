@@ -188,3 +188,44 @@ test('Profiel has no results tile any more (removed at the user\'s wish); the sc
   assert.equal(a.document.querySelector('#myres'),null);
   assert.equal(a.run('typeof drawResults'),'undefined');
 });
+
+
+test('B1 accepts a two-word sentence ending and submits its complete task context',async()=>{
+  const c=checker(),a=await app({fetch:c.fetch});
+  a.run('build("custom",{id:"custom",n:1,pool:()=>[ITEMS.find(q=>q.k==="wb|0")]})');
+  type(a,'#txt','ik werk');a.document.querySelector('#chk').click();await a.flush();
+  assert.equal(c.calls.length,1);assert.equal(c.calls[0].tasks[0].text,'ik werk');
+  assert.match(c.calls[0].tasks[0].task,/omdat/);
+});
+test('Long pasted writing remains editable and survives reload without a grading call',async()=>{
+  const c=checker(),store=storage(),a=await app({fetch:c.fetch,storage:store});
+  a.run('build("wr")');const original='Dit is mijn antwoord. '.repeat(150);
+  type(a,'#txt',original);a.document.querySelector('#chk').click();await a.flush();
+  assert.equal(c.calls.length,0);assert.equal(a.document.querySelector('#txt').value,original);
+  assert.match(a.document.querySelector('#fb').textContent,/2500/);
+  assert.match(a.document.querySelector('#writingLimit').textContent,/2500/);
+  assert.ok(!a.document.querySelector('#txt').readOnly);
+  a.document.querySelector('#back').click();
+  const b=await app({fetch:c.fetch,storage:store});b.document.querySelector('[data-draft="wr"]').click();
+  assert.equal(b.document.querySelector('#txt').value,original);
+  type(b,'#txt','Ik kan morgen niet komen. Kunnen wij een nieuwe afspraak maken?');b.document.querySelector('#chk').click();await b.flush();
+  assert.equal(c.calls.length,1);
+});
+test('An oversized exam answer returns to its editor without submitting or recording an exam score',async()=>{
+  const c=checker(),a=await app({fetch:c.fetch});a.run('startExam("wr",true)');
+  type(a,'#txt','x'.repeat(2501));a.run('overview();submitExam()');await a.flush();
+  assert.equal(c.calls.length,0);assert.equal(a.document.querySelector('#txt').value.length,2501);
+  assert.equal(a.run('!!cur.sent'),false);assert.equal(a.run('(S.res?.wr||[]).length'),0);
+  assert.match(a.document.querySelector('#fb').textContent,/2500/);
+});
+
+test('An expired oversized exam offers an explicit full-text download before shortening, never silent truncation',async()=>{
+  const c=checker(),a=await app({fetch:c.fetch});a.run('startExam("wr",true)');
+  type(a,'#txt','x'.repeat(2501));a.run('cur.expired=true;overview();submitExam()');await a.flush();
+  assert.ok(a.document.querySelector('#shorten'));
+  assert.equal(a.document.querySelector('#txt').value.length,2501);assert.equal(c.calls.length,0);
+  a.run('var downloadedText=null;saveDocx=items=>downloadedText=items[0].text');
+  a.document.querySelector('#shorten').click();
+  assert.equal(a.run('downloadedText.length'),2501);assert.equal(a.document.querySelector('#txt').value.length,2500);
+  assert.ok(a.document.querySelector('#txt').readOnly);assert.equal(c.calls.length,0);
+});

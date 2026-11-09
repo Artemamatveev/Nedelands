@@ -92,7 +92,7 @@ Geef voor elke opdracht, in dezelfde volgorde:
 - verdict: één of twee korte zinnen in eenvoudig Nederlands (A2): algemene beoordeling, of alle punten van de opdracht zijn gedaan en waar de punten verloren gaan.
 - corrected: de volledige tekst van de cursist, gecorrigeerd, in het Nederlands; verander alleen wat fout is. Bij een formulier: alleen het verbeterde antwoord op de open vraag; corrigeer de persoonlijke gegevens niet.
 - errors: de fouten, de belangrijkste eerst (woordvolgorde, werkwoordsvormen, de/het, spelling). wrong = het foute fragment uit de tekst, right = de juiste versie, why = korte uitleg van de regel in eenvoudig Nederlands (A2). Geen fouten: lege lijst.
-- scores: punten volgens het beoordelingsmodel Schrijven van DUO. Wees streng zoals een examinator: tel voor de punten alle fouten in de tekst, ook als je ze niet allemaal noemt.
+- scores: punten volgens onze oefenrubriek voor Schrijven; dit is geen officiële DUO-beoordeling. Wees streng zoals een examinator: tel voor de punten alle fouten in de tekst, ook als je ze niet allemaal noemt.
   inhoud (adequaatheid en begrijpelijkheid, 0–3): 3 = alle punten van de opdracht gedaan, goed begrijpelijk en passend (ook de toon, bijvoorbeeld een aanhef en een groet in een e-mail); 2 = bijna alles gedaan, één punt ontbreekt of is onduidelijk; 1 = maar een deel van de opdracht gedaan of moeilijk te begrijpen; 0 = onleesbaar, leeg of geen antwoord op de opdracht. Bij een formulier hoort bij inhoud ook of alle velden ingevuld en logisch zijn.
   woorden (woordenschat, 0–2): 2 = genoeg en passende woorden voor het onderwerp; 1 = weinig woorden of soms een verkeerd woord, maar begrijpelijk; 0 = zo weinig of zulke verkeerde woorden dat de tekst moeilijk te begrijpen is.
   grammatica (0–2): 2 = geen of bijna geen grammaticafouten (hoogstens 2 in een korte tekst); 1 = vrij veel fouten (3 tot 5); 0 = veel fouten (6 of meer), of fouten die het begrijpen moeilijk maken. Grammaticafouten zijn woordvolgorde, werkwoordsvormen, de/het, meervoud, lidwoorden en voorzetsels.
@@ -140,13 +140,13 @@ Geef voor elk antwoord, in dezelfde volgorde:
 - verdict: één of twee korte zinnen in eenvoudig Nederlands (A2): algemene beoordeling en wat er eventueel ontbreekt.
 - corrected: het antwoord van de cursist, verbeterd, zoals je het goed zegt; verander alleen wat fout is en voeg geen nieuwe informatie toe.
 - errors: de fouten, de belangrijkste eerst (woordvolgorde, werkwoordsvormen, de/het, verkeerde woorden). wrong = het foute fragment, right = de juiste versie, why = korte uitleg van de regel in eenvoudig Nederlands (A2). Geen fouten: lege lijst.
-- scores: punten zoals bij het examen van DUO, alleen de punten die je uit de tekst kunt halen.
+- scores: punten volgens onze oefenrubriek voor Spreken, alleen de punten die je uit de tekst kunt halen. Dit is geen officiële DUO-beoordeling.
   inhoud (0–3): past het antwoord bij de vraag en is het begrijpelijk? 3 = alle delen van de vraag beantwoord (bij een foto: beschreven én de vraag beantwoord; bij drie foto's: alle drie verteld; bij "waarom": een reden), 2 = bijna alles, 1 = maar een deel, 0 = geen antwoord, onbegrijpelijk of niet over de vraag.
   woorden (0–2): genoeg en passende woorden voor A2. grammatica (0–2): 2 = weinig fouten, 1 = fouten, maar begrijpelijk, 0 = veel fouten. samenhang (0–1): 1 = zinnen hangen samen (en, want, daarna, omdat).
   Is inhoud 0, dan zijn alle punten 0.
 Bij een vraag met foto's staat tussen haakjes wat er op de foto's te zien is.`;
 
-const str = (v, max) => (typeof v === "string" ? v.slice(0, max) : "");
+const str = v => typeof v === "string" ? v : "";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "method_not_allowed" });
@@ -154,11 +154,17 @@ export default async function handler(req, res) {
   if (!sameOrigin(req)) return res.status(403).json({ error: "forbidden" });
   if (!client || !accounts) return res.status(503).json({ error: "not_configured" });
 
-  // A real request is at most ~80 KB (16 answers or 12 texts, each cut below); refuse anything far bigger
+  // A real request is at most ~80 KB (16 answers or 12 texts, validated below); refuse anything far bigger
   if (Number(req.headers["content-length"]) > 200000) return res.status(413).json({ error: "too_large" });
   const sb = req.body?.part === "sb", sp = req.body?.part === "sp" || sb, wb = req.body?.part === "wb";
-  const input = Array.isArray(req.body?.tasks) ? req.body.tasks.slice(0, sp ? 16 : wb ? 12 : 4) : [];
+  const input = Array.isArray(req.body?.tasks) ? req.body.tasks : [];
   if (!input.length) return res.status(400).json({ error: "no_tasks" });
+  if (input.length > (sp ? 16 : wb ? 12 : 4)) return res.status(400).json({ error: "too_many_tasks" });
+  // Validate before reserving any quota. Never grade only part of a learner's answer.
+  const limits = { task: wb ? 2000 : 1200, form: 1500, text: 2500 };
+  for (let index = 0; index < input.length; index++) for (const [field, limit] of Object.entries(limits)) {
+    if (str(input[index]?.[field]).length > limit) return res.status(413).json({ error: "answer_too_long", field, limit, index });
+  }
 
   // Accounts: who is asking, and take the checks before calling Claude (given back if grading fails)
   let uid = null, left, lim = LIMIT, plus = false;
@@ -196,7 +202,7 @@ export default async function handler(req, res) {
   const giveBack = () => Promise.all([mine(), providerStarted || plus ? null : useTotal(-cost).catch(() => null)]);
   const tasks = input.map((t) => ({
     kind: wb ? (SCORES_WB[t?.kind] ? t.kind : "m") : sb ? (SCORES_SB[t?.kind] ? t.kind : "m") : "",
-    task: str(t?.task, wb ? 2000 : 1200), form: sp ? "" : str(t?.form, 1500), text: str(t?.text, 2500),
+    task: str(t?.task), form: sp ? "" : str(t?.form), text: str(t?.text),
   }));
   const max = !sp ? 8 : tasks.length === 1 ? 8 : tasks.length <= 4 ? 5 : 3;
   const prompt = sb
