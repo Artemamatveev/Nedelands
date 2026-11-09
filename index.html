@@ -622,6 +622,22 @@ body.vfull{overflow:hidden}
 .pickrow b{flex:1 0 auto;max-width:62%;font-weight:400;color:var(--soft);text-align:var(--te);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pickrow svg{flex:none;width:14px;height:14px;fill:none;stroke:var(--soft);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 .pickrow select{position:absolute;inset:0;width:100%;height:100%;opacity:0;font-size:16px;border:0;cursor:pointer}
+:root[data-desktop] .pickrow>:is(b,svg){display:none}
+:root[data-desktop] #plvl{
+  position:static;opacity:1;width:auto;min-inline-size:172px;min-height:40px;height:auto;margin-inline-start:auto;
+  padding:6px 10px;border:1px solid var(--line);border-radius:var(--rs);background:var(--card);color:var(--ink);
+  font:inherit;font-size:var(--fs-m);
+}
+@supports (appearance:base-select) and selector(::picker(select)){
+  :root[data-desktop] #plvl,:root[data-desktop] #plvl::picker(select){appearance:base-select}
+  :root[data-desktop] #plvl::picker(select){
+    position-area:block-end span-inline-end;position-try-order:normal;
+    margin-block-start:4px;padding:4px;border:1px solid var(--line);border-radius:var(--rs);
+    background:var(--card);color:var(--ink);box-shadow:var(--lift);
+  }
+  :root[data-desktop] #plvl option{padding:8px;border-radius:var(--rs)}
+  :root[data-desktop] #plvl option:is(:hover,:focus-visible){background:var(--surface)}
+}
 .pg .tog{margin:0}
 .pinfo{display:block;padding:14px 0;color:var(--soft);font-size:var(--fs-m);line-height:1.45}
 .pact{display:block;width:100%;min-height:52px;padding:0;background:none;border:0;font:inherit;font-size:var(--fs-b);text-align:var(--ta);color:var(--ink);cursor:pointer}
