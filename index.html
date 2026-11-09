@@ -553,6 +553,24 @@ main:is(:not(.big),:has(#home[hidden])) header .lang{top:6px;height:32px} /* the
 :root[dir=rtl] :is(p,h2,h3,b,small,li,.d){unicode-bidi:plaintext}
 :root[dir=rtl] :is(header,#play,#read,[lang=nl],.book,.doc,.sample,.msum,.tl,.bgl,input[type=email]){direction:ltr;text-align:left;--ta:left;--te:right}
 :root[dir=rtl] .tabs .lens{left:auto;right:5px;transform:translateX(calc(var(--i,0) * -100%))}
+@media (min-width:960px) and (hover:hover) and (pointer:fine){
+  :root:not([data-installed]) main:has(#home:not([hidden])){
+    width:calc(100% - 128px);
+    margin-right:max(112px,calc((100% - 1160px)/2));
+    padding-bottom:64px;
+  }
+  :root:not([data-installed]) .tabs{
+    left:auto;right:16px;top:50%;bottom:auto;transform:translateY(-50%);
+    flex-direction:column;width:96px;padding:5px;border-radius:var(--r);
+    touch-action:auto;transition:none;
+  }
+  :root:not([data-installed]) .tabs button{flex:0 0 56px;justify-content:center;padding:4px;border-radius:var(--rc)}
+  :root:not([data-installed]) .tabs.min span{display:block}
+  :root:not([data-installed]) .tabs .lens{
+    left:5px;right:5px;bottom:auto;width:auto;height:56px;border-radius:var(--rc);
+    transform:translateY(calc(var(--i,0) * 100%));
+  }
+}
 :root[dir=rtl] :not(#read *).back>span{display:inline-block;transform:scaleX(-1)}
 /* spacing between letters breaks joined Arabic and Devanagari */
 :root:is([lang=ar],[lang=hi],[lang=zh-Hans]) *{letter-spacing:0!important}
@@ -2267,6 +2285,7 @@ const logins=()=>acc.cfg&&acc.cfg.login||[];
 // app takes it from there when you return and exchanges it itself (PKCE: the code is useless without the secret that
 // only the app holds). If the login comes back in the app itself, nothing changes.
 const HAND="ww-hand",inApp=()=>navigator.standalone===true||matchMedia("(display-mode: standalone)").matches;
+document.documentElement.toggleAttribute("data-installed",inApp());
 const handOf=()=>{try{const o=JSON.parse(lsGet(HAND));return o&&o.h&&Date.now()-o.t<6e5?o:null}catch(e){return null}};
 let handBusy=false;
 async function claimHand(){
@@ -3957,7 +3976,7 @@ function home(){
   drawProfile();
   setTab(tab);
 }
-// The start screen is five tabs (Vandaag, Examen, Oefenen, Herhalen, Profiel) with a floating glass bar at the bottom, like iOS 26.
+// The start screen has five tabs in a floating bar, placed on the right in desktop browsers.
 // The tab you were on is kept while you practise: every back button goes back to it and is named after it.
 // Only Vandaag has the big painting and its label; the other tabs get the narrow strip, like an inner screen.
 let tab="vandaag";
@@ -4042,7 +4061,10 @@ document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>{if(Date.now(
   const n=$("tabs"),L=n.querySelector(".lens"),B=[...n.querySelectorAll("button")];
   let x0=null,id=null,drag=false,x=0,w=0,left=0,sg=1;
   const near=()=>Math.max(0,Math.min(B.length-1,Math.round(x/w)));
-  n.addEventListener("pointerdown",e=>{const r=n.getBoundingClientRect();x0=e.clientX;id=e.pointerId;drag=false;sg=document.documentElement.dir==="rtl"?-1:1;left=sg<0?r.right-5:r.left+5;w=(r.width-10)/B.length});
+  n.addEventListener("pointerdown",e=>{
+    if(getComputedStyle(n).flexDirection==="column")return;
+    const r=n.getBoundingClientRect();x0=e.clientX;id=e.pointerId;drag=false;sg=document.documentElement.dir==="rtl"?-1:1;left=sg<0?r.right-5:r.left+5;w=(r.width-10)/B.length;
+  });
   n.addEventListener("pointermove",e=>{
     if(x0==null||e.pointerId!==id)return;
     if(!drag){if(Math.abs(e.clientX-x0)<8)return;drag=true;try{n.setPointerCapture(id)}catch(_){}n.classList.add("drag")}
