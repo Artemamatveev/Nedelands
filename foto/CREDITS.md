@@ -113,3 +113,4 @@ De hoofdstukken in Geschiedenis gebruiken ook `art/oranje.jpg` en `art/aardappel
 | `kantoor.jpg` | [Wikimedia Deutschland Office 2024-03-15 3.jpg](https://commons.wikimedia.org/wiki/File:Wikimedia_Deutschland_Office_2024-03-15_3.jpg) | Eugene Ormandy | CC0 |
 | `apotheek.jpg` | [A Drug Store in Nigeria.jpg](https://commons.wikimedia.org/wiki/File:A_Drug_Store_in_Nigeria.jpg) | Beendy234 | CC0 |
 | `kinderopvang.jpg` | [Kinderdagverblijf Het Kabouterhuis, Bestanddeelnr 901-2481.jpg](https://commons.wikimedia.org/wiki/File:Kinderdagverblijf_Het_Kabouterhuis%2C_Bestanddeelnr_901-2481.jpg) | Koos Raucamp / Anefo | CC0 |
+| `klas.jpg` | [Kinderen in een klas, Bestanddeelnr 901-4054.jpg](https://commons.wikimedia.org/wiki/File:Kinderen_in_een_klas,_Bestanddeelnr_901-4054.jpg) | Nationaal Archief | CC0 |
