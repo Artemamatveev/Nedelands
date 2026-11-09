@@ -606,6 +606,8 @@ body.vfull{overflow:hidden}
 .avg i{width:84px;height:84px;border-radius:50%;overflow:hidden;border:3px solid var(--card);box-shadow:var(--lift)}
 .avg [aria-pressed=true] i{border-color:var(--oranje)} .avg [aria-pressed=true]{color:var(--ink);font-weight:600}
 .avg button:active i{transform:scale(.96)}
+:root[data-desktop] #talk:has(.avg){max-width:1080px}
+:root[data-desktop] .avg{grid-template-columns:repeat(9,minmax(0,1fr));gap:14px 8px}
 .pav:focus-visible{outline:3px solid var(--oranje);outline-offset:3px}
 .phero h2{margin:14px 0 2px;text-wrap:balance}
 .pmail{margin:0;color:var(--soft);font-size:var(--fs-m);word-break:break-all}
@@ -4096,8 +4098,9 @@ const AVS={
     +`<path d="M24 54c0-22 10-34 26-34s26 12 26 34c0 16-10 25-26 25S24 70 24 54z" fill="#E7AC37"/>`
     +avFace("#B77B59",{open:1})
     +`<path d="M28 42c4-13 11-19 22-19s18 6 22 19c-13-7-31-7-44 0z" fill="#F6CA63"/>
-    <g transform="translate(53 79)" fill="none" stroke="#614918" stroke-width="1.7" stroke-linejoin="round">
-      <circle cx="4" cy="11" r="4"/><circle cx="20" cy="11" r="4"/><path d="M4 11l5-7 5 7H4m10 0 3-8h3m-3 0 3 8M7 4h5"/>
+    <g transform="translate(24 69) scale(2)" fill="none" stroke="#332C29" stroke-width="1.5" stroke-linejoin="round">
+      <circle cx="4" cy="11" r="4" fill="#FFF2C7"/><circle cx="20" cy="11" r="4" fill="#FFF2C7"/>
+      <path d="M4 11l5-7 5 7H4m10 0 3-8h3m-3 0 3 8M7 4h5"/>
     </g>`},
   schaatser:{n:"de schaatser",s:avBg("#E1EDF9")
     +avBody("#245A79")+avFace("#F1C6A4")
@@ -4109,15 +4112,47 @@ const AVS={
     +avBody("#2E6663",`<path d="M37 80h26l5 20H32z" fill="#F8F5ED"/>`)
     +avFace("#D29B73",{open:1})
     +`<path d="M27 39c0-12 9-20 23-20s22 8 22 20z" fill="#2A414D"/><path d="M35 39h42q-9 9-27 6z" fill="#20313A"/>
-    <path d="M59 90q11-11 20-2l6-4v11l-6-4q-9 9-20-1z" fill="#56868A"/>
-    <circle cx="64" cy="90" r="1.4" fill="#fff"/>`},
+    <path d="M22 84q20-21 49-7l13-9v24l-13-7q-29 15-49-1z" fill="#8FC4CC" stroke="#244B55" stroke-width="2"/>
+    <path d="M37 75q6 8 0 15m10-6h17" fill="none" stroke="#467D8A" stroke-width="2"/>
+    <circle cx="30" cy="82" r="2" fill="#244B55"/>`},
   molenaar:{n:"de molenaar",s:avBg("#E7EDDA")
     +avBody("#78614C",`<path d="M34 81l6 19m26-19-6 19" stroke="#E6CEAC" stroke-width="4"/>`)
     +avFace("#E0AD89",{open:1})
     +`<path d="M27 40c0-12 9-20 23-20 12 0 20 5 23 14-14 0-19 4-24 8z" fill="#655447"/>
     <path d="M25 41q23-10 48-7l-3 7q-27 7-45 0z" fill="#483D35"/>
     <path d="M43 59q3-5 7-2 4-3 7 2-4 3-7 0-3 3-7 0z" fill="#655447"/>
-    <path d="M49 96l3-9 3 9zm-3-17 12 12m0-12L46 91" fill="none" stroke="#E6CEAC" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>`},
+    <path d="M64 93l5-29h11l6 29z" fill="#F0D4A6" stroke="#594337" stroke-width="2"/>
+    <path d="M67 65l8-7 7 7m-7 18v9" fill="none" stroke="#594337" stroke-width="2"/>
+    <path d="M63 58l25 24m0-24L63 82" stroke="#594337" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="75.5" cy="70" r="3" fill="#F0D4A6" stroke="#594337" stroke-width="1.5"/>`},
+  vangogh:{n:"Vincent van Gogh",s:avBg("#D6E8EA")
+    +avBody("#284D69",`<path d="M35 79l15 12 15-12-8 21H43z" fill="#E8DFB9"/>`)
+    +avFace("#EFC3A2",{open:1,mouth:0})
+    +`<path d="M26 43c-1-15 9-25 24-25 11 0 20 6 25 18-13-5-24-4-32 2l-10 8z" fill="#A64B2A"/>
+    <path d="M28 55q7 10 17 8 5-7 10 0 9 1 17-8c-3 16-12 24-22 24S31 71 28 55z" fill="#AC522F"/>
+    <path d="M45 65q5 2 10 0" fill="none" stroke="#683E2E" stroke-width="1.6" stroke-linecap="round"/>
+    <path d="M76 96V81" stroke="#497148" stroke-width="3"/>
+    <circle cx="76" cy="78" r="9" fill="#F2BC45"/><circle cx="76" cy="78" r="4" fill="#7B522E"/>`},
+  rembrandt:{n:"Rembrandt",s:avBg("#EFE0C6")
+    +avBody("#594032",`<path d="M30 80l20 12 20-12-9 15H39z" fill="#FBEDD1"/>`)
+    +`<path d="M25 40q-5 12 2 26l9 4 28 1 10-8q5-14-1-24z" fill="#775745"/>`
+    +avFace("#D6A17E",{open:1,mouth:0})
+    +`<path d="M29 40c-8-3-9-11-3-16 7-6 18-8 29-6 14 2 22 9 22 16-7-2-16-2-25 1-8 3-15 5-23 5z" fill="#322923"/>
+    <path d="M40 62q5-7 10-3 5-4 10 3-6 2-10 0-4 2-10 0zm5 6h10l-5 6z" fill="#6B4B3D"/>`},
+  sinterklaas:{n:"Sinterklaas",s:avBg("#F8E3DC")
+    +avBody("#B52A35",`<path d="M34 79l16 11 16-11m-16 11v10" fill="none" stroke="#F4C66B" stroke-width="3"/>`)
+    +avFace("#E9B99B",{open:1,mouth:0})
+    +`<path d="M27 47l5-25L50 9l18 13 5 25q-23-6-46 0z" fill="#BA303B" stroke="#F4C66B" stroke-width="2"/>
+    <path d="M50 19v17m-6-11h12" stroke="#F4C66B" stroke-width="2.8" stroke-linecap="round"/>
+    <path d="M27 54q7 8 16 6 7-6 14 0 9 2 16-6 0 18-12 24l-11 8-11-8Q27 72 27 54z" fill="#FFF9ED"/>
+    <path d="M45 67q5 3 10 0" fill="none" stroke="#A96B66" stroke-width="1.7" stroke-linecap="round"/>`},
+  parel:{n:"het meisje met de parel",s:avBg("#E0EAF1")
+    +avBody("#BD8A45",`<path d="M33 79l17 9 12-9-10 14z" fill="#FFF8E9"/>`)
+    +avFace("#F1C7A6",{open:1})
+    +`<path d="M62 30q15 7 12 26l9 20-12 9-8-25z" fill="#D8AD52"/>
+    <path d="M25 43c0-14 9-24 25-24 11 0 19 5 23 14-15-3-26 0-36 7z" fill="#2B5C93"/>
+    <path d="M28 39q17-13 40-9" fill="none" stroke="#5286B2" stroke-width="3" stroke-linecap="round"/>
+    <ellipse cx="69" cy="66" rx="4.5" ry="6" fill="#FFFDF1" stroke="#BEBBBA" stroke-width="1"/>`},
 };
 const avSVG=id=>`<svg viewBox="0 0 100 100" aria-hidden="true">${(AVS[id]||AVS.bal).s}</svg>`;
 const TABN={vandaag:"Vandaag",examen:"Examen",oefenen:"Oefenen",herhalen:"Herhalen",profiel:"Profiel"};
