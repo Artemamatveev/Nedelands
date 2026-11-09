@@ -125,7 +125,13 @@ can only be taken back on the device that sent it. `OUTCOME_CAP` new rows a mont
 - **Oefenen**: "Examenonderdelen" (Lezen, Luisteren, Schrijven, Spreken, KNM: practice without the clock) and
 "Grammatica en woorden" under it, "Lezen, luisteren en spreken" beside them on a computer.
 - **Herhalen**: Mijn zwakke punten, Mijn fouten and Mijn woorden (the last two once there is something in them).
-- **Profiel**: first and last name, the level (A2 or B1, a list, see B1) (`S.me` `{name, last}`, so they sync, and they also go to the account's
+- **Profiel** looks like an iPhone settings screen (the user's example, November 2026): on top a round portrait of a Dutch
+woman or man in Golden Age dress (`art/av-v.jpg`, Judith Leyster's self-portrait; `art/av-m.jpg`, Frans Hals, a bearded man
+with a ruff, 1625; tap to switch, `S.me.av`, with its museum label under the name in Dutch), the name (or "Profiel") and the
+e-mail; then one filled cobalt banner (`.pban`: "Inloggen of account maken", or Bittertalen Plus when logged in), and
+rounded grey groups of rows on the white tile (`.pg`, `.prow`: the name fields with the value on the right, the level as a
+row with a native select over it, Trillen; the account with its status and Uitloggen / Account verwijderen as plain rows;
+Over and Privacy). Content: first and last name, the level (A2 or B1, a list, see B1) (`S.me` `{name, last}`, so they sync, and they also go to the account's
 `user_metadata` by `syncMeta()`; an exam date was asked here once and removed at the user's wish, an old `exam` field is
 kept as it is but not shown), the account
 (see Accounts). No "Mijn resultaten" tile any more (removed at the user's wish, November 2026): the scores stay in
