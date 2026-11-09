@@ -114,7 +114,7 @@ eindgesprek or a 64-hour course with the Blik op Werk keurmerk; the PVT with the
 inburgeren.nl ↗, and the eindgesprek to practise as four conversations (`GP` items with `ona:1`, the learner is a kok,
 examiner "Mevrouw Bakker"), which the Gesprekken list and its count leave out. Check these rules when DUO changes them. Practising a part is on Oefenen.
 Last on both level tabs, "Mijn examen" (`uitScreen()`, in `#talk`): per part the learner taps Geslaagd or Niet geslaagd for
-the real exam (tap again to take it back), which also shows in Mijn resultaten. Their own record is `S.uit` `{part: {ok, at}}`;
+the real exam (tap again to take it back). Their own record is `S.uit` `{part: {ok, at}}`;
 a copy goes to `/api/outcome` (`api/outcome.js`, table `exam_outcomes` and `put_outcome()` in `supabase/schema.sql`, run it
 in the SQL editor) to see whether the proefexamens and "Stabiel oefenresultaat" predict the result: part, ok, `pc` the last
 proefexamen score, `rd` the status then (0 nog niet, 1 bijna, 2 klaar), the month. No name, e-mail, account or IP. The row's
@@ -128,7 +128,8 @@ can only be taken back on the device that sent it. `OUTCOME_CAP` new rows a mont
 - **Profiel**: first and last name, the level (A2 or B1, a list, see B1) (`S.me` `{name, last}`, so they sync, and they also go to the account's
 `user_metadata` by `syncMeta()`; an exam date was asked here once and removed at the user's wish, an old `exam` field is
 kept as it is but not shown), the account
-(see Accounts) and "Mijn resultaten": every proefexamen with its date and score against the pass line, and a few counts.
+(see Accounts). No "Mijn resultaten" tile any more (removed at the user's wish, November 2026): the scores stay in
+`S.res` and show in the Examen rows.
 
 Every section appears once; don't add a second entry point to the same exercise.
 

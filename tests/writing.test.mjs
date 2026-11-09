@@ -182,15 +182,9 @@ test('Focused writing has its own resumable draft and preserves an ordinary writ
   assert.equal(b.document.querySelector('#txt').value,'Dit is mijn gerichte oefening.');
   assert.equal(b.document.querySelector('#timer').textContent,'');
 });
-test('Profile retains legacy results and only shows type history when detailed scores exist',async()=>{
+test('Profiel has no results tile any more (removed at the user\'s wish); the scores stay in S.res',async()=>{
   const a=await app();
-  a.run('S.res={wr:[{id:"old",at:Date.now(),pc:80,nw:100}]};drawResults()');
-  assert.match(a.document.querySelector('#myres').textContent,/80%/);
-  assert.equal(a.document.querySelector('.writing-history'),null);
-  const snap=pure('writingSnapshot',review([a2(0)],[perfect]));
-  a.run(`S.res.wr.push({at:Date.now(),pc:100,writing:${JSON.stringify(snap)}});drawResults()`);
-  assert.ok(a.document.querySelector('.writing-history'));
-  assert.match(a.document.querySelector('.writing-history').textContent,/1 opdracht · 1 proefexamen/);
-  a.run('LANG="en";LI=0;trNode(document.querySelector(".writing-history"))');
-  assert.match(a.document.querySelector('.writing-history').textContent,/Short message/);
+  a.run('S.res={wr:[{id:"old",at:Date.now(),pc:80,nw:100}]};drawProfile()');
+  assert.equal(a.document.querySelector('#myres'),null);
+  assert.equal(a.run('typeof drawResults'),'undefined');
 });

@@ -611,7 +611,6 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
       <div class="list" id="plinks"></div>
       <p class="note" id="pstart" style="margin:10px 0 0"></p>
     </section>
-    <section class="tile" id="myres" data-tab="profiel"></section>
     <section class="tile" data-tab="herhalen"><h2>Herhalen</h2><div class="list" id="mine"></div></section>
   </div>
   <div id="welcome" hidden></div>
@@ -3747,18 +3746,6 @@ function drawProfile(){
   $("plinks").innerHTML=itHTML(`data-x="over"`,"Over Bittertalen","Wie het maakt, waarom, en wat erin zit.",{ic:"over"})
     +itHTML(`data-x="privacy"`,"Privacyverklaring","Welke gegevens Bittertalen gebruikt, waarom en waar ze staan.",{ic:"privacy"});
   $("plinks").querySelectorAll("button").forEach(b=>b.onclick=()=>{location.href="/"+b.dataset.x});
-  drawResults();
-}
-function drawResults(){
-  const el=$("myres"); if(!el)return;
-  const R=S.res||{};
-  const day=t=>new Date(t).toLocaleDateString("nl-NL",{day:"numeric",month:"long"}),all=["lz","ls","wr","sp","knm","l1","lb","wb","sb"],ks=all.filter(k=>(R[k]||[]).length),U=S.uit||{},uk=all.filter(k=>U[k]);
-  el.innerHTML=`<h2>Mijn resultaten</h2>`
-    +(uk.length?`<h3 class="lh">Echt examen</h3><ul class="errs kv">${uk.map(k=>`<li>${PART[k]}<span class="${U[k].ok?"good":"bad"}">${U[k].ok?"Geslaagd":"Niet geslaagd"}</span></li>`).join("")}</ul>`:"")
-    +(ks.length?ks.map(k=>`<h3 class="lh">${PART[k]}</h3><ul class="errs kv">${R[k].slice().reverse().map(r=>`<li>Proefexamen ${day(r.at)}<span class="${r.pc>=passPc(k)?"good":"bad"}">${r.pc}%</span></li>`).join("")}</ul>${writingHistoryHTML(k)}`).join("")
-      :`<p class="sub">Nog geen proefexamens.</p>`)
-    +`<h3 class="lh">Geoefend</h3><ul class="errs kv"><li>Dagen op rij<span>${S.last>=today()-1?S.streak:0}</span></li><li>Vragen geoefend<span>${Object.keys(S.items).length}</span></li>`
-    +`<li>Bewaarde woorden<span>${(S.words||[]).length}</span></li><li>Gesprekken gevoerd<span>${Object.keys(S.gp||{}).length}</span></li></ul>`;
 }
 function drawPlan(){
   $("plan").innerHTML=planHTML();
@@ -4321,18 +4308,8 @@ function writingReviewHTML(review) {
     <h3 class="lh">Waar gingen de punten naartoe?</h3>${writingBarsHTML(review.criteria,WRITING_CRITERION_LABELS)}
     ${!review.complete?`<p class="note">Nog niet alle antwoorden hebben een puntenscore. Er is geen volledige totaalscore opgeslagen. Je concept blijft bewaard.</p>`
       :focus?`<h3 class="lh">Dit kun je nu verbeteren</h3>${focus}`:`<p class="note good">In deze poging heb je geen punten verloren.</p>`}
-    <p class="note">Dit laat deze poging zien. Bekijk je resultaten in Profiel om meerdere proefexamens te vergelijken.</p>
+    <p class="note">Dit laat deze poging zien.</p>
   </section>`;
-}
-function writingHistoryHTML(part) {
-  if(!isWr(part))return "";
-  const history=writingHistory(S.res?.[part] || []);
-  if(!history.types.length)return "";
-  return `<details class="writing-review writing-history"><summary>Per soort schrijfopdracht</summary>
-    <p class="note"><span>Laatste proefexamens met deelresultaten</span> · ${history.attempts}</p>
-    ${writingTypesHTML(history.types,true)}
-    ${history.attempts<3?'<p class="note">Nog weinig gegevens. Maak meer proefexamens om je ontwikkeling te zien.</p>':""}
-    <p class="note">Dit zijn oefenresultaten, geen voorspelling van je officiële uitslag.</p></details>`;
 }
 function practiseWritingFocus(action, part, back) {
   planId=null;
@@ -5961,7 +5938,6 @@ const UI={
 "Wie het maakt, waarom, en wat erin zit.":["Who makes it, why, and what is in it.","من يصنعه ولماذا وماذا يحتوي.","Kim yapıyor, neden yapıyor ve içinde neler var.","इसे कौन बनाता है, क्यों, और इसमें क्या है।","谁在做、为什么做、里面有什么。"],
 "Privacyverklaring":["Privacy statement","بيان الخصوصية","Gizlilik bildirimi","गोपनीयता कथन","隐私声明"],
 "Welke gegevens Bittertalen gebruikt, waarom en waar ze staan.":["What data Bittertalen uses, why and where it is kept.","البيانات التي يستخدمها Bittertalen وسبب استخدامها وأين تُحفظ.","Bittertalen hangi verileri, neden kullanıyor ve nerede saklıyor.","Bittertalen कौन-सा डेटा इस्तेमाल करता है, क्यों और वह कहाँ रखा जाता है।","Bittertalen 使用哪些数据、为什么使用、存放在哪里。"],
-"Mijn resultaten":["My results","نتائجي","Sonuçlarım","मेरे परिणाम","我的成绩"],
 "Nog geen proefexamens.":["No practice exams yet.","لا توجد امتحانات تجريبية بعد.","Henüz deneme sınavı yok.","अभी कोई अभ्यास परीक्षा नहीं।","还没有模拟考试。"],
 "Geoefend":["Practised","تم التدرّب","Çalışıldı","अभ्यास किया","已练习"],
 "Dagen op rij":["Days in a row","أيام متواصلة","Üst üste gün","लगातार दिन","连续天数"],
