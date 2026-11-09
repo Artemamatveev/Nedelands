@@ -4033,8 +4033,8 @@ function home(){
 // The tab you were on is kept while you practise: every back button goes back to it and is named after it.
 // Only Vandaag has the big painting and its label; the other tabs get the narrow strip, like an inner screen.
 let tab="vandaag";
-// Profiel's avatars: original chibi Dutch people, drawn here (head and shoulders, viewBox 0 0 100 100), four girls, four
-// boys and the bitterbal (the default); the learner picks one (S.me.av). The names are Dutch, as content.
+// Profiel's avatars: Dutch characters and the bitterbal (the default), drawn in a 100 × 100 viewBox.
+// The learner's choice is stored in S.me.av. The names are Dutch, as content.
 const AVINK="#2B2F3A";
 const avFace=(sk,o={})=>{const y=50;
   const eyes=o.open
@@ -4091,6 +4091,33 @@ const AVS={
     +`<path d="M27 46c0-12 10-18 23-18s23 6 23 18z" fill="#2A2222"/>`
     +avFace("#F2D2B3",{open:1})
     +`<ellipse cx="50" cy="35" rx="35" ry="7" fill="#E8C36A"/><path d="M32 34c0-11 8-16 18-16s18 5 18 16z" fill="#F0CF7A"/><rect x="32" y="28" width="36" height="5" fill="#3A7BC8"/>`},
+  fietser:{n:"de fietser",s:avBg("#DBEDF3")
+    +avBody("#E7AC37",`<path d="M50 78v22" stroke="#8F601A" stroke-width="2"/>`)
+    +`<path d="M24 54c0-22 10-34 26-34s26 12 26 34c0 16-10 25-26 25S24 70 24 54z" fill="#E7AC37"/>`
+    +avFace("#B77B59",{open:1})
+    +`<path d="M28 42c4-13 11-19 22-19s18 6 22 19c-13-7-31-7-44 0z" fill="#F6CA63"/>
+    <g transform="translate(53 79)" fill="none" stroke="#614918" stroke-width="1.7" stroke-linejoin="round">
+      <circle cx="4" cy="11" r="4"/><circle cx="20" cy="11" r="4"/><path d="M4 11l5-7 5 7H4m10 0 3-8h3m-3 0 3 8M7 4h5"/>
+    </g>`},
+  schaatser:{n:"de schaatser",s:avBg("#E1EDF9")
+    +avBody("#245A79")+avFace("#F1C6A4")
+    +`<circle cx="51" cy="17" r="7" fill="#D84E30"/><path d="M27 41c0-13 9-22 23-22s23 9 23 22z" fill="#D84E30"/>
+    <rect x="25" y="36" width="50" height="8" rx="4" fill="#AB3627"/>
+    <path d="M33 72q17 8 34 0l2 8-8 4v14H51V84q-12-1-20-5z" fill="#D84E30"/>
+    <path d="M66 89h4v4h8v3H66zm0 9h14" fill="none" stroke="#FFF4DD" stroke-width="1.5" stroke-linejoin="round"/>`},
+  haringverkoper:{n:"de haringverkoper",s:avBg("#F4E9DF")
+    +avBody("#2E6663",`<path d="M37 80h26l5 20H32z" fill="#F8F5ED"/>`)
+    +avFace("#D29B73",{open:1})
+    +`<path d="M27 39c0-12 9-20 23-20s22 8 22 20z" fill="#2A414D"/><path d="M35 39h42q-9 9-27 6z" fill="#20313A"/>
+    <path d="M59 90q11-11 20-2l6-4v11l-6-4q-9 9-20-1z" fill="#56868A"/>
+    <circle cx="64" cy="90" r="1.4" fill="#fff"/>`},
+  molenaar:{n:"de molenaar",s:avBg("#E7EDDA")
+    +avBody("#78614C",`<path d="M34 81l6 19m26-19-6 19" stroke="#E6CEAC" stroke-width="4"/>`)
+    +avFace("#E0AD89",{open:1})
+    +`<path d="M27 40c0-12 9-20 23-20 12 0 20 5 23 14-14 0-19 4-24 8z" fill="#655447"/>
+    <path d="M25 41q23-10 48-7l-3 7q-27 7-45 0z" fill="#483D35"/>
+    <path d="M43 59q3-5 7-2 4-3 7 2-4 3-7 0-3 3-7 0z" fill="#655447"/>
+    <path d="M49 96l3-9 3 9zm-3-17 12 12m0-12L46 91" fill="none" stroke="#E6CEAC" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>`},
 };
 const avSVG=id=>`<svg viewBox="0 0 100 100" aria-hidden="true">${(AVS[id]||AVS.bal).s}</svg>`;
 const TABN={vandaag:"Vandaag",examen:"Examen",oefenen:"Oefenen",herhalen:"Herhalen",profiel:"Profiel"};
