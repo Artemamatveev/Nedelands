@@ -511,6 +511,9 @@ words, paintings or history, run it and commit `audio/`. Who speaks: dialogue pe
 Charon (as the voice on the exam), words and reading aloud by Vindemiatrix, Gesprekken by the role (`GP .w`) and the
 learner's example answers by the other voice. The Google key is in `~/.config/bittertalen/tts.env` (`GOOGLE_TTS_KEY`, a
 key restricted to the Text-to-Speech API in the user's Google Cloud project); never put it in the repository or the chat.
+In a cloud session the key is a network secret of the environment `nedelands` (host texttospeech.googleapis.com, header
+`X-Goog-Api-Key`, no prefix), which the proxy puts in: run `NODE_USE_ENV_PROXY=1 GOOGLE_TTS_KEY=dummy node audio/build.mjs`
+(the page's texts then come through Playwright).
 The whole app is about 240 000 characters, inside Google's free million per month.
 
 ## Gesprekken (conversations)
