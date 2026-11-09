@@ -605,7 +605,7 @@ body.vfull{overflow:hidden}
 .pav span,.pav svg,.avg i svg{display:block;width:100%;height:100%}
 .avg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px 8px;margin:18px 0 6px}
 .avg button{display:flex;flex-direction:column;align-items:center;gap:8px;padding:0;background:none;border:0;font:inherit;font-size:var(--fs-s);color:var(--soft);line-height:1.3;cursor:pointer}
-.avg i{width:84px;height:84px;border-radius:var(--r);overflow:hidden;border:3px solid var(--card);box-shadow:var(--lift)}
+.avg i{width:84px;height:84px;border-radius:var(--r);overflow:hidden;border:3px solid transparent}
 .avg [aria-pressed=true] i{border-color:var(--oranje)} .avg [aria-pressed=true]{color:var(--ink);font-weight:600}
 .avg button:active i{transform:scale(.96)}
 :root[data-desktop] #talk:has(.avg){max-width:1080px}
@@ -4178,10 +4178,19 @@ const AVS={
     <ellipse cx="69" cy="66" rx="4.5" ry="6" fill="#FFFDF1" stroke="#BEBBBA" stroke-width="1"/>`},
 };
 const avatarOrder=Object.keys(AVS);
+const avatarPortraits={
+  bal:"/art/bitterbal-white.jpg",
+  volv:"/art/volendam-girl-white.jpg"
+};
+const avatarSheet="/art/plush-avatars.jpg";
 function avSVG(id){
-  const avatar=AVS[id]||AVS.bal;
-  const portrait=avatar===AVS.bal?'<image href="/art/bitterbal-scarf.jpg" width="100" height="100"/>':"";
-  return `<svg viewBox="0 0 100 100" aria-hidden="true">${avatar.s}${portrait}</svg>`;
+  const tile=Math.max(0,avatarOrder.indexOf(id));
+  const key=avatarOrder[tile];
+  const portrait=avatarPortraits[key];
+  const image=portrait
+    ?`<image href="${portrait}" width="100" height="100"/>`
+    :`<image href="${avatarSheet}" x="${-(tile%4)*100}" y="${-Math.floor(tile/4)*100}" width="400" height="400"/>`;
+  return `<svg viewBox="0 0 100 100" overflow="hidden" aria-hidden="true">${AVS[key].s}${image}</svg>`;
 }
 const TABN={vandaag:"Vandaag",examen:"Examen",oefenen:"Oefenen",herhalen:"Herhalen",profiel:"Profiel"};
 const backHTML=()=>`<span aria-hidden="true">←</span>${TABN[tab]}`;
