@@ -6,6 +6,7 @@
     "@anthropic-ai/sdk": "^0.132.1"
   },
   "devDependencies": {
+    "axe-core": "4.10.3",
     "fake-indexeddb": "6.2.5",
     "linkedom": "0.18.15"
   },

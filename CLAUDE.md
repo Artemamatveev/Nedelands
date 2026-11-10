@@ -137,8 +137,8 @@ icons with names, the names fold away while you scroll down). The bar is a nearl
 shadow, so it stands out on a white tile too (the clear glass one vanished on light screens). The lens is a rounded
 rectangle (19 px corners, the bar 24 px, so they run parallel), not a circle: a circle cut off longer names such as
 "Мой день"; a name wider than its button ("Повторение") is set a little smaller, down to 9.5 px (`fitTabs()`, phone only). The current tab sits
-under a lens (`.tabs .lens`), a bitterbal (an orange gradient, lighter top left, the same in dark mode) with the
-tab in white, that slides to the new tab with a little spring and stretch, and can be dragged along the bar
+under a lens (`.tabs .lens`), a bitterbal (an orange gradient, lighter only at the top where the icon is, the same in
+dark mode) with the tab in white (at least 4.5:1 behind the name, measured by the browser test), that slides to the new tab with a little spring and stretch, and can be dragged along the bar
 with a finger (it grows and clears while held; where you let go is the tab that opens). The bar only
 shows on the five tabs; exercises and inner screens hide it and go back with their back button or a swipe. The tab
 you were on is kept (`tab`), so every back button returns to it and is named after it.
@@ -300,7 +300,9 @@ Writing drafts are local and account-scoped (`ww-writing:<owner>:practice|exam:<
 Writing feedback recommends at most two actions, prioritising unfinished tasks and critical content before other lost points. A zero for content is not treated as separate evidence of grammar or spelling weakness. Identified word-order errors can open the existing A2/B1 word-order section; other actions open the relevant writing task. These focused tasks use a separate `:focus/<task-key>` draft slot, appear among resumable drafts, and preserve ordinary practice drafts. Returning restores the exam result without grading or recording the attempt again. Detailed corrections, rewriting and Word export remain available under the summary.
 
 Run `npm ci --ignore-scripts` and `npm test` after changes. `tests/browser.test.mjs` opens the homepage and the app
-in Chromium (no errors, no sideways scroll, Arabic right to left, the sample question, the KNM theme list); it skips
+in Chromium (no errors, no sideways scroll, Arabic right to left, the sample question, the KNM theme list, and axe-core
+(a dev dependency) finding no accessibility problem on the homepage, every tab, an answered question, a proefexamen, the
+login window, Over and Privacy, light and dark; a screen without the painting gives its own `h1`, like `#playh`); it skips
 where Playwright is missing, and the `browser` job in `.github/workflows/check.yml` installs it and makes it required. The workflow checks learner verb forms, order alternatives, normal UI entry points, diagnostic counts, time budgets, drafts and deadlines, account isolation, offline merges, conditional-write races, lost acknowledgements and grading-quota failures. Browser/microphone behaviour and human NT2 review still require separate validation.
 
 `sw.js` makes the app work offline and start quickly: the page from the network if it answers within `FAST` (2.5 s),

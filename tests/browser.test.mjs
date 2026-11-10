@@ -1,5 +1,6 @@
 // Smoke test in a real browser: the homepage and the app open without errors, fit a phone screen, switch to Arabic
-// (right to left), show the sample question and open the KNM theme list. Runs where Playwright and Chromium are
+// (right to left), show the sample question and open the KNM theme list; axe-core finds no accessibility problem on any
+// kind of screen, light and dark, and the white tab name on the oranje lens has at least 4.5:1. Runs where Playwright and Chromium are
 // installed (the "browser" job in CI sets BROWSER_TESTS=1, so there a missing browser fails instead of skipping).
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -106,6 +107,47 @@ test('The homepage and the app work in a real browser', async t => {
       await s.p.locator('#play .opt').first().click();
       await s.p.waitForSelector('.fb');
       assert.deepEqual(s.errors, []); await s.ctx.close();
+    });
+    // axe-core's WCAG checks (names, labels, headings, contrast where it can tell, ARIA) on every kind of screen, light
+    // and dark; the white tab names on the oranje lens are measured separately (axe can't read a gradient)
+    await t.test('accessibility: axe finds nothing', async () => {
+      const AXE = fs.readFileSync(createRequire(import.meta.url).resolve('axe-core/axe.min.js'), 'utf8'), found = [];
+      const check = async (name, url, prep, opt = {}) => {
+        const s = await page(browser, base, opt); await s.go(url); await s.p.waitForTimeout(300);
+        if (prep) { await prep(s.p); await s.p.waitForTimeout(200); }
+        await s.p.addScriptTag({content: AXE});
+        const v = await s.p.evaluate(() => axe.run(document).then(r => r.violations.map(v => `${v.id}: ${v.nodes.slice(0, 3).map(n => n.target.join(' ')).join(', ')}`)));
+        v.forEach(x => found.push(`${name}: ${x}`));
+        assert.deepEqual(s.errors, [], name); await s.ctx.close();
+      };
+      const tab = t => p => p.evaluate(t => setTab(t), t);
+      for (const scheme of ['light', 'dark']) {
+        await check(`homepage ${scheme}`, '/', null, {colorScheme: scheme});
+        for (const t of ['vandaag', 'examen', 'oefenen', 'herhalen', 'profiel']) await check(`${t} ${scheme}`, '/oefenen', tab(t), {colorScheme: scheme});
+        await check(`KNM answered ${scheme}`, '/oefenen', async p => { await p.evaluate(() => build('knm')); await p.locator('#play .opts button').first().click(); }, {colorScheme: scheme});
+      }
+      await check('KNM proefexamen', '/oefenen', p => p.evaluate(() => startExam('knm')));
+      await check('login window', '/oefenen?open=login');
+      await check('over', '/over'); await check('privacy dark', '/privacy', null, {colorScheme: 'dark'});
+      await check('Arabic', '/oefenen', null, {lang: 'ar'});
+      await check('desktop', '/oefenen', null, {viewport: {width: 1280, height: 800}, isMobile: false, hasTouch: false});
+      assert.deepEqual(found, []);
+      // the current tab's name, white on the oranje lens: at least 4.5:1 on every pixel behind it
+      const s = await page(browser, base); await s.go('/oefenen'); await s.p.evaluate(() => setTab('examen')); await s.p.waitForTimeout(600);
+      const box = await s.p.locator('.tabs button[data-t="examen"] span:not([aria-hidden])').last().boundingBox();
+      await s.p.addStyleTag({content: '.tabs button *{visibility:hidden!important}'});
+      const png = (await s.p.screenshot({clip: box})).toString('base64');
+      const min = await s.p.evaluate(async png => {
+        const img = new Image(); img.src = 'data:image/png;base64,' + png; await img.decode();
+        const c = Object.assign(document.createElement('canvas'), {width: img.width, height: img.height}), g = c.getContext('2d');
+        g.drawImage(img, 0, 0);
+        const d = g.getImageData(0, 0, c.width, c.height).data, L = v => { v /= 255; return v <= .03928 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; };
+        let low = 99;
+        for (let i = 0; i < d.length; i += 4) low = Math.min(low, 1.05 / (.2126 * L(d[i]) + .7152 * L(d[i + 1]) + .0722 * L(d[i + 2]) + .05));
+        return low;
+      }, png);
+      assert.ok(min >= 4.5, `white on the lens: ${min.toFixed(2)}:1`);
+      await s.ctx.close();
     });
   } finally { await browser.close(); server.close(); }
 });

@@ -210,8 +210,8 @@ a.it{text-decoration:none} .it.ext::after{content:none}
    the lens's plus the bar's padding, so they run parallel */
 .tabs .lens{position:absolute;top:5px;bottom:5px;left:5px;width:calc((100% - 10px)/5);border-radius:19px;pointer-events:none;
   /* the lens is a bitterbal: fried orange, lighter where the light falls, the current tab white on it (the same
-     colours in dark mode, white text 4.6:1) */
-  background:radial-gradient(120% 140% at 35% 20%,#E3792F 0%,#C8500C 55%,#A93F07 100%);
+     colours in dark mode; the light only at the top, where the icon is: white text at least 4.5:1 under the name) */
+  background:radial-gradient(120% 140% at 35% 10%,#DD7029 0%,#BF4A08 38%,#A23C06 100%);
   box-shadow:inset 0 1px 1px rgba(255,255,255,.35),inset 0 -2px 3px rgba(80,25,0,.25),0 4px 12px rgba(200,80,12,.4);
   transform:translateX(calc(var(--i,0) * 100%));transition:transform .38s cubic-bezier(.22,1,.36,1),scale .3s cubic-bezier(.22,1,.36,1),background-color .3s}
 .tabs .lens.go{animation:goo .38s ease-out}
@@ -669,6 +669,7 @@ body.vfull{overflow:hidden}
 @media (hover:hover){:root[data-desktop] .tabs button:not([aria-current]):hover{background:rgba(255,255,255,.55)}}
 :root[data-desktop] .tabs .lens{
   left:10px;right:10px;top:var(--nav-top);bottom:auto;width:auto;height:var(--nav-row);border-radius:var(--rc);
+  background:radial-gradient(90% 260% at 12% -60%,#DD7029 0%,#BF4A08 45%,#A23C06 100%);
   transform:translateY(calc(var(--i,0) * 100%));
 }
 /* the inner screens (an exercise, a book) float on the same blurred painting */
@@ -893,6 +894,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
     <div id="hbody"></div>
   </div>
   <div id="play" lang="nl" hidden>
+    <h1 class="sr-only" id="playh"></h1>
     <div class="top"><button class="back x" id="back" aria-label="Stoppen"></button><div class="bar"><i id="bar"></i></div><span id="cnt"></span><span id="timer"></span></div>
     <section class="card" id="card" aria-live="polite"></section>
     <div class="mode"><button id="mode"></button></div>
@@ -2403,7 +2405,8 @@ function build(id,custom){
 // Practising is a focus screen: no painting, only ✕ (back to where you came from), the progress, the count and the clock
 const XSVG='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
 function show(){
-  head(); if(pos>=queue.length)return finish();
+  head(); $("playh").textContent=cur.t||"Oefenen"; // the screen's heading for screen readers (the painting's h1 is hidden here)
+  if(pos>=queue.length)return finish();
   const q=queue[pos]; answered=false; $("mode").hidden=!q.canType; hush();
   let h=`<p class="ask">${q.label}</p>`;
   if(q.intro)h+=`<p class="intro">${q.intro}</p>`; // as on the exam: who reads or hears what
