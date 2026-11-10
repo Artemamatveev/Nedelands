@@ -1,0 +1,161 @@
+'s-Gravenhage	m		synonym of Den Haag
+112	m		112, the pan-European emergency phone number
+15e	a		15th
+19e	a		19th
+4e	a		4th
+18e	a		18th
+13e	a		13th
+11e	a		11th
+14e	a		14th
+17e	a		17th
+1e	a		1st
+2e	a		2nd
+3e	a		3rd
+5e	a		5th
+6e	a		6th
+7e	a		7th
+10e	a		10th
+8e	a		8th
+9e	a		9th
+12e	a		12th
+20e	a		20th
+21e	a		21st
+16-minner	n	de · mv. 16-minners	someone below the age of 16; i.e. a legal minor
+'s-Hertogenbosch	m		's-Hertogenbosch (a city, municipality, and capital of North Brabant,…
+16e	a		16th
+06-nummer	n	het · mv. 06-nummers	mobile phone number
+2C-B	n	de	2C-B
+4-fluoramfetamine	n	de	4-fluoroamphetamine
+22e	a		22nd
+23e	a		23rd
+24e	a		24th
+25e	a		25th
+26e	a		26th
+27e	a		27th
+28e	a		28th
+29e	a		29th
+65-plusser	n	de · mv. 65-plussers	a person who is 65 years old or older, 65 having traditionally been the…
+'s-Gravenzande	m		a city and former municipality of Westland, South Holland, Netherlands
+16-plusser	n	de · mv. 16-plussers	Someone above the age of 16
+'s-Heerenberg	m		a city and former municipality of Montferland, Gelderland, Netherlands
+'s-Gravenhoek	m		a former municipality of Zeeland, Netherlands
+'s-Gravenpolder	m		a village and former municipality of Borsele, Zeeland, Netherlands
+'s-Heerenhoek	m		a village and former municipality of Borsele, Zeeland, Netherlands
+'s-Heerenbroek	m		a village in Kampen, Overijssel, Netherlands
+'s-Gravendeel	m		a village and former municipality of Hoeksche Waard, South Holland, Netherlands
+'s-Gravenland	m		a neighbourhood of Capelle aan den IJssel, South Holland, Netherlands; a neighbourhood of Rotterdam, South Holland, Netherlands
+'s-Gravenweg	m		a hamlet in Zuidplas, South Holland, Netherlands
+'s-Gravenambacht	m		a former municipality of South Holland, Netherlands
+'s-Molenaarsbuurt	m		a hamlet in Alphen aan den Rijn, South Holland, Netherlands
+'s-Graveland	m		a village and former municipality of Wijdemeren, North Holland, Netherlands
+'s-Gravensloot	m		a hamlet in Woerden, Utrecht, Netherlands
+'s-Gravesloot	m		a former municipality of Utrecht, Netherlands
+020	m		synonym of Amsterdam
+010	m		synonym of Rotterdam
+19e-eeuws	a		nineteenth-century, related to or happening in the 19th century
+#
+5	aanbidden:v|zien:v|geven:v
+7	wassen:v|slapen:v|gaan:v
+-	wassen:a|benen:a|zullen:v
+3	worden:v|gewaarworden:v|verworden:v
+3b	bergen:v|trekken:v|zwemmen:v
+2a	vliegen:v|genieten:v|schieten:v
+6	slaan:v|dragen:v|gedragen:v
+'s	des:|eens:d
+'m	hem:r
+3a	drinken:v|klimmen:v|zingen:v
+1	kijken:v|verdwijnen:v|blijven:v
+2b	duiken:v|ruiken:v|sluiten:v
+'n	een:t
+4	scheren:v|breken:v|bewegen:v
+'t	het:|het:r
+'k	ik:r
+3+7	helpen:v|werpen:v|afwerpen:v
+'er	der:d
+15e	vijftiende:a
+19e	negentiende:a
+4e	vierde:a
+18e	achttiende:a
+13e	dertiende:a
+11e	elfde:a
+14e	veertiende:a
+20ste	twintigste:a
+17e	zeventiende:a
+1e	eerste:a
+2e	tweede:a
+3e	derde:a
+5e	vijfde:a
+6e	zesde:a
+7e	zevende:a
+10e	tiende:a
+8e	achtste:a
+9e	negende:a
+12e	twaalfde:a
+20e	twintigste:a
+21e	eenentwintigste:a
+21ste	eenentwintigste:a
+41e	eenenveertigste:a
+19de	negentiende:a
+'r	haar:r
+'ns	eens:d
+16-minners	16-minner:n
+16-minnertje	16-minner:n
+16e	zestiende:a
+100e	honderdste:a
+06-nummers	06-nummer:n
+06-nummertje	06-nummer:n
+'ie	ie:r
+4-FA	4-fluoramfetamine:n
+4-FMP	4-fluoramfetamine:n
+15de	vijftiende:a
+18de	achttiende:a
+17de	zeventiende:a
+16de	zestiende:a
+8ste	achtste:a
+9de	negende:a
+10de	tiende:a
+11de	elfde:a
+12de	twaalfde:a
+13de	dertiende:a
+14de	veertiende:a
+7de	zevende:a
+2de	tweede:a
+3de	derde:a
+4de	vierde:a
+5de	vijfde:a
+6de	zesde:a
+1ste	eerste:a
+22ste	tweeëntwintigste:a
+22e	tweeëntwintigste:a
+30e	dertigste:a
+30ste	dertigste:a
+65-plussers	65-plusser:n
+31e	eenendertigste:a
+40e	veertigste:a
+50e	vijftigste:a
+60e	zestigste:a
+70e	zeventigste:a
+80e	tachtigste:a
+90e	negentigste:a
+16-plussers	16-plusser:n
+16-plussertje	16-plusser:n
+31ste	eenendertigste:a
+40ste	veertigste:a
+41ste	eenenveertigste:a
+50ste	vijftigste:a
+60ste	zestigste:a
+70ste	zeventigste:a
+80ste	tachtigste:a
+90ste	negentigste:a
+100ste	honderdste:a
+19e-eeuwse	19e-eeuws:a
+1-op-1	een-op-een:d
+1-hoog	eenhoog:d
+2-hoog	tweehoog:d
+3-hoog	driehoog:d
+4-hoog	vierhoog:d
+5-hoog	vijfhoog:d
+0e	nulde:a
+0de	nulde:a
+18-plusser	achttienplusser:n
+18+'er	achttienplusser:n

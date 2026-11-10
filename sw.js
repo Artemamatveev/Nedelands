@@ -2,23 +2,70 @@
 // The page itself: from the network first, but never waiting more than FAST ms (a slow connection made people wait);
 // then the cached copy, and the network refreshes it in the background: when the new one differs (another ETag), the
 // open page is told, and it offers to reload. Cache-first alone left iPhones on an old version: iOS stops a home-screen
-// app's background work, so the refresh of the 1 MB page often never finished. With nothing cached yet: the network. Other pages (including the landing page) are cached under their own address.
-// Paintings, photos and icons: from the cache, refreshed in the background. The dictionary (7 MB): cache only.
+// app's background work, so the refresh of the (then 1 MB) page often never finished. With nothing cached yet: the
+// network. Other pages (including the landing page) are cached under their own address.
+// The page's own files (data/ and study/ scripts as "?v=<hash>", and the dictionary's parts under "?v=" DICTV) never
+// change under the same address: they are kept for good, and a new copy of the page is only stored once all its files
+// are in the cache, so the cached page always works offline. Versions no page uses any more are then removed.
+// Paintings, photos and icons: from the cache, refreshed in the background.
 // Recorded voices (audio/): cached on first play. api/ (grading, new texts) always goes to the network.
-const APP = "/oefenen", CACHE = "nl-a2-v12", CORE = [APP, "/", "/landing.css", "/landing.js", "/art/delft.jpg", "/art/bitterbal-white.jpg", "/manifest.json", "/apple-touch-icon.png", "/study/language-v1.js", "/study/progress-v1.js", "/study/writing-v1.js"];
+// CACHE stays the same when sw.js changes: a new name would throw away every painting, photo and voice people have.
+const APP = "/oefenen", CACHE = "nl-a2-v12", CORE = [APP, "/", "/landing.css", "/landing.js", "/art/delft.jpg", "/art/bitterbal-white.jpg", "/manifest.json", "/apple-touch-icon.png"];
+
+const assetsOf = html => [...html.matchAll(/src="(\/(?:data|study)\/[^"?]+\.js\?v=[0-9a-f]+)"/g)].map(m => m[1]);
+const dictOf = html => (/const DICTV="([0-9a-f]+)"/.exec(html) || [])[1] || "";
+// One network request per versioned file, shared by the page that asks for it and the background that stores it
+const inflight = new Map();
+function fetchAsset(c, url) {
+  const u = new URL(url, location.origin).href;
+  if (!inflight.has(u)) inflight.set(u, fetch(u).then(async res => { if (res.ok) await c.put(u, res.clone()); return res })
+    .finally(() => inflight.delete(u)));
+  return inflight.get(u).then(res => res.clone());
+}
+// Every file the page loads, from the cache, an older cache (from) or the network; true when all are there
+async function keepAssets(c, html, from) {
+  const ok = await Promise.all(assetsOf(html).map(async u => {
+    if (await c.match(u)) return true;
+    const old = from && await from.match(u);
+    if (old) { await c.put(u, old); return true }
+    const res = await fetchAsset(c, u).catch(() => null);
+    return !!(res && res.ok);
+  }));
+  return ok.every(Boolean);
+}
+// Forget the versions the stored page no longer uses (also the unversioned files and the 7 MB dictionary of before)
+async function prune(c, html) {
+  const keep = new Set(assetsOf(html)), dv = dictOf(html);
+  for (const req of await c.keys()) {
+    const u = new URL(req.url);
+    if (/^\/(data|study)\//.test(u.pathname) && !keep.has(u.pathname + u.search)) await c.delete(req);
+    else if (u.pathname.startsWith("/dict/") && (!dv || u.searchParams.get("v") !== dv)) await c.delete(req);
+  }
+}
+// A new copy of the app page goes into the cache only with all its files
+async function storeApp(c, res) {
+  const html = await res.clone().text();
+  if (!(await keepAssets(c, html))) return false;
+  await c.put(APP, res); await prune(c, html); return true;
+}
 
 // Install must not fail: on the user's iPhone a new sw.js never took over, most likely because caching the 1 MB page
 // at install did not finish. So each file is tried on its own and a miss is fine (the page comes from the network at the
-// next start anyway); without a fresh page the one from the old cache is carried over, so the app still opens offline.
+// next start anyway); without a fresh page the one from an old cache is carried over with its files, so the app still
+// opens offline.
 self.addEventListener("install", e => {
   self.skipWaiting();
   e.waitUntil(caches.open(CACHE).then(async c => {
-    await Promise.all(CORE.map(u => c.add(new Request(u, { cache: "no-store" })).catch(() => {})));
+    await Promise.all(CORE.filter(u => u !== APP).map(u => c.add(new Request(u, { cache: "no-store" })).catch(() => {})));
+    const res = await fetch(new Request(APP, { cache: "no-store" })).catch(() => null);
+    if (res && res.ok) await storeApp(c, res).catch(() => {});
     if (!(await c.match(APP))) {
       for (const k of await caches.keys()) {
         if (k === CACHE) continue;
-        const old = await (await caches.open(k)).match("/");
-        if (old && (await old.clone().text()).includes('id="welcome"')) { await c.put(APP, old); break }
+        const oc = await caches.open(k), old = (await oc.match(APP)) || (await oc.match("/"));
+        if (!old) continue;
+        const html = await old.clone().text();
+        if (html.includes('id="welcome"') && await keepAssets(c, html, oc)) { await c.put(APP, old); break }
       }
     }
   }).catch(() => {}));
@@ -34,11 +81,12 @@ self.addEventListener("activate", e => {
     (await self.clients.matchAll({ type: "window", includeUncontrolled: true })).forEach(w => w.postMessage({ fresh: true }));
   }));
 });
-// The page sends the list of paintings and photos, so they are there offline before they are first shown
+// The page sends the files to keep before they are first needed: paintings and photos, and the dictionary's parts
 self.addEventListener("message", e => {
   const urls = e.data && Array.isArray(e.data.warm) ? e.data.warm : [];
-  e.waitUntil(caches.open(CACHE).then(c => Promise.all(urls.map(u =>
-    c.match(u).then(hit => hit || c.add(u).catch(() => {}))))));
+  e.waitUntil(caches.open(CACHE).then(async c => {
+    for (const u of urls) if (!(await c.match(u))) await c.add(u).catch(() => {}); // one by one: it is background work
+  }));
 });
 self.addEventListener("fetch", e => {
   const r = e.request, u = new URL(r.url);
@@ -53,6 +101,11 @@ self.addEventListener("fetch", e => {
     const key = app ? APP : u.pathname === "/index.html" ? "/" : u.pathname;
     e.respondWith(cacheFirst(e, r, key)); return;
   }
+  // Versioned files: the same address always has the same content, so a cached copy is never fetched again
+  if (u.searchParams.has("v") && /^\/(data|study|dict)\//.test(u.pathname)) {
+    e.respondWith(caches.open(CACHE).then(c => c.match(r).then(hit => hit || fetchAsset(c, r.url))));
+    return;
+  }
   // Recorded voices: kept after the first play (a file never changes, its name is the hash of its line). The audio
   // element asks for byte ranges (Safari won't play without them), answered from the whole file.
   if (u.pathname.startsWith("/audio/") && u.pathname.endsWith(".mp3")) {
@@ -61,9 +114,9 @@ self.addEventListener("fetch", e => {
       .then(res => ranged(r, res)));
     return;
   }
-  // Everything else from the cache. Paintings, photos and the dictionary never change under the same name, so a hit is
-  // not fetched again (on a slow connection that used to fill the line at every start); the rest (manifest, icons,
-  // lib, audio/index.json) is refreshed in the background.
+  // Everything else from the cache. Paintings and photos never change under the same name, so a hit is not fetched
+  // again (on a slow connection that used to fill the line at every start); the rest (manifest, icons, lib,
+  // audio/index.json) is refreshed in the background.
   e.respondWith(caches.open(CACHE).then(c => c.match(r).then(hit => {
     const net = () => fetch(r).then(res => { if (res.ok) c.put(r, res.clone()); return res });
     if (hit) { if (!/^\/(dict|art|foto)\//.test(u.pathname)) e.waitUntil(net().catch(() => {})); return hit }
@@ -71,24 +124,29 @@ self.addEventListener("fetch", e => {
   })));
 });
 // The network if it answers within FAST ms, else the cached page; the network still refreshes the cache in the
-// background and, when the page changed, tells the open windows ({fresh: true}). Nothing cached (the first visit):
-// wait for the network, else the start page.
+// background and, when the page changed, tells the open windows ({fresh: true}) once the new page and its files are
+// stored. Nothing cached (the first visit): wait for the network, else the start page.
 const FAST = 2500;
 async function cacheFirst(e, r, key) {
   const c = await caches.open(CACHE), hit = await c.match(key), old = hit && hit.clone(); // hit may go to the page, old is compared
   // by its address: a navigation request itself can't be fetched with other options
+  let stored = Promise.resolve(false);
   const net = fetch(r.url, { cache: "no-store", credentials: "same-origin" }).then(async res => {
-    if (res.ok) await c.put(key, res.clone());
+    if (res.ok) {
+      if (key === APP) stored = storeApp(c, res.clone()).catch(() => false); // in the background: the page doesn't wait for its files
+      else { await c.put(key, res.clone()); stored = Promise.resolve(true) }
+    }
     return res;
   });
+  e.waitUntil(net.then(() => stored, () => {}));
   if (!hit) return net.catch(() => Response.error());
   const quick = net.then(res => res.ok ? res : hit, () => hit);
   const page = Promise.race([quick, new Promise(ok => setTimeout(() => ok(hit), FAST))]);
   e.waitUntil(net.then(async res => {
     // the window got the network's page, so it is already new: nothing to offer
-    if ((await page) !== hit || !res.ok || key !== APP) return;
+    if ((await page) !== hit || !res.ok || key !== APP || !(await stored)) return;
     const a = old.headers.get("etag"), b = res.headers.get("etag");
-    const changed = a && b ? a !== b : (await old.text()) !== (await res.clone().text());
+    const changed = a && b ? a !== b : (await old.text()) !== (await (await c.match(APP)).text());
     if (!changed) return;
     // remembered too (the page that is still starting may miss the message, so it asks /__changed)
     await c.put("/__changed", new Response(String(Date.now())));

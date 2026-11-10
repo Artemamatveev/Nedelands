@@ -1,0 +1,115 @@
+quiz	n	de · mv. quizzen	quiz
+quisling	n	de · mv. quislingen	quisling
+Qatar	m		Qatar (a country in West Asia in the Middle East)
+qua	p		regarding, concerning, in terms of
+Quechua	m		Quechua (language)
+quarantaine	n	de · mv. quarantaines	a quarantine, sanitary measure of isolating infected people; its duration or…; any isolation, exclusion
+quagga	n	de · mv. quagga's	quagga (Equus quagga quagga)
+quotum	n	het · mv. quota	quota, quotum
+quota	n	de · mv. quota's	synonym of quotum
+quark	n	de · mv. quarks	quark
+quiche	n	de · mv. quiches	quiche
+qat	n	de	khat (the plant Catha edulis); khat (a psychoactive stimulant obtained from the plant)
+quetzal	n	de · mv. quetzals	quetzal (bird of genus Pharomacrus); quetzal (Guatemalan currency)
+quinoa	n	de · mv. quinoa's	quinoa (Chenopodium quinoa); the seeds of the quinoa
+quasi	d		quasi
+quad	n	de · mv. quads	quad, quad bike
+quaestor	n	de · mv. quaestoren	treasurer, today mostly used in academic/student organizations
+quenelle	n	de · mv. quenelles	dumpling, quenelle (food); quenelle (gesture)
+quotiënt	n	het · mv. quotiënten	quotient
+quitte	a		quits, even
+Quenyaans	m		Quenya (constructed language)
+quaker	n	de · mv. quakers	Quaker (believer of the Quaker faith)
+quizzen	v	quizde – gequizd	to do a quiz
+quadrupool	n	de · mv. quadrupolen	quadrupole
+quadrupoolterm	n	de · mv. quadrupooltermen	quadrupole term
+quadrone	n	de · mv. quadronen	synonym of quarterone
+Quist	m		a surname
+quatsch	n	de	nonsense
+quinoakut	n	de · mv. quinoakutten	female superfoodie
+quiëtisme	n	het	quietism
+quiëtisterij	n	de	quietism
+quiëtist	n	de · mv. quiëtisten	quietist
+quadrimester	n	het · mv. quadrimesters	quadrimester (period of four months)
+Q-koorts	n	de	Q fever, bacterial disease caused by Coxiella burnetii
+queeste	n	de · mv. queesten	quest
+quasi-alliantie	n	de · mv. quasi-allianties	quasi-alliance
+Quirijnstok	m		a hamlet in Tilburg, North Brabant, Netherlands
+Quatrebras	m		a hamlet in Tytsjerksteradiel, Friesland, Netherlands
+quizvraag	n	de · mv. quizvragen	pub quiz question
+Quackjeswater	m		a lake in South Holland, Netherlands, near the western shore of the island…
+qowed	i		get lost, piss off
+QR-code	n	de · mv. QR-codes	QR code
+quarterone	n	de · mv. quarteronen	quadroon
+quinterone	n	de · mv. quinteronen	quintroon
+quooker	n	de	synonym of kokendwaterkraan (“boiling water tap”)
+quoteren	v	quoteerde – gequoteerd	to quote, estimate, appraise
+#
+quizzen	quiz:n
+quizje	quiz:n
+quislingen	quisling:n
+quislingetje	quisling:n
+quarantaines	quarantaine:n
+quarantainetje	quarantaine:n
+quagga's	quagga:n
+quaggaatje	quagga:n
+quota	quotum:n
+quotumpje	quotum:n
+quota's	quota:n
+quarks	quark:n
+quiches	quiche:n
+quicheje	quiche:n
+quadroon	quadrone:n
+quetzals	quetzal:n
+quetzaltje	quetzal:n
+quinoa's	quinoa:n
+quads	quad:n
+quadje	quad:n
+quaestoren	quaestor:n
+quaestors	quaestor:n
+quaestores	quaestor:n
+quaestortje	quaestor:n
+quint	kwint:n
+quenelles	quenelle:n
+quenelletje	quenelle:n
+quotiënten	quotiënt:n
+quotiëntje	quotiënt:n
+quakers	quaker:n
+quakertje	quaker:n
+quiz	quizzen:v
+quizde	quizzen:v
+quizt	quizzen:v
+quizden	quizzen:v
+quizzend	quizzen:v
+quadrupolen	quadrupool:n
+quadrupooltje	quadrupool:n
+quadrupooltermen	quadrupoolterm:n
+quadrupooltermpje	quadrupoolterm:n
+quarteroon	quarterone:n
+quartel	kwartel:n
+quadronen	quadrone:n
+quintessens	kwintessens:n
+quinoakutten	quinoakut:n
+quiëtisten	quiëtist:n
+quadrimesters	quadrimester:n
+quadrimestertje	quadrimester:n
+queesten	queeste:n
+queestes	queeste:n
+quasi-allianties	quasi-alliantie:n
+quasi-alliantietje	quasi-alliantie:n
+quizvragen	quizvraag:n
+quizvraagje	quizvraag:n
+qualle	kwal:n
+qualiteit	kwaliteit:n
+quantiteit	kwantiteit:n
+QR-codes	QR-code:n
+QR-codetje	QR-code:n
+quarteronen	quarterone:n
+quinteronen	quinterone:n
+qualificatie	kwalificatie:n
+qualificeeren	kwalificeren:v
+quoteer	quoteren:v
+quoteerde	quoteren:v
+quoteert	quoteren:v
+quoteerden	quoteren:v
+quoterend	quoteren:v

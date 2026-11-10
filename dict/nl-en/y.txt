@@ -1,0 +1,88 @@
+yes	i		yay (exclamation of happiness or enthusiasm)
+yeti	n	de · mv. yeti's	yeti
+yttrium	n	het	yttrium
+ytterbium	n	het	ytterbium
+yam	n	de · mv. yams	yam, a tropical vine; its edible root
+yo	i		yo (informal greeting, interjection similar to hey)
+yell	n	de · mv. yells	yell, a slogan to be shouted, especially in sports or games (e.g. by…
+yen	n	de · mv. yens	yen, Japanese monetary unit and coin
+yurt	n	de · mv. yurts	yurt
+yucca	n	de · mv. yucca's	yucca, evergreen of the genus Yucca
+yoga	n	de	yoga
+yogi	n	de · mv. yogi's	yogi
+yogini	n	de · mv. yogini's	yogini, female practitioner of yoga
+yup	n	de · mv. yuppen	yuppie (young upwardly mobile urban professional person)
+yaoi	n	de	yaoi
+yuri	n	de	yuri
+yoghurt	n	de · mv. yoghurts	yogurt
+ypsilon	n	de · mv. ypsilons	upsilon
+yamswortel	n	de · mv. yamswortels	the edible root of a yam; a plant which produces it, i.e. any vine of genus Dioscorea
+yoctoseconde	n	de · mv. yoctoseconden	yoctosecond: 10⁻²⁴ of a second
+yellen	v	yelde – geyeld	to cry (e.g. a motto)
+youtuben	v	youtubede – geyoutubed	to watch or upload videos on YouTube
+yogisch	a		yogic
+y-as	n	de · mv. y-assen	y-axis (vertical axis in 2-dimensional graphs; 2nd horizontal axis in…
+yogaën	v	yogade – geyogaad	to practice yoga
+Ysselsteyn	m		a village in Venray, Limburg, Netherlands
+Yerseke	m		a village and former municipality of Reimerswaal, Zeeland, Netherlands
+Yersekendam	m		a neighbourhood of Reimerswaal, Zeeland, Netherlands
+Yde	m		a village in Tynaarlo, Drenthe, Netherlands
+Ypecolsga	m		a village in Súdwest-Fryslân, Friesland, Netherlands
+Ypenburg	m		a neighbourhood of The Hague, South Holland, Netherlands
+yahtzeeën	v	yahtzeede – geyahtzeed	to play Yahtzee
+yusu	d		seriously, really
+yogales	n	de · mv. yogalessen	yoga class
+yoghurtijs	n	het	frozen yogurt
+yperiet	n	het	synonym of mosterdgas (“mustard gas”)
+yogaleraar	n	de · mv. yogaleraars	yoga teacher
+#
+yeti's	yeti:n
+yetietje	yeti:n
+yak	jak:n
+yams	yam:n
+yammen	yam:n
+yammetje	yam:n
+yells	yell:n
+yens	yen:n
+yurts	yurt:n
+yucca's	yucca:n
+yogi's	yogi:n
+yogini's	yogini:n
+yuppen	yup:n
+yupje	yup:n
+yoghurts	yoghurt:n
+yoghurtje	yoghurt:n
+ypsilons	ypsilon:n
+yamswortels	yamswortel:n
+yamsworteltje	yamswortel:n
+yoctoseconden	yoctoseconde:n
+yoctosecondes	yoctoseconde:n
+yel	yellen:v
+yelde	yellen:v
+yelt	yellen:v
+yelden	yellen:v
+yellend	yellen:v
+ynghels	engels:n
+ysschots	ijsschots:n
+youtube	youtuben:v
+youtubede	youtuben:v
+youtubet	youtuben:v
+youtubeden	youtuben:v
+youtubend	youtuben:v
+yogische	yogisch:a
+y-assen	y-as:n
+yoga	yogaën:v
+yogade	yogaën:v
+yogaat	yogaën:v
+yogaden	yogaën:v
+yogaënd	yogaën:v
+yahtzee	yahtzeeën:v
+yahtzeede	yahtzeeën:v
+yahtzeet	yahtzeeën:v
+yahtzeeden	yahtzeeën:v
+yahtzeeënd	yahtzeeën:v
+yogalessen	yogales:n
+yogalesje	yogales:n
+yoghurtijsje	yoghurtijs:n
+yogaleraars	yogaleraar:n
+yogaleraren	yogaleraar:n

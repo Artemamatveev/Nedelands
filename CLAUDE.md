@@ -9,7 +9,14 @@ eruit" shows three screenshots of the app in `shots/` (WebP, 780 px wide), taken
 writing feedback in them is a made-up example (the page says so), and its errors and points must follow the scoring
 rules. "Veelgestelde vragen" uses native `<details>`; keep the answers true (not DUO, offline, no pass guarantee). The
 Plus card only shows when Plus is on (a card saying it was unavailable looked broken). Contact on the homepage is
-hallo@bittertalen.nl (the catch-all mailbox). The study app is served at `/oefenen` from `oefenen.html`. `study/language-v1.js` holds stable verb and word-order data plus checking logic. `study/progress-v1.js` handles three-way progress merges and conditional cloud writes. `study/writing-v1.js` aggregates writing feedback without making another grading request. Paintings are in `art/`.
+hallo@bittertalen.nl (the catch-all mailbox). The study app is served at `/oefenen` from `oefenen.html` (the code, the styles and the small tables, about 340 KB).
+Its large data lives in `data/`, plain scripts loaded before the app's own script, each a set of top-level `const`s
+that depend on nothing: `data/ui.js` (`UI`, `UIR`), `data/knm.js` (`KNM`), `data/a2.js` (`LZ`, `LS`, `LSM`, `SP`, `WR`,
+`WT`, `BG`), `data/b1.js` (`LZ1`, `LSB`, `WRB`, `SPB`, `G1`, `VO1`, `GSB`) and `data/extra.js` (`GP`, `GS`, `BOOKS`,
+`ART`, `FOTO`). Below, "in `oefenen.html`" for these names means that file. Every local script is loaded as
+`?v=<hash of its content>`, and the service worker keeps it for good under that address: after editing `data/`,
+`study/` or the dictionary run `node tools/stamp.mjs` (the tests fail when a version is out of date). A data file
+must not use anything from the app's script at load time (only inside functions). `study/language-v1.js` holds stable verb and word-order data plus checking logic. `study/progress-v1.js` handles three-way progress merges and conditional cloud writes. `study/writing-v1.js` aggregates writing feedback without making another grading request. Paintings are in `art/`.
 Deployed on Vercel from `main`: every push to `main` goes live at https://bittertalen.nl (push `main` first, then the working
 branch: in November 2026 a commit built first as a branch preview got no production build when it reached `main`; then
 start one by hand, a production deployment of `main` at that commit) (Vercel project
@@ -249,7 +256,11 @@ where Playwright is missing, and the `browser` job in `.github/workflows/check.y
 `sw.js` makes the app work offline and start quickly: the page from the network if it answers within `FAST` (2.5 s),
 else the cached copy (`cacheFirst()`: on a slow connection people waited for the page). Pure cache-first left the user's
 iPhone on an old version in November 2026 (iOS stops a home-screen app's background work, so the background refresh of
-the 1 MB page never finished), so don't go back to it. A new `sw.js` (bump `CACHE`) tells the open windows at activate, only when it replaces an older cache (not on a first visit). Its install never fails: each core file is cached on its own, a miss is fine, and without a fresh page the old cache's page is carried over (an install that cached the whole page with `addAll` seemed never to finish on the user's iPhone). When
+the 1 MB page never finished), so don't go back to it. The page's `?v=` scripts and dictionary parts are cache-only: a
+new copy of the page is stored only after all its files are in the cache (`storeApp()`), then versions it no longer
+uses are removed (`prune()`), so the cached page always opens offline (`tests/browser.test.mjs` checks this, also
+after an update). Keep `CACHE` as it is when `sw.js` changes: a new name throws away every cached painting, photo and
+voice. A new `CACHE` tells the open windows at activate, only when it replaces an older cache (not on a first visit). Its install never fails: each core file is cached on its own, a miss is fine, and without a fresh page the old cache's page is carried over (an install that cached the whole page with `addAll` seemed never to finish on the user's iPhone). When
 the cached copy was shown and the network's differs (another ETag), the open page gets
 `{fresh:true}`, and because a page that is still starting can miss that, the time of the change is also kept at
 `/__changed`, which the page asks after 4 and 15 s and when it comes back (`freshCheck()`); then a glass bar above the
@@ -495,9 +506,13 @@ those are stored only in IndexedDB (`books` list, `book:<id>` text), never in `w
 `S.bk` keeps reading positions and `S.words` the saved words (`{w, en, p, s, f}`; a few early
 ones had `ru`, which `enWords()` replaces with English from the dictionary), practised as `bw|…` items, also in the Mix.
 
-Tapping a word looks it up in `dict/nl-en.txt`, a free offline Dutch–English dictionary built
+Tapping a word looks it up in the Dutch–English dictionary, built
 from English Wiktionary by `dict/build.py` (kaikki.org extract, CC BY-SA 4.0; keep the credit
-line on the Boekenkast screen). It is loaded once, when the shelf opens. The popup shows the
+line on the Boekenkast screen). `dict/nl-en.txt` is the whole dictionary; the app loads its parts by first letter
+(`dict/nl-en/<letter>.txt`, `_` for the rest, made by `dict/split.py`, which `build.py` runs; `dshard()` in the page
+must match `shard()` there). `lookUp()` runs `define()`, loads the parts it missed and runs it again, so a tap loads
+a few parts of about 100 KB, not 7 MB; opening the shelf or the history sends every part to the cache in the
+background (`warmDict()`), so lookups work offline later. `nl-en.txt` stays deployed for pages from before the split. The popup shows the
 lemma, de/het, plural or verb forms (perfectum aux from `V`), and finds separable verbs
 (bel … op → opbellen). Meanings are in English.
 No Claude calls in the reader: whole sentences go to Google Translate via a link.

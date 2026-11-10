@@ -1,0 +1,4590 @@
+country	n	de	country music
+consensus	n	de	consensus
+Canada	m		Canada (a country in North America); a hamlet in Ooststellingwerf, Friesland, Netherlands
+China	m		China (a country in eastern Asia)
+Colombia	m		Colombia (a country in South America)
+Cuba	m		Cuba (a country, the largest island (based on land area) in the Caribbean)
+Cyprus	m		Cyprus (an island and country in the Mediterranean Sea, normally considered…
+computer	n	de · mv. computers	computer
+Congo	m		Democratic Republic of the Congo (a country in Central Africa, larger and to…; Republic of the Congo (a country in Central Africa, smaller and to the west…; Congo (a major river in Central Africa which flows for about 4,380 km (2,720…
+close	a		close (intimate or immediate in personal relationship); close (almost resulting in disaster)
+citrus	n	de · mv. citrussen	a citrus, a tree of the genus Citrus; a citrus fruit, a fruit from a tree of the genus Citrus
+Chinese	n	de · mv. Chinesen	woman from China
+cast	n	de · mv. casts	cast (people performing a movie or play)
+copula	n	de · mv. copula's	copula
+cool	a		cool, fashionable
+caracal	n	de · mv. caracals	caracal (Caracal caracal)
+chat	n	de · mv. chats	chat (online conversation); chat (online conversation platform)
+copyright	n	het · mv. copyrights	copyright
+creep	n	de · mv. creeps	creep (someone creepy or sexually disconcerting); creep (slow downslope movement of weathered material)
+continent	n	het · mv. continenten	continent (landmass)
+continent	a		continent
+cliché	n	het · mv. clichés	a cliché; an unoriginal work; a printing plate, a stereotype
+camera	n	de · mv. camera's	camera
+crime	n	de	hassle, struggle, pain in the neck (something extremely annoying or unpleasant)
+complex	a		complex (composite); complex (complicated); complex (containing an imaginary component or involving imaginary numbers)
+complex	n	het · mv. complexen	complex (collection of buildings or facilities with a common purpose); complex (abnormal mental state caused by repression)
+curve	n	de · mv. curven	curve: curved line
+cell	n	de · mv. cells	cellular phone, mobile phone
+charlatan	n	de · mv. charlatans	charlatan
+concern	n	het · mv. concerns	company, business, concern
+crush	n	de · mv. crushes	crush (infatuation with somebody one is not dating; object of this infatuation)
+cement	n	het	cement (powder, paste)
+cake	n	de · mv. cakes	pound cake
+cover	n	de · mv. covers	a cover, cover song, cover version (rerecording of a previously recorded…; a cover, the front of a magazine or of the package of a storage medium
+crisis	n	de · mv. crises	crisis; financial crisis
+correct	a		correct
+communist	n	de · mv. communisten	communist
+carburator	n	de · mv. carburatoren	carburetor, carburettor
+content	a		content(ed), satisfied
+content	n	de	the content of a medium
+CEO	n	de · mv. CEO's	CEO; chief executive officer
+community	n	de · mv. community's	community, particularly a virtual community or a group of people sharing…
+context	n	de · mv. contexten	context
+coke	n	de · mv. cokes	coke (type of processed carbon used as fuel); synonym of cocaïne
+chaos	n	de	chaos (disorder); primordial disorder
+carbon	n	het	fibre-reinforced polymer; black diamond; carbon paper
+café	n	het · mv. cafés	café; coffee shop; pub, bar
+centimeter	n	de · mv. centimeters	centimetre, one-hundredth of a metre; tape measure
+corrupt	a		corrupt (lacking integrity, being prone to discriminating, open to bribes, etc.); corrupt (containing (many) errors); deprave, morally corrupt
+CDA	m		Christian Democratic Appeal, a centre-right Christian democratic party in…
+chlorine	n	de	chlorine
+calcium	n	het	calcium
+cadmium	n	het	cadmium
+cerium	n	het	cerium
+curium	n	het	curium
+californium	n	het	californium
+cesium	n	het	caesium, cesium
+croissant	n	de · mv. croissants	croissant
+centigram	n	de/het · mv. centigrammen	centigramme, centigram
+circuit	n	het · mv. circuits	racetrack; electric circuit; exclusive group of individuals, clique, circle
+cherub	n	de · mv. cherubs	six-winged humanoid angel; putto
+crash	n	de · mv. crashes	crash, collision, esp. when involving aircraft; economic crash, especially in relation to stock exchanges; computer crash
+cash	n	de	cash
+cash	a		in coins and bills/notes
+college	n	het · mv. colleges	a collegial board, either advisory (committee) or as an authority; a secondary school, a high school, (now Belgium) especially in Roman…; an academic lecture, class
+calculus	n	de · mv. calculi	computation, calculation; calculus (stony concretion that forms in a bodily organ)
+constant	a		constant, invariable; constant, continuous, unceasing
+cola	n	de · mv. cola's	cola (drink)
+chi	n	de · mv. chi's	chi (letter of the Greek alphabet)
+candela	n	de · mv. candela's	candela
+coulomb	n	de · mv. coulombs	coulomb (unit of electric charge)
+check	n	de · mv. checks	check (inspection or examination)
+cheque	n	de · mv. cheques	check, cheque (a note promising to pay money to a named person or entity); voucher, used to pay a stated amount for a specific purpose
+club	n	de · mv. clubs	club (an association of members joining together for some common purpose,…; club (an implement to hit the ball in certain ball games, such as golf); nightclub
+collage	n	de · mv. collages	collage (image created by placing pictures on a surface); collage (composite created by the assemblage of various works)
+cent	n	de · mv. centen	cent, a subunit of currency equal to one-hundredth of the main unit of the…; cent, a subunit of currency equal to one-hundredth of the euro
+cobra	n	de · mv. cobra's	cobra (venomous snake from certain genera of the family Elapidae, especially…; Indian cobra (Naja naja)
+code	n	de · mv. codes	book or body of laws, code of laws, lawbook; system of rules and principles, e.g. of conduct; code (set of symbols)
+cruise	n	de · mv. cruises	cruise
+cornflakes	n		corn flakes; plural of cornflake
+clitoris	n	de · mv. clitores	clitoris
+coyote	n	de · mv. coyotes	coyote (Canis latrans)
+Chickasaw	m		Chickasaw (language)
+corpus	n	het · mv. corpora	a collection of writings, a text corpus
+curry	n	de · mv. curry's	the spicy condiment curry powder; a curry dish; curry ketchup
+cembalo	n	de · mv. cembalo's	harpsichord, cembalo
+Christus	m		Christ, Messiah (Christian title for Jesus of Nazareth)
+corps	n	het · mv. corpsen	student society, especially a traditional and hierarchical one
+Cherokee	m		the Cherokee language; Cherokee people
+Cherokee	n	de · mv. Cherokees	a member of the Cherokee people
+centaur	n	de · mv. centauren	centaur
+canon	n	de · mv. canons	canon (set of representative or pre-eminent literary works); canon (set of authoritative religious books, especially those constituting…; canon (religious law)
+Carthago	m		Carthage
+canvas	n	het · mv. canvassen	canvas, sail; canvas, fabric used for painting
+crack	n	de	crack (variety of cocaine)
+cup	n	de · mv. cups	cup (trophy); cup (one of the two parts of a brassiere which each cover a breast)
+comfort	n	het · mv. comforts	physical comfort, ease
+cricket	n	het	cricket (sport)
+canard	n	de · mv. canards	canard, hoax
+concubine	n	de · mv. concubines	concubine
+chip	n	de · mv. chips	a chip (one-piece circuit or hybrid device containing a circuit and another…
+carillon	n	de/het · mv. carillons	carillon
+Castiliaans	n	het	Castilian (language spoken in Spain and Latin America)
+crucifix	n	het · mv. crucifixen	a crucifix
+Chinees	m		Chinese (language)
+Chinees	a		Chinese
+Chinees	n	de · mv. Chinezen	a Chinese person; a Chinese or Chinese-Indonesian restaurant; Chinese food
+cacao	n	de	cocoa
+coma	n	het · mv. coma's	coma (state of unconsciousness); coma (head of a comet)
+cheers	i		cheers (toast)
+component	n	de · mv. componenten	component
+crêpe	n	de · mv. crêpes	crepe (thin pancake); crepe (soft thin light fabric with a crinkled surface)
+coach	n	de · mv. coaches	trainer, instructor, tutor, coach; counselor
+cowboy	n	de · mv. cowboys	cowboy
+chateau	n	het · mv. chateaus	château
+cataract	n	de · mv. cataracten	cataract, waterfall; cataract
+courgette	n	de · mv. courgettes	a courgette, a zucchini (fruit); the courgette plant, a variety of Cucurbita pepo
+Claudia	m		a female given name
+cult	n	de · mv. cults	cult (socially proscribed marginal religious group)
+clochard	n	de · mv. clochards	vagrant, tramp, bum
+conform	p		in accordance with, according to
+coup	n	de · mv. coups	a coup, a coup d'état, a putsch; a coup, a quick, surprising, brilliant move or action
+clou	n	de · mv. clous	punch line
+cru	a		crude, coarse
+clan	n	de · mv. clans	clan, kin group, esp. in relation to the Scottish Highlands or Scotland in…; a group of gamers playing on the same team, a clan
+cabriolet	n	de · mv. cabrioletten	cabriolet, convertible (car with a convertible top); cabriolet (light carriage with a convertible top, drawn by one horse)
+clown	n	de · mv. clowns	clown (entertainer)
+chauffeur	n	de · mv. chauffeurs	driver (person who drives a motorized vehicle, such as a car or a bus;…
+column	n	de · mv. columns	a recurring opinion piece in a newspaper or magazine; a column
+cappuccino	n	de · mv. cappuccino's	cappuccino
+chinchilla	n	de · mv. chinchilla's	chinchilla, rodent of the genus Chinchilla; lesser chinchilla, long-tailed chinchilla, Chinchilla lanigera; chinchilla fur
+cheat	n	de · mv. cheats	cheat (unfair advantage in a computer game)
+contact	n	het · mv. contacten	physical contact, touching; contact (close association); contact (communication, exchange)
+camper	n	de · mv. campers	a camper (recreational vehicle), a motor home
+cultivar	n	de · mv. cultivars	cultivar
+charge	n	de · mv. charges	a charge (fast ground attack)
+collier	n	de/het · mv. colliers	necklace
+col	n	de · mv. cols	turtleneck (high, close-fitting collar); mountain pass; glue
+cider	n	de · mv. ciders	cider
+cannabis	n	de	cannabis, plant of the genus Cannabis, especially Cannabis sativa or…; cannabis, a drug made from parts of this plant
+client	n	de · mv. clients	client
+contract	n	het · mv. contracten	contract
+conflict	n	het · mv. conflicten	a conflict, clash or dispute
+circa	p		circa: about, approximately
+circa	d		circa: about, approximately
+codicil	n	het · mv. codicillen	codicil
+cocktail	n	de · mv. cocktails	cocktail
+corgi	n	de · mv. corgi's	corgi, Welsh corgi (dog)
+clique	n	de · mv. cliques	clique, subgraph
+cache	n	de · mv. caches	cache (fast temporary storage where recently or frequently used information…; cache, geocache
+cervix	n	de · mv. cervixen	neck; the cervix between the uterus and the vagina
+chic	a		chic, elegant
+coca	n	de · mv. coca's	coca, plant of the family Erythroxylaceae; coca, consumable leaves of these plants
+corona	n	de · mv. corona's	corona; coronavirus or coronavirus disease, particularly COVID-19; the 2019-2021 COVID-19 pandemic
+chiton	n	de · mv. chitons	chiton (Greek tunic); chiton (mollusc of the class Polyplacophora)
+crux	n	de · mv. cruces	crucial or otherwise serious, difficult problem
+cape	n	de · mv. capes	a cape
+chef	n	de · mv. chefs	a boss, chief, head, leader; a culinary chef, a head cook
+concert	n	het · mv. concerten	concert (musical entertainment)
+corpulent	a		overweight, corpulent
+cis	n	de · mv. cissen	C-sharp
+clip	n	de · mv. clips	clip (something which clips or grasps; a device for attaching one object to…; video or audio clip
+cryptogram	n	het · mv. cryptogrammen	cryptic crossword (crossword puzzle with cryptic definitions)
+camouflage	n	de · mv. camouflages	camouflage
+Chris	m		a male given name
+cookie	n	het · mv. cookies	cookie
+cito	d		quickly, hastily
+coterie	n	de · mv. coteries	coterie, clique (exclusive circle of associates)
+cheeseburger	n	de · mv. cheeseburgers	cheeseburger
+casus	n	de · mv. casussen	a legal case; a case, occurrence, instance, especially used for a case study, reference or…; a case, (instance of) grammatical case
+cranberry	n	de · mv. cranberry's	cranberry
+CV	n	het · mv. CV's	curriculum vitae
+convex	a		convex
+chloride	n	het · mv. chloriden	chloride
+corner	n	de · mv. corners	corner
+circumflex	n	de/het · mv. circumflexen	circumflex
+Cornwall	m		Cornwall (a peninsula, cultural area, maritime ceremonial county, and duchy…
+census	n	de · mv. censussen	a census
+container	n	de · mv. containers	shipping container, cargo container; dumpster or domestic recycling bin, large waste container
+compliment	n	het · mv. complimenten	compliment
+coherent	a		coherent
+compact	a		compact (closely packed), dense; compact (having all necessary features fitting neatly into a small space)
+charisma	n	het · mv. charisma's	charisma (gift of the Holy Spirit); charisma (personal affability)
+cinema	n	de · mv. cinema's	cinema; movie theater (building where films are shown to an audience); cinema (the art or industry of making films)
+climax	n	de · mv. climaxen	climax (culmination of a narrative's rising action); climax (culmination or acme, the last term in an ascending series)
+condor	n	de · mv. condors	condor, Andean condor, Vultur gryphus
+coleslaw	n	de	coleslaw
+collo	n	het · mv. colli	parcel, package
+commando	n	het · mv. commando's	military command; order, imperative (especially in relation to the military or animal training); unit or division over whom an officer has command
+Chicago	m		Chicago (a large city in Illinois, United States)
+chill	a		chill, chilled out, laid back; chill, nice, pleasant
+covalent	a		covalent
+cellulose	n	de · mv. celluloses	cellulose (complex carbohydrate)
+carrousel	n	de · mv. carrousels	carrousel, merry-go-round (fairground ride); carrousel, type of group dressage in formation (equestrian discipline)
+cloaca	n	de · mv. cloaca's	cloaca (duct in certain vertebrates used for reproduction and excreting…
+console	n	de · mv. consoles	a projection from a wall supporting a superincumbent weight; a console (electronic control instrument with displays and an input device); a video game console, a console, especially a non-portable one
+cyanide	n	het	cyanide (C≡N-based compound)
+chino	n	de · mv. chino's	pair of trousers made of chino; chino
+campus	n	de · mv. campussen	campus
+cliffhanger	n	de · mv. cliffhangers	cliffhanger
+concurrent	n	de · mv. concurrenten	a competitor, an economic rival
+concurrent	a		concurrent, corresponding
+cabaret	n	het · mv. cabarets	cabaret, type of live entertainment; comedy, live performance of jokes and satire
+cactus	n	de · mv. cactussen	cactus, plant of the family Cactaceae
+casino	n	de · mv. casino's	casino, gambling house
+cartoon	n	de · mv. cartoons	cartoon (humorous drawing, often with a caption, or a strip of such drawings); cartoon (animated piece of film which is often but not exclusively humorous)
+criterium	n	het · mv. criteria	criterion, standard for comparison and appreciation; notably in cycling, race of low athletic merit
+Caroline	m		a female given name of French origin
+contrast	n	het · mv. contrasten	a contrast
+convent	n	het · mv. conventen	convent, monastery
+counter	n	de · mv. counters	counter-attack, counter
+congruent	a		congruent; congruent (coinciding exactly when superimposed)
+cyanose	n	de	cyanosis
+crèche	n	de · mv. crèches	a day nursery for small children until age 3 in Belgium (Flanders) or age 4…
+Cathay	m		Cathay (northern China)
+consistent	a		consistent, coherent
+censor	n	de · mv. censors	censor
+compost	n	de/het	compost, natural fertilizer produced by decaying organic matter
+cuisine	n	de	cuisine; a characteristic style of preparing food, often associated with a…
+cluster	n	de · mv. clusters	cluster; star cluster
+cholera	n	de	cholera
+carré	n	de/het · mv. carrés	square; square shaped pastry; four of a kind
+centrum	n	het · mv. centra	the centre, middle of focal part (e.g. of activity); centre (UK); a centre, centralised facility
+centrale	n	de · mv. centrales	hub, central; plant, factory; exchange (in a communications network)
+controller	n	de · mv. controllers	controller; controller (a person who audits, and manages the financial affairs of a…
+cholesterol	n	de/het	cholesterol
+castellum	n	het · mv. castella	castellum
+comeback	n	de · mv. comebacks	comeback
+Champagne	m		Champagne (a cultural region and former province of France, the terroir of…; a surname from French
+chili	n	de · mv. chilis	chili pepper; chili (dish)
+couscous	n	de	couscous
+cringe	a		cringe, cringeworthy
+citroengras	n	het	lemongrass (Cymbopogon citratus)
+cello	n	de · mv. cello's	cello
+coulisse	n	de · mv. coulissen	side of a stage, dressing room beside a stage, side wing
+celadon	n	het	celadon (color); celadon (ceramic glaze, ceramic ware)
+chatroom	n	de · mv. chatrooms	a chat room
+chips	n		potato chips, crisps
+chips	i		shoot; minced oath for Dutch shit
+capoeira	n	de	capoeira
+circus	n	het · mv. circussen	circus (company of performers; place where this company performs)
+calorie	n	de · mv. calorieën	calorie
+commune	n	de · mv. communes	a commune (community living together with common property)
+Centaur	m		Centaurus
+Chan	m		Chan Santokhi
+Chili	m		Chile (a country in South America)
+Co	m		a male given name; a diminutive of the female given name Jacoba
+Cor	m		a male given name, hypocoristic form of Cornelis; a female given name, hypocoristic form of Cornelia
+Corrie	m		a diminutive of the female given name Cornelia
+champagne	n	de · mv. champagnes	the sparkling wine champagne from the French region Champagne; a brand, type or serving of champagne; the color champagne
+capsule	n	de · mv. capsules	capsule (encapsulation containing drugs or supplements); cover over the cork and opening of a bottle
+cupcake	n	de · mv. cupcakes	a cupcake
+cassette	n	de · mv. cassettes	an audio cassette; any of various other cassette storage media; a case for a film reel
+Christine	m		a female given name
+consult	n	het · mv. consulten	consult, consultation
+CU	m		ChristianUnion, a conservative Christian social political party in the…
+crème	n	de · mv. crèmes	cream (color/colour); cream (ointment)
+cellist	n	de · mv. cellisten	cellist
+ces	n	de · mv. cessen	C-flat
+curator	n	de · mv. curatoren	curator, one who manages a collection; curator, one who manages an estate; liquidator appointed by a judge after bankruptcy
+chemo	n	de · mv. chemo's	chemotherapy
+Corsica	m		Corsica (an island and administrative region of France, in the Mediterranean…
+Ceres	m		a neighbourhood of Hollands Kroon, North Holland, Netherlands
+cavalcade	n	de · mv. cavalcades	horse parade, cavalcade
+cd	n	de · mv. cd's	CD, compact disc
+competent	a		competent
+cognac	n	de · mv. cognacs	cognac
+cascade	n	de · mv. cascades	cascade (waterfall or series of small waterfalls)
+colchicine	n	de	colchicine
+calva	n	de · mv. calva's	synonym of calvados (“French apple brandy”)
+consigliere	n	de · mv. consiglieri	a legal counsel and advisor of a crime boss, in particular in the mafia
+chanson	n	het · mv. chansons	chanson (French, lyric-driven song)
+christen	n	de · mv. christenen	Christian
+compressor	n	de · mv. compressors	compressor
+creepy	a		creepy (scary or sexually disconcerting)
+canapé	n	de · mv. canapés	canapé (food); canapé (furniture)
+Christina	m		a female given name
+carbide	n	het	carbide, C₂²⁻ or C⁴⁻
+correspondent	n	de · mv. correspondenten	a correspondent, in particular a reporter
+Columbus	m		a surname; Columbus, chiefly in reference to Christopher Columbus
+clement	a		clement
+combo	n	de · mv. combo's	combo (small musical group); combo (composite move)
+columbarium	n	het · mv. columbaria	dovecote, columbarium
+coromandel	n	het	calamander, striped ebony (a heavy wood, brown in color with deep black…
+chocolatier	n	de · mv. chocolatiers	chocolatier
+colporteur	n	de · mv. colporteurs	a door-to-door salesperson
+crouton	n	de · mv. croutons	crouton
+confronteren	v	confronteerde – geconfronteerd	to confront
+citadel	n	de · mv. citadellen	citadel
+cirkel	n	de · mv. cirkels	circle
+chocolade	n	de	chocolate
+compleet	d		completely, thoroughly
+compleet	a		complete
+comfortabel	a		comfortable
+controle	n	de · mv. controles	checkup, investigation; control (having someone or something in one's power)
+conditie	n	de · mv. condities	condition, state; condition, conditional clause; endurance
+culverin	n	de · mv. culverinnen	culverin, a kind of handgun
+cadeau	n	het · mv. cadeaus	present; gift
+coronavirus	n	het · mv. coronavirussen	coronavirus (member of the family Coronaviridae)
+cortège	n	de/het · mv. cortèges	cortege
+celesta	n	de · mv. celesta's	celesta (musical pipe instrument)
+consul	n	de · mv. consuls	consul (official in foreign country)
+consequent	a		consequent, resulting; logically consistent
+chapeau	i		Used to express appreciation
+curling	n	het	curling (winter sport where players aim and slide stones down a sheet of ice)
+cannelure	n	de · mv. cannelures	flute (groove in a column)
+cakewalk	n	de · mv. cakewalks	cakewalk (dance); funhouse
+choco	n	de · mv. choco's	solid chocolate; a bar or piece of chocolate; a chocolate milk, coco
+camping	n	de · mv. campings	campsite
+conditioner	n	de · mv. conditioners	hair conditioner
+carronade	n	de · mv. carronades	carronade
+Cepheus	m		Cepheus
+Cassiopeia	m		Cassiopeia
+cenote	n	de · mv. cenotes	cenote
+carbonade	n	de · mv. carbonades	dated spelling of karbonade
+coffeeshop	n	de · mv. coffeeshops	an establishment that sells cannabis products and often also non-alcoholic…
+commandant	n	de · mv. commandanten	commander
+couplet	n	het · mv. coupletten	verse of a song
+Cambodja	m		Cambodia (a country in Southeast Asia)
+Catalonië	m		Catalonia (an autonomous community in northeast Spain)
+conformist	n	de · mv. conformisten	conformist
+credo	n	het · mv. credo's	confession of faith, creed; (strong) conviction
+crematorium	n	het · mv. crematoria	crematorium, crematory
+columnist	n	de · mv. columnisten	a (male or unspecified) regular writer of a column, such as in a magazine or…
+cel	n	de · mv. cellen	component of a battery; component of a body tissue; a small room, such as a prison or cloister cell
+chihuahua	n	de · mv. chihuahua's	Chihuahua (dog)
+canasta	n	de · mv. canasta's	canasta (Uruguayan cardgame); canasta (meld of seven cards in the above game)
+courant	a		current, prevalent, standard
+courant	n	het · mv. couranten	currency
+chronometer	n	de · mv. chronometers	chronometer
+cabine	n	de · mv. cabines	cabin (of an aircraft or ship); cab (of a train)
+conga	n	de · mv. conga's	a conga (tall, narrow Cuban hand drum used in pairs); Conga (Cuban march music and dance style)
+chloroform	n	de	chloroform
+chauvinist	n	de · mv. chauvinisten	chauvinist
+classeur	n	de · mv. classeurs	a binder, a hard-cover folder
+casco	n	het	shell of a building, car or ship
+chamets	n	de	chametz
+coupé	n	de · mv. coupés	train compartment; coupé (type of sports car)
+chemise	n	de · mv. chemises	chemise (garment)
+caravan	n	de · mv. caravans	caravan (type of trailer, mobile home)
+conducteur	n	de · mv. conducteurs	conductor (ticket collector); cue sheet; partition containing one band player's particular part
+cava	n	de · mv. cava's	Cava
+cabotage	n	de	cabotage
+constante	n	de · mv. constanten	constant, non-variable factor or quantity
+campagne	n	de · mv. campagnes	campaign; campaign, offensive
+combi	n	de · mv. combi's	combination, combi; minivan, kombi
+colère	n	de · mv. colères	anger, rage
+charmant	a		charming, agreeable, nice
+carpaccio	n	de	carpaccio
+champignon	n	de · mv. champignons	a champignon, a button mushroom, Agaricus bisporus
+catwalk	n	de · mv. catwalks	catwalk (narrow elevated stage on which models parade)
+catechist	n	de · mv. catechisten	catechist
+cabochon	n	de · mv. cabochons	cabochon
+curare	n	het	curare
+camion	n	de · mv. camions	lorry; truck
+complot	n	het · mv. complotten	conspiracy
+cavia	n	de · mv. cavia's	guinea pig (Cavia porcellus)
+Celebes	m		Celebes, Sulawesi
+ceder	n	de · mv. ceders	cedar, tree of the genus Cedrus
+cipres	n	de · mv. cipressen	cypress
+cyclamen	n	het · mv. cyclamens	synonym of cyclaam
+citer	n	de · mv. citers	zither (musical instrument)
+collega	n	de · mv. collega's	colleague
+corso	n	het · mv. corso's	parade
+cachen	v	cachete – gecachet	to cache (store data in a cache); to cache, geocache
+cancelen	v	cancelde – gecanceld	to cancel
+chape	n	de · mv. chapes	screed
+chillen	v	childe – gechild	to chill, to relax
+concedo	d		I concede, admittedly
+concilie	n	het · mv. concilies	a church council in which bishops and eminent theologians are assembled to…
+conserven	n		preserved food, canned food
+citroen	n	de · mv. citroenen	a lemon (fruit); lemon tree (Citrus limon)
+cahier	n	de/het · mv. cahiers	notebook, writing pad; folder; magazine, proceeding, journal
+charme	n	de · mv. charmes	charm (quality of inspiring delight or admiration)
+carrière	n	de · mv. carrières	career, a person's occupation(s)
+cancan	n	de · mv. cancans	cancan (dance)
+crudités	n		crudités
+centrifuge	n	de · mv. centrifuges	centrifuge
+cijfer	n	het · mv. cijfers	digit, numeral; statistic, figure; a grade given for an assignment or class, particularly in primary school
+Cornelia	m		a female given name
+Confucius	m		Confucius
+conservator	n	de · mv. conservators	curator (of a museum or a library)
+conjunctie	n	de · mv. conjuncties	syzygy; conjunction
+cursus	n	de · mv. cursussen	an educational course, on its own or as part of an academic or evening…; the documentation associated with a course, usually compiled by teachers…
+computeren	v	computerde – gecomputerd	to use the computer
+camelia	n	de · mv. camelia's	a camellia, plant of the genus Camellia
+concurrentie	n	de	competition
+commentaar	n	de/het · mv. commentaren	commentary, comment (act or result of commenting); comment (message or speech act in which comment is given); commentary (text genre commenting on something, e.g. another text)
+cosplay	n	de · mv. cosplays	cosplay
+cosplayer	n	de · mv. cosplayers	cosplayer
+Constantijn	m		a male given name from Latin, equivalent to English Constantine
+Christiaan	m		a male given name, equivalent to English Christian
+cultuur	n	de · mv. culturen	culture (practices and beliefs particular to a society or group); culture (arts, historic heritage and creative media as a sector); culture (cultivation, tillage of crops)
+Cornelis	m		a male given name, equivalent to English Cornelius
+concluderen	v	concludeerde – geconcludeerd	to conclude
+conclusie	n	de · mv. conclusies	conclusion; opinion (judicial opinion delivered by an Advocate General to the European…
+coördinator	n	de · mv. coördinatoren	coordinator
+communicatie	n	de · mv. communicaties	communication
+centiliter	n	de · mv. centiliters	centilitre, centiliter
+concreet	a		concrete, not abstract; perceivable, real
+cultus	n	de · mv. cultussen	cult, a particular tradition of worship or veneration of deities, ancestors,…; religious service
+cambium	n	het · mv. cambia	cambium
+chagrijnig	a		bad-tempered, grumpy, cranky
+chagrijn	n	het · mv. chagrijnen	chagrin; someone in a bad mood, being grumpy
+classis	n	de · mv. classes	a supracongregational, regional executive body, intermediate in size or rank…
+coalitie	n	de · mv. coalities	coalition (government consisting of multiple parties); coalition (military force consisting of various parties)
+capibara	n	de · mv. capibara's	capybara (Hydrochoerus hydrochaeris)
+cheeta	n	de · mv. cheeta's	cheetah (Acinonyx jubatus)
+civetkat	n	de · mv. civetkatten	civet, carnivore of the genera Viverra or Civettictis
+Carmen	m		a female given name
+chocolaterie	n	de · mv. chocolaterieën	chocolaterie (chocolade shop); chocolate factory
+crusher	n	de · mv. crushers	crusher (machine designed to crush rocks)
+cantate	n	de · mv. cantaten	cantata
+compensatie	n	de · mv. compensaties	compensation
+communicant	n	de · mv. communicanten	a communicant, one receiving Holy Communion
+concealer	n	de · mv. concealers	concealer (cosmetic designed to cover blemishes)
+congregationalist	n	de · mv. congregationalisten	Congregationalist
+convergent	a		convergent
+claxon	n	de · mv. claxons	horn (especially on a motor vehicle)
+concept	n	het · mv. concepten	concept; draft, sketch
+commies	n	de · mv. commiezen	supervising official
+couveuse	n	de · mv. couveuses	An incubator, especially for sick or preterm infants
+calvados	n	de · mv. calvadossen	calvados
+chimpansee	n	de · mv. chimpansees	chimpanzee, member of the genus Pan
+Carmel	m		a neighbourhood of Hulst, Zeeland, Netherlands
+C4	n	het	(Belgium) dismissal (especially in semi-set phrases such as "C4 krijgen" and…
+carbonzuur	n	het · mv. carbonzuren	carboxyl group; carboxylic acid
+couvert	n	het · mv. couverts	cutlery, silverware; envelope
+chauvinisme	n	het	chauvinism
+corvee	n	de/het	household chores, especially at a camp or barracks
+colonne	n	de · mv. colonnes	column; column, pillar, sile
+chirurgie	n	de · mv. chirurgies	surgery; a medical operation; surgery (branch of medicine)
+colli	n	het · mv. colli's	parcel, package
+categorie	n	de · mv. categorieën	category (defined group)
+compagnie	n	de · mv. compagnies	a company, partnership; a sub-division of a battalion
+cardiologie	n	de	cardiology
+circumfix	n	het · mv. circumfixen	circumfix
+carga	n	de · mv. carga's	cargo
+Chantal	m		a female given name from French
+chirurg	n	de · mv. chirurgen	surgeon
+coaching	n	de	coaching
+collaborateur	n	de · mv. collaborateurs	one who collaborates or has collaborated with the Nazis, fascists or another…
+Curaçao	m		Curaçao (an island and constituent country of the Kingdom of the Netherlands…
+chauvinistisch	a		chauvinist, chauvinistic
+cartografie	n	de · mv. cartografieën	cartography
+comité	n	het · mv. comités	committee
+chaotisch	a		chaotic
+coureur	n	de · mv. coureurs	cyclist for sport (in contrast to fietser); motorcyclist; auto racer
+controverse	n	de · mv. controversen	controversy
+collecte	n	de · mv. collectes	collection, act of collecting (mostly of money)
+communisme	n	het · mv. communismen	communism (collectivist socialism, ideology); communism (classless and stateless international socialist order)
+cultureel	a		cultural
+chlorofyl	n	het	synonym of bladgroen (“chlorophyll”)
+christelijk	a		Christian
+calvinistisch	a		Calvinist
+cijferen	v	cijferde – gecijferd	to figure, compute
+cijferen	n	het	arithmetic
+Christa	m		a female given name
+chauffage	n	de · mv. chauffages	heating
+chemisch	a		chemical, relating to or produced by chemistry
+chemie	n	de	chemistry, the branch of natural science studying the composition and…; chemistry, attraction, rapport
+calèche	n	de · mv. calèches	light, four-wheeled, horse-drawn open carriage with a low wheelbase and a…
+concentratiekamp	n	het · mv. concentratiekampen	concentration camp
+catastrofe	n	de · mv. catastrofen	catastrophe, disaster; catastrophe, dénouement in a classical tragedy
+circulaire	n	de · mv. circulaires	circular letter
+catalogus	n	de · mv. catalogi	catalogue; register
+conservenblik	n	het · mv. conservenblikken	can containing preserved food, a tin-plate canister as used for canned food
+conserveren	v	conserveerde – geconserveerd	to preserve; to can (preserve)
+Congo-Brazzaville	m		Congo-Brazzaville (synonym of the Republic of the Congo: a country in…
+Congo-Kinshasa	m		Congo-Kinshasa (synonym of the Democratic Republic of the Congo: a country…
+casten	v	castte – gecast	to cast (assign performing parts in a production); to cast (broadcast over the Internet or a local network)
+computermuis	n	de · mv. computermuizen	mouse (manual, click-operated input device)
+continu	d		continuously
+continu	a		continuous (without break, cessation, or interruption in time)
+chatbot	n	de · mv. chatbots	chatbot
+citroengeel	n	het	lemon (colour/color)
+chatten	v	chatte – gechat	to chat
+carrosserie	n	de · mv. carrosserieën	body, bodywork of a motor vehicle
+componist	n	de · mv. componisten	composer
+creatuur	n	het · mv. creaturen	creature; monster, monstrous or loathsome creature; creation
+classificatie	n	de · mv. classificaties	the act of classification, forming into (functional or theoretical) classes; classification, a categorisation into class; the result of the above
+claustrofobie	n	de · mv. claustrofobieën	claustrophobia
+constructivisme	n	het	constructivism (Russian art movement involving abstract geometrical objects…; constructivism (school of studying international relations that prioritises…
+corrigeren	v	corrigeerde – gecorrigeerd	to correct (to make something that was not valid become right)
+creativiteit	n	de	creativity
+crassula	n	de · mv. crassula's	crassula, any plant of genus Crassula
+competitie	n	de · mv. competities	competition (contest for a prize or award); competition (series of contests or matches, for a prizze); competition, rivalry
+cycloon	n	de · mv. cyclonen	cyclone, a storm type with a rotating system of winds
+creatie	n	de · mv. creaties	creation (act of creating, inventing, etc.); creation, product (something created); creation (universe)
+creool	n	de · mv. creolen	in present-day Suriname and various parts of South and Central America, any…; a Creole, a member of a (Latin) American ethno-cultural group of colonial…; a creole language
+cosinus	n	de · mv. cosinussen	cosine
+cisgender	a		cisgender
+cisgender	n	de · mv. cisgenders	a cisgender person
+camembert	n	de · mv. camemberts	camembert (cheese)
+crimineel	a		criminal, contrary to enforceable legal rules; terrible, excessive (generally in a bad sense)
+crimineel	n	de · mv. criminelen	criminal (person guilty of breaking the law)
+contant	a		in cash
+contant	d		in cash
+creuse	n	de · mv. creusen	an oyster of the genus Crassostrea
+cocaïne	n	de	cocaine (narcotic derived from coca plants)
+contrabas	n	de · mv. contrabassen	double bass
+corrector	n	de · mv. correctoren	corrector
+cassant	a		brusque, catty, acrid
+congres	n	het · mv. congressen	congress, large consultative and/or legislative body; congress; formal meeting, gathering or assembly
+chronologie	n	de · mv. chronologieën	chronology
+criminologie	n	de · mv. criminologieën	criminology
+charismatisch	a		charismatic (pertaining to the gifts of the Holy Spirit); charismatic (personally influential or affable)
+cadens	n	de · mv. cadensen	cadence (progression of chords closing a piece or section); cadenza (closing embellishment)
+controleren	v	controleerde – gecontroleerd	to check; to control
+Christoffel	m		a male given name, corresponding to English Christopher
+canaille	n	het · mv. canailles	plebs, scum, riffraff; rascal, jerk, scumbag
+constateren	v	constateerde – geconstateerd	to ascertain
+castreren	v	castreerde – gecastreerd	to castrate, to neuter (remove the testicles of); to remove the female genitals, or even a plant's stamen; to emasculate, to reduce to a lesser, weaker state ('less balls')
+coëfficiënt	n	de · mv. coëfficiënten	coefficient (algebraic constant)
+cyrillisch	a		Cyrillic
+cyrillisch	m		the Cyrillic script
+Californië	m		California (the most populous state of the United States); a hamlet in Maasdriel, Gelderland, Netherlands; a hamlet in Horst aan de Maas, Limburg, Netherlands
+chronologisch	a		chronological
+commercieel	a		commercial (of or pertaining to commerce or commercialism)
+corruptie	n	de	corruption, perversion of integrity through compromise, bribery or conflict…; moral corruption, moral perversion
+curatele	n	de	curatorship
+condensator	n	de · mv. condensatoren	capacitor
+corruptiezaak	n	de · mv. corruptiezaken	corruption case
+complexiteit	n	de · mv. complexiteiten	complexity
+camionette	n	de · mv. camionetten	van
+confisqueren	v	confisqueerde – geconfisqueerd	to confiscate
+carnaval	n	het · mv. carnavals	the carnival, last festive occasion(s) before Lent, notably on Shrove Tuesday; a festival celebrated with costuming, parades and other festivities, with a…
+causaliteit	n	de · mv. causaliteiten	causality
+cytologie	n	de	cytology (cell biology)
+concederen	v	concedeerde – geconcedeerd	to compromise, to accept a compromise; to allow, to concede, to permit
+chocolaatje	n	het · mv. chocolaatjes	a piece of chocolate (small piece of confectionery made from chocolate)
+ceremonie	n	de · mv. ceremoniën	ceremony, a formal ritual
+cyste	n	de · mv. cysten	cyst (sac which develops in the natural cavities of an organ)
+cobralelie	n	de · mv. cobralelies	cobra lily (Darlingtonia californica); Arisaema nepenthoides, a Himalayan tuberous plant also often called cobra lily
+compromis	n	het · mv. compromis	compromise
+c.q.	d		also used, technically incorrectly, to mean 'or', 'or else', 'in particular'
+constructivistisch	a		constructivist
+compromitteren	v	compromitteerde – gecompromitteerd	to compromise
+coltan	n	de	coltan
+charmeur	n	de · mv. charmeurs	a male charmer, a charming man
+collegezaal	n	de · mv. collegezalen	lecture theatre, lecture hall (auditorium-style classroom)
+cyaan	n	het	cyanogen, a blueish, acid, poisonous gas; cyan (colour)
+cyaan	a		cyan
+Comoren	m		Comoros (a country and group of islands in the Indian Ocean off the coast of…; Comoros (an archipelago consisting of the Union of the Comoros and the…
+citaat	n	het · mv. citaten	a quotation, fragment of a human expression, notably as reference
+creëren	v	creëerde – gecreëerd	to create, make, put into existence; to design creatively; to appoint, invest with an office etc
+chromosoom	n	het · mv. chromosomen	chromosome, structure in the cell nucleus containing genes
+centraal	a		central, being in the centre
+cirkelen	v	cirkelde – gecirkeld	to form a circle, turn/move/travel in a circle; to mark with a circle
+contemporain	a		contemporary
+cilinder	n	de · mv. cilinders	cylinder (geometric three-dimensional solid shape); certain objects of (roughly) cylindrical shape, e.g. a top hat; cylinder (of an engine)
+cyclus	n	de · mv. cycli	a cycle, a complete rotation; a cycle, a repeatable series; a cycle, a collection of related texts or artworks
+capoeirista	n	de · mv. capoeirista's	capoeirista
+checken	v	checkte – gecheckt	to check (up), to inspect, examine
+confrontatie	n	de · mv. confrontaties	confrontation, the act of confronting or challenging at least one other…
+cicade	n	de · mv. cicaden	cicada, any of the Cicadoidea, insects of the order Hemiptera; a cricket
+consulaat	n	het · mv. consulaten	consulate, the quasi-diplomatic post (office and residency) of a consul,…
+collageen	n	het	collagen
+collageen	a		collagenic
+competentie	n	de · mv. competenties	competence, ability, capability, fitness, suitability; competence, formal qualification, jurisdiction
+cocon	n	de · mv. cocons	cocoon
+captcha	n	de · mv. captcha's	CAPTCHA
+chronisch	a		chronic
+correctie	n	de · mv. correcties	a correction, rectification; the action or process of correcting; a punishment, sanction
+consumeren	v	consumeerde – geconsumeerd	to consume, to use
+Catalaans	a		Catalan, relating to Catalonia, its people and/or their language
+Catalaans	m		Catalan, the Romance language of Catalonia
+colbert	n	de/het · mv. colberts	a formal jacket without tails
+cabrio	n	de · mv. cabrio's	cabriolet: convertible car
+coryfee	n	de · mv. coryfeeën	coryphaeus, leader of the chorus in Classical Greek theatre; performing star artist, compare coryphée; one who excels in some discipline
+celstraf	n	de · mv. celstraffen	prison sentence, jail term
+consument	n	de · mv. consumenten	a consumer, who buys and/or uses goods or services
+centralist	n	de · mv. centralisten	centralist (advocate of centralised government); telephone dispatcher
+castoreum	n	het	castoreum (exudate from castor sacs)
+chloor	n	het	chlorine
+compartiment	n	het · mv. compartimenten	compartment; train compartment
+copyshop	n	de · mv. copyshops	copy shop
+coupure	n	de · mv. coupuren	nominal value of denomination
+Colchis	m		Colchis (a historical region and ancient Georgian kingdom on the coast of…
+christendom	n	het	Christianity
+controversieel	a		controversial
+corresponderen	v	correspondeerde – gecorrespondeerd	to correspond (communicate by letter); to correspond, to agree
+coauteur	n	de · mv. coauteurs	coauthor, cowriter
+comprimeren	v	comprimeerde – gecomprimeerd	to compress
+compressie	n	de · mv. compressies	compression
+coderen	v	codeerde – gecodeerd	to encode, encrypt; to write (computer) code
+codering	n	de · mv. coderingen	encoding
+concertzaal	n	de · mv. concertzalen	concert hall
+constructief	a		constructive, conducive to improvement; pertaining to construction
+Catharijne	m		a former municipality of Utrecht, Netherlands; a female given name, equivalent to English Catherine
+capaciteit	n	de · mv. capaciteiten	capacity
+commissie	n	de · mv. commissies	commission
+consultatie	n	de · mv. consultaties	consultation
+clausule	n	de · mv. clausules	a clause, provision, stipulation in a contract, law etc
+constructie	n	de · mv. constructies	construction
+Cornisch	m		Cornish (language)
+Cornisch	a		Cornish (of, from or pertaining to the Cornish people, Cornish language or…
+cruiseschip	n	het · mv. cruiseschepen	a cruise ship
+citeren	v	citeerde – geciteerd	to quote a text and/or an author; to summon, subpoena to appear in court; to cite, to make an honorable mention of (someone) in a citation, notably in…
+chroom	n	het	chromium
+condoom	n	het · mv. condooms	condom
+castraat	n	de · mv. castraten	a castrato, male who has been castrated, surgically emasculated; notably a castrated singer (usually a (former) treble chorister)
+castratie	n	de · mv. castraties	a castration, emasculation by surgical removal of the testicles
+communistisch	a		communist
+carnivoor	n	de · mv. carnivoren	carnivore, meat-eating creature
+carnivoor	a		carnivorous
+connotatie	n	de · mv. connotaties	connotation
+capuchon	n	de · mv. capuchons	shaped as a pointed cap; a rain-resistant cap
+compositie	n	de · mv. composities	the composition (general) makeup of something, notably in terms of…; a musical composition, piece written by a composer; an artistic composition, arrangement as of figures in a scene, colors on a…
+censuur	n	de	censorship
+censureren	v	censureerde – gecensureerd	to censor
+compagnon	n	de · mv. compagnons	companion, friend, partner; partner in a business, associate
+compositorisch	a		concerning musical composing, composer(s) and/or compositions; concerning other artistic or linguistic composing and/or compositions
+coïncideren	v	coïncideerde – gecoïncideerd	to coincide, occur at the same time and place; to correspond, match
+citroenmelisse	n	de	lemon balm (Melissa officinalis)
+Canadees	n	de · mv. Canadezen	a Canadian
+Canadees	m		Canadian English (language)
+Canadees	a		Canadian
+Canadese	n	de · mv. Canadesen	Canadian (female inhabitant of Canada)
+centralisatie	n	de · mv. centralisaties	centralization (US), centralisation (UK)
+concentratie	n	de · mv. concentraties	concentration (ability to focus one's attention); concentration (amount of a substance relative to a total or volume); concentration (amassment, grouping)
+cynisme	n	het	Cynicism; cynicism, cynical attitude
+collectivisme	n	het · mv. collectivismen	collectivism, an ideological system in which the means (of production) must…
+centraliseren	v	centraliseerde – gecentraliseerd	to centralize (US), to centralise (Commonwealth)
+commissaris	n	de · mv. commissarissen	commissioner
+concentreren	v	concentreerde – geconcentreerd	to concentrate; to concentrate (the mind), to focus
+combineren	v	combineerde – gecombineerd	to combine
+chansonnier	n	de · mv. chansonniers	a chansonnier (singer of chansons); a chansonnier (songbook)
+Caraïbisch	a		Caribbean
+Caribisch	a		Caribbean; Cariban
+cassave	n	de · mv. cassaves	cassava
+comateus	a		comatose
+co-enzym	n	het · mv. co-enzymen	coenzyme
+cursiefje	n	het · mv. cursiefjes	a small column (in a newspaper) about everyday situations
+culmineren	v	culmineerde – geculmineerd	to culminate, to reach one's highest altitude, to pass through the meridian; to culminate, to reach one's highpoint
+combinatie	n	de · mv. combinaties	the act, process or outcome of combining; a set-up of a truck and one or more trailers; a series of moves in chess
+cynisch	a		cynical; Cynic, pertaining to Cynicism
+Cycladen	m		the Cyclades, an Aegean island chain
+Centraal-Amerika	m		Central America (a continental region in North America, consisting of the…
+centiem	n	de · mv. centiemen	a pittance, insignificant sum
+cetologie	n	de	cetology
+correcteur	n	de · mv. correcteurs	proofreader; censor
+crisette	n	de · mv. crisettes	a minor crisis, notably in politics
+catastrofaal	a		catastrophic
+clitoridectomie	n	de	clitoridectomy, the usually mutilative removal or cutting of the clitoris
+connétable	n	de · mv. connétables	constable of France (supreme commander of the French army or another…
+cotyledo	n	het · mv. cotyledonen	a cotyledon, early leaf developed by a seed plant's embryo; a cotyledon, placental lobule
+cardioloog	n	de · mv. cardiologen	a cardiologist, a medical specialist in heart diseases
+camoufleren	v	camoufleerde – gecamoufleerd	to camouflage, to hide, to disguise
+criticaster	n	de · mv. criticasters	criticaster, uncharitable critic
+cacaoboom	n	de · mv. cacaobomen	the cacao tree, Theobroma cacao
+confrater	n	de · mv. confraters	a confrere, professional colleague, chiefly in an upper-class profession,…; a fellow member, e.g. of a confraternity; a confrere, a comrade, a cahoot
+centrifugeren	v	centrifugeerde – gecentrifugeerd	to centrifuge; to rotate quickly in a centrifuge in order to separate or dry…
+crematie	n	de · mv. crematies	cremation
+copernicium	n	het	copernicium
+cavalerie	n	de · mv. cavaleries	cavalry (part of the military that is on horseback)
+considerans	n	de · mv. consideransen	a consideration, something taken into account to reach a decision, notably a…
+commotie	n	de	commotion (agitation)
+Corsicaans	a		Corsican, of or relating to the island, people and/or culture of Corsica; in or otherwise relating to the Corsican language
+Corsicaans	m		the Corsican language
+cognitief	a		cognitive (mental functions)
+computerspel	n	het · mv. computerspellen	a computer game, an electronic game designed to be run on a computer
+cumulatief	a		cumulative
+computervirus	n	het · mv. computervirussen	a computer virus (an infectious program)
+crypte	n	de · mv. cryptes	crypt
+convenant	n	het · mv. convenanten	agreement, accord (now especially in economic contexts)
+convecterend	a		convecting
+criticus	n	de · mv. critici	critic
+cyclocross	n	de	cyclocross
+creatief	a		creative
+categoriseren	v	categoriseerde – gecategoriseerd	to categorize
+certificaat	n	het · mv. certificaten	certificate, document as certified proof; certificate, various financial documents
+confucianisme	n	het	Confucianism
+correctheid	n	de	correctness
+cadans	n	de · mv. cadansen	cadence (rhythm)
+continuïteit	n	de	continuity
+commerçant	n	de · mv. commerçanten	businessman, trader
+conclaaf	n	het · mv. conclaven	conclave (meeting room for electing a Pope; meeting for electing a Pope)
+coreopsis	n	de · mv. coreopsissen	a coreopsis, a plant in the genus Coreopsis of composite herbs
+compactheid	n	de · mv. compactheden	compactness
+coördinaat	n	de · mv. coördinaten	coordinate
+coördinaat	a		ordered together, grouped together
+cabaretier	n	de · mv. cabaretiers	cabaret performer
+communiceren	v	communiceerde – gecommuniceerd	to communicate
+chanteren	v	chanteerde – gechanteerd	to extort money, to blackmail
+correspondentie	n	de · mv. correspondenties	correspondence, exchange of letters
+conversatie	n	de · mv. conversaties	conversation
+converseren	v	converseerde – geconverseerd	to converse, talk casually
+conventioneel	a		conventional, usual; routine, habitual; conventional, not atomic, not nuclear
+conventie	n	de · mv. conventies	agreement, accord; assembly, meeting, convention; convention, accepted standard
+chirurgijn	n	de · mv. chirurgijns	a barber surgeon
+capriool	n	de · mv. capriolen	a leap, a caper; a caper, a mischievous prank
+conferentie	n	de · mv. conferenties	conference, convention
+condoleren	v	condoleerde – gecondoleerd	to condole, offer one's condolences
+compenseren	v	compenseerde – gecompenseerd	to compensate
+criminaliteit	n	de	criminality
+cabaretière	n	de · mv. cabaretières	female cabaret performer
+clair-obscur	n	het	chiaroscuro
+celibaat	n	het	celibacy
+coronium	n	het	coronium (obsolete chemical element, hypothesised to exist based on a green…
+campanologie	n	de	campanology (study of bells)
+contreien	n		regions, areas
+circustent	n	de · mv. circustenten	circus tent
+coloradokever	n	de · mv. coloradokevers	potato beetle (Leptinotarsa decemlineata)
+constitueren	v	constitueerde – geconstitueerd	to constitute; to be established; to be enacted
+calorisch	a		caloric, calorific
+cardanas	n	de · mv. cardanassen	driveline
+chromosomaal	a		chromosomal
+cardiologisch	a		cardiological
+conservatorium	n	het · mv. conservatoriums	conservatory
+cacaoboon	n	de · mv. cacaobonen	cocoa bean
+capituleren	v	capituleerde – gecapituleerd	to capitulate, to surrender
+congruentie	n	de · mv. congruenties	congruence, agreement; congruence, the quality of being congruent
+Carthaags	a		Carthaginian
+Carthaags	m		synonym of Punisch (“Punic language”)
+Carthager	n	de · mv. Carthagers	a Carthaginian
+chijl	n	de	chyle
+cheffin	n	de · mv. cheffinnen	a female boss; a female chef, a female head cook
+concipiëren	v	concipieerde – geconcipieerd	to conceive
+capricieus	a		capricious, whimsical
+concertgebouw	n	het · mv. concertgebouwen	concert hall (building)
+consolideren	v	consolideerde – geconsolideerd	to consolidate, to strengthen
+consolidatie	n	de · mv. consolidaties	consolidation, strengthening
+contactlens	n	de · mv. contactlenzen	contact lens
+crashen	v	crashte – gecrasht	to crash; to go bankrupt
+conservatief	a		conservative, opposing (rapid) change, favouring a small government; moderate, reserved; conservative, careful
+conservatief	n	de · mv. conservatieven	a conservative
+constitutioneel	a		constitutional
+conjugeren	v	conjugeerde – geconjugeerd	synonym of vervoegen (“to conjugate”); to conjugate
+capitulatie	n	de · mv. capitulaties	capitulation, act of surrendering
+concertmeester	n	de · mv. concertmeesters	concertmaster
+contragewicht	n	het · mv. contragewichten	counterweight
+castagnet	n	de · mv. castagnetten	castanet
+cliënt	n	de · mv. cliënten	client, customer (of a service provider)
+condenseren	v	condenseerde – gecondenseerd	to condense
+caronade	n	de · mv. caronades	dated spelling of carronade
+consequentie	n	de · mv. consequenties	consequence, result
+chemicus	n	de · mv. chemici	chemist
+curiositeit	n	de · mv. curiositeiten	curiosity (unique or extraordinary object)
+curieus	a		rare, curious, remarkable
+correlatie	n	de · mv. correlaties	correlation
+centrumrechts	a		center-right (US), centre-right (UK)
+corrosief	a		corrosive
+cellenbeton	n	het	autoclave cellular concrete
+contactsleutel	n	de · mv. contactsleutels	a car key, an engine key
+cingel	n	de · mv. cingels	a cincture (a part of the priestly vestments)
+cafetaria	n	de · mv. cafetaria's	small restaurant, cafeteria; snack bar
+chanten	v	chantte – gechant	to chant
+collectivisatie	n	de	collectivization
+collectiviseren	v	collectiviseerde – gecollectiviseerd	to collectivize
+coalitieregering	n	de · mv. coalitieregeringen	coalition government; a government formed by a coalition (formal…
+centrumlinks	a		center-left (US), centre-left (UK)
+centristisch	a		centrist
+cacaoboter	n	de	cocoa butter
+collectief	a		collective
+collectief	n	het · mv. collectieven	a group, a collective; a collective noun; a collective farm
+calvinisme	n	het	Calvinism
+choqueren	v	choqueerde – gechoqueerd	to shock; to strike (e.g. with poverty)
+claimen	v	claimde – geclaimd	to claim, to demand possession, control or responsibility
+centrisme	n	het	centrism
+cryogenisch	a		cryogenic
+constipatie	n	de	constipation
+compileren	v	compileerde – gecompileerd	to compile, to put together; to compile
+Chileens	a		Chilean
+Chileense	n	de · mv. Chileensen	Chilean woman
+christendemocratisch	a		Christian-democratic
+celmembraan	n	het · mv. celmembranen	cell membrane
+cytoplasma	n	het	cytoplasm (contents of a cell excluding the nucleus)
+componeren	v	componeerde – gecomponeerd	to compose
+chordofoon	n	de · mv. chordofonen	chordophone
+copieus	a		copious (great in quantity)
+cytoskelet	n	het · mv. cytoskeletten	cytoskeleton (structure resembling a skeleton contained within a cytoplasm)
+crèmig	a		synonym of crèmeachtig
+converteren	v	converteerde – geconverteerd	to convert (to change into another form or state)
+conversie	n	de · mv. conversies	conversion (act or process of changing into another form or state)
+conjunctuur	n	de · mv. conjuncturen	economic condition; conjuncture; business cycle
+conciërge	n	de · mv. conciërges	concierge, janitor (one who attends to the maintenance of a building and…
+cybernetica	n	de	cybernetics (science of communication and control)
+classicus	n	de · mv. classici	classicist
+contacteren	v	contacteerde – gecontacteerd	to contact
+comazuipen	v		to binge drink to an excess leading to (normally unintentional) loss of…
+consulent	n	de · mv. consulenten	counsel, adviser, consultant; especially an educational adviser; a minister of a congregation who temporarily also serves another…
+curiosum	n	het · mv. curiosa	a curiosity, a curio, a curiosum
+commercie	n	de	commerce; commercialism
+concurreren	v	concurreerde – geconcurreerd	to compete
+complottheorie	n	de · mv. complottheorieën	conspiracy theory
+cirkelredenering	n	de · mv. cirkelredeneringen	circular argument, circular reasoning
+conisch	a		conical
+Catalaanse	n	de · mv. Catalaansen	female Catalan, female Catalonian (female native or inhabitant of Catalonia)
+coachen	v	coachte – gecoacht	to coach
+chemokuur	n	de · mv. chemokuren	chemotherapy
+chemotherapie	n	de · mv. chemotherapieën	chemotherapy
+centen	n		money
+crèmekleurig	a		cream-colored (US), cream-coloured (UK)
+curandus	n	de · mv. curandi	an adult person subject to a particular regime of guardianship (curatele)
+calciet	n	het	calcite
+commilito	n	de · mv. commilito's	fellow student, in particular used for members of the same student society
+contrôleur	n	de · mv. contrôleurs	controller”)
+carburateur	n	de · mv. carburateurs	carburetor
+contrabande	n	de · mv. contrabandes	smuggled goods, contraband
+cassonade	n	de · mv. cassonades	brown sugar
+cricketen	v	crickette – gecricket	to play cricket
+classificeren	v	classificeerde – geclassificeerd	to classify
+continuïteitsvergelijking	n	de · mv. continuïteitsvergelijkingen	continuity equation
+cilindrisch	a		cylindrical
+compliceren	v	compliceerde – gecompliceerd	to complicate
+catechese	n	de	catechesis (religious instruction)
+catechismus	n	de · mv. catechismussen	catechism
+correspondente	n	de · mv. correspondentes	a female correspondent, in particular a reporter
+clusterbom	n	de · mv. clusterbommen	cluster bomb
+contanten	n		cash
+civiel	a		civil (all senses); civilian
+civiel	n	het	plain clothes
+confirmatie	n	de · mv. confirmaties	confirmation
+confirmeren	v	confirmeerde – geconfirmeerd	to confirm, to validate, to corroborate; to confirm, to authorise; to confirm
+cryptozoölogie	n	de	cryptozoology
+centrifugaal	a		centrifugal
+continuüm	n	het · mv. continua	continuum
+collaboratie	n	de	collaboration with the Nazis, fascists or another enemy; treason, traitorous…
+computerprogramma	n	het · mv. computerprogramma's	computer program
+coöperatief	a		cooperative
+crediteur	n	de · mv. crediteuren	creditor
+champignonsoep	n	de · mv. champignonsoepen	mushroom soup made of button mushrooms
+conservatisme	n	het	conservatism
+cornflake	n	de · mv. cornflakes	cornflake (mostly used in plural)
+centiseconde	n	de · mv. centiseconden	centisecond (one hundredth of a second)
+chocoladeletter	n	de · mv. chocoladeletters	a letter of the alphabet, made of chocolate. Commonly eaten during…; bold upper-case letters in sensationalistic headlines, associated with…
+conformisme	n	het	conformism
+cederen	a		cedar
+cederen	v	cedeerde – gecedeerd	to cede, to hand over
+christenheid	n	de	Christendom
+courtisane	n	de · mv. courtisanes	a courtesan, a high-status prostitute or mistress
+coördinaten	n		personal data
+cilindercoördinaten	n		cylindrical coordinates
+contraremonstrant	n	de · mv. contraremonstranten	a Contraremonstrant, a Gomarist; an opponent of the Remonstrants around the…
+contraremonstrants	a		Contraremonstrant, Gomarist
+christologisch	a		Christological
+coördinatenstelsel	n	het · mv. coördinatenstelsels	coordinate system
+centralisme	n	het	centralism
+chapelure	n	de · mv. chapelures	dried breadcrumbs used as an ingredient or as a coating before deep-frying
+chauffeuse	n	de · mv. chauffeuses	female driver (woman who drives a motorized vehicle, such as a car or a bus;…
+communie	n	de · mv. communies	communion
+choppe	n	de · mv. choppes	chuppah, wedding canopy; chuppah, wedding ceremony
+chinoline	n	de	quinoline
+classicisme	n	het	classicism (art style modelled on art forms from classical Antiquity)
+chocolademelk	n	de	chocolate milk (milk flavored with chocolate and served cold or hot)
+contratenor	n	de · mv. contratenoren	countertenor
+conflictueus	a		conflictional, involving, characterised by or causing conflict
+curryketchup	n	de · mv. curryketchups	curry ketchup
+curryworst	n	de · mv. curryworsten	currywurst
+conflictdiamant	n	de · mv. conflictdiamanten	blood diamond
+corroderen	v	corrodeerde – gecorrodeerd	to corrode
+chicaneur	n	de · mv. chicaneurs	a quibbler, a chicaner, a nitpicker
+confederatie	n	de · mv. confederaties	a confederation; a union or alliance of (largely) independent sovereign…
+contrabandier	n	de · mv. contrabandiers	smuggler
+cyclisch	a		cyclic, cyclical
+chirurgisch	a		surgical
+Cocytus	m		Cocytus (river in Hades)
+cupcakemama	n	de · mv. cupcakemama's	a woman who has sacrificed her successful career to spend more time on…
+climacterisch	a		climactic
+compunctie	n	de · mv. compuncties	remorse
+coulrofobie	n	de	coulrophobia
+coprolalie	n	de	coprolalia
+carmovirus	n	het · mv. carmovirussen	any virus of the genus Carmovirus
+citroenzuur	n	het	citric acid
+clickbait	n	de	clickbait
+condoleance	n	de · mv. condoleances	condolence
+Chileen	n	de · mv. Chilenen	Chilean (person from Chile)
+Cabo	n	de · mv. Cabo's	Cape Verdean (person from Cabo Verde)
+celliste	n	de · mv. cellistes	female cellist
+cummingtoniet	n	het	Cummingtonite
+chinezen	v	chineesde – gechineesd	to dine out at a Chinese(-Indonesian) restaurant; to chase the dragon, to inhale the vapour from heated heroin
+Concordia	m		a neighbourhood of Sint Eustatius, Netherlands
+catastrofisme	n	het	catastrophism (belief that the Earth's crust and life on Earth are mainly…
+codewoord	n	het · mv. codewoorden	codeword
+conjunctivus	n	de · mv. conjunctivi	the subjunctive mood or a word therein
+contubernaal	n	het · mv. contubernalen	roommate, a companion or a cohabitant
+caleidoscoop	n	de · mv. caleidoscopen	kaleidoscope
+contractie	n	de · mv. contracties	contraction
+coöperatie	n	de · mv. coöperaties	cooperation; cooperative
+combinatietang	n	de · mv. combinatietangen	combination pliers, lineman's pliers
+combinatiesleutel	n	de · mv. combinatiesleutels	combination wrench, combination spanner
+cassetteband	n	de · mv. cassettebanden	cassette tape
+calamiteitenzender	n	de · mv. calamiteitenzenders	a public television channel that will broadcast in case of a disaster
+contradictie	n	de · mv. contradicties	contradiction
+Cornwallis	m		Cornwall (a duchy and county of England, United Kingdom)
+cisman	n	de · mv. cismannen	a cis man
+cameraploeg	n	de · mv. cameraploegen	film crew
+Calvijn	m		a male given name, equivalent to English Calvin
+citroensap	n	het · mv. citroensappen	lemon juice
+controniem	n	het · mv. controniemen	contronym
+cabaretesk	a		cabaret-like; as if from a comedy show
+cabaretavond	n	de · mv. cabaretavonden	cabaret evening
+cabaretduo	n	het · mv. cabaretduo's	duo performing (in a) cabaret
+cabaretfestival	n	het · mv. cabaretfestivals	cabaret festival
+cabaretgezelschap	n	het · mv. cabaretgezelschappen	cabaret group
+cabaretgroep	n	het · mv. cabaretgroepen	cabaret group
+c-sleutel	n	de · mv. c-sleutels	C-clef
+cabinepersoneel	n	het	cabin crew (in an aircraft)
+cabaretlied	n	het · mv. cabaretliederen	song in a cabaret show
+cabaretsketch	n	de · mv. cabaretsketches	cabaret sketch
+cabarettrio	n	het · mv. cabarettrio's	trio performing (in a) cabaret
+cabretleer	n	het	goat leather
+cabaretprogramma	n	het · mv. cabaretprogramma's	cabaret programme
+cabaretvoorstelling	n	de · mv. cabaretvoorstellingen	cabaret show
+cabaretshow	n	de · mv. cabaretshows	cabaret show
+cabaretzanger	n	het · mv. cabaretzangers	cabaret singer
+cabarettekst	n	het · mv. cabaretteksten	text used in a cabaret show
+cacao-overeenkomst	n	de	cocoa agreement
+cacaopoeder	n	het · mv. cacaopoeders	cocoa solids
+Charkiv	m		Kharkiv, a city, raion and oblast in Ukraine
+crapuul	n	het · mv. crapulen	scum, odious people; scumbag, odious person
+crapuleus	a		villainous, despicable
+condens	n	de	condensate
+clichématig	a		clichéd, trite
+Cruyff	m		a surname
+cafeïne	n	de	caffeine
+christendemocratie	n	de	Christian democracy
+camee	n	de · mv. cameeën	a piece of jewelry carved in relief; a cameo
+crèmewit	a		creamy white; cream
+codeïne	n	de	codeine
+conjectuur	n	de · mv. conjecturen	conjecture
+containerbegrip	n	het · mv. containerbegrippen	catch-all term
+Coen	m		a diminutive of the male given name Coenraad
+chromatide	n	de · mv. chromatiden	chromatid
+cadeaudochter	n	de · mv. cadeaudochters	stepdaughter
+complotdenker	n	de · mv. complotdenkers	conspiracist
+corpsbal	n	de · mv. corpsballen	frat boy, stereotypical haughty or foppish student belonging to a student…
+contraheren	v	contraheerde – gecontraheerd	to contract
+conflagratie	n	de · mv. conflagraties	conflagration, cyclical or eschatological destruction of the world through fire; any large fire; any vehement conflict
+colofon	n	de/het · mv. colofons	colophon
+consistorie	n	het · mv. consistories	meeting of the College of Cardinals; congregational council; consistory, room where such a church council usually gathers for meetings
+cowboykapitalisme	n	het	cowboy capitalism, a form of capitalism that is considered to promote…
+casinokapitalisme	n	het	any form of capitalism that features or depends on a large speculative…
+cassettespeler	n	de · mv. cassettespelers	cassette player
+connecten	v	connectte – geconnect	to connect
+causatief	n	de/het · mv. causatieven	causative
+causatief	a		causative
+commentariaat	n	het · mv. commentariaten	commentariat, the pundit and commentator class
+creabea	n	de · mv. creabea's	someone, especially a woman, who is creative; particularly with respect to…; DIY creativity
+creabea	a		creative; in particular, having a DIY vibe
+calamiteit	n	de · mv. calamiteiten	large disaster, calamity; sentinel event (an unintended or unexpected event, related to healthcare…
+calculeren	v	calculeerde – gecalculeerd	to calculate; to estimate, to reckon
+Cubaan	n	de · mv. Cubanen	Cuban (inhabitant or national of Cuba, or one of Cuban descent)
+cherubijn	n	de · mv. cherubijnen	six-winged humanoid angel; putto; cherub (affectionate term for a child)
+coalitieakkoord	n	het · mv. coalitieakkoorden	coalition agreement
+consumptiemaatschappij	n	de · mv. consumptiemaatschappijen	consumer society (society in which status and consumption are linked and…
+consumptie	n	de · mv. consumpties	consumption, act of eating or drinking; portion of food or drink; consumption, act of consuming
+cellofaan	n	het	cellophane
+chappement	n	het · mv. chappementen	muffler (of an exhaust)
+cd-wisselaar	n	de · mv. cd-wisselaars	CD changer
+clownvis	n	de · mv. clownvissen	A clownfish; any of various fish of the subfamily Amphiprioninae; common clownfish (Amphiprion ocellaris)
+chloorkip	n	de · mv. chloorkippen	chicken carcass that has been disinfected with a chlorine solution; chicken meat that has been disinfected with a chlorine solution
+chemieconcern	n	het · mv. chemieconcerns	chemical company, chemical concern
+coulance	n		accommodation (fe. of insurance company toward its clients)
+chicaneren	v		to cavil, to pettifog; to quarrel
+christendemocraat	n	de · mv. christendemocraten	Christian democrat
+computervredebreuk	n	de	computer intrusion (unauthorised accessing of a computer)
+cultuurtaal	n	de · mv. cultuurtalen	standard language, language of culture (standardised lect)
+casuïstiek	n	de	casuistry, casuistics
+conjunctief	n	de · mv. conjunctieven	the subjunctive mood or a word therein
+confessioneel	a		linked to a particular religious denomination, confessional
+confessioneel	n	de · mv. confessionelen	adherent or member of an explicitly religious political party
+consistentie	n	de · mv. consistenties	consistency; consistence
+collectie	n	de · mv. collecties	collection
+chrein	n	de	chrain
+Cool	m		a male given name; a neighbourhood and former municipality of Centrum borough, Rotterdam, South…
+Cools	m		a surname, Cools, originating as a patronymic
+Croy	m		a hamlet in Helmond, North Brabant, Netherlands
+curatorium	n	het · mv. curatoria	board of curators
+confiscatie	n	de · mv. confiscaties	confiscation
+chaloets	n	de · mv. chaloetsiem	halutz, early labour Zionist pioneer in British Palestine
+cadmiumgeel	a		cadmium yellow
+cadmiumgeel	n	het	a cadmium yellow colour or dye
+concurrentiekracht	n	de · mv. concurrentiekrachten	competitiveness
+chargeren	v	chargeerde – gechargeerd	to charge, to attack; to exaggerate
+Corle	m		a hamlet in Winterswijk, Gelderland, Netherlands
+choepa	n	de · mv. choepot	chuppah, wedding canopy; chuppah, wedding ceremony
+Charo	m		a neighbourhood of Willemstad, Curaçao
+cabaleur	n	de · mv. cabaleurs	conspirator, member of a cabal
+Capelle	m		a former municipality of North Brabant, Netherlands; a hamlet in Schouwen-Duiveland, Zeeland, Netherlands
+cultusplaats	n	de · mv. cultusplaatsen	a place of worship, usually a non-Abrahamic cultic site
+chemicalie	n	de/het · mv. chemicaliën	chemical
+canolaolie	n	de · mv. canolaoliën	canola oil
+Comps	n		an abbreviation that combines the letters "comp" with an apostrophe-s…
+capabel	a		capable
+contactverbod	n	het · mv. contactverboden	restraining order (legal injunction against contacting someone)
+cipier	n	de · mv. cipiers	jailor, warden, prison guard
+confederaal	a		confederal; relating to a confederacy
+confederalisme	n	het	confederalism
+confedereren	v	confedereerde – geconfedereerd	to unite, to combine
+cameraval	n	de · mv. cameravallen	camera trap (set-up containing a camera that records information when triggered)
+constatering	n	de · mv. constateringen	observation, remark, finding
+cigaar	n	de · mv. cigaren	dated spelling of sigaar
+caduceren	v	caduceerde – gecaduceerd	to declare void, to nullify; to become void
+concaaf	a		concave
+charmeren	v	charmeerde – gecharmeerd	to charm, to impress (often with romantic connotations)
+chrestomathie	n	de · mv. chrestomathieën	chrestomathy, collection or book of selected writings (often quoted…; anthology, chrestomathy
+ceremoniemeester	n	de · mv. ceremoniemeesters	master of ceremonies (host at an official or otherwise ceremonial event)
+christendommelijk	a		pertaining to (petit bourgeois) Christendom
+certificatie	n	de · mv. certificaties	certification (qualification, state of being qualified for something); certification (granting of a certificate)
+cipressenboom	n	de · mv. cipressenbomen	cypress
+cultuurwoord	n	het · mv. cultuurwoorden	Kulturwort (widely borrowed word for a cross-cultural concept)
+ceel	n	de · mv. ceels	certificate, deed, official document; list, series
+chocoladezoen	n	de · mv. chocoladezoenen	a chocolate-coated cream or marshmallow treat
+cryogeen	a		cryogenic
+confineren	v	confineerde – geconfineerd	to confine, to detain
+confinatie	n	de · mv. confinaties	confinement, detention
+cijns	n	de · mv. cijnzen	feudal tax paid to a master or landowner
+Coevorden	m		Coevorden (a city and municipality of Drenthe, Netherlands)
+Culemborg	m		Culemborg (a city and municipality of Gelderland, Netherlands)
+cursist	n	de · mv. cursisten	learner, student following a course (usually outside of the standard…
+cursiste	n	de · mv. cursisten	a (female) learner, student (a woman who follows a study course)
+cadeautip	n	de · mv. cadeautips	suggestion for a gift
+cryptomunt	n	de · mv. cryptomunten	cryptocurrency; cryptocoin (monetary unit of a cryptocurrency)
+cryptovaluta	n	de · mv. cryptovaluta's	cryptocurrency
+chocomel	n	de	synonym of chocolademelk
+crowdsurfer	n	de · mv. crowdsurfers	crowd surfer
+cactusvijg	n	de · mv. cactusvijgen	a prickly pear, an Indian fig
+carpoolen	v	carpoolde – gecarpoold	to carpool; to share a car to save fuel, fuel costs, etc
+cijferkunst	n	de	arithmetic
+condoleantie	n	de · mv. condoleanties	condolence
+civilisationeel	a		civilisational
+collusie	n	de · mv. collusies	conspiracy, collusion (secret, illicit collaboration)
+cargadoor	n	de · mv. cargadoors	an agent who looks after the logistics of loading cargo into a ship, usually…
+contactdoos	n	de · mv. contactdozen	electrical socket, particularly one that isn't attached to a wall
+contactpersoon	n	de · mv. contactpersonen	contact, contact person
+contactloos	a		contactless, without (physical) contact
+conjecturaal	a		conjectural
+cladistiek	n	de	cladistics
+coulisselandschap	n	het · mv. coulisselandschappen	bocage, mixed woodland and pasture
+casinobrood	n	het · mv. casinobroden	bread or a loaf of bread baked in a shut tin, resulting in a regular…
+cilinderdeur	n	de · mv. cilinderdeuren	a semicylindrical cabinet door that can be opened or closed by rotating
+concessieblok	n	het · mv. concessieblokken	license block
+concessie	n	de · mv. concessies	concession, compromise; concession (temporal right to exploit a certain area); concession (area for which a right of exploitation has been granted)
+consuminderen	v	consuminderde – geconsuminderd	to consume less (rarely conjugated)
+cadeaukaart	n	de · mv. cadeaukaarten	electronic gift card (debit card that is given as a gift and can be used to…
+carnavalsnaam	n	de · mv. carnavalsnamen	a humorous name assigned to numerous towns during the festival of carnival
+catarre	n	de · mv. catarres	catarrh, chronic inflammation of the mucous membranes
+Cubaans	a		Cuban (pertaining to Cuba or Cubans)
+cloacadier	n	het · mv. cloacadieren	monotreme, any member of the order Monotremata
+cadeaubon	n	de · mv. cadeaubonnen	gift card, gift voucher (token that is given as a gift and can be used to…
+chicklit	n	de	chick lit
+creooltaal	n	de · mv. creooltalen	creole language
+composthoop	n	de · mv. composthopen	compost heap
+corpulentie	n	de	corpulence
+collatierecht	n	het · mv. collatierechten	right of patronage, advowson (right of a nobleman or patron to choose or…
+collatie	n	de · mv. collaties	collation (examination of documents; written result of such a comparison); collation (conference)
+celmaat	n	de · mv. celmaten	cell mate
+catecheet	n	de · mv. catecheten	catechist
+creditcard	n	de · mv. creditcards	credit card
+circusdier	n	het · mv. circusdieren	circus animal
+communistenvreter	n	de · mv. communistenvreters	a fanatical anticommunist
+cederolie	n	de · mv. cederoliën	cedar oil
+cholesterine	n	de	cholesterol, cholesterin
+campagnedek	n	het · mv. campagnedekken	poop deck (deck above the cabin)
+catechisatie	n	de · mv. catechisaties	catechesis (religious instruction)
+ceremonieel	a		ceremonial
+ceremonieel	n	het	ceremonial practices, ceremony
+condemnatie	n	de · mv. condemnaties	conviction, condemnation
+consternatie	n	de · mv. consternaties	consternation
+cimbaal	n	de · mv. cimbalen	cymbal (percussion instrument)
+cirkelboog	n	de · mv. cirkelbogen	a part of the circumference of a circle
+civiliteit	n	de · mv. civiliteiten	politeness, civility; civil formality
+citerspel	n	het	zither music
+computertoets	n	de · mv. computertoetsen	a computer key or computer button (pressable input device); an exam or test taken on a computer
+cijferschrift	n	het · mv. cijferschriften	an encrypted message; a method or key for encrypting messages
+commandocentrale	n	de · mv. commandocentrales	command centre
+christin	n	de · mv. christinnen	female Christian
+coloriet	n	het · mv. colorieten	palette, the effect of the ensemble of colours in a painting
+cognaat	n	het · mv. cognaten	cognate (related word, derived from the same lexeme as another word)
+cognaat	a		cognate
+cultuurstelsel	m		a policy of allocating (nominally) 20% of agricultural land in the Dutch…
+christocentrisch	a		Christocentric
+christocentrisme	n	het	Christocentrism
+colluderen	v	colludeerde – gecolludeerd	to collude, to conspire, to cooperate clandestinely
+calixtijn	n	de · mv. calixtijnen	a Calixtine, a Utraquist, a moderate Hussite
+cultfilm	n	de · mv. cultfilms	cult film
+cultuurbarbaar	n	de · mv. cultuurbarbaren	Philistine, barbarian (person bereft of culture)
+cultuurvolger	n	de · mv. cultuurvolgers	an animal that regularly makes anthropogenic environments into its habitat
+completeren	v	completeerde – gecompleteerd	to complete, to make complete, to finish; to fill or add to its usual or required amount, to make complete
+chordadier	n	het · mv. chordadieren	chordate, any member of the phylum Chordata
+civetkatachtige	n	de · mv. civetkatachtigen	viverrid, any member of the family Viverridae
+calvinist	n	de · mv. calvinisten	Calvinist, a follower of Calvinism; an orthodox Reformed Protestant, especially a confessional conservative…
+Coenraad	m		a male given name from Proto-Germanic, equivalent to English Conrad
+cacaomelk	n	de	cocoa drink, (if heated) hot chocolate (beverage made of cocoa and milk)
+Congres	m		Congress, the United States Congress
+congreszaal	n	de · mv. congreszalen	conference hall, convention hall
+convooi	n	het · mv. convooien	originally an import duty, later also levied on exports
+chaostheorie	n	de	chaos theory
+coscoroba	n	de · mv. coscoroba's	coscoroba (Coscoroba coscoroba)
+cetoloog	n	de · mv. cetologen	cetologist
+centenaar	n	de · mv. centenaars	100 kilogrammes; 100 pounds
+consterneren	v	consterneerde – geconsterneerd	to appall, to dismay
+clubhuis	n	het · mv. clubhuizen	clubhouse (building where an association is based)
+consciëntie	n	de · mv. consciëntiën	conscience
+commanderij	n	de · mv. commanderijen	commandery, the area or office controlled by the commander of a military order
+Claeys	m		a surname
+Couperus	m		a surname
+chilisalpeter	n	de/het	nitratine, Chile saltpetre
+Catalonisch	a		Catalan
+Catalonisch	m		Catalan
+Catalaan	n	de · mv. Catalanen	Catalan, Catalonian (native or inhabitant of Catalonia) (usually male)
+cartotheek	n	de · mv. cartotheken	a file system; a collection of maps, a cartographic library
+chemicaliëntanker	n	de · mv. chemicaliëntankers	chemical tanker
+citroenappel	n	de · mv. citroenappels	lemon (fruit)
+citroenlimonade	n	de · mv. citroenlimonades	lemonade, a sweetened or fizzy drink based on lemon juice
+citroenschijf	n	de · mv. citroenschijven	a slice of lemon
+citrusvrucht	n	de · mv. citrusvruchten	citrus fruit, fruit of a plant of the genus Citrus
+celgenoot	n	de · mv. celgenoten	cellmate
+celgenote	n	de · mv. celgenotes	female cellmate
+cautie	n	de · mv. cauties	a statement of one's rights during interrogation by law enforcement
+clandestien	a		clandestine
+clandestien	d		clandestinely
+cruiseboot	n	de · mv. cruiseboten	a cruise boat
+cannabist	n	de · mv. cannabisten	a (frequent) cannabis user
+contracoup	n	de · mv. contracoups	countercoup
+couppleger	n	de · mv. coupplegers	a putschist, one who perpetrates a coup d'état
+cremeren	v	cremeerde – gecremeerd	to cremate
+cd-rom	n	de · mv. cd-roms	a CD-ROM
+calciumoxide	n	het	calcium oxide (quicklime)
+Chinezin	n	de · mv. Chinezinnen	a Chinese woman
+cisvrouw	n	de · mv. cisvrouwen	a cis woman
+christologie	n	de · mv. christologieën	Christology (domain of Christian theology concerning Christ); Christology (particular Christological theory or perspective)
+cijfermeester	n	de · mv. cijfermeesters	someone who manages accounts for an institution; an auditor, an accountant
+contemporair	a		contemporary
+Celtiberen	n		Celtiberians
+correspondentieschaak	n	het	correspondence chess
+confectiepak	n	het · mv. confectiepakken	a ready-made suit
+cynicus	n	de · mv. cynici	Cynic; cynic, cynical person
+Colruyt	m		a surname
+citroenpers	n	de · mv. citroenpersen	a lemon squeezer
+citruspers	n	de · mv. citruspersen	a lemon squeezer
+chocoladebeen	n	het · mv. chocoladebenen	the non-dominant leg of a football player
+confectie	n	de · mv. confecties	mass-produced ready-to-wear outer clothing; a mass-produced ready-to-wear overgarment; an electuary, a confection
+carcinogeen	a		carcinogenic , causing cancer
+carcinogeen	n	het · mv. carcinogenen	a carcinogenic substance
+ceremonieus	a		ceremonial, ceremonious
+certificeren	v	certificeerde – gecertificeerd	to certify, to provide with a certificate
+citroenvla	n	de	lemon vla, a custard or maizena-based dessert made with lemon juice and…
+chijlmaking	n	de	chyle production
+cilinderhoed	n	de · mv. cilinderhoeden	a top hat
+conciliair	a		conciliar, pertaining to a church council
+Caïro	m		Cairo (the capital city of Egypt); Cairo (a governorate of Egypt)
+confituur	n	de · mv. confituren	sugar-preserved confited fruits
+chocoladereep	n	de · mv. chocoladerepen	a chocolate bar
+chrysant	n	de · mv. chrysanten	a chrysanthemum, flowering plant of the genus Chrysanthemum
+comakijken	v		to binge-watch
+Caprivistrook	m		Caprivi Strip
+consumentenvuurwerk	n	het	consumer fireworks (fireworks sold to and used by the general public rather…
+cakeblik	n	het · mv. cakeblikken	a cake tin
+convexiteit	n	de · mv. convexiteiten	convexity
+commandocentrum	n	het · mv. commandocentra	command centre
+cyberaanval	n	de · mv. cyberaanvallen	cyberattack
+Cambodjaan	n	de · mv. Cambodjanen	Cambodian (person)
+corrumperen	v		to corrupt, to spoil, or to rot
+Californiër	n	de · mv. Californiërs	a Californian
+Californisch	a		Californian
+Cambodjaans	a		Cambodian
+canoniek	a		canonical
+charitatief	a		charitable
+cariës	n	de	caries
+carneool	n	de · mv. carneolen	carnelian
+caroteen	n	het · mv. carotenen	carotene
+cartesiaans	a		Cartesian
+cavalerist	n	de · mv. cavaleristen	cavalry soldier (soldier on horseback)
+cederboom	n	de · mv. cederbomen	cedar, tree of the genus Cedrus
+celwand	n	de · mv. celwanden	cell wall
+celibatair	a		celibate
+celkern	n	de · mv. celkernen	nucleus (organelle)
+censuskiesrecht	n	het	census suffrage
+cementmolen	n	de · mv. cementmolens	cement mixer, concrete mixer
+centrifugaalmachine	n	de · mv. centrifugaalmachines	centrifuge
+cellulair	a		cellular
+cellulair	n	de · mv. cellulairs	cellular phone, mobile phone
+ceintuur	n	de/het · mv. ceintuurs	ceinture, narrow belt
+cetologisch	a		cetological
+Chaldeeuws	m		Chaldean
+Chaldeeuws	a		Chaldean
+Chaldeeër	n	de · mv. Chaldeeën	Chaldean
+charmezanger	n	de · mv. charmezangers	a crooner
+contr.	n	de · mv. contrs.	controller”)
+coronacrisis	m		the global health crisis and societal and economic crisis caused by the…
+coronakucher	n	de · mv. coronakuchers	someone who deliberately coughs at someone when the coronavirus is circulating
+Cornelissen	m		a surname originating as a patronymic
+Cuijk	m		a large village and former municipality of Land van Cuijk, North Brabant,…
+Cruquius	m		a village in Haarlemmermeer, North Holland, Netherlands
+culminatie	n	de · mv. culminaties	culmination, transit, the reaching of the highest altitude by a celestial body; culmination, highpoint, apex
+conciliarisme	n	het	conciliarism (view that church councils should be the supreme authority in…
+conciliaristisch	a		conciliaristic, conciliarist (relating to the view that church councils…
+congregationalisme	n	het	Congregationalism
+congregationalistisch	a		Congregationalist
+cirkelzaag	n	de · mv. cirkelzagen	a circular saw
+cameratoezicht	n	het	camera surveillance
+Cornet	m		a surname
+catechumeen	n	de · mv. catechumenen	catechumen
+confessie	n	de · mv. confessies	a religious affiliation or denomination; a confession of sins; a confession, a statement of faith
+canoniseren	v	canoniseerde – gecanoniseerd	to canonise, to adopt into a canon of authoritative texts or lore; to canonise, to accept into the canon of saints
+concordaat	n	het · mv. concordaten	concordat
+chtonisch	a		chthonic, earthly
+ciborie	n	het · mv. cibories	ciborium (covered receptacle for holding the consecrated wafers of the…
+coronafeest	n	het · mv. coronafeesten	festive gathering during the COVID-19 pandemic to rebel against…
+coalitiepartij	n	de · mv. coalitiepartijen	a political party that participates in a coalition, usually a governing…
+cavaleriecharge	n	de · mv. cavaleriecharges	cavalry charge
+communicatiemiddel	n	het · mv. communicatiemiddelen	a means of communication
+chloorgas	n	het	chlorine gas (gaseous dichlorine)
+cashewkaas	n	de · mv. cashewkazen	cashew cheese
+cellnummer	n	het · mv. cellnummers	cellular phone number, mobile phone number
+casarca	n	de · mv. casarca's	any of a number of shelduck species; the ruddy shelduck, Tadorna ferruginea
+cambrium	m		Cambrian
+cambrisch	a		Cambrian
+criminalisering	n	de · mv. criminaliseringen	criminalisation
+categorisch	a		categorical (without exception); resolute, firm
+causaal	a		causal
+cd-speler	n	de · mv. cd-spelers	CD player
+chef-kok	n	de · mv. chef-koks	a culinary chef, a head cook
+chaostheoretisch	a		of, pertaining to or according to chaos theory
+chilipeper	n	de · mv. chilipepers	chili, chili pepper (fruit); powdered chili pepper, chili powder
+Centraal-Amerikaan	n	de · mv. Centraal-Amerikanen	Central American, person (originating) from Central America
+Centraal-Amerikaans	a		Central American; of, from or relating to Central America
+charmantheid	n	de	charmingness
+chloorwater	n	het	chlorinated water, chlorine water
+circusartiest	n	de · mv. circusartiesten	a circus performer
+confectiekleding	n	de	mass-produced ready-to-wear outer clothing
+conserveermiddel	n	het · mv. conserveermiddelen	preservative (additive preventing decomposition)
+conserveringsmiddel	n	het · mv. conserveringsmiddelen	preservative (additive preventing decomposition)
+contextueel	a		contextual
+copulatief	a		copular, copulative
+copulatie	n	de · mv. copulaties	copulation, mating
+copuleren	v	copuleerde – gecopuleerd	to copulate, to mate
+coronair	a		coronary (pertaining to the coronary veins or arteries)
+caféhouder	n	de · mv. caféhouders	the owner or manager of a café
+convectie	n	de · mv. convecties	convection
+counteren	v	counterde – gecounterd	to counter-attack, to counter
+coveren	v	coverde – gecoverd	to cover, to make a cover version of
+cowboyhoed	n	de · mv. cowboyhoeden	cowboy hat
+criminaliseren	v	criminaliseerde – gecriminaliseerd	to criminalise
+cursief	a		italic
+cycloop	n	de · mv. cyclopen	cyclops (one-eyed giant)
+cruisen	v	cruisete – gecruiset	to cruise, to go on a cruise trip; to cruise in a car, to drive at a constant speed; to cruise, to have anonymous casual sex
+cellarius	n	de · mv. cellarii	a monk tasked with the economic administration of a monastery
+catsiaans	a		Catsian; of or pertaining to Jacob Cats (1577–1660), a Dutch jurist and poet…
+chartervliegtuig	n	het · mv. chartervliegtuigen	a charter plane, a charted aeroplane
+chartervlucht	n	de · mv. chartervluchten	a charter flight
+casueel	a		coincidental; remarkable, exceptional
+carbid	n	het	calcium carbide, CaC₂
+cactee	n	de · mv. cacteeën	cactus, plant of the family Cactaceae
+conflictstof	n	de	matter causing conflict
+celdeling	n	de · mv. celdelingen	cell division, cleavage
+celsplitsing	n	de · mv. celsplitsingen	cell division, cleavage
+copiloot	n	de · mv. copiloten	copilot
+comorbiditeit	n	de · mv. comorbiditeiten	comorbidity
+chequeboek	n	het · mv. chequeboeken	a chequebook
+citroenhaai	n	de · mv. citroenhaaien	lemon shark (Negaprion brevirostris)
+chequeverkeer	n	het	cheque transactions, check transations
+chequeboekdiplomatie	n	de	a method of solving diplomatic problems by 'waving the checkbook', i.e.…; a similar method of paying off non-diplomatic partners
+contactberoep	n	het · mv. contactberoepen	a job or profession which implies close physical contact with the clients,…
+Corsicaan	n	de · mv. Corsicanen	Corsican (native or inhabitant of Corsica, France) (usually male)
+contactsport	n	het · mv. contactsporten	an individual sport which implies close physical contact between the…
+competitiesport	n	de · mv. competitiesporten	any competitive sport, which opposes either individual players or teams; the practice of (a) sport in the framework of a competition, such as a…
+Centraal-Afrika	m		Central Africa (a core geographic region of Africa which includes Burundi,…; Central African Republic (a country in Central Africa)
+Capitool	m		Capitol (legislative building in Washington D.C.)
+Charlois	m		Charlois (a neighborhood and former municipality of Rotterdam, South…
+crimigrant	n	de · mv. crimigranten	crimmigrant
+crimigratie	n	de · mv. crimigraties	crimmigration
+corpustaalkunde	n	de	corpus linguistics
+cyclohexeen	n	het	cyclohexane
+combinatorisch	a		combinatorial
+cartoonesk	n	mv. cartooneske	cartoonish
+containerhaven	n	de · mv. containerhavens	container port
+containerschip	n	het · mv. containerschepen	container ship
+cognitiewetenschap	n	de · mv. cognitiewetenschappen	cognitive science
+cognitie	n	de · mv. cognities	cognition
+contraremonstrantie	n	de · mv. contraremonstranties	a remonstrance presented in opposition to another remonstrance; chiefly in…
+contraspionage	n	de	counterintelligence, counterespionage
+cultuurstrijder	n	de · mv. cultuurstrijders	a culture warrior; in the nineteenth century exclusively of anti-Catholics…
+cultuurstrijd	n	de · mv. cultuurstrijden	a culture war; in particular used of the Culture War in the German Empire in…
+cruciaal	a		crucial, vital, pivotal
+contourveer	n	de · mv. contourveren	contour feather
+coscorobazwaan	n	de · mv. coscorobazwanen	coscoroba (Coscoroba coscoroba)
+comparatief	a		comparative (pertaining to comparison); comparative (pertaining to the comparative degree)
+comparatief	n	de · mv. comparatieven	comparative (word in the comparative degree)
+Cranevelt	m		a neighborhood of Arnhem, Gelderland, Netherlands
+Coldenhove	m		a hamlet in Brummen, Gelderland, Netherlands
+Cortenoever	m		a hamlet in Brummen, Gelderland, Netherlands
+contactkoor	n	het · mv. contactkoren	a choir for persons with dementia
+Corlaer	m		a neighborhood of Nijkerk, Gelderland, Netherlands; a surname
+chargen	v	chargede – gecharged	to charge (to add energy to)
+chocozoen	n	de · mv. chocozoenen	a chocolate-coated cream or marshmallow treat
+coronavaccin	n	het · mv. coronavaccins	a vaccine against a disease caused by a corona virus, especially against…
+centrumpartij	n	de · mv. centrumpartijen	a political party in the centre of the ideological spectrum, in between left…
+Centrumpartij	m		a defunct far-right anti-immigrant political party in the Netherlands
+condoleanceregister	n	het · mv. condoleanceregisters	book of condolence, condolence book
+chocolademunt	n	de · mv. chocolademunten	a piece of chocolate shaped like a coin, often wrapped in metallic foil
+contributie	n	de · mv. contributies	a contribution to a joint effort; a membership fee
+cederhout	n	het	cedarwood
+cryosfeer	n	de	cryosphere
+contra-expertise	n	de · mv. contra-expertises	expert investigation by a third party when an earlier expert investigation…
+Creil	m		a village in Noordoostpolder, Flevoland, Netherlands
+circusclown	n	de · mv. circusclowns	circus clown
+carrièrediplomaat	n	de · mv. carrièrediplomaten	a professional career diplomat, employed indefinitely, as opposed to a…
+chocoladepasta	n	de/het · mv. chocoladepasta's	a chocolate spread
+contractrecht	n	het	contract law
+cocktailsaus	n	de · mv. cocktailsauzen	cocktail sauce
+consulaat-generaal	n	het · mv. consulaten-generaal	consulate general
+containervaart	n	de	container shipping (navigation for transporting goods shipped in containers)
+collegiant	n	de · mv. collegianten	a member of a loose grouping of antidogmatic Protestant dissenters,…; a member of a college (council) or society
+cosmetisch	a		cosmetic
+cultuurhistorisch	a		pertaining to cultural history
+centralistisch	a		centralist, centralistic
+controversetheoloog	n	de · mv. controversetheologen	a theologian who engaged as a polemicist in the early-modern…
+coronahaard	n	de · mv. coronahaarden	corona hotspot
+coccejaan	n	de · mv. coccejanen	a follower of Johannes Cocceius in the Reformed church during the…
+Chevremont	m		a neighbourhood of Kerkrade, Limburg, Netherlands
+Caumerveld	m		a neighbourhood of Heerlen, Limburg, Netherlands
+Camerig	m		a hamlet in Vaals, Limburg, Netherlands
+Cottessen	m		a hamlet in Vaals, Limburg, Netherlands
+Colmont	m		a hamlet in Voerendaal, Limburg, Netherlands
+Craubeek	m		a hamlet in Voerendaal, Limburg, Netherlands
+Cartils	m		a hamlet in Gulpen-Wittem, Limburg, Netherlands
+Crapoel	m		a hamlet in Gulpen-Wittem, Limburg, Netherlands
+Campagne	m		a neighbourhood of Maastricht, Limburg, Netherlands
+Caberg	m		a neighbourhood of Maastricht, Limburg, Netherlands
+Céramique	m		a neighbourhood of Maastricht, Limburg, Netherlands
+Catsop	m		a hamlet in Stein, Limburg, Netherlands
+Caluna	m		a hamlet in Leudal, Limburg, Netherlands
+Castert	m		a hamlet in Leudal, Limburg, Netherlands
+Crixhoek	m		a hamlet in Weert, Limburg, Netherlands
+Castenray	m		a village in Venray, Limburg, Netherlands
+Cadier	m		a former municipality of Limburg, Netherlands
+concretiseren	v	concretiseerde – geconcretiseerd	to concretize
+Cranendonck	m		a hamlet and municipality of North Brabant, Netherlands
+Cobbeek	m		a neighbourhood of Veldhoven, North Brabant, Netherlands
+Casteren	m		a village in Bladel, North Brabant, Netherlands
+Cromvoirt	m		a village and former municipality of Vught, North Brabant, Netherlands
+Coevering	m		a neighbourhood of Geldrop-Mierlo, North Brabant, Netherlands
+Castelré	m		a village in Baarle-Nassau, North Brabant, Netherlands
+Chaam	m		a village and former municipality of Alphen-Chaam, North Brabant, Netherlands
+Chaamdijk	m		a hamlet in Alphen-Chaam, North Brabant, Netherlands
+Couwelaar	m		a hamlet in Alphen-Chaam, North Brabant, Netherlands
+Chassé	m		a neighbourhood of Breda, North Brabant, Netherlands
+Calfven	m		a hamlet in Woensdrecht, North Brabant, Netherlands
+cryovulkaan	n	de · mv. cryovulkanen	a volcano on an icy moon or asteroid that ejects volatile materials rather…
+cryovulkanisme	n	de · mv. cryovulkanismen	the activity, and associated phenomena, of a cryovolcano – a volcano that…
+Colijnsplaat	m		a village and former municipality of Noord-Beveland, Zeeland, Netherlands
+Campensnieuwland	m		a hamlet in Noord-Beveland, Zeeland, Netherlands
+Coudorpe	m		a hamlet in Borsele, Zeeland, Netherlands
+Clinge	m		a village and former municipality of Hulst, Zeeland, Netherlands
+Cadzand	m		a village and former municipality of Sluis, Zeeland, Netherlands
+Cadzand-Bad	m		a village in Sluis, Zeeland, Netherlands
+Corsel	m		a surname
+Cellesbroek	m		a neighbourhood of Kampen, Overijssel, Netherlands
+creperen	v	crepeerde – gecrepeerd	to be in straining pain, to suffer miserably; to die due to horrible circumstances
+Cellemuiden	m		a hamlet in Zwartewaterland, Overijssel, Netherlands
+conversatieanalyse	n	de · mv. conversatieanalyses	conversational analysis
+Collendoorn	m		a hamlet in Hardenberg, Overijssel, Netherlands
+Collendoornerveen	m		a hamlet in Hardenberg, Overijssel, Netherlands
+Colmschaterenk	m		a neighbourhood of Deventer, Overijssel, Netherlands
+Colmschate	m		a village in Deventer, Overijssel, Netherlands
+Cromhoffsbleek	m		a neighbourhood of Enschede, Overijssel, Netherlands
+Clingenborgh	m		a neighbourhood of Steenwijkerland, Overijssel, Netherlands
+Columbuskwartier	m		a neighbourhood of Almere, Flevoland, Netherlands
+Componistenbuurt	m		a neighbourhood of Ede, Gelderland, Netherlands; a neighbourhood of Roermond, Limburg, Netherlands; a neighbourhood of Oosterhout, North Brabant, Netherlands
+Componistenkwartier	m		a neighbourhood of Apeldoorn, Gelderland, Netherlands
+conjo	n		a despicable person, a bastard
+congestieheffing	n	de · mv. congestieheffingen	congestion charge (type of road user charge linked to participation in…
+Coendersborg	m		a neighbourhood of Groningen, Groningen, Netherlands
+Ceresdorp	m		a neighbourhood of Stadskanaal, Groningen, Netherlands
+cyclosilicaat	n	het · mv. cyclosilicaten	cyclosilicate
+Cornjum	m		a village in Leeuwarden, Friesland, Netherlands
+Camminghaburen	m		a neighbourhood of Leeuwarden, Friesland, Netherlands
+Commissiepolle	m		a hamlet in De Fryske Marren, Friesland, Netherlands
+Cornwerd	m		a village in Súdwest-Fryslân, Friesland, Netherlands
+Carnisse	m		a neighbourhood of Barendrecht, South Holland, Netherlands; a neighbourhood of Rotterdam, South Holland, Netherlands
+Cillaarshoek	m		a hamlet and former municipality of Hoeksche Waard, South Holland, Netherlands
+Cromstrijen	m		a former municipality of South Holland, Netherlands
+Crabbehof	m		a neighbourhood of Dordrecht, South Holland, Netherlands
+centralisering	n	de · mv. centraliseringen	centralisation
+Componistenwijk	m		a neighbourhood of Baarn, Utrecht, Netherlands; a neighbourhood of Lansingerland, South Holland, Netherlands; a neighbourhood of Lisse, South Holland, Netherlands
+Cromvliet	m		a neighbourhood of Rijswijk, South Holland, Netherlands
+calamiteitenroute	n	de · mv. calamiteitenroutes	a route used by emergency vehicles
+Crooswijk	m		a neighbourhood of Rotterdam, South Holland, Netherlands
+Cronestein	m		a neighbourhood of Leiden, South Holland, Netherlands
+coöperatieprincipe	n	het · mv. coöperatieprincipes	cooperative principle
+Cashero	m		a village in Aruba
+Casibari	m		a village in Aruba
+Catiri	m		a village in Aruba
+Canashito	m		a village in Aruba
+Calabas	m		a village in Aruba
+Cumana	m		a neighbourhood of Oranjestad, Aruba
+Camacuri	m		a neighbourhood of Oranjestad, Aruba
+Calslagen	m		a hamlet in Aalsmeer, North Holland, Netherlands
+Crailo	m		a hamlet in Huizen, North Holland, Netherlands
+Cruquiuseiland	m		a neighbourhood of Amsterdam, North Holland, Netherlands
+Chassébuurt	m		a neighbourhood of Amsterdam, North Holland, Netherlands
+Cremerbuurt	m		a neighbourhood of Amsterdam, North Holland, Netherlands
+Cranenbroek	m		a neighbourhood of Alkmaar, North Holland, Netherlands
+Cruquius-Oost	m		a hamlet in Haarlemmermeer, North Holland, Netherlands
+Commandeurs	m		a neighbourhood of Heemskerk, North Holland, Netherlands
+Castricum	m		a village and municipality of North Holland, Netherlands
+Catrijp	m		a hamlet in Bergen, North Holland, Netherlands
+Camperduin	m		a hamlet in Bergen, North Holland, Netherlands
+Callantsoog	m		a village and former municipality of Schagen, North Holland, Netherlands
+Crosestein	m		a neighbourhood of Zeist, Utrecht, Netherlands
+Couwenhoven	m		a neighbourhood of Zeist, Utrecht, Netherlands
+Coelhorst	m		a hamlet in Amersfoort, Utrecht, Netherlands
+Calveen	m		a neighbourhood of Amersfoort, Utrecht, Netherlands
+Claverenblad	m		a neighbourhood of Leusden, Utrecht, Netherlands
+Cothen	m		a village and former municipality of Wijk bij Duurstede, Utrecht, Netherlands
+Cabauw	m		a village and former municipality of Lopik, Utrecht, Netherlands
+Cattenbroek	m		a hamlet in Montfoort, Utrecht, Netherlands
+controlepost	n	de · mv. controleposten	control post, checkpoint
+Cypriotisch	a		Cypriot
+Cyprioot	n	de · mv. Cyprioten	Cypriot
+cancelcultuur	n	de	cancel culture
+clustermunitie	n	de	cluster munition(s)
+cenobiet	n	de · mv. cenobieten	cenobite
+Casparij	m		a surname
+concubant	n	de · mv. concubanten	male partner in a common-law marriage
+concubaan	n	de · mv. concubanen	male partner in a common-law marriage
+Centraal-Azië	m		Central Asia (a landlocked geographic area of continental central Asia…
+corporatie	n	de · mv. corporaties	corporation; society, association, especially an entity founded to pursue a common goal…
+calimerocomplex	n	het · mv. calimerocomplexen	the feeling that one is being treated unfairly because one is smaller or has…
+concurrentiepositie	n	de · mv. concurrentieposities	competitiveness, competitive position
+concubinaat	n	het	concubinage
+complicatie	n	de · mv. complicaties	complication, entanglement; complication
+coromandeleend	n	de · mv. coromandeleenden	cotton pygmy goose (Nettapus coromandelianus)
+carolina-eend	n	de · mv. carolina-eenden	wood duck (Aix sponsa)
+calliopekolibrie	n	de · mv. calliopekolibries	Calliope hummingbird (Selasphorus calliope)
+christoffelkruid	n	het	baneberry, herb Christopher
+cashen	v	cashte – gecasht	to cash, to exchange for cash; to make money, particularly: to make a large amount of money at once
+citroenvlinder	n	de · mv. citroenvlinders	brimstone or common brimstone (Gonepteryx rhamni)
+convergeren	v	convergeerde – geconvergeerd	to converge
+citroensijs	n	de · mv. citroensijzen	citril finch (Carduelis citrinella)
+convergentie	n	de · mv. convergenties	convergence
+citroenkuifkaketoe	n	de · mv. citroenkuifkaketoes	a citron-crested cockatoo (Cacatua sulphurea citrinocristata)
+cirlgors	n	de · mv. cirlgorzen	cirl bunting (Emberiza cirlus)
+commissariaat	n	het · mv. commissariaten	the office of a commissioner or a commission
+charmeoffensief	n	het · mv. charmeoffensieven	charm offensive
+chemseks	n	de	chemsex
+cerviduct	n	het · mv. cerviducten	a wildlife crossing built specifically with deer in mind
+congrueren	v	congrueerde – gecongrueerd	to be congruent, to agree
+contaminatie	n	de · mv. contaminaties	contamination
+connectie	n	de · mv. connecties	connection (between people); connection (in communication networks)
+computerscherm	n	het · mv. computerschermen	computer screen
+conculega	n	de · mv. conculega's	a colleague, or a person working in the same sector for a different…
+contractbreuk	n	de · mv. contractbreuken	breach of contract
+cichorei	n	de	a chicory; any plant of the genus Cichorium; synonym of wilde cichorei
+commercialisatie	n	de · mv. commercialisaties	the act of commercializing
+chamaefyt	n	de · mv. chamaefyten	chamaephyte
+cryptofyt	n	de · mv. cryptofyten	cryptophyte
+cuberdon	n	de · mv. cuberdons	cuberdon, a cone-shaped Belgian candy from Ghent
+cyclaam	n	de · mv. cyclamen	a cyclamen, a plant of the genus Cyclamen
+correleren	v	correleerde – gecorreleerd	to correlate
+centaurie	n	de	a knapweed, starthistle, centaury; any plant of the genus Centaurea
+cipreswolfsmelk	n	de	cypress spurge (Euphorbia cyparissias)
+comporteren	v	comporteerde – gecomporteerd	to comport oneself
+complotdenken	n	het	conspiratorialism, belief in conspiracy theories
+Cherson	m		Kherson, a city, raion and oblast in Ukraine
+Chmelnytsky	m		Khmelnytskyi, a city, raion and oblast in Ukraine
+challe	n	de · mv. challes	challah
+Chanoeka	m		Hanukkah
+Chanoeklaas	m		a fusion of the Jewish holiday of Hanukkah and the Dutch Christian holiday…
+Channeke	m		synonym of Chanoeka (“Hanukkah”)
+Cruijffiaans	m		the unique way of speaking by Dutch football player Johan Cruyff
+Cruijffiaans	a		of or pertaining to Dutch football player Johan Cruyff; of or pertaining to the unique way of speaking by Dutch football player…
+chilipoeder	n	het · mv. chilipoeders	chili powder
+chilivlok	n	de · mv. chilivlokken	chili flake, red pepper flake
+construeren	v	construeerde – geconstrueerd	to construe; to construct
+covalentie	n	de · mv. covalenties	covalence
+connecteren	v	connecteerde – geconnecteerd	to connect
+calpol	n	de	paracetamol, acetaminophen (white crystalline compound used in medicine as…
+cryptogaam	a		cryptogamous
+cryptogaam	n	de · mv. cryptogamen	cryptogam
+calciumcarbonaat	n	de	calcium carbonate
+carbonaat	n	de	carbonate
+Catharinaparkiet	n	de · mv. Catharinaparkieten	the barred parakeet, Bolborhynchus lineola
+Centrumeiland	m		A man-made island in the IJ and neighborhood (a part of IJburg) in eastern…
+Castilië	m		Castile (a vaguely defined geographical region of central Spain generally…
+cc'en	v	cc'de – ge-cc'd	to cc (to add an additional recipient to the CC line of an e-mail message)
+configureren	v	configureerde – geconfigureerd	to configure
+cultiveren	v	cultiveerde – gecultiveerd	to cultivate (to grow plants); to cultivate (to nurture)
+conflicthantering	n	de · mv. conflicthanteringen	conflict management
+cultuurverschil	n	het · mv. cultuurverschillen	cultural difference
+coördineren	v	coördineerde – gecoördineerd	to coordinate
+coördinatie	n	de · mv. coördinaties	coordination
+coördinatief	a		coordinative
+cantharel	n	de · mv. cantharellen	chanterelle (Cantharellus cibarius)
+cruisereis	n	de · mv. cruisereizen	a cruise trip
+chanteerbaar	a		susceptible to extortion, blackmailable
+convectieoven	n	de · mv. convectieovens	synonym of heteluchtoven (“convection oven”)
+citatie	n	de · mv. citaties	quotation (fragment of a human expression quoted by someone)
+Chandrikapersad	m		a male given name
+champagneglas	n	het · mv. champagneglazen	champagne glass, champagne flute
+Coene	m		a surname
+circuleren	v	circuleerde – gecirculeerd	to circulate (to (cause to) move in circles); to circulate, to spread
+circulair	a		circular (in the shape of, or moving in a circle)
+circulatie	n	de · mv. circulaties	circulation (movement in a circle); circulation (transmission, spreading)
+circulariteit	n	de · mv. circulariteiten	circularity
+cassatie	n	de · mv. cassaties	cassation
+compilatie	n	de · mv. compilaties	the act or process of compiling or gathering together from various sources; that which is compiled; especially, a book or document composed of materials…
+compilatiewerk	n	het · mv. compilatiewerken	compilation work
+circumduceren	v	circumduceerde – gecircumduceerd	to circumduct (rotate a body part)
+circumductie	n	de · mv. circumducties	circumduction (rotation of a body part)
+cardiomyopathie	n	de	cardiomyopathy
+chatgesprek	n	het · mv. chatgesprekken	chat conversation
+collegejaar	n	het · mv. collegejaren	academic year in higher education
+concertkaart	n	de · mv. concertkaarten	concert ticket
+categorisatie	n	de · mv. categorisaties	categorization
+categorisering	n	de · mv. categoriseringen	categorization
+categoraal	a		restricted to or specialized in one category
+categoriaal	a		categorical (of or pertaining to categories); synonym of categoraal
+categoriek	a		synonym of categorisch
+controlemogelijkheid	n	de · mv. controlemogelijkheden	control possibility
+cultusbeeld	n	het · mv. cultusbeelden	statue of a god
+campagneleider	n	de · mv. campagneleiders	campaign manager
+corporatiewoning	n	de · mv. corporatiewoningen	social housing, rental dwelling belonging to a housing association
+constitutie	n	de · mv. constituties	constitution (ground law); constitution (physical condition of the body); constitution (act, or process of setting something up)
+cadeauwinkel	n	de · mv. cadeauwinkels	gift shop
+coronageval	n	het · mv. coronagevallen	a case of COVID-19, someone who has been infected with the coronavirus
+culinair	a		culinary
+coltrui	n	de · mv. coltruien	turtleneck sweater
+cohesie	n	de	cohesion (state of cohering or working together); cohesion (intermolecular forces of mutual attraction); cohesion (relatedness between parts of a text)
+coherentie	n	de	coherence
+commanditair	n	de · mv. commanditairen	A silent or limited partner in a limited partnership
+commanditair	a		Of or pertaining to a silent partner or limited partner in a limited partnership
+commanderen	v	commandeerde – gecommandeerd	to command, order
+chocoladecake	n	de · mv. chocoladecakes	chocolate cake (usually specifically a pound cake with chocolate flavour)
+contemplatie	n	de	contemplation
+cryptografie	n	de	cryptography
+conjugatie	n	de · mv. conjugaties	synonym of vervoeging (“conjugation”)
+cadmiumrood	n	het	cadmium red
+cadmiumgroen	n	het	cadmium green
+cadmiumoranje	n	het	cadmium orange
+conifeer	n	de · mv. coniferen	conifer
+cryptisch	a		cryptic
+condensatie	n	de · mv. condensaties	condensation (conversion of gas to liquid)
+claxonneren	v	claxonneerde – geclaxonneerd	to honk
+contactgestoord	a		reclusive, socially-awkward
+coproductie	n	de · mv. coproducties	coproduction
+creatieveling	n	de · mv. creatievelingen	creative person
+computeringenieur	n	de · mv. computeringenieurs	computer engineer
+criminoloog	n	de · mv. criminologen	criminologist
+chocoladetaart	n	de · mv. chocoladetaarten	chocolate cake
+curlingouder	n	de · mv. curlingouders	snowplow parent
+casuïst	n	de · mv. casuïsten	casuist
+confidentieel	a		confidential
+castorzaad	n	het · mv. castorzaden	castor bean
+castorolie	n	de · mv. castoroliën	castor oil
+castorolieplant	n	de · mv. castorolieplanten	synonym of wonderboom (“castor oil plant”)
+castorboon	n	de · mv. castorbonen	castor bean
+conformeren	v	conformeerde – geconformeerd	to conform; to conform to
+conformistisch	a		conformist
+configuratie	n	de · mv. configuraties	configuration (form of a thing, as depending on the relative placement of…; configuration (relative positions of a set of things); configuration (aspect of the planets)
+competitief	a		competitive (inclined to compete)
+commercialiseren	v	commercialiseerde – gecommercialiseerd	to commercialize
+Congolees	n	de · mv. Congolezen	Congolese (a person from the Congo or any Congolese state)
+Congolees	a		Congolese (of, from, or pertaining to the Congo or any Congolese state)
+cerebraal	a		cerebral
+cashewnoot	n	de · mv. cashewnoten	cashew nut
+conformiteit	n	de	conformity
+cederpestvogel	n	de · mv. cederpestvogels	cedar waxwing (Bombycilla cedrorum)
+cijnsrecht	n	het · mv. cijnsrechten	The right of a feudal lord to levy a census tax on peasants
+chatoena	n	de · mv. chatoenot	wedding
+chassene	n	de · mv. chassenes	wedding
+captatie	n	de · mv. captaties	collection or extraction of water; video capture, recording
+chromatografie	n	de	chromatography (technique for separation of components in a mixture)
+cupmaat	n	de · mv. cupmaten	cup size
+chocolade-eclair	n	de · mv. chocolade-eclairs	chocolate éclair
+chocolade-ijs	n	het	chocolate ice cream
+cessie	n	de · mv. cessies	cessation, of receivables and other materials from debtors to third parties…; assignment (transfer of rights or benefits)
+cakewalken	v	cakewalkte – gecakewalkt	to cakewalk (perform the cakewalk dance)
+collegegeld	n	het	tuition fees
+cichlide	n	de · mv. cichliden	cichlid (fish of family Cichlidae)
+crushen	v	crushte – gecrusht	to crush (press between two hard objects); to crush (reduce to fine particles by pounding or grinding)
+controleur	n	de · mv. controleurs	inspector; controller
+compartimenteren	v	compartimenteerde – gecompartimenteerd	to compartmentalize
+compartimentering	n	de · mv. compartimenteringen	compartmentalization
+citroenkruid	n	de	southernwood (Artemisia abrotanum); synonym of citroenmelisse (“lemon balm”)
+codenaam	n	de · mv. codenamen	code name
+cinnaber	n	het	cinnabar, cinnabarite (mineral); cinnabar, vermilion (color)
+chanoekilje	n	de · mv. chanoekiljes	synonym of chanoekia
+chanoekia	n	de · mv. chanoekiot	hanukkiah
+champagnefles	n	de · mv. champagneflessen	champagne bottle
+colombijntje	n	het · mv. colombijntjes	small airy cake often with a light and soft texture
+celdodend	a		that kills cells
+coeliakie	n	de	coeliac disease
+coassistentie	n	de · mv. coassistenties	medical internship phase
+coschap	n	het · mv. coschappen	medical internship
+coassistent	n	de · mv. coassistenten	medical student in clinical clerkship phase
+contextgebonden	a		context-dependent
+contextafhankelijk	a		context-dependent
+coupenaad	n	de · mv. coupenaden	dart A fold that is stitched on a garment
+cuckstoel	n	de · mv. cuckstoelen	A cuck chair; An individual or lone seat, especially on public transport
+clementie	n	de	clemency, lenience, mercy
+cito-cito	d		synonym of cito
+coaxiaal	a		coaxial
+coaxkabel	n	de · mv. coaxkabels	coaxial cable
+curlen	v	curlde – gecurld	to curl (take part in the sport of curling)
+contrasteren	v	contrasteerde – gecontrasteerd	to contrast
+contrastering	n	de · mv. contrasteringen	act of contrasting
+contrasterend	a		contrasting
+contrastaccent	n	het · mv. contrastaccenten	contrasting accent, contrasting highlight
+contrastkleur	n	de · mv. contrastkleuren	contrasting color; color used to contrast
+contrastmiddel	n	het · mv. contrastmiddelen	contrast medium
+contrastvloeistof	n	de · mv. contrastvloeistoffen	contrast medium
+contrastratio	n	de · mv. contrastratio's	contrast ratio
+contrastregelaar	n	de · mv. contrastregelaars	contrast control, switch to control the contrast (on a monitor)
+contrastrijk	a		rich in contrast
+contrastrijkheid	n	de	richness in contrast
+concertticket	n	de/het · mv. concerttickets	concert ticket
+cashloos	a		cashless
+commentaarloos	a		uncommented
+computeranimatie	n	de · mv. computeranimaties	computer animation; animation created with the use of CGI
+cafeïnevrij	a		caffeine-free
+cashvrij	a		cashfree, without cash
+caloriearm	a		low-calorie
+calorierijk	a		calorie-ful
+cholesterolarm	a		low-cholesterol, low in cholesterol
+contactarm	a		lacking social contact, nearly socially isolated
+contactarmoede	n	de	lack of social contact, near social isolation
+Canisius	m		Canisius: a surname from Latin; a surname from Latin
+consacreren	v	consacreerde – geconsacreerd	to consecrate, sanctify
+convenabel	a		appropriate, suitable, decent
+caféachtig	a		barlike, publike; café-like, resembling a coffee shop
+cartoonachtig	a		cartoony, cartoonish
+christusachtig	a		Christlike
+circusachtig	a		circuslike
+clownachtig	a		clownish, clownlike
+Criekemans	m		a surname
+copyrighten	v	copyrightte – gecopyright	to copyright (obtain or secure a copyright for some literary or other…
+copyrighthouder	n	de · mv. copyrighthouders	copyright holder
+crowdsurfen	v	crowdsurfte – gecrowdsurft	to crowd surf
+crowdsurfverbod	n	het · mv. crowdsurfverboden	ban on crowd surfing
+cumulverbod	n	het · mv. cumulverboden	ban for politicians on having a side job; ban on stacking benefits
+computerprobleem	n	het · mv. computerproblemen	computer problem
+computerwinkel	n	de · mv. computerwinkels	computer store
+computerapparaat	n	het · mv. computerapparaten	computer device
+citroenrasp	n	de · mv. citroenraspen	lemon zester; lemon zest
+clubben	v	clubde – geclubd	to club, to go clubbing
+clubachtig	a		clubby (resembling or suggestive of a social club or clubhouse)
+collageachtig	a		collagelike
+countryachtig	a		countryish (having characteristics of country music)
+countrymuziek	n	de	country music
+crèmeachtig	a		creamy (having the thick texture of cream); resembling the color cream
+crèmerig	a		synonym of crèmeachtig (“creamy”)
+crisisachtig	a		crisislike
+cabaretachtig	a		synonym of cabaretesk
+cosplayen	v	cosplayde – gecosplayd	to cosplay
+cilindervormig	a		Having a cylindrical shape
+chochme	n	de · mv. chochmes	witticism, nugget of wisdom
+clownschool	n	de · mv. clownscholen	clown school
+clownsfobie	n	de	The fear of clowns
+clownsangst	n	de	The fear of clowns
+clownsvrees	n	de	The fear of clowns
+cultuurevenement	n	het · mv. cultuurevenementen	cultural event
+cadeauverpakking	n	de · mv. cadeauverpakkingen	gift packaging
+cacaofantasie	n	de · mv. cacaofantasieën	product with less than 35% cacao; compound chocolate
+clipoorbel	n	de · mv. clipoorbellen	clip-on earring, earclip
+clipmaker	n	de · mv. clipmakers	music video maker
+clipzender	n	de · mv. clipzenders	music video television channel
+cherrytomaat	n	de · mv. cherrytomaten	cherry tomato
+compromisbereid	a		willing to compromise
+compromisbereidheid	n	de	willingness to compromise
+codebericht	n	het · mv. codeberichten	code message
+chocoladesmaak	n		a chocolate flavor
+citroensmaak	n		a lemon flavor
+concentrisch	a		concentric (having a common center)
+#
+computers	computer:n
+computertje	computer:n
+computer	computeren:v
+closer	close:a
+closest	close:a
+closere	close:a
+closeste	close:a
+citrussen	citrus:n
+Chinesen	Chinese:n
+Chinese	Chinees:a
+casts	cast:n
+castje	cast:n
+cast	casten:v
+concrete	concreet:a
+copula's	copula:n
+copulae	copula:n
+cooler	cool:a
+coolst	cool:a
+coole	cool:a
+coolere	cool:a
+coolste	cool:a
+complete	compleet:a
+caracals	caracal:n
+caracalletje	caracal:n
+chats	chat:n
+chatje	chat:n
+chat	chatten:v
+copyrights	copyright:n
+copyright	copyrighten:v
+creeps	creep:n
+continenten	continent:n
+continente	continent:a
+clichés	cliché:n
+clicheetje	cliché:n
+camera's	camera:n
+cameraatje	camera:n
+complexer	complex:a
+complext	complex:a
+complexe	complex:a
+complexere	complex:a
+complexte	complex:a
+complexen	complex:n
+complexje	complex:n
+curven	curve:n
+curves	curve:n
+curvetje	curve:n
+cells	cell:n
+celltje	cell:n
+charlatans	charlatan:n
+charlatannetje	charlatan:n
+concerns	concern:n
+concerntje	concern:n
+crushes	crush:n
+crush	crushen:v
+cakes	cake:n
+cakeje	cake:n
+covers	cover:n
+covertje	cover:n
+crises	crisis:n
+crisissen	crisis:n
+crisisje	crisis:n
+correcter	correct:a
+correctst	correct:a
+correcte	correct:a
+correctere	correct:a
+correctste	correct:a
+communisten	communist:n
+communistje	communist:n
+cylinder	cilinder:n
+carburatoren	carburator:n
+carburators	carburator:n
+carburatortje	carburator:n
+contenter	content:a
+contentst	content:a
+CEO's	CEO:n
+CEO'tje	CEO:n
+community's	community:n
+contexten	context:n
+cokes	coke:n
+chaosje	chaos:n
+carbonnetje	carbon:n
+cafés	café:n
+cafeetje	café:n
+centimeters	centimeter:n
+centimetertje	centimeter:n
+corrupter	corrupt:a
+corruptst	corrupt:a
+corrupte	corrupt:a
+corruptere	corrupt:a
+corruptste	corrupt:a
+croissants	croissant:n
+croissantje	croissant:n
+centigrammen	centigram:n
+circuits	circuit:n
+circuitje	circuit:n
+cherubs	cherub:n
+cherubje	cherub:n
+crashes	crash:n
+crashje	crash:n
+crash	crashen:v
+cash	cashen:v
+colleges	college:n
+collegetje	college:n
+calculi	calculus:n
+constanter	constant:a
+constantst	constant:a
+constante	constant:a
+constantere	constant:a
+constantste	constant:a
+cola	kola:n
+cola's	cola:n
+colaatje	cola:n
+chi's	chi:n
+chi'tje	chi:n
+candela's	candela:n
+coulombs	coulomb:n
+checks	check:n
+checkje	check:n
+check	checken:v
+cheques	cheque:n
+chequeje	cheque:n
+clubs	club:n
+clubje	club:n
+cluppie	club:n
+club	clubben:v
+collages	collage:n
+centen	cent:n
+centje	cent:n
+cobra's	cobra:n
+cobraatje	cobra:n
+codes	code:n
+codetje	code:n
+cruises	cruise:n
+cruiseje	cruise:n
+clitores	clitoris:n
+clitorissen	clitoris:n
+clitorisje	clitoris:n
+coyotes	coyote:n
+coyootje	coyote:n
+corpora	corpus:n|corps:n
+corpussen	corpus:n
+corpusje	corpus:n
+curry's	curry:n
+curry'tje	curry:n
+cembalo's	cembalo:n
+corps	korps:n
+corpsen	corps:n
+corpsje	corps:n
+Cherokees	Cherokee:n
+centauren	centaur:n
+centaurtje	centaur:n
+canons	canon:n
+canonnetje	canon:n
+canvassen	canvas:n
+cups	cup:n
+cupje	cup:n
+comforts	comfort:n
+comfortje	comfort:n
+canards	canard:n
+canardje	canard:n
+criteria	criterium:n
+concubines	concubine:n
+concubinen	concubine:n
+chips	chip:n
+chipje	chip:n
+carillons	carillon:n
+carillonnetje	carillon:n
+chap	sjap:n
+crucifixen	crucifix:n
+crucifixje	crucifix:n
+Chineser	Chinees:a
+Chineest	Chinees:a
+Chinesere	Chinees:a
+Chineeste	Chinees:a
+Chinezen	Chinees:n
+Chineesje	Chinees:n
+coma's	coma:n
+comaatje	coma:n
+componenten	component:n
+componentje	component:n
+crêpes	crêpe:n
+coaches	coach:n
+coachen	coach:n
+coachje	coach:n
+cowboys	cowboy:n
+cowboytje	cowboy:n
+chateaus	chateau:n
+chateaux	chateau:n
+chateautje	chateau:n
+cataracten	cataract:n
+cataractje	cataract:n
+courgettes	courgette:n
+chant	chanten:v
+cults	cult:n
+cultje	cult:n
+clochards	clochard:n
+clochardje	clochard:n
+coups	coup:n
+coupje	coup:n
+clous	clou:n
+crue	cru:a
+clans	clan:n
+clannetje	clan:n
+cabrioletten	cabriolet:n
+cabriolets	cabriolet:n
+cabrioletje	cabriolet:n
+chirurgus	chirurg:n
+clowns	clown:n
+clowntje	clown:n
+chauffeurs	chauffeur:n
+chauffeurtje	chauffeur:n
+columns	column:n
+cappuccino's	cappuccino:n
+cappuccinootje	cappuccino:n
+chinchilla's	chinchilla:n
+chinchillaatje	chinchilla:n
+cheats	cheat:n
+contacten	contact:n
+contactje	contact:n
+campers	camper:n
+campertje	camper:n
+cultivars	cultivar:n
+charges	charge:n
+colliers	collier:n
+colliertje	collier:n
+cols	col:n
+colletje	col:n
+collen	col:n
+ciders	cider:n
+cidertje	cider:n
+caste	casten:v
+clients	client:n
+claim	claimen:v
+contracten	contract:n
+contractje	contract:n
+conflicten	conflict:n
+conflictje	conflict:n
+codicillen	codicil:n
+codicils	codicil:n
+codicilletje	codicil:n
+cocktails	cocktail:n
+cocktailtje	cocktail:n
+corgi's	corgi:n
+clique	kliek:n
+cliques	clique:n
+caches	cache:n
+cache	cachen:v
+cervixen	cervix:n
+cervices	cervix:n
+cervixje	cervix:n
+chiquer	chic:a
+chicst	chic:a
+chique	chic:a
+chiquere	chic:a
+chicste	chic:a
+coca's	coca:n
+corona's	corona:n
+chitons	chiton:n
+chitonen	chiton:n
+cruces	crux:n
+cruxen	crux:n
+capes	cape:n
+capeje	cape:n
+chefs	chef:n
+chefje	chef:n
+concerten	concert:n
+concertje	concert:n
+corpulenter	corpulent:a
+corpulentst	corpulent:a
+corpulente	corpulent:a
+corpulentere	corpulent:a
+corpulentste	corpulent:a
+centime	centiem:n
+cissen	cis:n
+cisje	cis:n
+clips	clip:n
+clipje	clip:n
+ca.	circa:d
+cryptogrammen	cryptogram:n
+cryptogrammetje	cryptogram:n
+camouflages	camouflage:n
+cookies	cookie:n
+cookietje	cookie:n
+consumere	consumeren:v
+coteries	coterie:n
+coterieën	coterie:n
+coterietje	coterie:n
+cheeseburgers	cheeseburger:n
+casussen	casus:n
+casusje	casus:n
+cranberry's	cranberry:n
+CV's	CV:n
+convexer	convex:a
+convext	convex:a
+convexe	convex:a
+convexere	convex:a
+convexte	convex:a
+chloriden	chloride:n
+chlorides	chloride:n
+continue	continu:a
+cedere	cederen:v
+corners	corner:n
+cornertje	corner:n
+circumflexen	circumflex:n
+censussen	census:n
+catastrophe	catastrofe:n
+containers	container:n
+containertje	container:n
+complimenten	compliment:n
+complimentje	compliment:n
+coherenter	coherent:a
+coherentst	coherent:a
+coherente	coherent:a
+coherentere	coherent:a
+coherentste	coherent:a
+compacter	compact:a
+compactst	compact:a
+compacte	compact:a
+compactere	compact:a
+compactste	compact:a
+charisma's	charisma:n
+charismata	charisma:n
+cinema's	cinema:n
+cinemaatje	cinema:n
+climaxen	climax:n
+climaxje	climax:n
+condors	condor:n
+colli	collo:n
+commando's	commando:n
+chiller	chill:a
+chillst	chill:a
+chille	chill:a
+chillere	chill:a
+chillste	chill:a
+chill	chillen:v
+covalente	covalent:a
+celluloses	cellulose:n
+carrousels	carrousel:n
+carrouselletje	carrousel:n
+cloaca's	cloaca:n
+consoles	console:n
+cartel	kartel:n
+chino's	chino:n
+campussen	campus:n
+campusje	campus:n
+cliffhangers	cliffhanger:n
+cliffhangertje	cliffhanger:n
+concurrenten	concurrent:n
+concurrentje	concurrent:n
+concurrente	concurrent:a
+cabarets	cabaret:n
+cactussen	cactus:n
+cactusje	cactus:n
+casino's	casino:n
+casinootje	casino:n
+cartoons	cartoon:n
+cartoontje	cartoon:n
+criteriums	criterium:n
+criteriumpje	criterium:n
+coax	coaxkabel:n
+contrasten	contrast:n
+contrastje	contrast:n
+conventen	convent:n
+counters	counter:n
+chatte	chatten:v
+congruenter	congruent:a
+congruentst	congruent:a
+congruente	congruent:a
+congruentere	congruent:a
+congruentste	congruent:a
+crèches	crèche:n
+consistenter	consistent:a
+consistentst	consistent:a
+consistente	consistent:a
+consistentere	consistent:a
+consistentste	consistent:a
+censors	censor:n
+censortje	censor:n
+clusters	cluster:n
+clustertje	cluster:n
+carrés	carré:n
+carreetje	carré:n
+centra	centrum:n
+centrums	centrum:n
+centrumpje	centrum:n
+centrales	centrale:n
+centraletje	centrale:n
+centrale	centraal:a
+controllers	controller:n
+controllertje	controller:n
+castella	castellum:n
+castellums	castellum:n
+castellumpje	castellum:n
+comebacks	comeback:n
+comebackje	comeback:n
+chilis	chili:n
+cello's	cello:n
+cellootje	cello:n
+coulissen	coulisse:n
+chatrooms	chatroom:n
+circussen	circus:n
+circusje	circus:n
+calorieën	calorie:n
+calorietje	calorie:n
+communes	commune:n
+communetje	commune:n
+champagnes	champagne:n
+champagnetje	champagne:n
+capsules	capsule:n
+capsuletje	capsule:n
+cupcakes	cupcake:n
+cupcakeje	cupcake:n
+cassettes	cassette:n
+cassetten	cassette:n
+cassettetje	cassette:n
+consulten	consult:n
+consultje	consult:n
+crèmes	crème:n
+crèmepje	crème:n
+crèmeke	crème:n
+cellisten	cellist:n
+cellistje	cellist:n
+cessen	ces:n
+cesje	ces:n
+curatoren	curator:n
+curatortje	curator:n
+chemo's	chemo:n
+chemootje	chemo:n
+croquet	kroket:n
+cavalcades	cavalcade:n
+cavalcaden	cavalcade:n
+cavalcadetje	cavalcade:n
+cd's	cd:n
+cd'tje	cd:n
+catheter	katheter:n
+competenter	competent:a
+competentst	competent:a
+competente	competent:a
+competentere	competent:a
+competentste	competent:a
+cognacs	cognac:n
+cognacje	cognac:n
+cascades	cascade:n
+cascaden	cascade:n
+ceremonies	ceremonie:n
+calva's	calva:n
+calvaatje	calva:n
+consiglieri	consigliere:n
+chansons	chanson:n
+chansonnetje	chanson:n
+christenen	christen:n
+christentje	christen:n
+compressors	compressor:n
+compressoren	compressor:n
+compressortje	compressor:n
+creepyer	creepy:a
+creepy'st	creepy:a
+canapés	canapé:n
+canapeetje	canapé:n
+correspondenten	correspondent:n
+correspondentje	correspondent:n
+clementer	clement:a
+clementst	clement:a
+clemente	clement:a
+clementere	clement:a
+clementste	clement:a
+combo's	combo:n
+columbaria	columbarium:n
+columbariums	columbarium:n
+chocolatiers	chocolatier:n
+chocolatiertje	chocolatier:n
+colporteurs	colporteur:n
+croutons	crouton:n
+croutonnetje	crouton:n
+confronteer	confronteren:v
+confronteerde	confronteren:v
+confronteert	confronteren:v
+confronteerden	confronteren:v
+confronterend	confronteren:v
+citadellen	citadel:n
+citadels	citadel:n
+citadelletje	citadel:n
+cirkels	cirkel:n
+cirkeltje	cirkel:n
+cirkel	cirkelen:v
+completer	compleet:a
+compleetst	compleet:a
+completere	compleet:a
+compleetste	compleet:a
+comfortabeler	comfortabel:a
+comfortabelst	comfortabel:a
+comfortabele	comfortabel:a
+comfortabelere	comfortabel:a
+comfortabelste	comfortabel:a
+controles	controle:n
+condities	conditie:n
+conditiën	conditie:n
+culverinnen	culverin:n
+culverinnetje	culverin:n
+cadeaus	cadeau:n
+cadeautje	cadeau:n
+coronavirussen	coronavirus:n
+cortèges	cortège:n
+cortègetje	cortège:n
+Colombië	Colombia:m
+celesta's	celesta:n
+consuls	consul:n
+consequente	consequent:a
+cannelures	cannelure:n
+canneluretje	cannelure:n
+cakewalks	cakewalk:n
+cakewalk	cakewalken:v
+choco's	choco:n
+chocootje	choco:n
+campings	camping:n
+campinkje	camping:n
+conditioners	conditioner:n
+carronades	carronade:n
+cenotes	cenote:n
+carbonades	carbonade:n
+carbonaadje	carbonade:n
+carbonadetje	carbonade:n
+coffeeshops	coffeeshop:n
+coffeeshopje	coffeeshop:n
+commandanten	commandant:n
+commandantje	commandant:n
+coupletten	couplet:n
+coupletje	couplet:n
+conformisten	conformist:n
+conformistje	conformist:n
+credo's	credo:n
+credootje	credo:n
+crematoria	crematorium:n
+crematoriums	crematorium:n
+crematoriumpje	crematorium:n
+columnisten	columnist:n
+columnistje	columnist:n
+cellen	cel:n
+celletje	cel:n
+chihuahua's	chihuahua:n
+canasta's	canasta:n
+couranter	courant:a
+courantst	courant:a
+courante	courant:a
+courantere	courant:a
+courantste	courant:a
+couranten	courant:n
+courant	krant:n
+chronometers	chronometer:n
+cabines	cabine:n
+cabinetje	cabine:n
+cabientje	cabine:n
+conga's	conga:n
+chauvinisten	chauvinist:n
+chauvinistje	chauvinist:n
+classeurs	classeur:n
+classeurtje	classeur:n
+coupés	coupé:n
+coupeetje	coupé:n
+chemises	chemise:n
+chemisetje	chemise:n
+caravans	caravan:n
+caravannetje	caravan:n
+conducteurs	conducteur:n
+conducteurtje	conducteur:n
+cava's	cava:n
+cavaatje	cava:n
+CAPTCHA	captcha:n
+constanten	constante:n
+campagnes	campagne:n
+combi's	combi:n
+combietje	combi:n
+combieke	combi:n
+colères	colère:n
+charmanter	charmant:a
+charmantst	charmant:a
+charmante	charmant:a
+charmantere	charmant:a
+charmantste	charmant:a
+continua	continuüm:n
+champignons	champignon:n
+champignonnetje	champignon:n
+catwalks	catwalk:n
+catechisten	catechist:n
+cabochons	cabochon:n
+camions	camion:n
+camionnetje	camion:n
+complotten	complot:n
+complotje	complot:n
+cavia's	cavia:n
+caviaatje	cavia:n
+ceders	ceder:n
+cederen	ceder:n
+cedertje	ceder:n
+cipressen	cipres:n
+cipresje	cipres:n
+cyclamens	cyclamen:n
+cyclamen	cyclaam:n
+citers	citer:n
+citertje	citer:n
+collega's	collega:n
+collegae	collega:n
+collegaatje	collega:n
+corso's	corso:n
+corsootje	corso:n
+cachete	cachen:v
+cachet	cachen:v
+cacheten	cachen:v
+cachend	cachen:v
+cancel	cancelen:v
+cancelde	cancelen:v
+cancelt	cancelen:v
+cancelden	cancelen:v
+cancelend	cancelen:v
+chapes	chape:n
+chapeje	chape:n
+chapeke	chape:n
+chil	chillen:v
+childe	chillen:v
+chilt	chillen:v
+childen	chillen:v
+chillend	chillen:v
+compres	kompres:n
+concilies	concilie:n
+conciliën	concilie:n
+copie	kopie:n
+citroenen	citroen:n
+citroentje	citroen:n
+cools	cool:a
+cahiers	cahier:n
+cahiertje	cahier:n
+charmes	charme:n
+carrières	carrière:n
+carrièretje	carrière:n
+cancans	cancan:n
+centrifuges	centrifuge:n
+centrifugetje	centrifuge:n
+cijfers	cijfer:n
+cijfertje	cijfer:n
+cijfer	cijferen:v
+coolers	cool:a
+conservators	conservator:n
+conservatoren	conservator:n
+conservatortje	conservator:n
+conjuncties	conjunctie:n
+cursussen	cursus:n
+cursusje	cursus:n
+computerde	computeren:v
+computert	computeren:v
+computerden	computeren:v
+computerend	computeren:v
+camelia's	camelia:n
+commentaren	commentaar:n
+cosplays	cosplay:n
+cosplay	cosplayen:v
+cosplayers	cosplayer:n
+culturen	cultuur:n
+cultuurtje	cultuur:n
+concludeer	concluderen:v
+concludeerde	concluderen:v
+concludeert	concluderen:v
+concludeerden	concluderen:v
+concluderend	concluderen:v
+conclusies	conclusie:n
+conclusietje	conclusie:n
+coördinatoren	coördinator:n
+coördinators	coördinator:n
+communicaties	communicatie:n
+centiliters	centiliter:n
+concreter	concreet:a
+concreetst	concreet:a
+concretere	concreet:a
+concreetste	concreet:a
+cultussen	cultus:n
+cultusje	cultus:n
+cambia	cambium:n
+chagrijniger	chagrijnig:a
+chagrijnigst	chagrijnig:a
+chagrijnige	chagrijnig:a
+chagrijnigere	chagrijnig:a
+chagrijnigste	chagrijnig:a
+chagrijnen	chagrijn:n
+chagrijntje	chagrijn:n
+classes	classis:n
+coalities	coalitie:n
+coalitietje	coalitie:n
+capibara's	capibara:n
+capibaraatje	capibara:n
+cheeta's	cheeta:n
+cheetaatje	cheeta:n
+civetkatten	civetkat:n
+civetkatje	civetkat:n
+chocolaterieën	chocolaterie:n
+chocolateries	chocolaterie:n
+chocolaterietje	chocolaterie:n
+coquet	koket:a
+concludere	concluderen:v
+crushers	crusher:n
+crushertje	crusher:n
+cantaten	cantate:n
+cantates	cantate:n
+compensaties	compensatie:n
+compensatietje	compensatie:n
+communicanten	communicant:n
+communicantje	communicant:n
+concealers	concealer:n
+congregationalisten	congregationalist:n
+convergenter	convergent:a
+convergentst	convergent:a
+convergente	convergent:a
+convergentere	convergent:a
+convergentste	convergent:a
+claxons	claxon:n
+claxonnetje	claxon:n
+concepten	concept:n
+conceptje	concept:n
+commiezen	commies:n
+couveuses	couveuse:n
+couveusetje	couveuse:n
+calvadossen	calvados:n
+calvadosje	calvados:n
+chimpansees	chimpansee:n
+chimpanseetje	chimpansee:n
+chante	chanten:v
+carbonzuren	carbonzuur:n
+couverts	couvert:n
+colonnes	colonne:n
+colonnetje	colonne:n
+chirurgies	chirurgie:n
+chirurgietje	chirurgie:n
+colli's	colli:n
+collietje	colli:n
+critici	criticus:n
+categorieën	categorie:n
+categorietje	categorie:n
+compagnies	compagnie:n
+compagnieën	compagnie:n
+compagnietje	compagnie:n
+circumfixen	circumfix:n
+circumfixje	circumfix:n
+curiosa	curiosum:n
+cabo	Cabo:n
+carga's	carga:n
+chirurgen	chirurg:n
+chirurgje	chirurg:n
+collaborateurs	collaborateur:n
+collaborateurtje	collaborateur:n
+chauvinistischer	chauvinistisch:a
+chauvinistischt	chauvinistisch:a
+chauvinistische	chauvinistisch:a
+chauvinistischere	chauvinistisch:a
+chauvinistischte	chauvinistisch:a
+cartografieën	cartografie:n
+comprimere	comprimeren:v
+comités	comité:n
+comiteetje	comité:n
+chaotischer	chaotisch:a
+chaotischt	chaotisch:a
+chaotische	chaotisch:a
+chaotischere	chaotisch:a
+chaotischte	chaotisch:a
+coureurs	coureur:n
+coureurtje	coureur:n
+controversen	controverse:n
+controverses	controverse:n
+controversetje	controverse:n
+collectes	collecte:n
+collecten	collecte:n
+communismen	communisme:n
+communismetje	communisme:n
+culturele	cultureel:a
+christelijker	christelijk:a
+christelijkst	christelijk:a
+christelijke	christelijk:a
+christelijkere	christelijk:a
+christelijkste	christelijk:a
+calvinistischer	calvinistisch:a
+calvinistischt	calvinistisch:a
+calvinistische	calvinistisch:a
+calvinistischere	calvinistisch:a
+calvinistischte	calvinistisch:a
+cijferde	cijferen:v
+cijfert	cijferen:v
+cijferden	cijferen:v
+cijferend	cijferen:v
+chauffages	chauffage:n
+chemische	chemisch:a
+comptoir	kantoor:n
+calèches	calèche:n
+concentratiekampen	concentratiekamp:n
+concentratiekampje	concentratiekamp:n
+catastrofen	catastrofe:n
+catastrofes	catastrofe:n
+catastrofetje	catastrofe:n
+colbertje	colbert:n
+circulaires	circulaire:n
+circulaire	circulair:a
+catalogi	catalogus:n
+catalogussen	catalogus:n
+catalogusje	catalogus:n
+conservenblikken	conservenblik:n
+conservenblikje	conservenblik:n
+conserveer	conserveren:v
+conserveerde	conserveren:v
+conserveert	conserveren:v
+conserveerden	conserveren:v
+conserverend	conserveren:v
+castte	casten:v
+castten	casten:v
+castend	casten:v
+computermuizen	computermuis:n
+computermuisje	computermuis:n
+chatbots	chatbot:n
+chatbotten	chatbot:n
+chatbotje	chatbot:n
+chattend	chatten:v
+carrosserieën	carrosserie:n
+carrosserietje	carrosserie:n
+componisten	componist:n
+componistje	componist:n
+creaturen	creatuur:n
+creatuurtje	creatuur:n
+classificaties	classificatie:n
+classificatietje	classificatie:n
+claustrofobieën	claustrofobie:n
+claustrofobietje	claustrofobie:n
+corrigeer	corrigeren:v
+corrigeerde	corrigeren:v
+corrigeert	corrigeren:v
+corrigeerden	corrigeren:v
+corrigerend	corrigeren:v
+crassula's	crassula:n
+crassulaatje	crassula:n
+competities	competitie:n
+competitietje	competitie:n
+cyclonen	cycloon:n
+cycloontje	cycloon:n
+creaties	creatie:n
+creatietje	creatie:n
+creolen	creool:n
+creooltje	creool:n
+cosinussen	cosinus:n
+cisgenders	cisgender:n
+camemberts	camembert:n
+camembertje	camembert:n
+crimineler	crimineel:a
+crimineelst	crimineel:a
+criminele	crimineel:a
+criminelere	crimineel:a
+crimineelste	crimineel:a
+criminelen	crimineel:n
+crimineeltje	crimineel:n
+comptant	contant:d
+contante	contant:a
+creusen	creuse:n
+creuses	creuse:n
+contrabassen	contrabas:n
+contrabasje	contrabas:n
+correctoren	corrector:n
+correctors	corrector:n
+crashe	crashen:v
+cassanter	cassant:a
+cassantst	cassant:a
+cassante	cassant:a
+cassantere	cassant:a
+cassantste	cassant:a
+congressen	congres:n
+congresje	congres:n
+chronologieën	chronologie:n
+criminologieën	criminologie:n
+charismatischer	charismatisch:a
+charismatischt	charismatisch:a
+charismatische	charismatisch:a
+charismatischere	charismatisch:a
+charismatischte	charismatisch:a
+cadensen	cadens:n
+cadensje	cadens:n
+controleer	controleren:v
+controleerde	controleren:v
+controleert	controleren:v
+controleerden	controleren:v
+controlerend	controleren:v
+canailles	canaille:n
+constateer	constateren:v
+constateerde	constateren:v
+constateert	constateren:v
+constateerden	constateren:v
+constaterend	constateren:v
+castreer	castreren:v
+castreerde	castreren:v
+castreert	castreren:v
+castreerden	castreren:v
+castrerend	castreren:v
+coëfficiënten	coëfficiënt:n
+coëfficiëntje	coëfficiënt:n
+cyrillische	cyrillisch:a
+chronologischer	chronologisch:a
+chronologischt	chronologisch:a
+chronologische	chronologisch:a
+chronologischere	chronologisch:a
+chronologischte	chronologisch:a
+commerciëler	commercieel:a
+commercieelst	commercieel:a
+commerciële	commercieel:a
+commerciëlere	commercieel:a
+commercieelste	commercieel:a
+condensatoren	condensator:n
+condensatortje	condensator:n
+corruptiezaken	corruptiezaak:n
+corruptiezaakje	corruptiezaak:n
+complexiteiten	complexiteit:n
+camionetten	camionette:n
+camionettes	camionette:n
+camionetje	camionette:n
+confisqueer	confisqueren:v
+confisqueerde	confisqueren:v
+confisqueert	confisqueren:v
+confisqueerden	confisqueren:v
+confisquerend	confisqueren:v
+carnavals	carnaval:n
+carnavalletje	carnaval:n
+causaliteiten	causaliteit:n
+concedeer	concederen:v
+concedeerde	concederen:v
+concedeert	concederen:v
+concedeerden	concederen:v
+concederend	concederen:v
+chocola	chocolade:n
+claime	claimen:v
+chocolaatjes	chocolaatje:n
+ceremoniën	ceremonie:n
+ceremonieën	ceremonie:n
+ceremonietje	ceremonie:n
+cysten	cyste:n
+cystes	cyste:n
+cystetje	cyste:n
+cystje	cyste:n
+cobralelies	cobralelie:n
+cobralelietje	cobralelie:n
+compromissen	compromis:n
+compromistje	compromis:n
+compromisje	compromis:n
+constructivistischer	constructivistisch:a
+constructivistischt	constructivistisch:a
+constructivistische	constructivistisch:a
+constructivistischere	constructivistisch:a
+constructivistischte	constructivistisch:a
+compromitteer	compromitteren:v
+compromitteerde	compromitteren:v
+compromitteert	compromitteren:v
+compromitteerden	compromitteren:v
+compromitterend	compromitteren:v
+charmeurs	charmeur:n
+collegezalen	collegezaal:n
+collegezaaltje	collegezaal:n
+cyaner	cyaan:a
+cyaanst	cyaan:a
+cyane	cyaan:a
+cyanere	cyaan:a
+cyaanste	cyaan:a
+citaten	citaat:n
+citaatje	citaat:n
+creëer	creëren:v
+creëerde	creëren:v
+creëert	creëren:v
+creëerden	creëren:v
+creërend	creëren:v
+chromosomen	chromosoom:n
+chromosoompje	chromosoom:n
+centraler	centraal:a
+centraalst	centraal:a
+centralere	centraal:a
+centraalste	centraal:a
+cirkelde	cirkelen:v
+cirkelt	cirkelen:v
+cirkelden	cirkelen:v
+cirkelend	cirkelen:v
+contemporaine	contemporain:a
+cilinders	cilinder:n
+cilindertje	cilinder:n
+cycli	cyclus:n
+cyclussen	cyclus:n
+cyclusje	cyclus:n
+capoeirista's	capoeirista:n
+capoeiristaatje	capoeirista:n
+checkte	checken:v
+checkt	checken:v
+checkten	checken:v
+checkend	checken:v
+confrontaties	confrontatie:n
+confrontatietje	confrontatie:n
+cicaden	cicade:n
+cicades	cicade:n
+cicadetje	cicade:n
+consulaten	consulaat:n
+consulaatje	consulaat:n
+collagene	collageen:a
+competenties	competentie:n
+competentietje	competentie:n
+cocons	cocon:n
+coconnetje	cocon:n
+captcha's	captcha:n
+chronischer	chronisch:a
+chronischt	chronisch:a
+chronische	chronisch:a
+chronischere	chronisch:a
+chronischte	chronisch:a
+correcties	correctie:n
+correctietje	correctie:n
+challa	challe:n
+consumeer	consumeren:v
+consumeerde	consumeren:v
+consumeert	consumeren:v
+consumeerden	consumeren:v
+consumerend	consumeren:v
+Catalaanser	Catalaans:a
+Catalaanst	Catalaans:a
+Catalaanse	Catalaans:a|Catalaan:n
+Catalaansere	Catalaans:a
+Catalaanste	Catalaans:a
+colberts	colbert:n
+cabrio's	cabrio:n
+cabriootje	cabrio:n
+coryfeeën	coryfee:n
+coryfeetje	coryfee:n
+celstraffen	celstraf:n
+celstrafje	celstraf:n
+consumenten	consument:n
+consumentje	consument:n
+centralisten	centralist:n
+caserne	kazerne:n
+compartimenten	compartiment:n
+compartimentje	compartiment:n
+copyshops	copyshop:n
+coupuren	coupure:n
+coupuretje	coupure:n
+controversiëler	controversieel:a
+controversieelst	controversieel:a
+controversiële	controversieel:a
+controversiëlere	controversieel:a
+controversieelste	controversieel:a
+correspondeer	corresponderen:v
+correspondeerde	corresponderen:v
+correspondeert	corresponderen:v
+correspondeerden	corresponderen:v
+corresponderend	corresponderen:v
+coauteurs	coauteur:n
+coauteurtje	coauteur:n
+comprimeer	comprimeren:v
+comprimeerde	comprimeren:v
+comprimeert	comprimeren:v
+comprimeerden	comprimeren:v
+comprimerend	comprimeren:v
+compressies	compressie:n
+compressietje	compressie:n
+codeer	coderen:v
+codeerde	coderen:v
+codeert	coderen:v
+codeerden	coderen:v
+coderend	coderen:v
+coderingen	codering:n
+coderinkje	codering:n
+concertzalen	concertzaal:n
+concertzaaltje	concertzaal:n
+constructiever	constructief:a
+constructiefst	constructief:a
+constructieve	constructief:a
+constructievere	constructief:a
+constructiefste	constructief:a
+capaciteiten	capaciteit:n
+capaciteitje	capaciteit:n
+commissies	commissie:n
+commissietje	commissie:n
+consultaties	consultatie:n
+consultatietje	consultatie:n
+chylus	chijl:n
+clausules	clausule:n
+clausuletje	clausule:n
+constructies	constructie:n
+constructietje	constructie:n
+Cornische	Cornisch:a
+cruiseschepen	cruiseschip:n
+cruisescheepje	cruiseschip:n
+citeer	citeren:v
+citeerde	citeren:v
+citeert	citeren:v
+citeerden	citeren:v
+citerend	citeren:v
+condooms	condoom:n
+condoompje	condoom:n
+castraten	castraat:n
+castraatje	castraat:n
+castraties	castratie:n
+castratietje	castratie:n
+communistischer	communistisch:a
+communistischt	communistisch:a
+communistische	communistisch:a
+communistischere	communistisch:a
+communistischte	communistisch:a
+carnivoren	carnivoor:n
+carnivoortje	carnivoor:n
+carnivore	carnivoor:a
+connotaties	connotatie:n
+connotatietje	connotatie:n
+capuchons	capuchon:n
+capuchonnetje	capuchon:n
+composities	compositie:n
+compositietje	compositie:n
+censureer	censureren:v
+censureerde	censureren:v
+censureert	censureren:v
+censureerden	censureren:v
+censurerend	censureren:v
+compagnons	compagnon:n
+compagnonnetje	compagnon:n
+compositorische	compositorisch:a
+coïncideer	coïncideren:v
+coïncideerde	coïncideren:v
+coïncideert	coïncideren:v
+coïncideerden	coïncideren:v
+coïnciderend	coïncideren:v
+Canadezen	Canadees:n
+Canadeesje	Canadees:n
+Canadeser	Canadees:a
+Canadeest	Canadees:a
+Canadese	Canadees:a
+Canadesere	Canadees:a
+Canadeeste	Canadees:a
+Canadesen	Canadese:n
+centralisaties	centralisatie:n
+concentraties	concentratie:n
+concentratietje	concentratie:n
+collectivismen	collectivisme:n
+collectivismes	collectivisme:n
+collectivismetje	collectivisme:n
+centraliseer	centraliseren:v
+centraliseerde	centraliseren:v
+centraliseert	centraliseren:v
+centraliseerden	centraliseren:v
+centraliserend	centraliseren:v
+commissarissen	commissaris:n
+commissarisje	commissaris:n
+concentreer	concentreren:v
+concentreerde	concentreren:v
+concentreert	concentreren:v
+concentreerden	concentreren:v
+concentrerend	concentreren:v
+combineer	combineren:v
+combineerde	combineren:v
+combineert	combineren:v
+combineerden	combineren:v
+combinerend	combineren:v
+chansonniers	chansonnier:n
+Caraïbischer	Caraïbisch:a
+Caraïbischt	Caraïbisch:a
+Caraïbische	Caraïbisch:a
+Caraïbischere	Caraïbisch:a
+Caraïbischte	Caraïbisch:a
+Caribischer	Caribisch:a
+Caribischt	Caribisch:a
+Caribische	Caribisch:a
+Caribischere	Caribisch:a
+Caribischte	Caribisch:a
+cassaves	cassave:n
+comateuzer	comateus:a
+comateust	comateus:a
+comateuze	comateus:a
+comateuzere	comateus:a
+comateuste	comateus:a
+co-enzymen	co-enzym:n
+coënzym	co-enzym:n
+cursiefjes	cursiefje:n
+culmineer	culmineren:v
+culmineerde	culmineren:v
+culmineert	culmineren:v
+culmineerden	culmineren:v
+culminerend	culmineren:v
+combinaties	combinatie:n
+combinatietje	combinatie:n
+cynischer	cynisch:a
+cynischt	cynisch:a
+cynische	cynisch:a
+cynischere	cynisch:a
+cynischte	cynisch:a
+centiemen	centiem:n
+centiempje	centiem:n
+correcteurs	correcteur:n
+correcteurtje	correcteur:n
+crisettes	crisette:n
+catastrofaler	catastrofaal:a
+catastrofaalst	catastrofaal:a
+catastrofale	catastrofaal:a
+catastrofalere	catastrofaal:a
+catastrofaalste	catastrofaal:a
+connétables	connétable:n
+cotyledonen	cotyledo:n
+cotyledones	cotyledo:n
+cotyledootje	cotyledo:n
+cardiologen	cardioloog:n
+cardioloogje	cardioloog:n
+camoufleer	camoufleren:v
+camoufleerde	camoufleren:v
+camoufleert	camoufleren:v
+camoufleerden	camoufleren:v
+camouflerend	camoufleren:v
+criticasters	criticaster:n
+criticastertje	criticaster:n
+cacaobomen	cacaoboom:n
+cacaoboompje	cacaoboom:n
+confraters	confrater:n
+confratertje	confrater:n
+centrifugeer	centrifugeren:v
+centrifugeerde	centrifugeren:v
+centrifugeert	centrifugeren:v
+centrifugeerden	centrifugeren:v
+centrifugerend	centrifugeren:v
+crematies	crematie:n
+crematietje	crematie:n
+cavaleries	cavalerie:n
+consideransen	considerans:n
+considerantia	considerans:n
+consideransje	considerans:n
+Corsicaanser	Corsicaans:a
+Corsicaanst	Corsicaans:a
+Corsicaanse	Corsicaans:a
+Corsicaansere	Corsicaans:a
+Corsicaanste	Corsicaans:a
+cognitieve	cognitief:a
+computerspellen	computerspel:n
+computerspelletje	computerspel:n
+cumulatieve	cumulatief:a
+computervirussen	computervirus:n
+computervirusje	computervirus:n
+cryptes	crypte:n
+cryptetje	crypte:n
+convenanten	convenant:n
+convenantje	convenant:n
+convecterender	convecterend:a
+convecterendst	convecterend:a
+convecterende	convecterend:a
+convecterendere	convecterend:a
+convecterendste	convecterend:a
+cosmogonie	kosmogonie:n
+criticusje	criticus:n
+creatiever	creatief:a
+creatiefst	creatief:a
+creatieve	creatief:a
+creatievere	creatief:a
+creatiefste	creatief:a
+categoriseer	categoriseren:v
+categoriseerde	categoriseren:v
+categoriseert	categoriseren:v
+categoriseerden	categoriseren:v
+categoriserend	categoriseren:v
+certificaten	certificaat:n
+certificaatje	certificaat:n
+charmetje	charme:n
+cadansen	cadans:n
+cadansje	cadans:n
+commerçanten	commerçant:n
+conclaven	conclaaf:n
+conclaafje	conclaaf:n
+coreopsissen	coreopsis:n
+Chilenen	Chileen:n
+compactheden	compactheid:n
+coördinaten	coördinaat:n
+coördinaatje	coördinaat:n
+cabaretiers	cabaretier:n
+cabaretiertje	cabaretier:n
+communiceer	communiceren:v
+communiceerde	communiceren:v
+communiceert	communiceren:v
+communiceerden	communiceren:v
+communicerend	communiceren:v
+citere	citeren:v
+chanteer	chanteren:v
+chanteerde	chanteren:v
+chanteert	chanteren:v
+chanteerden	chanteren:v
+chanterend	chanteren:v
+correspondenties	correspondentie:n
+conversaties	conversatie:n
+conversatietje	conversatie:n
+converseer	converseren:v
+converseerde	converseren:v
+converseert	converseren:v
+converseerden	converseren:v
+converserend	converseren:v
+conventioneler	conventioneel:a
+conventioneelst	conventioneel:a
+conventionele	conventioneel:a
+conventionelere	conventioneel:a
+conventioneelste	conventioneel:a
+conventies	conventie:n
+conventietje	conventie:n
+chirurgijns	chirurgijn:n
+chirurgijnen	chirurgijn:n
+chirurgijntje	chirurgijn:n
+capriolen	capriool:n
+capriooltje	capriool:n
+conferenties	conferentie:n
+conferentietje	conferentie:n
+condoleer	condoleren:v
+condoleerde	condoleren:v
+condoleert	condoleren:v
+condoleerden	condoleren:v
+condolerend	condoleren:v
+constituere	constitueren:v
+compenseer	compenseren:v
+compenseerde	compenseren:v
+compenseert	compenseren:v
+compenseerden	compenseren:v
+compenserend	compenseren:v
+cabaretières	cabaretière:n
+caritatief	charitatief:a
+circustenten	circustent:n
+circustentje	circustent:n
+coloradokevers	coloradokever:n
+coloradokevertje	coloradokever:n
+constitueer	constitueren:v
+constitueerde	constitueren:v
+constitueert	constitueren:v
+constitueerden	constitueren:v
+constituerend	constitueren:v
+calorische	calorisch:a
+cardanassen	cardanas:n
+cardanasje	cardanas:n
+chromosomale	chromosomaal:a
+cardiologische	cardiologisch:a
+conservatoriums	conservatorium:n
+conservatoria	conservatorium:n
+conservatoriumpje	conservatorium:n
+cacaobonen	cacaoboon:n
+cacaoboontje	cacaoboon:n
+capituleer	capituleren:v
+capituleerde	capituleren:v
+capituleert	capituleren:v
+capituleerden	capituleren:v
+capitulerend	capituleren:v
+congruenties	congruentie:n
+Carthaagse	Carthaags:a
+Carthagers	Carthager:n
+Carthagertje	Carthager:n
+cheffinnen	cheffin:n
+cheffinnetje	cheffin:n
+cheffins	cheffin:n
+checke	checken:v
+concipieer	concipiëren:v
+concipieerde	concipiëren:v
+concipieert	concipiëren:v
+concipieerden	concipiëren:v
+concipiërend	concipiëren:v
+concipiëre	concipiëren:v
+camouflere	camoufleren:v
+capitulere	capituleren:v
+castrere	castreren:v
+censurere	censureren:v
+centralisere	centraliseren:v
+centrifugere	centrifugeren:v
+chantere	chanteren:v
+cijfere	cijferen:v
+cirkele	cirkelen:v
+codere	coderen:v
+combinere	combineren:v
+communicere	communiceren:v
+compensere	compenseren:v
+compromittere	compromitteren:v
+computere	computeren:v
+condolere	condoleren:v
+confisquere	confisqueren:v
+confrontere	confronteren:v
+conservere	conserveren:v
+constatere	constateren:v
+controlere	controleren:v
+conversere	converseren:v
+correspondere	corresponderen:v
+corrigere	corrigeren:v
+coïncidere	coïncideren:v
+creëre	creëren:v
+culminere	culmineren:v
+categorisere	categoriseren:v
+concentrere	concentreren:v
+capricieuzer	capricieus:a
+capricieust	capricieus:a
+capricieuze	capricieus:a
+capricieuzere	capricieus:a
+capricieuste	capricieus:a
+concertgebouwen	concertgebouw:n
+concertgebouwtje	concertgebouw:n
+consolideer	consolideren:v
+consolideerde	consolideren:v
+consolideert	consolideren:v
+consolideerden	consolideren:v
+consoliderend	consolideren:v
+consolidaties	consolidatie:n
+contactlenzen	contactlens:n
+contactlensje	contactlens:n
+consolidere	consolideren:v
+crashte	crashen:v
+crasht	crashen:v
+crashten	crashen:v
+crashend	crashen:v
+componere	componeren:v
+conservatiever	conservatief:a
+conservatiefst	conservatief:a
+conservatieve	conservatief:a
+conservatievere	conservatief:a
+conservatiefste	conservatief:a
+conservatieven	conservatief:n
+constitutionele	constitutioneel:a
+conjugeer	conjugeren:v
+conjugeerde	conjugeren:v
+conjugeert	conjugeren:v
+conjugeerden	conjugeren:v
+conjugerend	conjugeren:v
+conjugere	conjugeren:v
+capitulaties	capitulatie:n
+capitulatiën	capitulatie:n
+concertmeesters	concertmeester:n
+concertmeestertje	concertmeester:n
+contragewichten	contragewicht:n
+contragewichtje	contragewicht:n
+castagnetten	castagnet:n
+castagnetje	castagnet:n
+condoléance	condoleance:n
+cliënten	cliënt:n
+cliëntje	cliënt:n
+condenseer	condenseren:v
+condenseerde	condenseren:v
+condenseert	condenseren:v
+condenseerden	condenseren:v
+condenserend	condenseren:v
+condensere	condenseren:v
+caronades	caronade:n
+consequenties	consequentie:n
+consequentietje	consequentie:n
+chemici	chemicus:n
+chemicusje	chemicus:n
+curiositeiten	curiositeit:n
+curiositeitje	curiositeit:n
+curieuzer	curieus:a
+curieust	curieus:a
+curieuze	curieus:a
+curieuzere	curieus:a
+curieuste	curieus:a
+correlaties	correlatie:n
+correlatietje	correlatie:n
+centrumrechtse	centrumrechts:a
+corrosieve	corrosief:a
+contactsleutels	contactsleutel:n
+contactsleuteltje	contactsleutel:n
+cingels	cingel:n
+cingeltje	cingel:n
+cingel	singel:n
+calibreren	kalibreren:v
+cafetaria's	cafetaria:n
+cafetariaatje	cafetaria:n
+chantte	chanten:v
+chantten	chanten:v
+chantend	chanten:v
+collectiviseer	collectiviseren:v
+collectiviseerde	collectiviseren:v
+collectiviseert	collectiviseren:v
+collectiviseerden	collectiviseren:v
+collectiviserend	collectiviseren:v
+collectivisere	collectiviseren:v
+coalitieregeringen	coalitieregering:n
+coalitieregerinkje	coalitieregering:n
+centrumlinkse	centrumlinks:a
+centristische	centristisch:a
+collectieve	collectief:a
+collectieven	collectief:n
+choqueer	choqueren:v
+choqueerde	choqueren:v
+choqueert	choqueren:v
+choqueerden	choqueren:v
+choquerend	choqueren:v
+choquere	choqueren:v
+claimde	claimen:v
+claimt	claimen:v
+claimden	claimen:v
+claimend	claimen:v
+coaxiale	coaxiaal:a
+cryogenische	cryogenisch:a
+compileer	compileren:v
+compileerde	compileren:v
+compileert	compileren:v
+compileerden	compileren:v
+compilerend	compileren:v
+compilere	compileren:v
+culinaire	culinair:a
+clienten	client:n
+Chileense	Chileens:a
+Chileensen	Chileense:n
+christendemocratische	christendemocratisch:a
+celmembranen	celmembraan:n
+celmembraantje	celmembraan:n
+componeer	componeren:v
+componeerde	componeren:v
+componeert	componeren:v
+componeerden	componeren:v
+componerend	componeren:v
+chordofonen	chordofoon:n
+chordofoontje	chordofoon:n
+copieuzer	copieus:a
+copieust	copieus:a
+copieuze	copieus:a
+copieuzere	copieus:a
+copieuste	copieus:a
+cytoskeletten	cytoskelet:n
+cytoskeletje	cytoskelet:n
+crèmiger	crèmig:a
+crèmigst	crèmig:a
+crèmige	crèmig:a
+crèmigere	crèmig:a
+crèmigste	crèmig:a
+converteer	converteren:v
+converteerde	converteren:v
+converteert	converteren:v
+converteerden	converteren:v
+converterend	converteren:v
+conversies	conversie:n
+conversietje	conversie:n
+conjuncturen	conjunctuur:n
+conjunctuurtje	conjunctuur:n
+convertere	converteren:v
+conciërges	conciërge:n
+conciërgetje	conciërge:n
+classici	classicus:n
+contacteer	contacteren:v
+contacteerde	contacteren:v
+contacteert	contacteren:v
+contacteerden	contacteren:v
+contacterend	contacteren:v
+consulenten	consulent:n
+curiosumpje	curiosum:n
+communies	communie:n
+concurreer	concurreren:v
+concurreerde	concurreren:v
+concurreert	concurreren:v
+concurreerden	concurreren:v
+concurrerend	concurreren:v
+concurrere	concurreren:v
+complottheorieën	complottheorie:n
+complottheorietje	complottheorie:n
+cirkelredeneringen	cirkelredenering:n
+conischer	conisch:a
+conischt	conisch:a
+conische	conisch:a
+conischere	conisch:a
+conischte	conisch:a
+Catalaansen	Catalaanse:n
+coach	coachen:v
+coachte	coachen:v
+coacht	coachen:v
+coachten	coachen:v
+coachend	coachen:v
+cichliden	cichlide:n
+canivoren	carnivoor:n
+chemokuren	chemokuur:n
+chemokuurtje	chemokuur:n
+chemotherapieën	chemotherapie:n
+centjes	centen:n
+crèmekleurige	crèmekleurig:a
+curandi	curandus:n
+commilito's	commilito:n
+commilitootje	commilito:n
+contrôleur	controleur:n
+contrôleurs	contrôleur:n
+contrôleurtje	contrôleur:n
+carburateurs	carburateur:n
+carburateurtje	carburateur:n
+contrabandes	contrabande:n
+contrabandje	contrabande:n
+cassonades	cassonade:n
+commanditaire	commanditair:a
+cricket	cricketen:v
+crickette	cricketen:v
+cricketten	cricketen:v
+cricketend	cricketen:v
+classificeer	classificeren:v
+classificeerde	classificeren:v
+classificeert	classificeren:v
+classificeerden	classificeren:v
+classificerend	classificeren:v
+classificere	classificeren:v
+Charkov	Charkiv:m
+continuïteiten	continuïteit:n
+continuïteitsvergelijkingen	continuïteitsvergelijking:n
+continuïteitsvergelijkinkje	continuïteitsvergelijking:n
+cilindrische	cilindrisch:a
+compliceer	compliceren:v
+compliceerde	compliceren:v
+compliceert	compliceren:v
+compliceerden	compliceren:v
+complicerend	compliceren:v
+complicere	compliceren:v
+catechismussen	catechismus:n
+correspondentes	correspondente:n
+clusterbommen	clusterbom:n
+clusterbommetje	clusterbom:n
+civieler	civiel:a
+civielst	civiel:a
+civiele	civiel:a
+civielere	civiel:a
+civielste	civiel:a
+civiels	civiel:a
+comtoir	kantoor:n
+confirmaties	confirmatie:n
+confirmeer	confirmeren:v
+confirmeerde	confirmeren:v
+confirmeert	confirmeren:v
+confirmeerden	confirmeren:v
+confirmerend	confirmeren:v
+confirmere	confirmeren:v
+centrifugale	centrifugaal:a
+continuüms	continuüm:n
+centrifugaals	centrifugaal:a
+computerprogramma's	computerprogramma:n
+computerprogrammaatje	computerprogramma:n
+coöperatiever	coöperatief:a
+coöperatiefst	coöperatief:a
+coöperatieve	coöperatief:a
+coöperatievere	coöperatief:a
+coöperatiefste	coöperatief:a
+crediteuren	crediteur:n
+crediteurs	crediteur:n
+crediteurtje	crediteur:n
+champignonsoepen	champignonsoep:n
+champignonsoepje	champignonsoep:n
+cornflakes	cornflake:n
+centiseconden	centiseconde:n
+centisecondes	centiseconde:n
+chocoladeletters	chocoladeletter:n
+chocoladelettertje	chocoladeletter:n
+cedeer	cederen:v
+cedeerde	cederen:v
+cedeert	cederen:v
+cedeerden	cederen:v
+cederend	cederen:v
+courtisanes	courtisane:n
+contraremonstranten	contraremonstrant:n
+contraremonstrantse	contraremonstrants:a
+christologische	christologisch:a
+coördinatenstelsels	coördinatenstelsel:n
+coördinatenstelseltje	coördinatenstelsel:n
+chapelures	chapelure:n
+chauffeuses	chauffeuse:n
+cocarde	kokarde:n
+choppes	choppe:n
+contratenoren	contratenor:n
+contratenors	contratenor:n
+conflictueuzer	conflictueus:a
+conflictueust	conflictueus:a
+conflictueuze	conflictueus:a
+conflictueuzere	conflictueus:a
+conflictueuste	conflictueus:a
+curryketchups	curryketchup:n
+curryketchupje	curryketchup:n
+curryworsten	curryworst:n
+curryworstje	curryworst:n
+conflictdiamanten	conflictdiamant:n
+conflictdiamantje	conflictdiamant:n
+componiste	componist:n
+corrodeer	corroderen:v
+corrodeerde	corroderen:v
+corrodeert	corroderen:v
+corrodeerden	corroderen:v
+corroderend	corroderen:v
+chicaneurs	chicaneur:n
+caissière	kassière:n
+confederaties	confederatie:n
+confederatietje	confederatie:n
+contrabandiers	contrabandier:n
+cyclische	cyclisch:a
+chirurgische	chirurgisch:a
+contactere	contacteren:v
+cupcakemama's	cupcakemama:n
+cupcakemamaatje	cupcakemama:n
+climacterischer	climacterisch:a
+climacterischt	climacterisch:a
+climacterische	climacterisch:a
+climacterischere	climacterisch:a
+climacterischte	climacterisch:a
+compuncties	compunctie:n
+compunctietje	compunctie:n
+carmovirussen	carmovirus:n
+carmovirusje	carmovirus:n
+condoleances	condoleance:n
+Chileentje	Chileen:n
+Cabo's	Cabo:n
+Cabootje	Cabo:n
+cellistes	celliste:n
+chinees	chinezen:v
+chineesde	chinezen:v
+chineest	chinezen:v
+chineesden	chinezen:v
+chinezend	chinezen:v
+codewoorden	codewoord:n
+codewoordje	codewoord:n
+conjunctivi	conjunctivus:n
+conjunctivussen	conjunctivus:n
+conjunctivusje	conjunctivus:n
+contubernalen	contubernaal:n
+contubernaaltje	contubernaal:n
+caleidoscopen	caleidoscoop:n
+caleidoscoopje	caleidoscoop:n
+contracties	contractie:n
+contractietje	contractie:n
+coöperaties	coöperatie:n
+coöperatietje	coöperatie:n
+combinatietangen	combinatietang:n
+combinatietangetje	combinatietang:n
+combinatiesleutels	combinatiesleutel:n
+combinatiesleuteltje	combinatiesleutel:n
+cassettebanden	cassetteband:n
+cassettebandje	cassetteband:n
+calamiteitenzenders	calamiteitenzender:n
+contradicties	contradictie:n
+contradictietje	contradictie:n
+cismannen	cisman:n
+cameraploegen	cameraploeg:n
+cameraploegje	cameraploeg:n
+chemsex	chemseks:n
+citroensappen	citroensap:n
+citroensapje	citroensap:n
+controniemen	controniem:n
+controniempje	controniem:n
+cabaretesker	cabaretesk:a
+cabareteskst	cabaretesk:a
+cabareteske	cabaretesk:a
+cabareteskere	cabaretesk:a
+cabareteskste	cabaretesk:a
+cabaretavonden	cabaretavond:n
+cabaretavondje	cabaretavond:n
+cabaretduo's	cabaretduo:n
+cabaretduootje	cabaretduo:n
+cabaretfestivals	cabaretfestival:n
+cabaretfestivalletje	cabaretfestival:n
+cabaretgezelschappen	cabaretgezelschap:n
+cabaretgezelschapje	cabaretgezelschap:n
+cabaretgroepen	cabaretgroep:n
+cabaretgroepje	cabaretgroep:n
+c-sleutels	c-sleutel:n
+c-sleuteltje	c-sleutel:n
+cabaretliederen	cabaretlied:n
+cabaretliedje	cabaretlied:n
+cabaretsketches	cabaretsketch:n
+cabaretsketchje	cabaretsketch:n
+cabarettrio's	cabarettrio:n
+cabarettriootje	cabarettrio:n
+cabaretprogramma's	cabaretprogramma:n
+cabaretprogrammaatje	cabaretprogramma:n
+cabaretvoorstellingen	cabaretvoorstelling:n
+cabaretvoorstellinkje	cabaretvoorstelling:n
+cabaretshows	cabaretshow:n
+cabaretshowtje	cabaretshow:n
+cabaretzangers	cabaretzanger:n
+cabaretzangertje	cabaretzanger:n
+cabaretteksten	cabarettekst:n
+cabarettekstje	cabarettekst:n
+cacaopoeders	cacaopoeder:n
+crapulen	crapuul:n
+crapuleuzer	crapuleus:a
+crapuleust	crapuleus:a
+crapuleuze	crapuleus:a
+crapuleuzere	crapuleus:a
+crapuleuste	crapuleus:a
+clichématige	clichématig:a
+coffeïne	cafeïne:n
+curatoria	curatorium:n
+cameeën	camee:n
+cameetje	camee:n
+crèmewitte	crèmewit:a
+conjecturen	conjectuur:n
+conjectuurtje	conjectuur:n
+containerbegrippen	containerbegrip:n
+containerbegripje	containerbegrip:n
+chromatiden	chromatide:n
+chromatides	chromatide:n
+cadeaudochters	cadeaudochter:n
+cadeaudochtertje	cadeaudochter:n
+complotdenkers	complotdenker:n
+complotdenkertje	complotdenker:n
+corpsballen	corpsbal:n
+corpsballetje	corpsbal:n
+contraheer	contraheren:v
+contraheerde	contraheren:v
+contraheert	contraheren:v
+contraheerden	contraheren:v
+contraherend	contraheren:v
+coorne	koren:n
+conflagraties	conflagratie:n
+conflagratietje	conflagratie:n
+colofons	colofon:n
+colofonnetje	colofon:n
+consistories	consistorie:n
+consistorieën	consistorie:n
+consistoriën	consistorie:n
+consistorietje	consistorie:n
+cassettespelers	cassettespeler:n
+cassettespelertje	cassettespeler:n
+connect	connecten:v
+connectte	connecten:v
+connectten	connecten:v
+connectend	connecten:v
+causatieven	causatief:n
+causatiefje	causatief:n
+causatieve	causatief:a
+commentariaten	commentariaat:n
+commentariaatje	commentariaat:n
+creabea's	creabea:n
+creabeaatje	creabea:n
+calamiteiten	calamiteit:n
+calamiteitje	calamiteit:n
+calculeer	calculeren:v
+calculeerde	calculeren:v
+calculeert	calculeren:v
+calculeerden	calculeren:v
+calculerend	calculeren:v
+Cubanen	Cubaan:n
+Cubaantje	Cubaan:n
+cherubijnen	cherubijn:n
+cherubijntje	cherubijn:n
+coalitieakkoorden	coalitieakkoord:n
+coalitieakkoordje	coalitieakkoord:n
+consumptiemaatschappijen	consumptiemaatschappij:n
+consumptiemaatschappijtje	consumptiemaatschappij:n
+consumpties	consumptie:n
+consumptietje	consumptie:n
+cellofaantje	cellofaan:n
+chappementen	chappement:n
+chappementeke	chappement:n
+chapeluur	chapelure:n
+cd-wisselaars	cd-wisselaar:n
+cd-wisselaartje	cd-wisselaar:n
+clownvissen	clownvis:n
+clownvisje	clownvis:n
+chloorkippen	chloorkip:n
+chloorkipje	chloorkip:n
+chloorkippetje	chloorkip:n
+chemieconcerns	chemieconcern:n
+chemieconcerntje	chemieconcern:n
+christendemocraten	christendemocraat:n
+christendemocraatje	christendemocraat:n
+cultuurtalen	cultuurtaal:n
+cultuurtaaltje	cultuurtaal:n
+conjunctieven	conjunctief:n
+conjunctiefje	conjunctief:n
+confessioneler	confessioneel:a
+confessioneelst	confessioneel:a
+confessionele	confessioneel:a
+confessionelere	confessioneel:a
+confessioneelste	confessioneel:a
+confessionelen	confessioneel:n
+confessioneeltje	confessioneel:n
+consistenties	consistentie:n
+collecties	collectie:n
+collectietje	collectie:n
+confiscaties	confiscatie:n
+chaloetsiem	chaloets:n
+cadmiumgeler	cadmiumgeel:a
+cadmiumgeelst	cadmiumgeel:a
+cadmiumgele	cadmiumgeel:a
+cadmiumgelere	cadmiumgeel:a
+cadmiumgeelste	cadmiumgeel:a
+concurrentiekrachten	concurrentiekracht:n
+chargeer	chargeren:v
+chargeerde	chargeren:v
+chargeert	chargeren:v
+chargeerden	chargeren:v
+chargerend	chargeren:v
+choepot	choepa:n
+choepoth	choepa:n
+choepa's	choepa:n
+cabaleurs	cabaleur:n
+cabaleurtje	cabaleur:n
+cultusplaatsen	cultusplaats:n
+cultusplaatsje	cultusplaats:n
+chemicaliën	chemicalie:n
+canolaoliën	canolaolie:n
+Comps	compagnie:n
+cuberdons	cuberdon:n
+capabeler	capabel:a
+capabelst	capabel:a
+capabele	capabel:a
+capabelere	capabel:a
+capabelste	capabel:a
+contactverboden	contactverbod:n
+cipiers	cipier:n
+cipiertje	cipier:n
+confederale	confederaal:a
+confedereer	confedereren:v
+confedereerde	confedereren:v
+confedereert	confedereren:v
+confedereerden	confedereren:v
+confedererend	confedereren:v
+cameravallen	cameraval:n
+constateringen	constatering:n
+constaterinkje	constatering:n
+cigaren	cigaar:n
+cigaartje	cigaar:n
+caduceer	caduceren:v
+caduceerde	caduceren:v
+caduceert	caduceren:v
+caduceerden	caduceren:v
+caducerend	caduceren:v
+concaver	concaaf:a
+concaafst	concaaf:a
+concave	concaaf:a
+concavere	concaaf:a
+concaafste	concaaf:a
+charmeer	charmeren:v
+charmeerde	charmeren:v
+charmeert	charmeren:v
+charmeerden	charmeren:v
+charmerend	charmeren:v
+chrestomathieën	chrestomathie:n
+ceremoniemeesters	ceremoniemeester:n
+ceremoniemeestertje	ceremoniemeester:n
+christendommelijker	christendommelijk:a
+christendommelijkst	christendommelijk:a
+christendommelijke	christendommelijk:a
+christendommelijkere	christendommelijk:a
+christendommelijkste	christendommelijk:a
+certificaties	certificatie:n
+cipressenbomen	cipressenboom:n
+cipresboom	cipressenboom:n
+cultuurwoorden	cultuurwoord:n
+ceels	ceel:n
+chocoladezoenen	chocoladezoen:n
+chocoladezoentje	chocoladezoen:n
+cryogene	cryogeen:a
+confineer	confineren:v
+confineerde	confineren:v
+confineert	confineren:v
+confineerden	confineren:v
+confinerend	confineren:v
+confinaties	confinatie:n
+cijnzen	cijns:n
+cursisten	cursist:n|cursiste:n
+cursistje	cursist:n|cursiste:n
+cadeautips	cadeautip:n
+cryptomunten	cryptomunt:n
+cryptomuntje	cryptomunt:n
+cryptovaluta's	cryptovaluta:n
+crowdsurfers	crowdsurfer:n
+communisties	communistisch:a
+cactusvijgen	cactusvijg:n
+carpool	carpoolen:v
+carpoolde	carpoolen:v
+carpoolt	carpoolen:v
+carpoolden	carpoolen:v
+carpoolend	carpoolen:v
+condoleanties	condoleantie:n
+civilisationele	civilisationeel:a
+cieren	sieren:v
+collusies	collusie:n
+collusiën	collusie:n
+cargadoors	cargadoor:n
+contactdozen	contactdoos:n
+contactdoosje	contactdoos:n
+contactpersonen	contactpersoon:n
+contactloze	contactloos:a
+conjectureel	conjecturaal:a
+conjecturale	conjecturaal:a
+coulisselandschappen	coulisselandschap:n
+coulissenlandschap	coulisselandschap:n
+casinobroden	casinobrood:n
+cilinderdeuren	cilinderdeur:n
+concessieblokken	concessieblok:n
+concessies	concessie:n
+consuminder	consuminderen:v
+consuminderde	consuminderen:v
+consumindert	consuminderen:v
+consuminderden	consuminderen:v
+consuminderend	consuminderen:v
+cadeaukaarten	cadeaukaart:n
+cadeaukaartje	cadeaukaart:n
+carnavalsnamen	carnavalsnaam:n
+carnavalsnaampje	carnavalsnaam:n
+catarres	catarre:n
+Cubaanse	Cubaans:a
+cloacadieren	cloacadier:n
+cadeaubonnen	cadeaubon:n
+cadeaubonnetje	cadeaubon:n
+creooltalen	creooltaal:n
+composthopen	composthoop:n
+composthoopje	composthoop:n
+collatierechten	collatierecht:n
+collaties	collatie:n
+celmaten	celmaat:n
+celmaatje	celmaat:n
+caricatuur	karikatuur:n
+catecheten	catecheet:n
+creditcards	creditcard:n
+circusdieren	circusdier:n
+circusdiertje	circusdier:n
+communistenvreters	communistenvreter:n
+cederoliën	cederolie:n
+campagnedekken	campagnedek:n
+catechisaties	catechisatie:n
+ceremoniëler	ceremonieel:a
+ceremonieelst	ceremonieel:a
+ceremoniële	ceremonieel:a
+ceremoniëlere	ceremonieel:a
+ceremonieelste	ceremonieel:a
+condemnaties	condemnatie:n
+consternaties	consternatie:n
+cimbalen	cimbaal:n
+cimbaaltje	cimbaal:n
+cirkelbogen	cirkelboog:n
+cirkelboogje	cirkelboog:n
+civiliteiten	civiliteit:n
+computertoetsen	computertoets:n
+cijferschriften	cijferschrift:n
+cedel	ceel:n
+commandocentrales	commandocentrale:n
+christinnen	christin:n
+christinnetje	christin:n
+colorieten	coloriet:n
+cognaten	cognaat:n
+cognate	cognaat:a
+christocentrischer	christocentrisch:a
+christocentrischt	christocentrisch:a
+christocentrische	christocentrisch:a
+christocentrischere	christocentrisch:a
+christocentrischte	christocentrisch:a
+critiek	kritiek:n
+colludeer	colluderen:v
+colludeerde	colluderen:v
+colludeert	colluderen:v
+colludeerden	colluderen:v
+colluderend	colluderen:v
+calixtijnen	calixtijn:n
+cultfilms	cultfilm:n
+cultfilmpje	cultfilm:n
+cultuurbarbaren	cultuurbarbaar:n
+cultuurbarbaartje	cultuurbarbaar:n
+cultuurvolgers	cultuurvolger:n
+completeer	completeren:v
+completeerde	completeren:v
+completeert	completeren:v
+completeerden	completeren:v
+completerend	completeren:v
+chordadieren	chordadier:n
+chordadiertje	chordadier:n
+civetkatachtigen	civetkatachtige:n
+calvinisten	calvinist:n
+copiloten	copiloot:n
+congreszalen	congreszaal:n
+congreszaaltje	congreszaal:n
+convooi	konvooi:n
+convooien	convooi:n
+coscoroba's	coscoroba:n
+coscorobaatje	coscoroba:n
+cetologen	cetoloog:n
+centenaars	centenaar:n
+centenaren	centenaar:n
+consterneer	consterneren:v
+consterneerde	consterneren:v
+consterneert	consterneren:v
+consterneerden	consterneren:v
+consternerend	consterneren:v
+clubhuizen	clubhuis:n
+clubhuisje	clubhuis:n
+consciëntiën	consciëntie:n
+commanderijen	commanderij:n
+Catalanen	Catalaan:n
+cartotheken	cartotheek:n
+chemicaliëntankers	chemicaliëntanker:n
+citroenappels	citroenappel:n
+citroenappelen	citroenappel:n
+citroenlimonades	citroenlimonade:n
+citroenschijven	citroenschijf:n
+citroenschijfje	citroenschijf:n
+citrusvruchten	citrusvrucht:n
+citrusvruchtje	citrusvrucht:n
+celgenoten	celgenoot:n
+celgenootje	celgenoot:n
+celgenotes	celgenote:n
+cauties	cautie:n
+cautieën	cautie:n
+clandestiene	clandestien:a
+cruiseboten	cruiseboot:n
+cannabisten	cannabist:n
+contracoups	contracoup:n
+coupplegers	couppleger:n
+cremeer	cremeren:v
+cremeerde	cremeren:v
+cremeert	cremeren:v
+cremeerden	cremeren:v
+cremerend	cremeren:v
+cd-roms	cd-rom:n
+cd-rommetje	cd-rom:n
+Chinezinnen	Chinezin:n
+cisvrouwen	cisvrouw:n
+christologieën	christologie:n
+cijfermeesters	cijfermeester:n
+contemporaire	contemporair:a
+confectiepakken	confectiepak:n
+confectiepakje	confectiepak:n
+cynici	cynicus:n
+citroenpersen	citroenpers:n
+citroenpersje	citroenpers:n
+citruspersen	citruspers:n
+citruspersje	citruspers:n
+chocoladebenen	chocoladebeen:n
+confecties	confectie:n
+carcinogene	carcinogeen:a
+carcinogenen	carcinogeen:n
+ceremonieuze	ceremonieus:a
+certificeer	certificeren:v
+certificeerde	certificeren:v
+certificeert	certificeren:v
+certificeerden	certificeren:v
+certificerend	certificeren:v
+cilinderhoeden	cilinderhoed:n
+conciliaire	conciliair:a
+confituren	confituur:n
+chocoladerepen	chocoladereep:n
+chocoladereepje	chocoladereep:n
+chrysanten	chrysant:n
+chrysantje	chrysant:n
+concullega	conculega:n
+cakeblikken	cakeblik:n
+convexiteiten	convexiteit:n
+commandocentra	commandocentrum:n
+cyberaanvallen	cyberaanval:n
+Cambodjanen	Cambodjaan:n
+Californiërs	Californiër:n
+Californische	Californisch:a
+Cambodjaanse	Cambodjaans:a
+canonieke	canoniek:a
+charitatiever	charitatief:a
+charitatiefst	charitatief:a
+charitatieve	charitatief:a
+charitatievere	charitatief:a
+charitatiefste	charitatief:a
+carneolen	carneool:n
+carotenen	caroteen:n
+cartesiaanse	cartesiaans:a
+cavaleristen	cavalerist:n
+cederbomen	cederboom:n
+cederboompje	cederboom:n
+celwanden	celwand:n
+celwandje	celwand:n
+celibataire	celibatair:a
+celkernen	celkern:n
+celkerntje	celkern:n
+cementmolens	cementmolen:n
+centrifugaalmachines	centrifugaalmachine:n
+cellulaire	cellulair:a
+cellulairs	cellulair:n
+cellulairtje	cellulair:n
+ceintuurs	ceintuur:n
+ceinturen	ceintuur:n
+cetologische	cetologisch:a
+Chaldeeuwse	Chaldeeuws:a
+Chaldeeën	Chaldeeër:n
+Chaldeeërs	Chaldeeër:n
+charmezangers	charmezanger:n
+contr.	contractie:n|controleur:n
+contrs.	contr.:n
+cyfer	cijfer:n
+coronakuchers	coronakucher:n
+coronakuchertje	coronakucher:n
+culminaties	culminatie:n
+conciliaristische	conciliaristisch:a
+congregationalistische	congregationalistisch:a
+cirkelzagen	cirkelzaag:n
+catechumenen	catechumeen:n
+confessies	confessie:n
+canoniseer	canoniseren:v
+canoniseerde	canoniseren:v
+canoniseert	canoniseren:v
+canoniseerden	canoniseren:v
+canoniserend	canoniseren:v
+concordaten	concordaat:n
+chtonische	chtonisch:a
+cibories	ciborie:n
+ciboriën	ciborie:n
+coronafeesten	coronafeest:n
+coronafeestje	coronafeest:n
+coalitiepartijen	coalitiepartij:n
+coalitiepartijtje	coalitiepartij:n
+cavaleriecharges	cavaleriecharge:n
+communicatiemiddelen	communicatiemiddel:n
+cashewkazen	cashewkaas:n
+cashewkaasje	cashewkaas:n
+cosplaye	cosplayen:v
+cellnummers	cellnummer:n
+cellnummertje	cellnummer:n
+casarca's	casarca:n
+casarcaatje	casarca:n
+cambrische	cambrisch:a
+criminaliseringen	criminalisering:n
+cryoturbatie	kryoturbatie:n
+categorischer	categorisch:a
+categorischt	categorisch:a
+categorische	categorisch:a
+categorischere	categorisch:a
+categorischte	categorisch:a
+causale	causaal:a
+cd-spelers	cd-speler:n
+cd-spelertje	cd-speler:n
+chef-koks	chef-kok:n
+chaostheoretische	chaostheoretisch:a
+chilipepers	chilipeper:n
+chilipepertje	chilipeper:n
+Centraal-Amerikanen	Centraal-Amerikaan:n
+Centraal-Amerikaanse	Centraal-Amerikaans:a
+circusartiesten	circusartiest:n
+circusartiestje	circusartiest:n
+conserveermiddelen	conserveermiddel:n
+conserveermiddeltje	conserveermiddel:n
+conserveringsmiddelen	conserveringsmiddel:n
+contextueler	contextueel:a
+contextueelst	contextueel:a
+contextuele	contextueel:a
+contextuelere	contextueel:a
+contextueelste	contextueel:a
+copulatieve	copulatief:a
+copulaties	copulatie:n
+copuleer	copuleren:v
+copuleerde	copuleren:v
+copuleert	copuleren:v
+copuleerden	copuleren:v
+copulerend	copuleren:v
+coronaire	coronair:a
+caféhouders	caféhouder:n
+convecties	convectie:n
+counter	counteren:v
+counterde	counteren:v
+countert	counteren:v
+counterden	counteren:v
+counterend	counteren:v
+cover	coveren:v
+coverde	coveren:v
+covert	coveren:v
+coverden	coveren:v
+coverend	coveren:v
+cowboyhoeden	cowboyhoed:n
+cowboyhoedje	cowboyhoed:n
+criminaliseer	criminaliseren:v
+criminaliseerde	criminaliseren:v
+criminaliseert	criminaliseren:v
+criminaliseerden	criminaliseren:v
+criminaliserend	criminaliseren:v
+cursiever	cursief:a
+cursiefst	cursief:a
+cursieve	cursief:a
+cursievere	cursief:a
+cursiefste	cursief:a
+cyclopen	cycloop:n
+cycloopje	cycloop:n
+cruise	cruisen:v
+cruisete	cruisen:v
+cruiset	cruisen:v
+cruiseten	cruisen:v
+cruisend	cruisen:v
+cruisede	cruisen:v
+cruiseden	cruisen:v
+cellarii	cellarius:n
+catsiaanse	catsiaans:a
+chartervliegtuigen	chartervliegtuig:n
+chartervliegtuigje	chartervliegtuig:n
+chartervluchten	chartervlucht:n
+chartervluchtje	chartervlucht:n
+casuele	casueel:a
+cacteeën	cactee:n
+celdelingen	celdeling:n
+celsplitsingen	celsplitsing:n
+comorbiditeiten	comorbiditeit:n
+chequeboeken	chequeboek:n
+chequeboekje	chequeboek:n
+citroenhaaien	citroenhaai:n
+citroenhaaitje	citroenhaai:n
+contactberoepen	contactberoep:n
+Corsicanen	Corsicaan:n
+contactsporten	contactsport:n
+competitiesporten	competitiesport:n
+crimigranten	crimigrant:n
+crimigrantje	crimigrant:n
+crimigraties	crimigratie:n
+combinatorische	combinatorisch:a
+cartoonesker	cartoonesk:n
+cartooneskst	cartoonesk:n
+cartooneske	cartoonesk:n
+cartooneskere	cartoonesk:n
+cartooneskste	cartoonesk:n
+containerhavens	containerhaven:n
+containerschepen	containerschip:n
+cognitiewetenschappen	cognitiewetenschap:n
+cognities	cognitie:n
+contraremonstranties	contraremonstrantie:n
+contraremonstrantieën	contraremonstrantie:n
+coelte	koelte:n
+cultuurstrijders	cultuurstrijder:n
+cultuurstrijden	cultuurstrijd:n
+cruciale	cruciaal:a
+contourveren	contourveer:n
+coscorobazwanen	coscorobazwaan:n
+coscorobazwaantje	coscorobazwaan:n
+comparatieve	comparatief:a
+comparatieven	comparatief:n
+contactkoren	contactkoor:n
+charge	chargen:v
+chargede	chargen:v
+charget	chargen:v
+chargeden	chargen:v
+chargend	chargen:v
+chocozoenen	chocozoen:n
+chocozoentje	chocozoen:n
+coronavaccins	coronavaccin:n
+centrumpartijen	centrumpartij:n
+centrumpartijtje	centrumpartij:n
+condoleanceregisters	condoleanceregister:n
+chocolademunten	chocolademunt:n
+chocolademuntje	chocolademunt:n
+contributies	contributie:n
+contra-expertises	contra-expertise:n
+circusclowns	circusclown:n
+carrièrediplomaten	carrièrediplomaat:n
+chocoladepasta's	chocoladepasta:n
+chocoladepastaatje	chocoladepasta:n
+cocktailsauzen	cocktailsaus:n
+cocktailsausje	cocktailsaus:n
+consulaten-generaal	consulaat-generaal:n
+collegianten	collegiant:n
+cosmetische	cosmetisch:a
+cultuurhistorische	cultuurhistorisch:a
+centralistische	centralistisch:a
+controverstheoloog	controversetheoloog:n
+controversetheologen	controversetheoloog:n
+coronahaarden	coronahaard:n
+coccejanen	coccejaan:n
+concretiseer	concretiseren:v
+concretiseerde	concretiseren:v
+concretiseert	concretiseren:v
+concretiseerden	concretiseren:v
+concretiserend	concretiseren:v
+cryovulkanen	cryovulkaan:n
+cryovulkanismen	cryovulkanisme:n
+crepeer	creperen:v
+crepeerde	creperen:v
+crepeert	creperen:v
+crepeerden	creperen:v
+creperend	creperen:v
+conversatieanalyses	conversatieanalyse:n
+conversatieanalysetje	conversatieanalyse:n
+congestieheffingen	congestieheffing:n
+cyclosilicaten	cyclosilicaat:n
+centraliseringen	centralisering:n
+calamiteitenroutes	calamiteitenroute:n
+coöperatieprincipes	coöperatieprincipe:n
+coöperatieprincipetje	coöperatieprincipe:n
+controleposten	controlepost:n
+controlepostje	controlepost:n
+Cypriotische	Cypriotisch:a
+Cyprioten	Cyprioot:n
+cenobieten	cenobiet:n
+concubanten	concubant:n
+concubanen	concubaan:n
+corporaties	corporatie:n
+corporatietje	corporatie:n
+calimerocomplexen	calimerocomplex:n
+calimerocomplexje	calimerocomplex:n
+concurrentieposities	concurrentiepositie:n
+complicaties	complicatie:n
+complicatietje	complicatie:n
+coromandeleenden	coromandeleend:n
+coromandeleendje	coromandeleend:n
+carolina-eenden	carolina-eend:n
+carolina-eendje	carolina-eend:n
+calliopekolibries	calliopekolibrie:n
+calliopekolibrietje	calliopekolibrie:n
+cashte	cashen:v
+casht	cashen:v
+cashten	cashen:v
+cashend	cashen:v
+citroenvlinders	citroenvlinder:n
+citroenvlindertje	citroenvlinder:n
+coleur	kleur:n
+convergeer	convergeren:v
+convergeerde	convergeren:v
+convergeert	convergeren:v
+convergeerden	convergeren:v
+convergerend	convergeren:v
+citroensijzen	citroensijs:n
+citroensijsje	citroensijs:n
+convergenties	convergentie:n
+convergentietje	convergentie:n
+citroenkuifkaketoes	citroenkuifkaketoe:n
+citroenkuifkaketoetje	citroenkuifkaketoe:n
+cirlgorzen	cirlgors:n
+cirlgorsje	cirlgors:n
+commissariaten	commissariaat:n
+commissariaatje	commissariaat:n
+charmeoffensieven	charmeoffensief:n
+cerviducten	cerviduct:n
+cerviductje	cerviduct:n
+congrueer	congrueren:v
+congrueerde	congrueren:v
+congrueert	congrueren:v
+congrueerden	congrueren:v
+congruerend	congrueren:v
+contaminaties	contaminatie:n
+contaminatietje	contaminatie:n
+connecties	connectie:n
+connectietje	connectie:n
+computerschermen	computerscherm:n
+computerschermpje	computerscherm:n
+conculega's	conculega:n
+conculegaatje	conculega:n
+contractbreuken	contractbreuk:n
+cappu	cappuccino:n
+commercialisaties	commercialisatie:n
+chamaefyten	chamaefyt:n
+cryptofyten	cryptofyt:n
+cyclaampje	cyclaam:n
+correleer	correleren:v
+correleerde	correleren:v
+correleert	correleren:v
+correleerden	correleren:v
+correlerend	correleren:v
+comporteer	comporteren:v
+comporteerde	comporteren:v
+comporteert	comporteren:v
+comporteerden	comporteren:v
+comporterend	comporteren:v
+challes	challe:n
+challetje	challe:n
+Cruijffiaanser	Cruijffiaans:a
+Cruijffiaanst	Cruijffiaans:a
+Cruijffiaanse	Cruijffiaans:a
+Cruijffiaansere	Cruijffiaans:a
+Cruijffiaanste	Cruijffiaans:a
+chilipoeders	chilipoeder:n
+chilivlokken	chilivlok:n
+chilivlokje	chilivlok:n
+construeer	construeren:v
+construeerde	construeren:v
+construeert	construeren:v
+construeerden	construeren:v
+construerend	construeren:v
+covalenties	covalentie:n
+connecteer	connecteren:v
+connecteerde	connecteren:v
+connecteert	connecteren:v
+connecteerden	connecteren:v
+connecterend	connecteren:v
+cryptogame	cryptogaam:a
+cryptogamen	cryptogaam:n
+Catharinaparkieten	Catharinaparkiet:n
+Catharinaparkietje	Catharinaparkiet:n
+cc	cc'en:v
+cc'de	cc'en:v
+cc't	cc'en:v
+cc'den	cc'en:v
+cc'end	cc'en:v
+configureer	configureren:v
+configureerde	configureren:v
+configureert	configureren:v
+configureerden	configureren:v
+configurerend	configureren:v
+cultiveer	cultiveren:v
+cultiveerde	cultiveren:v
+cultiveert	cultiveren:v
+cultiveerden	cultiveren:v
+cultiverend	cultiveren:v
+conflicthanteringen	conflicthantering:n
+cultuurverschillen	cultuurverschil:n
+cultuurverschilletje	cultuurverschil:n
+coördineer	coördineren:v
+coördineerde	coördineren:v
+coördineert	coördineren:v
+coördineerden	coördineren:v
+coördinerend	coördineren:v
+coördinaties	coördinatie:n
+coördinatietje	coördinatie:n
+coördinatiever	coördinatief:a
+coördinatiefst	coördinatief:a
+coördinatieve	coördinatief:a
+coördinatievere	coördinatief:a
+coördinatiefste	coördinatief:a
+cantharellen	cantharel:n
+cantharelletje	cantharel:n
+cruisereizen	cruisereis:n
+cruisereisje	cruisereis:n
+chanteerbaarder	chanteerbaar:a
+chanteerbaarst	chanteerbaar:a
+convectieovens	convectieoven:n
+convectieoventje	convectieoven:n
+citaties	citatie:n
+champagneglazen	champagneglas:n
+champagneglaasje	champagneglas:n
+circuleer	circuleren:v
+circuleerde	circuleren:v
+circuleert	circuleren:v
+circuleerden	circuleren:v
+circulerend	circuleren:v
+circulairder	circulair:a
+circulairst	circulair:a
+circulairdere	circulair:a
+circulairste	circulair:a
+circulaties	circulatie:n
+circulatietje	circulatie:n
+circulariteiten	circulariteit:n
+circulariteitje	circulariteit:n
+cassaties	cassatie:n
+cassatietje	cassatie:n
+compilaties	compilatie:n
+compilatietje	compilatie:n
+compilatiewerken	compilatiewerk:n
+compilatiewerkje	compilatiewerk:n
+circumduceer	circumduceren:v
+circumduceerde	circumduceren:v
+circumduceert	circumduceren:v
+circumduceerden	circumduceren:v
+circumducerend	circumduceren:v
+circumducties	circumductie:n
+circumductietje	circumductie:n
+chatgesprekken	chatgesprek:n
+collegejaren	collegejaar:n
+concertkaarten	concertkaart:n
+concertkaartje	concertkaart:n
+categorisaties	categorisatie:n
+categorisatietje	categorisatie:n
+categoriseringen	categorisering:n
+categoriserinkje	categorisering:n
+categoraler	categoraal:a
+categoraalst	categoraal:a
+categorale	categoraal:a
+categoralere	categoraal:a
+categoraalste	categoraal:a
+categorialer	categoriaal:a
+categoriaalst	categoriaal:a
+categoriale	categoriaal:a
+categorialere	categoriaal:a
+categoriaalste	categoriaal:a
+categorieker	categoriek:a
+categoriekst	categoriek:a
+categorieke	categoriek:a
+categoriekere	categoriek:a
+categoriekste	categoriek:a
+controlemogelijkheden	controlemogelijkheid:n
+cultusbeelden	cultusbeeld:n
+cultusbeeldje	cultusbeeld:n
+campagneleiders	campagneleider:n
+corporatiewoningen	corporatiewoning:n
+constituties	constitutie:n
+cadeauwinkels	cadeauwinkel:n
+cadeauwinkeltje	cadeauwinkel:n
+coronagevallen	coronageval:n
+culinairder	culinair:a
+culinairst	culinair:a
+culinairdere	culinair:a
+culinairste	culinair:a
+coltruien	coltrui:n
+coltruitje	coltrui:n
+commanditairen	commanditair:n
+commanditairtje	commanditair:n
+commandeer	commanderen:v
+commandeerde	commanderen:v
+commandeert	commanderen:v
+commandeerden	commanderen:v
+commanderend	commanderen:v
+chocoladecakes	chocoladecake:n
+chicorei	cichorei:n
+conjugaties	conjugatie:n
+conjugatietje	conjugatie:n
+coniferen	conifeer:n
+conifeertje	conifeer:n
+cryptischer	cryptisch:a
+cryptischt	cryptisch:a
+cryptische	cryptisch:a
+cryptischere	cryptisch:a
+cryptischte	cryptisch:a
+condensaties	condensatie:n
+claxonneer	claxonneren:v
+claxonneerde	claxonneren:v
+claxonneert	claxonneren:v
+claxonneerden	claxonneren:v
+claxonnerend	claxonneren:v
+contactgestoorder	contactgestoord:a
+contactgestoordst	contactgestoord:a
+contactgestoorde	contactgestoord:a
+contactgestoordere	contactgestoord:a
+contactgestoordste	contactgestoord:a
+coproducties	coproductie:n
+coproductietje	coproductie:n
+creatievelingen	creatieveling:n
+creatievelingetje	creatieveling:n
+computeringenieurs	computeringenieur:n
+criminologen	criminoloog:n
+chocoladetaarten	chocoladetaart:n
+chocoladetaartje	chocoladetaart:n
+curlingouders	curlingouder:n
+casuïsten	casuïst:n
+casuïstje	casuïst:n
+confidentiëler	confidentieel:a
+confidentieelst	confidentieel:a
+confidentiële	confidentieel:a
+confidentiëlere	confidentieel:a
+confidentieelste	confidentieel:a
+castorzaden	castorzaad:n
+castorzaadje	castorzaad:n
+castoroliën	castorolie:n
+castorolietje	castorolie:n
+castorolieplanten	castorolieplant:n
+castorolieplantje	castorolieplant:n
+castorbonen	castorboon:n
+castorboontje	castorboon:n
+conformeer	conformeren:v
+conformeerde	conformeren:v
+conformeert	conformeren:v
+conformeerden	conformeren:v
+conformerend	conformeren:v
+conformistischer	conformistisch:a
+conformistischt	conformistisch:a
+conformistische	conformistisch:a
+conformistischere	conformistisch:a
+conformistischte	conformistisch:a
+configuraties	configuratie:n
+configuratietje	configuratie:n
+competitiever	competitief:a
+competitiefst	competitief:a
+competitieve	competitief:a
+competitievere	competitief:a
+competitiefste	competitief:a
+commercialiseer	commercialiseren:v
+commercialiseerde	commercialiseren:v
+commercialiseert	commercialiseren:v
+commercialiseerden	commercialiseren:v
+commercialiserend	commercialiseren:v
+Congolezen	Congolees:n
+Congoleesje	Congolees:n
+Congoleser	Congolees:a
+Congoleest	Congolees:a
+Congolese	Congolees:a
+Congolesere	Congolees:a
+Congoleeste	Congolees:a
+cerebrale	cerebraal:a
+cerebraalst	cerebraal:a
+cerebraler	cerebraal:a
+cerebralere	cerebraal:a
+cerebraalste	cerebraal:a
+cashewnoten	cashewnoot:n
+cashewnootje	cashewnoot:n
+Cathaye	Cathay:m
+cederpestvogels	cederpestvogel:n
+cederpestvogeltje	cederpestvogel:n
+cijnsrechten	cijnsrecht:n
+chatoenot	chatoena:n
+chassenes	chassene:n
+captaties	captatie:n
+captatietje	captatie:n
+cupmaten	cupmaat:n
+cupmaatje	cupmaat:n
+chocolade-eclairs	chocolade-eclair:n
+chocolade-ijsje	chocolade-ijs:n
+cessies	cessie:n
+camptoir	kantoor:n
+comtoor	kantoor:n
+cantoor	kantoor:n
+cantoir	kantoor:n
+cakewalkte	cakewalken:v
+cakewalkt	cakewalken:v
+cakewalkten	cakewalken:v
+cakewalkend	cakewalken:v
+cichlides	cichlide:n
+cichlidetje	cichlide:n
+crushte	crushen:v
+crusht	crushen:v
+crushten	crushen:v
+crushend	crushen:v
+controleurs	controleur:n
+controleurtje	controleur:n
+compartimenteer	compartimenteren:v
+compartimenteerde	compartimenteren:v
+compartimenteert	compartimenteren:v
+compartimenteerden	compartimenteren:v
+compartimenterend	compartimenteren:v
+compartimenteringen	compartimentering:n
+compartimenterinkje	compartimentering:n
+codenamen	codenaam:n
+chanoekiljes	chanoekilje:n
+chanoekiljetje	chanoekilje:n
+chanoekiot	chanoekia:n
+chanoekia's	chanoekia:n
+chanoekiaatje	chanoekia:n
+constateeren	constateren:v
+corrigeeren	corrigeren:v
+cultiveeren	cultiveren:v
+compenseeren	compenseren:v
+catastrophaal	catastrofaal:a
+conformeeren	conformeren:v
+contrasteeren	contrasteren:v
+confronteeren	confronteren:v
+champagneflessen	champagnefles:n
+champagneflesje	champagnefles:n
+colombijntjes	colombijntje:n
+celdodende	celdodend:a
+coassistenties	coassistentie:n
+coassistentietje	coassistentie:n
+coschappen	coschap:n
+coschapje	coschap:n
+coassistenten	coassistent:n
+coassistentje	coassistent:n
+contextgebondener	contextgebonden:a
+contextgebondenst	contextgebonden:a
+contextgebondenste	contextgebonden:a
+contextafhankelijker	contextafhankelijk:a
+contextafhankelijkst	contextafhankelijk:a
+contextafhankelijke	contextafhankelijk:a
+contextafhankelijkere	contextafhankelijk:a
+contextafhankelijkste	contextafhankelijk:a
+coupenaden	coupenaad:n
+coupenaadje	coupenaad:n
+cuckstoelen	cuckstoel:n
+cuckstoeltje	cuckstoel:n
+coaxaal	coaxiaal:a
+coaxkabels	coaxkabel:n
+coaxkabeltje	coaxkabel:n
+curl	curlen:v
+curlde	curlen:v
+curlt	curlen:v
+curlden	curlen:v
+curlend	curlen:v
+contrasteer	contrasteren:v
+contrasteerde	contrasteren:v
+contrasteert	contrasteren:v
+contrasteerden	contrasteren:v
+contrasterend	contrasteren:v
+contrasteringen	contrastering:n
+contrasterender	contrasterend:a
+contrasterendst	contrasterend:a
+contrasterende	contrasterend:a
+contrasterendere	contrasterend:a
+contrasterendste	contrasterend:a
+contrastaccenten	contrastaccent:n
+contrastkleuren	contrastkleur:n
+contrastmiddelen	contrastmiddel:n
+contrastvloeistoffen	contrastvloeistof:n
+contrastratio's	contrastratio:n
+contrastregelaars	contrastregelaar:n
+contrastrijker	contrastrijk:a
+contrastrijkst	contrastrijk:a
+contrastrijke	contrastrijk:a
+contrastrijkere	contrastrijk:a
+contrastrijkste	contrastrijk:a
+concerttickets	concertticket:n
+cashlozer	cashloos:a
+cashloost	cashloos:a
+cashloze	cashloos:a
+cashlozere	cashloos:a
+cashlooste	cashloos:a
+commentaarlozer	commentaarloos:a
+commentaarloost	commentaarloos:a
+commentaarloze	commentaarloos:a
+commentaarlozere	commentaarloos:a
+commentaarlooste	commentaarloos:a
+computeranimaties	computeranimatie:n
+cafeïnevrijst	cafeïnevrij:a
+cafeïnevrijer	cafeïnevrij:a
+cafeïnevrije	cafeïnevrij:a
+cafeïnevrijere	cafeïnevrij:a
+cafeïnevrijste	cafeïnevrij:a
+cashvrijst	cashvrij:a
+cashvrijer	cashvrij:a
+cashvrije	cashvrij:a
+cashvrijere	cashvrij:a
+cashvrijste	cashvrij:a
+caloriearmer	caloriearm:a
+caloriearmst	caloriearm:a
+caloriearme	caloriearm:a
+caloriearmere	caloriearm:a
+caloriearmste	caloriearm:a
+calorierijker	calorierijk:a
+calorierijkst	calorierijk:a
+calorierijke	calorierijk:a
+calorierijkere	calorierijk:a
+calorierijkste	calorierijk:a
+centra's	centrum:n
+cholesterolarmer	cholesterolarm:a
+cholesterolarmst	cholesterolarm:a
+cholesterolarme	cholesterolarm:a
+cholesterolarmere	cholesterolarm:a
+cholesterolarmste	cholesterolarm:a
+contactarmer	contactarm:a
+contactarmst	contactarm:a
+contactarme	contactarm:a
+contactarmere	contactarm:a
+contactarmste	contactarm:a
+consacreer	consacreren:v
+consacreerde	consacreren:v
+consacreert	consacreren:v
+consacreerden	consacreren:v
+consacrerend	consacreren:v
+convenabeler	convenabel:a
+convenabelst	convenabel:a
+convenabele	convenabel:a
+convenabelere	convenabel:a
+convenabelste	convenabel:a
+caféachtiger	caféachtig:a
+caféachtigst	caféachtig:a
+caféachtige	caféachtig:a
+caféachtigere	caféachtig:a
+caféachtigste	caféachtig:a
+cartoonachtiger	cartoonachtig:a
+cartoonachtigst	cartoonachtig:a
+cartoonachtige	cartoonachtig:a
+cartoonachtigere	cartoonachtig:a
+cartoonachtigste	cartoonachtig:a
+christusachtiger	christusachtig:a
+christusachtigst	christusachtig:a
+christusachtige	christusachtig:a
+christusachtigere	christusachtig:a
+christusachtigste	christusachtig:a
+Christusachtig	christusachtig:a
+circusachtiger	circusachtig:a
+circusachtigst	circusachtig:a
+circusachtige	circusachtig:a
+circusachtigere	circusachtig:a
+circusachtigste	circusachtig:a
+clownachtiger	clownachtig:a
+clownachtigst	clownachtig:a
+clownachtige	clownachtig:a
+clownachtigere	clownachtig:a
+clownachtigste	clownachtig:a
+copyrightte	copyrighten:v
+copyrightten	copyrighten:v
+copyrightend	copyrighten:v
+copyrighthouders	copyrighthouder:n
+crowdsurf	crowdsurfen:v
+crowdsurfte	crowdsurfen:v
+crowdsurft	crowdsurfen:v
+crowdsurften	crowdsurfen:v
+crowdsurfend	crowdsurfen:v
+crowdsurfde	crowdsurfen:v
+crowdsurfden	crowdsurfen:v
+crowdsurfverboden	crowdsurfverbod:n
+cumulverboden	cumulverbod:n
+computerproblemen	computerprobleem:n
+computerwinkels	computerwinkel:n
+computerwinkeltje	computerwinkel:n
+computerapparaten	computerapparaat:n
+citroenraspen	citroenrasp:n
+clubde	clubben:v
+clubt	clubben:v
+clubden	clubben:v
+clubbend	clubben:v
+clubachtiger	clubachtig:a
+clubachtigst	clubachtig:a
+clubachtige	clubachtig:a
+clubachtigere	clubachtig:a
+clubachtigste	clubachtig:a
+collageachtiger	collageachtig:a
+collageachtigst	collageachtig:a
+collageachtige	collageachtig:a
+collageachtigere	collageachtig:a
+collageachtigste	collageachtig:a
+countryachtiger	countryachtig:a
+countryachtigst	countryachtig:a
+countryachtige	countryachtig:a
+countryachtigere	countryachtig:a
+countryachtigste	countryachtig:a
+crèmeachtiger	crèmeachtig:a
+crèmeachtigst	crèmeachtig:a
+crèmeachtige	crèmeachtig:a
+crèmeachtigere	crèmeachtig:a
+crèmeachtigste	crèmeachtig:a
+crèmeriger	crèmerig:a
+crèmerigst	crèmerig:a
+crèmerige	crèmerig:a
+crèmerigere	crèmerig:a
+crèmerigste	crèmerig:a
+crisisachtiger	crisisachtig:a
+crisisachtigst	crisisachtig:a
+crisisachtige	crisisachtig:a
+crisisachtigere	crisisachtig:a
+crisisachtigste	crisisachtig:a
+cabaretachtiger	cabaretachtig:a
+cabaretachtigst	cabaretachtig:a
+cabaretachtige	cabaretachtig:a
+cabaretachtigere	cabaretachtig:a
+cabaretachtigste	cabaretachtig:a
+cosplayde	cosplayen:v
+cosplayt	cosplayen:v
+cosplayden	cosplayen:v
+cosplayend	cosplayen:v
+cosplayst	cosplayen:v
+cilindervormiger	cilindervormig:a
+cilindervormigst	cilindervormig:a
+cilindervormige	cilindervormig:a
+cilindervormigere	cilindervormig:a
+cilindervormigste	cilindervormig:a
+calfaten	kalefateren:v
+chochme	gogme:n
+chochmes	chochme:n
+clownscholen	clownschool:n
+clownschooltje	clownschool:n
+cultuurevenementen	cultuurevenement:n
+cadeauverpakkingen	cadeauverpakking:n
+cacaofantasieën	cacaofantasie:n
+clipoorbellen	clipoorbel:n
+clipmakers	clipmaker:n
+clipmakertje	clipmaker:n
+clipzenders	clipzender:n
+clipzendertje	clipzender:n
+cherrytomaten	cherrytomaat:n
+cherrytomaatje	cherrytomaat:n
+compromisbereider	compromisbereid:a
+compromisbereidst	compromisbereid:a
+compromisbereide	compromisbereid:a
+compromisbereidere	compromisbereid:a
+compromisbereidste	compromisbereid:a
+couranters	courant:a
+codeberichten	codebericht:n
+concentrische	concentrisch:a

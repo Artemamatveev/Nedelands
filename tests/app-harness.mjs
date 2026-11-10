@@ -53,7 +53,7 @@ export async function app(options = {}) {
   for(const match of html.matchAll(/<script([^>]*)>([\s\S]*?)<\/script>/g)){
     if(match[1].includes('ld+json'))continue;
     const src=match[1].match(/src="([^"]+)"/);
-    const code=src?fs.readFileSync(new URL(src[1].slice(1),root),'utf8'):match[2];
+    const code=src?fs.readFileSync(new URL(src[1].slice(1).split('?')[0],root),'utf8'):match[2];
     vm.runInContext(code,context,{filename:src?src[1]:`inline-${index++}.js`});
   }
   // Let IndexedDB and the auth/config promises finish without waiting for app timers.

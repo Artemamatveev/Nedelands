@@ -14,9 +14,14 @@ const TYPES = {'.html':'text/html; charset=utf-8','.js':'text/javascript','.css'
 let chromium = null;
 try { ({ chromium } = createRequire(import.meta.url)('playwright')); } catch {}
 
-function serve() {
+// state.knm: another version of data/knm.js in the page's address, as after an update
+function serve(state = {}) {
   const server = http.createServer((req, res) => {
     let p = decodeURIComponent(new URL(req.url, 'http://x').pathname);
+    if (state.knm && (p === '/oefenen' || p === '/oefenen.html')) {
+      res.writeHead(200, {'content-type': TYPES['.html']});
+      return res.end(fs.readFileSync(path.join(ROOT, 'oefenen.html'), 'utf8').replace(/\/data\/knm\.js\?v=[0-9a-f]+/, '/data/knm.js?v=' + state.knm));
+    }
     if (p === '/api/config') { res.writeHead(200, {'content-type':'application/json'}); return res.end('{}'); }
     if (p.startsWith('/api/')) { res.writeHead(404); return res.end(); }
     if (p === '/') p = '/index.html';
@@ -68,6 +73,9 @@ test('The homepage and the app work in a real browser', async t => {
       assert.equal(await s.p.locator('#knmsub [data-kt]').count(), 9);
       await s.p.click('#knmsub [data-kt="0"]');
       await s.p.waitForSelector('#play:not([hidden]) .opt');
+      // the dictionary: a word loads its part over the network
+      const e = await s.p.evaluate(() => lookUp('huizen', 'De huizen zijn oud.').then(E => [E.map(x => x.l), dictHave.size]));
+      assert.ok(e[0].includes('huis')); assert.ok(e[1] < 5);
       assert.deepEqual(s.errors, []); await s.ctx.close();
     });
     await t.test('app: the sample question from the homepage', async () => {
@@ -77,5 +85,34 @@ test('The homepage and the app work in a real browser', async t => {
       await s.p.waitForSelector('.fb');
       assert.deepEqual(s.errors, []); await s.ctx.close();
     });
+  } finally { await browser.close(); server.close(); }
+});
+
+test('Offline the app opens with its own files, also after an update', async t => {
+  let browser;
+  try { browser = chromium && await chromium.launch(); } catch (e) { if (process.env.BROWSER_TESTS) throw e; }
+  if (!browser) { if (process.env.BROWSER_TESTS) assert.fail('Playwright is not installed'); return t.skip('no browser here'); }
+  const state = {}, server = await serve(state), base = `http://127.0.0.1:${server.address().port}`;
+  try {
+    const s = await page(browser, base, {serviceWorkers: 'allow'});
+    await s.go('/oefenen'); await s.p.waitForSelector('#plan .step');
+    await s.p.evaluate(() => navigator.serviceWorker.ready);
+    const cached = () => s.p.evaluate(async () => (await (await caches.open('nl-a2-v12')).keys()).map(r => new URL(r.url)).map(u => u.pathname + u.search));
+    const wait = async ok => { for (let i = 0; i < 100 && !ok(await cached()); i++) await s.p.waitForTimeout(100); return cached(); };
+    const files = await s.p.evaluate(() => [...document.scripts].map(x => x.getAttribute('src')).filter(x => x && x.includes('?v=')));
+    assert.ok(files.length >= 8);
+    let c = await wait(c => c.includes('/oefenen') && files.every(f => c.includes(f)));
+    assert.ok(files.every(f => c.includes(f)), 'the page\'s files are cached');
+    await s.ctx.setOffline(true); await s.p.reload(); await s.p.waitForSelector('#plan .step');
+    await s.ctx.setOffline(false);
+    // an update: the page asks for another version of one file
+    state.knm = 'ffffffffff';
+    await s.p.reload(); await s.p.waitForSelector('#plan .step');
+    c = await wait(c => c.includes('/data/knm.js?v=ffffffffff') && c.filter(x => x.startsWith('/data/knm.js')).length === 1);
+    assert.deepEqual(c.filter(x => x.startsWith('/data/knm.js')), ['/data/knm.js?v=ffffffffff'], 'only the version the stored page uses');
+    await s.ctx.setOffline(true); await s.p.reload(); await s.p.waitForSelector('#plan .step');
+    assert.equal(await s.p.evaluate(() => KNM.length > 400), true);
+    assert.deepEqual(s.errors.filter(e => !/ERR_INTERNET_DISCONNECTED|Failed to load resource/.test(e)), []);
+    await s.ctx.close();
   } finally { await browser.close(); server.close(); }
 });

@@ -2,7 +2,7 @@
 # Entry lines: lemma \t pos \t info \t glosses ; after a line "#": form \t lemma:pos|lemma:pos
 # Usage: python3 -I dict/build.py kaikki.org-dictionary-Dutch.jsonl.gz dict/nl-en.txt
 # (data: https://kaikki.org/dictionary/Dutch/ , from English Wiktionary, CC BY-SA 4.0)
-import gzip,json,sys,re,collections
+import gzip,json,sys,re,collections,os
 src,out=sys.argv[1],sys.argv[2]
 POS={"noun":"n","verb":"v","adj":"a","adv":"d","prep":"p","pron":"r","conj":"c","num":"u","article":"t","det":"t","intj":"i","name":"m","particle":"x","contraction":"x","postp":"p","circumpos":"p"}
 OLD={"obsolete","archaic","dated","rare","historical","Flanders","Belgium","Suriname","majestic","dialectal","nonstandard","proscribed","misspelling","Brabant","Limburg"}
@@ -75,3 +75,6 @@ for f,ls in forms.items():
     if ls: fl.append(f"{f}\t{'|'.join(l+':'+p for l,p in ls[:3])}")
 open(out,"w").write("\n".join(lines)+"\n#\n"+"\n".join(fl)+"\n")
 print(len(entries),"lemmas",len(lines),"entry lines",len(fl),"forms")
+# the parts the app loads (dict/nl-en/<letter>.txt); then run node tools/stamp.mjs for their version
+import subprocess
+subprocess.run([sys.executable,"-I",os.path.join(os.path.dirname(os.path.abspath(__file__)),"split.py")],check=True)

@@ -1,0 +1,49 @@
+xi	n	de · mv. xi's	xi (letter of the Greek alphabet)
+xenon	n	het	xenon
+xylofoon	n	de · mv. xylofoons	xylophone (musical instrument)
+Xanten	m		Xanten, a city in North Rhine-Westphalia, Germany, near the Rhine
+xyleem	n	het · mv. xylemen	xylem
+xenofobie	n	de · mv. xenofobieën	xenophobia, hatred and/or pathological fear towards strangers or foreigners
+xylografie	n	de · mv. xylografieën	xylography (art of making xylographs)
+xanthaangom	n	de	xanthan gum (E415)
+xenofoob	n	de · mv. xenofoben	xenophobe
+xenofoob	a		xenophobic
+xenohormoon	n	het · mv. xenohormonen	xenohormone
+xerofyt	n	de · mv. xerofyten	xerophyte
+xyloliet	n	het	an artificial stone made of compressed magnesite and cellulose
+xenotransplantatie	n	de · mv. xenotransplantaties	xenotransplantation
+xanthaan	n	het	xanthan (polysaccharide produced by Xanthomonas campestris)
+xenofobisch	a		xenophobic
+xenongas	n	het	xenon gas
+x-aantal	n	het · mv. x-aantallen	x number of, x amount of (unknown or unspecified number of)
+x-as	n	de · mv. x-assen	x-axis
+#
+xi's	xi:n
+xi'tje	xi:n
+x	keer:n
+xylofoons	xylofoon:n
+xylofonen	xylofoon:n
+xylofoontje	xylofoon:n
+xylemen	xyleem:n
+xyleempje	xyleem:n
+xenofobieën	xenofobie:n
+xenofobietje	xenofobie:n
+xylografieën	xylografie:n
+xenofoben	xenofoob:n
+xenofoobje	xenofoob:n
+xenofober	xenofoob:a
+xenofoobst	xenofoob:a
+xenofobe	xenofoob:a
+xenofobere	xenofoob:a
+xenofoobste	xenofoob:a
+xtc	ecstasy:n
+xenohormonen	xenohormoon:n
+xenohormoontje	xenohormoon:n
+xerofyten	xerofyt:n
+xenotransplantaties	xenotransplantatie:n
+xenofobischer	xenofobisch:a
+xenofobische	xenofobisch:a
+xenofobischere	xenofobisch:a
+x-aantallen	x-aantal:n
+x-aantalletje	x-aantal:n
+x-assen	x-as:n
