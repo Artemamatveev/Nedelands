@@ -2356,8 +2356,8 @@ function show(){
     <button class="btn wide" id="recb">${cur.exam?"● Antwoord geven":"● Opnemen"}</button><p class="note" id="recn">${q.spk?`${q.prep?`Denk eerst ${q.prep} seconden na. `:""}Je hebt ${q.spk} seconden om te antwoorden, zoals op het Staatsexamen.${cur.exam?" Na de vraag begint de tijd vanzelf.":" Daarna kun je jezelf terugluisteren."}`:cur.exam?"Je hebt één minuut per vraag.":"Je hebt één minuut. Daarna kun je jezelf terugluisteren."}</p></div>
     ${cur.exam?"":`${SR?`<button class="ghost wide" id="spchk" style="margin-bottom:10px">Spreek in en laat nakijken</button>${acc.cfg&&!acc.user?(acc.cfg.free?freeNote():`<p class="note">Nakijken kan als je bent ingelogd (Profiel).</p>`):""}`:""}<button class="ghost wide" id="rev">Toon voorbeeld</button>`}`;
   else if(S.typing&&q.canType)h+=`<div class="type"><input id="inp" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Je antwoord"><button class="btn" id="chk">Controleer</button></div>`;
-  else{const nv=cur.nav&&q.type==="choice";o=nv?cur.op[pos]=cur.op[pos]||q.opts():q.opts();
-    h+=`<div class="opts${o.length===3||o.some(x=>x.length>14)?" one":""}">${o.map((x,i)=>`<button class="opt${nv&&cur.pick[pos]===x?" sel":""}" data-n="${i}"${nv?` aria-pressed="${cur.pick[pos]===x}"`:""}>${x}</button>`).join("")}</div>`;
+  else{const nv=cur.nav&&q.type==="choice";o=nv?cur.op[pos]=cur.op[pos]||q.opts():q.opts();const C=x=>capA(q,x);
+    h+=`<div class="opts${o.length===3||o.some(x=>x.length>14)?" one":""}">${o.map((x,i)=>`<button class="opt${nv&&cur.pick[pos]===x?" sel":""}" data-n="${i}"${nv?` aria-pressed="${cur.pick[pos]===x}"`:""}>${C(x)}</button>`).join("")}</div>`;
     if(nv)h+=navHTML()}
   h+=`<div class="fb" id="fb"></div>`;
   $("card").innerHTML=h; const cd=$("card");cd.classList.remove("in");void cd.offsetWidth;cd.classList.add("in");
@@ -2429,11 +2429,15 @@ function buzz(k){
   try{if(navigator.vibrate){navigator.vibrate(k==="bad"?[25,60,25]:k==="tick"?8:12);return}}catch(e){}
   try{tapIOS();if(k==="bad")setTimeout(()=>{try{tapIOS()}catch(e){}},120)}catch(e){}
 }
+// Answers to a question (KNM, reading, listening, history) start with a capital letter on screen; the stored answer
+// stays as it is, so checking is unchanged. Grammar options don't: there the option fills a gap inside a sentence.
+const CAPSEC=new Set(["knm","lz","l1","ls","lb","gs"]);
+const capA=(q,s)=>CAPSEC.has(q.sec)?String(s).replace(/^((?:\s|<[^>]+>)*)(\p{Ll})/u,(m,a,c)=>a+c.toUpperCase()):s;
 function feedback(ok,q){
   buzz(ok?"good":"bad");
   $("fb").className="fb sheet "+(ok?"ok":"no");
   // wrong: a short heading, then the right answer in ink (a long red heading was loud)
-  $("fb").innerHTML=`<p class="fbh"><i aria-hidden="true">${ok?"✓":"✕"}</i><b class="${ok?"good":"bad"}">${ok?"Goed zo!":"Niet goed"}</b></p>${ok?"":`<p class="fbr"><span>Goed is:</span> <strong>${q.right}</strong></p>`}
+  $("fb").innerHTML=`<p class="fbh"><i aria-hidden="true">${ok?"✓":"✕"}</i><b class="${ok?"good":"bad"}">${ok?"Goed zo!":"Niet goed"}</b></p>${ok?"":`<p class="fbr"><span>Goed is:</span> <strong>${capA(q,q.right)}</strong></p>`}
     ${q.note?(q.sec==="verb"?q.note:`<div class="note">${q.note}</div>`):""}
     <button class="btn wide" id="next">Verder</button>`;
   $("next").onclick=()=>{pos++;show()}; $("next").focus();
@@ -2481,14 +2485,14 @@ function submitExam(){
   if(cur.sent)return; cur.sent=true;
   // Schrijven: the written tasks go to Claude; an empty task is not sent and counts as not passed
   if(isWr(cur.part)){cur.ans=queue.map((q,i)=>{const w=cur.pick[i]||{f:[],t:""};return{q,form:q.fields?q.fields.map((f,j)=>f+": "+(w.f[j]||"").trim()).join("\n"):"",text:w.t.trim()}}).filter((a,i)=>picked(i));pos=queue.length;return finish()}
-  queue.forEach((q,i)=>{const ok=cur.pick[i]===q.right;record(ok,q);cur.log.push({l:q.label,ok});if(!ok)cur.miss.push({q:q.big,r:q.right})});
+  queue.forEach((q,i)=>{const ok=cur.pick[i]===q.right;record(ok,q);cur.log.push({l:q.label,ok});if(!ok)cur.miss.push({q:q.big,r:capA(q,q.right)})});
   pos=queue.length; finish();
 }
 function grade(ans,btn,o){
   if(answered||!ans)return; answered=true;
   ans=ans.replace(/\s+/g," ").replace(/’/g,"'");
   const q=queue[pos],ok=ans===q.right.toLowerCase()||ans===q.right;
-  if(cur.exam){record(ok);cur.log.push({l:q.label,ok});if(!ok)cur.miss.push({q:q.big,r:q.right});pos++;return show()}
+  if(cur.exam){record(ok);cur.log.push({l:q.label,ok});if(!ok)cur.miss.push({q:q.big,r:capA(q,q.right)});pos++;return show()}
   document.querySelectorAll(".opt").forEach(b=>{b.disabled=true;if(o&&o[b.dataset.n]===q.right)b.classList.add("ok")});
   if(btn&&!ok)btn.classList.add("no");
   if($("inp"))$("inp").disabled=true; if($("chk"))$("chk").disabled=true;
