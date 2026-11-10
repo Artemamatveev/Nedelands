@@ -611,6 +611,16 @@ body.vfull{overflow:hidden}
   display:grid;grid-template-columns:fit-content(38%) minmax(0,1fr);align-items:center;gap:20px;
 }
 :root[data-desktop] #alogin{margin:0}
+:root:not([data-desktop]) .phead:has(#alogin){
+  display:grid;grid-template-columns:clamp(56px,19vw,76px) minmax(0,1fr);align-items:center;gap:12px;
+}
+:root:not([data-desktop]) .phead:has(#alogin) .phero{padding:0;gap:6px}
+:root:not([data-desktop]) .phead:has(#alogin) .pav{width:100%;height:auto;aspect-ratio:1}
+:root:not([data-desktop]) .phead:has(#alogin) .phero h2{margin:0;font-size:var(--fs-m)}
+:root:not([data-desktop]) #alogin{min-height:44px;margin:0;padding:10px 12px;gap:8px;overflow-wrap:anywhere}
+:root:not([data-desktop]) #alogin .ic{display:none}
+:root:not([data-desktop]) #alogin b{font-size:var(--fs-m);line-height:1.25}
+:root:not([data-desktop]) #alogin small{font-size:var(--fs-s)}
 .pg{margin:14px 0 0;padding:0 16px;background:var(--surface);border-radius:var(--rc)}
 .pg:empty{display:none}
 .pg>*{border-bottom:1px solid var(--line)} .pg>:last-child{border-bottom:0}
