@@ -598,38 +598,52 @@ body.vfull{overflow:hidden}
    at the top (a wall across the whole screen ran under the menu); the menu is its own floating glass panel beside the
    window, level with its top: the logo, the five tabs as rows with icon and name, the oranje lens behind the current
    one, the language pill at the bottom; only Vandaag hangs the painting, the other tabs start with their content */
-:root[data-desktop]{--nav-w:212px;--nav-x:24px;--nav-top:84px;--nav-row:48px;--win-top:24px;
+:root[data-desktop]{--nav-w:212px;--nav-c:76px;--nav-x:24px;--nav-top:84px;--nav-row:48px;--win-top:24px;
   --frost:rgba(250,251,254,.5);--frost-line:rgba(255,255,255,.6);--frost-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 24px 70px rgba(8,16,40,.22)}
-:root[data-desktop] body::before{inset:-60px;background:center/cover var(--paint-bg,url(/art/molen-glass.jpg));filter:blur(34px) saturate(1.25)}
-:root[data-desktop] body::after{background:rgba(236,240,248,.38)}
+:root[data-desktop] body::before{z-index:-3;inset:-60px;background:center/cover var(--paint-bg,url(/art/molen-glass.jpg));filter:blur(34px) saturate(1.25)}
+:root[data-desktop] body::after{z-index:-2;background:rgba(236,240,248,.38)}
 :root[data-desktop] main:has(#home:not([hidden])){
   max-width:1180px;
   margin-top:var(--win-top);
-  margin-left:calc(var(--nav-w) + 2*var(--nav-x) + max(0px,(100% - var(--nav-w) - 3*var(--nav-x) - 1180px)/2));margin-right:var(--nav-x);
+  margin-left:calc(var(--nav-c) + 2*var(--nav-x) + max(0px,(100% - var(--nav-c) - 3*var(--nav-x) - 1180px)/2));margin-right:var(--nav-x);
   padding:0 28px 32px;margin-bottom:var(--nav-x);
-  position:relative;z-index:9;border-radius:28px;overflow:clip; /* above the menu panel: the logo and the language pill (fixed, inside main) show on it */
+  position:relative;border-radius:28px;overflow:clip; /* no z-index: the logo and the language pill (fixed, inside main) stay above the menu */
 }
-/* the glass on a layer of its own: a backdrop filter on <main> itself would pin the logo and the language pill
-   (position: fixed) inside the window */
+/* the glass on a layer of its own: a backdrop filter or a z-index on <main> itself would keep the logo and the
+   language pill (position: fixed) inside the window or under the menu */
 :root[data-desktop] main:has(#home:not([hidden]))::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;
   background:var(--frost);-webkit-backdrop-filter:blur(28px) saturate(1.5);backdrop-filter:blur(28px) saturate(1.5);
   border:1px solid var(--frost-line);box-shadow:var(--frost-shadow)}
 :root[data-desktop] main:has(#home:not([hidden])) header{margin:0 -28px}
-:root[data-desktop] main:has(#home:not([hidden])) h1{position:fixed;z-index:9;left:calc(var(--nav-x) + 20px);top:calc(var(--win-top) + 26px);bottom:auto;font-size:26px;color:var(--ink)}
-:root[data-desktop] main:has(#home:not([hidden])) header .lang{position:fixed;z-index:9;left:calc(var(--nav-x) + 16px);right:auto;bottom:auto;
+:root[data-desktop] main:has(#home:not([hidden])) h1{position:fixed;z-index:11;left:calc(var(--nav-x) + 20px);top:calc(var(--win-top) + 26px);bottom:auto;font-size:26px;color:var(--ink);
+  opacity:0;transition:opacity .15s}
+:root[data-desktop] main:has(#home:not([hidden])) header .lang{position:fixed;z-index:11;left:calc(var(--nav-x) + 9px);right:auto;bottom:auto;
   top:calc(var(--win-top) + var(--nav-top) + 5*var(--nav-row) + 12px)}
 :root[data-desktop] main:has(#home:not([hidden])):not(.big) header{height:12px;background:none}
 :root[data-desktop] main:has(#home:not([hidden])):not(.big) header .art,
 :root[data-desktop] main:has(#home:not([hidden])):not(.big) header::after{display:none}
+/* the menu is a narrow strip of icons that widens over the window on hover or keyboard focus (the user's wish):
+   then the names and the logo show; collapsed, a small bitterbal stands for the logo */
 :root[data-desktop] .tabs{
-  left:var(--nav-x);top:var(--win-top);bottom:auto;transform:none;width:var(--nav-w);flex-direction:column;justify-content:flex-start;gap:0;
-  padding:var(--nav-top) 10px 64px;border-radius:24px;touch-action:auto;transition:none;
+  z-index:10;left:var(--nav-x);top:var(--win-top);bottom:auto;transform:none;width:var(--nav-c);flex-direction:column;justify-content:flex-start;gap:0;
+  padding:var(--nav-top) 10px 64px;border-radius:24px;touch-action:auto;overflow:hidden;
   background:var(--frost);border:1px solid var(--frost-line);box-shadow:var(--frost-shadow);
+  transition:width .28s cubic-bezier(.3,1,.4,1),box-shadow .28s;
 }
-:root[data-desktop] .tabs.min{width:var(--nav-w)}
-:root[data-desktop] .tabs button{flex:0 0 var(--nav-row);flex-direction:row;justify-content:flex-start;gap:12px;padding:0 14px;border-radius:var(--rc);font-size:var(--fs-b)}
-:root[data-desktop] .tabs svg{width:22px;height:22px}
-:root[data-desktop] .tabs.min span{display:block}
+:root[data-desktop]:has(.tabs:is(:hover,:focus-within),header .lang:is(:hover,:focus-within)) .tabs{width:var(--nav-w);box-shadow:var(--frost-shadow),0 20px 50px rgba(8,16,40,.18)}
+:root[data-desktop] .tabs.min{width:var(--nav-c)} :root[data-desktop]:has(.tabs:is(:hover,:focus-within),header .lang:is(:hover,:focus-within)) .tabs.min{width:var(--nav-w)}
+:root[data-desktop] .tabs::before{content:"";position:absolute;left:calc(var(--nav-c)/2 - 15px);top:28px;width:30px;height:30px;border-radius:50%;
+  background:radial-gradient(120% 140% at 35% 20%,#E3792F 0%,#C8500C 55%,#A93F07 100%);
+  box-shadow:inset 0 1px 1px rgba(255,255,255,.35),inset 0 -2px 3px rgba(80,25,0,.25);transition:opacity .15s}
+:root[data-desktop]:has(.tabs:is(:hover,:focus-within),header .lang:is(:hover,:focus-within)) .tabs::before{opacity:0}
+:root[data-desktop]:has(.tabs:is(:hover,:focus-within),header .lang:is(:hover,:focus-within)) main:has(#home:not([hidden])) h1{opacity:1}
+/* the language pill fits the strip without its arrow; the strip stays open while the pointer is on the pill */
+:root[data-desktop] main:has(#home:not([hidden])) header .lang .dn{display:none}
+:root[data-desktop]:has(.tabs:is(:hover,:focus-within),header .lang:is(:hover,:focus-within)) main:has(#home:not([hidden])) header .lang .dn{display:block}
+:root[data-desktop] .tabs button{flex:0 0 var(--nav-row);flex-direction:row;justify-content:flex-start;gap:14px;padding:0 0 0 17px;border-radius:var(--rc);font-size:var(--fs-b);white-space:nowrap}
+:root[data-desktop] .tabs svg{flex:none;width:22px;height:22px}
+:root[data-desktop] .tabs span,:root[data-desktop] .tabs.min span{display:block;opacity:0;transition:opacity .15s}
+:root[data-desktop]:has(.tabs:is(:hover,:focus-within),header .lang:is(:hover,:focus-within)) .tabs span{opacity:1;transition-delay:.06s}
 @media (hover:hover){:root[data-desktop] .tabs button:not([aria-current]):hover{background:rgba(255,255,255,.55)}}
 :root[data-desktop] .tabs .lens{
   left:10px;right:10px;top:var(--nav-top);bottom:auto;width:auto;height:var(--nav-row);border-radius:var(--rc);
@@ -639,9 +653,11 @@ body.vfull{overflow:hidden}
 :root[data-desktop] main:has(#home[hidden]) header{border-radius:var(--r);margin-top:24px}
 /* Arabic: the panel on the right */
 :root[dir=rtl][data-desktop] .tabs{left:auto;right:var(--nav-x)}
-:root[dir=rtl][data-desktop] main:has(#home:not([hidden])){margin-left:var(--nav-x);margin-right:calc(var(--nav-w) + 2*var(--nav-x) + max(0px,(100% - var(--nav-w) - 3*var(--nav-x) - 1180px)/2))}
+:root[dir=rtl][data-desktop] main:has(#home:not([hidden])){margin-left:var(--nav-x);margin-right:calc(var(--nav-c) + 2*var(--nav-x) + max(0px,(100% - var(--nav-c) - 3*var(--nav-x) - 1180px)/2))}
 :root[dir=rtl][data-desktop] main:has(#home:not([hidden])) h1{left:auto;right:calc(var(--nav-x) + 20px)}
-:root[dir=rtl][data-desktop] main:has(#home:not([hidden])) header .lang{left:auto;right:calc(var(--nav-x) + 16px)}
+:root[dir=rtl][data-desktop] main:has(#home:not([hidden])) header .lang{left:auto;right:calc(var(--nav-x) + 9px)}
+:root[dir=rtl][data-desktop] .tabs::before{left:auto;right:calc(var(--nav-c)/2 - 15px)}
+:root[dir=rtl][data-desktop] .tabs button{padding:0 17px 0 0}
 :root[data-desktop] .duo{align-items:stretch}
 :root[data-desktop] .duo>div{display:contents}
 :root[data-desktop] .duo>.tile{grid-column:1/-1}
