@@ -157,6 +157,10 @@ h2{display:flex;align-items:center;gap:10px;font-size:var(--fs-xl);font-weight:6
 .ic text{fill:currentColor;stroke:none;font:600 12px -apple-system,system-ui,sans-serif}
 .it::after{content:"›";flex:none;font-size:26px;line-height:1;margin-top:-3px;color:var(--soft)}
 a.it{text-decoration:none} .it.ext::after{content:none}
+/* a row that opens a list under it (KNM: its themes): the chevron turns down; the rows under it line up with its title */
+.it[aria-expanded]::after{transition:transform .2s} .it[aria-expanded="true"]::after{transform:rotate(90deg)}
+[dir=rtl] .it[aria-expanded="true"]::after{transform:rotate(-90deg)}
+.sub .it{padding-inline-start:46px;min-height:48px}
 .it .th{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
 .it b{font-size:var(--fs-b);font-weight:600;line-height:1.3}
 .it small{flex:none;color:var(--soft);font-size:var(--fs-s);font-variant-numeric:tabular-nums}
@@ -2068,7 +2072,9 @@ const SEC=[
 {id:"gs",t:"Geschiedenis",s:"Vragen over de geschiedenis van Nederland",n:10},
 {id:"bg",t:"Beginnen",s:"Twaalf korte lessen",n:8}
 ];
-const GAP=[1,2,4,7,14], KEY="ww-v1";
+// Days until a question comes back after a right answer, per box (S.items .b). The last steps (30, 60) let a known
+// question rest instead of returning every two weeks for ever. Old progress (boxes 0–4) keeps working.
+const GAP=[1,2,4,7,14,30,60], KEY="ww-v1";
 const $=id=>document.getElementById(id);
 const today=()=>{const d=new Date();return Math.floor((d.getTime()-d.getTimezoneOffset()*6e4)/864e5)};
 const freshProgress=()=>({items:{},streak:0,last:0,typing:false,errs:[],gen:{lz:[],ls:[]},t:0,day:{d:0,done:[]},words:[],bk:{}});
@@ -2626,7 +2632,10 @@ VO1.forEach(([w,d],i)=>{const o=x=>shuffle(VO1.filter(y=>y[0]!==w)).slice(0,3).m
   ITEMS.push({sec:"v1",k:"v1r|"+w,ord:(i/6|0)+1,type:"choice",label:"Welk woord past hierbij?",big:d,sub:"",right:w,tts:w,opts:()=>shuffle([w,...o(0)])})});
 // KNM rows: [theme, question, right, wrong, wrong, explanation, photo?]; the photo (from foto/, like on the exam) is optional.
 // KNM from index KNMS on: situations with a person in them, as on the exam since July 2025 (harder than the short questions)
-const KNMS=235,kc={};KNM.forEach((p,i)=>{kc[p[0]]=(kc[p[0]]||0)+1;ch("knm",i,kc[p[0]]/2|0,"KNM: "+p[0],p[1],"",p[2],[p[3],p[4]],p[5]);const it=ITEMS[ITEMS.length-1];if(i>=KNMS)it.sit=1;if(p[6])it.pics=[p[6]]});
+// The order of new questions (ord) counts the short questions and the situations apart, so practice mixes them from
+// the start instead of keeping the situations until all 235 short questions were met.
+const KNMS=235,kc={};KNM.forEach((p,i)=>{const g=p[0]+(i>=KNMS?"|s":"");kc[g]=(kc[g]||0)+1;ch("knm",i,kc[g]/2|0,"KNM: "+p[0],p[1],"",p[2],[p[3],p[4]],p[5]);const it=ITEMS[ITEMS.length-1];if(i>=KNMS)it.sit=1;if(p[6])it.pics=[p[6]]});
+const KNMT=[...new Set(KNM.map(p=>p[0]))]; // the eight themes, in the order of KNM
 VO.forEach((p,i)=>ITEMS.push({sec:"vo",k:"vo|"+p[0],ord:i/6|0,type:"choice",label:"Wat betekent dit woord?",big:p[0],sub:"",right:p[1],
   opts:()=>shuffle([p[1],...shuffle(VO.filter(x=>x!==p)).slice(0,3).map(x=>x[1])])}));
 // Woorden per thema: A2 words for the exam topics with a short Dutch description, three ways (word → description,
@@ -4037,12 +4046,18 @@ const icHTML=k=>`<i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC[
 function itHTML(attr,t,d,o={}){
   return`<button class="it" ${attr}>${o.ic?icHTML(o.ic):""}<span><span class="th"><b>${t}</b>${o.n!=null?`<small>${o.n}</small>`:""}</span>${d?`<span class="d">${d}</span>`:""}${o.bar!=null?`<span class="bar${o.pass?" pass":""}"><i style="width:${o.bar}%"></i></span>`:""}</span></button>`;
 }
+var knmOpen=false; // the theme list under KNM on Oefenen is open
 function home(){
   paint();
   $("play").hidden=true;$("welcome").hidden=true;$("move").hidden=true;$("stats").hidden=true;$("lib").hidden=true;$("read").hidden=true;$("media").hidden=true;$("story").hidden=true;$("hist").hidden=true;$("talk").hidden=true;stopMedia();closePop();$("home").hidden=false;head();clock(0);hush();planId=null;drawPlan();
   const sec=id=>SEC.find(x=>x.id===id);
   const row=id=>{const s=sec(id),p=ITEMS.filter(x=>x.sec===id),n=p.filter(x=>S.items[x.k]).length;
     return itHTML(`data-s="${id}"`,s.t,s.s,{n:n?n+" van "+p.length:null,bar:n?n/p.length*100:null,ic:id})};
+  // KNM opens a list under its row: all themes together, or one of the eight themes of the exam
+  const knmRow=()=>{const p=ITEMS.filter(x=>x.sec==="knm"),seen=a=>a.filter(x=>S.items[x.k]).length,n=seen(p),s=sec("knm");
+    return itHTML(`data-knm="1" aria-expanded="${knmOpen}" aria-controls="knmsub"`,s.t,s.s,{n:n?n+" van "+p.length:null,bar:n?n/p.length*100:null,ic:"knm"})
+      +`<div class="sub" id="knmsub"${knmOpen?"":" hidden"}>${itHTML(`data-kt="all"`,"Alle thema's","Door elkaar, zoals op het examen")}`
+      +KNMT.map((t,i)=>{const q=p.filter(x=>x.label==="KNM: "+t),m=seen(q);return itHTML(`data-kt="${i}"`,t,"",{n:m?m+" van "+q.length:null})}).join("")+`</div>`};
   // exam parts: how ready you are (from the proefexamens, else from practice); practising them is on the Oefenen tab
   // one short row per part: the bar (proefexamen, else practice) with the 70% line; words only once there is a proefexamen
   // the number is the share of right answers (last proefexamen, else practice), not a chance of passing; the line under it says which
@@ -4071,7 +4086,7 @@ function home(){
     <div class="list">${parts().map(part).join("")}</div>`+officialExam+onaRow+uitRow;
   $("parts").innerHTML=`${levelLabel}<h2>Oefenen zonder timer</h2>
     <p class="sub">Korte oefeningen met feedback tijdens het oefenen.</p>
-    <div class="list">${parts().map(row).join("")}</div>`;
+    <div class="list">${parts().map(k=>k==="knm"?knmRow():row(k)).join("")}</div>`;
   $("gram").innerHTML=`<h2>Grammatica en woorden</h2><p class="sub">Rondes van 10 vragen.</p>`+(lvl()==="B1"
     ?`<div class="list">${["g1","w1","v1"].map(row).join("")}</div><h3 class="lh">Herhalen op A2-niveau</h3><div class="list">${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`
     :`<div class="list">${itHTML(`data-x="bg"`,"Beginnen","Twaalf korte lessen, voor als je net begint.",{ic:"bg",n:(n=>n?`${n} van ${BG.length}`:null)(BG.filter(bgDone).length)})}${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`);
@@ -4083,7 +4098,9 @@ function home(){
     +((S.errs||[]).length?itHTML(`data-x="errs"`,"Oefen met je eigen fouten","Kies de juiste versie van zinnen uit je eerdere teksten en antwoorden.",{n:S.errs.length,ic:"errs"}):"")
     +((S.words||[]).length?itHTML(`data-x="words"`,"Mijn woorden","Die je bij het lezen hebt bewaard.",{n:S.words.length,ic:"words"}):"");
   document.querySelectorAll("#exam button,#parts button,#gram button,#books button,#mine button").forEach(b=>b.onclick=()=>{const d=b.dataset;
-    if(d.s)build(d.s);
+    if(d.knm){knmOpen=!knmOpen;b.setAttribute("aria-expanded",knmOpen);$("knmsub").hidden=!knmOpen}
+    else if(d.kt)build("knm",d.kt==="all"?null:{...SEC.find(x=>x.id==="knm"),t:"KNM: "+KNMT[d.kt],theme:KNMT[d.kt]});
+    else if(d.s)build(d.s);
     else if(d.e)examGate(d.e,true);
     else if(d.x==="stats")stats();
     else if(d.x==="books")library();
@@ -4527,11 +4544,15 @@ function resumeWriting(section,exam,slot=""){
 function build(id,custom){
   cur={...(custom||SEC.find(s=>s.id===id))}; cur.zs=[]; const d=today(), due=[],fresh=[];
   const lv=x=>lvl()==="B1"||!x.k.startsWith("gb|"); // the B1 history questions only at B1
-  const pool=id==="mix"?ITEMS.filter(x=>lv(x)&&(x.sec!=="bg"||S.items[x.k])&&!isWr(x.sec)&&!(lvl()==="B1"?["lz","ls","sp"]:["l1","lb","sb","g1","w1","v1"]).includes(x.sec)).concat(wordItems()):ITEMS.filter(x=>x.sec===id&&lv(x));
+  // cur.theme: one KNM theme only (the list under KNM on Oefenen)
+  const pool=id==="mix"?ITEMS.filter(x=>lv(x)&&(x.sec!=="bg"||S.items[x.k])&&!isWr(x.sec)&&!(lvl()==="B1"?["lz","ls","sp"]:["l1","lb","sb","g1","w1","v1"]).includes(x.sec)).concat(wordItems()):ITEMS.filter(x=>x.sec===id&&lv(x)&&(!cur.theme||x.label==="KNM: "+cur.theme));
   shuffle(pool.slice()).forEach(q=>{const it=S.items[q.k];if(!it)fresh.push(q);else if(it.d<=d)due.push(q)});
   due.sort((a,b)=>S.items[a.k].b-S.items[b.k].b);
   fresh.sort((a,b)=>a.ord-b.ord);
-  let cand=due.slice(0,Math.ceil(cur.n*.7)).concat(fresh,due.slice(Math.ceil(cur.n*.7)));
+  // Due questions first (the lowest box, so mistakes, first), but while there are unseen questions at most half of a
+  // round: with 70% a five-question round brought one new question a day and felt like the same questions every day.
+  const dueN=fresh.length?Math.floor(cur.n/2):cur.n;
+  let cand=due.slice(0,dueN).concat(fresh,due.slice(dueN));
   if(id==="mix"){const cnt={};cand=cand.filter(q=>(cnt[q.sec]=(cnt[q.sec]||0)+1)<=(q.sec==="verb"?3:q.sec==="sp"||q.sec==="sb"?1:2))}
   queue=cand.slice(0,cur.n);
   if(id==="wr"&&cur.n>=4){const f=cand.filter(q=>q.fields),o=cand.filter(q=>!q.fields);queue=f.slice(0,1).concat(o.slice(0,3))}
@@ -4636,8 +4657,9 @@ function record(ok,q=queue[pos]){
   if(!cur.exam)clearWriting(q);
   const d=today();
   if(!q.retry){
-    const it=S.items[q.k]||{b:0,d};
-    if(ok){it.d=d+GAP[it.b];it.b=Math.min(4,it.b+1);it.r=(it.r||0)+1}else{it.b=0;it.d=d;it.w=(it.w||0)+1}
+    // right the first time: probably known already, so it comes back in four days, not tomorrow
+    const it=S.items[q.k]||{b:ok?2:0,d};
+    if(ok){it.d=d+GAP[it.b];it.b=Math.min(GAP.length-1,it.b+1);it.r=(it.r||0)+1}else{it.b=0;it.d=d;it.w=(it.w||0)+1}
     S.items[q.k]=it; if(ok)right++;
   }
   if(!ok&&!cur.exam&&q.type!=="reveal"&&q.type!=="write")queue.push({...q,retry:true});
@@ -5171,7 +5193,7 @@ function finish(){
     <div class="big">${right}/${total}</div>
     <p class="ru">${right<total?"in één keer goed. De rest komt morgen terug.":"zonder fouten. Netjes!"}</p>
     <div class="two"><button class="ghost" id="tohome">${cur.back?cur.back.t:"Alle onderdelen"}</button><button class="btn" id="more">${cur.next?cur.next.t:"Nog een ronde"}</button></div></div>`;
-  $("more").onclick=cur.next?cur.next.f:()=>build(cur.id,cur.pool||cur.back?cur:null); $("tohome").onclick=cur.back?cur.back.f:home;
+  $("more").onclick=cur.next?cur.next.f:()=>build(cur.id,cur.pool||cur.back||cur.theme?cur:null); $("tohome").onclick=cur.back?cur.back.f:home;
 }
 // Boekenkast: short A2 stories built in, plus the reader's own books.
 // Own books live in IndexedDB ("books" = list, "book:<id>" = text); S only keeps positions (S.bk) and saved words (S.words).
@@ -6651,6 +6673,8 @@ const UI={
 "Berichten, e-mails en een formulier":["Messages, e-mails and a form","رسائل وبريد إلكتروني ونموذج","Mesajlar, e-postalar ve bir form","संदेश, ई-मेल और एक फ़ॉर्म","短信、电子邮件和一份表格","Mensajes, correos y un formulario","Сообщения, письма и анкета"],
 "Vragen en foto's, hardop":["Questions and photos, out loud","أسئلة وصور، بصوت عالٍ","Sorular ve fotoğraflar, sesli","प्रश्न और तस्वीरें, बोलकर","问题和照片，大声说","Preguntas y fotos, en voz alta","Вопросы и фотографии. Отвечайте вслух"],
 "De 8 thema's van het examen":["The 8 themes of the exam","مواضيع الامتحان الثمانية","Sınavın 8 konusu","परीक्षा के 8 विषय","考试的 8 个主题","Los 8 temas del examen","8 тем экзамена"],
+"Alle thema's":["All themes","كل المواضيع","Tüm konular","सभी विषय","所有主题","Todos los temas","Все темы"],
+"Door elkaar, zoals op het examen":["Mixed, as in the exam","مختلطة، كما في الامتحان","Karışık, sınavdaki gibi","मिले-जुले, जैसे परीक्षा में","混合练习，和考试一样","Mezclados, como en el examen","Вперемешку, как на экзамене"],
 "Lange teksten, zes vragen per tekst":["Long texts, six questions each","نصوص طويلة، ستة أسئلة لكل نص","Uzun metinler, metin başına altı soru","लंबे पाठ, हर पाठ में छह प्रश्न","长文章，每篇六个问题","Textos largos con seis preguntas cada uno","Длинные тексты с шестью вопросами к каждому"],
 "Radio, gesprekken en uitleg":["Radio, conversations and talks","الراديو والمحادثات والشروحات","Radyo, konuşmalar ve anlatımlar","रेडियो, बातचीत और व्याख्यान","广播、对话和讲解","Radio, conversaciones y explicaciones","Радио, разговоры и объяснения"],
 "Zinnen, een formulier en e-mails":["Sentences, a form and e-mails","جمل ونموذج ورسائل بريد إلكتروني","Cümleler, bir form ve e-postalar","वाक्य, एक फ़ॉर्म और ई-मेल","句子、一份表格和电子邮件","Frases, un formulario y correos","Предложения, анкета и письма"],
@@ -7212,6 +7236,8 @@ Object.assign(UI,{
   "E-mail":["Email","بريد إلكتروني","E-posta","ईमेल","电子邮件","Correo electrónico","Электронная почта"],
   "Schrijfopdracht":["Writing task","مهمة كتابة","Yazma görevi","लेखन कार्य","写作题","Tarea de escritura","Письменное задание"]
 });
+// The KNM themes on their own (the list under KNM): the same words as "KNM: <theme>" without "KNM: "
+KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});
 const UIR=[
  // the years of a history chapter (GS .y): "ca. 3400–3100 v.Chr.", "12 v.Chr. – ca. 400", "ca. 1000–1500", "1957–nu"
  [/^(ca\. )?(\d+)( v\.Chr\.)?(?:(\s?–\s?)(ca\. )?(\d+|nu)( v\.Chr\.)?)?$/,(m,c1,a,bc1,sep,c2,b,bc2)=>{

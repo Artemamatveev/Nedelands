@@ -162,3 +162,43 @@ test('History chapter years are translated in the menus, Dutch stays as it is',a
   assert.equal(t('zh','ca. 1000–1500'),'约1000–1500');
   assert.equal(t('en','1568–1648'),null);
 });
+test('KNM opens a theme list on Oefenen, and a theme round keeps to that theme',async()=>{
+  const a=await app();a.run('home();setTab("oefenen")');
+  const row=a.document.querySelector('#parts [data-knm]');
+  assert.ok(row);assert.equal(a.document.querySelector('#knmsub').hidden,true);
+  row.click();
+  assert.equal(a.document.querySelector('#knmsub').hidden,false);
+  assert.equal(row.getAttribute('aria-expanded'),'true');
+  assert.equal(a.document.querySelectorAll('#knmsub [data-kt]').length,9);
+  a.document.querySelector('#knmsub [data-kt="2"]').click();
+  const theme=a.run('KNMT[2]');
+  assert.equal(a.run('cur.theme'),theme);
+  assert.ok(a.run(`queue.length>0&&queue.every(q=>q.label==="KNM: "+${JSON.stringify(theme)})`));
+  a.run('build(cur.id,cur.pool||cur.back||cur.theme?cur:null)'); // "Nog een ronde"
+  assert.ok(a.run(`queue.every(q=>q.label==="KNM: "+${JSON.stringify(theme)})`));
+  a.run('home();setTab("oefenen")');a.document.querySelector('#knmsub [data-kt="all"]').click();
+  assert.equal(a.run('cur.theme'),undefined);
+  assert.ok(a.run('new Set(queue.map(q=>q.label)).size>1'));
+  assert.equal(a.run('KNMT.every(t=>UI[t]&&UI[t].length===7)&&UI["Alle thema\'s"].length===7'),true);
+});
+test('A practice round keeps at least half new questions while unseen ones remain',async()=>{
+  const a=await app();
+  a.run('const d=today();ITEMS.filter(x=>x.sec==="knm").slice(0,60).forEach(x=>S.items[x.k]={b:1,d:d-1,r:1,w:0})');
+  a.run('build("knm",{...SEC.find(x=>x.id==="knm"),...SHORT.knm})');
+  assert.equal(a.run('queue.length'),5);
+  assert.ok(a.run('queue.filter(q=>!S.items[q.k]).length')>=3);
+  // situations (the exam's format since July 2025) are among the first new questions, not after all short ones
+  a.run('S.items={}');
+  assert.ok(a.run('[0,1,2,3,4,5,6,7,8,9].some(()=>{build("knm");return queue.some(q=>q.sit)})'));
+});
+test('A question answered right the first time comes back in four days; a known one rests longer',async()=>{
+  const a=await app();a.run('build("knm")');
+  const k=a.run('queue[0].k');
+  a.run('record(true,queue[0])');
+  assert.equal(a.run(`S.items[${JSON.stringify(k)}].d-today()`),4);
+  a.run(`S.items[${JSON.stringify(k)}].b=5;record(true,{...queue[0],retry:false})`);
+  assert.equal(a.run(`S.items[${JSON.stringify(k)}].d-today()`),30);
+  a.run(`record(false,{...queue[0],retry:false})`);
+  assert.equal(a.run(`S.items[${JSON.stringify(k)}].b`),0);
+  assert.equal(a.run(`S.items[${JSON.stringify(k)}].d-today()`),0);
+});

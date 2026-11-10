@@ -125,6 +125,9 @@ can only be taken back on the device that sent it. `OUTCOME_CAP` new rows a mont
 (privacy.html says so). A passed part stays in today's lesson for now.
 - **Oefenen**: "Examenonderdelen" (Lezen, Luisteren, Schrijven, Spreken, KNM: practice without the clock) and
 "Grammatica en woorden" under it, "Lezen, luisteren en spreken" beside them on a computer.
+The KNM row opens a list under it (`knmRow()`, `aria-expanded`, the chevron turns down): "Alle thema's" (the usual mixed
+round) and the eight themes (`KNMT`), each with its own count; a theme round is `build("knm", {theme})` and "Nog een
+ronde" keeps the theme. The theme names' translations come from the `"KNM: <theme>"` entries in `UI`.
 - **Herhalen**: Mijn zwakke punten, Mijn fouten and Mijn woorden (the last two once there is something in them).
 - **Profiel** looks like an iPhone settings screen (the user's example, November 2026): on top a round avatar the learner
 picks (`avScreen()` in `#talk`, "Kies je avatar": a grid of three by three, the chosen one with an orange ring; `S.me.av`, so it
@@ -213,6 +216,12 @@ question says so); `FOTO` holds a short Dutch description of each for screen rea
 Progress is isolated by account, with a guest scope. `ww-progress-v2:<owner>` stores `{data, frame, version}` locally and in IndexedDB. Existing `ww-v1` data is migrated only into the account recorded by `ww-acc`, or into the guest scope if none was recorded. Never discard this legacy backup. Normal logout clears the active-owner marker and switches to guest progress, without merging account data into another account. A matching cached Supabase user may reopen that same local scope offline while session refresh is unavailable; it never grants server access.
 
 `frame.base` is the last acknowledged server snapshot and must be a deep copy independent of live `S`. A pending write records its local input, target, receipt id and device id before sending. `syncProgress()` reads the latest row, merges offline changes, and updates only if its `t` still matches. Retries inspect `_receipts` so losing an acknowledgement cannot count the same answers twice. New practice-result rows have a random `id` as well as `at`; older rows still work. Errors schedule retries and show a sync status in Profiel. Do not revert to whole-document last-writer-wins.
+
+Practice rounds (`build()`): due questions first, the lowest box first, but while unseen questions remain at most half
+of a round (it was 70%, and a five-question round then brought one new question a day: learners met the same KNM
+questions over and over). `GAP` is `[1,2,4,7,14,30,60]` days per box (`S.items .b`); a question right the first time
+starts in box 2 (back in four days, not tomorrow); a wrong answer goes back to box 0. New KNM questions mix the short
+ones and the situations (their `ord` is counted apart), so the exam's format is not kept until last.
 
 `S.res` keeps the last 10 practice-exam scores per part. A stable practice result requires three recent results averaging at least 80%, each above the practice target, with at least two mostly new attempts. This describes practice performance. Speaking explicitly leaves pronunciation and pace unassessed. The score thresholds are practice targets.
 
