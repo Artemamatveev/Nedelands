@@ -128,7 +128,8 @@ with a finger (it grows and clears while held; where you let go is the tab that 
 shows on the five tabs; exercises and inner screens hide it and go back with their back button or a swipe. The tab
 you were on is kept (`tab`), so every back button returns to it and is named after it.
 
-- **Vandaag**: the painting and its label, then today's lesson: how far you are today (a bar of six pills, "2 van 6
+- **Mijn dag** (the first tab; it was called "Vandaag", which the user found unclear, November 2026; its key in the
+code is still `vandaag`, and "Vandaag" below means this tab): the painting and its label, then today's lesson: how far you are today (a bar of six pills, "2 van 6
 klaar"), one short line, and the steps (a new A2 learner sees "Waar begin ik?" right under the heading, above the time
 choice, so it shows above the tab bar on a phone): all alike: its icon, title, a short line and ›, a done one a green check; no exam dates. When all are done the streak ribbon drops down once that day (`ww-stamp`) with a tap of the
 phone. The learner chooses 10, 20 or 40 minutes. `planTasks()` selects short rounds within that estimated budget, prioritises weak parts, and rotates ties. `S.lessonPlan` freezes the steps for that day, level and budget so completed work does not reorder the lesson. Full timed exams start from Examen. Then Mix van de dag.
@@ -214,7 +215,7 @@ Every section appears once; don't add a second entry point to the same exercise.
   Text links `<a>` only for other websites, with ↗.
 - One `h2` per section or screen; groups inside it get `h3.lh`
   (small capitals, `--soft`). Every inner screen starts with a back button named after where it
-  goes: the tab's name (Vandaag, Examen, Oefenen, Herhalen) for the home screen.
+  goes: the tab's name (Mijn dag, Examen, Oefenen, Herhalen) for the home screen.
 - **Practising is a focus screen** (`#play`): no painting, one row with ✕ (back to where you came from; in a
   proefexamen the first tap or swipe back only asks "Stoppen?" and the page springs back), the progress bar, the count (3/10) and the clock. The main
   button (`.act`), the exam buttons (`.exnav`) and the feedback stick to the bottom of the screen, under the thumb.

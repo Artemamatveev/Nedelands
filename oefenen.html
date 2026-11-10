@@ -835,17 +835,17 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
   <div id="welcome" hidden></div>
   <div id="move" hidden></div>
   <div id="story" hidden>
-    <button class="back" id="vback"><span aria-hidden="true">←</span>Vandaag</button>
+    <button class="back" id="vback"><span aria-hidden="true">←</span>Mijn dag</button>
     <div id="vbody"></div>
   </div>
   <div id="stats" hidden>
-    <button class="back" id="sback"><span aria-hidden="true">←</span>Vandaag</button>
+    <button class="back" id="sback"><span aria-hidden="true">←</span>Mijn dag</button>
     <h2>Mijn zwakke punten</h2>
     <p class="sub">De onderdelen met de meeste fouten staan bovenaan.</p>
     <div id="statlist"></div>
   </div>
   <div id="lib" hidden>
-    <button class="back" id="lback"><span aria-hidden="true">←</span>Vandaag</button>
+    <button class="back" id="lback"><span aria-hidden="true">←</span>Mijn dag</button>
     <h2>Boekenkast</h2>
     <p class="sub">Tik op een woord voor de betekenis.</p>
     <div id="shelf"></div>
@@ -891,7 +891,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
 </main>
 <nav class="tabs" id="tabs" aria-label="Onderdelen">
   <i class="lens" aria-hidden="true"></i>
-  <button data-t="vandaag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16V20H4z"/><path d="M4 10h16M8 3v4M16 3v4"/></svg><span>Vandaag</span></button>
+  <button data-t="vandaag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16V20H4z"/><path d="M4 10h16M8 3v4M16 3v4"/></svg><span>Mijn dag</span></button>
   <button data-t="examen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h12v17H6z"/><path d="M9.5 4V2.8h5V4M9 12.5l2.2 2.2L15.5 10"/></svg><span>Examen</span></button>
   <button data-t="oefenen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c2.6-1 5.6-.8 9 1.3v13c-3.4-2.1-6.4-2.3-9-1.3zM21 5.5c-2.6-1-5.6-.8-9 1.3v13c3.4-2.1 6.4-2.3 9-1.3z"/></svg><span>Oefenen</span></button>
   <button data-t="herhalen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12V9.5A3.5 3.5 0 0 1 7.5 6H19M16 3l3 3-3 3M20 12v2.5a3.5 3.5 0 0 1-3.5 3.5H5M8 21l-3-3 3-3"/></svg><span>Herhalen</span></button>
@@ -901,7 +901,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
 <script src="/study/language-v1.js?v=e94426af48"></script>
 <script src="/study/progress-v1.js?v=3145793dee"></script>
 <script src="/study/writing-v1.js?v=e5690fd786"></script>
-<script src="/data/ui.js?v=bd29b833b4"></script>
+<script src="/data/ui.js?v=93f9ba668b"></script>
 <script src="/data/knm.js?v=48aed89ba7"></script>
 <script src="/data/a2.js?v=35efca6a73"></script>
 <script src="/data/b1.js?v=e9701bd331"></script>
@@ -2066,7 +2066,7 @@ function avSVG(id){
   const portrait=avatarPortraits[key]||`/art/avatars/${key}.jpg`;
   return `<svg viewBox="0 0 100 100" aria-hidden="true">${AVS[key].s}<image href="${portrait}" width="100" height="100" preserveAspectRatio="none"/></svg>`;
 }
-const TABN={vandaag:"Vandaag",examen:"Examen",oefenen:"Oefenen",herhalen:"Herhalen",profiel:"Profiel"};
+const TABN={vandaag:"Mijn dag",examen:"Examen",oefenen:"Oefenen",herhalen:"Herhalen",profiel:"Profiel"};
 const backHTML=()=>`<span aria-hidden="true">←</span>${TABN[tab]}`;
 const TABS=Object.keys(TABN);
 function setTab(t,top=true){
@@ -3826,7 +3826,7 @@ async function arrive(){
   $("move").innerHTML=`<h2>Welkom op bittertalen.nl</h2><p class="sub">Je voortgang is verhuisd: ${packSum(d)}.</p>
     ${/zonderboeken/.test(h)?`<p class="note">Je eigen boeken waren te groot om mee te nemen. Voeg ze opnieuw toe in de Boekenkast.</p>`:""}
     <p class="note">Bewaar dit adres. Gebruik je een iPhone? Zet Bittertalen opnieuw op je beginscherm: Deel, dan Zet op beginscherm.</p>
-    <button class="btn wide" id="mvdone">Naar Vandaag</button>`;
+    <button class="btn wide" id="mvdone">Naar Mijn dag</button>`;
   $("mvdone").onclick=()=>{home();if(acc.cfg&&!acc.user&&!lsGet(WEL))welcome()};
 }
 const OLD=location.hostname, entry=new URLSearchParams(location.search).get("open"), ready$=restore();
