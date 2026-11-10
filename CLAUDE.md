@@ -112,7 +112,9 @@ generic "AI app" look.
     label underneath: artist, title, year, museum and one A2 sentence in Dutch (no
     translation), all in one size (15px, no italics). The full painting and the label are on the Vandaag tab; the
     other tabs and inner screens get the narrow strip (`main.big` is only set on Vandaag), on a phone softened (blurred),
-    so the crop never shows half a face. Tapping the painting on a
+    so the crop never shows half a face. In the strip the language pill sits on the right, level with the logo (above it, it
+    crowded the logo), left of the streak ribbon when that hangs there; on a phone under 375 px with the ribbon only
+    the globe shows. Tapping the painting on a
     home tab opens its story (`story()`); on inner screens it shows the painting in full.
   - Streak: a ribbon in the Dutch flag (rood, wit, blauw, horizontal like the flag: `#AE1C28`, white, `#21468B`)
     hanging from the top of the painting, the number on the white band and "dagen op rij" under it (`.streak .lint`).
