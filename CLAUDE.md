@@ -19,10 +19,11 @@ feedback stay Dutch); "Vraag 3", the three ways to practise as a numbered list; 
 na", the writing check set in HTML (a made-up example, the page says so; its errors and points must follow the scoring
 rules). "Veelgestelde vragen" uses native `<details>`; keep the answers true (not DUO, offline, no pass guarantee). The
 Plus card only shows when Plus is on (a card saying it was unavailable looked broken). The page looks like the app: the
-blurred windmill behind frosted glass, white tiles with the app's shadow, a glass bar on top. Bitterbal, the plush
-mascot, greets visitors in the hero, in front of Vermeer's Gezicht op Delft with a speech bubble (on a phone above the
-headline); the user wants it in another pose, waving: swap `art/bitterbal-white.jpg` there once there is such a
-picture. Contact on the homepage is hallo@bittertalen.nl (the catch-all mailbox). The study app is served at `/oefenen` from `oefenen.html` (the code, the styles and the small tables, about 340 KB).
+blurred windmill behind frosted glass, white tiles with the app's shadow, a glass bar on top. The hero shows the app
+itself in a phone (`shots/app.webp`, the top of Mijn dag, taken with Playwright) in front of Vermeer's Gezicht op Delft;
+Bitterbal, the plush mascot, stands small beside it with a speech bubble (the user wanted the app there, not the
+mascot instead of it; they want Bitterbal in another pose, waving: swap `art/bitterbal-white.jpg` there once there is
+such a picture). Contact on the homepage is hallo@bittertalen.nl (the catch-all mailbox). The study app is served at `/oefenen` from `oefenen.html` (the code, the styles and the small tables, about 340 KB).
 Its large data lives in `data/`, plain scripts loaded before the app's own script, each a set of top-level `const`s
 that depend on nothing: `data/ui.js` (`UI`, `UIR`), `data/knm.js` (`KNM`), `data/a2.js` (`LZ`, `LS`, `LSM`, `SP`, `WR`,
 `WT`, `BG`), `data/b1.js` (`LZ1`, `LSB`, `WRB`, `SPB`, `G1`, `VO1`, `GSB`) and `data/extra.js` (`GP`, `GS`, `BOOKS`,
