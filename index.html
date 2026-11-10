@@ -20,13 +20,22 @@
 <link rel="stylesheet" href="/landing.css">
 <script>
 // Keep existing sign-in, payment, migration and installed app entry points working.
+// Someone who already practises on this device (their progress is here) goes straight to the app: the app lived at
+// "/" before, so old bookmarks point here. "?home" (Profiel's Website row) shows this page all the same.
 (() => {
   const q = new URLSearchParams(location.search);
   const alias = /^(bittertalen|nedelands)\.vercel\.app$/.test(location.hostname);
+  let mine = false;
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k === "ww-v1" || k === "ww-acc" || k.startsWith("ww-progress-v2:")) { mine = true; break; }
+    }
+  } catch {}
   if (alias || q.has("code") || q.has("error") || q.has("plus") || location.hash.startsWith("#verhuis=") ||
-      navigator.standalone || matchMedia("(display-mode: standalone)").matches) {
+      navigator.standalone || matchMedia("(display-mode: standalone)").matches || (mine && !q.has("home") && !/bot|crawl|spider|slurp|lighthouse/i.test(navigator.userAgent))) {
     location.replace("/oefenen" + location.search + location.hash);
-  }
+  } else if (q.has("home") && q.size === 1) history.replaceState(null, "", "/" + location.hash);
 })();
 </script>
 <script type="application/ld+json">
@@ -62,7 +71,7 @@
       <h1 id="intro" data-t>Oefen Nederlands op jouw tempo.</h1>
       <p class="lead" data-t>Bereid je voor op je inburgeringsexamen of Staatsexamen NT2. Doe een korte les, oefen een onderdeel of maak een proefexamen met een timer.</p>
       <div class="actions hero-actions">
-        <a class="button primary" href="/oefenen" data-t>Begin gratis</a>
+        <a class="button primary" href="/oefenen?open=today" data-t>Begin gratis</a>
         <a class="button outline" href="/oefenen?open=sample" data-t>Probeer één vraag</a>
       </div>
       <p class="note" data-t>Gratis beginnen, ook zonder account.</p>
@@ -171,7 +180,7 @@
   <section class="closing">
     <img class="mascot" src="/art/bitterbal-white.jpg" width="88" height="88" alt="">
     <div class="closing-text"><p class="bubble" data-t>Hoi, ik ben Bitterbal!</p><h2 data-t>Klaar voor je eerste oefening?</h2></div>
-    <a class="button primary" href="/oefenen" data-t>Begin gratis</a>
+    <a class="button primary" href="/oefenen?open=today" data-t>Begin gratis</a>
   </section>
 </main>
 <footer class="wrap footer">

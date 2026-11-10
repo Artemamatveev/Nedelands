@@ -1322,7 +1322,7 @@ function siteFooter(){
   const row=(site,t)=>`<button type="button" class="it" data-site="${site}"><span><span class="th"><b>${t}</b></span></span></button>`,
     link=(href,t)=>`<a class="it" href="${href}"><span><span class="th"><b>${t}</b></span></span></a>`;
   return `<h3 class="lh">Hulp</h3><div class="pg">${row("faq","Veelgestelde vragen")}${row("exam","Uitleg over de examens")}${row("prices","Prijzen")}${row("cancel","Abonnement opzeggen")}${link("mailto:hallo@bittertalen.nl","Contact")}</div>
-    <h3 class="lh">Bittertalen</h3><div class="pg">${link("/over","Over Bittertalen")}${link("/privacy","Privacyverklaring")}${link("/","Website")}</div>`;
+    <h3 class="lh">Bittertalen</h3><div class="pg">${link("/over","Over Bittertalen")}${link("/privacy","Privacyverklaring")}${inApp()?"":link("/?home","Website")}</div>`; // an installed app can't show the website: it opens itself again
 }
 function tryOne(){
   const section=lvl()==="B1"?"l1":"lz";
@@ -3984,6 +3984,9 @@ function openEntry(){
   const q=new URLSearchParams(location.search);
   if(q.has("code")||q.has("error")||q.has("plus")||location.hash.startsWith("#verhuis="))return;
   q.delete("open");history.replaceState(null,"",location.pathname+(q.size?"?"+q:"")+location.hash);
+  // from the homepage, which already offers Inloggen: someone who started without an account doesn't get the login
+  // window by itself later (it stays in Profiel)
+  if(entry!=="login"&&entry!=="plus")lsSet(WEL,"1");
   if(entry==="today")return;
   if(entry==="a2"||entry==="b1"){setLvl(entry.toUpperCase());setTab("oefenen");home()}
   if(entry==="sample")tryOne();

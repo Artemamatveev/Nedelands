@@ -78,6 +78,25 @@ test('The homepage and the app work in a real browser', async t => {
       assert.ok(e[0].includes('huis')); assert.ok(e[1] < 5);
       assert.deepEqual(s.errors, []); await s.ctx.close();
     });
+    await t.test('homepage and app: who goes where', async () => {
+      const s = await page(browser, base);
+      await s.ctx.route('**/api/config', r => r.fulfill({json: {url: 'https://example.supabase.co', anon: 'x', login: ['google'], limit: 5, free: 2}}));
+      await s.p.evaluate(() => localStorage.clear()).catch(() => {});
+      await s.go('/'); await s.p.waitForSelector('.hero');
+      // Begin gratis: into the app without the login window (the homepage already offers Inloggen)
+      await s.p.click('.hero .button.primary'); await s.p.waitForSelector('#plan .step'); await s.p.waitForTimeout(800);
+      assert.equal(await s.p.locator('#welcome').isHidden(), true);
+      assert.equal(new URL(s.p.url()).search, '');
+      // someone who practises here goes from / straight to the app; ?home shows the homepage all the same
+      await s.go('/'); await s.p.waitForSelector('#plan .step');
+      assert.equal(new URL(s.p.url()).pathname, '/oefenen');
+      await s.go('/?home'); await s.p.waitForSelector('.hero');
+      assert.equal(new URL(s.p.url()).pathname + new URL(s.p.url()).search, '/');
+      // back from a login or a payment: the app takes over
+      await s.go('/?plus=stop'); await s.p.waitForSelector('#plan .step');
+      assert.equal(new URL(s.p.url()).pathname, '/oefenen');
+      assert.deepEqual(s.errors, []); await s.ctx.close();
+    });
     await t.test('app: the sample question from the homepage', async () => {
       const s = await page(browser, base); await s.go('/oefenen?open=sample');
       await s.p.waitForSelector('#play:not([hidden]) .doc');

@@ -3,7 +3,14 @@
 Bittertalen (a pun on bitterballen: "bitter languages", self-irony about learning Dutch) is a single-page study app for the Dutch A2 integration exam (inburgeringsexamen).
 The public homepage is `index.html` (`landing.js` translates it: every `data-t` text and `data-alt` alt text needs all
 seven translations in `copy`, which `tests/site.test.mjs` checks) and reads Plus pricing from `/api/config`. Its main
-button "Begin gratis" opens `/oefenen`. Under the hero four numbers (questions, KNM questions, proefexamens per level,
+button "Begin gratis" opens `/oefenen?open=today`. How the two pages hand over (`tests/browser.test.mjs` checks it):
+the homepage sends to the app whoever already practises on this device (a `ww-v1`, `ww-acc` or `ww-progress-v2:`
+key; the app lived at "/" before, so old bookmarks and the "← Bittertalen" links of /over and /privacy point there),
+an installed app, the old addresses, and returns from a login (`?code`, `?error`, the handoff's `?h`), from Stripe
+(`?plus`) and from a move (`#verhuis=`), each with its address. `/?home` (Profiel's Website row, hidden in an installed
+app, which can't show the website) shows the homepage all the same. Arriving from the homepage (`?open=today`, `a2`,
+`b1`, `sample`) marks the login window as seen (`ww-welcome`): the homepage already offers Inloggen, so someone who
+started without an account isn't stopped by it later; `?open=login` opens it. Under the hero four numbers (questions, KNM questions, proefexamens per level,
 conversations), checked against the content by the same test: change them when the content shrinks. "Zo ziet het
 eruit" shows three screenshots of the app in `shots/` (WebP, 780 px wide), taken with Playwright from the real app; the
 writing feedback in them is a made-up example (the page says so), and its errors and points must follow the scoring
