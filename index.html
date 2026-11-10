@@ -14,7 +14,7 @@
 <meta property="og:image" content="https://bittertalen.nl/art/og-delft.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#1F3C96">
-<link rel="icon" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.json">
 <link rel="stylesheet" href="/landing.css">
@@ -62,7 +62,7 @@
       <h1 id="intro" data-t>Oefen Nederlands op jouw tempo.</h1>
       <p class="lead" data-t>Bereid je voor op je inburgeringsexamen of Staatsexamen NT2. Doe een korte les, oefen een onderdeel of maak een proefexamen met een timer.</p>
       <div class="actions hero-actions">
-        <a class="button primary" href="#niveaus" data-t>Kies je niveau</a>
+        <a class="button primary" href="/oefenen" data-t>Begin gratis</a>
         <a class="button outline" href="/oefenen?open=sample" data-t>Probeer één vraag</a>
       </div>
       <p class="note" data-t>Gratis beginnen, ook zonder account.</p>
@@ -75,6 +75,13 @@
       <figcaption lang="nl" dir="ltr">Johannes Vermeer · <cite>Gezicht op Delft</cite></figcaption>
     </figure>
   </section>
+
+  <ul class="stats" aria-label="Bittertalen">
+    <li><b dir="ltr">6000+</b><span data-t>oefenvragen</span></li>
+    <li><b dir="ltr">400+</b><span data-t>KNM-vragen over de 8 thema's</span></li>
+    <li><b dir="ltr">5</b><span data-t>proefexamens per niveau, met een timer</span></li>
+    <li><b dir="ltr">30+</b><span data-t>gesprekken om hardop te oefenen</span></li>
+  </ul>
 
   <section id="niveaus" class="block">
     <h2 data-t>Waar oefen je voor?</h2>
@@ -116,8 +123,18 @@
     </div>
   </section>
 
+  <section id="voorbeeld" class="block">
+    <h2 data-t>Zo ziet het eruit</h2>
+    <div class="grid three shots">
+      <figure><img src="/shots/les.webp" width="390" height="780" loading="lazy" data-alt="Je les van vandaag in Bittertalen, met de stappen van vandaag" alt="Je les van vandaag in Bittertalen, met de stappen van vandaag"><figcaption data-t>Elke dag een les met korte rondes.</figcaption></figure>
+      <figure><img src="/shots/feedback.webp" width="390" height="780" loading="lazy" data-alt="Feedback op een geschreven tekst: punten per onderdeel en de fouten in de tekst" alt="Feedback op een geschreven tekst: punten per onderdeel en de fouten in de tekst"><figcaption data-t>Feedback op je tekst: punten per onderdeel en je fouten in je eigen tekst.</figcaption></figure>
+      <figure><img src="/shots/examen.webp" width="390" height="780" loading="lazy" data-alt="Proefexamens per onderdeel met de laatste score" alt="Proefexamens per onderdeel met de laatste score"><figcaption data-t>Proefexamens met een timer, en je score per onderdeel.</figcaption></figure>
+    </div>
+    <p class="note" data-t>Voorbeeld: de tekst en de punten zijn verzonnen.</p>
+  </section>
+
   <section id="prijzen" class="block">
-    <h2 data-t>Gratis oefenen. Vaker feedback met Plus.</h2>
+    <h2 data-t>Wat kost het?</h2>
     <div class="grid two pricing">
       <article class="card">
         <h3 data-t>Gratis</h3>
@@ -130,24 +147,33 @@
         </ul>
         <a class="button outline" href="/oefenen?open=today" data-t>Open Bittertalen</a>
       </article>
-      <article class="card plus">
+      <article class="card plus" id="plus-card" hidden>
         <h3>Bittertalen Plus</h3>
-        <p class="price" id="plus-price" hidden></p>
-        <p id="plus-status" class="note" role="status"></p>
+        <p class="price" id="plus-price"></p>
         <ul>
           <li id="plus-checks" data-t>Laat je teksten en gesproken antwoorden vaker nakijken door Claude</li>
           <li data-t>Voor beide niveaus, met een account</li>
           <li data-t>Elke maand opzegbaar</li>
         </ul>
-        <a class="button outline" href="/oefenen?open=plus" id="plus-link" hidden data-t>Bekijk Plus</a>
-        <noscript><p>Bekijk de prijs in de app bij Profiel.</p></noscript>
+        <a class="button outline" href="/oefenen?open=plus" id="plus-link" data-t>Bekijk Plus</a>
       </article>
     </div>
   </section>
 
+  <section id="vragen" class="block faq">
+    <h2 data-t>Veelgestelde vragen</h2>
+    <details><summary data-t>Is Bittertalen van DUO?</summary><p data-t>Nee. Bittertalen is een onafhankelijke oefenapp. De echte examens en de officiële oefenexamens vind je bij DUO en op inburgeren.nl.</p></details>
+    <details><summary data-t>Welk examen moet ik doen: A2 of B1?</summary><p data-t>Dat hangt af van je situatie, bijvoorbeeld welke inburgeringswet voor jou geldt. Kijk op inburgeren.nl of vraag het aan je gemeente. In Bittertalen kies je je niveau zelf, en je kunt het later veranderen.</p></details>
+    <details><summary data-t>Wat is KNM?</summary><p data-t>Kennis van de Nederlandse Maatschappij: vragen over werk, wonen, gezondheid, instanties, geschiedenis en hoe mensen in Nederland met elkaar omgaan. Je oefent de acht thema's van het examen, samen of één voor één.</p></details>
+    <details><summary data-t>Heb ik een account nodig?</summary><p data-t>Nee, je kunt meteen beginnen. Met een gratis account bewaar je je voortgang op al je apparaten en laat je je teksten en gesproken antwoorden vaker nakijken.</p></details>
+    <details><summary data-t>Werkt het zonder internet?</summary><p data-t>Ja, de meeste oefeningen werken ook offline, bijvoorbeeld in de trein. Voor het nakijken door Claude heb je internet nodig, en op sommige telefoons ook voor het herkennen van spraak.</p></details>
+    <details><summary data-t>Kan ik Bittertalen op mijn telefoon zetten?</summary><p data-t>Ja. Open Bittertalen in je browser en zet het op je beginscherm (op een iPhone in Safari: Deel, dan Zet op beginscherm). Dan opent het als een app.</p></details>
+    <details><summary data-t>Betekent een goede score dat ik slaag?</summary><p data-t>Nee. Je score laat zien hoeveel antwoorden goed waren bij het oefenen. Het echte examen kan anders zijn. Doe daarom ook de officiële oefenexamens van DUO.</p></details>
+  </section>
+
   <section class="closing">
     <h2 data-t>Klaar voor je eerste oefening?</h2>
-    <a class="button primary" href="#niveaus" data-t>Kies je niveau</a>
+    <a class="button primary" href="/oefenen" data-t>Begin gratis</a>
   </section>
 </main>
 <footer class="wrap footer">
@@ -155,7 +181,7 @@
   <div class="actions">
     <a href="/over" data-t>Over Bittertalen</a>
     <a href="/privacy" data-t>Privacyverklaring</a>
-    <a href="mailto:privacy@bittertalen.nl" data-t>Contact</a>
+    <a href="mailto:hallo@bittertalen.nl" data-t>Contact</a>
   </div>
 </footer>
 </body>

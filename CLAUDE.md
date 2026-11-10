@@ -1,7 +1,15 @@
 # Bittertalen
 
 Bittertalen (a pun on bitterballen: "bitter languages", self-irony about learning Dutch) is a single-page study app for the Dutch A2 integration exam (inburgeringsexamen).
-The public homepage is `index.html` and reads Plus pricing from `/api/config`. The study app is served at `/oefenen` from `oefenen.html`. `study/language-v1.js` holds stable verb and word-order data plus checking logic. `study/progress-v1.js` handles three-way progress merges and conditional cloud writes. `study/writing-v1.js` aggregates writing feedback without making another grading request. Paintings are in `art/`.
+The public homepage is `index.html` (`landing.js` translates it: every `data-t` text and `data-alt` alt text needs all
+seven translations in `copy`, which `tests/site.test.mjs` checks) and reads Plus pricing from `/api/config`. Its main
+button "Begin gratis" opens `/oefenen`. Under the hero four numbers (questions, KNM questions, proefexamens per level,
+conversations), checked against the content by the same test: change them when the content shrinks. "Zo ziet het
+eruit" shows three screenshots of the app in `shots/` (WebP, 780 px wide), taken with Playwright from the real app; the
+writing feedback in them is a made-up example (the page says so), and its errors and points must follow the scoring
+rules. "Veelgestelde vragen" uses native `<details>`; keep the answers true (not DUO, offline, no pass guarantee). The
+Plus card only shows when Plus is on (a card saying it was unavailable looked broken). Contact on the homepage is
+hallo@bittertalen.nl (the catch-all mailbox). The study app is served at `/oefenen` from `oefenen.html`. `study/language-v1.js` holds stable verb and word-order data plus checking logic. `study/progress-v1.js` handles three-way progress merges and conditional cloud writes. `study/writing-v1.js` aggregates writing feedback without making another grading request. Paintings are in `art/`.
 Deployed on Vercel from `main`: every push to `main` goes live at https://bittertalen.nl (push `main` first, then the working
 branch: in November 2026 a commit built first as a branch preview got no production build when it reached `main`; then
 start one by hand, a production deployment of `main` at that commit) (Vercel project
@@ -73,7 +81,9 @@ generic "AI app" look.
   separators, flat buttons. The floating tab bar is a glass pill (like iOS 26 and Instagram); the login window
   (`#welcome`) is a card like Yandex ID (24px).
 - **Logo**: the name "Bittertalen" in the system font, with a bitterbal (`--oranje`, light crumbs) as the dot on
-  the i, the size and place of a normal dot (`h1 .idot`). The app icon is a bitterbal too.
+  the i, the size and place of a normal dot (`h1 .idot`). The app icon is a bitterbal too: `icon-1024.png` is the
+  source; `manifest.json` lists 192 and 512 px versions and a maskable one (the picture inside the safe circle), and
+  the pages use `favicon-32.png`. Make them again from the source when the icon changes.
 - **Dutch motifs instead of decoration**:
   - Header: the painting of the day (`ART` + `paint()` in `oefenen.html`), with a museum
     label underneath: artist, title, year, museum and one A2 sentence in Dutch (no
@@ -99,7 +109,8 @@ shows on the five tabs; exercises and inner screens hide it and go back with the
 you were on is kept (`tab`), so every back button returns to it and is named after it.
 
 - **Vandaag**: the painting and its label, then today's lesson: how far you are today (a bar of six pills, "2 van 6
-klaar"), one short line, and the steps: all alike: its icon, title, a short line and ›, a done one a green check; no exam dates. When all are done the streak ribbon drops down once that day (`ww-stamp`) with a tap of the
+klaar"), one short line, and the steps (a new A2 learner sees "Waar begin ik?" right under the heading, above the time
+choice, so it shows above the tab bar on a phone): all alike: its icon, title, a short line and ›, a done one a green check; no exam dates. When all are done the streak ribbon drops down once that day (`ww-stamp`) with a tap of the
 phone. The learner chooses 10, 20 or 40 minutes. `planTasks()` selects short rounds within that estimated budget, prioritises weak parts, and rotates ties. `S.lessonPlan` freezes the steps for that day, level and budget so completed work does not reorder the lesson. Full timed exams start from Examen. Then Mix van de dag.
 - **Examen**: "Naar het examen": one row per exam part (`.rd`, from `ready()`), the whole row starts that part's
 proefexamen: its icon, the name with its minutes under it, the score on the right ("76%" in ink with a small
@@ -231,7 +242,9 @@ Writing drafts are local and account-scoped (`ww-writing:<owner>:practice|exam:<
 
 Writing feedback recommends at most two actions, prioritising unfinished tasks and critical content before other lost points. A zero for content is not treated as separate evidence of grammar or spelling weakness. Identified word-order errors can open the existing A2/B1 word-order section; other actions open the relevant writing task. These focused tasks use a separate `:focus/<task-key>` draft slot, appear among resumable drafts, and preserve ordinary practice drafts. Returning restores the exam result without grading or recording the attempt again. Detailed corrections, rewriting and Word export remain available under the summary.
 
-Run `npm ci --ignore-scripts` and `npm test` after changes. The workflow checks learner verb forms, order alternatives, normal UI entry points, diagnostic counts, time budgets, drafts and deadlines, account isolation, offline merges, conditional-write races, lost acknowledgements and grading-quota failures. Browser/microphone behaviour and human NT2 review still require separate validation.
+Run `npm ci --ignore-scripts` and `npm test` after changes. `tests/browser.test.mjs` opens the homepage and the app
+in Chromium (no errors, no sideways scroll, Arabic right to left, the sample question, the KNM theme list); it skips
+where Playwright is missing, and the `browser` job in `.github/workflows/check.yml` installs it and makes it required. The workflow checks learner verb forms, order alternatives, normal UI entry points, diagnostic counts, time budgets, drafts and deadlines, account isolation, offline merges, conditional-write races, lost acknowledgements and grading-quota failures. Browser/microphone behaviour and human NT2 review still require separate validation.
 
 `sw.js` makes the app work offline and start quickly: the page from the network if it answers within `FAST` (2.5 s),
 else the cached copy (`cacheFirst()`: on a slow connection people waited for the page). Pure cache-first left the user's

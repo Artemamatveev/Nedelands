@@ -48,7 +48,7 @@ h3 {font-size:22px;letter-spacing:-.02em}
 .mascot {display:grid;justify-items:center;max-width:74%;overflow:hidden;border:1px solid #ffffffbd;border-radius:20px;background:#fdfdfd;color:#14213d;box-shadow:0 18px 45px #07142e40}
 .mascot p {position:relative;margin:15px 12px 0;font-weight:650;text-align:center}
 .mascot img {display:block;width:clamp(132px,22vw,220px);max-width:100%;height:auto}
-figcaption {position:absolute;inset-inline:14px;bottom:11px;text-align:right;color:#fff;font-size:12px}
+.hero-art figcaption {position:absolute;inset-inline:14px;bottom:11px;text-align:right;color:#fff;font-size:12px}
 .block {margin-block:0 50px;scroll-margin-top:18px}
 .grid {display:grid;gap:14px}
 .two {grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -72,6 +72,25 @@ figcaption {position:absolute;inset-inline:14px;bottom:11px;text-align:right;col
 .closing h2 {margin:0;font-size:clamp(24px,3vw,32px)}
 .closing .button {flex:none}
 .footer {padding-block:20px 30px;border-top:1px solid var(--line)}
+/* what is in it: four numbers under the hero */
+.stats {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;list-style:none;margin:0 0 54px;padding:0}
+.stats li {display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding-block-start:14px;border-top:1px solid var(--line)}
+.stats b {font-size:30px;font-weight:650;letter-spacing:-.03em}
+.stats span {font-size:15px;color:var(--muted)}
+/* screenshots of the app: the top of a phone screen, in a rounded frame */
+.shots figure {margin:0}
+.shots img {display:block;width:100%;height:auto;aspect-ratio:390/560;object-fit:cover;object-position:top;border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);background:var(--card)}
+.shots figcaption {margin-top:10px;font-size:15px;color:var(--muted)}
+/* without Plus the free card stands alone */
+.pricing:has(#plus-card[hidden]) {grid-template-columns:minmax(0,560px)}
+/* questions: native details, one line each until opened */
+.faq details {border-bottom:1px solid var(--line)}
+.faq details:first-of-type {border-top:1px solid var(--line)}
+.faq summary {display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:56px;padding-block:12px;cursor:pointer;font-weight:600;list-style:none}
+.faq summary::-webkit-details-marker {display:none}
+.faq summary::after {content:"+";flex:none;font-size:24px;font-weight:400;line-height:1;color:var(--muted)}
+.faq details[open] summary::after {content:"−"}
+.faq p {margin:0 0 18px;color:var(--muted);max-width:68ch}
 .footer .actions {flex-wrap:wrap}
 :lang(ar) h1,:lang(ar) h2,:lang(ar) h3,:lang(ar) .eyebrow,:lang(hi) h1,:lang(hi) h2,:lang(hi) h3,:lang(hi) .eyebrow,:lang(zh) .eyebrow {letter-spacing:normal}
 @media(max-width:820px) {
@@ -88,6 +107,9 @@ figcaption {position:absolute;inset-inline:14px;bottom:11px;text-align:right;col
   .hero{grid-template-columns:1fr;padding-block:34px 35px;gap:23px}
   .hero-art{min-height:260px}
   .two,.three{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr));margin-block-end:36px}
+  .shots{grid-auto-flow:column;grid-template-columns:none;grid-auto-columns:78%;overflow-x:auto;scroll-snap-type:x mandatory;padding-block-end:6px}
+  .shots figure{scroll-snap-align:start}
   .block{margin-block-end:36px}
   .closing,.footer{align-items:flex-start;flex-direction:column}
 }
