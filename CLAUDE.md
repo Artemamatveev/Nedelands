@@ -16,7 +16,7 @@ form, in the app's Examenblad style (the user found icon cards and phone screens
 "Vraag 1 · Waar oefen je voor?" with A (A2) and B (B1) in square letter boxes that open the app at that level; "Vraag 2
 · Probeer het zelf", a real KNM question marked on the page like in the app (`landing.js`; the question and its
 feedback stay Dutch); "Vraag 3", the three ways to practise as a numbered list; "Vraag 4 · Zo kijkt Claude je tekst
-na", the writing check set in HTML (a made-up example, the page says so; its errors and points must follow the scoring
+na", the writing check set in HTML like in the app, with the same checklist (a made-up example, the page says so; its errors and points must follow the scoring
 rules). "Veelgestelde vragen" uses native `<details>`; keep the answers true (not DUO, offline, no pass guarantee). The
 Plus card only shows when Plus is on (a card saying it was unavailable looked broken). The page looks like the app: the
 blurred windmill behind frosted glass, white tiles with the app's shadow, a glass bar on top. The hero shows the app
@@ -478,8 +478,11 @@ A2-niveau", and today's grammar step helps with a B1 round. The page title, desc
 
 ## Writing and speaking check (Schrijven, Spreken)
 
-The result shows DUO's points as bars, one per criterion (`scoreHTML()`, `.dpts`: full green, some oranje, none red)
-with the total, then the learner's own text with every error marked where it is and numbered (`markErrs()`,
+The result shows DUO's points as a checklist (`scoreHTML()`, `.dpts`; the user's choice, November 2026, from three
+designs): each criterion as a plain question ("Heb je geschreven wat de opdracht vraagt?", "Zijn je zinnen goed
+gebouwd?"…) with a round mark and "Ja", "Bijna" or "Nee" and its points (✓ green full, ! oranje some, ✕ red none), then the
+total. Coloured bars looked generated, and boxes of numbers 0–3 left it unclear whether a score was good or bad; don't go
+back to either. After it comes then the learner's own text with every error marked where it is and numbered (`markErrs()`,
 `ownHTML()`: Claude's `wrong` is looked up in the text; one it can't find is only in the list), the numbered list of
 errors (`errsHTML()`: wrong → right, why) and the corrected text.
 

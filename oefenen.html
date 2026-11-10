@@ -391,13 +391,14 @@ mark.err sup{font-size:11px;font-weight:700;color:var(--bad);margin-left:1px}
 .errs.fixes{counter-reset:fx} .errs.fixes li{counter-increment:fx;position:relative;padding-left:28px}
 .errs.fixes li::before{content:counter(fx);position:absolute;left:0;top:9px;width:20px;height:20px;border-radius:50%;background:color-mix(in srgb,var(--bad) 14%,transparent);color:var(--bad);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
 .errs.fixes s+strong::before{content:"→ ";color:var(--soft);font-weight:400}
-/* DUO's points as bars (.dpts; .pts is the list of points a task asks for) */
-.dpts{margin:10px 0 6px;display:grid;gap:8px}
-.pt{display:grid;grid-template-columns:96px minmax(0,1fr) 34px;align-items:center;gap:10px;font-size:var(--fs-m)}
-.pt i{height:8px;border-radius:999px;background:var(--surface);overflow:hidden} .pt b{display:block;height:100%;border-radius:999px}
-.pt b.full{background:var(--good)} .pt b.some{background:var(--oranje)} .pt b.none{background:var(--bad)}
-.pt em{font-style:normal;font-weight:600;text-align:var(--te);font-variant-numeric:tabular-nums}
-.ptt{margin:2px 0 0;font-size:var(--fs-m);color:var(--soft)} .ptt b{color:var(--ink)}
+/* DUO's points as a checklist (.dpts; .pts is the list of points a task asks for): a plain question per criterion,
+   a round mark (✓ green, ! oranje, ✕ red) and "Ja / Bijna / Nee · 2 van 3 punten" */
+.dpts{list-style:none;margin:12px 0 6px;padding:0;border-top:1px solid var(--line)}
+.dpts li{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);line-height:1.35}
+.dpts i{flex:none;display:grid;place-items:center;width:24px;height:24px;margin-top:1px;border-radius:50%;color:#fff;font-style:normal;font-weight:700;font-size:var(--fs-s)}
+.dpts .g i{background:var(--good)} .dpts .m i{background:var(--oranje)} .dpts .n i{background:var(--bad)}
+.dpts b{display:block;font-weight:600;font-size:var(--fs-b)} .dpts li>span>span{color:var(--soft);font-size:var(--fs-m)}
+.ptt{margin:10px 0 0;font-size:var(--fs-m);color:var(--soft)} .ptt b{color:var(--ink)}
 .errs.kv li{display:flex;justify-content:space-between;gap:12px} .errs.kv span{display:inline;color:var(--ink);font-size:inherit;font-weight:600}
 .errs.kv span.good{color:var(--good)} .errs.kv span.bad{color:var(--bad)}
 details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:700;padding:6px 0}
@@ -1629,9 +1630,15 @@ const SCMAX={inhoud:3,woorden:2,grammatica:2,spelling:2,samenhang:1}, SPMAX=8, W
 const mxPts=M=>Object.values(M).reduce((a,b)=>a+b,0);
 // DUO's points as bars: one per criterion (full green, some oranje, none red), then the total and what is voldoende
 const scoreHTML=(sc,M)=>{if(!sc)return""; const wr="spelling" in sc,X=M||SCMAX,n=M?mxPts(M):wr?WRMAX:SPMAX;
-  return`<div class="dpts">${Object.keys(X).filter(k=>k in sc).map(k=>{const v=+sc[k]||0,m=X[k];
-      return`<div class="pt"><span>${k[0].toUpperCase()+k.slice(1)}</span><i><b class="${v>=m?"full":v>0?"some":"none"}" style="width:${m?Math.max(v/m*100,v?0:4):0}%"></b></i><em>${v}/${m}</em></div>`}).join("")}
-    <p class="ptt">Samen <b>${spPts({scores:sc})} van ${n}</b></p></div><p class="note">${M?M.spelling?`Voldoende is ${Math.ceil(n*.7)} punten, met inhoud minstens 2.`:M===WBMAX.z?"Eén punt voor de inhoud, één voor de grammatica. Past de inhoud niet, dan telt de grammatica ook niet.":`Voldoende is ${Math.ceil(n*.6)} punten, met inhoud minstens 2. Uitspraak en spreektempo kan ik niet horen: oefen die met Zeg het na.`:wr?"Voldoende is 7 punten, met inhoud minstens 2.":"Uitspraak en vloeiendheid kan ik niet horen: oefen die met Zeg het na."}</p>`};
+  // a checklist (the user's choice, November 2026): each criterion as a plain question with Ja, Bijna or Nee and its
+  // points, so it is clear what is good and what is not (coloured bars and boxes of numbers were unclear or looked
+  // generated); the questions follow DUO's criteria
+  const written=wr||Object.values(WBMAX).includes(M); // a B1 sentence task has no spelling, but it is written
+  const Q={inhoud:written?"Heb je geschreven wat de opdracht vraagt?":"Heb je gezegd wat de opdracht vraagt?",
+    woorden:"Kies je de goede woorden?",grammatica:"Zijn je zinnen goed gebouwd?",spelling:"Is je spelling goed?",samenhang:"Is het één duidelijk geheel?"};
+  return`<ul class="dpts">${Object.keys(X).filter(k=>k in sc).map(k=>{const v=Math.max(0,Math.min(X[k],+sc[k]||0)),m=X[k],c=v>=m?"g":v>0?"m":"n";
+      return`<li class="${c}"><i aria-hidden="true">${c==="g"?"✓":c==="m"?"!":"✕"}</i><span><b>${Q[k]||k}</b><span>${c==="g"?"Ja":c==="m"?"Bijna":"Nee"} · ${v} van ${m} ${m===1?"punt":"punten"}</span></span></li>`}).join("")}</ul>
+    <p class="ptt">Samen <b>${spPts({scores:sc})} van ${n} punten</b></p><p class="note">${M?M.spelling?`Voldoende is ${Math.ceil(n*.7)} punten, met inhoud minstens 2.`:M===WBMAX.z?"Eén punt voor de inhoud, één voor de grammatica. Past de inhoud niet, dan telt de grammatica ook niet.":`Voldoende is ${Math.ceil(n*.6)} punten, met inhoud minstens 2. Uitspraak en spreektempo kan ik niet horen: oefen die met Zeg het na.`:wr?"Voldoende is 7 punten, met inhoud minstens 2.":"Uitspraak en vloeiendheid kan ik niet horen: oefen die met Zeg het na."}</p>`};
 // The learner's own text with each error marked where it is (numbered like the list under it). Claude returns the
 // wrong words as they stand in the text; one that can't be found (a missing word) is only in the list.
 function markErrs(text,errs){

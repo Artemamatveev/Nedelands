@@ -167,13 +167,13 @@ h3 {font-size:22px;letter-spacing:-.02em}
 .own {padding:14px 16px;border-inline-start:3px solid var(--line);background:var(--card);font-size:16px;line-height:1.75}
 .own mark {padding:0 2px;background:color-mix(in srgb,var(--bad) 13%,transparent);border-bottom:2px solid var(--bad);color:inherit}
 .own sup {font-size:11px;font-weight:700;color:var(--bad)}
-.pts {width:100%;border-collapse:collapse;font-size:15px}
-.pts th {width:112px;padding:5px 0;font-weight:400;text-align:start}
-.pts td:nth-child(2) {padding:5px 12px}
-.pts td:last-child {font-weight:600;text-align:end;font-variant-numeric:tabular-nums}
-.pts i {display:block;height:6px;border-radius:3px;background:linear-gradient(var(--good),var(--good)) 0/var(--v) 100% no-repeat,var(--line)}
-.pts i.some {background:linear-gradient(var(--oranje),var(--oranje)) 0/var(--v) 100% no-repeat,var(--line)}
-.sum {margin:10px 0;font-size:15px} .sum b {font-size:20px}
+/* the points as in the app: a plain question per criterion with Ja, Bijna or Nee */
+.verdict {margin:0 0 8px;color:var(--muted);font-size:15px} .verdict b {display:block;color:var(--good);font-size:26px;font-weight:700;letter-spacing:-.02em}
+.ck {list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.ck li {display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);color:var(--muted);font-size:15px;line-height:1.35}
+.ck i {flex:none;display:grid;place-items:center;width:22px;height:22px;margin-top:1px;border-radius:50%;color:#fff;font-style:normal;font-weight:700;font-size:12px}
+.ck .g i {background:var(--good)} .ck .m i {background:var(--oranje)}
+.ck b {display:block;color:var(--ink);font-weight:600}
 .fixes {margin:0;padding-inline-start:20px;color:var(--muted);font-size:15px} .fixes li {margin:4px 0}
 .fixes s {color:var(--bad)} .fixes b {color:var(--good)}
 @media(max-width:640px) {
