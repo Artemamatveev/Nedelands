@@ -122,7 +122,8 @@ test('Offline the app opens with its own files, also after an update', async t =
     const cached = () => s.p.evaluate(async () => (await (await caches.open('nl-a2-v12')).keys()).map(r => new URL(r.url)).map(u => u.pathname + u.search));
     const wait = async ok => { for (let i = 0; i < 100 && !ok(await cached()); i++) await s.p.waitForTimeout(100); return cached(); };
     const files = await s.p.evaluate(() => [...document.scripts].map(x => x.getAttribute('src')).filter(x => x && x.includes('?v=')));
-    assert.ok(files.length >= 8);
+    assert.ok(files.length >= 7);
+    assert.equal(files.some(f => f.startsWith('/data/ui.js')), false, 'the translations are not loaded for Dutch');
     let c = await wait(c => c.includes('/oefenen') && files.every(f => c.includes(f)));
     assert.ok(files.every(f => c.includes(f)), 'the page\'s files are cached');
     await s.ctx.setOffline(true); await s.p.reload(); await s.p.waitForSelector('#plan .step');
@@ -134,6 +135,13 @@ test('Offline the app opens with its own files, also after an update', async t =
     assert.deepEqual(c.filter(x => x.startsWith('/data/knm.js')), ['/data/knm.js?v=ffffffffff'], 'only the version the stored page uses');
     await s.ctx.setOffline(true); await s.p.reload(); await s.p.waitForSelector('#plan .step');
     assert.equal(await s.p.evaluate(() => KNM.length > 400), true);
+    // in another language the translations come too, and stay for offline use
+    await s.ctx.setOffline(false);
+    await s.p.evaluate(() => localStorage.setItem('ww-ui', 'ar')); await s.p.reload(); await s.p.waitForSelector('#plan .step');
+    await s.p.waitForFunction(() => document.querySelector('#tabs button[data-t=examen] span').textContent !== 'Examen');
+    c = await wait(c => c.some(x => x.startsWith('/data/ui.js')));
+    await s.ctx.setOffline(true); await s.p.reload(); await s.p.waitForSelector('#plan .step');
+    await s.p.waitForFunction(() => document.querySelector('#tabs button[data-t=examen] span').textContent !== 'Examen');
     assert.deepEqual(s.errors.filter(e => !/ERR_INTERNET_DISCONNECTED|Failed to load resource/.test(e)), []);
     await s.ctx.close();
   } finally { await browser.close(); server.close(); }

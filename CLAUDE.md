@@ -25,9 +25,12 @@ Bitterbal, the plush mascot, stands small beside it with a speech bubble (the us
 mascot instead of it; they want Bitterbal in another pose, waving: swap `art/bitterbal-white.jpg` there once there is
 such a picture). Contact on the homepage is hallo@bittertalen.nl (the catch-all mailbox). The study app is served at `/oefenen` from `oefenen.html` (the code, the styles and the small tables, about 340 KB).
 Its large data lives in `data/`, plain scripts loaded before the app's own script, each a set of top-level `const`s
-that depend on nothing: `data/ui.js` (`UI`, `UIR`), `data/knm.js` (`KNM`), `data/a2.js` (`LZ`, `LS`, `LSM`, `SP`, `WR`,
+that depend on nothing: `data/knm.js` (`KNM`), `data/a2.js` (`LZ`, `LS`, `LSM`, `SP`, `WR`,
 `WT`, `BG`), `data/b1.js` (`LZ1`, `LSB`, `WRB`, `SPB`, `G1`, `VO1`, `GSB`) and `data/extra.js` (`GP`, `GS`, `BOOKS`,
-`ART`, `FOTO`). Below, "in `oefenen.html`" for these names means that file. Every local script is loaded as
+`ART`, `FOTO`). `data/ui.js` is the menus' translations: it adds to the empty `UI` and `UIR` the page defines and is
+loaded only when the menus are in another language than Dutch (`loadUI()`, version `UIV`; about 190 KB Dutch users don't
+need); the service worker keeps it with the page only for someone who already uses it, and the tests load it always.
+Below, "in `oefenen.html`" for these names means that file. Every local script is loaded as
 `?v=<hash of its content>`, and the service worker keeps it for good under that address: after editing `data/`,
 `study/` or the dictionary run `node tools/stamp.mjs` (the tests fail when a version is out of date). A data file
 must not use anything from the app's script at load time (only inside functions). `study/language-v1.js` holds stable verb and word-order data plus checking logic. `study/progress-v1.js` handles three-way progress merges and conditional cloud writes. `study/writing-v1.js` aggregates writing feedback without making another grading request. Paintings are in `art/`.

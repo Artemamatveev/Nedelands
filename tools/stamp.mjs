@@ -1,4 +1,5 @@
-// Versions in oefenen.html. Every local script (data/, study/) is loaded as "?v=<hash of its content>", and DICTV is
+// Versions in oefenen.html. Every local script (data/, study/) is loaded as "?v=<hash of its content>", UIV is the
+// version of data/ui.js (loaded only for other languages than Dutch), and DICTV is
 // the hash of the dictionary's parts (dict/nl-en/). The service worker keeps such a file for good under that address, so
 // a changed file must get a new address: run `node tools/stamp.mjs` after editing data/, study/ or the dictionary.
 // `node tools/stamp.mjs --check` changes nothing and fails when a version is out of date (the tests run it).
@@ -21,6 +22,8 @@ export function stamped(html) {
   let out = html.replace(/src="(\/(?:data|study)\/[^"?]+\.js)(?:\?v=[0-9a-f]*)?"/g, (m, p) => `src="${p}?v=${hash(read(p.slice(1)))}"`);
   const dv = dictVersion();
   if (dv) out = out.replace(/const DICTV="[0-9a-f]*"/, `const DICTV="${dv}"`);
+  // the menus' translations, loaded only for other languages than Dutch (loadUI())
+  out = out.replace(/const UIV="[0-9a-f]*"/, `const UIV="${hash(read("data/ui.js"))}"`);
   return out;
 }
 

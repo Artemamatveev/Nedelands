@@ -914,7 +914,6 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
 <script src="/study/language-v1.js?v=e94426af48"></script>
 <script src="/study/progress-v1.js?v=3145793dee"></script>
 <script src="/study/writing-v1.js?v=e5690fd786"></script>
-<script src="/data/ui.js?v=93f9ba668b"></script>
 <script src="/data/knm.js?v=48aed89ba7"></script>
 <script src="/data/a2.js?v=35efca6a73"></script>
 <script src="/data/b1.js?v=e9701bd331"></script>
@@ -3855,6 +3854,20 @@ if(OLD==="nedelands.vercel.app")location.replace(NEWURL); else if(OLD==="bittert
 // Exercises, texts, stories and questions stay Dutch: only text nodes and labels that match a menu string are
 // translated, never inside #play (the exercises) or #read (the book reader). A text node keeps its Dutch original
 // (UIO), so switching restores it; a MutationObserver translates what later renders draw.
+// The menus' translations: empty tables here, filled by data/ui.js, which is loaded only when the menus are in another
+// language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
+const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
+const UI={}, UIR=[];
+const UIV="a1c57160dd";
+let uiP=null;
+function uiLoaded(){ // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
+  KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});
+}
+function loadUI(){
+  if(LCODE.indexOf(LANG)<0)return Promise.resolve();
+  return uiP||(uiP=new Promise((ok,no)=>{const s=document.createElement("script");s.src=`/data/ui.js?v=${UIV}`;
+    s.onload=()=>{uiLoaded();ok()};s.onerror=()=>{uiP=null;s.remove();no()};document.head.appendChild(s)}));
+}
 const LANGS={nl:{n:"Nederlands",s:"NL",c:"nl"},en:{n:"English",s:"EN",c:"en"},ar:{n:"العربية",s:"عربي",c:"ar"},tr:{n:"Türkçe",s:"TR",c:"tr"},hi:{n:"हिन्दी",s:"हिं",c:"hi"},zh:{n:"中文",s:"中文",c:"zh-Hans"},es:{n:"Español",s:"ES",c:"es"},ru:{n:"Русский",s:"RU",c:"ru"}};
 let LANG=LANGS[lsGet("ww-ui")]?lsGet("ww-ui"):"nl", LI=LCODE.indexOf(LANG);
 // Month and day names come from the browser; only the order differs per language
@@ -4012,8 +4025,6 @@ Object.assign(UI,{
   "E-mail":["Email","بريد إلكتروني","E-posta","ईमेल","电子邮件","Correo electrónico","Электронная почта"],
   "Schrijfopdracht":["Writing task","مهمة كتابة","Yazma görevi","लेखन कार्य","写作题","Tarea de escritura","Письменное задание"]
 });
-// The KNM themes on their own (the list under KNM): the same words as "KNM: <theme>" without "KNM: "
-KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});
 const uiR=s=>{for(const[r,f]of UIR)if(r.test(s)){const v=s.replace(r,Array.isArray(f)?f[LI]:f);if(v!==s)return v}return null};
 const UIO=new WeakMap(), UIA=new WeakMap();
 const rtlMark=v=>LANG==="ar"?"\u200f"+v:v; // an Arabic line that starts with a Latin word (KNM, Face ID) still runs right to left
@@ -4047,12 +4058,13 @@ function fitTabs(){
   document.querySelectorAll("#tabs button span").forEach(s=>{s.style.fontSize="";if(desk)return;
     const w=s.parentNode.clientWidth-10,t=s.getBoundingClientRect().width;if(t>w)s.style.fontSize=Math.max(9.5,12*w/t).toFixed(1)+"px"})}
 addEventListener("resize",()=>requestAnimationFrame(fitTabs));
-document.addEventListener("change",e=>{if(!e.target.matches("[data-lang]"))return;LANG=e.target.value;LI=LCODE.indexOf(LANG);lsSet("ww-ui",LI<0?null:LANG);applyLang()});
+document.addEventListener("change",e=>{if(!e.target.matches("[data-lang]"))return;LANG=e.target.value;LI=LCODE.indexOf(LANG);lsSet("ww-ui",LI<0?null:LANG);
+  if(LI>=0&&!uiP){setLangBtns();loadUI().then(applyLang).catch(()=>{});return}applyLang()});
 document.querySelector("header .lang").outerHTML=langHTML();
 // Profiel's Taal row: every language named in itself, like the pill's list
 $("plang").innerHTML=Object.keys(LANGS).map(k=>`<option value="${k}">${LANGS[k].n}</option>`).join("");setLangBtns();
 $("site-footer").innerHTML=siteFooter();
-if(LI>=0)applyLang(); else fitTabs();
+if(LI>=0){applyLang();loadUI().then(applyLang).catch(()=>{})} else fitTabs(); // the direction at once, the words when they are here
 function openEntry(){
   if(!["today","a2","b1","sample","login","plus"].includes(entry)||$("move").hidden===false)return;
   const q=new URLSearchParams(location.search);

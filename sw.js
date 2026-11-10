@@ -14,6 +14,10 @@ const APP = "/oefenen", CACHE = "nl-a2-v12", CORE = [APP, "/", "/landing.css", "
 
 const assetsOf = html => [...html.matchAll(/src="(\/(?:data|study)\/[^"?]+\.js\?v=[0-9a-f]+)"/g)].map(m => m[1]);
 const dictOf = html => (/const DICTV="([0-9a-f]+)"/.exec(html) || [])[1] || "";
+// the menus' translations (data/ui.js) are loaded only for other languages than Dutch: kept with the page only for
+// someone who already uses them (a version of it is in the cache)
+const uiOf = html => { const v = (/const UIV="([0-9a-f]+)"/.exec(html) || [])[1]; return v ? `/data/ui.js?v=${v}` : "" };
+const hasUI = async c => c && (await c.keys()).some(r => new URL(r.url).pathname === "/data/ui.js");
 // One network request per versioned file, shared by the page that asks for it and the background that stores it
 const inflight = new Map();
 function fetchAsset(c, url) {
@@ -24,7 +28,9 @@ function fetchAsset(c, url) {
 }
 // Every file the page loads, from the cache, an older cache (from) or the network; true when all are there
 async function keepAssets(c, html, from) {
-  const ok = await Promise.all(assetsOf(html).map(async u => {
+  const list = assetsOf(html), ui = uiOf(html);
+  if (ui && (await hasUI(c) || await hasUI(from))) list.push(ui);
+  const ok = await Promise.all(list.map(async u => {
     if (await c.match(u)) return true;
     const old = from && await from.match(u);
     if (old) { await c.put(u, old); return true }
@@ -35,7 +41,7 @@ async function keepAssets(c, html, from) {
 }
 // Forget the versions the stored page no longer uses (also the unversioned files and the 7 MB dictionary of before)
 async function prune(c, html) {
-  const keep = new Set(assetsOf(html)), dv = dictOf(html);
+  const keep = new Set(assetsOf(html).concat(uiOf(html) || [])), dv = dictOf(html);
   for (const req of await c.keys()) {
     const u = new URL(req.url);
     if (/^\/(data|study)\//.test(u.pathname) && !keep.has(u.pathname + u.search)) await c.delete(req);

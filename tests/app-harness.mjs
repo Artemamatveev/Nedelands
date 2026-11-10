@@ -56,6 +56,9 @@ export async function app(options = {}) {
     const code=src?fs.readFileSync(new URL(src[1].slice(1).split('?')[0],root),'utf8'):match[2];
     vm.runInContext(code,context,{filename:src?src[1]:`inline-${index++}.js`});
   }
+  // The menus' translations are loaded by the page only for other languages (loadUI()); the tests always have them.
+  vm.runInContext(fs.readFileSync(new URL('data/ui.js',root),'utf8'),context,{filename:'data/ui.js'});
+  vm.runInContext('uiLoaded()',context);
   // Let IndexedDB and the auth/config promises finish without waiting for app timers.
   for(let i=0;i<8;i++)await new Promise(setImmediate);
   return {context,document,errors,timers,run:code=>vm.runInContext(code,context),async flush(){for(let i=0;i<8;i++)await new Promise(setImmediate)}};
