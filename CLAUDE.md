@@ -121,7 +121,9 @@ generic "AI app" look.
 
 Five tabs, switched by a floating glass bar at the bottom (`nav.tabs`, `setTab()`; like iOS 26 / Instagram:
 icons with names, the names fold away while you scroll down). The bar is a nearly opaque capsule with a thin line and a deep
-shadow, so it stands out on a white tile too (the clear glass one vanished on light screens). The current tab sits
+shadow, so it stands out on a white tile too (the clear glass one vanished on light screens). The lens is a rounded
+rectangle (19 px corners, the bar 24 px, so they run parallel), not a circle: a circle cut off longer names such as
+"Мой день"; a name wider than its button ("Повторение") is set a little smaller, down to 9.5 px (`fitTabs()`, phone only). The current tab sits
 under a lens (`.tabs .lens`), a bitterbal (an orange gradient, lighter top left, the same in dark mode) with the
 tab in white, that slides to the new tab with a little spring and stretch, and can be dragged along the bar
 with a finger (it grows and clears while held; where you let go is the tab that opens). The bar only
