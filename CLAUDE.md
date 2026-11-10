@@ -68,7 +68,10 @@ content stays left to right (`#play`, `#read`, the header, `[lang=nl]`, `.book`,
 tab bar, its lens and the swipe back are mirrored; `unicode-bidi:plaintext` keeps Dutch titles readable in a right-to-left list.
 No letter spacing in Arabic, Hindi or Chinese: it breaks joined letters.
 `privacy.html` and `over.html` hold the same text in eight languages: one `<article data-l>` per language with the same sections, points and
-links, only the one matching `ww-ui` shown (a small script; Dutch without a script), with their own language pill. The Dutch text of the
+links, only the one matching `ww-ui` shown (a small script; Dutch without a script), with their own language globe (in ink
+on the glass, top left above the tile, like the app's). They look like an inner screen of the app: one white tile on the frosted
+windmill, Examenblad corners, each section under a hairline with its heading in cobalt, sentence case (no small capitals), Delft at
+night in dark mode. The Dutch text of the
 privacy statement is the official one and each translation says so. When either page changes, update every translation.
 
 ## Design: Delfts blauw
