@@ -161,8 +161,10 @@ round) and the eight themes (`KNMT`), each with its own count; a theme round is 
 ronde" keeps the theme. The theme names' translations come from the `"KNM: <theme>"` entries in `UI`.
 - **Herhalen**: Mijn zwakke punten, Mijn fouten and Mijn woorden (the last two once there is something in them); with
 neither, a short empty state says what will come there (`.empty`).
-- **On a computer** (`data-desktop`): a sidebar like a desktop app (`.tabs` as a column of 232 px with the logo on top,
-the tabs as rows with icon and name, the oranje lens behind the current one, the language pill at the bottom); on
+- **On a computer** (`data-desktop`): the menu is a floating panel on the glass, top left (`.tabs`, 212 px, round
+corners; the user liked the floating bar and wanted it larger, not a full-height white sidebar): the logo on top, the
+tabs as rows with icon and name, the oranje lens behind the current one, the language pill at the bottom; mirrored in
+Arabic; on
 Vandaag the painting hangs framed on the cobalt museum wall (360 px high), the other tabs have no painting band.
 - **Profiel** looks like an iPhone settings screen (the user's example, November 2026): on top a round avatar the learner
 picks (`avScreen()` in `#talk`, "Kies je avatar": a grid of three by three, the chosen one with an orange ring; `S.me.av`, so it

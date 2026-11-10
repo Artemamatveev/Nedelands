@@ -593,37 +593,39 @@ body.vfull{overflow:hidden}
 :root[data-desktop] header .art img{max-width:100%}
 :root[data-desktop] header .lang{top:20px;left:auto;right:40px;height:36px}
 :root[data-desktop] header:has(.streak:not(:empty)) .lang{top:110px}
-/* computer: a sidebar like a desktop app, with the logo on top and the five tabs as rows (icon and name), the oranje
-   lens behind the current one; the other tabs have no painting band, only Vandaag hangs the painting on the wall */
+/* computer: the menu is a floating panel on the glass (the user liked the floating bar, but larger): the logo on
+   top, the five tabs as rows with icon and name, the oranje lens behind the current one, the language pill at the
+   bottom; only Vandaag hangs the painting on the wall, the other tabs start with their content */
+:root[data-desktop]{--nav-w:212px;--nav-x:24px;--nav-top:84px;--nav-row:48px}
 :root[data-desktop] main:has(#home:not([hidden])){
   max-width:1180px;
-  margin-left:calc(232px + max(0px,(100% - 232px - 1180px)/2));margin-right:0;
+  margin-left:calc(var(--nav-w) + 2*var(--nav-x) + max(0px,(100% - var(--nav-w) - 2*var(--nav-x) - 1180px)/2));margin-right:0;
   padding-bottom:64px;
 }
-:root[data-desktop] main:has(#home:not([hidden])) h1{position:fixed;z-index:9;left:30px;top:30px;bottom:auto;font-size:28px;color:var(--ink)}
-:root[data-desktop] main:has(#home:not([hidden])) header .lang{position:fixed;z-index:9;left:26px;right:auto;top:auto;bottom:24px}
+:root[data-desktop] main:has(#home:not([hidden])) h1{position:fixed;z-index:9;left:calc(var(--nav-x) + 20px);top:calc(var(--nav-x) + 26px);bottom:auto;font-size:26px;color:var(--ink)}
+:root[data-desktop] main:has(#home:not([hidden])) header .lang{position:fixed;z-index:9;left:calc(var(--nav-x) + 16px);right:auto;bottom:auto;
+  top:calc(var(--nav-x) + var(--nav-top) + 5*var(--nav-row) + 12px)}
 :root[data-desktop] main:has(#home:not([hidden])):not(.big) header{height:24px;border-image:none;background:none}
 :root[data-desktop] main:has(#home:not([hidden])):not(.big) header .art,
 :root[data-desktop] main:has(#home:not([hidden])):not(.big) header::after{display:none}
 :root[data-desktop] .tabs{
-  left:0;top:0;bottom:0;transform:none;width:232px;flex-direction:column;justify-content:flex-start;gap:0;
-  padding:92px 14px 24px;border-radius:0;border:0;border-inline-end:1px solid var(--line);
-  background:color-mix(in srgb,var(--card) 94%,transparent);box-shadow:none;touch-action:auto;transition:none;
+  left:var(--nav-x);top:var(--nav-x);bottom:auto;transform:none;width:var(--nav-w);flex-direction:column;justify-content:flex-start;gap:0;
+  padding:var(--nav-top) 10px 64px;border-radius:var(--r);touch-action:auto;transition:none;
 }
-:root[data-desktop] .tabs.min{width:232px}
-:root[data-desktop] .tabs button{flex:0 0 46px;flex-direction:row;justify-content:flex-start;gap:12px;padding:0 14px;border-radius:var(--rc);font-size:var(--fs-m)}
+:root[data-desktop] .tabs.min{width:var(--nav-w)}
+:root[data-desktop] .tabs button{flex:0 0 var(--nav-row);flex-direction:row;justify-content:flex-start;gap:12px;padding:0 14px;border-radius:var(--rc);font-size:var(--fs-b)}
 :root[data-desktop] .tabs svg{width:22px;height:22px}
 :root[data-desktop] .tabs.min span{display:block}
 @media (hover:hover){:root[data-desktop] .tabs button:not([aria-current]):hover{background:var(--surface)}}
 :root[data-desktop] .tabs .lens{
-  left:14px;right:14px;top:92px;bottom:auto;width:auto;height:46px;border-radius:var(--rc);
+  left:10px;right:10px;top:var(--nav-top);bottom:auto;width:auto;height:var(--nav-row);border-radius:var(--rc);
   transform:translateY(calc(var(--i,0) * 100%));
 }
-/* Arabic: the sidebar on the right */
-:root[dir=rtl][data-desktop] .tabs{left:auto;right:0}
-:root[dir=rtl][data-desktop] main:has(#home:not([hidden])){margin-left:0;margin-right:calc(232px + max(0px,(100% - 232px - 1180px)/2))}
-:root[dir=rtl][data-desktop] main:has(#home:not([hidden])) h1{left:auto;right:30px}
-:root[dir=rtl][data-desktop] main:has(#home:not([hidden])) header .lang{left:auto;right:26px}
+/* Arabic: the panel on the right */
+:root[dir=rtl][data-desktop] .tabs{left:auto;right:var(--nav-x)}
+:root[dir=rtl][data-desktop] main:has(#home:not([hidden])){margin-left:0;margin-right:calc(var(--nav-w) + 2*var(--nav-x) + max(0px,(100% - var(--nav-w) - 2*var(--nav-x) - 1180px)/2))}
+:root[dir=rtl][data-desktop] main:has(#home:not([hidden])) h1{left:auto;right:calc(var(--nav-x) + 20px)}
+:root[dir=rtl][data-desktop] main:has(#home:not([hidden])) header .lang{left:auto;right:calc(var(--nav-x) + 16px)}
 :root[data-desktop] .duo{align-items:stretch}
 :root[data-desktop] .duo>div{display:contents}
 :root[data-desktop] .duo>.tile{grid-column:1/-1}
