@@ -55,7 +55,10 @@ test('The homepage and the app work in a real browser', async t => {
       const s = await page(browser, base); await s.go('/'); await s.p.waitForLoadState('load');
       assert.equal(await overflow(s.p), 0);
       assert.equal(await s.p.locator('#plus-card').isHidden(), true); // Plus is off without configuration
-      assert.equal(await s.p.locator('.shots img').count(), 3);
+      // Vraag 2: the KNM question on the homepage marks the answer like the app does
+      await s.p.locator('.quiz .choice').first().click();
+      assert.equal(await s.p.locator('.quiz .choice.ok').count(), 1);
+      assert.equal(await s.p.locator('#qfb').isVisible(), true);
       assert.deepEqual(s.errors, []); await s.ctx.close();
     });
     await t.test('homepage in Arabic', async () => {

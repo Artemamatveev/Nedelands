@@ -67,6 +67,15 @@ const copy = {
   "Je les van vandaag in Bittertalen, met de stappen van vandaag": ["Today’s lesson in Bittertalen, with today’s steps", "درس اليوم في Bittertalen مع خطوات اليوم", "Bittertalen’de bugünkü ders ve bugünün adımları", "Bittertalen में आज का पाठ, आज के चरणों के साथ", "Bittertalen 中的今日课程和今天的步骤", "La lección de hoy en Bittertalen, con los pasos de hoy", "Урок дня в Bittertalen с шагами на сегодня"],
   "Feedback op een geschreven tekst: punten per onderdeel en de fouten in de tekst": ["Feedback on a written text: points per criterion and the mistakes in the text", "تصحيح نص مكتوب: نقاط لكل معيار والأخطاء في النص", "Yazılı bir metne geri bildirim: ölçüt başına puan ve metindeki hatalar", "लिखे गए पाठ पर फ़ीडबैक: हर मानदंड के अंक और पाठ में गलतियाँ", "书面文本的反馈：各评分项的分数和文中的错误", "Comentarios sobre un texto escrito: puntos por criterio y los errores en el texto", "Разбор письменного текста: баллы по критериям и ошибки в тексте"],
   "Proefexamens per onderdeel met de laatste score": ["Mock exams per section with the latest score", "امتحانات تجريبية لكل قسم مع آخر نتيجة", "Bölüm başına deneme sınavları ve son puan", "हर भाग की अभ्यास परीक्षाएँ और आख़िरी स्कोर", "各部分的模拟考试及最近一次分数", "Simulacros por sección con la última puntuación", "Пробные экзамены по разделам с последним результатом"],
+  "Hoi! Ik ben Bitterbal.": ["Hi! I’m Bitterbal.", "مرحبًا! أنا بيتر بال.", "Merhaba! Ben Bitterbal.", "नमस्ते! मैं बिटरबाल हूँ।", "你好！我是 Bitterbal。", "¡Hola! Soy Bitterbal.", "Привет! Я Биттербал."],
+  "Zullen we samen Nederlands oefenen?": ["Shall we practise Dutch together?", "هل نتدرّب على الهولندية معًا؟", "Birlikte Flemenkçe çalışalım mı?", "क्या हम साथ में डच का अभ्यास करें?", "我们一起练习荷兰语吧？", "¿Practicamos neerlandés juntos?", "Давайте вместе потренируем нидерландский?"],
+  "Vraag 1": ["Question 1", "السؤال 1", "Soru 1", "प्रश्न 1", "第 1 题", "Pregunta 1", "Вопрос 1"],
+  "Vraag 2": ["Question 2", "السؤال 2", "Soru 2", "प्रश्न 2", "第 2 题", "Pregunta 2", "Вопрос 2"],
+  "Vraag 3": ["Question 3", "السؤال 3", "Soru 3", "प्रश्न 3", "第 3 题", "Pregunta 3", "Вопрос 3"],
+  "Vraag 4": ["Question 4", "السؤال 4", "Soru 4", "प्रश्न 4", "第 4 题", "Pregunta 4", "Вопрос 4"],
+  "Probeer het zelf": ["Try it yourself", "جرّب بنفسك", "Kendin dene", "खुद आज़माएँ", "自己试试", "Pruébalo tú", "Попробуйте сами"],
+  "Een echte KNM-vraag, zoals in de app. Kies een antwoord.": ["A real KNM question, as in the app. Choose an answer.", "سؤال KNM حقيقي كما في التطبيق. اختر إجابة.", "Uygulamadaki gibi gerçek bir KNM sorusu. Bir cevap seç.", "ऐप जैसा एक असली KNM प्रश्न। एक उत्तर चुनें।", "一道真实的 KNM 题，和应用里一样。选一个答案。", "Una pregunta real de KNM, como en la app. Elige una respuesta.", "Настоящий вопрос KNM, как в приложении. Выберите ответ."],
+  "Zo kijkt Claude je tekst na": ["How Claude checks your writing", "هكذا يصحّح Claude نصك", "Claude metnini böyle kontrol eder", "Claude आपके लेखन को ऐसे जाँचता है", "Claude 这样批改你的文章", "Así revisa Claude tu texto", "Так Claude проверяет ваш текст"],
   "Contact": ["Contact", "التواصل", "İletişim", "संपर्क", "联系我们","Contacto","Контакты"]
 };
 
@@ -122,3 +131,21 @@ fetch("/api/config").then(r => {
   if (!r.ok) throw new Error("Config unavailable");
   return r.json();
 }).then(value => { config = value; }, () => { config = null; }).then(render);
+
+// Vraag 2: a real KNM question on the homepage, marked like in the app (the box turns green or red); the question and
+// its feedback stay Dutch, as all exercises do
+(() => {
+  const quiz = document.querySelector(".quiz"), fb = $("qfb");
+  if (!quiz) return;
+  quiz.querySelectorAll(".choice").forEach(b => b.addEventListener("click", () => {
+    if (quiz.classList.contains("done")) return;
+    quiz.classList.add("done");
+    const ok = b.dataset.ok === "1";
+    b.classList.add(ok ? "ok" : "no");
+    quiz.querySelector('[data-ok="1"]').classList.add("ok");
+    quiz.querySelectorAll(".choice").forEach(x => x.disabled = true);
+    fb.innerHTML = ok ? "<b class=\"good\">Goed zo!</b> Een verhuizing geef je door aan de gemeente."
+      : "<b class=\"bad\">Niet goed.</b> Goed is: <b>bij de gemeente</b>. Een verhuizing geef je door aan de gemeente.";
+    fb.hidden = false; $("qmore").hidden = false;
+  }));
+})();

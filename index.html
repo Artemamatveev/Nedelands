@@ -77,7 +77,11 @@
       <p class="note" data-t>Gratis beginnen, ook zonder account.</p>
     </div>
     <figure class="hero-art">
-      <div class="phone"><img src="/shots/app.webp" width="390" height="700" fetchpriority="high" data-alt="Je les van vandaag in Bittertalen, met de stappen van vandaag" alt="Je les van vandaag in Bittertalen, met de stappen van vandaag"></div>
+      <!-- Bitterbal, the mascot, welcomes visitors in front of the painting -->
+      <div class="greeter">
+        <p class="bubble"><b data-t>Hoi! Ik ben Bitterbal.</b> <span data-t>Zullen we samen Nederlands oefenen?</span></p>
+        <img src="/art/bitterbal-white.jpg" width="360" height="360" alt="" fetchpriority="high">
+      </div>
       <figcaption lang="nl" dir="ltr"><b>Johannes Vermeer</b> · <cite>Gezicht op Delft</cite>, ca. 1660 · Mauritshuis</figcaption>
     </figure>
   </section>
@@ -89,52 +93,68 @@
     <li><b dir="ltr">30+</b><span data-t>gesprekken om hardop te oefenen</span></li>
   </ul>
 
-  <section id="niveaus" class="block">
+  <!-- The homepage asks like the exam form ("Examenblad", the app's style): lettered answers in square boxes -->
+  <section id="niveaus" class="block paper">
+    <p class="qnum" data-t>Vraag 1</p>
     <h2 data-t>Waar oefen je voor?</h2>
-    <div class="grid two">
-      <article class="card level">
-        <span class="badge">A2</span>
-        <h3 data-t>Inburgeringsexamen</h3>
-        <p data-t>Oefen met Nederlands uit het dagelijks leven: lezen, luisteren, schrijven en spreken. Oefen ook Kennis van de Nederlandse Maatschappij (KNM).</p>
-        <a href="/oefenen?open=a2" class="text-link"><span data-t>Oefen op A2</span> <span aria-hidden="true" class="arrow">→</span></a>
-      </article>
-      <article class="card level">
-        <span class="badge">B1</span>
-        <h3 data-t>Staatsexamen NT2 · Programma I</h3>
-        <p data-t>Bereid je voor op lezen, luisteren, schrijven en spreken op B1, met langere teksten en opdrachten over werk, studie en het dagelijks leven.</p>
-        <a href="/oefenen?open=b1" class="text-link"><span data-t>Oefen op B1</span> <span aria-hidden="true" class="arrow">→</span></a>
-      </article>
+    <div class="choices">
+      <a class="choice" href="/oefenen?open=a2"><span class="lt" aria-hidden="true">A</span><span class="tx"><b><span data-t>Inburgeringsexamen</span> <small>A2</small></b><span class="d" data-t>Oefen met Nederlands uit het dagelijks leven: lezen, luisteren, schrijven en spreken. Oefen ook Kennis van de Nederlandse Maatschappij (KNM).</span></span><span class="go" data-t>Oefen op A2</span></a>
+      <a class="choice" href="/oefenen?open=b1"><span class="lt" aria-hidden="true">B</span><span class="tx"><b><span data-t>Staatsexamen NT2 · Programma I</span> <small>B1</small></b><span class="d" data-t>Bereid je voor op lezen, luisteren, schrijven en spreken op B1, met langere teksten en opdrachten over werk, studie en het dagelijks leven.</span></span><span class="go" data-t>Oefen op B1</span></a>
     </div>
     <p class="note" data-t>Je kunt je niveau later veranderen in je profiel.</p>
   </section>
 
-  <section id="oefenvormen" class="block">
-    <h2 data-t>Drie manieren om te oefenen</h2>
-    <div class="grid three">
-      <article class="card">
-        <svg class="symbol" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 10h18m-13 5 2 2 5-5"/></svg>
-        <h3 data-t>Een les per dag</h3>
-        <p data-t>Kies 10, 20 of 40 minuten. Bittertalen stelt je les samen en geeft extra aandacht aan wat je lastig vindt.</p>
-      </article>
-      <article class="card">
-        <svg class="symbol" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6v15M12 6C9 4 6 4 3 5v14c3-1 6-1 9 2 3-3 6-3 9-2V5c-3-1-6-1-9 1Z"/></svg>
-        <h3 data-t>Zelf kiezen</h3>
-        <p data-t>Oefen één vaardigheid, herhaal woorden, doe grammatica of lees en luister naar verhalen in het Nederlands.</p>
-      </article>
-      <article class="card">
-        <svg class="symbol" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6m3 5 2-2"/></svg>
-        <h3 data-t>Een proefexamen maken</h3>
-        <p data-t>Oefen een examenonderdeel met een timer en bekijk je resultaten om te zien wat je nog kunt oefenen.</p>
-      </article>
+  <section id="probeer" class="block paper">
+    <p class="qnum" data-t>Vraag 2</p>
+    <h2 data-t>Probeer het zelf</h2>
+    <p class="note" data-t>Een echte KNM-vraag, zoals in de app. Kies een antwoord.</p>
+    <div class="quiz" lang="nl" dir="ltr">
+      <p class="qq">Je verhuist. Waar geef je je nieuwe adres door?</p>
+      <div class="choices" role="group" aria-label="Antwoorden">
+        <button type="button" class="choice" data-ok="0"><span class="lt" aria-hidden="true">A</span><span class="tx">Bij de woningcorporatie</span></button>
+        <button type="button" class="choice" data-ok="1"><span class="lt" aria-hidden="true">B</span><span class="tx">Bij de gemeente</span></button>
+        <button type="button" class="choice" data-ok="0"><span class="lt" aria-hidden="true">C</span><span class="tx">Bij de Belastingdienst</span></button>
+      </div>
+      <p class="qfb" id="qfb" role="status" hidden></p>
     </div>
+    <a class="button primary" id="qmore" href="/oefenen?open=today" hidden data-t>Begin gratis</a>
   </section>
 
-  <section id="voorbeeld" class="block">
-    <h2 data-t>Zo ziet het eruit</h2>
-    <div class="grid three shots">
-      <figure><img src="/shots/les.webp" width="390" height="780" loading="lazy" data-alt="Je les van vandaag in Bittertalen, met de stappen van vandaag" alt="Je les van vandaag in Bittertalen, met de stappen van vandaag"><figcaption data-t>Elke dag een les met korte rondes.</figcaption></figure>
-      <figure><img src="/shots/feedback.webp" width="390" height="780" loading="lazy" data-alt="Feedback op een geschreven tekst: punten per onderdeel en de fouten in de tekst" alt="Feedback op een geschreven tekst: punten per onderdeel en de fouten in de tekst"><figcaption data-t>Feedback op je tekst: punten per onderdeel en je fouten in je eigen tekst.</figcaption></figure>
-      <figure><img src="/shots/examen.webp" width="390" height="780" loading="lazy" data-alt="Proefexamens per onderdeel met de laatste score" alt="Proefexamens per onderdeel met de laatste score"><figcaption data-t>Proefexamens met een timer, en je score per onderdeel.</figcaption></figure>
+  <section id="oefenvormen" class="block paper">
+    <p class="qnum" data-t>Vraag 3</p>
+    <h2 data-t>Drie manieren om te oefenen</h2>
+    <ol class="ways">
+      <li><h3 data-t>Een les per dag</h3><p data-t>Kies 10, 20 of 40 minuten. Bittertalen stelt je les samen en geeft extra aandacht aan wat je lastig vindt.</p></li>
+      <li><h3 data-t>Zelf kiezen</h3><p data-t>Oefen één vaardigheid, herhaal woorden, doe grammatica of lees en luister naar verhalen in het Nederlands.</p></li>
+      <li><h3 data-t>Een proefexamen maken</h3><p data-t>Oefen een examenonderdeel met een timer en bekijk je resultaten om te zien wat je nog kunt oefenen.</p></li>
+    </ol>
+  </section>
+
+  <section id="voorbeeld" class="block paper">
+    <p class="qnum" data-t>Vraag 4</p>
+    <h2 data-t>Zo kijkt Claude je tekst na</h2>
+    <p class="note" data-t>Feedback op je tekst: punten per onderdeel en je fouten in je eigen tekst.</p>
+    <div class="specimen" lang="nl" dir="ltr">
+      <p class="task">Je gaat een week op vakantie. Schrijf een briefje aan je buurvrouw. Vraag of zij je planten water wil geven en schrijf waar de sleutel ligt.</p>
+      <div class="sp-grid">
+        <div class="own">Beste Anja,<br><mark>volgende week ik ga<sup>1</sup></mark> op vakantie naar Turkije. Wil jij mijn planten water <mark>geeven<sup>2</sup></mark>? <mark>De planten staat<sup>3</sup></mark> in de keuken. De sleutel <mark>ligd<sup>4</sup></mark> onder de mat bij de achterdeur.<br>Heel erg bedankt!<br>Groeten,<br>Samira</div>
+        <div>
+          <table class="pts">
+            <tr><th>Inhoud</th><td><i style="--v:100%"></i></td><td>3/3</td></tr>
+            <tr><th>Woorden</th><td><i style="--v:100%"></i></td><td>2/2</td></tr>
+            <tr><th>Grammatica</th><td><i class="some" style="--v:50%"></i></td><td>1/2</td></tr>
+            <tr><th>Spelling</th><td><i style="--v:100%"></i></td><td>2/2</td></tr>
+            <tr><th>Samenhang</th><td><i style="--v:100%"></i></td><td>1/1</td></tr>
+          </table>
+          <p class="sum">Samen <b>9 van 10</b> · voldoende</p>
+          <ol class="fixes">
+            <li><s>volgende week ik ga</s> → <b>volgende week ga ik</b></li>
+            <li><s>geeven</s> → <b>geven</b></li>
+            <li><s>De planten staat</s> → <b>De planten staan</b></li>
+            <li><s>ligd</s> → <b>ligt</b></li>
+          </ol>
+        </div>
+      </div>
     </div>
     <p class="note" data-t>Voorbeeld: de tekst en de punten zijn verzonnen.</p>
   </section>
@@ -178,8 +198,7 @@
   </section>
 
   <section class="closing">
-    <img class="mascot" src="/art/bitterbal-white.jpg" width="88" height="88" alt="">
-    <div class="closing-text"><p class="bubble" data-t>Hoi, ik ben Bitterbal!</p><h2 data-t>Klaar voor je eerste oefening?</h2></div>
+    <h2 data-t>Klaar voor je eerste oefening?</h2>
     <a class="button primary" href="/oefenen?open=today" data-t>Begin gratis</a>
   </section>
 </main>

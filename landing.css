@@ -2,12 +2,12 @@
   color-scheme: light dark;
   --bg:#fbfcfe; --card:#fff; --ink:#14213d; --muted:#52617d;
   --blue:#1f3c96; --fill:#1f3c96; --wash:#edf2ff; --line:#d9e2f1; --oranje:#cb5d17;
-  --shadow:0 1px 2px #08102810,0 8px 24px #0810281a; --glass:rgba(240,244,252,.55);
+  --shadow:0 1px 2px #08102810,0 8px 24px #0810281a; --glass:rgba(240,244,252,.55); --good:#2e7d4b; --bad:#c0392b;
   font: 17px/1.5 -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   background:var(--bg); color:var(--ink);
 }
 @media(prefers-color-scheme:dark) {
-  :root {--bg:#0a0f1b;--card:#131a2a;--ink:#eef1f7;--muted:#9ea7ba;--blue:#9db4f5;--fill:#2a4aae;--wash:#1d2436;--line:#283149;--oranje:#ff8a3d;--shadow:0 1px 2px #0006,0 10px 28px #00000073;--glass:rgba(10,15,27,.7)}
+  :root {--bg:#0a0f1b;--card:#131a2a;--ink:#eef1f7;--muted:#9ea7ba;--blue:#9db4f5;--fill:#2a4aae;--wash:#1d2436;--line:#283149;--oranje:#ff8a3d;--shadow:0 1px 2px #0006,0 10px 28px #00000073;--glass:rgba(10,15,27,.7);--good:#74cf95;--bad:#ff8f80}
 }
 * {box-sizing:border-box}
 /* the same window as the app: a Dutch landscape (Ruisdael's windmill, pre-blurred) behind frosted glass, white tiles on it */
@@ -49,9 +49,6 @@ h3 {font-size:22px;letter-spacing:-.02em}
 #plus-status:empty {display:none}
 .hero-art {position:relative;isolation:isolate;display:grid;place-items:center;min-height:470px;margin:0;padding:34px 0 48px;border-radius:20px;overflow:hidden;background:#25364c url('/art/delft.jpg') center 48%/cover no-repeat;box-shadow:var(--shadow)}
 .hero-art::before {content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,#0c193c10 40%,#0c193cb0)}
-/* the app itself in a phone, in front of the painting */
-.phone {width:min(250px,62%);aspect-ratio:390/700;border-radius:38px;border:9px solid #10131a;background:#10131a;overflow:hidden;box-shadow:0 2px 0 1px #ffffff26 inset,0 24px 60px #050a1a80}
-.phone img {display:block;width:100%;height:100%;object-fit:cover;object-position:top;border-radius:29px}
 .hero-art figcaption {position:absolute;inset-inline:16px;bottom:13px;text-align:end;color:#fff;font-size:13px;line-height:1.35;text-shadow:0 1px 3px #0008}
 .hero-art figcaption b {font-weight:600}
 .hero-art figcaption cite {font-style:normal}
@@ -75,9 +72,7 @@ h3 {font-size:22px;letter-spacing:-.02em}
 .pricing li+li {margin-top:7px}
 .pricing .button {margin-block-start:auto}
 .plus {background:var(--card);outline:2px solid var(--fill);outline-offset:-2px}
-.closing {display:flex;align-items:center;gap:20px;background:var(--card);box-shadow:var(--shadow);border-radius:20px;padding:22px 30px;margin-block-end:32px}
-.closing .mascot {flex:none;width:88px;height:88px;border-radius:50%;object-fit:cover;background:#fff}
-.closing-text {flex:1;min-width:0}
+.closing {display:flex;align-items:center;justify-content:space-between;gap:20px;background:var(--card);box-shadow:var(--shadow);border-radius:20px;padding:22px 30px;margin-block-end:32px}
 .bubble {display:inline-block;margin:0 0 6px;padding:5px 12px;border-radius:4px;background:var(--wash);font-size:15px;font-weight:600}
 .closing h2 {margin:0;font-size:clamp(24px,3vw,32px)}
 .closing .button {flex:none}
@@ -88,10 +83,6 @@ h3 {font-size:22px;letter-spacing:-.02em}
 .stats li+li {border-inline-start:1px solid var(--line)}
 .stats b {font-size:30px;font-weight:650;letter-spacing:-.03em}
 .stats span {font-size:15px;color:var(--muted)}
-/* screenshots of the app: the top of a phone screen, in a rounded frame */
-.shots figure {margin:0}
-.shots img {display:block;width:100%;height:auto;aspect-ratio:390/560;object-fit:cover;object-position:top;border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);background:var(--card)}
-.shots figcaption {margin-top:10px;font-size:15px;color:var(--muted)}
 /* without Plus the free card stands alone */
 .pricing:has(#plus-card[hidden]) {grid-template-columns:minmax(0,560px)}
 /* questions: native details, one line each until opened */
@@ -119,13 +110,75 @@ h3 {font-size:22px;letter-spacing:-.02em}
   .bar .button{min-height:44px;padding-inline:10px}
   .hero{grid-template-columns:1fr;padding-block:34px 35px;gap:23px}
   .hero-art{min-height:0;padding:26px 0 46px}
-  .phone{width:min(220px,64%)}
   .two,.three{grid-template-columns:1fr}
   .stats{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:16px;margin-block-end:36px}
   .stats li:nth-child(3){border-inline-start:0}
   .closing{flex-direction:column;align-items:flex-start}
-  .shots{grid-auto-flow:column;grid-template-columns:none;grid-auto-columns:78%;overflow-x:auto;scroll-snap-type:x mandatory;padding-block-end:6px}
-  .shots figure{scroll-snap-align:start}
   .block{margin-block-end:36px}
   .closing,.footer{align-items:flex-start;flex-direction:column}
+}
+
+/* Bitterbal, the mascot, welcomes visitors in front of the painting */
+.greeter {display:flex;flex-direction:column;align-items:center}
+.greeter img {width:clamp(170px,21vw,236px);height:auto;aspect-ratio:1;object-fit:cover;border-radius:50%;border:6px solid #fff;background:#fff;box-shadow:0 18px 45px #07142e59}
+.greeter .bubble {position:relative;max-width:270px;margin:0 0 18px;padding:12px 16px;border-radius:14px;background:#fff;color:#14213d;font-size:15px;font-weight:400;line-height:1.35;text-align:center;box-shadow:0 10px 30px #07142e40}
+.greeter .bubble::after {content:"";position:absolute;left:50%;bottom:-7px;width:14px;height:14px;background:#fff;transform:translateX(-50%) rotate(45deg)}
+.greeter .bubble b {display:block;font-size:17px;font-weight:650}
+
+/* Examenblad: the sections are set like questions on the exam form, as the app's answers are (lettered square boxes,
+   hairlines, an ink rule over the feedback); icon cards and phone screenshots looked like every other course site */
+.paper {padding:clamp(22px,3vw,34px);border-radius:20px;background:var(--card);box-shadow:var(--shadow)}
+.qnum {margin:0 0 4px;color:var(--blue);font-size:15px;font-weight:600}
+.paper h2 {margin-block-end:12px}
+.paper>.note:first-of-type {margin:0 0 12px}
+.choices {display:grid;margin-top:6px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.choice {display:flex;align-items:center;gap:16px;width:100%;padding:16px 0;border:0;border-bottom:1px solid var(--line);background:none;color:inherit;font:inherit;text-align:start;text-decoration:none;cursor:pointer}
+.choice:last-child {border-bottom:0}
+.lt {flex:none;display:grid;place-items:center;width:34px;height:34px;border:1.5px solid var(--ink);border-radius:3px;font-weight:700}
+.choice .tx {flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.choice .tx b {font-size:19px;font-weight:600}
+.choice .tx small {margin-inline-start:6px;font-size:13px;font-weight:700;color:var(--blue)}
+.choice .d {color:var(--muted);font-size:15px}
+.choice .go {flex:none;color:var(--blue);font-size:15px;font-weight:600}
+.choice .go::after {content:" →"} [dir=rtl] .choice .go::after {content:" ←"}
+@media(hover:hover) {.choice:not(:disabled):hover .lt {border-color:var(--blue);color:var(--blue)}}
+.quiz .qq {margin:8px 0 6px;font-size:20px;font-weight:600}
+.quiz .choice {padding:13px 0}
+.quiz .tx {font-size:17px}
+.choice.ok .lt,.choice.no .lt {font-size:0;color:#fff}
+.choice.ok .lt {background:var(--good);border-color:var(--good)} .choice.no .lt {background:var(--bad);border-color:var(--bad)}
+.choice.ok .lt::before {content:"✓";font-size:15px} .choice.no .lt::before {content:"✕";font-size:15px}
+.quiz.done .choice:not(.ok,.no) {opacity:.45}
+.choice:disabled {cursor:default}
+.qfb {margin:14px 0 0;padding-top:12px;border-top:2px solid var(--ink)}
+.good {color:var(--good)} .bad {color:var(--bad)}
+#qmore {margin-top:16px}
+.ways {list-style:none;counter-reset:w;margin:0;padding:0;border-top:1px solid var(--line)}
+.ways li {counter-increment:w;display:grid;grid-template-columns:44px 1fr;column-gap:12px;padding:16px 0;border-bottom:1px solid var(--line)}
+.ways li:last-child {border-bottom:0}
+.ways li::before {content:counter(w);grid-row:1/3;font-size:28px;font-weight:700;line-height:1.1;color:var(--oranje);font-variant-numeric:tabular-nums}
+.ways h3 {font-size:19px} .ways p {margin:4px 0 0;color:var(--muted)}
+/* Vraag 4: the writing check itself, set in HTML like in the app */
+.specimen {padding:18px;border:1px solid var(--line);border-radius:4px;background:var(--bg)}
+.specimen .task {margin:0 0 14px;font-weight:600}
+.sp-grid {display:grid;grid-template-columns:1.1fr 1fr;gap:22px}
+.own {padding:14px 16px;border-inline-start:3px solid var(--line);background:var(--card);font-size:16px;line-height:1.75}
+.own mark {padding:0 2px;background:color-mix(in srgb,var(--bad) 13%,transparent);border-bottom:2px solid var(--bad);color:inherit}
+.own sup {font-size:11px;font-weight:700;color:var(--bad)}
+.pts {width:100%;border-collapse:collapse;font-size:15px}
+.pts th {width:112px;padding:5px 0;font-weight:400;text-align:start}
+.pts td:nth-child(2) {padding:5px 12px}
+.pts td:last-child {font-weight:600;text-align:end;font-variant-numeric:tabular-nums}
+.pts i {display:block;height:6px;border-radius:3px;background:linear-gradient(var(--good),var(--good)) 0/var(--v) 100% no-repeat,var(--line)}
+.pts i.some {background:linear-gradient(var(--oranje),var(--oranje)) 0/var(--v) 100% no-repeat,var(--line)}
+.sum {margin:10px 0;font-size:15px} .sum b {font-size:20px}
+.fixes {margin:0;padding-inline-start:20px;color:var(--muted);font-size:15px} .fixes li {margin:4px 0}
+.fixes s {color:var(--bad)} .fixes b {color:var(--good)}
+@media(max-width:640px) {
+  .sp-grid {grid-template-columns:1fr}
+  .choice {flex-wrap:wrap} .choice .go {flex-basis:100%;padding-inline-start:50px}
+  .greeter img {width:118px;border-width:4px}
+  .greeter .bubble {margin-bottom:12px;padding:9px 13px;font-size:14px}
+  /* on a phone Bitterbal greets first, above the headline */
+  .hero-art {order:-1;padding:18px 0 62px}
 }

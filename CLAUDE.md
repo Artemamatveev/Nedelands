@@ -11,15 +11,18 @@ an installed app, the old addresses, and returns from a login (`?code`, `?error`
 app, which can't show the website) shows the homepage all the same. Arriving from the homepage (`?open=today`, `a2`,
 `b1`, `sample`) marks the login window as seen (`ww-welcome`): the homepage already offers Inloggen, so someone who
 started without an account isn't stopped by it later; `?open=login` opens it. Under the hero four numbers (questions, KNM questions, proefexamens per level,
-conversations), checked against the content by the same test: change them when the content shrinks. "Zo ziet het
-eruit" shows three screenshots of the app in `shots/` (WebP, 780 px wide), taken with Playwright from the real app; the
-writing feedback in them is a made-up example (the page says so), and its errors and points must follow the scoring
-rules. "Veelgestelde vragen" uses native `<details>`; keep the answers true (not DUO, offline, no pass guarantee). The
-Plus card only shows when Plus is on (a card saying it was unavailable looked broken). It looks like the app: the
-blurred windmill behind frosted glass, white tiles with the app's shadow, cobalt squares with white glyphs, a glass
-bar on top; the hero shows the app in a phone (`shots/app.webp`, the top of Vandaag) in front of Vermeer's Gezicht op
-Delft with a museum line; the plush Bitterbal says hello at the closing call to action. Contact on the homepage is
-hallo@bittertalen.nl (the catch-all mailbox). The study app is served at `/oefenen` from `oefenen.html` (the code, the styles and the small tables, about 340 KB).
+conversations), checked against the content by the same test: change them when the content shrinks. The sections are set like questions on the exam
+form, in the app's Examenblad style (the user found icon cards and phone screenshots looked like every competitor):
+"Vraag 1 · Waar oefen je voor?" with A (A2) and B (B1) in square letter boxes that open the app at that level; "Vraag 2
+· Probeer het zelf", a real KNM question marked on the page like in the app (`landing.js`; the question and its
+feedback stay Dutch); "Vraag 3", the three ways to practise as a numbered list; "Vraag 4 · Zo kijkt Claude je tekst
+na", the writing check set in HTML (a made-up example, the page says so; its errors and points must follow the scoring
+rules). "Veelgestelde vragen" uses native `<details>`; keep the answers true (not DUO, offline, no pass guarantee). The
+Plus card only shows when Plus is on (a card saying it was unavailable looked broken). The page looks like the app: the
+blurred windmill behind frosted glass, white tiles with the app's shadow, a glass bar on top. Bitterbal, the plush
+mascot, greets visitors in the hero, in front of Vermeer's Gezicht op Delft with a speech bubble (on a phone above the
+headline); the user wants it in another pose, waving: swap `art/bitterbal-white.jpg` there once there is such a
+picture. Contact on the homepage is hallo@bittertalen.nl (the catch-all mailbox). The study app is served at `/oefenen` from `oefenen.html` (the code, the styles and the small tables, about 340 KB).
 Its large data lives in `data/`, plain scripts loaded before the app's own script, each a set of top-level `const`s
 that depend on nothing: `data/ui.js` (`UI`, `UIR`), `data/knm.js` (`KNM`), `data/a2.js` (`LZ`, `LS`, `LSM`, `SP`, `WR`,
 `WT`, `BG`), `data/b1.js` (`LZ1`, `LSB`, `WRB`, `SPB`, `G1`, `VO1`, `GSB`) and `data/extra.js` (`GP`, `GS`, `BOOKS`,
