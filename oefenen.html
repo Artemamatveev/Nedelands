@@ -46,16 +46,18 @@ if(navigator.serviceWorker){navigator.serviceWorker.addEventListener("message",f
   --card:#FFFFFF; --glass:rgba(240,244,252,.5); --lift:0 1px 2px rgba(8,16,40,.06),0 8px 24px rgba(8,16,40,.10);
   box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
 }
+/* dark: neutral graphite like iOS (tiles lighter than the page), cobalt only on the main action and the icons:
+   an all-navy dark mode made tiles melt into the page */
 @media (prefers-color-scheme:dark){ :root:not([data-theme="light"],[data-desktop]){
-  --bg:#0B1430; --surface:#14204A; --wash:#2A3D7A; --ink:#E8EEFA; --soft:#A6B2CF; --line:#24346A;
-  --blue:#8EADF5; --deep:#B9CCF8; --oranje:#FF8A3D; --good:#7CCB93; --bad:#FF8A7A; --on:#0B1430;
-  --fill:#3D63D6; --fill-press:#2F51B8; --on-fill:#FFFFFF;
-  --card:#111C42; --glass:rgba(8,14,36,.6); --lift:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.4); } }
+  --bg:#24262B; --surface:#0F1013; --wash:#2C3445; --ink:#F2F3F5; --soft:#A3A8B4; --line:#30333A;
+  --blue:#9DB4F5; --deep:#C3D1F8; --oranje:#FF8A3D; --good:#6FCF8E; --bad:#FF8A7A; --on:#0F1013;
+  --fill:#2F55C8; --fill-press:#2546A8; --on-fill:#FFFFFF;
+  --card:#1A1B1F; --glass:rgba(15,16,19,.66); --lift:0 1px 2px rgba(0,0,0,.4),0 10px 28px rgba(0,0,0,.45); } }
 :root[data-theme="dark"]:not([data-desktop]){
-  --bg:#0B1430; --surface:#14204A; --wash:#2A3D7A; --ink:#E8EEFA; --soft:#A6B2CF; --line:#24346A;
-  --blue:#8EADF5; --deep:#B9CCF8; --oranje:#FF8A3D; --good:#7CCB93; --bad:#FF8A7A; --on:#0B1430;
-  --fill:#3D63D6; --fill-press:#2F51B8; --on-fill:#FFFFFF;
-  --card:#111C42; --glass:rgba(8,14,36,.6); --lift:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.4); }
+  --bg:#24262B; --surface:#0F1013; --wash:#2C3445; --ink:#F2F3F5; --soft:#A3A8B4; --line:#30333A;
+  --blue:#9DB4F5; --deep:#C3D1F8; --oranje:#FF8A3D; --good:#6FCF8E; --bad:#FF8A7A; --on:#0F1013;
+  --fill:#2F55C8; --fill-press:#2546A8; --on-fill:#FFFFFF;
+  --card:#1A1B1F; --glass:rgba(15,16,19,.66); --lift:0 1px 2px rgba(0,0,0,.4),0 10px 28px rgba(0,0,0,.45); }
 :root[data-desktop]{color-scheme:light}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -74,6 +76,9 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-vi
 /* het schilderij van vandaag */
 header{position:relative;height:220px;margin:0 -16px;overflow:hidden;background:#132A6E;transition:height .25s}
 main:is(:not(.big),:has(#home[hidden])) header{height:88px}
+/* the strip on the other tabs: the painting softened, so a crop never shows half a face; the full one is on Vandaag */
+.art img{transition:filter .25s,transform .25s}
+:root:not([data-desktop]) main:is(:not(.big),:has(#home[hidden])) .art img{filter:blur(10px) saturate(1.15);transform:scale(1.15)}
 .art{position:absolute;inset:0;width:100%;padding:0;border:0;background:none;display:block}
 .art img{width:100%;height:100%;object-fit:cover;display:block}
 header::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(8,16,40,.8),rgba(8,16,40,0) 60%);pointer-events:none}
@@ -134,9 +139,10 @@ h2{display:flex;align-items:center;gap:10px;font-size:var(--fs-xl);font-weight:6
 .pts{margin:0 0 14px;padding-left:22px} .pts li{margin:0 0 4px} .gapw{color:var(--blue)}
 .qs{margin:0 0 14px;padding-left:22px;color:var(--soft)} .qs li{margin:0 0 4px} .qs li.on{color:var(--ink);font-weight:600}
 #hear{margin:10px 0 4px}
-.steps{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:8px}
+.steps{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:0;border-top:1px solid var(--line)}
+.steps li{border-bottom:1px solid var(--line)}
 .ona{margin:0 0 12px;padding-inline-start:22px}.ona li{margin:0 0 6px}
-.step{display:grid;grid-template-columns:36px minmax(0,1fr) 36px;column-gap:14px;align-items:center;width:100%;height:100%;text-align:var(--ta);background:var(--bg);border:1.5px solid var(--line);border-radius:var(--rc);padding:12px 14px}
+.step{display:grid;grid-template-columns:36px minmax(0,1fr) 36px;column-gap:14px;align-items:center;width:100%;height:100%;text-align:var(--ta);background:none;border:0;border-radius:0;padding:11px 0;color:var(--ink)}
 /* every step: its icon on a cobalt square (the next one: cobalt on white, a done one: a green check), title, line, › or ▶ */
 .step .sic{grid-row:1/3;width:36px;height:36px;border-radius:9px;background:var(--fill);color:#fff;display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:600;font-size:var(--fs-m)}
 .step .sic svg{width:20px;height:20px}
@@ -145,7 +151,7 @@ h2{display:flex;align-items:center;gap:10px;font-size:var(--fs-xl);font-weight:6
 .step span{grid-column:2;color:var(--soft);font-size:var(--fs-m);line-height:1.35}
 .step em{grid-column:3;grid-row:1/3;font-style:normal;font-weight:600;font-size:var(--fs-m);color:var(--blue);white-space:nowrap}
 .step em.c{font-size:26px;font-weight:400;line-height:1;color:var(--soft);justify-self:center}
-@media (hover:hover){.step:hover{border-color:var(--blue)}}
+@media (hover:hover){.step:hover b{color:var(--blue)}}
 .step.ok b{color:var(--soft)} .step.ok em{color:var(--soft)}
 /* lijsten: één rij = één scherm of oefening. De hele rij is de knop, met › rechts. */
 .list{display:grid;margin-top:8px;border-top:1px solid var(--line)}
@@ -242,9 +248,11 @@ main:has(#home:not([hidden])){padding-bottom:116px}
 .opt:active{border-color:var(--blue)}
 .opts.one{grid-template-columns:1fr}
 .opts.one .opt{font-size:var(--fs-b);font-weight:500;text-align:var(--ta);padding:11px 14px;min-height:0}
-.opt.ok{background:var(--good);border-color:var(--good);box-shadow:none;color:var(--on)}
-.opt.no{background:var(--bad);border-color:var(--bad);box-shadow:none;color:var(--on)}
-.opt.ok::before{content:"✓ "} .opt.no::before{content:"✕ "}
+/* marked answers: a light tint, a coloured border and a coloured ✓ or ✕; the text stays ink (solid green and red looked loud) */
+.opt.ok{background:color-mix(in srgb,var(--good) 11%,var(--bg));border-color:var(--good);box-shadow:none;color:var(--ink)}
+.opt.no{background:color-mix(in srgb,var(--bad) 9%,var(--bg));border-color:var(--bad);box-shadow:none;color:var(--ink)}
+.opt.ok::before,.opt.no::before{font-weight:700;margin-inline-end:6px}
+.opt.ok::before{content:"✓";color:var(--good)} .opt.no::before{content:"✕";color:var(--bad)}
 .opt:disabled{cursor:default}
 .type{display:flex;gap:8px}
 input,textarea{font:inherit;color:var(--ink);background:var(--card);border:1.5px solid var(--ink);border-radius:var(--rc)}
@@ -300,10 +308,12 @@ textarea{display:block;width:100%;font-size:var(--fs-b);line-height:1.5;padding:
    while the text scrolls under them */
 #card>.act,#card>.exnav,#card>.fb.sheet{position:sticky;bottom:0;z-index:2;background:var(--card);margin:16px -16px 0;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line)}
 #card>.act:has(>[hidden]){display:none}
-#card>.fb.ok{border-top:2px solid var(--good);background:color-mix(in srgb,var(--good) 12%,var(--card))}
-#card>.fb.no{border-top:2px solid var(--bad);background:color-mix(in srgb,var(--bad) 10%,var(--card))}
+#card>.fb.ok{border-top:1px solid color-mix(in srgb,var(--good) 40%,var(--line));background:color-mix(in srgb,var(--good) 7%,var(--card))}
+#card>.fb.no{border-top:1px solid color-mix(in srgb,var(--bad) 40%,var(--line));background:color-mix(in srgb,var(--bad) 6%,var(--card))}
+.fbr{margin:0 0 8px;font-size:var(--fs-l);font-weight:600;line-height:1.3} .fbr span{display:block;font-size:var(--fs-s);font-weight:600;color:var(--soft);margin-bottom:2px}
 .fbh{display:flex;align-items:center;gap:10px;margin:0 0 8px}
-.fbh i{flex:none;display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:8px;font-style:normal;font-weight:700;color:var(--on)}
+.fbh i{flex:none;display:flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;font-style:normal;font-size:var(--fs-s);font-weight:700;color:var(--on)}
+.fbh b{font-size:var(--fs-b)}
 .ok .fbh i{background:var(--good)} .no .fbh i{background:var(--bad)}
 .fb.sheet .btn{margin-top:6px} #card>.fb.sheet{border-radius:var(--r) var(--r) 0 0}
 /* focus while practising: no painting, only ✕, the progress and the clock */
@@ -511,7 +521,7 @@ body.vfull{overflow:hidden}
   #home .tile{padding:24px 28px 20px}
   .tile,#play,#stats,#lib,#read,#media,#story,#hist,#talk,#move{padding-left:28px;padding-right:28px}
   #card>.act,#card>.exnav,#card>.fb.sheet{margin-left:-28px;margin-right:-28px;padding-left:28px;padding-right:28px}
-  .steps{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .steps{grid-template-columns:none}
   #exam .list{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));column-gap:40px}
   .duo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:16px;align-items:start}
   #play,#stats,#lib,#read,#media,#story,#hist,#talk,#move{max-width:720px;margin:16px auto 0}
@@ -559,29 +569,45 @@ body.vfull{overflow:hidden}
 :root[dir=rtl] .tabs .lens{left:auto;right:5px;transform:translateX(calc(var(--i,0) * -100%))}
 :root[data-desktop] main{overflow-x:visible}
 :root[data-desktop] header{border-image:linear-gradient(#132A6E 0 0) fill 0 // 0 100vmax}
-:root[data-desktop] main.big:has(#home:not([hidden])) header{height:156px}
+:root[data-desktop] main.big:has(#home:not([hidden])) header{height:360px}
 :root[data-desktop] main:is(:not(.big),:has(#home[hidden])) header{height:168px}
 :root[data-desktop] main:is(:not(.big),:has(#home[hidden])) header h1{bottom:28px}
 :root[data-desktop] header .art{max-width:calc(100% - 460px)}
+:root[data-desktop] main.big:has(#home:not([hidden])) header .art{top:36px;bottom:36px;max-width:calc(100% - 120px)}
 :root[data-desktop] header .art img{max-width:100%}
 :root[data-desktop] header .lang{top:20px;left:auto;right:40px;height:36px}
 :root[data-desktop] header:has(.streak:not(:empty)) .lang{top:110px}
+/* computer: a sidebar like a desktop app, with the logo on top and the five tabs as rows (icon and name), the oranje
+   lens behind the current one; the other tabs have no painting band, only Vandaag hangs the painting on the wall */
 :root[data-desktop] main:has(#home:not([hidden])){
-  width:calc(100% - 128px);
-  margin-left:max(112px,calc((100% - 1160px)/2));
+  max-width:1180px;
+  margin-left:calc(232px + max(0px,(100% - 232px - 1180px)/2));margin-right:0;
   padding-bottom:64px;
 }
+:root[data-desktop] main:has(#home:not([hidden])) h1{position:fixed;z-index:9;left:30px;top:30px;bottom:auto;font-size:28px;color:var(--ink)}
+:root[data-desktop] main:has(#home:not([hidden])) header .lang{position:fixed;z-index:9;left:26px;right:auto;top:auto;bottom:24px}
+:root[data-desktop] main:has(#home:not([hidden])):not(.big) header{height:24px;border-image:none;background:none}
+:root[data-desktop] main:has(#home:not([hidden])):not(.big) header .art,
+:root[data-desktop] main:has(#home:not([hidden])):not(.big) header::after{display:none}
 :root[data-desktop] .tabs{
-  left:16px;top:50%;bottom:auto;transform:translateY(-50%);
-  flex-direction:column;width:96px;padding:5px;border-radius:var(--r);
-  touch-action:auto;transition:none;
+  left:0;top:0;bottom:0;transform:none;width:232px;flex-direction:column;justify-content:flex-start;gap:0;
+  padding:92px 14px 24px;border-radius:0;border:0;border-inline-end:1px solid var(--line);
+  background:color-mix(in srgb,var(--card) 94%,transparent);box-shadow:none;touch-action:auto;transition:none;
 }
-:root[data-desktop] .tabs button{flex:0 0 56px;justify-content:center;padding:4px;border-radius:var(--rc)}
+:root[data-desktop] .tabs.min{width:232px}
+:root[data-desktop] .tabs button{flex:0 0 46px;flex-direction:row;justify-content:flex-start;gap:12px;padding:0 14px;border-radius:var(--rc);font-size:var(--fs-m)}
+:root[data-desktop] .tabs svg{width:22px;height:22px}
 :root[data-desktop] .tabs.min span{display:block}
+@media (hover:hover){:root[data-desktop] .tabs button:not([aria-current]):hover{background:var(--surface)}}
 :root[data-desktop] .tabs .lens{
-  left:5px;right:5px;bottom:auto;width:auto;height:56px;border-radius:var(--rc);
+  left:14px;right:14px;top:92px;bottom:auto;width:auto;height:46px;border-radius:var(--rc);
   transform:translateY(calc(var(--i,0) * 100%));
 }
+/* Arabic: the sidebar on the right */
+:root[dir=rtl][data-desktop] .tabs{left:auto;right:0}
+:root[dir=rtl][data-desktop] main:has(#home:not([hidden])){margin-left:0;margin-right:calc(232px + max(0px,(100% - 232px - 1180px)/2))}
+:root[dir=rtl][data-desktop] main:has(#home:not([hidden])) h1{left:auto;right:30px}
+:root[dir=rtl][data-desktop] main:has(#home:not([hidden])) header .lang{left:auto;right:26px}
 :root[data-desktop] .duo{align-items:stretch}
 :root[data-desktop] .duo>div{display:contents}
 :root[data-desktop] .duo>.tile{grid-column:1/-1}
@@ -696,11 +722,11 @@ h2,h3,.verb,.step b,.it b{text-wrap:balance} p,.d,.sub,.note{text-wrap:pretty}
 .writing-details{margin-block:18px}
 .writing-details h2{margin-block-start:24px}
 
-.site-footer{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-block-start:12px;border-block-start:1px solid var(--line);font-size:var(--fs-m)}
-.site-footer summary{min-height:44px;padding-block:10px;line-height:1.4;font-weight:600;cursor:pointer}
-.site-footer ul{list-style:none;padding:0;margin:0}
-.site-footer :is(a,button){display:inline-flex;align-items:center;min-height:44px;max-inline-size:100%;color:var(--blue);text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}
-.site-footer button{background:none;border:0;padding:0;font:inherit;text-align:start;cursor:pointer}
+.site-footer .lh{margin:22px 0 0;padding-inline-start:16px} .site-footer .pg{margin-top:6px}
+.site-footer .it b{font-weight:400}
+/* Herhalen before there is anything to repeat: what will come here */
+.empty{display:flex;gap:12px;align-items:flex-start;margin-top:14px;padding:14px 16px;border-radius:var(--rc);background:var(--surface);color:var(--soft);font-size:var(--fs-m);line-height:1.4}
+.empty b{display:block;color:var(--ink);font-weight:600;font-size:var(--fs-b);margin-bottom:2px}
 .site-help details{border-block-start:1px solid var(--line);padding-block:8px}
 .site-help summary{min-height:44px;padding-block:10px;cursor:pointer;font-weight:600}
 
@@ -815,7 +841,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
 <script src="/study/language-v1.js?v=e94426af48"></script>
 <script src="/study/progress-v1.js?v=3145793dee"></script>
 <script src="/study/writing-v1.js?v=e5690fd786"></script>
-<script src="/data/ui.js?v=5a99127abe"></script>
+<script src="/data/ui.js?v=bd29b833b4"></script>
 <script src="/data/knm.js?v=48aed89ba7"></script>
 <script src="/data/a2.js?v=35efca6a73"></script>
 <script src="/data/b1.js?v=e9701bd331"></script>
@@ -1273,22 +1299,14 @@ function bindLogin(el,x,pre,mail){
   el.querySelectorAll("[data-login]").forEach(b=>b.onclick=()=>{if(ok(b.dataset.login))login(b.dataset.login)});
 }
 function welcome(){$("home").hidden=true;$("welcome").hidden=false;window.scrollTo(0,0);drawWelcome()}
+// Help and the pages about Bittertalen at the end of Profiel: groups of rows like the iPhone's Settings (they were two
+// <details> with browser triangles and blue links, which looked unfinished). Opzeggen stays a row of its own: cancelling
+// must be easy to find.
 function siteFooter(){
-  return `<details><summary>Oefenen en examens</summary><ul>
-      <li><button type="button" data-site="A2">A2 oefenen</button></li>
-      <li><button type="button" data-site="B1">B1 oefenen</button></li>
-      <li><button type="button" data-site="free">Gratis oefenvraag</button></li>
-      <li><button type="button" data-site="exam">Uitleg over de examens</button></li>
-      <li><button type="button" data-site="prices">Prijzen</button></li>
-    </ul></details>
-    <details><summary>Hulp</summary><ul>
-      <li><button type="button" data-site="faq">Veelgestelde vragen</button></li>
-      <li><a href="mailto:privacy@bittertalen.nl">Contact</a></li>
-      <li><a href="/privacy">Privacyverklaring</a></li>
-      <li><button type="button" data-site="cancel">Abonnement opzeggen</button></li>
-      <li><a href="/over">Over Bittertalen</a></li>
-      <li><a href="/">Bittertalen</a></li>
-    </ul></details>`;
+  const row=(site,t)=>`<button type="button" class="it" data-site="${site}"><span><span class="th"><b>${t}</b></span></span></button>`,
+    link=(href,t)=>`<a class="it" href="${href}"><span><span class="th"><b>${t}</b></span></span></a>`;
+  return `<h3 class="lh">Hulp</h3><div class="pg">${row("faq","Veelgestelde vragen")}${row("exam","Uitleg over de examens")}${row("prices","Prijzen")}${row("cancel","Abonnement opzeggen")}${link("mailto:hallo@bittertalen.nl","Contact")}</div>
+    <h3 class="lh">Bittertalen</h3><div class="pg">${link("/over","Over Bittertalen")}${link("/privacy","Privacyverklaring")}${link("/","Website")}</div>`;
 }
 function tryOne(){
   const section=lvl()==="B1"?"l1":"lz";
@@ -1742,7 +1760,7 @@ const IC={
   wo:'<rect x="2" y="7.5" width="6.5" height="9" rx="1.8"/><rect x="10" y="7.5" width="5.5" height="9" rx="1.8"/><rect x="17" y="7.5" width="5" height="9" rx="1.8"/>',
   pr:'<path fill-rule="evenodd" d="M12 2.5a9.5 9.5 0 1 1 0 19 9.5 9.5 0 0 1 0-19zM11 6.5v6.4l4.6 2.8 1-1.7-3.6-2.2V6.5z"/>',
   dh:'<path fill-rule="evenodd" d="M2.5 4A1.5 1.5 0 0 1 4 2.5h7.4l10.1 10.1a1.5 1.5 0 0 1 0 2.1l-6.8 6.8a1.5 1.5 0 0 1-2.1 0L2.5 11.4zM7.5 6a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>',
-  vo:'<text x="12" y="17.2" text-anchor="middle" font-size="13.5" font-weight="700" font-family="-apple-system,system-ui,sans-serif">Aa</text>',
+  vo:'<path d="M8 3h11a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2V7a2 2 0 0 0-2-2H6a2 2 0 0 1 2-2z"/><path d="M5 7h11a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2zm2.2 5h6.6a1 1 0 0 0 0-2H7.2a1 1 0 0 0 0 2zm0 4h4.6a1 1 0 0 0 0-2H7.2a1 1 0 0 0 0 2z" fill-rule="evenodd"/>',
   books:'<rect x="2.5" y="4" width="4.5" height="17" rx="1.2"/><rect x="8.5" y="4" width="4.5" height="17" rx="1.2"/><path d="M14.4 5.6l3.2-.9a1.2 1.2 0 0 1 1.5.8l3.3 13a1.2 1.2 0 0 1-.9 1.5l-3.2.9a1.2 1.2 0 0 1-1.5-.8L13.5 7.1a1.2 1.2 0 0 1 .9-1.5z"/>',
   media:'<path fill-rule="evenodd" d="M4 4h16a1.8 1.8 0 0 1 1.8 1.8v11A1.8 1.8 0 0 1 20 18.6H4a1.8 1.8 0 0 1-1.8-1.8v-11A1.8 1.8 0 0 1 4 4zM10 8v6.6l5.5-3.3z"/><rect x="7" y="19.9" width="10" height="1.8" rx=".9"/>',
   words:'<path d="M6.5 2.5h11A1.5 1.5 0 0 1 19 4v17.5l-7-4.6-7 4.6V4a1.5 1.5 0 0 1 1.5-1.5z"/>',
@@ -1780,11 +1798,12 @@ function home(){
   const part=k=>{const r=ready(k),ex=((S.res||{})[k]||[]).length;
     // the number is the share right (the last proefexamen, else practice); the line says where it comes from and what you need
     const need=`oefendoel: ${passPc(k)}%`;
-    const speech=["sp","sb"].includes(k)?'<span class="st">Uitspraak en tempo zijn niet beoordeeld.</span>':"";
+    // only beside a score: without one there is nothing that could seem to include pronunciation
+    const speech=["sp","sb"].includes(k)&&r.pc!=null?'<span class="st">Uitspraak en tempo zijn niet beoordeeld.</span>':"";
     const st=ex?`<span class="st ${r.cls==="good"?"good":r.cls===""?"near":""}"><i></i>${r.st} · ${need}${/kende/.test(r.t)?" · je kende de meeste vragen al":""}</span>`
       :`<span class="st">${r.pc!=null?need:"Nog niet geoefend · "+need}</span>`;
     const scoreSource=ex?"Laatste proefexamen":"Oefeningen";
-    return`<button class="rd" data-e="${k}" aria-expanded="false">${icHTML(k)}<span class="rm"><b>${PART[k]}</b><small><span>Bekijk proefexamen</span> · <span>${EX[k].min} min</span></small></span><strong class="rp${r.pc==null?" none":""}">${r.pc==null?"–":r.pc+"%"}${r.pc==null?"":`<small>${scoreSource}</small>`}</strong><span class="bar pass" aria-hidden="true" style="--pass:${passPc(k)}%"><i style="width:${r.pc||0}%"></i></span>${st}${speech}</button>`};
+    return`<button class="rd" data-e="${k}" aria-expanded="false">${icHTML(k)}<span class="rm"><b>${PART[k]}</b><small>${EX[k].min}&nbsp;min</small></span><strong class="rp${r.pc==null?" none":""}">${r.pc==null?"":r.pc+"%"}${r.pc==null?"":`<small>${scoreSource}</small>`}</strong><span class="bar pass" aria-hidden="true" style="--pass:${passPc(k)}%"><i style="width:${r.pc||0}%"></i></span>${st}${speech}</button>`};
   const lb=Object.values(S.bk||{}).filter(b=>b.t).sort((a,b)=>b.at-a.at)[0];
   const hs=S.hs||{},lh=GS.filter(c=>hs[c.id]).sort((a,b)=>hs[b.id]-hs[a.id])[0],gsDone=GS.filter(c=>gsItems(c).every(x=>(S.items[x.k]||{}).r)).length;
   // one row per part: tap it for a proefexamen; on the right how far you are
@@ -1810,9 +1829,10 @@ function home(){
     +itHTML(`data-x="hist"`,"Geschiedenis van Nederland",lh?`Je was bij: ${lh.t}`:"Van de hunebedden tot nu.",{n:gsDone?`${gsDone} van ${GS.length}`:null,ic:"hist"})
     +itHTML(`data-x="media"`,"Luisteren en kijken","Nieuws, video's en podcasts.",{ic:"media"})
     +itHTML(`data-x="talk"`,"Gesprekken","Bel de dokter, koop brood, praat met de buren.",{n:(n=>n?`${n} van ${GP.filter(c=>!c.ona).length}`:null)(GP.filter(c=>!c.ona&&(S.gp||{})[c.id]).length),ic:"talk"});
-  $("mine").innerHTML=itHTML(`data-x="stats"`,"Kies een lastig onderwerp","Bekijk waar je het vaakst fouten maakt en kies wat je wilt oefenen.",{ic:"stats"})
+  $("mine").innerHTML=itHTML(`data-x="stats"`,"Kies een lastig onderwerp","Waar je de meeste fouten maakt.",{ic:"stats"})
     +((S.errs||[]).length?itHTML(`data-x="errs"`,"Oefen met je eigen fouten","Kies de juiste versie van zinnen uit je eerdere teksten en antwoorden.",{n:S.errs.length,ic:"errs"}):"")
-    +((S.words||[]).length?itHTML(`data-x="words"`,"Mijn woorden","Die je bij het lezen hebt bewaard.",{n:S.words.length,ic:"words"}):"");
+    +((S.words||[]).length?itHTML(`data-x="words"`,"Mijn woorden","Die je bij het lezen hebt bewaard.",{n:S.words.length,ic:"words"}):"")
+    +(!(S.errs||[]).length&&!(S.words||[]).length?`<div class="empty"><span><b>Hier komt je herhaling</b>Fouten uit je teksten en woorden die je bij het lezen bewaart, komen hier vanzelf bij.</span></div>`:"");
   document.querySelectorAll("#exam button,#parts button,#gram button,#books button,#mine button").forEach(b=>b.onclick=()=>{const d=b.dataset;
     if(d.knm){knmOpen=!knmOpen;b.setAttribute("aria-expanded",knmOpen);$("knmsub").hidden=!knmOpen}
     else if(d.kt)build("knm",d.kt==="all"?null:{...SEC.find(x=>x.id==="knm"),t:"KNM: "+KNMT[d.kt],theme:KNMT[d.kt]});
@@ -2131,7 +2151,7 @@ function planHTML(){
   const intro=nx<0?"Alles is klaar. Tot morgen!":P.bg?"Eerst de basis: elke dag één les.":P.pc!=null?`Vooral ${PART[P.k]}: daar scoor je nu het laagst.`:"Van elk onderdeel een beetje.";
   // new here at A2: where to begin, right under the heading, so it is seen above the tab bar on a phone. Gone after the
   // test, or once someone has clearly been practising
-  const first=lvl()==="A2"&&!S.start&&Object.keys(S.items).length<30?`<div class="list">${itHTML(`data-p="t:start"`,"Waar begin ik?","Twaalf korte vragen. Daarna weet je waar je kunt beginnen.",{ic:"bg"})}</div>`:"";
+  const first=lvl()==="A2"&&!S.start&&Object.keys(S.items).length<30?`<div class="list">${itHTML(`data-p="t:start"`,"Waar begin ik?","Twaalf vragen: zo weet je waar je begint.",{ic:"bg"})}</div>`:"";
   const date=new Date().toLocaleDateString("nl-NL",{weekday:"long",day:"numeric",month:"long"});
   return`<p class="ask"><span>${date}</span> · <span>${LVL[lvl()]}</span></p><h2>Je les van vandaag</h2>
     ${first}${writingDrafts().map(x=>`<button class="ghost wide" data-draft="${x.section}" data-exam="${Number(x.exam)}" data-draft-slot="${esc(x.slot)}"><span>Verder met je concept</span> · ${x.exam?EX[x.section].t:PART[x.section]}${x.slot?" · <span>Gerichte oefening</span>":""}</button>`).join("")}
@@ -2404,7 +2424,8 @@ function buzz(k){
 function feedback(ok,q){
   buzz(ok?"good":"bad");
   $("fb").className="fb sheet "+(ok?"ok":"no");
-  $("fb").innerHTML=`<p class="fbh"><i aria-hidden="true">${ok?"✓":"✕"}</i><b class="${ok?"good":"bad"}">${ok?"Goed zo!":"Goed is: "+q.right}</b></p>
+  // wrong: a short heading, then the right answer in ink (a long red heading was loud)
+  $("fb").innerHTML=`<p class="fbh"><i aria-hidden="true">${ok?"✓":"✕"}</i><b class="${ok?"good":"bad"}">${ok?"Goed zo!":"Niet goed"}</b></p>${ok?"":`<p class="fbr"><span>Goed is</span>${q.right}</p>`}
     ${q.note?(q.sec==="verb"?q.note:`<div class="note">${q.note}</div>`):""}
     <button class="btn wide" id="next">Verder</button>`;
   $("next").onclick=()=>{pos++;show()}; $("next").focus();

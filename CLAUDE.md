@@ -8,7 +8,10 @@ conversations), checked against the content by the same test: change them when t
 eruit" shows three screenshots of the app in `shots/` (WebP, 780 px wide), taken with Playwright from the real app; the
 writing feedback in them is a made-up example (the page says so), and its errors and points must follow the scoring
 rules. "Veelgestelde vragen" uses native `<details>`; keep the answers true (not DUO, offline, no pass guarantee). The
-Plus card only shows when Plus is on (a card saying it was unavailable looked broken). Contact on the homepage is
+Plus card only shows when Plus is on (a card saying it was unavailable looked broken). It looks like the app: the
+blurred windmill behind frosted glass, white tiles with the app's shadow, cobalt squares with white glyphs, a glass
+bar on top; the hero shows the app in a phone (`shots/app.webp`, the top of Vandaag) in front of Vermeer's Gezicht op
+Delft with a museum line; the plush Bitterbal says hello at the closing call to action. Contact on the homepage is
 hallo@bittertalen.nl (the catch-all mailbox). The study app is served at `/oefenen` from `oefenen.html` (the code, the styles and the small tables, about 340 KB).
 Its large data lives in `data/`, plain scripts loaded before the app's own script, each a set of top-level `const`s
 that depend on nothing: `data/ui.js` (`UI`, `UIR`), `data/knm.js` (`KNM`), `data/a2.js` (`LZ`, `LS`, `LSM`, `SP`, `WR`,
@@ -62,7 +65,9 @@ generic "AI app" look.
 - **Colours**: tin-glaze white `--bg`, cobalt `--blue`, light wash `--wash`, and
   `--oranje` as the only accent (timer, selection, the bitterbal lens in the tab bar). Filled cobalt surfaces (`.btn`, the icon squares,
   chosen word tokens, photo numbers) use `--fill` with `--on-fill` text: in dark mode that stays a deep
-  cobalt with white text (5.3:1), because the light `--blue` read as a highlight rather than the main action.
+  cobalt (`#2F55C8`) with white text (6.4:1), because the light `--blue` read as a highlight rather than the main action.
+  Dark mode is neutral graphite like iOS (page `#0F1013`, tiles `#1A1B1F`, controls `#24262B`), with cobalt only on the
+  main action and the icons: an all-navy dark mode made the tiles melt into the page.
   Always use the tokens on `:root`; every colour has a dark-mode value.
 - **Glass and tiles**: the page background is a Dutch landscape faintly seen through a frosted window: Ruisdael's
   windmill, pre-blurred in `art/molen-glass.jpg` (`body::before`), under a half-transparent wash (`--glass`). The content sits on plain white tiles with a soft shadow (`.tile`, `--card`, `--lift`), not
@@ -95,7 +100,8 @@ generic "AI app" look.
   - Header: the painting of the day (`ART` + `paint()` in `oefenen.html`), with a museum
     label underneath: artist, title, year, museum and one A2 sentence in Dutch (no
     translation), all in one size (15px, no italics). The full painting and the label are on the Vandaag tab; the
-    other tabs and inner screens get the narrow strip (`main.big` is only set on Vandaag). Tapping the painting on a
+    other tabs and inner screens get the narrow strip (`main.big` is only set on Vandaag), on a phone softened (blurred),
+    so the crop never shows half a face. Tapping the painting on a
     home tab opens its story (`story()`); on inner screens it shows the painting in full.
   - Streak: a ribbon in the Dutch flag (rood, wit, blauw, horizontal like the flag: `#AE1C28`, white, `#21468B`)
     hanging from the top of the painting, the number on the white band and "dagen op rij" under it (`.streak .lint`).
@@ -120,8 +126,8 @@ klaar"), one short line, and the steps (a new A2 learner sees "Waar begin ik?" r
 choice, so it shows above the tab bar on a phone): all alike: its icon, title, a short line and ›, a done one a green check; no exam dates. When all are done the streak ribbon drops down once that day (`ww-stamp`) with a tap of the
 phone. The learner chooses 10, 20 or 40 minutes. `planTasks()` selects short rounds within that estimated budget, prioritises weak parts, and rotates ties. `S.lessonPlan` freezes the steps for that day, level and budget so completed work does not reorder the lesson. Full timed exams start from Examen. Then Mix van de dag.
 - **Examen**: "Naar het examen": one row per exam part (`.rd`, from `ready()`), the whole row starts that part's
-proefexamen: its icon, the name with its minutes under it, the score on the right ("76%" in ink with a small
-"goed" under it; "–" without one) and ›; under it the bar with the pass line (`passOf()`: Lezen and Luisteren 19 of
+proefexamen: its icon, the name with its minutes under it, the score on the right ("76%" in ink with where it comes
+from under it; nothing without one) and ›; under it the bar with the pass line (`passOf()`: Lezen and Luisteren 19 of
 25, KNM 28 of 40, the rest 70%) and one status line: a dot and the status (green Stabiel oefenresultaat, oranje Bijna
 klaar, grey Nog niet klaar) or "Bij het oefenen" / "Nog niet geoefend", then "nodig: 76%". No line with the number of proefexamens, the date and "nieuwe vragen" under it (removed at the user's wish: the history is in Mijn resultaten). The user found a bare
 percentage unclear, so the intro says in one line what the percentage and the line mean. The number is the share of right answers (the last
@@ -146,11 +152,17 @@ can only be taken back on the device that sent it. `OUTCOME_CAP` new rows a mont
 The KNM row opens a list under it (`knmRow()`, `aria-expanded`, the chevron turns down): "Alle thema's" (the usual mixed
 round) and the eight themes (`KNMT`), each with its own count; a theme round is `build("knm", {theme})` and "Nog een
 ronde" keeps the theme. The theme names' translations come from the `"KNM: <theme>"` entries in `UI`.
-- **Herhalen**: Mijn zwakke punten, Mijn fouten and Mijn woorden (the last two once there is something in them).
+- **Herhalen**: Mijn zwakke punten, Mijn fouten and Mijn woorden (the last two once there is something in them); with
+neither, a short empty state says what will come there (`.empty`).
+- **On a computer** (`data-desktop`): a sidebar like a desktop app (`.tabs` as a column of 232 px with the logo on top,
+the tabs as rows with icon and name, the oranje lens behind the current one, the language pill at the bottom); on
+Vandaag the painting hangs framed on the cobalt museum wall (360 px high), the other tabs have no painting band.
 - **Profiel** looks like an iPhone settings screen (the user's example, November 2026): on top a round avatar the learner
 picks (`avScreen()` in `#talk`, "Kies je avatar": a grid of three by three, the chosen one with an orange ring; `S.me.av`, so it
-goes along). The avatars are original chibi Dutch people drawn as inline SVG in `AVS` (`avSVG()`; head and shoulders,
-viewBox 0 0 100 100): four girls (Volendam with the white hul, a supporter in orange, a headscarf in Delfts blauw, braids with
+goes along). The avatars are plush (crocheted) Dutch characters, images in `art/avatars/<key>.jpg` and the bitterbal in
+`art/bitterbal-white.jpg` (`avSVG()`); the plush bitterbal is the mascot everywhere (the homepage too). Only the app icon
+is still a photo of a real bitterbal: make it plush too once there is a plush bitterbal of at least 1024 px. `AVS`
+keeps their names and the earlier SVG drawings: four girls (Volendam with the white hul, a supporter in orange, a headscarf in Delfts blauw, braids with
 a tulip), four boys (Volendam, Koningsdag with a crown, a painter, a cheese carrier) and the bitterbal, the default; skin
 tones vary on purpose. Their names under them are Dutch content (`lang="nl"`). The user showed a Vexels set as the example:
 that set is copyrighted, so never copy it; no `<defs>`/gradients in them (a gradient defined in a hidden copy doesn't draw).
@@ -158,7 +170,8 @@ Under it the name (or "Profiel") and the
 e-mail; then one filled cobalt banner (`.pban`: "Inloggen of account maken", or Bittertalen Plus when logged in), and
 rounded grey groups of rows on the white tile (`.pg`, `.prow`: the name fields with the value on the right, the level as a
 row with a native select over it, Trillen; the account with its status and Uitloggen / Account verwijderen as plain rows;
-Over and Privacy). Content: first and last name, the level (A2 or B1, a list, see B1) (`S.me` `{name, last}`, so they sync, and they also go to the account's
+then `siteFooter()`: "Hulp" (Veelgestelde vragen, Uitleg over de examens, Prijzen, Abonnement opzeggen, Contact) and
+"Bittertalen" (Over, Privacyverklaring, Website) as rows like the iPhone's Settings). Content: first and last name, the level (A2 or B1, a list, see B1) (`S.me` `{name, last}`, so they sync, and they also go to the account's
 `user_metadata` by `syncMeta()`; an exam date was asked here once and removed at the user's wish, an old `exam` field is
 kept as it is but not shown), the account
 (see Accounts). No "Mijn resultaten" tile any more (removed at the user's wish, November 2026): the scores stay in
@@ -173,7 +186,8 @@ Every section appears once; don't add a second entry point to the same exercise.
   On the home screen a row starts with an icon like the Settings app on iPhone (`IC`, `icHTML()`): a filled white
   glyph on a cobalt (`--fill`) square of 34 px with 9 px corners; a path with class `s` is drawn as a line. Every step
   of today looks the same (`.sic` icon 36 px, title, line, ›, so the titles and chevrons line up), a done one a
-  green square with a check. The next step is no longer singled out (a filled card and a play button were tried; the
+  green square with a check; the steps are rows of one list with a line between them, like every other list (not
+  bordered cards), also on a computer. The next step is no longer singled out (a filled card and a play button were tried; the
   user found one highlighted row odd): the order and the checks say what is next (`aria-current="step"`). Hover colours only under `@media (hover:hover)`: on iPhone they stuck after a tap. Not thin line icons on pastel squares (they look
   generated) and not painting details (tried, the user didn't like them). Counts on the right only once something
   was done (no "0 van 225").
@@ -189,8 +203,9 @@ Every section appears once; don't add a second entry point to the same exercise.
 - **Practising is a focus screen** (`#play`): no painting, one row with ✕ (back to where you came from; in a
   proefexamen the first tap or swipe back only asks "Stoppen?" and the page springs back), the progress bar, the count (3/10) and the clock. The main
   button (`.act`), the exam buttons (`.exnav`) and the feedback stick to the bottom of the screen, under the thumb.
-  The feedback is a sheet (`.fb.sheet`): a ✓ or ✕ as well as green or red, the right answer, why, and Verder.
-  Options also show ✓ / ✕; three options stand in one column.
+  The feedback is a sheet (`.fb.sheet`, lightly tinted): a round ✓ or ✕ with "Goed zo!" or "Niet goed", then for a wrong
+  answer "Goed is" and the right answer in ink, why, and Verder. Marked options get a light tint, a coloured border and
+  a coloured ✓ / ✕, with the text in ink (solid green and red fills looked loud); three options stand in one column.
 
 ## Words, motion, touch
 
