@@ -112,9 +112,9 @@ generic "AI app" look.
     label underneath: artist, title, year, museum and one A2 sentence in Dutch (no
     translation), all in one size (15px, no italics). The full painting and the label are on the Vandaag tab; the
     other tabs and inner screens get the narrow strip (`main.big` is only set on Vandaag), on a phone softened (blurred),
-    so the crop never shows half a face. In the strip the language pill sits on the right, level with the logo (above it, it
-    crowded the logo), left of the streak ribbon when that hangs there; on a phone under 375 px with the ribbon only
-    the globe shows. Tapping the painting on a
+    so the crop never shows half a face. On a phone the language in the header is only a white globe on the painting, no pill (the
+    cobalt pill weighed on the painting and crowded the logo; the user's choice): top left on Mijn dag, in the strip on
+    the right, level with the logo, left of the streak ribbon when that hangs there. Profiel has a "Taal" row as well. Tapping the painting on a
     home tab opens its story (`story()`); on inner screens it shows the painting in full.
   - Streak: a ribbon in the Dutch flag (rood, wit, blauw, horizontal like the flag: `#AE1C28`, white, `#21468B`)
     hanging from the top of the painting, the number on the white band and "dagen op rij" under it (`.streak .lint`).
@@ -193,7 +193,7 @@ that set is copyrighted, so never copy it; no `<defs>`/gradients in them (a grad
 Under it the name (or "Profiel") and the
 e-mail; then one filled cobalt banner (`.pban`: "Inloggen of account maken", or Bittertalen Plus when logged in), and
 rounded grey groups of rows on the white tile (`.pg`, `.prow`: the name fields with the value on the right, the level as a
-row with a native select over it, Trillen; the account with its status and Uitloggen / Account verwijderen as plain rows;
+row with a native select over it, Taal (the menus' language, each named in itself, `.langrow`), Trillen; the account with its status and Uitloggen / Account verwijderen as plain rows;
 then `siteFooter()`: "Hulp" (Veelgestelde vragen, Uitleg over de examens, Prijzen, Abonnement opzeggen, Contact) and
 "Bittertalen" (Over, Privacyverklaring, Website) as rows like the iPhone's Settings). Content: first and last name, the level (A2 or B1, a list, see B1) (`S.me` `{name, last}`, so they sync, and they also go to the account's
 `user_metadata` by `syncMeta()`; an exam date was asked here once and removed at the user's wish, an old `exam` field is
