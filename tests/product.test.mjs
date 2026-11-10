@@ -36,7 +36,7 @@ test('Early diagnostic reports only tested questions and can continue to the end
   a.document.querySelector('#bgcontinue').click();
   for(let i=3;i<12;i++){
     const correct=a.run(`START[${i}][2]`);
-    [...a.document.querySelectorAll('#tbody .opt')].find(x=>x.textContent===correct).click();
+    [...a.document.querySelectorAll('#tbody .opt')].find(x=>x.querySelector('.tx').textContent===correct).click();
   }
   assert.match(a.document.querySelector('#tbody').textContent,/9 van 12 goed/);
   assert.equal(a.run('S.start.untested.length'),0);

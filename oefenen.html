@@ -37,7 +37,7 @@ if(navigator.serviceWorker){navigator.serviceWorker.addEventListener("message",f
    Type: the phone's own system font (SF Pro on iPhone), so it reads like a native app. */
 :root{
   /* round corners, as in the login window (the user's wish): tiles, controls (buttons, fields, options), small things */
-  --r:20px; --rc:14px; --rs:10px;
+  --r:20px; --rc:4px; --rs:3px;
   /* type, the iOS text styles: caption 12, footnote 13, subhead 15, body 17, title 3 20, title 2 22, title 1 28 */
   --fs-xs:12px; --fs-s:13px; --fs-m:15px; --fs-b:17px; --fs-l:20px; --fs-xl:22px; --fs-xxl:28px;
   --bg:#FBFCFE; --surface:#EEF2FA; --wash:#C9D6F2; --ink:#14213D; --soft:#56617C; --line:#D6DDEB;
@@ -144,7 +144,7 @@ h2{display:flex;align-items:center;gap:10px;font-size:var(--fs-xl);font-weight:6
 .ona{margin:0 0 12px;padding-inline-start:22px}.ona li{margin:0 0 6px}
 .step{display:grid;grid-template-columns:36px minmax(0,1fr) 36px;column-gap:14px;align-items:center;width:100%;height:100%;text-align:var(--ta);background:none;border:0;border-radius:0;padding:11px 0;color:var(--ink)}
 /* every step: its icon on a cobalt square (the next one: cobalt on white, a done one: a green check), title, line, › or ▶ */
-.step .sic{grid-row:1/3;width:36px;height:36px;border-radius:9px;background:var(--fill);color:#fff;display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:600;font-size:var(--fs-m)}
+.step .sic{grid-row:1/3;width:36px;height:36px;border-radius:var(--rc);background:var(--fill);color:#fff;display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:600;font-size:var(--fs-m)}
 .step .sic svg{width:20px;height:20px}
 .step.ok .sic{background:var(--good);color:#fff}
 .step b{font-size:var(--fs-b);font-weight:600;line-height:1.3}
@@ -157,7 +157,7 @@ h2{display:flex;align-items:center;gap:10px;font-size:var(--fs-xl);font-weight:6
 .list{display:grid;margin-top:8px;border-top:1px solid var(--line)}
 .it{display:flex;align-items:center;gap:12px;width:100%;min-height:56px;padding:11px 0 12px;text-align:var(--ta);background:none;border:0;border-bottom:1px solid var(--line);color:var(--ink)}
 .it>span{flex:1;min-width:0}
-.it .ic,.rd .ic{flex:none;display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;background:var(--fill);color:#fff}
+.it .ic,.rd .ic{flex:none;display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:var(--rc);background:var(--fill);color:#fff}
 .ic svg,.sic svg{width:20px;height:20px;fill:currentColor;stroke:none}
 .ic svg .s,.sic svg .s{fill:none;stroke:currentColor;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round}
 .ic text{fill:currentColor;stroke:none;font:600 12px -apple-system,system-ui,sans-serif}
@@ -175,7 +175,8 @@ a.it{text-decoration:none} .it.ext::after{content:none}
 @media (hover:hover){.it:hover b{color:var(--blue)}}
 .itw{display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line)} .itw .it{border:0}
 /* kopje boven een groep: klein, kapitalen, zoals de vraag in een oefening */
-.lh{margin:26px 0 4px;color:var(--soft);font-size:var(--fs-s);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.lh{margin:26px 0 4px;color:var(--blue);font-size:var(--fs-m);font-weight:600}
+.lh::first-letter,.ask::first-letter{text-transform:uppercase}
 /* naar het examen: one row per part starts its proefexamen; the name and time, the bar with the 70% line, the score, › */
 .rd{display:grid;grid-template-columns:34px minmax(0,1fr) auto 14px;column-gap:12px;row-gap:7px;align-items:center;width:100%;padding:13px 0;text-align:var(--ta);background:none;border:0;border-bottom:1px solid var(--line);color:var(--ink)}
 /* a part: its icon, the name and minutes, the score on the right; under it the bar with the pass line and the status */
@@ -233,11 +234,11 @@ main:has(#home:not([hidden])){padding-bottom:116px}
 .top{display:flex;justify-content:space-between;align-items:center;margin:14px 0 0}
 .back{display:inline-flex;align-items:center;gap:6px;min-height:44px;background:none;border:1px solid var(--line);color:var(--ink);font-weight:600;font-size:var(--fs-b);padding-block:5px 6px;padding-inline:10px 14px;border-radius:var(--rc)}
 .back span{font-size:20px;line-height:1}
-#timer,.rec .t{font-weight:700;font-variant-numeric:tabular-nums;color:var(--oranje);border:1.5px solid var(--oranje);padding:2px 9px;border-radius:8px}
+#timer,.rec .t{font-weight:700;font-variant-numeric:tabular-nums;color:var(--oranje);border:1.5px solid var(--oranje);padding:2px 9px;border-radius:var(--rs)}
 #timer:empty{display:none}
 .bar{height:6px;background:var(--surface);overflow:hidden;border-radius:999px;margin:14px 0 22px}
 .bar i{display:block;height:100%;width:0;transition:width .3s;background:var(--blue)}
-.ask{color:var(--soft);font-size:var(--fs-s);font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin:0}
+.ask{color:var(--blue);font-size:var(--fs-m);font-weight:600;margin:0}
 .verb{font-size:44px;font-weight:700;letter-spacing:-.02em;line-height:1.08;margin:6px 0 2px;word-break:break-word}
 .verb.long{font-size:var(--fs-l);font-weight:600;line-height:1.35;letter-spacing:-.01em;margin:8px 0 12px}
 .ru{color:var(--soft);margin:0 0 18px}
@@ -246,19 +247,27 @@ main:has(#home:not([hidden])){padding-bottom:116px}
 .opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .opt{background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:var(--rc);padding:14px 8px;font-size:var(--fs-l);font-weight:600;min-height:60px;word-break:break-word}
 .opt:active{border-color:var(--blue)}
-/* three options: one grouped list like the iPhone's Settings (separate tinted boxes with coloured borders looked
-   generated), rows with a line between them */
-.opts.one{grid-template-columns:1fr;gap:0;background:var(--surface);border-radius:var(--rc);overflow:hidden}
-.opts.one .opt{display:flex;align-items:center;gap:12px;font-size:var(--fs-b);font-weight:400;text-align:var(--ta);padding:14px 16px;min-height:52px;background:none;border:0;border-radius:0;border-bottom:1px solid var(--line)}
+/* Examenblad (the user's choice): three options as on the exam form, a letter in a square box, rows between hairlines;
+   marked: the box turns green or red with ✓ or ✕, the text stays ink; the other options fade. A choice in a
+   proefexamen fills the box oranje. (Solid fills, tinted boxes and a grouped grey list all looked generated.) */
+.opts.one{grid-template-columns:1fr;gap:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.opts.one .opt{display:flex;align-items:center;gap:14px;font-size:var(--fs-b);font-weight:400;text-align:var(--ta);padding:12px 0;min-height:56px;background:none;border:0;border-radius:0;border-bottom:1px solid var(--line)}
 .opts.one .opt:last-child{border-bottom:0}
-.opts.one .opt:active{background:color-mix(in srgb,var(--ink) 7%,transparent)}
-/* marked, like a checkmark on iPhone: the colour on the text and a ✓ or ✕ at the end; the other options fade */
+.opt .lt{flex:none;width:30px;height:30px;display:grid;place-items:center;border:1.5px solid var(--ink);border-radius:var(--rs);font-size:var(--fs-m);font-weight:700;color:var(--ink)}
+.opt .tx{min-width:0}
+@media (hover:hover){.opts.one .opt:not(:disabled):hover .lt{border-color:var(--blue);color:var(--blue)}}
+.opts.one .opt:active .lt{background:var(--surface)}
+.opt.ok .lt,.opt.no .lt,.opt.sel .lt{font-size:0;color:#fff}
+.opt.ok .lt{background:var(--good);border-color:var(--good)} .opt.no .lt{background:var(--bad);border-color:var(--bad)}
+.opt.ok .lt::before{content:"✓";font-size:var(--fs-m)} .opt.no .lt::before{content:"✕";font-size:var(--fs-m)}
+.opt.sel .lt{background:var(--oranje);border-color:var(--oranje);font-size:var(--fs-m)}
+/* short options (two columns) stay boxes; marked: coloured border and text with ✓ or ✕ */
 .opt.ok,.opt.no{background:none}
 .opt.ok{color:var(--good);border-color:var(--good);font-weight:600}
 .opt.no{color:var(--bad);border-color:var(--bad)}
-.opts.one .opt.ok,.opts.one .opt.no{border-color:var(--line)}
-.opt.ok::after,.opt.no::after{margin-inline-start:auto;padding-inline-start:6px;font-weight:700}
-.opt.ok::after{content:"✓"} .opt.no::after{content:"✕"}
+.opts.one .opt.ok,.opts.one .opt.no{color:var(--ink);font-weight:400}
+.opts:not(.one) .opt.ok::after,.opts:not(.one) .opt.no::after{padding-inline-start:6px;font-weight:700}
+.opts:not(.one) .opt.ok::after{content:"✓"} .opts:not(.one) .opt.no::after{content:"✕"}
 .opt:disabled:not(.ok,.no){opacity:.45}
 .opt:disabled{cursor:default}
 .type{display:flex;gap:8px}
@@ -306,7 +315,6 @@ textarea{display:block;width:100%;font-size:var(--fs-b);line-height:1.5;padding:
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .opt.sel{border-color:var(--oranje);box-shadow:inset 0 0 0 2px var(--oranje)}
 .opts.one .opt.sel{box-shadow:none;border-color:var(--line);font-weight:600}
-.opt.sel::after{content:"";display:inline-block;flex:none;margin-inline-start:auto;width:10px;height:10px;border-radius:50%;background:var(--oranje)}
 .exnav{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:8px;margin-top:16px} .exnav button{padding:11px 6px}
 .ovw{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;margin:12px 0 16px}
 .ovw button{min-height:46px;background:var(--bg);color:var(--ink);border:1.5px solid var(--line);border-radius:var(--rs);font-weight:600;font-variant-numeric:tabular-nums}
@@ -323,7 +331,7 @@ textarea{display:block;width:100%;font-size:var(--fs-b);line-height:1.5;padding:
 .fbh i{display:none}
 .fbh b{font-size:var(--fs-l);font-weight:600}
 .ok .fbh i{background:var(--good)} .no .fbh i{background:var(--bad)}
-.fb.sheet .btn{margin-top:6px} #card>.fb.sheet{border-radius:var(--r) var(--r) 0 0}
+.fb.sheet .btn{margin-top:6px} #card>.fb.sheet{border-radius:0;border-top:2px solid var(--ink)}
 /* focus while practising: no painting, only ✕, the progress and the clock */
 main:has(#play:not([hidden])) header{display:none}
 #play .top{gap:12px;margin:14px 0 22px}
@@ -2357,7 +2365,8 @@ function show(){
     ${cur.exam?"":`${SR?`<button class="ghost wide" id="spchk" style="margin-bottom:10px">Spreek in en laat nakijken</button>${acc.cfg&&!acc.user?(acc.cfg.free?freeNote():`<p class="note">Nakijken kan als je bent ingelogd (Profiel).</p>`):""}`:""}<button class="ghost wide" id="rev">Toon voorbeeld</button>`}`;
   else if(S.typing&&q.canType)h+=`<div class="type"><input id="inp" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Je antwoord"><button class="btn" id="chk">Controleer</button></div>`;
   else{const nv=cur.nav&&q.type==="choice";o=nv?cur.op[pos]=cur.op[pos]||q.opts():q.opts();const C=x=>capA(q,x);
-    h+=`<div class="opts${o.length===3||o.some(x=>x.length>14)?" one":""}">${o.map((x,i)=>`<button class="opt${nv&&cur.pick[pos]===x?" sel":""}" data-n="${i}"${nv?` aria-pressed="${cur.pick[pos]===x}"`:""}>${C(x)}</button>`).join("")}</div>`;
+    const one=o.length===3||o.some(x=>x.length>14);
+    h+=`<div class="opts${one?" one":""}">${o.map((x,i)=>`<button class="opt${nv&&cur.pick[pos]===x?" sel":""}" data-n="${i}"${nv?` aria-pressed="${cur.pick[pos]===x}"`:""}>${one?optLt(i,C(x)):C(x)}</button>`).join("")}</div>`;
     if(nv)h+=navHTML()}
   h+=`<div class="fb" id="fb"></div>`;
   $("card").innerHTML=h; const cd=$("card");cd.classList.remove("in");void cd.offsetWidth;cd.classList.add("in");
@@ -2431,6 +2440,8 @@ function buzz(k){
 }
 // Answers to a question (KNM, reading, listening, history) start with a capital letter on screen; the stored answer
 // stays as it is, so checking is unchanged. Grammar options don't: there the option fills a gap inside a sentence.
+// an option on the exam form: its letter (not read aloud) and its text
+const optLt=(i,x)=>`<span class="lt" aria-hidden="true">${"ABCDEF"[i]}</span><span class="tx">${x}</span>`;
 const CAPSEC=new Set(["knm","lz","l1","ls","lb","gs"]);
 const capA=(q,s)=>CAPSEC.has(q.sec)?String(s).replace(/^((?:\s|<[^>]+>)*)(\p{Ll})/u,(m,a,c)=>a+c.toUpperCase()):s;
 function feedback(ok,q){
@@ -3218,7 +3229,7 @@ function startTest(){
     i<START.length?draw():end()};
   const draw=()=>{const q=START[i],o=shuffle(q.slice(2,5)),go=pick(q);
     $("tbody").innerHTML=`<p class="ask">Vraag ${i+1} van ${START.length}</p><p class="bgq bgl" lang="nl">${q[1]}</p>
-      <div class="opts one bgl" lang="nl">${o.map((x,j)=>`<button class="opt" data-n="${j}">${x}</button>`).join("")}</div>
+      <div class="opts one bgl" lang="nl">${o.map((x,j)=>`<button class="opt" data-n="${j}">${optLt(j,x)}</button>`).join("")}</div>
       <button class="ghost wide" id="bgn" style="margin-top:12px">Ik weet het niet</button>`;
     document.querySelectorAll("#tbody .opt").forEach(b=>b.onclick=()=>go(o[b.dataset.n]===q[2]));
     $("bgn").onclick=()=>go(false);

@@ -77,7 +77,7 @@ generic "AI app" look.
   app reads like a native iPhone app. No web fonts; headings semibold (600–700), never 800.
   No handwriting or decorative fonts.
 - **The login window's look, everywhere** (the user liked its type and colours): headings in `--ink`, semibold (600),
-  no diamond; small labels (`h3.lh`, `.ask`) in `--soft`; cobalt only on the main action (`.btn`) and
+  no diamond; small labels (`h3.lh`, `.ask`) in cobalt (`--blue`), sentence case, 15 px, never small capitals; cobalt only on the main action (`.btn`) and
   in icons; secondary buttons (`.ghost`, `.back`) are neutral: 1px `--line` border, `--ink` text; chevrons › in
   `--soft`; fields have a 1.5px `--ink` border, 52px high; the level switch (`.seg`) is a grey track with a white
   thumb, like iOS.
@@ -86,10 +86,10 @@ generic "AI app" look.
   buttons, fields, documents), `--fs-l` 20 (options, long questions, feedback), `--fs-xl` 22 (h2), `--fs-xxl` 28 (today's
   lesson). Only display sizes stay their own (the logo, the big word 44, the score 72, the streak ribbon, the reader). Weights
   600, 700 only for the logo, the big word and the score. Headings a little tighter (-.01em to -.02em).
-- **Shapes**: round corners, as in the login window the user liked (it looks livelier): tokens on `:root`, `--r` 20px
-  for tiles and inner screens, `--rc` 14px for controls (buttons, fields, options, steps, the level switch, documents,
-  photos), `--rs` 10px for small things (icon squares, word tokens, small buttons), 8px for the tiniest (numbers, the
-  timer); bars are pills, the feedback sheet has round top corners. Use the tokens, not new numbers. Solid 1px
+- **Shapes** ("Examenblad", the user's choice in November 2026, from four designs: it looks like the exam form and not
+  generated): tiles and inner screens keep round corners (`--r` 20px; the login window 24px), everything inside is nearly
+  square: `--rc` 4px for controls (buttons, fields, options, the level switch, documents, photos, icon squares), `--rs`
+  3px for small things (letter boxes, word tokens, the timer); bars are pills, the feedback sheet has round top corners. Use the tokens, not new numbers. Solid 1px
   separators, flat buttons. The floating tab bar is a glass pill (like iOS 26 and Instagram); the login window
   (`#welcome`) is a card like Yandex ID (24px).
 - **Logo**: the name "Bittertalen" in the system font, with a bitterbal (`--oranje`, light crumbs) as the dot on
@@ -203,12 +203,13 @@ Every section appears once; don't add a second entry point to the same exercise.
 - **Practising is a focus screen** (`#play`): no painting, one row with ✕ (back to where you came from; in a
   proefexamen the first tap or swipe back only asks "Stoppen?" and the page springs back), the progress bar, the count (3/10) and the clock. The main
   button (`.act`), the exam buttons (`.exnav`) and the feedback stick to the bottom of the screen, under the thumb.
-  Three options are one grouped list like the iPhone's Settings (`.opts.one`: rows with a line between them on a grey
-  group). Marked like a checkmark on iPhone: the colour on the text and ✓ / ✕ at the end, the other options fade; a
-  choice in a proefexamen gets an oranje dot at the end. The feedback is a plain sheet (`.fb.sheet`): "Goed zo!" or
+  Three options are set like the exam form (`.opts.one`, `optLt()`): a letter A, B, C in a square box, rows between
+  hairlines. Marked: the box turns green with ✓ or red with ✕, the text stays ink, the other options fade; a choice in a
+  proefexamen fills the box oranje. Answers to KNM, reading, listening and history questions start with a capital on
+  screen (`capA()`); grammar options keep their case. The feedback is a plain, square sheet under a 2px ink rule (`.fb.sheet`): "Goed zo!" or
   "Niet goed" in colour, for a wrong answer "Goed is: <answer>" in ink, why, and Verder. The user found the earlier
   versions generated-looking: solid green and red fills, then separate tinted boxes with coloured borders, ✓ / ✕ in
-  front and a tinted sheet; don't go back to either.
+  front and a tinted sheet, then a grouped grey list; don't go back to any of them.
 
 ## Words, motion, touch
 
