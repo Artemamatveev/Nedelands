@@ -23,7 +23,10 @@ function serve(state = {}) {
       res.writeHead(200, {'content-type': TYPES['.html']});
       return res.end(fs.readFileSync(path.join(ROOT, 'oefenen.html'), 'utf8').replace(/\/data\/knm\.js\?v=[0-9a-f]+/, '/data/knm.js?v=' + state.knm));
     }
-    if (p === '/api/config') { res.writeHead(200, {'content-type':'application/json'}); return res.end('{}'); }
+    if (p === '/api/config') { res.writeHead(200, {'content-type':'application/json'}); return res.end(JSON.stringify(state.config || {})); }
+    if (p === '/api/event' && state.events) {
+      let b = ''; req.on('data', d => b += d); req.on('end', () => { state.events.push(JSON.parse(b)); res.writeHead(204); res.end(); }); return;
+    }
     if (p.startsWith('/api/')) { res.writeHead(404); return res.end(); }
     if (p === '/') p = '/index.html';
     let f = path.join(ROOT, path.normalize(p));
@@ -149,6 +152,38 @@ test('The homepage and the app work in a real browser', async t => {
       assert.ok(min >= 4.5, `white on the lens: ${min.toFixed(2)}:1`);
       await s.ctx.close();
     });
+  } finally { await browser.close(); server.close(); }
+});
+
+// The anonymous counts: the app counts a device once a day ("new" only without progress), the homepage its own day and
+// its buttons; nothing at all with Global Privacy Control, and nothing when the server doesn't offer it (cfg.events)
+test('Usage counts: once a day, nothing with Global Privacy Control', async t => {
+  let browser;
+  try { browser = chromium && await chromium.launch(); } catch (e) { if (process.env.BROWSER_TESTS) throw e; }
+  if (!browser) { if (process.env.BROWSER_TESTS) assert.fail('Playwright is not installed'); return t.skip('no browser here'); }
+  const state = {events: [], config: {url: 'https://supa.example', anon: 'x', login: [], limit: 5, free: 0, events: 1}};
+  const server = await serve(state), base = `http://127.0.0.1:${server.address().port}`;
+  try {
+    const s = await page(browser, base);
+    await s.go('/oefenen'); await s.p.waitForTimeout(2200);
+    await s.p.reload(); await s.p.waitForTimeout(2200); // the same day again: not counted twice
+    assert.deepEqual(state.events.map(e => e.ev), ['open', 'new']);
+    assert.deepEqual(Object.keys(state.events[0]).sort(), ['ev', 'lvl', 'ui']);
+    await s.p.evaluate(() => startExam('knm', true)); await s.p.waitForTimeout(300);
+    assert.equal(state.events.at(-1).ev, 'exam_knm');
+    state.events.length = 0;
+    await s.go('/?home'); await s.p.waitForTimeout(600);
+    await Promise.all([s.p.waitForURL(/oefenen/), s.p.locator('a.button.primary[href="/oefenen?open=today"]').first().click()]);
+    await s.p.waitForTimeout(400);
+    assert.deepEqual(state.events.map(e => e.ev), ['home', 'begin']);
+    await s.ctx.close();
+    state.events.length = 0;
+    const g = await page(browser, base); await g.p.addInitScript(() => Object.defineProperty(navigator, 'globalPrivacyControl', {value: true}));
+    await g.go('/oefenen'); await g.p.waitForTimeout(2200); await g.go('/?home'); await g.p.waitForTimeout(600);
+    assert.deepEqual(state.events, []);
+    await g.ctx.close();
+    state.config = {}; const n = await page(browser, base); await n.go('/oefenen'); await n.p.waitForTimeout(2200);
+    assert.deepEqual(state.events, []); await n.ctx.close();
   } finally { await browser.close(); server.close(); }
 });
 

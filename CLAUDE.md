@@ -381,6 +381,23 @@ vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one comin
   needs its host in the CSP, or the browser blocks it.
 - `/api/account` (DELETE) deletes the user and, by cascade, their rows; the progress on the device stays.
 
+## Usage counts (anonymous)
+
+To see what is used and where learners stop, the pages count a few events, and nothing more: per Amsterdam day one number
+per event, level (`A2`, `B1`, or empty on the homepage) and menu language, in table `usage_counts` (`bump_event()` in
+`supabase/schema.sql`, run it in the SQL editor; rows go after two years). No id, cookie, account, IP address or answer, so
+a count can never be tied to a person. `track(ev)` in `oefenen.html` and `landing.js` posts `{ev, lvl, ui}` to
+`/api/event` (`api/event.js`: same origin only, the events in `EVENTS`, `EVENT_CAP` a day per count, default 50 000), only
+when `/api/config` says `events` (accounts on and `EVENTS` not `0`) and never with Global Privacy Control or Do Not Track.
+The events: `open` (the app, once a day per device: `ww-day` keeps only the date) and `new` (that first time, with no
+progress yet), `home` (the homepage, once a day: `ww-day-home`), `begin` (a button from the homepage into the app, not
+Inloggen or Plus), `quiz` (Vraag 2 answered), `test` (the starttest done), `day` (today's lesson done, with the ribbon),
+`exam_<part>` (a proefexamen started) and `done_<part>` (handed in: `keepRes()`). A new event goes in `EVENTS` too
+(`tests/events.test.mjs` checks every `track("…")` in the pages against it). privacy.html describes this in "De website en
+bezoekers tellen", "Cookies" and "Hoe lang", in all eight languages: change them with it. Vercel Web Analytics is not used
+(the statement once said so; it was never on the pages). Read the counts in the SQL editor, for example
+`select day, ev, sum(n) from public.usage_counts where day > current_date - 30 group by 1, 2 order by 1, 2;`.
+
 ## Bittertalen Plus (payments)
 
 The user chose (9 November 2026, replacing the earlier version with levels, a yearly price and a free week): practice,

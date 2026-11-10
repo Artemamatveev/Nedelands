@@ -126,6 +126,17 @@ export async function putOutcome({ id, part, ok, pc, rd }) {
   if (!r.ok) throw new Error(`put_outcome ${r.status}`);
   return (await r.json()) === true;
 }
+// Anonymous usage counts (api/event.js, table usage_counts): one more for today's event, level and menu language.
+// EVENT_CAP a day per count (default 50000), so a stranger can't run it up: true when added, false when full; throws on failure.
+const EVENT_CAP = Math.max(1, parseInt(process.env.EVENT_CAP, 10) || 50000);
+export async function bumpEvent({ ev, lvl, ui }) {
+  const r = await rest("rpc/bump_event", {
+    method: "POST",
+    body: JSON.stringify({ e_ev: ev, e_lvl: lvl, e_ui: ui, cap: EVENT_CAP }),
+  });
+  if (!r.ok) throw new Error(`bump_event ${r.status}`);
+  return (await r.json()) === true;
+}
 export async function dropOutcome(id) {
   const r = await rest(`exam_outcomes?id=eq.${encodeURIComponent(id)}`, { method: "DELETE" });
   return r.ok;

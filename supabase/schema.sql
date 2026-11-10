@@ -199,3 +199,41 @@ $$;
 revoke execute on function public.put_outcome(uuid, text, boolean, int, int, int) from public, anon, authenticated;
 grant execute on function public.put_outcome(uuid, text, boolean, int, int, int) to service_role;
 
+
+-- Anonymous usage counts (api/event.js): how many devices open the app or the homepage a day, finish the starttest or
+-- today's lesson, start and hand in a proefexamen. Only a number per day, event, level and menu language: no id, cookie,
+-- account, IP address or anything else about a person. Rows older than two years are deleted (privacy.html says so).
+-- Only the server writes it; read it here, for example:
+--   select day, ev, sum(n) from public.usage_counts where day > current_date - 30 group by 1, 2 order by 1, 2;
+create table if not exists public.usage_counts (
+  day date not null,
+  ev text not null check (ev ~ '^[a-z0-9_]{2,16}$'),
+  lvl text not null check (lvl in ('', 'A2', 'B1')),
+  ui text not null check (ui in ('nl', 'en', 'ar', 'tr', 'hi', 'zh', 'es', 'ru')),
+  n int not null default 0,
+  primary key (day, ev, lvl, ui)
+);
+alter table public.usage_counts enable row level security; -- no policies: nobody but the service role
+
+-- Adds one. Returns false when that count already reached `cap` today (nothing is added), so a stranger can't run it up.
+create or replace function public.bump_event(e_ev text, e_lvl text, e_ui text, cap int)
+returns boolean
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  d date := (now() at time zone 'Europe/Amsterdam')::date;
+  k int;
+begin
+  if extract(hour from now() at time zone 'Europe/Amsterdam') = 3 then
+    delete from public.usage_counts where day < d - interval '2 years';
+  end if;
+  insert into public.usage_counts as u (day, ev, lvl, ui, n) values (d, e_ev, e_lvl, e_ui, 1)
+    on conflict (day, ev, lvl, ui) do update set n = u.n + 1 where u.n < cap
+    returning n into k;
+  return k is not null;
+end;
+$$;
+revoke execute on function public.bump_event(text, text, text, int) from public, anon, authenticated;
+grant execute on function public.bump_event(text, text, text, int) to service_role;

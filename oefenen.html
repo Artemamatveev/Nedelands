@@ -1148,6 +1148,15 @@ const ACFG="ww-acc-cfg",ALINK="ww-acc"; // the config, and which account this de
 const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
 const lsSet=(k,v)=>{try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}};
 const amsDay=()=>new Intl.DateTimeFormat("en-CA",{timeZone:"Europe/Amsterdam"}).format(new Date()); // the day the limit counts
+// Anonymous usage counts (api/event.js): only "one more today" per event, level and menu language; no id, cookie, account
+// or IP address. Only when the server offers it (cfg.events), never with Global Privacy Control or Do Not Track.
+const trackOn=()=>!!(acc.cfg&&acc.cfg.events)&&!navigator.globalPrivacyControl&&navigator.doNotTrack!=="1";
+function track(ev){ if(!trackOn())return;
+  try{fetch("/api/event",{method:"POST",keepalive:true,headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({ev,lvl:lvl(),ui:lsGet("ww-ui")||"nl"})}).catch(()=>{})}catch(e){} }
+// A device that opens the app counts once a day (ww-day keeps only the date), "new" the first time with no progress yet
+function trackDay(){ if(!trackOn())return; const d=amsDay(),was=lsGet("ww-day"); if(was===d)return;
+  lsSet("ww-day",d); track("open"); if(!was&&!Object.keys(S.items||{}).length)track("new"); }
 function loadSb(){
   if(acc.sb)return Promise.resolve(acc.sb);
   return acc.load||(acc.load=new Promise((ok,no)=>{const t=document.createElement("script");t.src="/lib/supabase-2.117.3.js";t.onload=ok;t.onerror=no;document.head.appendChild(t)})
@@ -1165,6 +1174,7 @@ async function initAccount(){
   else fresh.then(c=>{if(c&&(c.url||!acc.user)){acc.cfg=c.url?c:null;drawProfile()}});
   acc.cfg=cfg&&cfg.url?cfg:null; drawProfile();
   if(!acc.cfg)return;
+  setTimeout(trackDay,1500); // after the start, and after the rest of the page's script has run
   const q=new URLSearchParams(location.search),back=q.has("code")||q.has("error");
   if(back&&q.get("h")&&(!handOf()||handOf().h!==q.get("h")))return handBack(q.get("h"),q.get("code"),q.get("error"));
   if(back)lsSet(HAND,null);
@@ -2147,6 +2157,7 @@ function examCheckLimit(e){
 // Schrijven and Spreken are graded by Claude: without a login, or with too few checks left today, say so first
 function startExam(e,go){
   if(!go&&examCheckLimit(e))return examGate(e);
+  track("exam_"+e);
   build("exam",{id:"exam",exam:1,part:e,keep:["lz","l1","ls","lb","sp","wb","sb"].includes(e),write:isWr(e),speak:e==="sp"||e==="sb",...EX[e],pool:()=>{if(e==="wb")return wbTasks(8,3);if(e==="sb")return sbTasks(8,8);const a=byFresh(shuffle(ITEMS.filter(x=>x.sec===e)));
     if(["lz","l1","ls","lb"].includes(e)){const g={};a.forEach(q=>{const t=q.text||q.say;(g[t]=g[t]||[]).push(q)}); // whole texts and fragments, as on the exam; the least-seen first
       let T=shuffle(Object.values(g)).map(x=>[x.sort((p,q)=>p.k<q.k?-1:1),x.reduce((s,q)=>s+seenN(q),0)/x.length]).sort((x,y)=>x[1]-y[1]).map(x=>x[0]);
@@ -2166,7 +2177,7 @@ const PASS=.7;
 const PASSP={lz:19/25,ls:19/25,knm:28/40,wb:25/47}, passOf=k=>PASSP[k]||PASS, passPc=k=>Math.round(passOf(k)*100);
 // Proefexamen results per part (S.res, last 10): {at, pc, nw}, nw = % of the questions that were new (missing in older results).
 // Ready = the last two average 80% or more, and at least one of them was mostly new questions
-function keepRes(k,pc,writing){if(k){S.res=S.res||{};S.res[k]=(S.res[k]||[]).concat({id:crypto.randomUUID(),at:Date.now(),pc,nw:cur.nw,...(writing?{writing}:{})}).slice(-10)}save()}
+function keepRes(k,pc,writing){if(k){track("done_"+k);S.res=S.res||{};S.res[k]=(S.res[k]||[]).concat({id:crypto.randomUUID(),at:Date.now(),pc,nw:cur.nw,...(writing?{writing}:{})}).slice(-10)}save()}
 function ready(k){
   const R=(S.res||{})[k]||[],P=passPc(k);
   if(!R.length){let r=0,w=0;ITEMS.forEach(x=>{const it=x.sec===k&&S.items[x.k];if(it){r+=it.r||0;w+=it.w||0}});
@@ -2302,7 +2313,7 @@ function drawPlan(){
   document.querySelectorAll("#plan [data-draft]").forEach(b=>b.onclick=()=>resumeWriting(b.dataset.draft,b.dataset.exam==="1",b.dataset.draftSlot));
   document.querySelectorAll("#plan [data-budget]").forEach(b=>b.onclick=()=>{S.minutes=Number(b.dataset.budget);save();drawPlan()});
   // the whole lesson done: the streak stamp is put down once, with a tap of the phone
-  const d=today();if(!$("plan").querySelector(".step:not(.ok)")&&lsGet("ww-stamp")!=String(d)){lsSet("ww-stamp",String(d));
+  const d=today();if(!$("plan").querySelector(".step:not(.ok)")&&lsGet("ww-stamp")!=String(d)){lsSet("ww-stamp",String(d));track("day");
     const st=$("streak");st.classList.remove("stamp");void st.offsetWidth;st.classList.add("stamp");buzz("good")}
   document.querySelectorAll("#plan [data-p]").forEach(b=>b.onclick=()=>{const id=b.dataset.p,[k,v]=id.split(":");planId=id;
     if(k==="t")return startTest();
@@ -3278,7 +3289,7 @@ function startTest(){
   let i=0,inRow=0; const miss=[];
   const end=()=>{const right=i-miss.length,lv=i===START.length && right>=10?2:right>=5?1:0;
     const untested=START.slice(i).map(x=>x[0]);
-    S.start={at:Date.now(),lv,miss:[...miss],untested,asked:i}; save();
+    S.start={at:Date.now(),lv,miss:[...miss],untested,asked:i}; save(); track("test");
     const f=BG.find(l=>miss.includes(l.id));
     $("tbody").innerHTML=`<p class="ask">Starttest</p><h2>${right} van ${i} goed</h2>
       ${untested.length?`<p><span>Nog niet getest</span> · ${untested.length}</p><button class="ghost wide" id="bgcontinue">Ga verder met de test</button>`:""}

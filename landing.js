@@ -130,7 +130,29 @@ render();
 fetch("/api/config").then(r => {
   if (!r.ok) throw new Error("Config unavailable");
   return r.json();
-}).then(value => { config = value; }, () => { config = null; }).then(render);
+}).then(value => { config = value; }, () => { config = null; }).then(render).then(homeDay);
+
+// Anonymous usage counts (api/event.js), as in the app: only "one more today" per event and menu language, no id, cookie,
+// account or IP address; only when the server offers it, never with Global Privacy Control or Do Not Track
+const trackOn = () => !!(config && config.events) && !navigator.globalPrivacyControl && navigator.doNotTrack !== "1";
+function track(ev) {
+  if (!trackOn()) return;
+  let ui = "nl";
+  try { ui = localStorage.getItem("ww-ui") || "nl"; } catch {}
+  fetch("/api/event", { method: "POST", keepalive: true, headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ev, lvl: "", ui }) }).catch(() => {});
+}
+// the homepage counts once a day per device (ww-day-home keeps only the date)
+function homeDay() {
+  if (!trackOn()) return;
+  const d = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Amsterdam" }).format(new Date());
+  try { if (localStorage.getItem("ww-day-home") === d) return; localStorage.setItem("ww-day-home", d); } catch { return; }
+  track("home");
+}
+// the buttons into the app (not Inloggen and Plus, which are for people who already know it)
+document.querySelectorAll('a[href^="/oefenen?open="]').forEach(a => {
+  if (!/open=(login|plus)/.test(a.getAttribute("href"))) a.addEventListener("click", () => track("begin"));
+});
 
 // Vraag 2: a real KNM question on the homepage, marked like in the app (the box turns green or red); the question and
 // its feedback stay Dutch, as all exercises do
@@ -140,6 +162,7 @@ fetch("/api/config").then(r => {
   quiz.querySelectorAll(".choice").forEach(b => b.addEventListener("click", () => {
     if (quiz.classList.contains("done")) return;
     quiz.classList.add("done");
+    track("quiz");
     const ok = b.dataset.ok === "1";
     b.classList.add(ok ? "ok" : "no");
     quiz.querySelector('[data-ok="1"]').classList.add("ok");
