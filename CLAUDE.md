@@ -167,9 +167,10 @@ with round corners (the glass on `main::before`: a backdrop filter on `<main>` w
 `main` sits above the menu with `z-index`); the museum wall exists only inside the window (it used to run across the
 whole screen, under the menu). The menu is its own floating glass panel left of the window, level with its top
 (`.tabs`; the user liked the floating bar, not a full-height white sidebar): a narrow strip of icons (76 px, a small
-bitterbal for the logo, the language pill without its arrow) that widens over the window to 212 px on hover or
-keyboard focus, also while the pointer is on the language pill (`:root:has(...)`), and then shows the logo, the tabs'
-names and the arrow; the oranje lens behind the current tab; mirrored in Arabic; on
+bitterbal for the logo, the language as a row like the tabs: the globe in line with the icons, not the cobalt pill,
+which looked out of place there) that widens over the window to 212 px on hover or keyboard focus, also while the
+pointer is on the language row (`:root:has(...)`), and then shows the logo, the tabs' names and the language code with
+its arrow; the oranje lens behind the current tab; mirrored in Arabic; on
 Vandaag the painting hangs framed on the cobalt museum wall (360 px high), the other tabs have no painting band.
 - **Profiel** looks like an iPhone settings screen (the user's example, November 2026): on top a round avatar the learner
 picks (`avScreen()` in `#talk`, "Kies je avatar": a grid of three by three, the chosen one with an orange ring; `S.me.av`, so it

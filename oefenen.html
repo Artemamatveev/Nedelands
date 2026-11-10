@@ -617,8 +617,18 @@ body.vfull{overflow:hidden}
 :root[data-desktop] main:has(#home:not([hidden])) header{margin:0 -28px}
 :root[data-desktop] main:has(#home:not([hidden])) h1{position:fixed;z-index:11;left:calc(var(--nav-x) + 20px);top:calc(var(--win-top) + 26px);bottom:auto;font-size:26px;color:var(--ink);
   opacity:0;transition:opacity .15s}
-:root[data-desktop] main:has(#home:not([hidden])) header .lang{position:fixed;z-index:11;left:calc(var(--nav-x) + 9px);right:auto;bottom:auto;
-  top:calc(var(--win-top) + var(--nav-top) + 5*var(--nav-row) + 12px)}
+:root[data-desktop] main:has(#home:not([hidden])) header .lang{position:fixed;z-index:11;left:calc(var(--nav-x) + 11px);right:auto;bottom:auto;
+  top:calc(var(--win-top) + var(--nav-top) + 5*var(--nav-row) + 9px)}
+/* in the strip the language is a row like the tabs (the cobalt pill looked out of place there): the globe in line
+   with the icons; open, the language code and the arrow beside it */
+:root[data-desktop] main:has(#home:not([hidden])) header .lang{width:calc(var(--nav-c) - 22px);height:var(--nav-row);justify-content:flex-start;gap:14px;
+  padding:0 0 0 17px;border:0;border-radius:var(--rc);background:none;color:var(--ink);box-shadow:none;font-size:var(--fs-b);
+  white-space:nowrap;overflow:hidden;transition:width .28s cubic-bezier(.3,1,.4,1)}
+:root[data-desktop] main:has(#home:not([hidden])) header .lang svg:not(.dn){width:22px;height:22px;stroke-width:1.7}
+:root[data-desktop] main:has(#home:not([hidden])) header .lang [data-langs]{opacity:0;transition:opacity .15s}
+:root[data-desktop]:has(.tabs:is(:hover,:focus-within),header .lang:is(:hover,:focus-within)) main:has(#home:not([hidden])) header .lang{width:calc(var(--nav-w) - 22px)}
+:root[data-desktop]:has(.tabs:is(:hover,:focus-within),header .lang:is(:hover,:focus-within)) main:has(#home:not([hidden])) header .lang [data-langs]{opacity:1;transition-delay:.06s}
+@media (hover:hover){:root[data-desktop] main:has(#home:not([hidden])) header .lang:hover{background:rgba(255,255,255,.55)}}
 :root[data-desktop] main:has(#home:not([hidden])):not(.big) header{height:12px;background:none}
 :root[data-desktop] main:has(#home:not([hidden])):not(.big) header .art,
 :root[data-desktop] main:has(#home:not([hidden])):not(.big) header::after{display:none}
@@ -626,7 +636,7 @@ body.vfull{overflow:hidden}
    then the names and the logo show; collapsed, a small bitterbal stands for the logo */
 :root[data-desktop] .tabs{
   z-index:10;left:var(--nav-x);top:var(--win-top);bottom:auto;transform:none;width:var(--nav-c);flex-direction:column;justify-content:flex-start;gap:0;
-  padding:var(--nav-top) 10px 64px;border-radius:24px;touch-action:auto;overflow:hidden;
+  padding:var(--nav-top) 10px 66px;border-radius:24px;touch-action:auto;overflow:hidden;
   background:var(--frost);border:1px solid var(--frost-line);box-shadow:var(--frost-shadow);
   transition:width .28s cubic-bezier(.3,1,.4,1),box-shadow .28s;
 }
@@ -655,7 +665,7 @@ body.vfull{overflow:hidden}
 :root[dir=rtl][data-desktop] .tabs{left:auto;right:var(--nav-x)}
 :root[dir=rtl][data-desktop] main:has(#home:not([hidden])){margin-left:var(--nav-x);margin-right:calc(var(--nav-c) + 2*var(--nav-x) + max(0px,(100% - var(--nav-c) - 3*var(--nav-x) - 1180px)/2))}
 :root[dir=rtl][data-desktop] main:has(#home:not([hidden])) h1{left:auto;right:calc(var(--nav-x) + 20px)}
-:root[dir=rtl][data-desktop] main:has(#home:not([hidden])) header .lang{left:auto;right:calc(var(--nav-x) + 9px)}
+:root[dir=rtl][data-desktop] main:has(#home:not([hidden])) header .lang{left:auto;right:calc(var(--nav-x) + 11px);padding:0 17px 0 0;direction:rtl}
 :root[dir=rtl][data-desktop] .tabs::before{left:auto;right:calc(var(--nav-c)/2 - 15px)}
 :root[dir=rtl][data-desktop] .tabs button{padding:0 17px 0 0}
 :root[data-desktop] .duo{align-items:stretch}
