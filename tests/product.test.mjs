@@ -202,3 +202,13 @@ test('A question answered right the first time comes back in four days; a known 
   assert.equal(a.run(`S.items[${JSON.stringify(k)}].b`),0);
   assert.equal(a.run(`S.items[${JSON.stringify(k)}].d-today()`),0);
 });
+test('Reading and listening practice brings new texts, and a text with a mistake back first',async()=>{
+  const a=await app();
+  // every question of the first two Lezen texts answered right and due today: a new text still comes first
+  a.run(`const d=today(),T=[...new Set(ITEMS.filter(x=>x.sec==="lz").map(x=>x.text))];
+    ITEMS.filter(x=>x.sec==="lz"&&(x.text===T[0]||x.text===T[1])).forEach(x=>S.items[x.k]={b:2,d,r:1,w:0})`);
+  assert.equal(a.run('someTexts("lz",1)().every(q=>!S.items[q.k])'),true);
+  // a wrong answer in the second text: that text comes back first
+  a.run('const T2=[...new Set(ITEMS.filter(x=>x.sec==="lz").map(x=>x.text))][1];S.items[ITEMS.find(x=>x.sec==="lz"&&x.text===T2).k]={b:0,d:today(),r:0,w:1}');
+  assert.equal(a.run('someTexts("lz",1)()[0].text===[...new Set(ITEMS.filter(x=>x.sec==="lz").map(x=>x.text))][1]'),true);
+});

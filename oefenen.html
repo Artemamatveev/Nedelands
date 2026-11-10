@@ -2185,11 +2185,12 @@ let planId=null;
 // B1 has its own Lezen, Luisteren, Schrijven and Spreken; KNM belongs to both routes.
 const lvl=()=>S.lvl==="B1"?"B1":"A2", LVL={A2:"Inburgering A2",B1:"Staatsexamen B1"};
 const parts=()=>lvl()==="B1"?["l1","lb","wb","sb","knm"]:["lz","ls","wr","sp","knm"];
-// the questions of k whole texts (or fragments): due ones first, then the least-seen
+// the questions of k whole texts (or fragments): first a text with a mistake to try again, then a text not read yet,
+// then other texts that are due, then the least-seen (due texts first made learners meet the same texts again and again)
 const someTexts=(sec,k)=>()=>{
   const g={},d=today();ITEMS.forEach(q=>{const t=q.text||q.say;if(q.sec===sec)(g[t]=g[t]||[]).push(q)});
-  const due=x=>x.some(q=>S.items[q.k]&&S.items[q.k].d<=d)?0:1;
-  return shuffle(Object.values(g)).map(x=>[x,due(x),x.reduce((a,q)=>a+seenN(q),0)/x.length]).sort((a,b)=>a[1]-b[1]||a[2]-b[2])
+  const it=q=>S.items[q.k],rank=x=>x.some(q=>it(q)&&it(q).d<=d&&!it(q).b)?0:!x.some(it)?1:x.some(q=>it(q)&&it(q).d<=d)?2:3;
+  return shuffle(Object.values(g)).map(x=>[x,rank(x),x.reduce((a,q)=>a+seenN(q),0)/x.length]).sort((a,b)=>a[1]-b[1]||a[2]-b[2])
     .slice(0,k).flatMap(x=>x[0].sort((p,q)=>p.k<q.k?-1:1))};
 const oneText=sec=>someTexts(sec,1);
 const SHORT={lz:{n:6,s:"Eén tekst met vragen",pool:oneText("lz"),keep:1},l1:{n:6,s:"Eén lange tekst met zes vragen",pool:oneText("l1"),keep:1},lb:{n:4,s:"Eén fragment met vragen",pool:oneText("lb"),keep:1},
