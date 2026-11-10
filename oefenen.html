@@ -584,7 +584,7 @@ body.vfull{overflow:hidden}
 :root[dir=rtl] :is(header,#play,#read,[lang=nl],.book,.doc,.sample,.msum,.tl,.bgl,input[type=email]){direction:ltr;text-align:left;--ta:left;--te:right}
 :root[dir=rtl] .tabs .lens{left:auto;right:5px;transform:translateX(calc(var(--i,0) * -100%))}
 :root[data-desktop] main{overflow-x:visible}
-:root[data-desktop] header{border-image:linear-gradient(#132A6E 0 0) fill 0 // 0 100vmax}
+:root[data-desktop] header{border-image:none}
 :root[data-desktop] main.big:has(#home:not([hidden])) header{height:360px}
 :root[data-desktop] main:is(:not(.big),:has(#home[hidden])) header{height:168px}
 :root[data-desktop] main:is(:not(.big),:has(#home[hidden])) header h1{bottom:28px}
@@ -593,37 +593,53 @@ body.vfull{overflow:hidden}
 :root[data-desktop] header .art img{max-width:100%}
 :root[data-desktop] header .lang{top:20px;left:auto;right:40px;height:36px}
 :root[data-desktop] header:has(.streak:not(:empty)) .lang{top:110px}
-/* computer: the menu is a floating panel on the glass (the user liked the floating bar, but larger): the logo on
-   top, the five tabs as rows with icon and name, the oranje lens behind the current one, the language pill at the
-   bottom; only Vandaag hangs the painting on the wall, the other tabs start with their content */
-:root[data-desktop]{--nav-w:212px;--nav-x:24px;--nav-top:84px;--nav-row:48px}
+/* computer, like a glass dashboard (the user's examples): the painting of the day, strongly blurred, fills the screen;
+   the app sits in one big window of frosted glass with round corners, the museum wall with the painting only inside it
+   at the top (a wall across the whole screen ran under the menu); the menu is its own floating glass panel beside the
+   window, level with its top: the logo, the five tabs as rows with icon and name, the oranje lens behind the current
+   one, the language pill at the bottom; only Vandaag hangs the painting, the other tabs start with their content */
+:root[data-desktop]{--nav-w:212px;--nav-x:24px;--nav-top:84px;--nav-row:48px;--win-top:24px;
+  --frost:rgba(250,251,254,.5);--frost-line:rgba(255,255,255,.6);--frost-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 24px 70px rgba(8,16,40,.22)}
+:root[data-desktop] body::before{inset:-60px;background:center/cover var(--paint-bg,url(/art/molen-glass.jpg));filter:blur(34px) saturate(1.25)}
+:root[data-desktop] body::after{background:rgba(236,240,248,.38)}
 :root[data-desktop] main:has(#home:not([hidden])){
   max-width:1180px;
-  margin-left:calc(var(--nav-w) + 2*var(--nav-x) + max(0px,(100% - var(--nav-w) - 2*var(--nav-x) - 1180px)/2));margin-right:0;
-  padding-bottom:64px;
+  margin-top:var(--win-top);
+  margin-left:calc(var(--nav-w) + 2*var(--nav-x) + max(0px,(100% - var(--nav-w) - 3*var(--nav-x) - 1180px)/2));margin-right:var(--nav-x);
+  padding:0 28px 32px;margin-bottom:var(--nav-x);
+  position:relative;z-index:9;border-radius:28px;overflow:clip; /* above the menu panel: the logo and the language pill (fixed, inside main) show on it */
 }
-:root[data-desktop] main:has(#home:not([hidden])) h1{position:fixed;z-index:9;left:calc(var(--nav-x) + 20px);top:calc(var(--nav-x) + 26px);bottom:auto;font-size:26px;color:var(--ink)}
+/* the glass on a layer of its own: a backdrop filter on <main> itself would pin the logo and the language pill
+   (position: fixed) inside the window */
+:root[data-desktop] main:has(#home:not([hidden]))::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;
+  background:var(--frost);-webkit-backdrop-filter:blur(28px) saturate(1.5);backdrop-filter:blur(28px) saturate(1.5);
+  border:1px solid var(--frost-line);box-shadow:var(--frost-shadow)}
+:root[data-desktop] main:has(#home:not([hidden])) header{margin:0 -28px}
+:root[data-desktop] main:has(#home:not([hidden])) h1{position:fixed;z-index:9;left:calc(var(--nav-x) + 20px);top:calc(var(--win-top) + 26px);bottom:auto;font-size:26px;color:var(--ink)}
 :root[data-desktop] main:has(#home:not([hidden])) header .lang{position:fixed;z-index:9;left:calc(var(--nav-x) + 16px);right:auto;bottom:auto;
-  top:calc(var(--nav-x) + var(--nav-top) + 5*var(--nav-row) + 12px)}
-:root[data-desktop] main:has(#home:not([hidden])):not(.big) header{height:24px;border-image:none;background:none}
+  top:calc(var(--win-top) + var(--nav-top) + 5*var(--nav-row) + 12px)}
+:root[data-desktop] main:has(#home:not([hidden])):not(.big) header{height:12px;background:none}
 :root[data-desktop] main:has(#home:not([hidden])):not(.big) header .art,
 :root[data-desktop] main:has(#home:not([hidden])):not(.big) header::after{display:none}
 :root[data-desktop] .tabs{
-  left:var(--nav-x);top:var(--nav-x);bottom:auto;transform:none;width:var(--nav-w);flex-direction:column;justify-content:flex-start;gap:0;
-  padding:var(--nav-top) 10px 64px;border-radius:var(--r);touch-action:auto;transition:none;
+  left:var(--nav-x);top:var(--win-top);bottom:auto;transform:none;width:var(--nav-w);flex-direction:column;justify-content:flex-start;gap:0;
+  padding:var(--nav-top) 10px 64px;border-radius:24px;touch-action:auto;transition:none;
+  background:var(--frost);border:1px solid var(--frost-line);box-shadow:var(--frost-shadow);
 }
 :root[data-desktop] .tabs.min{width:var(--nav-w)}
 :root[data-desktop] .tabs button{flex:0 0 var(--nav-row);flex-direction:row;justify-content:flex-start;gap:12px;padding:0 14px;border-radius:var(--rc);font-size:var(--fs-b)}
 :root[data-desktop] .tabs svg{width:22px;height:22px}
 :root[data-desktop] .tabs.min span{display:block}
-@media (hover:hover){:root[data-desktop] .tabs button:not([aria-current]):hover{background:var(--surface)}}
+@media (hover:hover){:root[data-desktop] .tabs button:not([aria-current]):hover{background:rgba(255,255,255,.55)}}
 :root[data-desktop] .tabs .lens{
   left:10px;right:10px;top:var(--nav-top);bottom:auto;width:auto;height:var(--nav-row);border-radius:var(--rc);
   transform:translateY(calc(var(--i,0) * 100%));
 }
+/* the inner screens (an exercise, a book) float on the same blurred painting */
+:root[data-desktop] main:has(#home[hidden]) header{border-radius:var(--r);margin-top:24px}
 /* Arabic: the panel on the right */
 :root[dir=rtl][data-desktop] .tabs{left:auto;right:var(--nav-x)}
-:root[dir=rtl][data-desktop] main:has(#home:not([hidden])){margin-left:0;margin-right:calc(var(--nav-w) + 2*var(--nav-x) + max(0px,(100% - var(--nav-w) - 2*var(--nav-x) - 1180px)/2))}
+:root[dir=rtl][data-desktop] main:has(#home:not([hidden])){margin-left:var(--nav-x);margin-right:calc(var(--nav-w) + 2*var(--nav-x) + max(0px,(100% - var(--nav-w) - 3*var(--nav-x) - 1180px)/2))}
 :root[dir=rtl][data-desktop] main:has(#home:not([hidden])) h1{left:auto;right:calc(var(--nav-x) + 20px)}
 :root[dir=rtl][data-desktop] main:has(#home:not([hidden])) header .lang{left:auto;right:calc(var(--nav-x) + 16px)}
 :root[data-desktop] .duo{align-items:stretch}
@@ -1737,6 +1753,7 @@ function paint(){
   const p=ART[today()%ART.length], src="/art/"+p.f+".jpg";
   if(!$("artimg").src.endsWith(src)){$("artimg").src=src;$("zimg").src=src}
   $("artimg").style.objectPosition="50% "+p.y+"%";
+  document.documentElement.style.setProperty("--paint-bg",`url(${src})`); // the computer's blurred background
   $("label").innerHTML=`<p class="lab"><b>${p.a}</b><br>${p.t}, ${p.d} · ${p.m}</p><p class="nl">${p.nl}</p>`;
   $("zcap").innerHTML=`<b>${p.a}</b><br>${p.t}, ${p.d} · ${p.m}`;
   // Tapping the painting on the start screen opens its story (to read or hear); on other screens it only shows it in full
