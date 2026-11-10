@@ -46,18 +46,18 @@ if(navigator.serviceWorker){navigator.serviceWorker.addEventListener("message",f
   --card:#FFFFFF; --glass:rgba(240,244,252,.5); --lift:0 1px 2px rgba(8,16,40,.06),0 8px 24px rgba(8,16,40,.10);
   box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
 }
-/* dark: neutral graphite like iOS (tiles lighter than the page), cobalt only on the main action and the icons:
-   an all-navy dark mode made tiles melt into the page */
+/* dark: Delft at night, a blue-black page with tiles a step lighter, so they stand apart, and a deep cobalt for the
+   main action (a neutral graphite with a bright blue button looked like a stock UI kit) */
 @media (prefers-color-scheme:dark){ :root:not([data-theme="light"],[data-desktop]){
-  --bg:#24262B; --surface:#0F1013; --wash:#2C3445; --ink:#F2F3F5; --soft:#A3A8B4; --line:#30333A;
-  --blue:#9DB4F5; --deep:#C3D1F8; --oranje:#FF8A3D; --good:#6FCF8E; --bad:#FF8A7A; --on:#0F1013;
-  --fill:#2F55C8; --fill-press:#2546A8; --on-fill:#FFFFFF;
-  --card:#1A1B1F; --glass:rgba(15,16,19,.66); --lift:0 1px 2px rgba(0,0,0,.4),0 10px 28px rgba(0,0,0,.45); } }
+  --bg:#1D2436; --surface:#0A0F1B; --wash:#26314D; --ink:#EEF1F7; --soft:#9EA7BA; --line:#283149;
+  --blue:#9DB4F5; --deep:#C3D1F8; --oranje:#FF8A3D; --good:#74CF95; --bad:#FF8F80; --on:#0A0F1B;
+  --fill:#2A4AAE; --fill-press:#213D93; --on-fill:#FFFFFF;
+  --card:#131A2A; --glass:rgba(10,15,27,.68); --lift:0 1px 2px rgba(0,0,0,.4),0 10px 28px rgba(0,0,0,.45); } }
 :root[data-theme="dark"]:not([data-desktop]){
-  --bg:#24262B; --surface:#0F1013; --wash:#2C3445; --ink:#F2F3F5; --soft:#A3A8B4; --line:#30333A;
-  --blue:#9DB4F5; --deep:#C3D1F8; --oranje:#FF8A3D; --good:#6FCF8E; --bad:#FF8A7A; --on:#0F1013;
-  --fill:#2F55C8; --fill-press:#2546A8; --on-fill:#FFFFFF;
-  --card:#1A1B1F; --glass:rgba(15,16,19,.66); --lift:0 1px 2px rgba(0,0,0,.4),0 10px 28px rgba(0,0,0,.45); }
+  --bg:#1D2436; --surface:#0A0F1B; --wash:#26314D; --ink:#EEF1F7; --soft:#9EA7BA; --line:#283149;
+  --blue:#9DB4F5; --deep:#C3D1F8; --oranje:#FF8A3D; --good:#74CF95; --bad:#FF8F80; --on:#0A0F1B;
+  --fill:#2A4AAE; --fill-press:#213D93; --on-fill:#FFFFFF;
+  --card:#131A2A; --glass:rgba(10,15,27,.68); --lift:0 1px 2px rgba(0,0,0,.4),0 10px 28px rgba(0,0,0,.45); }
 :root[data-desktop]{color-scheme:light}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -244,15 +244,22 @@ main:has(#home:not([hidden])){padding-bottom:116px}
 .hint{display:block;background:none;border:0;color:var(--soft);text-decoration:underline;font-size:var(--fs-m);padding:11px 0;margin:-19px 0 5px;text-align:var(--ta)}
 .hint:disabled{text-decoration:none;color:var(--ink);font-size:var(--fs-m)}
 .opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.opt{background:var(--bg);color:var(--ink);border:1.5px solid var(--line);border-radius:var(--rc);box-shadow:0 2px 0 var(--line);padding:14px 8px;font-size:var(--fs-l);font-weight:600;min-height:60px;word-break:break-word}
+.opt{background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:var(--rc);padding:14px 8px;font-size:var(--fs-l);font-weight:600;min-height:60px;word-break:break-word}
 .opt:active{border-color:var(--blue)}
-.opts.one{grid-template-columns:1fr}
-.opts.one .opt{font-size:var(--fs-b);font-weight:500;text-align:var(--ta);padding:11px 14px;min-height:0}
-/* marked answers: a light tint, a coloured border and a coloured ✓ or ✕; the text stays ink (solid green and red looked loud) */
-.opt.ok{background:color-mix(in srgb,var(--good) 11%,var(--bg));border-color:var(--good);box-shadow:none;color:var(--ink)}
-.opt.no{background:color-mix(in srgb,var(--bad) 9%,var(--bg));border-color:var(--bad);box-shadow:none;color:var(--ink)}
-.opt.ok::before,.opt.no::before{font-weight:700;margin-inline-end:6px}
-.opt.ok::before{content:"✓";color:var(--good)} .opt.no::before{content:"✕";color:var(--bad)}
+/* three options: one grouped list like the iPhone's Settings (separate tinted boxes with coloured borders looked
+   generated), rows with a line between them */
+.opts.one{grid-template-columns:1fr;gap:0;background:var(--surface);border-radius:var(--rc);overflow:hidden}
+.opts.one .opt{display:flex;align-items:center;gap:12px;font-size:var(--fs-b);font-weight:400;text-align:var(--ta);padding:14px 16px;min-height:52px;background:none;border:0;border-radius:0;border-bottom:1px solid var(--line)}
+.opts.one .opt:last-child{border-bottom:0}
+.opts.one .opt:active{background:color-mix(in srgb,var(--ink) 7%,transparent)}
+/* marked, like a checkmark on iPhone: the colour on the text and a ✓ or ✕ at the end; the other options fade */
+.opt.ok,.opt.no{background:none}
+.opt.ok{color:var(--good);border-color:var(--good);font-weight:600}
+.opt.no{color:var(--bad);border-color:var(--bad)}
+.opts.one .opt.ok,.opts.one .opt.no{border-color:var(--line)}
+.opt.ok::after,.opt.no::after{margin-inline-start:auto;padding-inline-start:6px;font-weight:700}
+.opt.ok::after{content:"✓"} .opt.no::after{content:"✕"}
+.opt:disabled:not(.ok,.no){opacity:.45}
 .opt:disabled{cursor:default}
 .type{display:flex;gap:8px}
 input,textarea{font:inherit;color:var(--ink);background:var(--card);border:1.5px solid var(--ink);border-radius:var(--rc)}
@@ -298,6 +305,8 @@ textarea{display:block;width:100%;font-size:var(--fs-b);line-height:1.5;padding:
 .wide{width:100%}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .opt.sel{border-color:var(--oranje);box-shadow:inset 0 0 0 2px var(--oranje)}
+.opts.one .opt.sel{box-shadow:none;border-color:var(--line);font-weight:600}
+.opt.sel::after{content:"";display:inline-block;flex:none;margin-inline-start:auto;width:10px;height:10px;border-radius:50%;background:var(--oranje)}
 .exnav{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:8px;margin-top:16px} .exnav button{padding:11px 6px}
 .ovw{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;margin:12px 0 16px}
 .ovw button{min-height:46px;background:var(--bg);color:var(--ink);border:1.5px solid var(--line);border-radius:var(--rs);font-weight:600;font-variant-numeric:tabular-nums}
@@ -308,12 +317,11 @@ textarea{display:block;width:100%;font-size:var(--fs-b);line-height:1.5;padding:
    while the text scrolls under them */
 #card>.act,#card>.exnav,#card>.fb.sheet{position:sticky;bottom:0;z-index:2;background:var(--card);margin:16px -16px 0;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line)}
 #card>.act:has(>[hidden]){display:none}
-#card>.fb.ok{border-top:1px solid color-mix(in srgb,var(--good) 40%,var(--line));background:color-mix(in srgb,var(--good) 7%,var(--card))}
-#card>.fb.no{border-top:1px solid color-mix(in srgb,var(--bad) 40%,var(--line));background:color-mix(in srgb,var(--bad) 6%,var(--card))}
-.fbr{margin:0 0 8px;font-size:var(--fs-l);font-weight:600;line-height:1.3} .fbr span{display:block;font-size:var(--fs-s);font-weight:600;color:var(--soft);margin-bottom:2px}
+/* the sheet stays plain: only its heading has the colour */
+.fbr{margin:0 0 8px;line-height:1.4} .fbr span{color:var(--soft)} .fbr strong{font-weight:600}
 .fbh{display:flex;align-items:center;gap:10px;margin:0 0 8px}
-.fbh i{flex:none;display:flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;font-style:normal;font-size:var(--fs-s);font-weight:700;color:var(--on)}
-.fbh b{font-size:var(--fs-b)}
+.fbh i{display:none}
+.fbh b{font-size:var(--fs-l);font-weight:600}
 .ok .fbh i{background:var(--good)} .no .fbh i{background:var(--bad)}
 .fb.sheet .btn{margin-top:6px} #card>.fb.sheet{border-radius:var(--r) var(--r) 0 0}
 /* focus while practising: no painting, only ✕, the progress and the clock */
@@ -2425,7 +2433,7 @@ function feedback(ok,q){
   buzz(ok?"good":"bad");
   $("fb").className="fb sheet "+(ok?"ok":"no");
   // wrong: a short heading, then the right answer in ink (a long red heading was loud)
-  $("fb").innerHTML=`<p class="fbh"><i aria-hidden="true">${ok?"✓":"✕"}</i><b class="${ok?"good":"bad"}">${ok?"Goed zo!":"Niet goed"}</b></p>${ok?"":`<p class="fbr"><span>Goed is</span>${q.right}</p>`}
+  $("fb").innerHTML=`<p class="fbh"><i aria-hidden="true">${ok?"✓":"✕"}</i><b class="${ok?"good":"bad"}">${ok?"Goed zo!":"Niet goed"}</b></p>${ok?"":`<p class="fbr"><span>Goed is:</span> <strong>${q.right}</strong></p>`}
     ${q.note?(q.sec==="verb"?q.note:`<div class="note">${q.note}</div>`):""}
     <button class="btn wide" id="next">Verder</button>`;
   $("next").onclick=()=>{pos++;show()}; $("next").focus();

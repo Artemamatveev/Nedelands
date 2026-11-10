@@ -65,9 +65,9 @@ generic "AI app" look.
 - **Colours**: tin-glaze white `--bg`, cobalt `--blue`, light wash `--wash`, and
   `--oranje` as the only accent (timer, selection, the bitterbal lens in the tab bar). Filled cobalt surfaces (`.btn`, the icon squares,
   chosen word tokens, photo numbers) use `--fill` with `--on-fill` text: in dark mode that stays a deep
-  cobalt (`#2F55C8`) with white text (6.4:1), because the light `--blue` read as a highlight rather than the main action.
-  Dark mode is neutral graphite like iOS (page `#0F1013`, tiles `#1A1B1F`, controls `#24262B`), with cobalt only on the
-  main action and the icons: an all-navy dark mode made the tiles melt into the page.
+  cobalt (`#2A4AAE`) with white text (7.8:1), because the light `--blue` read as a highlight rather than the main action.
+  Dark mode is Delft at night: a blue-black page (`#0A0F1B`) with tiles a clear step lighter (`#131A2A`), so they don't
+  melt into the page. A neutral graphite with a brighter blue button was tried and looked like a stock UI kit.
   Always use the tokens on `:root`; every colour has a dark-mode value.
 - **Glass and tiles**: the page background is a Dutch landscape faintly seen through a frosted window: Ruisdael's
   windmill, pre-blurred in `art/molen-glass.jpg` (`body::before`), under a half-transparent wash (`--glass`). The content sits on plain white tiles with a soft shadow (`.tile`, `--card`, `--lift`), not
@@ -203,9 +203,12 @@ Every section appears once; don't add a second entry point to the same exercise.
 - **Practising is a focus screen** (`#play`): no painting, one row with ✕ (back to where you came from; in a
   proefexamen the first tap or swipe back only asks "Stoppen?" and the page springs back), the progress bar, the count (3/10) and the clock. The main
   button (`.act`), the exam buttons (`.exnav`) and the feedback stick to the bottom of the screen, under the thumb.
-  The feedback is a sheet (`.fb.sheet`, lightly tinted): a round ✓ or ✕ with "Goed zo!" or "Niet goed", then for a wrong
-  answer "Goed is" and the right answer in ink, why, and Verder. Marked options get a light tint, a coloured border and
-  a coloured ✓ / ✕, with the text in ink (solid green and red fills looked loud); three options stand in one column.
+  Three options are one grouped list like the iPhone's Settings (`.opts.one`: rows with a line between them on a grey
+  group). Marked like a checkmark on iPhone: the colour on the text and ✓ / ✕ at the end, the other options fade; a
+  choice in a proefexamen gets an oranje dot at the end. The feedback is a plain sheet (`.fb.sheet`): "Goed zo!" or
+  "Niet goed" in colour, for a wrong answer "Goed is: <answer>" in ink, why, and Verder. The user found the earlier
+  versions generated-looking: solid green and red fills, then separate tinted boxes with coloured borders, ✓ / ✕ in
+  front and a tinted sheet; don't go back to either.
 
 ## Words, motion, touch
 
