@@ -113,8 +113,9 @@ generic "AI app" look.
     translation), all in one size (15px, no italics). The full painting and the label are on the Vandaag tab; the
     other tabs and inner screens get the narrow strip (`main.big` is only set on Vandaag), on a phone softened (blurred),
     so the crop never shows half a face. On a phone the language in the header is only a white globe on the painting, no pill (the
-    cobalt pill weighed on the painting and crowded the logo; the user's choice): top left on Mijn dag, in the strip on
-    the right, level with the logo, left of the streak ribbon when that hangs there. Profiel has a "Taal" row as well. Tapping the painting on a
+    cobalt pill weighed on the painting and crowded the logo): top left above the logo, the same on every tab and inner
+    screen (the user's wish; a place on the right of the strip was tried); on the login card the same globe in ink.
+    Profiel has a "Taal" row as well. Tapping the painting on a
     home tab opens its story (`story()`); on inner screens it shows the painting in full.
   - Streak: a ribbon in the Dutch flag (rood, wit, blauw, horizontal like the flag: `#AE1C28`, white, `#21468B`)
     hanging from the top of the painting, the number on the white band and "dagen op rij" under it (`.streak .lint`).
