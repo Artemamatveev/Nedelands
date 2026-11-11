@@ -1470,7 +1470,7 @@ function drawWelcome(){
     <h2>${acc.step==="code"?"Vul de code in":first?"Welkom bij Bittertalen":"Inloggen of account maken"}</h2>`
     +(first && !acc.step?`<p>Oefen Nederlands met een korte leesopdracht.</p><button class="btn wide" id="wtry">Probeer één vraag</button><details><summary>Inloggen of account maken</summary>${loginHTML("w")}</details>`:loginHTML("w"))+(acc.msg?`<p class="note">${esc(acc.msg)}</p>`:"")
     +`<button class="ghost wide" id="wlater">${first?"Eerst rondkijken":"Terug"}</button></div>
-    <div class="wfoot"><p>Met een account blijft je voortgang bewaard, ook op je andere apparaten, en kijkt Claude je teksten en antwoorden na.</p>
+    <div class="wfoot"><p>Met een account blijft je voortgang bewaard, ook op je andere apparaten, en kijkt Bittertalen je teksten en antwoorden na.</p>
     <p><a href="/privacy">Privacyverklaring</a></p><p class="wart">${p.a} · ${p.t} · ${p.m}</p></div>`;
   if($("wtry"))$("wtry").onclick=()=>{
     lsSet(WEL,"1");home();tryOne();
@@ -1486,7 +1486,7 @@ async function authHead(){
   return{Authorization:"Bearer "+t};
 }
 // Why Claude can't grade now, or null
-const noCheck=c=>c==="quota_unavailable"?"Nakijken is tijdelijk niet beschikbaar. Je kunt verder oefenen.":c==="login"?(acc.free===0?`Je gratis nakijkbeurten van vandaag zijn op. Log in bij Profiel: dan kijkt Claude ${acc.cfg?acc.cfg.limit:20} keer per dag na.`:"Log in bij Profiel om dit door Claude te laten nakijken."):c==="limit"?`Je hebt vandaag al ${acc.cfg?myLimit()+" keer":"vaak"} laten nakijken. Morgen kan het weer.${acc.cfg&&acc.cfg.plus&&!isPlus()?` Met Bittertalen Plus ${acc.cfg.plus.limit} keer per dag (Profiel).`:""}`:c==="busy"?"Claude heeft vandaag al heel veel teksten nagekeken. Morgen kan het weer.":null;
+const noCheck=c=>c==="quota_unavailable"?"Nakijken is tijdelijk niet beschikbaar. Je kunt verder oefenen.":c==="login"?(acc.free===0?`Je gratis nakijkbeurten van vandaag zijn op. Log in bij Profiel: dan kijkt Bittertalen ${acc.cfg?acc.cfg.limit:20} keer per dag na.`:"Log in bij Profiel om dit door Bittertalen te laten nakijken."):c==="limit"?`Je hebt vandaag al ${acc.cfg?myLimit()+" keer":"vaak"} laten nakijken. Morgen kan het weer.${acc.cfg&&acc.cfg.plus&&!isPlus()?` Met Bittertalen Plus ${acc.cfg.plus.limit} keer per dag (Profiel).`:""}`:c==="busy"?"Bittertalen heeft vandaag al heel veel teksten nagekeken. Morgen kan het weer.":null;
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const answer=(v,t)=>t==="past"?v[2]:t==="pastpl"?v[3]:t==="pp"?v[4]:v[5];
 
@@ -2470,7 +2470,7 @@ function show(){
   if(q.type==="order")h+=`<p class="note">Maak een zin. Je kunt beginnen met <b>${esc(q.right.split(" ")[0])}</b>.</p>`+`<div class="line" id="line"></div><div class="pool" id="pool"></div><div class="act"><button class="btn wide" id="chk" disabled>Controleer</button></div>`;
   else if(q.type==="write")h+=(q.pts?`<ul class="pts">${q.pts.map(x=>`<li>${x}</li>`).join("")}</ul>`:"")
     +(q.ctx?`<div class="sample">${esc(q.ctx).replace("___",'<b class="gapw">______</b>')}</div>`:"")+(q.fields?q.fields.map((f,i)=>`<label class="fld"><span>${f}</span><input id="f${i}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></label>`).join("")+`<p class="ask">${q.open}</p>`:"")+`<textarea id="txt" rows="${q.kind==="z"?3:7}" placeholder="${q.kind==="z"?q.ctx&&!/___/.test(q.ctx)?"Schrijf hier het einde van de zin…":"Schrijf hier je zin…":"Schrijf hier je tekst…"}" aria-label="Je tekst" spellcheck="false" autocorrect="off" autocapitalize="off"></textarea>`
-    +(!cur.exam&&acc.cfg&&!acc.user?(acc.cfg.free?freeNote():`<p class="note">Claude kijkt je tekst na als je bent ingelogd (Profiel).</p>`):"")
+    +(!cur.exam&&acc.cfg&&!acc.user?(acc.cfg.free?freeNote():`<p class="note">Bittertalen kijkt je tekst na als je bent ingelogd (Profiel).</p>`):"")
     +(cur.nav?navHTML():`<div class="act"><button class="btn wide" id="chk">${cur.exam?"Volgende opdracht":zNext(q)?"Volgende zin":q.kind==="z"&&(cur.zs||[]).length?"Controleer mijn zinnen":"Controleer mijn tekst"}</button></div>`);
   else if(q.type==="reveal")h+=(canSpeak?`<button class="hint" id="sayq">▶ Luister naar de vraag</button>`:"")
     +`<div class="rec" id="rec"><div class="clk"><span class="t" id="rect">${mmss(q.spk||SPK)}</span><div class="m"><i id="recm"></i></div></div><div id="recp"></div>
@@ -2582,7 +2582,7 @@ function examGate(e,preview=false){
     <p class="note">${draft?`<span>Je hebt een opgeslagen concept.</span>`:`<span>${exam.min} min</span> · ${countPrefix}${exam.n} <span>${countLabel}</span><br><span>De timer start zodra je begint.</span>`}</p>
     <p class="note"><span>Stoppen? Kies × en bevestig.</span></p>`:"";
   const warning=cost?`<p class="note">${acc.user?`Je kunt vandaag nog ${Math.max(0,acc.left)} keer laten nakijken, en dit proefexamen telt als ${cost}. Zonder nakijken zie je aan het eind alleen de voorbeeldantwoorden.`
-    :"Je bent niet ingelogd. Dan kijkt Claude je antwoorden niet na, en zie je aan het eind alleen de voorbeeldantwoorden."}</p>`:"";
+    :"Je bent niet ingelogd. Dan kijkt Bittertalen je antwoorden niet na, en zie je aan het eind alleen de voorbeeldantwoorden."}</p>`:"";
   d.innerHTML=`${details}${warning}<div class="two"><button class="ghost" id="gback">Terug</button>
     ${cost&&!acc.user?`<button class="ghost" id="glog">Inloggen</button>`:""}
     <button class="btn" id="ggo">${draft?"Verder met je concept":cost?"Toch beginnen":"Start proefexamen"}</button></div>`;
@@ -2758,7 +2758,7 @@ async function nakijken(tasks,part){
   return j.tasks;
 }
 // Without an account: how many free checks are left today, and what an account gives
-const freeNote=()=>acc.cfg&&acc.cfg.free&&!acc.user?`<p class="note">${acc.free==null?`Zonder account kijkt Claude ${acc.cfg.free} keer per dag gratis na.`:acc.free>0?`Nog ${acc.free} keer gratis nakijken vandaag.`:"Je gratis nakijkbeurten van vandaag zijn op."} Met een account ${acc.cfg.limit} keer per dag (Profiel).</p>`:"";
+const freeNote=()=>acc.cfg&&acc.cfg.free&&!acc.user?`<p class="note">${acc.free==null?`Zonder account kijkt Bittertalen ${acc.cfg.free} keer per dag gratis na.`:acc.free>0?`Nog ${acc.free} keer gratis nakijken vandaag.`:"Je gratis nakijkbeurten van vandaag zijn op."} Met een account ${acc.cfg.limit} keer per dag (Profiel).</p>`:"";
 function selfGrade(q,msg,doc){
   $("fb").innerHTML=`<p class="note">${msg}</p><p class="ask">Voorbeeld</p><div class="sample">${esc(q.right)}</div>
     ${q.type==="reveal"?echoHTML("het voorbeeld"):""}${doc?docBtn:""}<div class="two"><button class="ghost" id="again">Later herhalen</button><button class="btn" id="got">Gelukt</button></div>`;
@@ -3427,7 +3427,7 @@ function plusScreen(){
   const c=acc.cfg.plus,p=acc.plus,on=isPlus();
   $("tbody").innerHTML=`<h2 id="plusS">Bittertalen Plus</h2>`
     +(on?(p.status==="past_due"?"":`<p class="sub">${plusLine()}</p>`)
-      :`<p class="sub">Claude kijkt je teksten en antwoorden ${c.limit} keer per dag na, in plaats van ${acc.cfg.limit}.</p><p class="sub">Al het andere in Bittertalen blijft gratis.</p><p class="sub">€ ${c.price} per maand. Je kunt elke maand opzeggen.</p>`)
+      :`<p class="sub">Bittertalen kijkt je teksten en antwoorden ${c.limit} keer per dag na, in plaats van ${acc.cfg.limit}.</p><p class="sub">Al het andere in Bittertalen blijft gratis.</p><p class="sub">€ ${c.price} per maand. Je kunt elke maand opzeggen.</p>`)
     +(on&&p.status==="past_due"?`<p class="note">Je laatste betaling is niet gelukt. Stripe probeert het nog een paar keer.</p>`:"")
     +(plusMsg?`<p class="note" role="status">${esc(plusMsg)}</p>`:"")
     +(!acc.user?`<p class="note">Log in om Plus te nemen.</p><button class="btn wide" id="pgo">Inloggen</button>`
@@ -3909,7 +3909,7 @@ if(OLD==="nedelands.vercel.app")location.replace(NEWURL); else if(OLD==="bittert
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="337bbe726e";
+const UIV="f9ed76769a";
 let uiP=null;
 function uiLoaded(){ // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});
