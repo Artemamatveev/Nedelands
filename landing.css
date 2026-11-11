@@ -235,3 +235,36 @@ h3 {font-size:22px;letter-spacing:-.02em}
  .header-actions #enter {grid-column:1/-1;grid-row:2;font-size:13px;min-height:40px;padding:8px 11px}
  .bar .brand {font-size:22px;align-self:start;padding-block-start:6px}
 }
+
+/* Learning features: a compact tile grid rather than one long numbered list. */
+.feature-grid {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;border:0;margin-block-start:22px}
+.feature-grid li {display:grid;grid-template-columns:32px minmax(0,1fr);gap:12px 10px;align-content:start;min-width:0;padding:20px;border:1px solid var(--line);border-radius:16px;background:color-mix(in srgb,var(--wash) 38%,var(--card));counter-increment:none}
+.feature-grid li:last-child {border-bottom:1px solid var(--line)}
+.feature-grid li::before {content:none}
+.feature-icon {display:flex;align-items:center;justify-content:center;width:32px;height:32px;margin:0;border-radius:9px;background:var(--card);color:var(--blue)}
+.feature-icon svg {display:block;width:21px;height:21px}
+.feature-grid h3 {align-self:center;font-size:17px;line-height:1.25;letter-spacing:-.02em}
+.feature-grid p {grid-column:1/-1;font-size:14.5px;line-height:1.5;margin:0}
+.feature-grid li:first-child {grid-column:span 2;background:#1f3c96;border-color:#1f3c96;color:#fff}
+.feature-grid li:first-child .feature-icon {background:#ffffff20;color:#fff}
+.feature-grid li:first-child h3 {font-size:24px}
+.feature-grid li:first-child p {color:#edf2ff;max-width:44ch;font-size:16px}
+@media(max-width:1000px) {
+ .feature-grid {grid-template-columns:repeat(3,minmax(0,1fr))}
+ .feature-grid li:first-child {grid-column:1/-1}
+}
+@media(max-width:700px) {
+ .feature-grid {grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+ .feature-grid li {padding:18px 16px}
+ .feature-grid h3 {font-size:17px}
+ .feature-grid p {font-size:14px}
+}
+@media(max-width:440px) {
+ .feature-grid {grid-template-columns:1fr}
+ .feature-grid li {display:grid;grid-template-columns:36px minmax(0,1fr);column-gap:12px;row-gap:0;padding:16px}
+ .feature-icon {grid-row:1/3;width:36px;height:36px;margin:0;border-radius:10px}
+ .feature-icon svg {width:21px;height:21px}
+ .feature-grid li:first-child h3 {font-size:20px}
+ .feature-grid li:first-child p {font-size:14px}
+ .feature-grid p {grid-column:2;margin-block-start:6px}
+}
