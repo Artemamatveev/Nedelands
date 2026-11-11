@@ -19,7 +19,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.json">
-<link rel="stylesheet" href="/landing.css?v=smooth7">
+<link rel="stylesheet" href="/landing.css?v=footer8">
 <script>
 // Keep existing sign-in, payment, migration and installed app entry points working.
 // Someone who already practises on this device (their progress is here) goes straight to the app on a phone or tablet:
@@ -48,7 +48,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Bittertalen","url":"https://bittertalen.nl/","applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":"nl","educationalLevel":["A2","B1"],"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}
 </script>
-<script defer src="/landing.js?v=header4"></script>
+<script defer src="/landing.js?v=footer8"></script>
 <script defer src="/lib/gsap-3.15.1.min.js"></script>
 <script defer src="/lib/ScrollTrigger-3.15.1.min.js"></script>
 <script defer src="/landing-motion-v3.js"></script>
@@ -227,13 +227,14 @@
     <a class="button primary" href="/oefenen?open=today" data-t>Begin gratis</a>
   </section>
 </main>
-<footer class="wrap footer">
-  <span>Bittertalen</span>
-  <div class="actions">
-    <a href="/over" data-t>Over Bittertalen</a>
-    <a href="/privacy" data-t>Privacyverklaring</a>
-    <a href="/contact" data-t>Contact</a>
-  </div>
+<footer class="wrap footer footer-legal">
+  <div class="footer-top"><span class="copyright">© 2026 Bittertalen</span><div class="actions">
+    <a href="/over" data-t>Over Bittertalen</a><a href="/contact" data-t>Contact</a><a href="/privacy" data-t>Privacyverklaring</a><a href="/voorwaarden" data-t>Gebruiksvoorwaarden</a>
+  </div></div>
+  <p data-t>Bittertalen is een onafhankelijke oefenapp en is niet verbonden aan DUO.</p>
+  <p data-t>Oefenresultaten bieden geen garantie op het behalen van een officieel examen.</p>
+  <p class="footer-owner"><span>Artem Matveev</span> · <a href="/contact"><bdi>hallo@bittertalen.nl</bdi></a> · <span>KVK: <bdi>000000000</bdi></span> · <span>BTW-id: <bdi>000000000</bdi></span></p>
+  <p class="footer-placeholder" data-t>KVK en btw-id zijn tijdelijke placeholders en moeten nog worden ingevuld.</p>
 </footer>
 </body>
 </html>

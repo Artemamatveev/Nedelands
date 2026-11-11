@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>@view-transition{navigation:auto}@media(prefers-reduced-motion:reduce){@view-transition{navigation:none}}
+[hidden]{display:none!important}.meta{font-size:13px;color:var(--soft)}.identifiers{font-size:14px;overflow-wrap:anywhere}.links{display:flex;flex-wrap:wrap;gap:10px 20px;margin-block-start:24px;padding-block-start:16px;border-top:1px solid var(--line)}
+</style>
+<link rel="stylesheet" href="/motion-v1.css">
+<title>Gebruiksvoorwaarden — Bittertalen</title>
+<meta name="description" content="Informatie over oefenen, Bittertalen Plus, opzeggen, rechten en privacy.">
+<link rel="canonical" href="https://bittertalen.nl/voorwaarden">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<script>
+(() => {
+  const desktop=matchMedia("(min-width:960px) and (hover:hover) and (pointer:fine)");
+  const installed=matchMedia("(display-mode: standalone)");
+  const update=()=>document.documentElement.toggleAttribute("data-desktop",desktop.matches&&!installed.matches&&navigator.standalone!==true);
+  desktop.addEventListener("change",update);
+  installed.addEventListener("change",update);
+  update();
+})();
+</script>
+<style>
+/* The same Delfts blauw as the app: tin-glaze white, cobalt, the system font, one plain tile on the frosted windmill;
+   Examenblad shapes (round tile, nearly square controls), sections like the exam form, the language as a plain globe */
+:root{
+  --surface:#EEF2FA; --wash:#C9D6F2; --ink:#14213D; --soft:#56617C; --line:#D6DDEB; --blue:#1F3C96; --oranje:#C8500C;
+  --card:#FFFFFF; --glass:rgba(240,244,252,.55); --lift:0 1px 2px rgba(8,16,40,.06),0 8px 24px rgba(8,16,40,.10);
+  --r:20px; --rc:4px;
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"],[data-desktop]){
+  --surface:#0A0F1B; --wash:#1D2436; --ink:#EEF1F7; --soft:#9EA7BA; --line:#283149; --blue:#9DB4F5; --oranje:#FF8A3D;
+  --card:#131A2A; --glass:rgba(10,15,27,.7); --lift:0 1px 2px rgba(0,0,0,.4),0 10px 28px rgba(0,0,0,.45); } }
+:root[data-theme="dark"]:not([data-desktop]){
+  --surface:#0A0F1B; --wash:#1D2436; --ink:#EEF1F7; --soft:#9EA7BA; --line:#283149; --blue:#9DB4F5; --oranje:#FF8A3D;
+  --card:#131A2A; --glass:rgba(10,15,27,.7); --lift:0 1px 2px rgba(0,0,0,.4),0 10px 28px rgba(0,0,0,.45); }
+:root[data-desktop]{color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.55}
+body::before{content:"";position:fixed;inset:-24px;z-index:-2;background:url(/art/molen-glass.jpg) 70% 40%/cover}
+body::after{content:"";position:fixed;inset:0;z-index:-1;background:var(--glass)}
+main{max-width:720px;margin:0 auto;padding:16px 16px 48px}
+article{background:var(--card);border-radius:var(--r);box-shadow:var(--lift);padding:8px 20px 24px}
+.back{display:inline-flex;align-items:center;gap:6px;min-height:44px;margin-top:12px;border:1px solid var(--line);color:var(--ink);font-weight:600;font-size:16px;padding-block:5px 6px;padding-inline:10px 14px;border-radius:var(--rc);text-decoration:none}
+@media (hover:hover){.back:hover{background:var(--surface)}}
+h1{font-size:28px;font-weight:600;line-height:1.2;margin:20px 0 6px}
+h2{color:var(--blue);font-size:15px;font-weight:600;line-height:1.3;margin:26px 0 8px;padding-top:18px;border-top:1px solid var(--line)}
+p,li{margin:0 0 10px} ul{padding-inline-start:22px;margin:0 0 10px}
+.sub{color:var(--soft)}
+a{color:var(--blue)}
+a:focus-visible{outline:3px solid var(--oranje);outline-offset:2px}
+.box{border-inline-start:3px solid var(--wash);padding-block:2px;padding-inline-start:14px;margin:14px 0}
+@media (min-width:768px){article{padding:12px 36px 32px}}
+.top{display:flex;justify-content:flex-start;margin:0 0 6px}
+.lang{position:relative;display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;color:var(--ink)}
+.lang svg{flex:none;width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8}
+.lang :is(#langs,.dn){display:none}
+.lang select{position:absolute;inset:0;width:100%;height:100%;opacity:0;font-size:16px;border:0;cursor:pointer}
+.lang:focus-within{outline:2px solid var(--oranje);outline-offset:2px}
+[dir=rtl] .back>span{display:inline-block;transform:scaleX(-1)}
+.hero{display:block;width:100%;aspect-ratio:1200/630;object-fit:cover;border-radius:var(--rc);margin:18px 0 6px}
+.cap{font-size:13px;color:var(--soft);margin:0 0 6px}
+</style>
+</head>
+<body>
+<main>
+<div class="top"><label class="lang"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.6 3.9 5.6 3.9 9s-1.3 6.4-3.9 9c-2.6-2.6-3.9-5.6-3.9-9s1.3-6.4 3.9-9z"/></svg><span id="langs">NL</span><svg class="dn" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4"/></svg><select id="lang" aria-label="Taal"><option value="nl">Nederlands</option><option value="en">English</option><option value="ar">العربية</option><option value="tr">Türkçe</option><option value="hi">हिन्दी</option><option value="zh">中文</option><option value="es">Español</option><option value="ru">Русский</option></select></label></div>
+<article data-l="nl">
+<a class="back" href="/"><span aria-hidden="true">←</span> Bittertalen</a>
+<h1>Gebruiksvoorwaarden</h1><p class="meta">Bijgewerkt: 12 november 2026</p>
+<h2>Aanbieder</h2><p>Bittertalen wordt gemaakt en beheerd door Artem Matveev. Vragen of klachten: <a href="/contact"><bdi>hallo@bittertalen.nl</bdi></a>.</p>
+<p class="identifiers">KVK: <bdi>000000000</bdi> · BTW-id: <bdi>000000000</bdi></p><p class="meta">KVK en btw-id zijn tijdelijke placeholders en moeten nog worden ingevuld.</p>
+<h2>Oefenen en examens</h2><p>Bittertalen is een onafhankelijke oefenapp en is niet verbonden aan DUO. Oefenresultaten bieden geen garantie op het behalen van een officieel examen.</p><p>Bittertalen helpt je oefenen voor A2 en B1. Het is geen officiële exameninstantie. Raadpleeg DUO voor de officiële examens en eisen. Automatische feedback kan fouten bevatten en is geen officiële beoordeling.</p>
+<h2>Gratis en Bittertalen Plus</h2><p>De oefeningen zijn gratis. Plus is een maandelijks abonnement voor extra nakijkbeurten. De actuele prijs en limieten staan vóór betaling in de app. De prijs en betaalperiode worden ook bij het afrekenen getoond. Het abonnement wordt maandelijks verlengd totdat je het opzegt.</p>
+<h2>Opzeggen</h2><p>Je kunt elke maand opzeggen via Profiel → Bittertalen Plus → Abonnement beheren. Daar zie je wanneer de opzegging ingaat.</p>
+<h2>Herroepingsrecht</h2><p>Bij het online afsluiten van een abonnement heb je in beginsel 14 dagen na het sluiten van de overeenkomst om zonder reden te herroepen. Je kunt dit melden via hallo@bittertalen.nl; vermeld je account-e-mailadres en de datum van afsluiten. Een geldige herroeping wordt afgehandeld volgens de wettelijke regels. Opzeggen en herroepen zijn verschillende rechten.</p>
+<h2>Je rechten, privacy en bronnen</h2><p>Deze informatie beperkt je wettelijke consumentenrechten niet. De rechten op eigen oorspronkelijke materialen blijven bij de rechthebbenden; materialen van derden vallen onder hun eigen licenties of zijn publiek domein. Zie de bronnen bij Over Bittertalen en de privacyverklaring voor het gebruik van persoonsgegevens.</p>
+<div class="links"><a href="/over">Over Bittertalen</a><a href="/contact">Contact</a><a href="/privacy">Privacyverklaring</a></div>
+</article>
+<article data-l="en" hidden>
+<a class="back" href="/"><span aria-hidden="true">←</span> Bittertalen</a>
+<h1>Terms of use</h1><p class="meta">Updated: 12 November 2026</p>
+<h2>Provider</h2><p>Bittertalen is created and managed by Artem Matveev. Questions or complaints: <a href="/contact"><bdi>hallo@bittertalen.nl</bdi></a>.</p>
+<p class="identifiers">KVK: <bdi>000000000</bdi> · BTW-id: <bdi>000000000</bdi></p><p class="meta">KVK and VAT ID numbers are temporary placeholders and still need to be completed.</p>
+<h2>Practice and exams</h2><p>Bittertalen is an independent practice app and is not affiliated with DUO. Practice results do not guarantee passing an official exam.</p><p>Bittertalen helps you practise for A2 and B1. It is not an official examination body. Consult DUO for official exams and requirements. Automated feedback may contain errors and is not an official assessment.</p>
+<h2>Free practice and Bittertalen Plus</h2><p>The exercises are free. Plus is a monthly subscription for additional checks. The current price and limits are shown in the app before payment. The price and billing period are also shown at checkout. The subscription renews monthly until you cancel.</p>
+<h2>Cancellation</h2><p>You can cancel each month under Profile → Bittertalen Plus → Manage subscription. That screen shows when cancellation takes effect.</p>
+<h2>Right of withdrawal</h2><p>When you take out a subscription online, you generally have 14 days after concluding the agreement to withdraw without giving a reason. You can notify hallo@bittertalen.nl; include your account email and subscription date. A valid withdrawal is handled in accordance with statutory rules. Cancellation and withdrawal are different rights.</p>
+<h2>Your rights, privacy and sources</h2><p>This information does not limit your statutory consumer rights. Rights in original materials remain with their rightsholders; third-party materials have their own licences or are in the public domain. See the sources on About Bittertalen and the privacy statement for information about personal data.</p>
+<div class="links"><a href="/over">About Bittertalen</a><a href="/contact">Contact</a><a href="/privacy">Privacy statement</a></div>
+</article>
+<article data-l="ar" hidden>
+<a class="back" href="/"><span aria-hidden="true">←</span> Bittertalen</a>
+<h1>شروط الاستخدام</h1><p class="meta">آخر تحديث: 12 نوفمبر 2026</p>
+<h2>مقدّم الخدمة</h2><p>أنشأ Artem Matveev تطبيق Bittertalen ويديره. للأسئلة والشكاوى: <a href="/contact"><bdi>hallo@bittertalen.nl</bdi></a>.</p>
+<p class="identifiers">KVK: <bdi>000000000</bdi> · BTW-id: <bdi>000000000</bdi></p><p class="meta">أرقام KVK وضريبة القيمة المضافة مؤقتة ويجب استكمالها.</p>
+<h2>التدريب والامتحانات</h2><p>Bittertalen تطبيق مستقل للتدرّب ولا يرتبط بـ DUO. نتائج التدريب لا تضمن النجاح في الامتحان الرسمي.</p><p>يساعدك Bittertalen على التدرّب لمستويي A2 وB1، وليس جهة امتحانات رسمية. راجع DUO لمعرفة الامتحانات والمتطلبات الرسمية. قد تتضمن الملاحظات الآلية أخطاء ولا تُعدّ تقييمًا رسميًا.</p>
+<h2>التدريب المجاني وBittertalen Plus</h2><p>التمارين مجانية. Plus اشتراك شهري يتيح تصحيحات إضافية. يظهر السعر الحالي والحدود في التطبيق قبل الدفع، ويظهر السعر وفترة الفوترة أيضًا عند الدفع. يتجدد الاشتراك شهريًا حتى تلغيه.</p>
+<h2>إلغاء الاشتراك</h2><p>يمكنك الإلغاء كل شهر من ملفي ← Bittertalen Plus ← إدارة الاشتراك. تعرض تلك الصفحة موعد سريان الإلغاء.</p>
+<h2>حق التراجع</h2><p>عند الاشتراك عبر الإنترنت، لديك من حيث المبدأ 14 يومًا بعد إبرام الاتفاق للتراجع دون ذكر سبب. يمكنك إبلاغ hallo@bittertalen.nl مع بريد حسابك وتاريخ الاشتراك. تُعالج طلبات التراجع الصحيحة وفق القانون. إلغاء الاشتراك والتراجع حقان مختلفان.</p>
+<h2>حقوقك والخصوصية والمصادر</h2><p>لا تحد هذه المعلومات من حقوقك القانونية كمستهلك. تبقى حقوق المواد الأصلية لأصحابها؛ وتخضع مواد الأطراف الأخرى لتراخيصها أو تكون ضمن الملكية العامة. راجع المصادر في صفحة عن Bittertalen وبيان الخصوصية لمعرفة استخدام البيانات الشخصية.</p>
+<div class="links"><a href="/over">عن Bittertalen</a><a href="/contact">تواصل معنا</a><a href="/privacy">بيان الخصوصية</a></div>
+</article>
+<article data-l="tr" hidden>
+<a class="back" href="/"><span aria-hidden="true">←</span> Bittertalen</a>
+<h1>Kullanım koşulları</h1><p class="meta">Güncelleme: 12 Kasım 2026</p>
+<h2>Hizmet sağlayıcı</h2><p>Bittertalen, Artem Matveev tarafından oluşturulur ve yönetilir. Sorular ve şikâyetler: <a href="/contact"><bdi>hallo@bittertalen.nl</bdi></a>.</p>
+<p class="identifiers">KVK: <bdi>000000000</bdi> · BTW-id: <bdi>000000000</bdi></p><p class="meta">KVK ve KDV numaraları geçici yer tutuculardır; henüz doldurulmamıştır.</p>
+<h2>Alıştırmalar ve sınavlar</h2><p>Bittertalen bağımsız bir alıştırma uygulamasıdır ve DUO ile bağlantılı değildir. Alıştırma sonuçları resmî sınavı geçmeyi garanti etmez.</p><p>Bittertalen A2 ve B1 için çalışmana yardımcı olur; resmî sınav kurumu değildir. Resmî sınavlar ve şartlar için DUO’ya başvur. Otomatik geri bildirim hatalar içerebilir ve resmî değerlendirme değildir.</p>
+<h2>Ücretsiz alıştırmalar ve Bittertalen Plus</h2><p>Alıştırmalar ücretsizdir. Plus, ek kontroller sunan aylık aboneliktir. Güncel ücret ve sınırlar ödemeden önce uygulamada gösterilir. Ücret ve fatura dönemi ödeme sırasında da gösterilir. Abonelik iptal edilene kadar her ay yenilenir.</p>
+<h2>Abonelik iptali</h2><p>Profil → Bittertalen Plus → Aboneliği yönet bölümünden her ay iptal edebilirsin. İptalin ne zaman geçerli olacağı o ekranda gösterilir.</p>
+<h2>Cayma hakkı</h2><p>İnternetten abonelik başlattığında, kural olarak sözleşmenin yapılmasından sonra 14 gün içinde gerekçe göstermeden cayabilirsin. Hesap e-postanı ve abonelik tarihini belirterek hallo@bittertalen.nl adresine bildirebilirsin. Geçerli cayma talepleri yasal kurallara göre ele alınır. Abonelik iptali ile cayma farklı haklardır.</p>
+<h2>Hakların, gizlilik ve kaynaklar</h2><p>Bu bilgiler yasal tüketici haklarını sınırlamaz. Özgün materyallerin hakları sahiplerinde kalır; üçüncü taraf materyaller kendi lisanslarına tabidir veya kamu malıdır. Kişisel verilerin kullanımı için kaynaklara ve gizlilik bildirimine bak.</p>
+<div class="links"><a href="/over">Bittertalen hakkında</a><a href="/contact">İletişim</a><a href="/privacy">Gizlilik bildirimi</a></div>
+</article>
+<article data-l="hi" hidden>
+<a class="back" href="/"><span aria-hidden="true">←</span> Bittertalen</a>
+<h1>उपयोग की शर्तें</h1><p class="meta">अद्यतन: 12 नवंबर 2026</p>
+<h2>सेवा प्रदाता</h2><p>Bittertalen को Artem Matveev बनाते और संचालित करते हैं। सवाल या शिकायत के लिए: <a href="/contact"><bdi>hallo@bittertalen.nl</bdi></a>.</p>
+<p class="identifiers">KVK: <bdi>000000000</bdi> · BTW-id: <bdi>000000000</bdi></p><p class="meta">KVK और VAT नंबर अस्थायी प्लेसहोल्डर हैं; इन्हें अभी भरना बाकी है।</p>
+<h2>अभ्यास और परीक्षाएँ</h2><p>Bittertalen एक स्वतंत्र अभ्यास ऐप है और DUO से संबद्ध नहीं है। अभ्यास के नतीजे आधिकारिक परीक्षा पास करने की गारंटी नहीं देते।</p><p>Bittertalen A2 और B1 की तैयारी में मदद करता है; यह आधिकारिक परीक्षा संस्था नहीं है। आधिकारिक परीक्षाओं और आवश्यकताओं के लिए DUO देखें। स्वचालित प्रतिक्रिया में गलतियाँ हो सकती हैं और यह आधिकारिक मूल्यांकन नहीं है।</p>
+<h2>मुफ़्त अभ्यास और Bittertalen Plus</h2><p>अभ्यास मुफ़्त हैं। Plus अतिरिक्त जाँच के लिए मासिक सदस्यता है। भुगतान से पहले ऐप में मौजूदा कीमत और सीमाएँ दिखाई जाती हैं। भुगतान के समय कीमत और बिलिंग अवधि भी दिखाई जाती है। रद्द करने तक सदस्यता हर महीने नवीनीकृत होती है।</p>
+<h2>सदस्यता रद्द करना</h2><p>आप हर महीने प्रोफ़ाइल → Bittertalen Plus → सदस्यता प्रबंधित करें से रद्द कर सकते हैं। रद्दीकरण कब लागू होगा यह उसी पेज पर दिखता है।</p>
+<h2>समझौते से हटने का अधिकार</h2><p>ऑनलाइन सदस्यता लेने पर सामान्यतः समझौता होने के बाद 14 दिनों के भीतर बिना कारण बताए उससे हटने का अधिकार होता है। खाते का ईमेल और सदस्यता की तारीख़ देकर hallo@bittertalen.nl पर सूचित कर सकते हैं। वैध अनुरोधों पर क़ानून के अनुसार कार्रवाई होती है। सदस्यता रद्द करना और समझौते से हटना अलग अधिकार हैं।</p>
+<h2>आपके अधिकार, गोपनीयता और स्रोत</h2><p>यह जानकारी आपके क़ानूनी उपभोक्ता अधिकारों को सीमित नहीं करती। मौलिक सामग्री के अधिकार उनके अधिकारधारकों के पास रहते हैं; अन्य सामग्री अपने लाइसेंस के अंतर्गत या सार्वजनिक डोमेन में है। निजी डेटा के उपयोग के लिए स्रोत और गोपनीयता नीति देखें।</p>
+<div class="links"><a href="/over">Bittertalen के बारे में</a><a href="/contact">संपर्क करें</a><a href="/privacy">गोपनीयता नीति</a></div>
+</article>
+<article data-l="zh" hidden>
+<a class="back" href="/"><span aria-hidden="true">←</span> Bittertalen</a>
+<h1>使用条款</h1><p class="meta">更新：2026年11月12日</p>
+<h2>服务提供者</h2><p>Bittertalen 由 Artem Matveev 创建和管理。问题或投诉请联系： <a href="/contact"><bdi>hallo@bittertalen.nl</bdi></a>.</p>
+<p class="identifiers">KVK: <bdi>000000000</bdi> · BTW-id: <bdi>000000000</bdi></p><p class="meta">KVK 和增值税号码为临时占位内容，尚待填写。</p>
+<h2>练习与考试</h2><p>Bittertalen 是独立的练习应用，与 DUO 没有隶属或合作关系。 练习成绩不保证能通过正式考试。</p><p>Bittertalen 帮助你备考 A2 和 B1，并非官方考试机构。正式考试和要求请查询 DUO。自动反馈可能有误，不是官方评分。</p>
+<h2>免费练习和 Bittertalen Plus</h2><p>练习免费。Plus 是提供额外批改次数的月度订阅。当前价格和限额会在付款前显示于应用中，结账时也会显示价格和计费周期。订阅每月自动续订，直至取消。</p>
+<h2>取消订阅</h2><p>你可以每月通过“我的”→ Bittertalen Plus → 管理订阅取消。该页面会显示取消的生效时间。</p>
+<h2>撤回权</h2><p>在线订阅后，原则上可在订立协议后的 14 天内无需说明理由撤回。请通过 hallo@bittertalen.nl 通知，并提供账户邮箱和订阅日期。有效撤回请求按法律规定处理。取消订阅与撤回协议是不同的权利。</p>
+<h2>你的权利、隐私与来源</h2><p>本信息不限制你的法定消费者权利。原创材料的权利归其权利人所有；第三方材料适用各自许可或属于公有领域。个人数据使用方式请参阅来源说明和隐私声明。</p>
+<div class="links"><a href="/over">关于 Bittertalen</a><a href="/contact">联系我们</a><a href="/privacy">隐私声明</a></div>
+</article>
+<article data-l="es" hidden>
+<a class="back" href="/"><span aria-hidden="true">←</span> Bittertalen</a>
+<h1>Condiciones de uso</h1><p class="meta">Actualizado: 12 de noviembre de 2026</p>
+<h2>Prestador del servicio</h2><p>Artem Matveev crea y gestiona Bittertalen. Para preguntas o reclamaciones: <a href="/contact"><bdi>hallo@bittertalen.nl</bdi></a>.</p>
+<p class="identifiers">KVK: <bdi>000000000</bdi> · BTW-id: <bdi>000000000</bdi></p><p class="meta">Los números KVK e IVA son datos provisionales pendientes de completar.</p>
+<h2>Ejercicios y exámenes</h2><p>Bittertalen es una aplicación de práctica independiente y no está afiliada a DUO. Los resultados de práctica no garantizan aprobar un examen oficial.</p><p>Bittertalen te ayuda a preparar A2 y B1; no es un organismo examinador oficial. Consulta DUO para los exámenes y requisitos oficiales. La evaluación automática puede contener errores y no es una calificación oficial.</p>
+<h2>Práctica gratuita y Bittertalen Plus</h2><p>Los ejercicios son gratis. Plus es una suscripción mensual que ofrece revisiones adicionales. El precio y los límites actuales se muestran en la aplicación antes del pago. El precio y el período de facturación también se muestran al pagar. La suscripción se renueva mensualmente hasta que la canceles.</p>
+<h2>Cancelar la suscripción</h2><p>Puedes cancelar cada mes en Perfil → Bittertalen Plus → Gestionar suscripción. Allí se indica cuándo se hace efectiva la cancelación.</p>
+<h2>Derecho de desistimiento</h2><p>Al contratar una suscripción por internet, en principio dispones de 14 días desde la celebración del contrato para desistir sin dar un motivo. Puedes avisar a hallo@bittertalen.nl indicando el correo de tu cuenta y la fecha de contratación. El desistimiento válido se tramita conforme a la ley. Cancelar y desistir son derechos diferentes.</p>
+<h2>Tus derechos, privacidad y fuentes</h2><p>Esta información no limita tus derechos legales como consumidor. Los derechos de los materiales originales pertenecen a sus titulares; los materiales de terceros tienen sus propias licencias o son de dominio público. Consulta las fuentes y la política de privacidad para conocer el uso de datos personales.</p>
+<div class="links"><a href="/over">Sobre Bittertalen</a><a href="/contact">Contacto</a><a href="/privacy">Política de privacidad</a></div>
+</article>
+<article data-l="ru" hidden>
+<a class="back" href="/"><span aria-hidden="true">←</span> Bittertalen</a>
+<h1>Условия использования</h1><p class="meta">Обновлено: 12 ноября 2026</p>
+<h2>Владелец</h2><p>Bittertalen создаёт и поддерживает Артём Матвеев. Вопросы и обращения: <a href="/contact"><bdi>hallo@bittertalen.nl</bdi></a>.</p>
+<p class="identifiers">KVK: <bdi>000000000</bdi> · BTW-id: <bdi>000000000</bdi></p><p class="meta">Номера KVK и BTW-id — временные заполнители; их ещё предстоит указать.</p>
+<h2>Подготовка и экзамены</h2><p>Bittertalen — независимое приложение для подготовки, не связанное с DUO. Результаты тренировок не гарантируют сдачу официального экзамена.</p><p>Bittertalen помогает готовиться к A2 и B1 и не является официальным экзаменационным органом. Официальные требования и экзамены смотрите у DUO. Автоматическая обратная связь может содержать ошибки и не является официальной оценкой.</p>
+<h2>Бесплатные занятия и Bittertalen Plus</h2><p>Упражнения бесплатны. Plus — месячная подписка на дополнительные проверки. Актуальные цена и лимиты показаны в приложении до оплаты. Цена и период списания также показаны при оплате. Подписка продлевается каждый месяц до её отмены.</p>
+<h2>Отмена подписки</h2><p>Подписку можно отменять ежемесячно через Профиль → Bittertalen Plus → Управление подпиской. Там указано, когда отмена вступит в силу.</p>
+<h2>Право отказа от договора</h2><p>При оформлении подписки онлайн, как правило, есть 14 дней с момента заключения договора для отказа без объяснения причин. Сообщить об отказе можно на hallo@bittertalen.nl, указав email аккаунта и дату оформления. Действительный отказ обрабатывается по правилам закона. Отмена продления подписки и отказ от договора — разные права.</p>
+<h2>Ваши права, конфиденциальность и источники</h2><p>Эта информация не ограничивает законные права потребителей. Права на оригинальные материалы сохраняются за их правообладателями; сторонние материалы используются по своим лицензиям либо находятся в общественном достоянии. Сведения об источниках и использовании персональных данных доступны по ссылкам ниже.</p>
+<div class="links"><a href="/over">О Bittertalen</a><a href="/contact">Контакты</a><a href="/privacy">Конфиденциальность</a></div>
+</article>
+</main>
+<script>
+// The page follows the language of the app (ww-ui); the Dutch text is the official one and shows without a script
+(function(){
+  var S={nl:["nl","NL"],en:["en","EN"],ar:["ar","عربي"],tr:["tr","TR"],hi:["hi","हिं"],zh:["zh-Hans","中文"],es:["es","ES"],ru:["ru","RU"]},sel=document.getElementById("lang"),l=null,suffix=" — Bittertalen";
+  try{l=localStorage.getItem("ww-ui")}catch(e){}
+  function show(k){if(!S[k])k="nl";var h=document.documentElement;
+    document.querySelectorAll("article").forEach(function(a){var on=a.getAttribute("data-l")===k;a.hidden=!on;if(on)document.title=a.querySelector("h1").textContent+suffix});
+    h.lang=S[k][0];h.dir=k==="ar"?"rtl":"ltr";sel.value=k;sel.setAttribute("aria-label",k==="es"?"Idioma":k==="ru"?"Язык":"Taal");document.getElementById("langs").textContent=S[k][1]}
+  show(l);
+  // "← Bittertalen" goes back to the app for someone who came from it (on a computer "/" is the homepage)
+  try{if(new URL(document.referrer).origin===location.origin&&/^\/oefenen/.test(new URL(document.referrer).pathname))
+    document.querySelectorAll("a.back").forEach(function(a){a.href="/oefenen"})}catch(e){}
+  sel.onchange=function(){try{sel.value==="nl"?localStorage.removeItem("ww-ui"):localStorage.setItem("ww-ui",sel.value)}catch(e){}show(sel.value)};
+})();
+</script>
+</body>
+</html>
