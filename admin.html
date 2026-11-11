@@ -29,6 +29,7 @@ button,.btn{font:inherit;font-weight:600;border-radius:var(--rc);padding:8px 14p
 .btn.main{background:var(--fill);border-color:var(--fill);color:#fff}
 button:focus-visible,.btn:focus-visible,input:focus-visible,.scroll:focus-visible{outline:2px solid var(--oranje);outline-offset:2px}
 .tile{background:var(--card);border-radius:var(--r);box-shadow:var(--lift);padding:20px 22px;margin-bottom:20px}
+.tile.warn{border-inline-start:4px solid var(--oranje)}
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:20px}
 .kpi{background:var(--card);border-radius:var(--r);box-shadow:var(--lift);padding:16px 18px}
 .kpi b{display:block;font-size:28px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
@@ -212,6 +213,8 @@ function draw() {
   const at = DATA.at.toLocaleTimeString("ru-RU", {hour: "2-digit", minute: "2-digit"});
   app.innerHTML = `<header><h1>Bittertalen <small>статистика · ${esc(me)}</small></h1><div class="grow"></div>
     <span class="muted">обновлено в ${at}</span><button id="re">Обновить</button><a class="btn" href="/oefenen">В приложение</a></header>
+    ${DATA.users.some(u => !("qd" in u)) ? `<section class="tile warn" role="status"><h2>В Supabase старая версия функции admin_overview</h2>
+    <p class="sub" style="margin:0">Поэтому ответы «сегодня» и «7 дней» не показываются, хотя приложение их уже считает. Выполните в SQL Editor последний блок из <code>supabase/schema.sql</code> (<code>create or replace function public.admin_overview()</code> …) и нажмите «Обновить».</p></section>` : ""}
     ${kpis(DATA.users)}${users(DATA.users)}${counts(DATA.counts)}
     <p class="sub">Время — активные минуты в приложении: страница открыта, и человек что-то нажимал за последние 90 секунд (или слушал запись). Время и ответы по дням учитываются с 11 ноября 2026 года и попадают сюда после синхронизации прогресса; «всего» у ответов — за всё время, с первого дня. «Разных вопросов» — сколько разных вопросов человек хоть раз прошёл. Ответы считают и упражнения, и пробные экзамены; повтор вопроса после ошибки в том же раунде не считается.</p>`;
   $("re").onclick = load;

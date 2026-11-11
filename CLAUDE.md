@@ -416,7 +416,8 @@ counter per day (`rebaseProgress`, `mergeS` takes the larger), so two devices on
 eight languages under "Met een account", that the progress includes the minutes per day and that the maker can see this
 overview; change both with the page. Answers per day are `S.qd` (answered) and `S.qr` (right), counted in `record()` with
 the totals in `S.items` (practice and proefexamens; a retry after a mistake in the same round doesn't count), merged and
-pruned like `S.tm`; before 11 November 2026 only the totals exist. Profiel shows a row "Statistiek" to /admin only for the
+pruned like `S.tm`; before 11 November 2026 only the totals exist. When `admin_overview()` in the database is older than the
+page (a row without `qd`), the page says so in a notice: a new field in the function means running its block again. Profiel shows a row "Statistiek" to /admin only for the
 owner: `adminCheck()` asks `/api/admin?me=1` once per login (200 only for an `ADMIN_EMAILS` account, without reading data).
 
 ## Bittertalen Plus (payments)

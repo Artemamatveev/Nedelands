@@ -211,7 +211,7 @@ test('The owner overview shows accounts and study time', async t => {
     admin: {users: [
       {email: 'anna@example.nl', name: 'Anna de Vries', created: now, login: now, seen: now, lvl: 'A2', items: 120, right: 90, wrong: 30,
         res: {knm: {n: 3, pc: 72, at: Date.now()}}, tm: {[day]: 1500, [day - 1]: 600, [day - 30]: 300}, qd: {[day]: 12, [day - 2]: 8}, qr: {[day]: 9, [day - 2]: 8}, checks: 4, checks7: 2, plus: null},
-      {email: 'omar@example.nl', name: null, created: now, login: now, seen: null, lvl: 'B1', items: 0, right: 0, wrong: 0, res: null, tm: null, checks: 0, checks7: 0, plus: 'active'}],
+      {email: 'omar@example.nl', name: null, created: now, login: now, seen: null, lvl: 'B1', items: 0, right: 0, wrong: 0, res: null, tm: null, qd: null, qr: null, checks: 0, checks7: 0, plus: 'active'}],
     counts: [{day: now.slice(0, 10), ev: 'open', lvl: 'A2', ui: 'nl', n: 5}, {day: now.slice(0, 10), ev: 'exam_knm', lvl: 'A2', ui: 'ru', n: 2}]}};
   const server = await serve(state), base = `http://127.0.0.1:${server.address().port}`;
   try {
@@ -228,6 +228,10 @@ test('The owner overview shows accounts and study time', async t => {
     const AXE = fs.readFileSync(createRequire(import.meta.url).resolve('axe-core/axe.min.js'), 'utf8');
     await s.p.addScriptTag({content: AXE});
     assert.deepEqual(await s.p.evaluate(() => axe.run(document).then(r => r.violations.map(v => v.id + ': ' + v.nodes.map(n => n.target.join(' ')).slice(0, 3).join(', ')))), []);
+    // an older admin_overview() in the database (no qd): the page says so instead of showing dashes without a reason
+    assert.equal(await s.p.locator('.tile.warn').count(), 0);
+    state.admin.users.forEach(u => { delete u.qd; delete u.qr; });
+    await s.p.locator('#re').click(); await s.p.waitForSelector('.tile.warn');
     assert.deepEqual(s.errors, []); await s.ctx.close();
     // without a session it asks to log in, and never calls /api/admin
     state.adminAuth = undefined;
