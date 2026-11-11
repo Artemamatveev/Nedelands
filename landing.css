@@ -269,3 +269,17 @@ h3 {font-size:22px;letter-spacing:-.02em}
  .feature-grid li:first-child p {font-size:14px}
  .feature-grid p {grid-column:2;margin-block-start:6px}
 }
+
+/* Motion has a quick response and a soft, unhurried finish. */
+.button,.language,.signin,.nav a,.footer a,.choice,.preview-switch button,.preview-motion {
+ transition:background-color var(--motion-quick) var(--motion-settle),color var(--motion-quick) var(--motion-settle),border-color var(--motion-ui) var(--motion-settle),opacity var(--motion-ui) var(--motion-settle),filter var(--motion-ui) var(--motion-settle),transform var(--motion-quick) var(--motion-ease);
+}
+.button:active,.preview-switch button:active {transform:scale(.985)}
+.block {scroll-margin-block-start:104px}
+@media(max-width:640px) {.block {scroll-margin-block-start:170px}}
+@media(prefers-reduced-motion:no-preference) {html{scroll-behavior:smooth}}
+@media(prefers-reduced-motion:reduce) {
+ html{scroll-behavior:auto}
+ .button,.language,.signin,.nav a,.footer a,.choice,.preview-switch button,.preview-motion {transition:none}
+ .button:active,.preview-switch button:active {transform:none}
+}

@@ -1,0 +1,17 @@
+/* Shared timing for the site and study app. Navigation stays native. */
+:root {
+  --motion-quick:180ms;
+  --motion-ui:280ms;
+  --motion-page:400ms;
+  --motion-ease:cubic-bezier(.22,1,.36,1);
+  --motion-settle:cubic-bezier(.4,0,.2,1);
+}
+@view-transition {navigation:auto}
+::view-transition-old(root) {animation:bt-document-out 240ms var(--motion-settle) both;mix-blend-mode:normal}
+::view-transition-new(root) {animation:bt-document-in 320ms var(--motion-settle) both;mix-blend-mode:normal}
+@keyframes bt-document-out {to{opacity:0}}
+@keyframes bt-document-in {from{opacity:0}}
+@media(prefers-reduced-motion:reduce) {
+  @view-transition {navigation:none}
+  ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*) {animation:none!important}
+}
