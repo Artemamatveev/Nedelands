@@ -1,6 +1,16 @@
 const languages = ["en", "ar", "tr", "hi", "zh", "es", "ru"];
 // Dutch copy is also in the HTML so the page is readable without scripts.
 const copy = {
+  "Zo leer je met Bittertalen": ["How you learn with Bittertalen", "هكذا تتعلّم مع Bittertalen", "Bittertalen ile nasıl öğrenirsin", "Bittertalen के साथ ऐसे सीखें", "用 Bittertalen 学习", "Así aprendes con Bittertalen", "Как заниматься с Bittertalen"],
+  "Video’s in het Nederlands": ["Videos in Dutch", "فيديوهات باللغة الهولندية", "Flemenkçe videolar", "डच में वीडियो", "荷兰语视频", "Vídeos en neerlandés", "Видео на нидерландском"],
+  "Kijk video’s in het Nederlands en oefen je luistervaardigheid met onderwerpen uit het dagelijks leven.": ["Watch videos in Dutch and practise listening with topics from everyday life.", "شاهد فيديوهات بالهولندية وتدرّب على الاستماع من خلال موضوعات من الحياة اليومية.", "Flemenkçe videolar izle ve günlük hayattan konularla dinleme becerini geliştir.", "डच में वीडियो देखें और रोज़मर्रा के विषयों के साथ सुनने का अभ्यास करें।", "观看荷兰语视频，通过日常生活话题练习听力。", "Mira vídeos en neerlandés y practica la comprensión oral con temas de la vida cotidiana.", "Смотрите видео на нидерландском и тренируйте понимание речи на повседневных темах."],
+  "Geschiedenis en cultuur": ["History and culture", "التاريخ والثقافة", "Tarih ve kültür", "इतिहास और संस्कृति", "历史与文化", "Historia y cultura", "История и культура"],
+  "Maak kennis met de Nederlandse geschiedenis en cultuur via verhalen en schilderijen.": ["Discover Dutch history and culture through stories and paintings.", "تعرّف على تاريخ هولندا وثقافتها من خلال القصص واللوحات.", "Hikâyeler ve tablolar aracılığıyla Hollanda tarihini ve kültürünü tanı.", "कहानियों और चित्रों के ज़रिए नीदरलैंड के इतिहास और संस्कृति को जानें।", "通过故事和绘画了解荷兰的历史与文化。", "Descubre la historia y la cultura de los Países Bajos a través de relatos y pinturas.", "Знакомьтесь с историей и культурой Нидерландов через рассказы и картины."],
+  "Boeken lezen met vertaling": ["Read books with translation", "قراءة الكتب مع الترجمة", "Çeviri desteğiyle kitap oku", "अनुवाद की मदद से किताबें पढ़ें", "借助翻译读书", "Lee libros con ayuda de la traducción", "Книги с переводом"],
+  "Lees in het Nederlands en bekijk de vertaling van woorden die je nog niet kent.": ["Read in Dutch and look up translations of words you do not know yet.", "اقرأ بالهولندية واطّلع على ترجمة الكلمات التي لا تعرفها بعد.", "Flemenkçe oku ve henüz bilmediğin kelimelerin çevirisine bak.", "डच में पढ़ें और अनजान शब्दों का अनुवाद देखें।", "阅读荷兰语书籍，查看不认识的单词的翻译。", "Lee en neerlandés y consulta la traducción de las palabras que todavía no conoces.", "Читайте на нидерландском и смотрите перевод незнакомых слов."],
+  "Leren van je fouten": ["Learn from your mistakes", "تعلّم من أخطائك", "Hatalarından öğren", "अपनी गलतियों से सीखें", "从错误中学习", "Aprende de tus errores", "Работа над ошибками"],
+  "Herhaal vragen die je eerder fout had en oefen extra met wat nog lastig is.": ["Revisit questions you previously got wrong and practise what you still find difficult.", "راجع الأسئلة التي أخطأت فيها سابقًا وتدرّب أكثر على ما لا يزال صعبًا.", "Daha önce yanlış cevapladığın soruları tekrarla ve zorlandığın konulara daha çok çalış.", "जिन सवालों में पहले गलती हुई थी उन्हें दोहराएँ और मुश्किल विषयों का और अभ्यास करें।", "重做之前答错的题目，重点练习仍然觉得困难的内容。", "Repite las preguntas que antes respondiste mal y refuerza lo que todavía te cuesta.", "Повторяйте задания, в которых раньше ошибались, и уделяйте больше внимания сложным темам."],
+
   "Animatie": ["Animation", "الحركة", "Animasyon", "ऐनिमेशन", "动画", "Animación", "Анимация"],
   "Bekijk de app": ["Explore the app", "تعرّف على التطبيق", "Uygulamayı keşfet", "ऐप देखें", "看看应用", "Explora la aplicación", "Посмотрите приложение"],
   "Mijn dag": ["My day", "يومي", "Günüm", "मेरा दिन", "我的一天", "Mi día", "Мой день"],
@@ -165,7 +175,7 @@ document.querySelectorAll('a[href^="/oefenen?open="]').forEach(a => {
   if (!/open=(login|plus)/.test(a.getAttribute("href"))) a.addEventListener("click", () => track("begin"));
 });
 
-// Vraag 2: a real KNM question on the homepage, marked like in the app (the box turns green or red); the question and
+// Vraag 3: a real KNM question on the homepage, marked like in the app (the box turns green or red); the question and
 // its feedback stay Dutch, as all exercises do
 (() => {
   const quiz = document.querySelector(".quiz"), fb = $("qfb");
