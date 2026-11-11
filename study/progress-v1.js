@@ -6,7 +6,7 @@ function rebaseProgress(base, local, remote, path = []) {
   if (progressEqual(base, remote)) return local;
   const [section, , field] = path;
   const counter = section === "items" && (field === "r" || field === "w") ||
-    section === "xs" && path.length === 2 || section === "gp" && field === "n";
+    (section === "xs" || section === "tm") && path.length === 2 || section === "gp" && field === "n";
   if (counter && Number.isFinite(local) && Number.isFinite(remote))
     return remote + Math.max(0, local - (base || 0));
   if (local === undefined || remote === undefined && base !== undefined) return undefined;

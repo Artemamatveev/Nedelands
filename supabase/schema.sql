@@ -237,3 +237,44 @@ end;
 $$;
 revoke execute on function public.bump_event(text, text, text, int) from public, anon, authenticated;
 grant execute on function public.bump_event(text, text, text, int) to service_role;
+
+-- The owner's overview (api/admin.js, admin.html): per account what it did, worked out here so the large progress rows
+-- never leave the database. Only the server calls it, and api/admin.js only for the e-mails in ADMIN_EMAILS.
+-- items: questions practised; right / wrong: answers; res: per part the number of proefexamens and the last score;
+-- tm: study seconds per day (day number since 1970 → seconds); checks: Claude checks in all, and in the last 7 days.
+create or replace function public.admin_overview()
+returns jsonb
+language sql
+security definer
+stable
+set search_path = ''
+as $$
+  select coalesce(jsonb_agg(x order by coalesce(x->>'seen', x->>'login') desc nulls last), '[]'::jsonb) from (
+    select jsonb_build_object(
+      'email', u.email,
+      'provider', u.raw_app_meta_data->>'provider',
+      'name', nullif(trim(concat_ws(' ', coalesce(nullif(p.data->'me'->>'name', ''), u.raw_user_meta_data->>'full_name',
+        u.raw_user_meta_data->>'name'), p.data->'me'->>'last')), ''),
+      'created', u.created_at, 'login', u.last_sign_in_at, 'seen', p.updated_at,
+      'lvl', p.data->>'lvl', 'streak', p.data->'streak', 'last', p.data->'last',
+      'items', (select count(*) from jsonb_each(case when jsonb_typeof(p.data->'items') = 'object' then p.data->'items' else '{}' end)),
+      'right', (select coalesce(sum(case when (v->>'r') ~ '^\d+$' then (v->>'r')::bigint end), 0)
+        from jsonb_each(case when jsonb_typeof(p.data->'items') = 'object' then p.data->'items' else '{}' end) e(k, v)),
+      'wrong', (select coalesce(sum(case when (v->>'w') ~ '^\d+$' then (v->>'w')::bigint end), 0)
+        from jsonb_each(case when jsonb_typeof(p.data->'items') = 'object' then p.data->'items' else '{}' end) e(k, v)),
+      'res', (select jsonb_object_agg(k, jsonb_build_object('n', jsonb_array_length(v), 'pc', v->-1->'pc', 'at', v->-1->'at'))
+        from jsonb_each(case when jsonb_typeof(p.data->'res') = 'object' then p.data->'res' else '{}' end) e(k, v)
+        where jsonb_typeof(v) = 'array' and jsonb_array_length(v) > 0),
+      'tm', case when jsonb_typeof(p.data->'tm') = 'object' then p.data->'tm' end,
+      'checks', (select coalesce(sum(n), 0) from public.check_usage c where c.user_id = u.id),
+      'checks7', (select coalesce(sum(n), 0) from public.check_usage c where c.user_id = u.id
+        and c.day > (now() at time zone 'Europe/Amsterdam')::date - 7),
+      'plus', pl.status
+    ) as x
+    from auth.users u
+    left join public.progress p on p.user_id = u.id
+    left join public.plus pl on pl.user_id = u.id
+  ) s;
+$$;
+revoke execute on function public.admin_overview() from public, anon, authenticated;
+grant execute on function public.admin_overview() to service_role;

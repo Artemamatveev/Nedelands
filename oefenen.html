@@ -914,7 +914,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
 </nav>
 <div class="zoom" id="zoom" hidden><img id="zimg" alt=""><p id="zcap"></p></div>
 <script src="/study/language-v1.js?v=e94426af48"></script>
-<script src="/study/progress-v1.js?v=3145793dee"></script>
+<script src="/study/progress-v1.js?v=7da6367615"></script>
 <script src="/study/writing-v1.js?v=e5690fd786"></script>
 <script src="/data/knm.js?v=48aed89ba7"></script>
 <script src="/data/a2.js?v=35efca6a73"></script>
@@ -1250,7 +1250,7 @@ function mergeS(a,b){
   const by=(x,y,f)=>{const m=Object.assign({},x||{});for(const k in y||{})m[k]=k in m?f(m[k],y[k]):y[k];return m};
   const uni=(x,y,k)=>{const h=new Set((x||[]).map(k));return(x||[]).concat((y||[]).filter(e=>!h.has(k(e))))};
   o.items=by(a.items,b.items,(x,y)=>n(y)>n(x)||n(y)===n(x)&&(y.d||0)>(x.d||0)?y:x);
-  o.xs=by(a.xs,b.xs,Math.max); o.hs=by(a.hs,b.hs,Math.max);
+  o.xs=by(a.xs,b.xs,Math.max); o.hs=by(a.hs,b.hs,Math.max); o.tm=by(a.tm,b.tm,Math.max);
   o.gp=by(a.gp,b.gp,(x,y)=>({n:Math.max(x.n||0,y.n||0),b:Math.max(x.b||0,y.b||0),at:Math.max(x.at||0,y.at||0)}));
   o.bk=by(a.bk,b.bk,(x,y)=>(y.at||0)>(x.at||0)?y:x);
   o.res=by(a.res,b.res,(x,y)=>{const m={};x.concat(y).forEach(r=>m[r.at]=r);return Object.values(m).sort((p,q)=>p.at-q.at).slice(-10)});
@@ -1606,6 +1606,16 @@ function vkey(s){let a=0xdeadbeef,b=0x41c6ce57;for(let i=0,c;i<s.length;i++){c=s
 // other lines on their own (the options read aloud come in any order)
 function sayKeys(L){const d=L.some(l=>/^[A-C]: /.test(l)),t=L.join("\n");return L.map((l,i)=>vkey(d?t+"\n#"+i:l))}
 const speaking=()=>sayOn||(canSpeak&&(speechSynthesis.speaking||speechSynthesis.pending));
+// Study time: active seconds per day (S.tm, day number → seconds), counted only while the page is visible and the learner
+// did something in the last 90 s or the app is speaking. Kept with the progress (it syncs with an account); the owner's
+// overview (admin.html) shows it. Written to S once a minute and when the page is hidden, not at every tick.
+let tmLast=Date.now(),tmAcc=0;
+["pointerdown","keydown","wheel","touchmove"].forEach(e=>addEventListener(e,()=>{tmLast=Date.now()},{passive:true,capture:true}));
+function tmFlush(){ if(tmAcc<1)return; const d=String(today()),old=today()-400; S.tm=S.tm||{};
+  S.tm[d]=(S.tm[d]||0)+tmAcc; tmAcc=0; for(const k in S.tm)if(+k<old)delete S.tm[k]; save(); }
+setInterval(()=>{ if(document.visibilityState==="visible"&&(Date.now()-tmLast<9e4||speaking())){tmAcc+=15;if(tmAcc>=60)tmFlush()} },15000);
+addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")tmFlush()});
+addEventListener("pagehide",tmFlush);
 function stopSpeak(){sayN++;sayOn=false;sayA.pause();try{if(canSpeak)speechSynthesis.cancel()}catch(e){}}
 // The phone's voice: left unset, so the phone uses the Dutch (nl-NL) voice picked in its settings;
 // in a dialogue ("A: …" / "B: …" lines) speaker B gets a higher pitch, so the two people sound different

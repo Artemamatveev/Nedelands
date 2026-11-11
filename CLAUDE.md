@@ -399,6 +399,23 @@ bezoekers tellen", "Cookies" and "Hoe lang", in all eight languages: change them
 (the statement once said so; it was never on the pages). Read the counts in the SQL editor, for example
 `select day, ev, sum(n) from public.usage_counts where day > current_date - 30 group by 1, 2 order by 1, 2;`.
 
+## The owner's overview (admin)
+
+`admin.html` (served as /admin, noindex, not linked anywhere, in Russian because only the owner reads it, made for a
+computer) shows who has an account and what they did: name and e-mail, level, last activity, study time today / 7 days /
+in all, questions practised, answers and the share right, proefexamens per part (number and last score), Claude checks,
+Plus; a row opens its minutes of the last 14 days and its exam history; above, six totals, and under the accounts the
+anonymous counts of the last 30 days per day. It loads the vendored Supabase library, reads the session the app left in
+this browser and asks `/api/admin` (`api/admin.js`) with the access token; the server answers only a confirmed e-mail in
+`ADMIN_EMAILS` (a Vercel env var, comma-separated; without it nobody gets in) and reads `admin_overview()` (in
+`supabase/schema.sql`, run it in the SQL editor; it works out the summaries inside the database, so the large progress rows
+never leave it) and `usage_counts`. Guests without an account appear only in the anonymous counts. Study time is `S.tm`
+(day number → active seconds: the page visible and a tap, key or scroll in the last 90 s, or the app speaking; written to
+`S` once a minute and when the page is hidden, days older than 400 dropped). It syncs with the progress, merged as a
+counter per day (`rebaseProgress`, `mergeS` takes the larger), so two devices on one day add up. privacy.html says, in all
+eight languages under "Met een account", that the progress includes the minutes per day and that the maker can see this
+overview; change both with the page.
+
 ## Bittertalen Plus (payments)
 
 The user chose (9 November 2026, replacing the earlier version with levels, a yearly price and a free week): practice,

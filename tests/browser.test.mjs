@@ -24,6 +24,10 @@ function serve(state = {}) {
       return res.end(fs.readFileSync(path.join(ROOT, 'oefenen.html'), 'utf8').replace(/\/data\/knm\.js\?v=[0-9a-f]+/, '/data/knm.js?v=' + state.knm));
     }
     if (p === '/api/config') { res.writeHead(200, {'content-type':'application/json'}); return res.end(JSON.stringify(state.config || {})); }
+    if (p === '/api/admin' && state.admin) {
+      state.adminAuth = req.headers.authorization || '';
+      res.writeHead(200, {'content-type': 'application/json'}); return res.end(JSON.stringify(state.admin));
+    }
     if (p === '/api/event' && state.events) {
       let b = ''; req.on('data', d => b += d); req.on('end', () => { state.events.push(JSON.parse(b)); res.writeHead(state.fail ? 502 : 204); res.end(); }); return;
     }
@@ -193,6 +197,43 @@ test('Usage counts: once a day, nothing with Global Privacy Control', async t =>
     await g.ctx.close();
     state.config = {}; const n = await page(browser, base); await n.go('/oefenen'); await n.p.waitForTimeout(2200);
     assert.deepEqual(state.events, []); await n.ctx.close();
+  } finally { await browser.close(); server.close(); }
+});
+
+// The owner's overview: with a session it asks /api/admin with the access token and shows the accounts, the study time
+// and the anonymous counts; a row opens its days; axe finds nothing
+test('The owner overview shows accounts and study time', async t => {
+  let browser;
+  try { browser = chromium && await chromium.launch(); } catch (e) { if (process.env.BROWSER_TESTS) throw e; }
+  if (!browser) { if (process.env.BROWSER_TESTS) assert.fail('Playwright is not installed'); return t.skip('no browser here'); }
+  const d = new Date(), day = Math.floor((d.getTime() - d.getTimezoneOffset() * 6e4) / 864e5), now = new Date().toISOString();
+  const state = {config: {url: 'https://supa.example', anon: 'x', login: [], limit: 5, free: 0},
+    admin: {users: [
+      {email: 'anna@example.nl', name: 'Anna de Vries', created: now, login: now, seen: now, lvl: 'A2', items: 120, right: 90, wrong: 30,
+        res: {knm: {n: 3, pc: 72, at: Date.now()}}, tm: {[day]: 1500, [day - 1]: 600, [day - 30]: 300}, checks: 4, checks7: 2, plus: null},
+      {email: 'omar@example.nl', name: null, created: now, login: now, seen: null, lvl: 'B1', items: 0, right: 0, wrong: 0, res: null, tm: null, checks: 0, checks7: 0, plus: 'active'}],
+    counts: [{day: now.slice(0, 10), ev: 'open', lvl: 'A2', ui: 'nl', n: 5}, {day: now.slice(0, 10), ev: 'exam_knm', lvl: 'A2', ui: 'ru', n: 2}]}};
+  const server = await serve(state), base = `http://127.0.0.1:${server.address().port}`;
+  try {
+    const s = await page(browser, base, {viewport: {width: 1280, height: 800}, isMobile: false, hasTouch: false});
+    await s.p.addInitScript(() => localStorage.setItem('sb-supa-auth-token', JSON.stringify({access_token: 'tok-1', refresh_token: 'r', token_type: 'bearer',
+      expires_in: 3600, expires_at: Math.floor(Date.now() / 1000) + 36000, user: {id: 'u1', email: 'eigenaar@example.nl', aud: 'authenticated'}})));
+    await s.go('/admin'); await s.p.waitForSelector('tr.u');
+    assert.equal(state.adminAuth, 'Bearer tok-1');
+    const text = await s.p.textContent('main');
+    assert.match(text, /Anna de Vries/); assert.match(text, /anna@example\.nl/); assert.match(text, /35 мин/); // 25 today + 10 yesterday in 7 days
+    assert.match(text, /KNM ×3 · 72%/); assert.match(text, /Без имени/);
+    await s.p.locator('tr.u').first().click(); await s.p.waitForSelector('tr.detail .days');
+    assert.equal(await overflow(s.p), 0);
+    const AXE = fs.readFileSync(createRequire(import.meta.url).resolve('axe-core/axe.min.js'), 'utf8');
+    await s.p.addScriptTag({content: AXE});
+    assert.deepEqual(await s.p.evaluate(() => axe.run(document).then(r => r.violations.map(v => v.id + ': ' + v.nodes.map(n => n.target.join(' ')).slice(0, 3).join(', ')))), []);
+    assert.deepEqual(s.errors, []); await s.ctx.close();
+    // without a session it asks to log in, and never calls /api/admin
+    state.adminAuth = undefined;
+    const g = await page(browser, base, {viewport: {width: 1280, height: 800}, isMobile: false, hasTouch: false});
+    await g.go('/admin'); await g.p.waitForSelector('.msg a[href="/oefenen?open=login"]');
+    assert.equal(state.adminAuth, undefined); await g.ctx.close();
   } finally { await browser.close(); server.close(); }
 });
 

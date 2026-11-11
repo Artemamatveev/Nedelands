@@ -151,3 +151,8 @@ test('An expired cached session for another account never selects the old accoun
   });
   const a=await app({storage:store});assert.equal(a.run('progressOwner'),'guest');assert.equal(a.run('S.items.privateAnswer'),undefined);
 });
+test('Study time from two devices on the same day adds up, other days stay',()=>{
+  const base={tm:{'20403':120}},local=clone(base),remote=clone(base);
+  local.tm['20403']+=300;remote.tm['20403']+=60;remote.tm['20404']=90;
+  assert.deepEqual(merge(base,local,remote).tm,{'20403':480,'20404':90});
+});

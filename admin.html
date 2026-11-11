@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Bittertalen · статистика</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<style>
+/* The owner's overview: only the owner sees it (api/admin.js checks ADMIN_EMAILS), so it is in Russian and made for a
+   computer. The app's Delfts blauw: tin-glaze white, cobalt, oranje as the one accent, round tiles, nearly square controls */
+:root{
+  --bg:#EEF2FA; --card:#fff; --ink:#14213D; --soft:#56617C; --line:#D6DDEB; --blue:#1F3C96; --fill:#1F3C96; --wash:#E4EBFA;
+  --oranje:#C8500C; --good:#21613A; --bad:#C0392B; --r:20px; --rc:4px;
+  --lift:0 1px 2px rgba(8,16,40,.06),0 8px 24px rgba(8,16,40,.10);
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0A0F1B; --card:#131A2A; --ink:#EEF1F7; --soft:#9EA7BA; --line:#283149; --blue:#9DB4F5; --fill:#2A4AAE; --wash:#1D2436;
+  --oranje:#FF8A3D; --good:#74CF95; --bad:#FF8F80; --lift:0 1px 2px rgba(0,0,0,.4),0 10px 28px rgba(0,0,0,.45);}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 -apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,sans-serif}
+main{max-width:1400px;margin:0 auto;padding:24px 24px 64px}
+header{display:flex;align-items:center;gap:16px;margin-bottom:20px}
+h1{font-size:24px;font-weight:600;margin:0;letter-spacing:-.01em}
+h1 small{color:var(--soft);font-weight:400;font-size:15px;margin-inline-start:8px}
+h2{font-size:17px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--soft);font-size:13px;margin:0 0 14px}
+.grow{flex:1}
+button,.btn{font:inherit;font-weight:600;border-radius:var(--rc);padding:8px 14px;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--ink);text-decoration:none}
+.btn.main{background:var(--fill);border-color:var(--fill);color:#fff}
+button:focus-visible,.btn:focus-visible,input:focus-visible,.scroll:focus-visible{outline:2px solid var(--oranje);outline-offset:2px}
+.tile{background:var(--card);border-radius:var(--r);box-shadow:var(--lift);padding:20px 22px;margin-bottom:20px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:20px}
+.kpi{background:var(--card);border-radius:var(--r);box-shadow:var(--lift);padding:16px 18px}
+.kpi b{display:block;font-size:28px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kpi span{color:var(--soft);font-size:13px}
+.scroll{overflow-x:auto;position:relative} /* also holds .sr, which would otherwise widen the page */
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th{color:var(--soft);font-weight:600;font-size:13px;line-height:1.25;text-align:start;vertical-align:bottom;padding:8px 8px;border-bottom:1px solid var(--line)}
+td{padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top;white-space:nowrap}
+td.num,th.num{text-align:end}
+tbody tr.u{cursor:pointer}
+@media (hover:hover){tbody tr.u:hover td{background:var(--wash)}}
+tr.open td{background:var(--wash)}
+.who button{all:unset;cursor:pointer;display:block}
+.who button:focus-visible{outline:2px solid var(--oranje);outline-offset:2px}
+.who b{display:block;font-weight:600}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.who span{color:var(--soft);font-size:13px}
+.muted{color:var(--soft)}
+.chip{display:inline-block;border:1px solid var(--line);border-radius:var(--rc);padding:1px 6px;margin:0 4px 3px 0;font-size:13px}
+.ok{color:var(--good)} .no{color:var(--bad)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-inline-end:6px;background:var(--line)}
+.dot.now{background:var(--good)} .dot.week{background:var(--oranje)}
+.bar{height:8px;border-radius:999px;background:var(--fill);min-width:2px}
+.days{display:flex;align-items:flex-end;gap:4px;height:90px;margin:8px 0 2px}
+.days div{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px;height:100%;font-size:11px;color:var(--soft)}
+.days i{display:block;width:100%;background:var(--fill);border-radius:2px 2px 0 0;min-height:1px}
+.detail td{white-space:normal;background:var(--wash)}
+.detail .cols{display:grid;grid-template-columns:2fr 1fr;gap:24px;padding:4px 4px 10px}
+.msg{max-width:560px;margin:80px auto;text-align:center}
+.msg p{color:var(--soft)}
+input[type=search]{font:inherit;border:1.5px solid var(--ink);border-radius:var(--rc);padding:7px 10px;background:var(--card);color:var(--ink);width:260px}
+code{font-size:13px;background:var(--wash);padding:1px 5px;border-radius:3px}
+</style>
+</head>
+<body>
+<main id="app"><p class="msg">Загружаю…</p></main>
+<script src="/lib/supabase-2.117.3.js"></script>
+<script>
+(() => {
+const $ = id => document.getElementById(id), app = $("app");
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
+// the app's day number (local days since 1970), as in S.tm
+const dayNo = (t = Date.now()) => { const d = new Date(t); return Math.floor((d.getTime() - d.getTimezoneOffset() * 6e4) / 864e5); };
+const dayLabel = n => new Date(n * 864e5).toLocaleDateString("ru-RU", {day: "numeric", month: "short", timeZone: "UTC"});
+const PART = {lz: "Чтение A2", ls: "Аудирование A2", wr: "Письмо A2", sp: "Речь A2", knm: "KNM",
+  l1: "Чтение B1", lb: "Аудирование B1", wb: "Письмо B1", sb: "Речь B1"};
+const EV = [["open", "Открыли приложение"], ["new", "Новые устройства"], ["home", "Главная"], ["begin", "Перешли в приложение"],
+  ["quiz", "Пример вопроса"], ["test", "Стартовый тест"], ["day", "Урок дня"], ["exam", "Экзаменов начато"], ["done", "Экзаменов сдано"]];
+
+function dur(sec) {
+  sec = Math.round(sec || 0);
+  if (sec < 60) return sec ? "<1 мин" : "—";
+  const h = Math.floor(sec / 3600), m = Math.round(sec % 3600 / 60);
+  return h ? `${h} ч ${String(m).padStart(2, "0")} мин` : `${m} мин`;
+}
+function when(iso) {
+  if (!iso) return "—";
+  const t = Date.parse(iso), days = dayNo() - dayNo(t), hm = new Date(t).toLocaleTimeString("ru-RU", {hour: "2-digit", minute: "2-digit"});
+  if (days <= 0) return `сегодня ${hm}`;
+  if (days === 1) return `вчера ${hm}`;
+  if (days < 7) return `${days} дн. назад`;
+  return new Date(t).toLocaleDateString("ru-RU", {day: "numeric", month: "short", year: days > 300 ? "numeric" : undefined});
+}
+const date = iso => iso ? new Date(iso).toLocaleString("ru-RU", {day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit"}) : "—";
+// study seconds: today, the last 7 days and in all
+function time(tm) {
+  const t = dayNo(); let today = 0, week = 0, all = 0;
+  for (const [k, v] of Object.entries(tm || {})) { const n = +v || 0; all += n; if (+k === t) today += n; if (+k > t - 7) week += n; }
+  return {today, week, all};
+}
+
+function message(title, text, action) {
+  app.innerHTML = `<div class="msg"><h1>${title}</h1><p>${text}</p>${action || ""}</div>`;
+}
+
+async function token() {
+  const cfg = await fetch("/api/config").then(r => r.ok ? r.json() : {}).catch(() => ({}));
+  if (!cfg.url) return {off: true};
+  const sb = supabase.createClient(cfg.url, cfg.anon, {auth: {flowType: "pkce", detectSessionInUrl: false, persistSession: true, autoRefreshToken: true}});
+  const {data} = await sb.auth.getSession();
+  return {token: data.session && data.session.access_token, email: data.session && data.session.user.email};
+}
+
+let DATA = null, me = "", open = new Set(), query = "";
+async function load() {
+  const t = await token().catch(() => ({}));
+  if (t.off) return message("Аккаунты не настроены", "Без Supabase на сайте нет аккаунтов, и показывать нечего.");
+  if (!t.token) return message("Нужно войти", "Войдите в приложение тем аккаунтом, который указан в <code>ADMIN_EMAILS</code>, и вернитесь сюда.",
+    `<a class="btn main" href="/oefenen?open=login">Войти</a>`);
+  me = t.email || "";
+  const r = await fetch("/api/admin", {headers: {authorization: `Bearer ${t.token}`}}).catch(() => null);
+  if (!r) return message("Нет связи", "Сервер не ответил. Попробуйте ещё раз.", `<button onclick="location.reload()">Обновить</button>`);
+  if (r.status === 403) return message("Нет доступа", `Вы вошли как <b>${esc(me)}</b>. Этот адрес должен быть в переменной <code>ADMIN_EMAILS</code> в Vercel.`);
+  if (r.status === 401) return message("Нужно войти", "Сессия закончилась. Войдите в приложение ещё раз.", `<a class="btn main" href="/oefenen?open=login">Войти</a>`);
+  if (!r.ok) return message("База не ответила", "Скорее всего, в Supabase ещё нет функции <code>admin_overview</code>: выполните последний блок из <code>supabase/schema.sql</code> в SQL Editor.",
+    `<button onclick="location.reload()">Обновить</button>`);
+  DATA = await r.json(); DATA.at = new Date(); draw();
+}
+
+function kpis(users) {
+  const t = dayNo(), seenDay = u => u.seen ? dayNo(Date.parse(u.seen)) : null;
+  const today = users.filter(u => seenDay(u) === t).length, week = users.filter(u => seenDay(u) !== null && seenDay(u) > t - 7).length;
+  let wk = 0, ans = 0, ex = 0;
+  for (const u of users) { wk += time(u.tm).week; ans += (u.right || 0) + (u.wrong || 0); for (const p of Object.values(u.res || {})) ex += p.n || 0; }
+  const k = (v, l) => `<div class="kpi"><b>${v}</b><span>${l}</span></div>`;
+  return `<div class="kpis">${k(users.length, "аккаунтов")}${k(today, "занимались сегодня")}${k(week, "занимались за 7 дней")}` +
+    `${k(dur(wk), "время занятий за 7 дней")}${k(ans.toLocaleString("ru-RU"), "ответов на вопросы")}${k(ex, "пробных экзаменов")}</div>`;
+}
+
+function counts(rows) {
+  if (!rows) return `<section class="tile"><h2>Посещения</h2><p class="sub">Таблицы <code>usage_counts</code> нет в базе.</p></section>`;
+  const by = {};
+  for (const r of rows) {
+    const d = by[r.day] = by[r.day] || {};
+    const k = r.ev.startsWith("exam_") ? "exam" : r.ev.startsWith("done_") ? "done" : r.ev;
+    d[k] = (d[k] || 0) + r.n;
+  }
+  const days = Object.keys(by).sort().reverse(), max = Math.max(1, ...days.map(d => by[d].open || 0));
+  const body = days.map(d => `<tr><td>${new Date(d + "T12:00:00Z").toLocaleDateString("ru-RU", {weekday: "short", day: "numeric", month: "short"})}</td>` +
+    EV.map(([k], i) => `<td class="num">${by[d][k] || (i ? "<span class=muted>·</span>" : "0")}</td>`).join("") +
+    `<td style="width:12%;min-width:80px"><div class="bar" style="width:${(by[d].open || 0) / max * 100}%"></div></td></tr>`).join("");
+  return `<section class="tile"><h2>Посещения за 30 дней</h2>
+    <p class="sub">Анонимно, все устройства, и с аккаунтом, и без: число событий за день. Одно устройство в день считается один раз.</p>
+    <div class="scroll" tabindex="0" role="region" aria-label="Посещения по дням"><table><thead><tr><th>День</th>${EV.map(([, l]) => `<th class="num">${l}</th>`).join("")}<th><span class="sr">Открытия, график</span></th></tr></thead>
+    <tbody>${body || `<tr><td colspan="${EV.length + 2}" class="muted">Пока пусто.</td></tr>`}</tbody></table></div></section>`;
+}
+
+function resChips(res) {
+  const e = Object.entries(res || {});
+  if (!e.length) return `<span class="muted">—</span>`;
+  return e.map(([k, v]) => `<span class="chip" title="последний: ${esc(date(v.at && new Date(v.at).toISOString()))}">${esc(PART[k] || k)} ×${v.n}${v.pc != null ? ` · ${v.pc}%` : ""}</span>`).join("");
+}
+
+function detail(u) {
+  const t = dayNo(), tm = u.tm || {}, list = [];
+  for (let n = t - 13; n <= t; n++) list.push([n, +tm[n] || 0]);
+  const max = Math.max(60, ...list.map(x => x[1]));
+  const bars = list.map(([n, s]) => `<div title="${dayLabel(n)}: ${dur(s)}"><span>${s >= 60 ? Math.round(s / 60) : ""}</span><i style="height:${s / max * 70}px"></i>${new Date(n * 864e5).getUTCDate()}</div>`).join("");
+  const res = Object.entries(u.res || {}).map(([k, v]) => `<li>${esc(PART[k] || k)}: ${v.n}×, последний ${v.pc != null ? v.pc + "%" : "—"} (${esc(date(v.at && new Date(v.at).toISOString()))})</li>`).join("");
+  const active = Object.values(tm).filter(v => v >= 60).length;
+  return `<tr class="detail"><td colspan="11"><div class="cols">
+    <div><b>Минуты занятий за 14 дней</b> <span class="muted">· дней с занятиями всего: ${active}</span><div class="days">${bars}</div></div>
+    <div><p><b>Аккаунт создан:</b> ${date(u.created)}<br><b>Последний вход:</b> ${date(u.login)}<br><b>Последняя синхронизация:</b> ${date(u.seen)}<br>
+    <b>Вход через:</b> ${esc(u.provider || "—")}</p>${res ? `<b>Пробные экзамены</b><ul>${res}</ul>` : ""}</div></div></td></tr>`;
+}
+
+function users(list) {
+  const t = dayNo();
+  const rows = list.filter(u => !query || `${u.name || ""} ${u.email || ""}`.toLowerCase().includes(query)).map((u, i) => {
+    const tt = time(u.tm), ans = (u.right || 0) + (u.wrong || 0), pc = ans ? Math.round(u.right / ans * 100) : null;
+    const sd = u.seen ? dayNo(Date.parse(u.seen)) : null, dot = sd === t ? "now" : sd !== null && sd > t - 7 ? "week" : "";
+    const key = u.email || String(i), isOpen = open.has(key);
+    return `<tr class="u${isOpen ? " open" : ""}" data-k="${esc(key)}">
+      <td class="who"><button aria-expanded="${isOpen}"><b>${esc(u.name || "Без имени")}</b><span>${esc(u.email || "")}</span></button></td>
+      <td>${esc(u.lvl || "A2")}</td>
+      <td><span class="dot ${dot}"></span>${when(u.seen || u.login)}</td>
+      <td class="num">${dur(tt.today)}</td><td class="num">${dur(tt.week)}</td><td class="num">${dur(tt.all)}</td>
+      <td class="num">${u.items || 0}</td>
+      <td class="num">${ans}${pc != null ? ` <span class="${pc >= 70 ? "ok" : "muted"}">(${pc}%)</span>` : ""}</td>
+      <td style="white-space:normal;min-width:180px">${resChips(u.res)}</td>
+      <td class="num">${u.checks7 || 0} / ${u.checks || 0}</td>
+      <td>${u.plus ? `<span class="${["active", "trialing"].includes(u.plus) ? "ok" : "muted"}">${esc(u.plus)}</span>` : `<span class="muted">—</span>`}</td></tr>` +
+      (isOpen ? detail(u) : "");
+  }).join("");
+  return `<section class="tile"><header style="margin-bottom:10px"><div class="grow"><h2>Пользователи с аккаунтом</h2>
+    <p class="sub" style="margin:0">Те, кто вошёл в аккаунт. Гостей без аккаунта видно только в анонимных посещениях ниже. Нажмите на строку, чтобы увидеть дни.</p></div>
+    <input type="search" id="q" placeholder="Имя или e-mail" aria-label="Поиск" value="${esc(query)}"></header>
+    <div class="scroll" tabindex="0" role="region" aria-label="Пользователи"><table><thead><tr><th>Кто</th><th>Уровень</th><th>Последняя активность</th><th class="num">Сегодня</th><th class="num">7 дней</th>
+    <th class="num">Всего</th><th class="num">Вопросов</th><th class="num">Ответов (верно)</th><th>Пробные экзамены</th><th class="num">Claude: 7 дн / всего</th><th>Plus</th></tr></thead>
+    <tbody>${rows || `<tr><td colspan="11" class="muted">Никого.</td></tr>`}</tbody></table></div></section>`;
+}
+
+function draw() {
+  const at = DATA.at.toLocaleTimeString("ru-RU", {hour: "2-digit", minute: "2-digit"});
+  app.innerHTML = `<header><h1>Bittertalen <small>статистика · ${esc(me)}</small></h1><div class="grow"></div>
+    <span class="muted">обновлено в ${at}</span><button id="re">Обновить</button><a class="btn" href="/oefenen">В приложение</a></header>
+    ${kpis(DATA.users)}${users(DATA.users)}${counts(DATA.counts)}
+    <p class="sub">Время — активные минуты в приложении: страница открыта, и человек что-то нажимал за последние 90 секунд (или слушал запись). Учитывается с 11 ноября 2026 года и попадает сюда после синхронизации прогресса.</p>`;
+  $("re").onclick = load;
+  const q = $("q"); q.oninput = () => { query = q.value.trim().toLowerCase(); const pos = q.selectionStart; draw(); const n = $("q"); n.focus(); n.setSelectionRange(pos, pos); };
+  app.querySelectorAll("tr.u").forEach(tr => {
+    const flip = () => { const k = tr.dataset.k; open.has(k) ? open.delete(k) : open.add(k); draw(); };
+    tr.onclick = flip; // the name is a button too, for the keyboard (a click on it reaches the row)
+  });
+}
+load();
+})();
+</script>
+</body>
+</html>

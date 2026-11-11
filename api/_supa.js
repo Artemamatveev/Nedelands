@@ -126,6 +126,17 @@ export async function putOutcome({ id, part, ok, pc, rd }) {
   if (!r.ok) throw new Error(`put_outcome ${r.status}`);
   return (await r.json()) === true;
 }
+// The owner's overview (api/admin.js): every account's summary (admin_overview() in schema.sql) and the anonymous counts
+// of the last `days` days. Throws when the database can't answer.
+export async function adminData(days = 30) {
+  const since = new Date(Date.now() - days * 864e5).toISOString().slice(0, 10);
+  const [a, b] = await Promise.all([
+    rest("rpc/admin_overview", { method: "POST", body: "{}" }),
+    rest(`usage_counts?select=day,ev,lvl,ui,n&day=gte.${since}&order=day.asc`),
+  ]);
+  if (!a.ok) throw new Error(`admin_overview ${a.status}`);
+  return { users: await a.json(), counts: b.ok ? await b.json() : null };
+}
 // Anonymous usage counts (api/event.js, table usage_counts): one more for today's event, level and menu language.
 // EVENT_CAP a day per count (default 50000), so a stranger can't run it up: true when added, false when full; throws on failure.
 const EVENT_CAP = Math.max(1, parseInt(process.env.EVENT_CAP, 10) || 50000);
