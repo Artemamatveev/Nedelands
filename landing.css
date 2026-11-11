@@ -218,8 +218,9 @@ h3 {font-size:22px;letter-spacing:-.02em}
 }
 @media(prefers-reduced-motion:reduce) {.phone-stage,.phone-float,.greeter img{transform:none!important}}
 
-.preview-motion {position:absolute;top:14px;inset-inline-start:14px;z-index:4;display:flex;align-items:center;gap:6px;min-height:36px;padding:6px 11px;border:1px solid #ffffff70;border-radius:20px;background:#102554d9;color:#fff;font:inherit;font-size:12px;cursor:pointer}
-.preview-motion[aria-pressed=false] {background:#fff;color:#1f3c96}
+.preview-motion {position:absolute;top:14px;inset-inline-start:14px;z-index:4;display:flex;align-items:center;gap:6px;min-height:36px;padding:6px 11px;border:0;border-radius:6px;background:transparent;color:#fff;opacity:.6;text-shadow:0 1px 4px #07142e80;font:inherit;font-size:12px;cursor:pointer}
+.preview-motion[aria-pressed=false] {background:transparent;color:#fff}
+.preview-motion:is(:hover,:focus-visible) {opacity:1}
 .preview-motion:focus-visible {outline-color:#fff}
 
 /* Clear header hierarchy: language, account sign-in, then the main practice action. */
