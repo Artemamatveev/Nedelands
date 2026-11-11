@@ -405,7 +405,10 @@ bezoekers tellen", "Cookies" and "Hoe lang", in all eight languages: change them
 computer, light only: no dark mode on a desktop) shows who has an account and what they did: name and e-mail, level, last
 activity, study time and answers (with the share right) today / 7 days / in all, how many different questions, proefexamens per part (number and last score), Claude checks,
 Plus; a row opens its minutes of the last 14 days and its exam history; above, six totals, and under the accounts the
-anonymous counts of the last 30 days per day. It loads the vendored Supabase library, reads the session the app left in
+anonymous counts of the last 30 days per day, and at the bottom two column charts of those 30 days: devices that opened the
+app a day, and the accounts' study minutes a day (`chart()`: one series and one axis each, the value on the highest day and
+today, the rest in a tooltip on hover or focus and in a table under it). The tables are grids: every cell bordered and
+centred (the user's wish). It loads the vendored Supabase library, reads the session the app left in
 this browser and asks `/api/admin` (`api/admin.js`) with the access token; the server answers only a confirmed e-mail in
 `ADMIN_EMAILS` (a Vercel env var, comma-separated; without it nobody gets in) and reads `admin_overview()` (in
 `supabase/schema.sql`, run it in the SQL editor; it works out the summaries inside the database, so the large progress rows

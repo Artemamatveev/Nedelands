@@ -224,6 +224,12 @@ test('The owner overview shows accounts and study time', async t => {
     assert.match(text, /Anna de Vries/); assert.match(text, /anna@example\.nl/); assert.match(text, /35 мин/); // 25 today + 10 yesterday in 7 days
     assert.match(text, /KNM ×3 · 72%/); assert.match(text, /12 \(75%\)/); assert.match(text, /20 \(85%\)/); assert.match(text, /120 \(75%\)/); // today, 7 days, in all assert.match(text, /Без имени/);
     await s.p.locator('tr.u').first().click(); await s.p.waitForSelector('tr.detail .days');
+    // two charts of the last 30 days: devices a day and study minutes a day; a column tells its value on hover and focus
+    assert.equal(await s.p.locator('figure.chart').count(), 2);
+    assert.equal(await s.p.locator('figure.chart .col').count(), 60);
+    await s.p.locator('figure.chart').nth(1).locator('.col').last().hover();
+    assert.match(await s.p.textContent('.tip'), /25 мин/);
+    assert.equal(await s.p.locator('figure.chart').first().locator('.col').last().getAttribute('aria-label').then(a => / 5 устр\.$/.test(a)), true);
     assert.equal(await overflow(s.p), 0);
     const AXE = fs.readFileSync(createRequire(import.meta.url).resolve('axe-core/axe.min.js'), 'utf8');
     await s.p.addScriptTag({content: AXE});
