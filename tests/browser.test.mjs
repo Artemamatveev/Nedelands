@@ -25,7 +25,7 @@ function serve(state = {}) {
     }
     if (p === '/api/config') { res.writeHead(200, {'content-type':'application/json'}); return res.end(JSON.stringify(state.config || {})); }
     if (p === '/api/event' && state.events) {
-      let b = ''; req.on('data', d => b += d); req.on('end', () => { state.events.push(JSON.parse(b)); res.writeHead(204); res.end(); }); return;
+      let b = ''; req.on('data', d => b += d); req.on('end', () => { state.events.push(JSON.parse(b)); res.writeHead(state.fail ? 502 : 204); res.end(); }); return;
     }
     if (p.startsWith('/api/')) { res.writeHead(404); return res.end(); }
     if (p === '/') p = '/index.html';
@@ -165,7 +165,16 @@ test('Usage counts: once a day, nothing with Global Privacy Control', async t =>
   const server = await serve(state), base = `http://127.0.0.1:${server.address().port}`;
   try {
     const s = await page(browser, base);
+    // a cached config from before the counts, and the server not keeping the first one (the table not made yet): sent
+    // again at the next start, then once only
+    await s.p.addInitScript(() => { if (!sessionStorage.getItem('seen')) { sessionStorage.setItem('seen', 1);
+      localStorage.setItem('ww-acc-cfg', JSON.stringify({url: 'https://supa.example', anon: 'x', login: [], limit: 5, free: 0})); } });
+    state.fail = true;
     await s.go('/oefenen'); await s.p.waitForTimeout(2200);
+    assert.deepEqual(state.events.map(e => e.ev), ['open']);
+    assert.equal(await s.p.evaluate(() => localStorage.getItem('ww-day')), null);
+    state.fail = false; state.events.length = 0;
+    await s.p.reload(); await s.p.waitForTimeout(2200);
     await s.p.reload(); await s.p.waitForTimeout(2200); // the same day again: not counted twice
     assert.deepEqual(state.events.map(e => e.ev), ['open', 'new']);
     assert.deepEqual(Object.keys(state.events[0]).sort(), ['ev', 'lvl', 'ui']);

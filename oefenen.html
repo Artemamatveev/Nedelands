@@ -1151,12 +1151,16 @@ const amsDay=()=>new Intl.DateTimeFormat("en-CA",{timeZone:"Europe/Amsterdam"}).
 // Anonymous usage counts (api/event.js): only "one more today" per event, level and menu language; no id, cookie, account
 // or IP address. Only when the server offers it (cfg.events), never with Global Privacy Control or Do Not Track.
 const trackOn=()=>!!(acc.cfg&&acc.cfg.events)&&!navigator.globalPrivacyControl&&navigator.doNotTrack!=="1";
-function track(ev){ if(!trackOn())return;
-  try{fetch("/api/event",{method:"POST",keepalive:true,headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({ev,lvl:lvl(),ui:lsGet("ww-ui")||"nl"})}).catch(()=>{})}catch(e){} }
-// A device that opens the app counts once a day (ww-day keeps only the date), "new" the first time with no progress yet
-function trackDay(){ if(!trackOn())return; const d=amsDay(),was=lsGet("ww-day"); if(was===d)return;
-  lsSet("ww-day",d); track("open"); if(!was&&!Object.keys(S.items||{}).length)track("new"); }
+function track(ev){ if(!trackOn())return Promise.resolve(false);
+  try{return fetch("/api/event",{method:"POST",keepalive:true,headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({ev,lvl:lvl(),ui:lsGet("ww-ui")||"nl"})}).then(r=>r.ok,()=>false)}catch(e){return Promise.resolve(false)} }
+// A device that opens the app counts once a day (ww-day keeps only the date), "new" the first time with no progress yet.
+// The day is marked only once the server kept the count: a lost one (offline, the table not there yet) is sent again at
+// the next start. Asked again when a fresh config comes (a cached one may not offer the counts yet).
+let dayBusy=false;
+function trackDay(){ if(!trackOn()||dayBusy)return; const d=amsDay(),was=lsGet("ww-day"); if(was===d)return;
+  const first=!was&&!Object.keys(S.items||{}).length; dayBusy=true;
+  track("open").then(ok=>{dayBusy=false;if(!ok)return;lsSet("ww-day",d);if(first)track("new")}); }
 function loadSb(){
   if(acc.sb)return Promise.resolve(acc.sb);
   return acc.load||(acc.load=new Promise((ok,no)=>{const t=document.createElement("script");t.src="/lib/supabase-2.117.3.js";t.onload=ok;t.onerror=no;document.head.appendChild(t)})
@@ -1171,7 +1175,7 @@ async function initAccount(){
   let cfg=null; try{cfg=JSON.parse(lsGet(ACFG))}catch(e){}
   const fresh=fetch("/api/config").then(r=>r.ok?r.json():null).catch(()=>null).then(c=>{if(c)lsSet(ACFG,JSON.stringify(c));return c});
   if(!cfg||!cfg.url)cfg=await fresh; // a cached "off" is asked again: accounts may have been switched on since
-  else fresh.then(c=>{if(c&&(c.url||!acc.user)){acc.cfg=c.url?c:null;drawProfile()}});
+  else fresh.then(c=>{if(c&&(c.url||!acc.user)){acc.cfg=c.url?c:null;drawProfile();setTimeout(trackDay,1500)}});
   acc.cfg=cfg&&cfg.url?cfg:null; drawProfile();
   if(!acc.cfg)return;
   setTimeout(trackDay,1500); // after the start, and after the rest of the page's script has run

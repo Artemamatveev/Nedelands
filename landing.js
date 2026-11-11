@@ -136,18 +136,18 @@ fetch("/api/config").then(r => {
 // account or IP address; only when the server offers it, never with Global Privacy Control or Do Not Track
 const trackOn = () => !!(config && config.events) && !navigator.globalPrivacyControl && navigator.doNotTrack !== "1";
 function track(ev) {
-  if (!trackOn()) return;
+  if (!trackOn()) return Promise.resolve(false);
   let ui = "nl";
   try { ui = localStorage.getItem("ww-ui") || "nl"; } catch {}
-  fetch("/api/event", { method: "POST", keepalive: true, headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ ev, lvl: "", ui }) }).catch(() => {});
+  return fetch("/api/event", { method: "POST", keepalive: true, headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ev, lvl: "", ui }) }).then(r => r.ok, () => false);
 }
-// the homepage counts once a day per device (ww-day-home keeps only the date)
+// the homepage counts once a day per device (ww-day-home keeps only the date), marked only once the server kept it
 function homeDay() {
   if (!trackOn()) return;
   const d = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Amsterdam" }).format(new Date());
-  try { if (localStorage.getItem("ww-day-home") === d) return; localStorage.setItem("ww-day-home", d); } catch { return; }
-  track("home");
+  try { if (localStorage.getItem("ww-day-home") === d) return; } catch { return; }
+  track("home").then(ok => { if (ok) try { localStorage.setItem("ww-day-home", d); } catch {} });
 }
 // the buttons into the app (not Inloggen and Plus, which are for people who already know it)
 document.querySelectorAll('a[href^="/oefenen?open="]').forEach(a => {

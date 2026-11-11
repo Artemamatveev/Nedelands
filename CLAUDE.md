@@ -389,8 +389,9 @@ per event, level (`A2`, `B1`, or empty on the homepage) and menu language, in ta
 a count can never be tied to a person. `track(ev)` in `oefenen.html` and `landing.js` posts `{ev, lvl, ui}` to
 `/api/event` (`api/event.js`: same origin only, the events in `EVENTS`, `EVENT_CAP` a day per count, default 50 000), only
 when `/api/config` says `events` (accounts on and `EVENTS` not `0`) and never with Global Privacy Control or Do Not Track.
-The events: `open` (the app, once a day per device: `ww-day` keeps only the date) and `new` (that first time, with no
-progress yet), `home` (the homepage, once a day: `ww-day-home`), `begin` (a button from the homepage into the app, not
+The events: `open` (the app, once a day per device: `ww-day` keeps only the date, set only once the server kept the
+count, so a lost one is sent again at the next start; asked again when a fresh config comes) and `new` (that first time,
+with no progress yet), `home` (the homepage, once a day: `ww-day-home`, the same way), `begin` (a button from the homepage into the app, not
 Inloggen or Plus), `quiz` (Vraag 2 answered), `test` (the starttest done), `day` (today's lesson done, with the ribbon),
 `exam_<part>` (a proefexamen started) and `done_<part>` (handed in: `keepRes()`). A new event goes in `EVENTS` too
 (`tests/events.test.mjs` checks every `track("…")` in the pages against it). privacy.html describes this in "De website en
