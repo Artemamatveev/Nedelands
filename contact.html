@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Contact — Bittertalen</title>
+<meta name="description" content="Neem contact op met Bittertalen voor vragen, ideeën of hulp.">
+<link rel="canonical" href="https://bittertalen.nl/contact">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<script>
+(() => {
+  const desktop=matchMedia("(min-width:960px) and (hover:hover) and (pointer:fine)");
+  const installed=matchMedia("(display-mode: standalone)");
+  const update=()=>document.documentElement.toggleAttribute("data-desktop",desktop.matches&&!installed.matches&&navigator.standalone!==true);
+  desktop.addEventListener("change",update);
+  installed.addEventListener("change",update);
+  update();
+})();
+</script>
+<style>
+/* The same Delfts blauw as the app: tin-glaze white, cobalt, the system font, one plain tile on the frosted windmill;
+   Examenblad shapes (round tile, nearly square controls), sections like the exam form, the language as a plain globe */
+:root{
+  --surface:#EEF2FA; --wash:#C9D6F2; --ink:#14213D; --soft:#56617C; --line:#D6DDEB; --blue:#1F3C96; --oranje:#C8500C;
+  --card:#FFFFFF; --glass:rgba(240,244,252,.55); --lift:0 1px 2px rgba(8,16,40,.06),0 8px 24px rgba(8,16,40,.10);
+  --r:20px; --rc:4px;
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"],[data-desktop]){
+  --surface:#0A0F1B; --wash:#1D2436; --ink:#EEF1F7; --soft:#9EA7BA; --line:#283149; --blue:#9DB4F5; --oranje:#FF8A3D;
+  --card:#131A2A; --glass:rgba(10,15,27,.7); --lift:0 1px 2px rgba(0,0,0,.4),0 10px 28px rgba(0,0,0,.45); } }
+:root[data-theme="dark"]:not([data-desktop]){
+  --surface:#0A0F1B; --wash:#1D2436; --ink:#EEF1F7; --soft:#9EA7BA; --line:#283149; --blue:#9DB4F5; --oranje:#FF8A3D;
+  --card:#131A2A; --glass:rgba(10,15,27,.7); --lift:0 1px 2px rgba(0,0,0,.4),0 10px 28px rgba(0,0,0,.45); }
+:root[data-desktop]{color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.55}
+body::before{content:"";position:fixed;inset:-24px;z-index:-2;background:url(/art/molen-glass.jpg) 70% 40%/cover}
+body::after{content:"";position:fixed;inset:0;z-index:-1;background:var(--glass)}
+main{max-width:720px;margin:0 auto;padding:16px 16px 48px}
+article{background:var(--card);border-radius:var(--r);box-shadow:var(--lift);padding:8px 20px 24px}
+.back{display:inline-flex;align-items:center;gap:6px;min-height:44px;margin-top:12px;border:1px solid var(--line);color:var(--ink);font-weight:600;font-size:16px;padding-block:5px 6px;padding-inline:10px 14px;border-radius:var(--rc);text-decoration:none}
+@media (hover:hover){.back:hover{background:var(--surface)}}
+h1{font-size:28px;font-weight:600;line-height:1.2;margin:20px 0 6px}
+h2{color:var(--blue);font-size:15px;font-weight:600;line-height:1.3;margin:26px 0 8px;padding-top:18px;border-top:1px solid var(--line)}
+p,li{margin:0 0 10px} ul{padding-inline-start:22px;margin:0 0 10px}
+.sub{color:var(--soft)}
+a{color:var(--blue)}
+a:focus-visible{outline:3px solid var(--oranje);outline-offset:2px}
+.box{border-inline-start:3px solid var(--wash);padding-block:2px;padding-inline-start:14px;margin:14px 0}
+@media (min-width:768px){article{padding:12px 36px 32px}}
+.top{display:flex;justify-content:flex-start;margin:0 0 6px}
+.lang{position:relative;display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;color:var(--ink)}
+.lang svg{flex:none;width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8}
+.lang :is(#langs,.dn){display:none}
+.lang select{position:absolute;inset:0;width:100%;height:100%;opacity:0;font-size:16px;border:0;cursor:pointer}
+.lang:focus-within{outline:2px solid var(--oranje);outline-offset:2px}
+[dir=rtl] .back>span{display:inline-block;transform:scaleX(-1)}
+.hero{display:block;width:100%;aspect-ratio:1200/630;object-fit:cover;border-radius:var(--rc);margin:18px 0 6px}
+.cap{font-size:13px;color:var(--soft);margin:0 0 6px}
+
+.top{justify-content:space-between;align-items:center;margin-block:0 12px}
+.brand{color:var(--ink);font-size:22px;font-weight:700;letter-spacing:-.04em;text-decoration:none}
+.intro{display:flex;align-items:center;gap:18px;margin-block:20px}
+.intro img{width:88px;height:88px;border-radius:50%;flex:none}
+.intro h1{margin:0 0 8px;font-weight:650}
+.intro p{margin:0}
+.email{display:inline-block;font-size:clamp(20px,4vw,28px);font-weight:650;text-decoration:none;overflow-wrap:anywhere}
+.contact-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-block:16px 0}
+.contact-actions a,.contact-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:9px 13px;border-radius:var(--rc);font:inherit;font-size:15px;font-weight:600;text-decoration:none;cursor:pointer}
+.write{background:#1F3C96;color:#fff;border:1px solid #1F3C96}
+.copy{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.status{font-size:14px;color:var(--soft);min-height:1.55em;margin-block:6px 0}
+.contact-footer{display:flex;flex-wrap:wrap;gap:10px 22px;margin-block-start:24px;padding-block-start:18px;border-top:1px solid var(--line);font-size:14px}
+button:focus-visible{outline:3px solid var(--oranje);outline-offset:3px}
+[hidden]{display:none!important}
+@media(max-width:420px){.intro{align-items:flex-start;gap:12px}.intro img{width:64px;height:64px}.intro h1{font-size:25px}}
+</style>
+</head>
+<body>
+<main>
+<div class="top"><a class="brand" href="/">Bittertalen</a><label class="lang"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.6 3.9 5.6 3.9 9s-1.3 6.4-3.9 9c-2.6-2.6-3.9-5.6-3.9-9s1.3-6.4 3.9-9z"/></svg><span id="langs">NL</span><svg class="dn" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4"/></svg><select id="lang" aria-label="Taal"><option value="nl">Nederlands</option><option value="en">English</option><option value="ar">العربية</option><option value="tr">Türkçe</option><option value="hi">हिन्दी</option><option value="zh">中文</option><option value="es">Español</option><option value="ru">Русский</option></select></label></div>
+<article data-l="nl">
+<a class="back" href="/"><span aria-hidden="true">←</span> Bittertalen</a>
+<div class="intro"><img src="/art/bitterbal-wave-nl-v1.jpg" width="88" height="88" alt=""><div><h1>Contact</h1><p class="sub">Heb je een vraag, een idee of hulp nodig met Bittertalen? Schrijf ons.</p></div></div>
+<h2>Vragen en ideeën</h2><p>Voor vragen over oefenen, je account, Bittertalen Plus of een suggestie voor de app.</p>
+<a class="email" href="mailto:hallo@bittertalen.nl"><bdi>hallo@bittertalen.nl</bdi></a>
+<div class="contact-actions"><a class="write" href="mailto:hallo@bittertalen.nl">Schrijf een e-mail</a><button class="copy" type="button" data-copied="E-mailadres gekopieerd." hidden>Kopieer e-mailadres</button></div>
+<p class="status" role="status" aria-live="polite"></p>
+<h2>Een fout melden</h2><p>Vertel wat er gebeurde, in welk onderdeel en op welk apparaat en in welke browser. Je kunt een schermafbeelding meesturen.</p>
+<h2>Privacy</h2><p>Voor vragen over je persoonsgegevens kun je schrijven naar <a href="mailto:privacy@bittertalen.nl"><bdi>privacy@bittertalen.nl</bdi></a>.</p>
+<div class="contact-footer"><a href="/privacy">Privacyverklaring</a><a href="/over">Over Bittertalen</a></div>
+</article>
+<article data-l="en" hidden>
+<a class="back" href="/"><span aria-hidden="true">←</span> Bittertalen</a>
+<div class="intro"><img src="/art/bitterbal-wave-nl-v1.jpg" width="88" height="88" alt=""><div><h1>Contact</h1><p class="sub">Have a question, an idea or need help with Bittertalen? Get in touch.</p></div></div>
+<h2>Questions and ideas</h2><p>For questions about practising, your account, Bittertalen Plus or a suggestion for the app.</p>
+<a class="email" href="mailto:hallo@bittertalen.nl"><bdi>hallo@bittertalen.nl</bdi></a>
+<div class="contact-actions"><a class="write" href="mailto:hallo@bittertalen.nl">Write an email</a><button class="copy" type="button" data-copied="Email address copied." hidden>Copy email address</button></div>
+<p class="status" role="status" aria-live="polite"></p>
+<h2>Report a problem</h2><p>Tell us what happened, which section you were using, and your device and browser. You can include a screenshot.</p>
+<h2>Privacy</h2><p>For questions about your personal data, you can write to <a href="mailto:privacy@bittertalen.nl"><bdi>privacy@bittertalen.nl</bdi></a>.</p>
+<div class="contact-footer"><a href="/privacy">Privacy statement</a><a href="/over">About Bittertalen</a></div>
+</article>
+<article data-l="ar" hidden>
+<a class="back" href="/"><span aria-hidden="true">←</span> Bittertalen</a>
+<div class="intro"><img src="/art/bitterbal-wave-nl-v1.jpg" width="88" height="88" alt=""><div><h1>تواصل معنا</h1><p class="sub">لديك سؤال أو فكرة أو تحتاج إلى مساعدة مع Bittertalen؟ راسلنا.</p></div></div>
+<h2>الأسئلة والأفكار</h2><p>للأسئلة عن التدرّب أو حسابك أو Bittertalen Plus أو اقتراحاتك للتطبيق.</p>
+<a class="email" href="mailto:hallo@bittertalen.nl"><bdi>hallo@bittertalen.nl</bdi></a>
+<div class="contact-actions"><a class="write" href="mailto:hallo@bittertalen.nl">اكتب رسالة بريد إلكتروني</a><button class="copy" type="button" data-copied="تم نسخ عنوان البريد." hidden>انسخ عنوان البريد</button></div>
+<p class="status" role="status" aria-live="polite"></p>
+<h2>الإبلاغ عن مشكلة</h2><p>أخبرنا بما حدث، وفي أي قسم، وعلى أي جهاز ومتصفح. يمكنك إرفاق لقطة شاشة.</p>
+<h2>الخصوصية</h2><p>للأسئلة عن بياناتك الشخصية، يمكنك المراسلة على <a href="mailto:privacy@bittertalen.nl"><bdi>privacy@bittertalen.nl</bdi></a>.</p>
+<div class="contact-footer"><a href="/privacy">بيان الخصوصية</a><a href="/over">عن Bittertalen</a></div>
+</article>
+<article data-l="tr" hidden>
+<a class="back" href="/"><span aria-hidden="true">←</span> Bittertalen</a>
+<div class="intro"><img src="/art/bitterbal-wave-nl-v1.jpg" width="88" height="88" alt=""><div><h1>İletişim</h1><p class="sub">Bittertalen hakkında bir sorun mu var, bir fikrin mi var veya yardıma mı ihtiyacın var? Bize yaz.</p></div></div>
+<h2>Sorular ve fikirler</h2><p>Alıştırmalar, hesabın, Bittertalen Plus veya uygulama önerilerin için.</p>
+<a class="email" href="mailto:hallo@bittertalen.nl"><bdi>hallo@bittertalen.nl</bdi></a>
+<div class="contact-actions"><a class="write" href="mailto:hallo@bittertalen.nl">E-posta yaz</a><button class="copy" type="button" data-copied="E-posta adresi kopyalandı." hidden>E-posta adresini kopyala</button></div>
+<p class="status" role="status" aria-live="polite"></p>
+<h2>Bir sorun bildir</h2><p>Ne olduğunu, hangi bölümde olduğunu, cihazını ve tarayıcını belirt. Ekran görüntüsü de ekleyebilirsin.</p>
+<h2>Gizlilik</h2><p>Kişisel verilerinle ilgili soruların için şu adrese yazabilirsin: <a href="mailto:privacy@bittertalen.nl"><bdi>privacy@bittertalen.nl</bdi></a>.</p>
+<div class="contact-footer"><a href="/privacy">Gizlilik bildirimi</a><a href="/over">Bittertalen hakkında</a></div>
+</article>
+<article data-l="hi" hidden>
+<a class="back" href="/"><span aria-hidden="true">←</span> Bittertalen</a>
+<div class="intro"><img src="/art/bitterbal-wave-nl-v1.jpg" width="88" height="88" alt=""><div><h1>संपर्क करें</h1><p class="sub">Bittertalen के बारे में कोई सवाल या सुझाव है, या मदद चाहिए? हमें लिखें।</p></div></div>
+<h2>सवाल और सुझाव</h2><p>अभ्यास, अपने खाते, Bittertalen Plus या ऐप के सुझावों के लिए।</p>
+<a class="email" href="mailto:hallo@bittertalen.nl"><bdi>hallo@bittertalen.nl</bdi></a>
+<div class="contact-actions"><a class="write" href="mailto:hallo@bittertalen.nl">ईमेल लिखें</a><button class="copy" type="button" data-copied="ईमेल पता कॉपी हो गया।" hidden>ईमेल पता कॉपी करें</button></div>
+<p class="status" role="status" aria-live="polite"></p>
+<h2>समस्या बताएँ</h2><p>बताएँ कि क्या हुआ, किस भाग में हुआ, और आप कौन-सा डिवाइस और ब्राउज़र इस्तेमाल कर रहे थे। स्क्रीनशॉट भी भेज सकते हैं।</p>
+<h2>गोपनीयता</h2><p>अपने निजी डेटा के बारे में सवालों के लिए इस पते पर लिखें: <a href="mailto:privacy@bittertalen.nl"><bdi>privacy@bittertalen.nl</bdi></a>.</p>
+<div class="contact-footer"><a href="/privacy">गोपनीयता नीति</a><a href="/over">Bittertalen के बारे में</a></div>
+</article>
+<article data-l="zh" hidden>
+<a class="back" href="/"><span aria-hidden="true">←</span> Bittertalen</a>
+<div class="intro"><img src="/art/bitterbal-wave-nl-v1.jpg" width="88" height="88" alt=""><div><h1>联系我们</h1><p class="sub">对 Bittertalen 有疑问、建议，或需要帮助？欢迎联系我们。</p></div></div>
+<h2>问题与建议</h2><p>有关练习、账户、Bittertalen Plus 的问题，或对应用的建议。</p>
+<a class="email" href="mailto:hallo@bittertalen.nl"><bdi>hallo@bittertalen.nl</bdi></a>
+<div class="contact-actions"><a class="write" href="mailto:hallo@bittertalen.nl">撰写邮件</a><button class="copy" type="button" data-copied="邮箱地址已复制。" hidden>复制邮箱地址</button></div>
+<p class="status" role="status" aria-live="polite"></p>
+<h2>报告问题</h2><p>请告诉我们发生了什么、在哪个部分，以及你使用的设备和浏览器。你也可以附上截图。</p>
+<h2>隐私</h2><p>如果对个人数据有疑问，请联系： <a href="mailto:privacy@bittertalen.nl"><bdi>privacy@bittertalen.nl</bdi></a>.</p>
+<div class="contact-footer"><a href="/privacy">隐私声明</a><a href="/over">关于 Bittertalen</a></div>
+</article>
+<article data-l="es" hidden>
+<a class="back" href="/"><span aria-hidden="true">←</span> Bittertalen</a>
+<div class="intro"><img src="/art/bitterbal-wave-nl-v1.jpg" width="88" height="88" alt=""><div><h1>Contacto</h1><p class="sub">¿Tienes una pregunta, una idea o necesitas ayuda con Bittertalen? Escríbenos.</p></div></div>
+<h2>Preguntas e ideas</h2><p>Para preguntas sobre los ejercicios, tu cuenta, Bittertalen Plus o sugerencias para la aplicación.</p>
+<a class="email" href="mailto:hallo@bittertalen.nl"><bdi>hallo@bittertalen.nl</bdi></a>
+<div class="contact-actions"><a class="write" href="mailto:hallo@bittertalen.nl">Escribir un correo</a><button class="copy" type="button" data-copied="Correo electrónico copiado." hidden>Copiar correo electrónico</button></div>
+<p class="status" role="status" aria-live="polite"></p>
+<h2>Comunicar un problema</h2><p>Cuéntanos qué ocurrió, en qué sección y qué dispositivo y navegador utilizabas. Puedes adjuntar una captura de pantalla.</p>
+<h2>Privacidad</h2><p>Si tienes preguntas sobre tus datos personales, puedes escribir a <a href="mailto:privacy@bittertalen.nl"><bdi>privacy@bittertalen.nl</bdi></a>.</p>
+<div class="contact-footer"><a href="/privacy">Política de privacidad</a><a href="/over">Sobre Bittertalen</a></div>
+</article>
+<article data-l="ru" hidden>
+<a class="back" href="/"><span aria-hidden="true">←</span> Bittertalen</a>
+<div class="intro"><img src="/art/bitterbal-wave-nl-v1.jpg" width="88" height="88" alt=""><div><h1>Связаться с нами</h1><p class="sub">Есть вопрос, идея или нужна помощь с Bittertalen? Напишите нам.</p></div></div>
+<h2>Вопросы и предложения</h2><p>По вопросам занятий, аккаунта, Bittertalen Plus и с предложениями по улучшению приложения.</p>
+<a class="email" href="mailto:hallo@bittertalen.nl"><bdi>hallo@bittertalen.nl</bdi></a>
+<div class="contact-actions"><a class="write" href="mailto:hallo@bittertalen.nl">Написать письмо</a><button class="copy" type="button" data-copied="Адрес скопирован." hidden>Скопировать адрес</button></div>
+<p class="status" role="status" aria-live="polite"></p>
+<h2>Сообщить об ошибке</h2><p>Расскажите, что произошло, в каком разделе и на каком устройстве и в каком браузере. Можно приложить снимок экрана.</p>
+<h2>Конфиденциальность</h2><p>По вопросам ваших персональных данных пишите на <a href="mailto:privacy@bittertalen.nl"><bdi>privacy@bittertalen.nl</bdi></a>.</p>
+<div class="contact-footer"><a href="/privacy">Политика конфиденциальности</a><a href="/over">О Bittertalen</a></div>
+</article>
+</main>
+<script>
+// The page follows the language of the app (ww-ui); Dutch shows without JavaScript
+(function(){
+  var S={nl:["nl","NL"],en:["en","EN"],ar:["ar","عربي"],tr:["tr","TR"],hi:["hi","हिं"],zh:["zh-Hans","中文"],es:["es","ES"],ru:["ru","RU"]},sel=document.getElementById("lang"),l=null,suffix=" — Bittertalen";
+  try{l=localStorage.getItem("ww-ui")}catch(e){}
+  function show(k){if(!S[k])k="nl";var h=document.documentElement;
+    document.querySelectorAll("article").forEach(function(a){var on=a.getAttribute("data-l")===k;a.hidden=!on;if(on)document.title=a.querySelector("h1").textContent+suffix});
+    h.lang=S[k][0];h.dir=k==="ar"?"rtl":"ltr";sel.value=k;sel.setAttribute("aria-label",k==="es"?"Idioma":k==="ru"?"Язык":"Taal");document.getElementById("langs").textContent=S[k][1]}
+  show(l);
+  // "← Bittertalen" goes back to the app for someone who came from it (on a computer "/" is the homepage)
+  try{if(new URL(document.referrer).origin===location.origin&&/^\/oefenen/.test(new URL(document.referrer).pathname))
+    document.querySelectorAll("a.back").forEach(function(a){a.href="/oefenen"})}catch(e){}
+  sel.onchange=function(){try{sel.value==="nl"?localStorage.removeItem("ww-ui"):localStorage.setItem("ww-ui",sel.value)}catch(e){}show(sel.value)};
+})();
+</script>
+<script>
+// Email actions are explicit; opening this page never launches a mail application.
+if (navigator.clipboard && window.isSecureContext) {
+  document.querySelectorAll('.copy').forEach(button => {
+    button.hidden = false;
+    button.addEventListener('click', async () => {
+      const status = button.closest('article').querySelector('.status');
+      try { await navigator.clipboard.writeText('hallo@bittertalen.nl'); status.textContent = button.dataset.copied; }
+      catch { status.textContent = 'hallo@bittertalen.nl'; }
+    });
+  });
+}
+</script>
+</body>
+</html>
