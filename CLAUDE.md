@@ -23,7 +23,8 @@ na", the writing check set in HTML like in the app, with the same checklist (a m
 rules). "Veelgestelde vragen" uses native `<details>`; keep the answers true (not DUO, offline, no pass guarantee). The
 Plus card only shows when Plus is on (a card saying it was unavailable looked broken). The page looks like the app (dark only on phones and tablets, light on a computer, like the app): the
 blurred windmill behind frosted glass, white tiles with the app's shadow, a glass bar on top. The hero shows the app
-itself in a phone (`shots/app.webp`, the top of Mijn dag, taken with Playwright) in front of Vermeer's Gezicht op Delft;
+itself in a phone (`shots/app.webp`, the top of Mijn dag, taken with Playwright) in front of Vermeer's Gezicht op Delft
+(no caption on the painting there: removed at the user's wish; the credit is in `art/CREDITS.md`);
 Bitterbal, the plush mascot, stands small beside it with a speech bubble (the user wanted the app there, not the
 mascot instead of it; they want Bitterbal in another pose, waving: swap `art/bitterbal-white.jpg` there once there is
 such a picture). Contact on the homepage is hallo@bittertalen.nl (the catch-all mailbox). The study app is served at `/oefenen` from `oefenen.html` (the code, the styles and the small tables, about 340 KB).

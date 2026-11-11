@@ -52,9 +52,6 @@ h3 {font-size:22px;letter-spacing:-.02em}
 #plus-status:empty {display:none}
 .hero-art {position:relative;isolation:isolate;display:grid;place-items:center;min-height:470px;margin:0;padding:34px 0 48px;border-radius:20px;overflow:hidden;background:#25364c url('/art/delft.jpg') center 48%/cover no-repeat;box-shadow:var(--shadow)}
 .hero-art::before {content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,#0c193c10 40%,#0c193cb0)}
-.hero-art figcaption {position:absolute;inset-inline:16px;bottom:13px;text-align:end;color:#fff;font-size:13px;line-height:1.35;text-shadow:0 1px 3px #0008}
-.hero-art figcaption b {font-weight:600}
-.hero-art figcaption cite {font-style:normal}
 .block {margin-block:0 50px;scroll-margin-top:18px}
 .grid {display:grid;gap:14px}
 .two {grid-template-columns:repeat(2,minmax(0,1fr))}
