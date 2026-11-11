@@ -212,3 +212,10 @@ test('Reading and listening practice brings new texts, and a text with a mistake
   a.run('const T2=[...new Set(ITEMS.filter(x=>x.sec==="lz").map(x=>x.text))][1];S.items[ITEMS.find(x=>x.sec==="lz"&&x.text===T2).k]={b:0,d:today(),r:0,w:1}');
   assert.equal(a.run('someTexts("lz",1)()[0].text===[...new Set(ITEMS.filter(x=>x.sec==="lz").map(x=>x.text))][1]'),true);
 });
+test('Answers are counted per day for the overview; a retry after a mistake is not',async()=>{
+  const a=await app();a.run('build("knm")');
+  a.run('record(true,queue[0]);record(false,queue[1]);record(true,{...queue[1],retry:true})');
+  const d=a.run('String(today())');
+  assert.equal(a.run(`S.qd[${JSON.stringify(d)}]`),2);
+  assert.equal(a.run(`S.qr[${JSON.stringify(d)}]`),1);
+});
