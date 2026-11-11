@@ -17,7 +17,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.json">
-<link rel="stylesheet" href="/landing.css">
+<link rel="stylesheet" href="/landing.css?v=hero2">
 <script>
 // Keep existing sign-in, payment, migration and installed app entry points working.
 // Someone who already practises on this device (their progress is here) goes straight to the app on a phone or tablet:
@@ -46,9 +46,10 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Bittertalen","url":"https://bittertalen.nl/","applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":"nl","educationalLevel":["A2","B1"],"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}
 </script>
-<script defer src="/landing.js"></script>
+<script defer src="/landing.js?v=hero2"></script>
 <script defer src="/lib/gsap-3.15.1.min.js"></script>
-<script defer src="/landing-motion-v1.js"></script>
+<script defer src="/lib/ScrollTrigger-3.15.1.min.js"></script>
+<script defer src="/landing-motion-v2.js"></script>
 </head>
 <body>
 <header class="top">
@@ -84,7 +85,16 @@
       <p class="note" data-t>Gratis beginnen, ook zonder account.</p>
     </div>
     <figure class="hero-art">
-      <div class="phone"><img src="/shots/app.webp" width="390" height="700" fetchpriority="high" data-alt="Je les van vandaag in Bittertalen, met de stappen van vandaag" alt="Je les van vandaag in Bittertalen, met de stappen van vandaag"></div>
+      <button class="preview-motion" id="preview-motion" type="button" aria-pressed="true" hidden><span aria-hidden="true">Ⅱ</span><span data-t>Animatie</span></button>
+      <div class="phone-stage"><div class="phone-float"><div class="phone">
+        <img data-preview-screen="day" src="/shots/app-day-v2.webp" width="390" height="780" fetchpriority="high" data-alt="Je les van vandaag in Bittertalen, met de stappen van vandaag" alt="Je les van vandaag in Bittertalen, met de stappen van vandaag">
+        <img data-preview-screen="practice" src="/shots/app-practice-v2.webp" width="390" height="780" loading="lazy" data-alt="Oefeningen in Bittertalen" alt="Oefeningen in Bittertalen" hidden>
+        <img data-preview-screen="exam" src="/shots/app-exam-v2.webp" width="390" height="780" loading="lazy" data-alt="Proefexamens in Bittertalen" alt="Proefexamens in Bittertalen" hidden>
+      </div></div></div>
+      <div class="preview-switch" role="group" aria-labelledby="preview-caption">
+        <p id="preview-caption" data-t>Bekijk de app</p>
+        <div><button type="button" data-preview="day" aria-pressed="true" data-t>Mijn dag</button><button type="button" data-preview="practice" aria-pressed="false" data-t>Oefenen</button><button type="button" data-preview="exam" aria-pressed="false" data-t>Examen</button></div>
+      </div>
       <!-- Bittie welcomes visitors beside the app. -->
       <div class="greeter"><p class="bubble"><b data-t>Hoi! Ik ben Bittie.</b> <span data-t>Zullen we samen Nederlands oefenen?</span></p><img src="/art/bitterbal-wave-nl-v1.jpg" width="360" height="360" alt=""></div>
     </figure>

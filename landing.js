@@ -1,6 +1,14 @@
 const languages = ["en", "ar", "tr", "hi", "zh", "es", "ru"];
 // Dutch copy is also in the HTML so the page is readable without scripts.
 const copy = {
+  "Animatie": ["Animation", "الحركة", "Animasyon", "ऐनिमेशन", "动画", "Animación", "Анимация"],
+  "Bekijk de app": ["Explore the app", "تعرّف على التطبيق", "Uygulamayı keşfet", "ऐप देखें", "看看应用", "Explora la aplicación", "Посмотрите приложение"],
+  "Mijn dag": ["My day", "يومي", "Günüm", "मेरा दिन", "我的一天", "Mi día", "Мой день"],
+  "Oefenen": ["Practise", "تدرّب", "Alıştırma", "अभ्यास", "练习", "Practicar", "Упражнения"],
+  "Examen": ["Exam", "الامتحان", "Sınav", "परीक्षा", "考试", "Examen", "Экзамен"],
+  "Oefeningen in Bittertalen": ["Exercises in Bittertalen", "تمارين في Bittertalen", "Bittertalen alıştırmaları", "Bittertalen में अभ्यास", "Bittertalen 练习", "Ejercicios en Bittertalen", "Упражнения в Bittertalen"],
+  "Proefexamens in Bittertalen": ["Mock exams in Bittertalen", "امتحانات تجريبية في Bittertalen", "Bittertalen deneme sınavları", "Bittertalen में अभ्यास परीक्षाएँ", "Bittertalen 模拟考试", "Simulacros de examen en Bittertalen", "Пробные экзамены в Bittertalen"],
+
   "Niveaus": ["Levels", "المستويات", "Seviyeler", "स्तर", "级别","Niveles","Уровни"],
   "Zo werkt het": ["How it works", "كيف يعمل", "Nasıl çalışır?", "यह कैसे काम करता है", "使用方法","Cómo funciona","Как это работает"],
   "Prijzen": ["Pricing", "الأسعار", "Fiyatlar", "कीमतें", "价格","Precios","Цены"],
