@@ -200,7 +200,8 @@ that set is copyrighted, so never copy it; no `<defs>`/gradients in them (a grad
 Under it the name (or "Profiel") and the
 e-mail; then one filled cobalt banner (`.pban`: "Inloggen of account maken", or Bittertalen Plus when logged in), and
 rounded grey groups of rows on the white tile (`.pg`, `.prow`: the name fields with the value on the right, the level as a
-row with a native select over it, Taal (the menus' language, each named in itself, `.langrow`), Trillen; the account with its status and Uitloggen / Account verwijderen as plain rows;
+row with a native select over it, Taal (the menus' language, each named in itself, `.langrow`; on a computer both lists are the
+same visible box at the end of the row), Trillen; the account with its status and Uitloggen / Account verwijderen as plain rows;
 then `siteFooter()`: "Hulp" (Veelgestelde vragen, Uitleg over de examens, Prijzen, Abonnement opzeggen, Contact) and
 "Bittertalen" (Over, Privacyverklaring, Website) as rows like the iPhone's Settings). Content: first and last name, the level (A2 or B1, a list, see B1) (`S.me` `{name, last}`, so they sync, and they also go to the account's
 `user_metadata` by `syncMeta()`; an exam date was asked here once and removed at the user's wish, an old `exam` field is
