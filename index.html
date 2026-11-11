@@ -17,13 +17,13 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.json">
-<link rel="stylesheet" href="/landing.css?v=hero2">
+<link rel="stylesheet" href="/landing.css?v=header4">
 <script>
 // Keep existing sign-in, payment, migration and installed app entry points working.
 // Someone who already practises on this device (their progress is here) goes straight to the app on a phone or tablet:
 // the app lived at "/" before, so old bookmarks point here. "?home" (Profiel's Website row) shows this page all the same.
 // On a computer the site always opens with this page (the user's wish): the app's menu has Home as its first row, and
-// the bar's button here says "Open Bittertalen" for someone who already practises (landing.js).
+// The header offers a daily lesson and a separate account sign-in link.
 (() => {
   const q = new URLSearchParams(location.search);
   const alias = /^(bittertalen|nedelands)\.vercel\.app$/.test(location.hostname);
@@ -46,7 +46,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Bittertalen","url":"https://bittertalen.nl/","applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":"nl","educationalLevel":["A2","B1"],"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}
 </script>
-<script defer src="/landing.js?v=features3"></script>
+<script defer src="/landing.js?v=header4"></script>
 <script defer src="/lib/gsap-3.15.1.min.js"></script>
 <script defer src="/lib/ScrollTrigger-3.15.1.min.js"></script>
 <script defer src="/landing-motion-v2.js"></script>
@@ -60,7 +60,7 @@
       <a href="#oefenvormen" data-t>Zo werkt het</a>
       <a href="#prijzen" data-t>Prijzen</a>
     </nav>
-    <div class="actions">
+    <div class="actions header-actions">
       <label class="language"><span id="language-code" aria-hidden="true">NL</span><span aria-hidden="true">⌄</span>
       <select id="language" aria-label="Taal / Language">
         <option value="nl">NL · Nederlands</option><option value="en">EN · English</option>
@@ -68,7 +68,8 @@
         <option value="hi">हिन्दी</option><option value="zh">中文</option>
         <option value="es">ES · Español</option><option value="ru">RU · Русский</option>
       </select></label>
-      <a class="button outline" id="enter" href="/oefenen?open=login" data-t>Inloggen</a>
+      <a class="signin" href="/oefenen?open=login" data-t>Inloggen</a>
+      <a class="button primary" id="enter" href="/oefenen?open=today" data-t>Begin met oefenen</a>
     </div>
   </div>
 </header>

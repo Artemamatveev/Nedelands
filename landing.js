@@ -1,6 +1,7 @@
 const languages = ["en", "ar", "tr", "hi", "zh", "es", "ru"];
 // Dutch copy is also in the HTML so the page is readable without scripts.
 const copy = {
+  "Begin met oefenen": ["Start practising", "ابدأ التدرّب", "Çalışmaya başla", "अभ्यास शुरू करें", "开始练习", "Empezar a practicar", "Начать заниматься"],
   "Zo leer je met Bittertalen": ["How you learn with Bittertalen", "هكذا تتعلّم مع Bittertalen", "Bittertalen ile nasıl öğrenirsin", "Bittertalen के साथ ऐसे सीखें", "用 Bittertalen 学习", "Así aprendes con Bittertalen", "Как заниматься с Bittertalen"],
   "Video’s in het Nederlands": ["Videos in Dutch", "فيديوهات باللغة الهولندية", "Flemenkçe videolar", "डच में वीडियो", "荷兰语视频", "Vídeos en neerlandés", "Видео на нидерландском"],
   "Kijk video’s in het Nederlands en oefen je luistervaardigheid met onderwerpen uit het dagelijks leven.": ["Watch videos in Dutch and practise listening with topics from everyday life.", "شاهد فيديوهات بالهولندية وتدرّب على الاستماع من خلال موضوعات من الحياة اليومية.", "Flemenkçe videolar izle ve günlük hayattan konularla dinleme becerini geliştir.", "डच में वीडियो देखें और रोज़मर्रा के विषयों के साथ सुनने का अभ्यास करें।", "观看荷兰语视频，通过日常生活话题练习听力。", "Mira vídeos en neerlandés y practica la comprensión oral con temas de la vida cotidiana.", "Смотрите видео на нидерландском и тренируйте понимание речи на повседневных темах."],
@@ -108,9 +109,6 @@ const pricing = {
   ru: ["в месяц", n => `Проверок в день с бесплатным аккаунтом: ${n}`, n => `Bittertalen проверяет ваши тексты и устные ответы. Проверок в день: ${n}`],
 };
 const select = document.querySelector("#language");
-// Someone who already practises on this device (the page's first script marks it) gets "Open Bittertalen" in the bar
-// instead of Inloggen: on a computer the site opens with this page, and that button is their way into the app
-if ("mine" in document.documentElement.dataset) { const a = document.getElementById("enter"); a.textContent = "Open Bittertalen"; a.href = "/oefenen"; }
 const nodes = [...document.querySelectorAll("[data-t]")].map(node => [node, node.textContent]);
 const alts = [...document.querySelectorAll("[data-alt]")].map(node => [node, node.dataset.alt]);
 const $ = id => document.getElementById(id);
