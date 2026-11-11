@@ -4,11 +4,14 @@ Bittertalen (a pun on bitterballen: "bitter languages", self-irony about learnin
 The public homepage is `index.html` (`landing.js` translates it: every `data-t` text and `data-alt` alt text needs all
 seven translations in `copy`, which `tests/site.test.mjs` checks) and reads Plus pricing from `/api/config`. Its main
 button "Begin gratis" opens `/oefenen?open=today`. How the two pages hand over (`tests/browser.test.mjs` checks it):
-the homepage sends to the app whoever already practises on this device (a `ww-v1`, `ww-acc` or `ww-progress-v2:`
-key; the app lived at "/" before, so old bookmarks and the "← Bittertalen" links of /over and /privacy point there),
+on a phone or tablet the homepage sends to the app whoever already practises on this device (a `ww-v1`, `ww-acc` or
+`ww-progress-v2:` key; on a computer the site always opens with the homepage, the user's wish: there the bar's button reads
+"Open Bittertalen" for such a visitor, and the app's menu has "Home" as its first row, `.tabs .hm`, a link to "/" that the
+lens never covers, with Profiel's Website row hidden; the app lived at "/" before, so old bookmarks and the "← Bittertalen" links of /over and /privacy point there),
 an installed app, the old addresses, and returns from a login (`?code`, `?error`, the handoff's `?h`), from Stripe
 (`?plus`) and from a move (`#verhuis=`), each with its address. `/?home` (Profiel's Website row, hidden in an installed
-app, which can't show the website) shows the homepage all the same. Arriving from the homepage (`?open=today`, `a2`,
+app, which can't show the website) shows the homepage all the same. The "← Bittertalen" links of /over and /privacy go back to
+/oefenen for someone who came from the app. Arriving from the homepage (`?open=today`, `a2`,
 `b1`, `sample`) marks the login window as seen (`ww-welcome`): the homepage already offers Inloggen, so someone who
 started without an account isn't stopped by it later; `?open=login` opens it. Under the hero four numbers (questions, KNM questions, proefexamens per level,
 conversations), checked against the content by the same test: change them when the content shrinks. The sections are set like questions on the exam

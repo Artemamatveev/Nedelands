@@ -103,6 +103,19 @@ test('The homepage and the app work in a real browser', async t => {
       assert.equal(new URL(s.p.url()).pathname, '/oefenen');
       await s.go('/?home'); await s.p.waitForSelector('.hero');
       assert.equal(new URL(s.p.url()).pathname + new URL(s.p.url()).search, '/');
+      // on a computer the site always opens with the homepage, also for someone who practises here: the bar's button
+      // leads into the app, and the app's menu has Home as its first row (not on a phone)
+      assert.equal(await s.p.locator('#enter').getAttribute('href'), '/oefenen');
+      const d = await s.ctx.browser().newContext({viewport: {width: 1280, height: 800}, serviceWorkers: 'block'}), dp = await d.newPage();
+      await dp.goto(base + '/over'); await dp.evaluate(() => { localStorage.setItem('ww-v1', '{}'); localStorage.setItem('ww-welcome', '1'); });
+      await dp.goto(base + '/'); await dp.waitForSelector('.hero'); await dp.waitForTimeout(300);
+      assert.equal(new URL(dp.url()).pathname, '/');
+      assert.equal(await dp.textContent('#enter'), 'Open Bittertalen');
+      await dp.click('#enter'); await dp.waitForSelector('#plan .step');
+      assert.equal(await dp.locator('#tabs > a.hm').isVisible(), true);
+      assert.equal(await dp.evaluate(() => document.querySelector('#tabs .lens').nextElementSibling.matches('a.hm[href="/"]')), true);
+      await dp.click('#tabs a.hm'); await dp.waitForSelector('.hero'); await d.close();
+      assert.equal(await s.p.locator('#tabs a.hm').count(), 0); // the phone page is the homepage here: no menu
       // back from a login or a payment: the app takes over
       await s.go('/?plus=stop'); await s.p.waitForSelector('#plan .step');
       assert.equal(new URL(s.p.url()).pathname, '/oefenen');

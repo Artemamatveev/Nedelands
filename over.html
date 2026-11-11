@@ -351,6 +351,9 @@ Commons.</li>
     document.querySelectorAll("article").forEach(function(a){var on=a.getAttribute("data-l")===k;a.hidden=!on;if(on)document.title=a.querySelector("h1").textContent+suffix});
     h.lang=S[k][0];h.dir=k==="ar"?"rtl":"ltr";sel.value=k;sel.setAttribute("aria-label",k==="es"?"Idioma":k==="ru"?"Язык":"Taal");document.getElementById("langs").textContent=S[k][1]}
   show(l);
+  // "← Bittertalen" goes back to the app for someone who came from it (on a computer "/" is the homepage)
+  try{if(new URL(document.referrer).origin===location.origin&&/^\/oefenen/.test(new URL(document.referrer).pathname))
+    document.querySelectorAll("a.back").forEach(function(a){a.href="/oefenen"})}catch(e){}
   sel.onchange=function(){try{sel.value==="nl"?localStorage.removeItem("ww-ui"):localStorage.setItem("ww-ui",sel.value)}catch(e){}show(sel.value)};
 })();
 </script>

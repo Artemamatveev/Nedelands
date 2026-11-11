@@ -202,6 +202,7 @@ a.it{text-decoration:none} .it.ext::after{content:none}
   touch-action:none;-webkit-user-select:none;user-select:none;transition:width .3s cubic-bezier(.3,1.2,.5,1)}
 .tabs button{position:relative;z-index:1;flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 4px 8px;border:0;border-radius:19px;background:none;color:var(--ink);font-size:var(--fs-xs);font-weight:600;line-height:1.1;transition:color .25s,padding .3s;-webkit-tap-highlight-color:transparent}
 .tabs svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.tabs .hm{display:none} /* the website: only in the menu on a computer */
 .tabs [aria-current]{color:#fff}
 /* the lens: a drop of glass over the current tab. It glides over and settles without overshooting (so it never leaves
    the bar), with a slight stretch on the way, and you can drag it
@@ -630,7 +631,7 @@ body.vfull{overflow:hidden}
 :root[data-desktop] main:has(#home:not([hidden])) h1{position:fixed;z-index:11;left:calc(var(--nav-x) + 20px);top:calc(var(--win-top) + 26px);bottom:auto;font-size:26px;color:var(--ink);
   opacity:0;transition:opacity .15s}
 :root[data-desktop] main:has(#home:not([hidden])) header .lang{position:fixed;z-index:11;left:calc(var(--nav-x) + 11px);right:auto;bottom:auto;
-  top:calc(var(--win-top) + var(--nav-top) + 5*var(--nav-row) + 9px)}
+  top:calc(var(--win-top) + var(--nav-top) + 6*var(--nav-row) + 9px)}
 /* in the strip the language is a row like the tabs (the cobalt pill looked out of place there): the globe in line
    with the icons; open, the language code and the arrow beside it */
 :root[data-desktop] main:has(#home:not([hidden])) header .lang{width:calc(var(--nav-c) - 22px);height:var(--nav-row);justify-content:flex-start;gap:14px;
@@ -663,12 +664,19 @@ body.vfull{overflow:hidden}
 :root[data-desktop] main:has(#home:not([hidden])) header .lang .dn{display:none}
 :root[data-desktop]:has(.tabs:is(:hover,:focus-within),header .lang:is(:hover,:focus-within)) main:has(#home:not([hidden])) header .lang .dn{display:block}
 :root[data-desktop] .tabs button{flex:0 0 var(--nav-row);flex-direction:row;justify-content:flex-start;gap:14px;padding:0 0 0 17px;border-radius:var(--rc);font-size:var(--fs-b);white-space:nowrap}
+/* the first row is the website (the user's wish: on a computer the site opens with the homepage, and the app's menu
+   leads back to it): a link that looks like the tabs, never under the lens */
+:root[data-desktop] .tabs .hm{position:relative;z-index:1;display:flex;align-items:center;flex:0 0 var(--nav-row);gap:14px;padding:0 0 0 17px;
+  border-radius:var(--rc);color:var(--ink);font-size:var(--fs-b);font-weight:600;line-height:1.1;text-decoration:none;white-space:nowrap}
+@media (hover:hover){:root[data-desktop] .tabs .hm:hover{background:rgba(255,255,255,.55)}}
+:root[dir=rtl][data-desktop] .tabs .hm{padding:0 17px 0 0}
+:root[data-desktop] .site-footer a[href="/?home"]{display:none} /* Profiel's Website row: the menu has it here */
 :root[data-desktop] .tabs svg{flex:none;width:22px;height:22px}
 :root[data-desktop] .tabs span,:root[data-desktop] .tabs.min span{display:block;opacity:0;transition:opacity .15s}
 :root[data-desktop]:has(.tabs:is(:hover,:focus-within),header .lang:is(:hover,:focus-within)) .tabs span{opacity:1;transition-delay:.06s}
 @media (hover:hover){:root[data-desktop] .tabs button:not([aria-current]):hover{background:rgba(255,255,255,.55)}}
 :root[data-desktop] .tabs .lens{
-  left:10px;right:10px;top:var(--nav-top);bottom:auto;width:auto;height:var(--nav-row);border-radius:var(--rc);
+  left:10px;right:10px;top:calc(var(--nav-top) + var(--nav-row));bottom:auto;width:auto;height:var(--nav-row);border-radius:var(--rc);
   background:radial-gradient(90% 260% at 12% -60%,#DD7029 0%,#BF4A08 45%,#A23C06 100%);
   transform:translateY(calc(var(--i,0) * 100%));
 }
@@ -907,6 +915,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
 </main>
 <nav class="tabs" id="tabs" aria-label="Onderdelen">
   <i class="lens" aria-hidden="true"></i>
+  <a class="hm" href="/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7v9h-5.5v-6h-5v6H4z"/></svg><span>Home</span></a>
   <button data-t="vandaag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16V20H4z"/><path d="M4 10h16M8 3v4M16 3v4"/></svg><span>Mijn dag</span></button>
   <button data-t="examen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h12v17H6z"/><path d="M9.5 4V2.8h5V4M9 12.5l2.2 2.2L15.5 10"/></svg><span>Examen</span></button>
   <button data-t="oefenen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c2.6-1 5.6-.8 9 1.3v13c-3.4-2.1-6.4-2.3-9-1.3zM21 5.5c-2.6-1-5.6-.8-9 1.3v13c3.4-2.1 6.4-2.3 9-1.3z"/></svg><span>Oefenen</span></button>
@@ -3900,7 +3909,7 @@ if(OLD==="nedelands.vercel.app")location.replace(NEWURL); else if(OLD==="bittert
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="95c0351ef5";
+const UIV="337bbe726e";
 let uiP=null;
 function uiLoaded(){ // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});

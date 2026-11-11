@@ -90,6 +90,9 @@ const pricing = {
   ru: ["в месяц", n => `Проверок в день с бесплатным аккаунтом: ${n}`, n => `Claude проверяет ваши тексты и устные ответы. Проверок в день: ${n}`],
 };
 const select = document.querySelector("#language");
+// Someone who already practises on this device (the page's first script marks it) gets "Open Bittertalen" in the bar
+// instead of Inloggen: on a computer the site opens with this page, and that button is their way into the app
+if ("mine" in document.documentElement.dataset) { const a = document.getElementById("enter"); a.textContent = "Open Bittertalen"; a.href = "/oefenen"; }
 const nodes = [...document.querySelectorAll("[data-t]")].map(node => [node, node.textContent]);
 const alts = [...document.querySelectorAll("[data-alt]")].map(node => [node, node.dataset.alt]);
 const $ = id => document.getElementById(id);
