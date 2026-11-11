@@ -9,6 +9,7 @@ Object.assign(UI,{
 "Uitleg over de examens":["About the exams","عن الامتحانات","Sınavlar hakkında","परीक्षाओं के बारे में","考试介绍","Sobre los exámenes","Об экзаменах"],
 "Prijzen":["Pricing","الأسعار","Fiyatlar","कीमतें","价格","Precios","Цены"],
 "Website":["Website","الموقع","Web sitesi","वेबसाइट","网站","Sitio web","Сайт"],
+"Statistiek":["Statistics","الإحصاءات","İstatistikler","आँकड़े","统计","Estadísticas","Статистика"],
 "Hier komt je herhaling":["Your review will appear here","ستظهر مراجعتك هنا","Tekrarların burada görünecek","आपकी दोहराई यहाँ दिखेगी","你的复习内容会出现在这里","Aquí aparecerá tu repaso","Здесь появится ваше повторение"],
 "Fouten uit je teksten en woorden die je bij het lezen bewaart, komen hier vanzelf bij.":["Mistakes from your texts and words you save while reading are added here automatically.","تُضاف هنا تلقائيًا الأخطاء من نصوصك والكلمات التي تحفظها أثناء القراءة.","Metinlerindeki hatalar ve okurken kaydettiğin kelimeler buraya kendiliğinden eklenir.","आपके लेखन की गलतियाँ और पढ़ते समय सहेजे गए शब्द यहाँ अपने आप जुड़ जाते हैं।","你写作中的错误和阅读时保存的单词会自动添加到这里。","Los errores de tus textos y las palabras que guardas al leer se añaden aquí automáticamente.","Ошибки из ваших текстов и слова, сохранённые при чтении, появятся здесь сами."],
 "Hulp":["Help","المساعدة","Yardım","सहायता","帮助","Ayuda","Помощь"],

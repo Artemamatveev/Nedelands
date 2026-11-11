@@ -155,4 +155,6 @@ test('Study time from two devices on the same day adds up, other days stay',()=>
   const base={tm:{'20403':120}},local=clone(base),remote=clone(base);
   local.tm['20403']+=300;remote.tm['20403']+=60;remote.tm['20404']=90;
   assert.deepEqual(merge(base,local,remote).tm,{'20403':480,'20404':90});
+  const qb={qd:{'20403':4}},ql=clone(qb),qrm=clone(qb);ql.qd['20403']+=3;qrm.qd['20403']+=2;
+  assert.deepEqual(merge(qb,ql,qrm).qd,{'20403':9});
 });

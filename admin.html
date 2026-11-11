@@ -14,9 +14,8 @@
   --oranje:#C8500C; --good:#21613A; --bad:#C0392B; --r:20px; --rc:4px;
   --lift:0 1px 2px rgba(8,16,40,.06),0 8px 24px rgba(8,16,40,.10);
 }
-@media (prefers-color-scheme:dark){:root{
-  --bg:#0A0F1B; --card:#131A2A; --ink:#EEF1F7; --soft:#9EA7BA; --line:#283149; --blue:#9DB4F5; --fill:#2A4AAE; --wash:#1D2436;
-  --oranje:#FF8A3D; --good:#74CF95; --bad:#FF8F80; --lift:0 1px 2px rgba(0,0,0,.4),0 10px 28px rgba(0,0,0,.45);}}
+/* light only: a page for the computer, like the app there (no dark mode on a desktop) */
+:root{color-scheme:light}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 -apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,sans-serif}
 main{max-width:1400px;margin:0 auto;padding:24px 24px 64px}
@@ -36,8 +35,8 @@ button:focus-visible,.btn:focus-visible,input:focus-visible,.scroll:focus-visibl
 .kpi span{color:var(--soft);font-size:13px}
 .scroll{overflow-x:auto;position:relative} /* also holds .sr, which would otherwise widen the page */
 table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
-th{color:var(--soft);font-weight:600;font-size:13px;line-height:1.25;text-align:start;vertical-align:bottom;padding:8px 8px;border-bottom:1px solid var(--line)}
-td{padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top;white-space:nowrap}
+th{color:var(--soft);font-weight:600;font-size:13px;line-height:1.25;text-align:start;vertical-align:bottom;padding:8px 6px;border-bottom:1px solid var(--line)}
+td{padding:9px 6px;border-bottom:1px solid var(--line);vertical-align:top;white-space:nowrap}
 td.num,th.num{text-align:end}
 tbody tr.u{cursor:pointer}
 @media (hover:hover){tbody tr.u:hover td{background:var(--wash)}}
@@ -55,6 +54,9 @@ tr.open td{background:var(--wash)}
 .bar{height:8px;border-radius:999px;background:var(--fill);min-width:2px}
 .days{display:flex;align-items:flex-end;gap:4px;height:90px;margin:8px 0 2px}
 .days div{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px;height:100%;font-size:11px;color:var(--soft)}
+.days .qa{font-weight:600;color:var(--blue);min-height:14px}
+th.gh{text-align:center;border-bottom:1px solid var(--line);padding-bottom:4px}
+.grp{border-inline-start:1px solid var(--line)}
 .days i{display:block;width:100%;background:var(--fill);border-radius:2px 2px 0 0;min-height:1px}
 .detail td{white-space:normal;background:var(--wash)}
 .detail .cols{display:grid;grid-template-columns:2fr 1fr;gap:24px;padding:4px 4px 10px}
@@ -133,10 +135,10 @@ function kpis(users) {
   const t = dayNo(), seenDay = u => u.seen ? dayNo(Date.parse(u.seen)) : null;
   const today = users.filter(u => seenDay(u) === t).length, week = users.filter(u => seenDay(u) !== null && seenDay(u) > t - 7).length;
   let wk = 0, ans = 0, ex = 0;
-  for (const u of users) { wk += time(u.tm).week; ans += (u.right || 0) + (u.wrong || 0); for (const p of Object.values(u.res || {})) ex += p.n || 0; }
+  for (const u of users) { wk += time(u.tm).week; ans += time(u.qd).week; for (const p of Object.values(u.res || {})) ex += p.n || 0; }
   const k = (v, l) => `<div class="kpi"><b>${v}</b><span>${l}</span></div>`;
   return `<div class="kpis">${k(users.length, "аккаунтов")}${k(today, "занимались сегодня")}${k(week, "занимались за 7 дней")}` +
-    `${k(dur(wk), "время занятий за 7 дней")}${k(ans.toLocaleString("ru-RU"), "ответов на вопросы")}${k(ex, "пробных экзаменов")}</div>`;
+    `${k(dur(wk), "время занятий за 7 дней")}${k(ans.toLocaleString("ru-RU"), "ответов за 7 дней")}${k(ex, "пробных экзаменов всего")}</div>`;
 }
 
 function counts(rows) {
@@ -167,11 +169,12 @@ function detail(u) {
   const t = dayNo(), tm = u.tm || {}, list = [];
   for (let n = t - 13; n <= t; n++) list.push([n, +tm[n] || 0]);
   const max = Math.max(60, ...list.map(x => x[1]));
-  const bars = list.map(([n, s]) => `<div title="${dayLabel(n)}: ${dur(s)}"><span>${s >= 60 ? Math.round(s / 60) : ""}</span><i style="height:${s / max * 70}px"></i>${new Date(n * 864e5).getUTCDate()}</div>`).join("");
+  const qd = u.qd || {};
+  const bars = list.map(([n, s]) => `<div title="${dayLabel(n)}: ${dur(s)}, ответов: ${+qd[n] || 0}"><span>${s >= 60 ? Math.round(s / 60) : ""}</span><i style="height:${s / max * 70}px"></i>${new Date(n * 864e5).getUTCDate()}<b class="qa">${+qd[n] || ""}</b></div>`).join("");
   const res = Object.entries(u.res || {}).map(([k, v]) => `<li>${esc(PART[k] || k)}: ${v.n}×, последний ${v.pc != null ? v.pc + "%" : "—"} (${esc(date(v.at && new Date(v.at).toISOString()))})</li>`).join("");
   const active = Object.values(tm).filter(v => v >= 60).length;
-  return `<tr class="detail"><td colspan="11"><div class="cols">
-    <div><b>Минуты занятий за 14 дней</b> <span class="muted">· дней с занятиями всего: ${active}</span><div class="days">${bars}</div></div>
+  return `<tr class="detail"><td colspan="12"><div class="cols">
+    <div><b>Последние 14 дней</b> <span class="muted">· столбик и число над ним — минуты, синее число под датой — ответы · дней с занятиями всего: ${active}</span><div class="days">${bars}</div></div>
     <div><p><b>Аккаунт создан:</b> ${date(u.created)}<br><b>Последний вход:</b> ${date(u.login)}<br><b>Последняя синхронизация:</b> ${date(u.seen)}<br>
     <b>Вход через:</b> ${esc(u.provider || "—")}</p>${res ? `<b>Пробные экзамены</b><ul>${res}</ul>` : ""}</div></div></td></tr>`;
 }
@@ -179,17 +182,18 @@ function detail(u) {
 function users(list) {
   const t = dayNo();
   const rows = list.filter(u => !query || `${u.name || ""} ${u.email || ""}`.toLowerCase().includes(query)).map((u, i) => {
-    const tt = time(u.tm), ans = (u.right || 0) + (u.wrong || 0), pc = ans ? Math.round(u.right / ans * 100) : null;
+    const tt = time(u.tm), qa = time(u.qd), qr = time(u.qr), ans = (u.right || 0) + (u.wrong || 0);
+    // answers with the share right: "12 (83%)"
+    const share = (n, r) => n ? `${n.toLocaleString("ru-RU")} <span class="${r / n >= .7 ? "ok" : "muted"}">(${Math.round(r / n * 100)}%)</span>` : "—";
     const sd = u.seen ? dayNo(Date.parse(u.seen)) : null, dot = sd === t ? "now" : sd !== null && sd > t - 7 ? "week" : "";
     const key = u.email || String(i), isOpen = open.has(key);
     return `<tr class="u${isOpen ? " open" : ""}" data-k="${esc(key)}">
-      <td class="who"><button aria-expanded="${isOpen}"><b>${esc(u.name || "Без имени")}</b><span>${esc(u.email || "")}</span></button></td>
-      <td>${esc(u.lvl || "A2")}</td>
+      <td class="who"><button aria-expanded="${isOpen}"><b>${esc(u.name || "Без имени")}</b><span>${esc(u.email || "")} · ${esc(u.lvl || "A2")}</span></button></td>
       <td><span class="dot ${dot}"></span>${when(u.seen || u.login)}</td>
-      <td class="num">${dur(tt.today)}</td><td class="num">${dur(tt.week)}</td><td class="num">${dur(tt.all)}</td>
-      <td class="num">${u.items || 0}</td>
-      <td class="num">${ans}${pc != null ? ` <span class="${pc >= 70 ? "ok" : "muted"}">(${pc}%)</span>` : ""}</td>
-      <td style="white-space:normal;min-width:180px">${resChips(u.res)}</td>
+      <td class="num grp">${dur(tt.today)}</td><td class="num">${dur(tt.week)}</td><td class="num">${dur(tt.all)}</td>
+      <td class="num grp">${share(qa.today, qr.today)}</td><td class="num">${share(qa.week, qr.week)}</td><td class="num">${share(ans, u.right || 0)}</td>
+      <td class="num grp">${u.items || 0}</td>
+      <td style="white-space:normal;min-width:150px">${resChips(u.res)}</td>
       <td class="num">${u.checks7 || 0} / ${u.checks || 0}</td>
       <td>${u.plus ? `<span class="${["active", "trialing"].includes(u.plus) ? "ok" : "muted"}">${esc(u.plus)}</span>` : `<span class="muted">—</span>`}</td></tr>` +
       (isOpen ? detail(u) : "");
@@ -197,9 +201,11 @@ function users(list) {
   return `<section class="tile"><header style="margin-bottom:10px"><div class="grow"><h2>Пользователи с аккаунтом</h2>
     <p class="sub" style="margin:0">Те, кто вошёл в аккаунт. Гостей без аккаунта видно только в анонимных посещениях ниже. Нажмите на строку, чтобы увидеть дни.</p></div>
     <input type="search" id="q" placeholder="Имя или e-mail" aria-label="Поиск" value="${esc(query)}"></header>
-    <div class="scroll" tabindex="0" role="region" aria-label="Пользователи"><table><thead><tr><th>Кто</th><th>Уровень</th><th>Последняя активность</th><th class="num">Сегодня</th><th class="num">7 дней</th>
-    <th class="num">Всего</th><th class="num">Вопросов</th><th class="num">Ответов (верно)</th><th>Пробные экзамены</th><th class="num">Claude: 7 дн / всего</th><th>Plus</th></tr></thead>
-    <tbody>${rows || `<tr><td colspan="11" class="muted">Никого.</td></tr>`}</tbody></table></div></section>`;
+    <div class="scroll" tabindex="0" role="region" aria-label="Пользователи"><table><thead><tr><th rowspan="2">Кто · уровень</th><th rowspan="2">Последняя активность</th>
+    <th colspan="3" class="grp gh">Время занятий</th><th colspan="3" class="grp gh">Ответы (верно)</th><th rowspan="2" class="num grp">Разных вопросов всего</th>
+    <th rowspan="2">Пробные экзамены</th><th rowspan="2" class="num">Claude 7 дн / всего</th><th rowspan="2">Plus</th></tr>
+    <tr><th class="num grp">сегодня</th><th class="num">7 дней</th><th class="num">всего</th><th class="num grp">сегодня</th><th class="num">7 дней</th><th class="num">всего</th></tr></thead>
+    <tbody>${rows || `<tr><td colspan="12" class="muted">Никого.</td></tr>`}</tbody></table></div></section>`;
 }
 
 function draw() {
@@ -207,7 +213,7 @@ function draw() {
   app.innerHTML = `<header><h1>Bittertalen <small>статистика · ${esc(me)}</small></h1><div class="grow"></div>
     <span class="muted">обновлено в ${at}</span><button id="re">Обновить</button><a class="btn" href="/oefenen">В приложение</a></header>
     ${kpis(DATA.users)}${users(DATA.users)}${counts(DATA.counts)}
-    <p class="sub">Время — активные минуты в приложении: страница открыта, и человек что-то нажимал за последние 90 секунд (или слушал запись). Учитывается с 11 ноября 2026 года и попадает сюда после синхронизации прогресса.</p>`;
+    <p class="sub">Время — активные минуты в приложении: страница открыта, и человек что-то нажимал за последние 90 секунд (или слушал запись). Время и ответы по дням учитываются с 11 ноября 2026 года и попадают сюда после синхронизации прогресса; «всего» у ответов — за всё время, с первого дня. «Разных вопросов» — сколько разных вопросов человек хоть раз прошёл. Ответы считают и упражнения, и пробные экзамены; повтор вопроса после ошибки в том же раунде не считается.</p>`;
   $("re").onclick = load;
   const q = $("q"); q.oninput = () => { query = q.value.trim().toLowerCase(); const pos = q.selectionStart; draw(); const n = $("q"); n.focus(); n.setSelectionRange(pos, pos); };
   app.querySelectorAll("tr.u").forEach(tr => {

@@ -914,7 +914,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
 </nav>
 <div class="zoom" id="zoom" hidden><img id="zimg" alt=""><p id="zcap"></p></div>
 <script src="/study/language-v1.js?v=e94426af48"></script>
-<script src="/study/progress-v1.js?v=7da6367615"></script>
+<script src="/study/progress-v1.js?v=c45ceeaefb"></script>
 <script src="/study/writing-v1.js?v=e5690fd786"></script>
 <script src="/data/knm.js?v=48aed89ba7"></script>
 <script src="/data/a2.js?v=35efca6a73"></script>
@@ -1200,6 +1200,7 @@ async function setUser(u){
   const guest=progressOwner==="guest" && uid && (S.t || Object.keys(S.items).length) ? progressClone(S) : null;
   clearTimeout(pushT);cloud=null;syncing=null;dirty=false;
   acc.user=u;acc.left=null;acc.plus=null;acc.saved=0;acc.step=null;acc.sync="";
+  if(acc.admin){acc.admin=false;$("site-footer").innerHTML=siteFooter()} acc.adminOf=null;
   if(owner!==progressOwner){
     localSave();openProgress(owner);
     ITEMS.splice(0,ITEMS.length,...ITEMS.filter(q=>!/^l[zs]\|g/.test(q.k)));
@@ -1216,6 +1217,7 @@ async function setUser(u){
     addGenerated();home();
   }
   if(!u)return drawProfile();
+  adminCheck();
   // Each tab keeps its own receipt even while another tab is syncing the same account.
   let device;
   try{device=sessionStorage.getItem("ww-sync-tab")||crypto.randomUUID();sessionStorage.setItem("ww-sync-tab",device)}catch{device=crypto.randomUUID()}
@@ -1250,7 +1252,7 @@ function mergeS(a,b){
   const by=(x,y,f)=>{const m=Object.assign({},x||{});for(const k in y||{})m[k]=k in m?f(m[k],y[k]):y[k];return m};
   const uni=(x,y,k)=>{const h=new Set((x||[]).map(k));return(x||[]).concat((y||[]).filter(e=>!h.has(k(e))))};
   o.items=by(a.items,b.items,(x,y)=>n(y)>n(x)||n(y)===n(x)&&(y.d||0)>(x.d||0)?y:x);
-  o.xs=by(a.xs,b.xs,Math.max); o.hs=by(a.hs,b.hs,Math.max); o.tm=by(a.tm,b.tm,Math.max);
+  o.xs=by(a.xs,b.xs,Math.max); o.hs=by(a.hs,b.hs,Math.max); o.tm=by(a.tm,b.tm,Math.max); o.qd=by(a.qd,b.qd,Math.max); o.qr=by(a.qr,b.qr,Math.max);
   o.gp=by(a.gp,b.gp,(x,y)=>({n:Math.max(x.n||0,y.n||0),b:Math.max(x.b||0,y.b||0),at:Math.max(x.at||0,y.at||0)}));
   o.bk=by(a.bk,b.bk,(x,y)=>(y.at||0)>(x.at||0)?y:x);
   o.res=by(a.res,b.res,(x,y)=>{const m={};x.concat(y).forEach(r=>m[r.at]=r);return Object.values(m).sort((p,q)=>p.at-q.at).slice(-10)});
@@ -1390,11 +1392,19 @@ function welcome(){$("home").hidden=true;$("welcome").hidden=false;window.scroll
 // Help and the pages about Bittertalen at the end of Profiel: groups of rows like the iPhone's Settings (they were two
 // <details> with browser triangles and blue links, which looked unfinished). Opzeggen stays a row of its own: cancelling
 // must be easy to find.
+// The owner's overview (admin.html): its row shows only for an account the server accepts (api/admin.js, ADMIN_EMAILS),
+// asked once per login; nobody else sees it, and the page itself checks again
+async function adminCheck(){
+  const uid=acc.user&&acc.user.id; if(!uid||!acc.sb||acc.adminOf===uid)return; acc.adminOf=uid;
+  try{const{data}=await acc.sb.auth.getSession(),t=data.session&&data.session.access_token;if(!t)return;
+    const r=await fetch("/api/admin?me=1",{headers:{authorization:`Bearer ${t}`}});
+    if(acc.user&&acc.user.id===uid){acc.admin=r.ok;$("site-footer").innerHTML=siteFooter()}}catch(e){acc.adminOf=null}
+}
 function siteFooter(){
   const row=(site,t)=>`<button type="button" class="it" data-site="${site}"><span><span class="th"><b>${t}</b></span></span></button>`,
     link=(href,t)=>`<a class="it" href="${href}"><span><span class="th"><b>${t}</b></span></span></a>`;
   return `<h3 class="lh">Hulp</h3><div class="pg">${row("faq","Veelgestelde vragen")}${row("exam","Uitleg over de examens")}${row("prices","Prijzen")}${row("cancel","Abonnement opzeggen")}${link("mailto:hallo@bittertalen.nl","Contact")}</div>
-    <h3 class="lh">Bittertalen</h3><div class="pg">${link("/over","Over Bittertalen")}${link("/privacy","Privacyverklaring")}${inApp()?"":link("/?home","Website")}</div>`; // an installed app can't show the website: it opens itself again
+    <h3 class="lh">Bittertalen</h3><div class="pg">${link("/over","Over Bittertalen")}${link("/privacy","Privacyverklaring")}${inApp()?"":link("/?home","Website")}${acc.admin?link("/admin","Statistiek"):""}</div>`; // an installed app can't show the website: it opens itself again
 }
 function tryOne(){
   const section=lvl()==="B1"?"l1":"lz";
@@ -1612,7 +1622,8 @@ const speaking=()=>sayOn||(canSpeak&&(speechSynthesis.speaking||speechSynthesis.
 let tmLast=Date.now(),tmAcc=0;
 ["pointerdown","keydown","wheel","touchmove"].forEach(e=>addEventListener(e,()=>{tmLast=Date.now()},{passive:true,capture:true}));
 function tmFlush(){ if(tmAcc<1)return; const d=String(today()),old=today()-400; S.tm=S.tm||{};
-  S.tm[d]=(S.tm[d]||0)+tmAcc; tmAcc=0; for(const k in S.tm)if(+k<old)delete S.tm[k]; save(); }
+  S.tm[d]=(S.tm[d]||0)+tmAcc; tmAcc=0;
+  for(const m of [S.tm,S.qd,S.qr])for(const k in m||{})if(+k<old)delete m[k]; save(); }
 setInterval(()=>{ if(document.visibilityState==="visible"&&(Date.now()-tmLast<9e4||speaking())){tmAcc+=15;if(tmAcc>=60)tmFlush()} },15000);
 addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")tmFlush()});
 addEventListener("pagehide",tmFlush);
@@ -2506,6 +2517,8 @@ function record(ok,q=queue[pos]){
     const it=S.items[q.k]||{b:ok?2:0,d};
     if(ok){it.d=d+GAP[it.b];it.b=Math.min(GAP.length-1,it.b+1);it.r=(it.r||0)+1}else{it.b=0;it.d=d;it.w=(it.w||0)+1}
     S.items[q.k]=it; if(ok)right++;
+    // answers per day (S.qd answered, S.qr right; day number → count), for the owner's overview; S.items keeps the totals
+    const dk=String(d); S.qd=S.qd||{}; S.qd[dk]=(S.qd[dk]||0)+1; if(ok){S.qr=S.qr||{}; S.qr[dk]=(S.qr[dk]||0)+1}
   }
   if(!ok&&!cur.exam&&q.type!=="reveal"&&q.type!=="write")queue.push({...q,retry:true});
   if(pos>=queue.length-1)complete(); else save();
@@ -3886,7 +3899,7 @@ if(OLD==="nedelands.vercel.app")location.replace(NEWURL); else if(OLD==="bittert
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="a1c57160dd";
+const UIV="95c0351ef5";
 let uiP=null;
 function uiLoaded(){ // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});

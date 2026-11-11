@@ -1,7 +1,7 @@
 // The owner's overview (admin.html): GET with the owner's Supabase access token → {users, counts}. users: what every
 // account did (admin_overview() in supabase/schema.sql: name, e-mail, when created, last login, last practice, level,
 // questions and answers, proefexamens, study time per day, Claude checks, Plus); counts: the anonymous usage counts of the
-// last 30 days (api/event.js). Only for a confirmed e-mail in ADMIN_EMAILS (comma-separated, set in Vercel; without it
+// last 30 days (api/event.js). With ?me=1 only {admin: true}, so the app knows to show the row in Profiel. Only for a confirmed e-mail in ADMIN_EMAILS (comma-separated, set in Vercel; without it
 // nobody gets in). Never cached.
 import { accounts, caller, adminData } from "./_supa.js";
 
@@ -16,6 +16,8 @@ export default async function handler(req, res) {
   if (!u) return res.status(401).json({ error: "login" });
   const mail = String(u.email || "").toLowerCase();
   if (!mail || !u.email_confirmed_at || !admins().includes(mail)) return res.status(403).json({ error: "forbidden" });
+  // ?me=1: only whether this account may open the overview (the app shows its row in Profiel), without reading the data
+  if (req.query && req.query.me) return res.status(200).json({ admin: true });
   try {
     return res.status(200).json(await adminData(30));
   } catch {

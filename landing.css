@@ -1,13 +1,16 @@
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
   --bg:#fbfcfe; --card:#fff; --ink:#14213d; --muted:#52617d;
   --blue:#1f3c96; --fill:#1f3c96; --wash:#edf2ff; --line:#d9e2f1; --oranje:#cb5d17;
   --shadow:0 1px 2px #08102810,0 8px 24px #0810281a; --glass:rgba(240,244,252,.55); --good:#2e7d4b; --bad:#c0392b;
   font: 17px/1.5 -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   background:var(--bg); color:var(--ink);
 }
-@media(prefers-color-scheme:dark) {
-  :root {--bg:#0a0f1b;--card:#131a2a;--ink:#eef1f7;--muted:#9ea7ba;--blue:#9db4f5;--fill:#2a4aae;--wash:#1d2436;--line:#283149;--oranje:#ff8a3d;--shadow:0 1px 2px #0006,0 10px 28px #00000073;--glass:rgba(10,15,27,.7);--good:#74cf95;--bad:#ff8f80}
+/* dark only on phones and tablets: on a computer (a wide screen with a mouse, as the app's data-desktop) the page stays
+   light, like the app there */
+@media (prefers-color-scheme:dark) and (max-width:959px), (prefers-color-scheme:dark) and (hover:none),
+       (prefers-color-scheme:dark) and (pointer:coarse) {
+  :root {color-scheme:dark;--bg:#0a0f1b;--card:#131a2a;--ink:#eef1f7;--muted:#9ea7ba;--blue:#9db4f5;--fill:#2a4aae;--wash:#1d2436;--line:#283149;--oranje:#ff8a3d;--shadow:0 1px 2px #0006,0 10px 28px #00000073;--glass:rgba(10,15,27,.7);--good:#74cf95;--bad:#ff8f80}
 }
 * {box-sizing:border-box}
 /* the same window as the app: a Dutch landscape (Ruisdael's windmill, pre-blurred) behind frosted glass, white tiles on it */

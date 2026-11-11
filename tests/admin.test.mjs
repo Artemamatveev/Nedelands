@@ -6,7 +6,7 @@ import vm from 'node:vm';
 import fs from 'node:fs';
 import {root} from './app-harness.mjs';
 
-async function ask({user = null, env = {ADMIN_EMAILS: 'Eigenaar@Example.nl, tweede@example.nl'}, accounts = true, method = 'GET', fail = false} = {}) {
+async function ask({user = null, env = {ADMIN_EMAILS: 'Eigenaar@Example.nl, tweede@example.nl'}, accounts = true, method = 'GET', fail = false, query = {}} = {}) {
   let asked = 0;
   const values = {accounts, caller: async () => user,
     adminData: async () => { asked++; if (fail) throw Error('down'); return {users: [{email: 'a@b.c'}], counts: []}; }};
@@ -15,7 +15,7 @@ async function ask({user = null, env = {ADMIN_EMAILS: 'Eigenaar@Example.nl, twee
   const module = new vm.SourceTextModule(fs.readFileSync(new URL('api/admin.js', root), 'utf8'), {context});
   await module.link(() => supa); await module.evaluate();
   const res = {statusCode: 200, headers: {}, setHeader(k, v) { this.headers[k] = v; }, status(n) { this.statusCode = n; return this; }, json(b) { this.body = b; return this; }};
-  await module.namespace.default({method, headers: {}}, res);
+  await module.namespace.default({method, headers: {}, query}, res);
   return {res, asked};
 }
 const owner = {id: '1', email: 'eigenaar@example.nl', email_confirmed_at: '2026-11-01T00:00:00Z'};
@@ -45,4 +45,10 @@ test('The overview function is only for the server', () => {
   const sql = fs.readFileSync(new URL('supabase/schema.sql', root), 'utf8');
   assert.match(sql, /create or replace function public\.admin_overview\(\)/);
   assert.match(sql, /revoke execute on function public\.admin_overview\(\) from public, anon, authenticated;/);
+});
+test('?me=1 only says whether the account is the owner, without reading the data', async () => {
+  const r = await ask({user: owner, query: {me: '1'}});
+  assert.equal(r.res.statusCode, 200); assert.equal(r.asked, 0); assert.equal(r.res.body.admin, true);
+  const n = await ask({user: {...owner, email: 'iemand@example.nl'}, query: {me: '1'}});
+  assert.equal(n.res.statusCode, 403); assert.equal(n.asked, 0);
 });

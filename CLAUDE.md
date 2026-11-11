@@ -18,7 +18,7 @@ form, in the app's Examenblad style (the user found icon cards and phone screens
 feedback stay Dutch); "Vraag 3", the three ways to practise as a numbered list; "Vraag 4 · Zo kijkt Claude je tekst
 na", the writing check set in HTML like in the app, with the same checklist (a made-up example, the page says so; its errors and points must follow the scoring
 rules). "Veelgestelde vragen" uses native `<details>`; keep the answers true (not DUO, offline, no pass guarantee). The
-Plus card only shows when Plus is on (a card saying it was unavailable looked broken). The page looks like the app: the
+Plus card only shows when Plus is on (a card saying it was unavailable looked broken). The page looks like the app (dark only on phones and tablets, light on a computer, like the app): the
 blurred windmill behind frosted glass, white tiles with the app's shadow, a glass bar on top. The hero shows the app
 itself in a phone (`shots/app.webp`, the top of Mijn dag, taken with Playwright) in front of Vermeer's Gezicht op Delft;
 Bitterbal, the plush mascot, stands small beside it with a speech bubble (the user wanted the app there, not the
@@ -402,8 +402,8 @@ bezoekers tellen", "Cookies" and "Hoe lang", in all eight languages: change them
 ## The owner's overview (admin)
 
 `admin.html` (served as /admin, noindex, not linked anywhere, in Russian because only the owner reads it, made for a
-computer) shows who has an account and what they did: name and e-mail, level, last activity, study time today / 7 days /
-in all, questions practised, answers and the share right, proefexamens per part (number and last score), Claude checks,
+computer, light only: no dark mode on a desktop) shows who has an account and what they did: name and e-mail, level, last
+activity, study time and answers (with the share right) today / 7 days / in all, how many different questions, proefexamens per part (number and last score), Claude checks,
 Plus; a row opens its minutes of the last 14 days and its exam history; above, six totals, and under the accounts the
 anonymous counts of the last 30 days per day. It loads the vendored Supabase library, reads the session the app left in
 this browser and asks `/api/admin` (`api/admin.js`) with the access token; the server answers only a confirmed e-mail in
@@ -414,7 +414,10 @@ never leave it) and `usage_counts`. Guests without an account appear only in the
 `S` once a minute and when the page is hidden, days older than 400 dropped). It syncs with the progress, merged as a
 counter per day (`rebaseProgress`, `mergeS` takes the larger), so two devices on one day add up. privacy.html says, in all
 eight languages under "Met een account", that the progress includes the minutes per day and that the maker can see this
-overview; change both with the page.
+overview; change both with the page. Answers per day are `S.qd` (answered) and `S.qr` (right), counted in `record()` with
+the totals in `S.items` (practice and proefexamens; a retry after a mistake in the same round doesn't count), merged and
+pruned like `S.tm`; before 11 November 2026 only the totals exist. Profiel shows a row "Statistiek" to /admin only for the
+owner: `adminCheck()` asks `/api/admin?me=1` once per login (200 only for an `ADMIN_EMAILS` account, without reading data).
 
 ## Bittertalen Plus (payments)
 

@@ -241,7 +241,7 @@ grant execute on function public.bump_event(text, text, text, int) to service_ro
 -- The owner's overview (api/admin.js, admin.html): per account what it did, worked out here so the large progress rows
 -- never leave the database. Only the server calls it, and api/admin.js only for the e-mails in ADMIN_EMAILS.
 -- items: questions practised; right / wrong: answers; res: per part the number of proefexamens and the last score;
--- tm: study seconds per day (day number since 1970 → seconds); checks: Claude checks in all, and in the last 7 days.
+-- tm: study seconds per day (day number since 1970 → seconds); qd / qr: answers / right answers per day; checks: Claude checks in all, and in the last 7 days.
 create or replace function public.admin_overview()
 returns jsonb
 language sql
@@ -266,6 +266,8 @@ as $$
         from jsonb_each(case when jsonb_typeof(p.data->'res') = 'object' then p.data->'res' else '{}' end) e(k, v)
         where jsonb_typeof(v) = 'array' and jsonb_array_length(v) > 0),
       'tm', case when jsonb_typeof(p.data->'tm') = 'object' then p.data->'tm' end,
+      'qd', case when jsonb_typeof(p.data->'qd') = 'object' then p.data->'qd' end,
+      'qr', case when jsonb_typeof(p.data->'qr') = 'object' then p.data->'qr' end,
       'checks', (select coalesce(sum(n), 0) from public.check_usage c where c.user_id = u.id),
       'checks7', (select coalesce(sum(n), 0) from public.check_usage c where c.user_id = u.id
         and c.day > (now() at time zone 'Europe/Amsterdam')::date - 7),

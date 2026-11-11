@@ -210,7 +210,7 @@ test('The owner overview shows accounts and study time', async t => {
   const state = {config: {url: 'https://supa.example', anon: 'x', login: [], limit: 5, free: 0},
     admin: {users: [
       {email: 'anna@example.nl', name: 'Anna de Vries', created: now, login: now, seen: now, lvl: 'A2', items: 120, right: 90, wrong: 30,
-        res: {knm: {n: 3, pc: 72, at: Date.now()}}, tm: {[day]: 1500, [day - 1]: 600, [day - 30]: 300}, checks: 4, checks7: 2, plus: null},
+        res: {knm: {n: 3, pc: 72, at: Date.now()}}, tm: {[day]: 1500, [day - 1]: 600, [day - 30]: 300}, qd: {[day]: 12, [day - 2]: 8}, qr: {[day]: 9, [day - 2]: 8}, checks: 4, checks7: 2, plus: null},
       {email: 'omar@example.nl', name: null, created: now, login: now, seen: null, lvl: 'B1', items: 0, right: 0, wrong: 0, res: null, tm: null, checks: 0, checks7: 0, plus: 'active'}],
     counts: [{day: now.slice(0, 10), ev: 'open', lvl: 'A2', ui: 'nl', n: 5}, {day: now.slice(0, 10), ev: 'exam_knm', lvl: 'A2', ui: 'ru', n: 2}]}};
   const server = await serve(state), base = `http://127.0.0.1:${server.address().port}`;
@@ -222,7 +222,7 @@ test('The owner overview shows accounts and study time', async t => {
     assert.equal(state.adminAuth, 'Bearer tok-1');
     const text = await s.p.textContent('main');
     assert.match(text, /Anna de Vries/); assert.match(text, /anna@example\.nl/); assert.match(text, /35 мин/); // 25 today + 10 yesterday in 7 days
-    assert.match(text, /KNM ×3 · 72%/); assert.match(text, /Без имени/);
+    assert.match(text, /KNM ×3 · 72%/); assert.match(text, /12 \(75%\)/); assert.match(text, /20 \(85%\)/); assert.match(text, /120 \(75%\)/); // today, 7 days, in all assert.match(text, /Без имени/);
     await s.p.locator('tr.u').first().click(); await s.p.waitForSelector('tr.detail .days');
     assert.equal(await overflow(s.p), 0);
     const AXE = fs.readFileSync(createRequire(import.meta.url).resolve('axe-core/axe.min.js'), 'utf8');
