@@ -315,3 +315,28 @@ test('Offline the app opens with its own files, also after an update', async t =
     await s.ctx.close();
   } finally { await browser.close(); server.close(); }
 });
+
+test('Monthly A2 and B1 offers fit the homepage and the app sends the selected level',async t=>{
+  let browser;
+  try{browser=chromium&&await chromium.launch()}catch(e){if(process.env.BROWSER_TESTS)throw e}
+  if(!browser){if(process.env.BROWSER_TESTS)assert.fail('Playwright is not installed');return t.skip('no browser here')}
+  const config={limit:5,plus:{limit:60,price:'9,99',plans:{A2:{price:'9,99'},B1:{price:'14,99'}}}};
+  const server=await serve({config}),base=`http://127.0.0.1:${server.address().port}`;
+  try{
+    for(const [lang,width] of [['nl',1280],['ru',390],['ar',375],['hi',320]]){
+      const s=await page(browser,base,{lang,viewport:{width,height:900}});await s.go('/');
+      await s.p.waitForFunction(()=>!document.querySelector('#plus-b1-card').hidden);
+      assert.match(await s.p.locator('#plus-price').textContent(),/9,99/);
+      assert.match(await s.p.locator('#plus-b1-price').textContent(),/14,99/);
+      assert.equal(await overflow(s.p),0);assert.deepEqual(s.errors,[]);await s.ctx.close();
+    }
+    const s=await page(browser,base);await s.go('/oefenen');await s.p.waitForSelector('#plan .step');
+    let chosen;
+    await s.ctx.route('**/api/plus',async r=>{chosen=r.request().postDataJSON();await r.fulfill({json:{url:'about:blank'}})});
+    await s.p.evaluate(cfg=>{acc.cfg=cfg;acc.user={id:'pricing-test'};acc.sb={auth:{getSession:async()=>({data:{session:{access_token:'test'}}})}};plusScreen()},config);
+    assert.match(await s.p.locator('[data-plus-plan="A2"]').textContent(),/9,99/);
+    assert.match(await s.p.locator('[data-plus-plan="B1"]').textContent(),/14,99/);
+    await s.p.locator('[data-plus-buy="B1"]').click();await s.p.waitForURL('about:blank');
+    assert.deepEqual(chosen,{go:'buy',level:'B1'});assert.deepEqual(s.errors,[]);await s.ctx.close();
+  }finally{await browser.close();await new Promise(ok=>server.close(ok))}
+});

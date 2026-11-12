@@ -2,6 +2,13 @@
 // tables oefenen.html defines. Loaded only when the menus are in another language than Dutch (loadUI()); edit here,
 // then run `node tools/stamp.mjs` (UIV).
 Object.assign(UI,{
+"Meer nakijkbeurten op A2.":["More checks at A2.", "تصحيحات إضافية لمستوى A2.", "A2 düzeyinde daha fazla kontrol.", "A2 स्तर पर ज़्यादा जाँचें।", "更多 A2 批改次数。", "Más revisiones de nivel A2.", "Больше проверок на уровне A2."],
+"Meer nakijkbeurten op B1, inclusief A2.":["More checks at B1, including A2.", "تصحيحات إضافية لمستوى B1، وتشمل A2.", "A2 dahil B1 düzeyinde daha fazla kontrol.", "B1 स्तर पर ज़्यादा जाँचें, A2 भी शामिल।", "更多 B1 批改次数，包含 A2。", "Más revisiones de nivel B1, con A2 incluido.", "Больше проверок на уровне B1, включая A2."],
+"Kies Plus A2":["Choose Plus A2", "اختر Plus A2", "Plus A2 seç", "Plus A2 चुनें", "选择 Plus A2", "Elegir Plus A2", "Выбрать Plus A2"],
+"Kies Plus B1":["Choose Plus B1", "اختر Plus B1", "Plus B1 seç", "Plus B1 चुनें", "选择 Plus B1", "Elegir Plus B1", "Выбрать Plus B1"],
+"Overstappen naar Plus B1":["Upgrade to Plus B1", "الترقية إلى Plus B1", "Plus B1’e yükselt", "Plus B1 में अपग्रेड करें", "升级至 Plus B1", "Cambiar a Plus B1", "Перейти на Plus B1"],
+"per maand":["per month", "شهريًا", "aylık", "प्रति माह", "每月", "al mes", "в месяц"],
+"Je kunt elke maand opzeggen.":["You can cancel each month.", "يمكنك الإلغاء كل شهر.", "Her ay iptal edebilirsin.", "आप हर महीने रद्द कर सकते हैं।", "每月均可取消。", "Puedes cancelar cada mes.", "Подписку можно отменить каждый месяц."],
 "Oefenen en examens":["Practice and exams","التدريب والامتحانات","Alıştırmalar ve sınavlar","अभ्यास और परीक्षाएँ","练习与考试","Práctica y exámenes","Практика и экзамены"],
 "A2 oefenen":["Practise A2","تدرّب على A2","A2 alıştırmaları","A2 का अभ्यास करें","练习 A2","Practicar A2","Практика A2"],
 "B1 oefenen":["Practise B1","تدرّب على B1","B1 alıştırmaları","B1 का अभ्यास करें","练习 B1","Practicar B1","Практика B1"],

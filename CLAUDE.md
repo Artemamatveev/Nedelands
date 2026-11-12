@@ -435,25 +435,31 @@ owner: `adminCheck()` asks `/api/admin?me=1` once per login (200 only for an `AD
 
 ## Bittertalen Plus (payments)
 
-The user chose (9 November 2026, replacing the earlier version with levels, a yearly price and a free week): practice,
-the proefexamens and `CHECK_LIMIT` Claude checks a day (default 5) stay free with an account; Bittertalen Plus, a monthly
-Stripe subscription of €9,99, only raises the daily Claude checks to `PLUS_LIMIT` (default 60). No trial, no yearly price,
-one Plus for both levels. No video or podcast may ever go behind it (YouTube's policies).
-- Stripe by plain fetch, no SDK (`stripe()` in `api/_supa.js`). Off unless `STRIPE_SECRET_KEY`, `STRIPE_PRICE` (the
-  monthly price's id, `price_…`) and `STRIPE_WEBHOOK_SECRET` are set (never in the repository or the chat); without them
-  Plus is hidden and the free limit stays 20. `PLUS_PRICE` is only the shown price (default "9,99"); `STRIPE_TERMS=1`
-  makes Checkout ask to accept the terms (set their URL in Stripe first).
-- `api/plus.js` (POST, logged in): `{go:"buy"}` → a Stripe Checkout URL (subscription, `subscription_data.metadata.uid`,
-  back to `/?plus=ok` or `/?plus=stop`), or the portal when Plus already runs; `{go:"manage"}` → the customer portal
-  (cancel, payment method, invoices; back to `/?plus=back`). Never a second subscription.
+The current pricing (12 November 2026): Plus A2 is €9,99/month and raises the daily AI allowance to `PLUS_LIMIT`
+(default 60) on A2 only. Plus B1 is €14,99/month and includes A2. All practice and timed proefexamens remain free;
+`CHECK_LIMIT` checks a day (default 5 when billing is configured, otherwise 20) remain available without Plus.
+There is no trial or yearly price. Videos and podcasts remain free.
+- `STRIPE_SECRET_KEY`, `STRIPE_PRICE` (the existing A2 monthly price), `STRIPE_PRICE_B1` and `STRIPE_WEBHOOK_SECRET`
+  enable billing. `STRIPE_PORTAL_CONFIG` identifies the portal configuration offering the two plans. A2 and B1 are
+  separate Stripe products because the portal requires unique billing intervals within a product. Keep price IDs in
+  environment configuration. Never retrieve, print or commit authentication secrets.
+- `api/_supa.js` fixes the displayed amounts in cents (`PLANS`) and verifies the configured Stripe price's EUR amount
+  and monthly interval before Checkout. `plusFor()` reads the actual subscription price to determine `level`, without
+  changing the Supabase schema or storing entitlements in client-writable progress. Subscription metadata records
+  ownership; it does not grant a level. Only the two configured price IDs can grant Plus.
+- `api/plus.js`: authenticated GET returns only `{plus:{status,until,ends,level}|null}`. POST `{go:"buy",level:"A2"|"B1"}`
+  starts Checkout for that plan; an omitted level from an old page buys A2. A current A2 subscriber choosing B1 gets a
+  `subscription_update_confirm` portal flow for the same subscription item. Stripe shows the amount and requires their
+  confirmation; this endpoint never updates or charges an existing subscription. POST `{go:"manage"}` opens the portal.
+  A lower-price change is scheduled for period end; cancellation, invoices and payment-method changes remain available.
 - `api/stripe.js`: the webhook (raw body, `bodyParser:false`), events `customer.subscription.created`, `.updated` and
   `.deleted` (Snapshot payloads). Every event reads the subscription from Stripe again and keeps the user's row of table
   `plus` (`supabase/schema.sql`; RLS: read own row; written only by the server): customer, sub, status, `until` (end of
   the paid month), `ends` (cancelled). An old subscription that ends never hides a newer one; an event for a deleted
   account cancels the subscription.
-- `api/check.js`: Plus (`isPlus()`: active, trialing or past_due, until `until` plus a day) gets `PLUS_LIMIT`; Plus checks
+- `api/check.js`: an active subscription covering the requested part (`wb`/`sb` require B1) gets `PLUS_LIMIT`; Plus checks
   don't count against `CHECK_CAP`. `api/account.js` cancels the subscription at Stripe before it deletes the account.
-- The page: `acc.plus` (read in `usage()`), `isPlus()`, `myLimit()`, a "Bittertalen Plus" row in Profiel under the
+- The page: `acc.plus` (verified through `/api/plus` in `usage()`), `isPlus(level)`, `myLimit(level)`, a "Bittertalen Plus" row in Profiel under the
   checks counter (`plusLine()`) and `plusScreen()` in `#talk` (the one entry point). `plusBack()` handles the return from
   Stripe and `plusWait()` looks again a few times, because the webhook may be later than the learner. Stripe's pages are
   navigations, so the CSP needs nothing new.

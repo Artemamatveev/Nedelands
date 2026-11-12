@@ -5,7 +5,7 @@
 // Google, Apple, Microsoft (azure) and Facebook show when they are switched on in Supabase (Authentication → Sign In / Providers);
 // the e-mail code only with LOGIN_EMAIL=1, because Supabase's own mail reaches only the project's team
 // (real users need custom SMTP); passkeys (still experimental in Supabase) only with LOGIN_PASSKEY=1.
-import { accounts, supaUrl, anonKey, LIMIT, FREE, plusOn, PLUS, PLUS_PRICE } from "./_supa.js";
+import { accounts, supaUrl, anonKey, LIMIT, FREE, plusOn, PLUS, PLUS_PRICE, PLANS } from "./_supa.js";
 import { eventsOn } from "./event.js";
 
 export default async function handler(req, res) {
@@ -21,6 +21,8 @@ export default async function handler(req, res) {
   if (process.env.LOGIN_EMAIL === "1" && ext.email !== false) login.push("email");
   if (process.env.LOGIN_PASSKEY === "1") login.push("passkey");
   return res.status(200).json({
-    url: supaUrl, anon: anonKey, login, limit: LIMIT, free: FREE, ...(plusOn ? { plus: { limit: PLUS, price: PLUS_PRICE } } : {}), ...(eventsOn() ? { events: 1 } : {}),
+    url: supaUrl, anon: anonKey, login, limit: LIMIT, free: FREE,
+    ...(plusOn ? { plus: { limit: PLUS, price: PLUS_PRICE, plans: Object.fromEntries(Object.entries(PLANS).map(([level, p]) => [level, { price: p.price }])) } } : {}),
+    ...(eventsOn() ? { events: 1 } : {}),
   });
 }

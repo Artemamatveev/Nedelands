@@ -13,7 +13,7 @@
 // With accounts set up (Supabase, see _supa.js) only a signed-in user may grade, CHECK_LIMIT checks a day;
 // the answer then also has `left`, the checks left today. With Bittertalen Plus (api/plus.js) PLUS_LIMIT a day.
 import Anthropic from "@anthropic-ai/sdk";
-import { accounts, caller, checkCost, useChecks, LIMIT, PLUS, plusOn, plusOf, isPlus, sameOrigin, FREE, visitor, useFree, useTotal } from "./_supa.js";
+import { accounts, caller, checkCost, useChecks, LIMIT, PLUS, plusOn, plusFor, coversLevel, sameOrigin, FREE, visitor, useFree, useTotal } from "./_supa.js";
 
 // Created only when the key is set, so a missing key gives a clear error instead of a crash
 // (trimmed: a key pasted into the dashboard with a trailing newline breaks the request header)
@@ -175,7 +175,7 @@ export default async function handler(req, res) {
       if (free < 0) return res.status(401).json({ error: "login", free: 0 });
     } else {
       uid = user.id;
-      plus = plusOn && isPlus(await plusOf(uid).catch(() => null));
+      plus = plusOn && coversLevel(await plusFor(uid).catch(() => null), wb || sb ? "B1" : "A2");
       if (plus) lim = PLUS;
       left = await useChecks(uid, cost, lim).catch(() => null);
       if (left == null) return res.status(502).json({ error: "failed" });
@@ -244,6 +244,7 @@ export default async function handler(req, res) {
     const out = result.tasks.slice(0, tasks.length);
     return res.status(200).json({
       left: who ? free : left,
+      limit: who ? FREE : lim,
       ...(who ? { free } : {}),
       tasks: out.map((t, i) => {
         const SC = wb ? SCORES_WB[tasks[i].kind] : sb ? SCORES_SB[tasks[i].kind] : sp ? SCORES_SP : SCORES_WR;
