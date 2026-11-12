@@ -8,7 +8,11 @@ full stop), one paragraph and the app in a phone: no label above the heading, no
 wish, November 2026). The bar: the name (30 px, 28 on a phone), the page's links, the language, Inloggen and the main button;
 on a phone two straight rows, the name with the button, then the links with the language and Inloggen (two wrapping flex
 rows: a grid tied the second row to the button's width; the type follows the screen's width and the narrowest phones leave
-out the middle link; the browser test measures it in the longest languages). How the two pages hand over (`tests/browser.test.mjs` checks it):
+out the middle link; the browser test measures it in the longest languages). The learning features (`#oefenvormen`)
+start as compact headings in native `details`: tapping or keyboard activation opens one description and colors that
+card blue; a fine mouse pointer also opens it on hover and closes it on leaving. No card starts highlighted. Keep the
+summary's icon and disclosure indicator, all eight languages, and the native fallback without JavaScript.
+How the two pages hand over (`tests/browser.test.mjs` checks it):
 the site always opens with the homepage in a browser, on phones, tablets and computers, including returning learners
 with saved progress or an account (the user's wish, 12 November 2026). The bar's button leads into the app. On a computer,
 the app's menu has "Home" as its first row, `.tabs .hm`, a link to "/" that the lens never covers, with Profiel's Website
