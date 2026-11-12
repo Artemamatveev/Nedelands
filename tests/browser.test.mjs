@@ -159,12 +159,22 @@ test('The homepage and the app work in a real browser', async t => {
       assert.deepEqual(s.errors, []); await s.ctx.close();
       const d = await page(browser, base, {viewport: {width: 1280, height: 900}, isMobile: false, hasTouch: false}); await d.go('/');
       const heading = d.p.locator('.feature-grid summary').first(), description = d.p.locator('.feature-grid p').first();
+      await d.p.evaluate(() => {
+        window.featureHoverTrace = [];
+        const card = document.querySelector('.feature-grid details');
+        for (const type of ['pointerenter', 'pointerleave']) card.addEventListener(type, e => {
+          window.featureHoverTrace.push({type, x: e.clientX, y: e.clientY, top: card.getBoundingClientRect().top, open: card.open});
+        });
+      });
       await heading.hover();
       await d.p.waitForFunction(() => document.querySelector('.feature-grid details').open);
       await d.p.mouse.move(0, 0);
       await heading.hover();
       await d.p.waitForFunction(() => !document.querySelector('.feature-grid p').getAnimations().some(a => a.playState === 'running'));
-      assert.equal(await description.isVisible(), true);
+      assert.equal(await description.isVisible(), true, JSON.stringify(await d.p.evaluate(() => {
+        const card = document.querySelector('.feature-grid details'), panel = card.querySelector('p');
+        return {events: window.featureHoverTrace, open: card.open, closing: card.className, hover: card.matches(':hover'), height: panel.getBoundingClientRect().height, animations: panel.getAnimations().map(a => ({state: a.playState, time: a.currentTime}))};
+      })));
       // Resizing during a close must not leave a fixed height or a stale closing state behind.
       await d.p.mouse.move(0, 0); await d.p.setViewportSize({width: 1100, height: 900});
       await d.p.waitForFunction(() => !document.querySelector('.feature-grid details').open);
