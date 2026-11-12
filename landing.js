@@ -160,25 +160,68 @@ render();
 {
   const features = [...document.querySelectorAll(".feature-grid details")];
   const hover = matchMedia("(hover: hover) and (pointer: fine)");
-  const expand = (card, open) => {
-    for (const feature of features) feature.open = feature === card && open;
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+  const states = features.map(card => ({ card, panel: card.querySelector("p"), expanded: card.open, animation: null }));
+  const finish = state => {
+    state.animation?.cancel();
+    state.animation = null;
+    state.card.open = state.expanded;
+    state.card.classList.remove("is-closing");
+    state.panel.style.removeProperty("overflow");
   };
-  for (const card of features) {
+  const reveal = (state, open) => {
+    if (state.expanded === open) return;
+    state.expanded = open;
+    const { card, panel } = state;
+    const style = getComputedStyle(panel);
+    // Start from the current frame when a tap or pointer reverses an unfinished animation.
+    const from = card.open ? {
+      height: `${panel.getBoundingClientRect().height}px`, opacity: style.opacity,
+      transform: style.transform, paddingBottom: style.paddingBottom
+    } : { height: "0px", opacity: 0, transform: "translateY(-6px)", paddingBottom: "0px" };
+    state.animation?.cancel();
+    state.animation = null;
+    card.open = true;
+    card.classList.toggle("is-closing", !open);
+    panel.inert = !open;
+    if (reduced.matches || !panel.animate) { finish(state); return; }
+    const to = {
+      height: open ? `${panel.getBoundingClientRect().height}px` : "0px",
+      opacity: open ? 1 : 0, transform: open ? "translateY(0)" : "translateY(-4px)",
+      paddingBottom: open ? getComputedStyle(panel).paddingBottom : "0px"
+    };
+    panel.style.overflow = "hidden";
+    const animation = panel.animate([from, to], {
+      duration: open ? 360 : 280, easing: "cubic-bezier(.22,1,.36,1)", fill: "both"
+    });
+    state.animation = animation;
+    animation.onfinish = () => { if (state.animation === animation) finish(state); };
+  };
+  const expand = (card, open) => {
+    for (const state of states) reveal(state, state.card === card && open);
+  };
+  for (const state of states) {
+    const { card } = state;
+    // The departing card needs to finish closing before its native content is hidden.
+    // Without JavaScript, the HTML name still provides a native exclusive accordion.
+    card.removeAttribute("name");
     const summary = card.querySelector("summary");
     summary.addEventListener("click", event => {
       event.preventDefault();
-      expand(card, !card.open);
+      expand(card, !state.expanded);
     });
     card.addEventListener("pointerenter", event => {
       if (event.pointerType === "mouse" && hover.matches) expand(card, true);
     });
     card.addEventListener("pointerleave", event => {
-      if (event.pointerType === "mouse" && hover.matches && !summary.matches(":focus-visible")) card.open = false;
+      if (event.pointerType === "mouse" && hover.matches && !summary.matches(":focus-visible")) reveal(state, false);
     });
     card.addEventListener("focusout", event => {
-      if (hover.matches && !card.contains(event.relatedTarget) && !card.matches(":hover")) card.open = false;
+      if (hover.matches && !card.contains(event.relatedTarget) && !card.matches(":hover")) reveal(state, false);
     });
   }
+  reduced.addEventListener("change", () => states.forEach(finish));
+  window.addEventListener("resize", () => states.forEach(state => { if (state.animation) finish(state); }));
 }
 
 fetch("/api/config").then(r => {
