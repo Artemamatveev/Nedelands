@@ -161,28 +161,30 @@ export default async function handler(req, res) {
   if (!input.length) return res.status(400).json({ error: "no_tasks" });
 
   // Accounts: who is asking, and take the checks before calling Claude (given back if grading fails)
-  let uid = null, left, lim = LIMIT, plus = false;
+  let uid = null, left, lim = LIMIT, plus = false, period = "week";
+  const checkedAt = new Date().toISOString();
   const cost = checkCost(input.length);
   let who = null, free;
   {
     const user = await caller(req).catch(() => null);
     if (!user) {
       // Without a login: a few single tasks a day for free (no proefexamens), counted per visitor
-      who = FREE && cost === 1 ? visitor(req) : "";
+      who = FREE && cost === 1 ? visitor(req, res) : "";
       if (!who) return res.status(401).json({ error: "login" });
-      free = await useFree(who, cost).catch(() => null);
+      free = await useFree(who, cost, checkedAt).catch(() => null);
       if (free == null) return res.status(401).json({ error: "login" }); // not set up in the database yet
+      if (free === -2) return res.status(429).json({ error: "busy" });
       if (free < 0) return res.status(401).json({ error: "login", free: 0 });
     } else {
       uid = user.id;
       plus = plusOn && coversLevel(await plusFor(uid).catch(() => null), wb || sb ? "B1" : "A2");
-      if (plus) lim = PLUS;
-      left = await useChecks(uid, cost, lim).catch(() => null);
+      if (plus) { lim = PLUS; period = "day"; }
+      left = await useChecks(uid, cost, lim, period, checkedAt).catch(() => null);
       if (left == null) return res.status(502).json({ error: "failed" });
-      if (left < 0) return res.status(429).json({ error: "limit", limit: lim, plus });
+      if (left < 0) return res.status(429).json({ error: "limit", limit: lim, period, checkedAt, plus });
     }
   }
-  const mine = () => (uid ? useChecks(uid, -cost, lim).catch(() => {}) : who ? useFree(who, -cost).catch(() => {}) : null);
+  const mine = () => (uid ? useChecks(uid, -cost, lim, period, checkedAt).catch(() => {}) : who ? useFree(who, -cost, checkedAt).catch(() => {}) : null);
   // Everyone's checks of today together: when the day is full, give this one back and ask to come back tomorrow.
   // Plus checks are paid for, so they neither count nor stop at that ceiling.
   const total = plus ? 0 : await useTotal(cost).catch(() => null);
@@ -245,6 +247,8 @@ export default async function handler(req, res) {
     return res.status(200).json({
       left: who ? free : left,
       limit: who ? FREE : lim,
+      period: who ? "once" : period,
+      checkedAt,
       ...(who ? { free } : {}),
       tasks: out.map((t, i) => {
         const SC = wb ? SCORES_WB[tasks[i].kind] : sb ? SCORES_SB[tasks[i].kind] : sp ? SCORES_SP : SCORES_WR;

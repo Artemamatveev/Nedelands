@@ -569,3 +569,69 @@ UIR.push(...[
  [/^Van de hunebedden tot nu, in (\d+) korte hoofdstukken\. Goed voor KNM\.$/,["From the hunebeds to now, in $1 short chapters. Good for KNM.","من المقابر الحجرية (hunebed) حتى اليوم، في $1 فصلًا قصيرًا. مفيد لامتحان KNM.","Hunebed'lerden günümüze, $1 kısa bölümde. KNM için faydalı.","hunebed से आज तक, $1 छोटे अध्यायों में। KNM के लिए उपयोगी।","从巨石墓到今天，共 $1 个短章节。对 KNM 有帮助。","De los dólmenes a la actualidad en $1 capítulos breves. Útil para KNM.","От дольменов до наших дней. Коротких глав: $1. Пригодится для KNM."]],
  [/^Nog (\d+) keer gratis nakijken vandaag\. Met een account (\d+) keer per dag \(Profiel\)\.$/,["$1 free checks left today. With an account $2 a day (Profile).","بقي $1 تصحيحات مجانية اليوم. وبحساب $2 مرة في اليوم (ملفي).","Bugün $1 ücretsiz kontrol kaldı. Hesapla günde $2 kez (Profil).","आज $1 मुफ़्त जाँचें बची हैं। खाते के साथ दिन में $2 (प्रोफ़ाइल)।","今天还剩 $1 次免费批改。有账户时每天 $2 次（我的）。","Revisiones gratuitas restantes hoy: $1. Con una cuenta tienes $2 al día (Perfil).","Осталось бесплатных проверок на сегодня: $1. С аккаунтом доступно $2 в день (в профиле)."]],
  [/^(.+?): (.+)$/,(m,a,b)=>{const x=uiT(a),y=uiT(b)||uiR(b);return x&&y?x+(LANG==="zh"?"：":": ")+y:m}]]);
+
+// Weekly free allowance and the one-time browser trial.
+Object.assign(UI,{
+  "Je gratis proefbeurten zijn op.": [
+    "Your free trial checks are used up.",
+    "انتهت التصحيحات التجريبية المجانية.",
+    "Ücretsiz deneme kontrollerin bitti.",
+    "आपकी मुफ़्त परीक्षण जाँचें समाप्त हो गई हैं।",
+    "免费体验批改次数已用完。",
+    "Has agotado las revisiones de prueba gratuitas.",
+    "Пробные бесплатные проверки закончились."
+  ],
+  "Je gratis proefbeurten zijn op. Maak een gratis account voor 7 nakijkbeurten per week.": [
+    "Your trial checks are used up. Create a free account for 7 checks a week.",
+    "انتهت تصحيحاتك التجريبية. أنشئ حسابًا مجانيًا للحصول على 7 تصحيحات أسبوعيًا.",
+    "Deneme kontrollerin bitti. Haftada 7 kontrol için ücretsiz hesap aç.",
+    "परीक्षण जाँचें समाप्त हो गई हैं। हफ़्ते में 7 जाँचों के लिए मुफ़्त खाता बनाएँ।",
+    "体验批改次数已用完。创建免费账号，每周可批改 7 次。",
+    "Has agotado las revisiones de prueba. Crea una cuenta gratuita para tener 7 revisiones semanales.",
+    "Пробные проверки закончились. Создайте бесплатный аккаунт, чтобы получать 7 проверок в неделю."
+  ],
+  "Je gratis weektegoed is op. Je krijgt maandag nieuw tegoed.": [
+    "Your free weekly allowance is used up. It renews on Monday.",
+    "انتهى رصيدك الأسبوعي المجاني. يتجدد يوم الاثنين.",
+    "Ücretsiz haftalık hakkın bitti. Pazartesi yenilenir.",
+    "आपका मुफ़्त साप्ताहिक कोटा समाप्त हो गया है। यह सोमवार को नवीनीकृत होगा।",
+    "本周免费批改额度已用完，周一恢复。",
+    "Has agotado tu cupo semanal gratuito. Se renueva el lunes.",
+    "Недельный бесплатный запас проверок закончился. Он обновится в понедельник."
+  ],
+  "Je gratis weektegoed is op. Je krijgt maandag nieuw tegoed. Met Plus kun je vaker laten nakijken.": [
+    "Your free weekly allowance is used up. It renews on Monday. Plus gives you more checks.",
+    "انتهى رصيدك الأسبوعي المجاني. يتجدد يوم الاثنين. يمنحك Plus تصحيحات أكثر.",
+    "Ücretsiz haftalık hakkın bitti. Pazartesi yenilenir. Plus ile daha fazla kontrol yaptırabilirsin.",
+    "आपका मुफ़्त साप्ताहिक कोटा समाप्त हो गया है। यह सोमवार को नवीनीकृत होगा। Plus से ज़्यादा जाँचें मिलती हैं।",
+    "本周免费批改额度已用完，周一恢复。Plus 提供更多批改次数。",
+    "Has agotado tu cupo semanal gratuito. Se renueva el lunes. Plus ofrece más revisiones.",
+    "Недельный бесплатный запас проверок закончился. Он обновится в понедельник. С Plus можно получать больше проверок."
+  ],
+  "Je dagtegoed is op. Morgen kun je weer laten nakijken.": [
+    "Your daily allowance is used up. You can get more checks tomorrow.",
+    "انتهى رصيدك اليومي. يمكنك طلب تصحيحات جديدة غدًا.",
+    "Günlük hakkın bitti. Yarın yeniden kontrol yaptırabilirsin.",
+    "आपका दैनिक कोटा समाप्त हो गया है। कल फिर जाँच करवा सकते हैं।",
+    "今日批改额度已用完，明天可继续。",
+    "Has agotado tu cupo diario. Mañana podrás solicitar más revisiones.",
+    "Дневной запас проверок закончился. Завтра можно продолжить."
+  ],
+  "Nakijken deze week: …": [
+    "Checks this week: …",
+    "التصحيحات هذا الأسبوع: …",
+    "Bu haftaki kontroller: …",
+    "इस हफ़्ते की जाँचें: …",
+    "本周批改：…",
+    "Revisiones esta semana: …",
+    "Проверки на этой неделе: …"
+  ]
+});
+UIR.push(
+  [/^Probeer (\d+) nakijkbeurten gratis in deze browser\.$/,["Try $1 free checks in this browser.", "جرّب $1 تصحيحات مجانية في هذا المتصفح.", "Bu tarayıcıda $1 ücretsiz kontrol dene.", "इस ब्राउज़र में $1 मुफ़्त परीक्षण जाँचें आज़माएँ।", "在此浏览器免费体验 $1 次批改。", "Prueba $1 revisiones gratuitas en este navegador.", "Попробуйте $1 бесплатные проверки в этом браузере."]],
+  [/^Nog (\d+) gratis proefbeurten in deze browser\.$/,["$1 free trial checks left in this browser.", "بقي $1 تصحيحات تجريبية مجانية في هذا المتصفح.", "Bu tarayıcıda $1 ücretsiz deneme kontrolü kaldı.", "इस ब्राउज़र में $1 मुफ़्त परीक्षण जाँचें बची हैं।", "此浏览器还剩 $1 次免费体验批改。", "Quedan $1 revisiones de prueba gratuitas en este navegador.", "В этом браузере осталось пробных проверок: $1."]],
+  [/^Met een gratis account: (\d+) nakijkbeurten per week\.$/,["With a free account: $1 checks a week.", "بحساب مجاني: $1 تصحيحات أسبوعيًا.", "Ücretsiz hesapla haftada $1 kontrol.", "मुफ़्त खाते से हफ़्ते में $1 जाँचें।", "免费账号：每周 $1 次批改。", "Con una cuenta gratuita: $1 revisiones semanales.", "С бесплатным аккаунтом: $1 проверок в неделю."]],
+  [/^Met Plus: (\d+) nakijkbeurten per dag\. Met een gratis account: (\d+) per week\.$/,["With Plus: $1 checks a day. With a free account: $2 a week.", "مع Plus: $1 تصحيحات يوميًا. بحساب مجاني: $2 أسبوعيًا.", "Plus ile günde $1 kontrol. Ücretsiz hesapla haftada $2.", "Plus से रोज़ $1 जाँचें। मुफ़्त खाते से हफ़्ते में $2।", "Plus：每天 $1 次批改。免费账号：每周 $2 次。", "Con Plus: $1 revisiones diarias. Con una cuenta gratuita: $2 semanales.", "С Plus: $1 проверок в день. С бесплатным аккаунтом: $2 в неделю."]],
+  [/^Nakijken deze week: nog (\d+) van de (\d+)$/,["Checks this week: $1 of $2 left", "التصحيحات هذا الأسبوع: بقي $1 من $2", "Bu haftaki kontroller: $2 haktan $1 kaldı", "इस हफ़्ते की जाँचें: $2 में से $1 बची हैं", "本周批改：$2 次中还剩 $1 次", "Revisiones esta semana: quedan $1 de $2", "Проверки на этой неделе: осталось $1 из $2"]],
+  [/^Je hebt nog (\d+) nakijkbeurten in je tegoed\. Dit proefexamen kost (\d+) nakijkbeurten\. Zonder nakijken zie je aan het eind alleen de voorbeeldantwoorden\.$/,["You have $1 checks left in your allowance. This practice exam uses $2 checks. Without grading, you will only see example answers at the end.", "بقي في رصيدك $1 تصحيحات. يستهلك هذا الامتحان التجريبي $2 تصحيحات. بدون تصحيح سترى في النهاية الإجابات النموذجية فقط.", "Hakkında $1 kontrol kaldı. Bu deneme sınavı $2 kontrol kullanır. Kontrol olmadan sonunda yalnızca örnek cevapları görürsün.", "आपके कोटे में $1 जाँचें बची हैं। इस अभ्यास परीक्षा में $2 जाँचें लगेंगी। जाँच के बिना अंत में केवल उदाहरण उत्तर दिखेंगे।", "额度还剩 $1 次批改。本次模拟考试消耗 $2 次。不批改时，结束后只显示参考答案。", "Te quedan $1 revisiones. Este simulacro consume $2. Sin revisión, al final solo verás las respuestas de ejemplo.", "В вашем запасе осталось проверок: $1. Этот пробный экзамен расходует $2. Без проверки в конце будут доступны только примеры ответов."]]
+);

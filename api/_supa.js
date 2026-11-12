@@ -1,4 +1,4 @@
-import { createHash } from "node:crypto";
+import { createHash, createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 // Supabase from the server, by plain fetch (no SDK): who is calling, the daily check allowance, deleting an account.
 // Files starting with _ are not routes on Vercel. The env vars come from the Supabase integration in the Vercel
 // Marketplace; without them accounts and paid grading are unavailable.
@@ -9,10 +9,8 @@ const SERVICE = (process.env.SUPABASE_SERVICE_ROLE_KEY || "").trim();
 export const accounts = !!(URL_ && ANON && SERVICE);
 export const supaUrl = URL_;
 export const anonKey = ANON;
-// Claude checks per person per day; a proefexamen costs more than one task (see checkCost). Default 5 once Plus can be
-// bought (the Stripe env vars below), 20 until then
-const STRIPE_SET = ["STRIPE_SECRET_KEY", "STRIPE_PRICE", "STRIPE_PRICE_B1", "STRIPE_WEBHOOK_SECRET"].every((k) => (process.env[k] || "").trim());
-export const LIMIT = Math.max(1, parseInt(process.env.CHECK_LIMIT, 10) || (STRIPE_SET ? 5 : 20));
+// Free account checks per Amsterdam calendar week, shared by the levels not covered by Plus.
+export const LIMIT = Math.max(1, parseInt(process.env.FREE_WEEKLY_CHECKS, 10) || 7);
 // With Bittertalen Plus (a Stripe subscription, see below) PLUS_LIMIT a day instead
 export const PLUS = Math.max(1, parseInt(process.env.PLUS_LIMIT, 10) || 60);
 // One task is 1; a proefexamen Schrijven (4 tasks) 2, Schrijven B1 (12) 4, Spreken A2 or B1 (16 answers) 6: roughly what they cost in tokens
@@ -28,40 +26,67 @@ export async function caller(req) {
   return u && u.id ? u : null;
 }
 
-// Takes `cost` checks from today's allowance (negative gives them back); returns what is left, -1 when not enough
-export async function useChecks(uid, cost, lim = LIMIT) {
-  const r = await fetch(`${URL_}/rest/v1/rpc/use_checks`, {
+// Reserve/refund in the same period, including when grading crosses midnight or Monday.
+export async function useChecks(uid, cost, lim = LIMIT, period = "week", checkedAt = new Date().toISOString()) {
+  const r = await fetch(`${URL_}/rest/v1/rpc/use_plan_checks`, {
     method: "POST",
     headers: { apikey: SERVICE, authorization: `Bearer ${SERVICE}`, "content-type": "application/json" },
-    body: JSON.stringify({ uid, cost, lim }),
+    body: JSON.stringify({ uid, cost, lim, window_kind: period, checked_at: checkedAt }),
   });
-  if (!r.ok) throw new Error(`use_checks ${r.status}`);
+  if (!r.ok) throw new Error(`use_plan_checks ${r.status}`);
   const value = await r.json();
   if (!Number.isSafeInteger(value)) throw new Error("Invalid quota counter");
   return value;
 }
 
-// Free checks without an account: FREE_CHECKS a day per visitor (default 2, 0 turns it off) and FREE_CAP a day for
-// all visitors together (default 50), so a stranger can try it but it can't cost much. The visitor is a hash of the
-// IP address with a secret, never the address itself; the rows are deleted after a day (use_free_checks in schema.sql).
+// Two one-time trial checks in this browser. The daily cap for all guests remains in place.
 export const FREE = Math.max(0, parseInt(process.env.FREE_CHECKS ?? "2", 10) || 0);
 const FREE_CAP = Math.max(1, parseInt(process.env.FREE_CAP, 10) || 50);
-export const visitor = (req) => {
-  const ip = String(req.headers["x-real-ip"] || req.headers["x-forwarded-for"] || "").split(",")[0].trim();
-  return ip ? createHash("sha256").update(ip + "|" + SERVICE).digest("hex").slice(0, 32) : "";
+const TRIAL_COOKIE = "bt_trial";
+const trialSign = id => createHmac("sha256", SERVICE).update("bittertalen-trial|" + id).digest("hex");
+export const visitor = (req, res) => {
+  const cookie = String(req.headers.cookie || "").split(";").map(s => s.trim()).find(s => s.startsWith(TRIAL_COOKIE + "="))?.slice(TRIAL_COOKIE.length + 1) || "";
+  const match = /^([0-9a-f]{32})\.([0-9a-f]{64})$/.exec(cookie);
+  let id = match?.[1];
+  if (!id || !timingSafeEqual(Buffer.from(match[2], "hex"), Buffer.from(trialSign(id), "hex"))) {
+    id = randomBytes(16).toString("hex");
+    // Only for the trial allowance, never for analytics. Nothing identifying is in the cookie.
+    res.setHeader("Set-Cookie", `${TRIAL_COOKIE}=${id}.${trialSign(id)}; Path=/; Max-Age=34560000; HttpOnly; Secure; SameSite=Lax`);
+  }
+  return createHash("sha256").update(id).digest("hex");
 };
-// Takes `cost` free checks for this visitor (negative gives back): what is left, -1 (visitor's day used up) or -2
-// (everyone's day used up); throws when the function is not in the database yet
-export async function useFree(who, cost) {
-  const r = await fetch(`${URL_}/rest/v1/rpc/use_free_checks`, {
+// A zero-cost lookup does not create a usage row. No new allowance on the next day.
+export async function useFree(who, cost, checkedAt = new Date().toISOString()) {
+  const r = await fetch(`${URL_}/rest/v1/rpc/use_trial_checks`, {
     method: "POST",
     headers: { apikey: SERVICE, authorization: `Bearer ${SERVICE}`, "content-type": "application/json" },
-    body: JSON.stringify({ who, cost, lim: FREE, cap: FREE_CAP }),
+    body: JSON.stringify({ who, cost, lim: FREE, cap: FREE_CAP, checked_at: checkedAt }),
   });
-  if (!r.ok) throw new Error(`use_free_checks ${r.status}`);
+  if (!r.ok) throw new Error(`use_trial_checks ${r.status}`);
   const value = await r.json();
   if (!Number.isSafeInteger(value)) throw new Error("Invalid quota counter");
   return value;
+}
+
+export const amsterdamDay = (at = new Date()) => new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Amsterdam" }).format(at);
+export const amsterdamWeek = (at = new Date()) => {
+  const date = new Date(amsterdamDay(at) + "T12:00:00Z");
+  date.setUTCDate(date.getUTCDate() - (date.getUTCDay() + 6) % 7);
+  return date.toISOString().slice(0, 10);
+};
+export async function allowanceOf(uid) {
+  const day = amsterdamDay(), week = amsterdamWeek();
+  const read = async (table, field, value) => {
+    const r = await rest(`${table}?user_id=eq.${encodeURIComponent(uid)}&${field}=eq.${value}&select=n`);
+    if (!r.ok) throw new Error("allowance_unavailable");
+    const rows = await r.json();
+    if (!Array.isArray(rows)) throw new Error("Invalid quota counter");
+    const n = rows[0]?.n ?? 0;
+    if (!Number.isSafeInteger(n) || n < 0) throw new Error("Invalid quota counter");
+    return n;
+  };
+  const [dailyUsed, weeklyUsed] = await Promise.all([read("check_day_usage", "day", day), read("check_week_usage", "week", week)]);
+  return { dailyUsed, weeklyUsed, day, week };
 }
 
 // All checks of a day together, logged-in and free (default 400, CHECK_CAP): a ceiling on what Claude can cost in a

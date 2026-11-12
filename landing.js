@@ -105,16 +105,26 @@ const copy = {
 };
 
 const pricing = {
-  nl: ["per maand", n => `Met een gratis account: ${n} nakijkbeurten per dag`, n => `Bittertalen kijkt je teksten en gesproken antwoorden na: ${n} nakijkbeurten per dag`],
-  en: ["per month", n => `With a free account: ${n} checks a day`, n => `Bittertalen reviews your writing and spoken answers: ${n} checks a day`],
-  ar: ["شهريًا", n => `بحساب مجاني: ${n} مرات تصحيح يوميًا`, n => `يصحّح Bittertalen كتاباتك وإجاباتك الشفهية: ${n} مرات يوميًا`],
-  tr: ["aylık", n => `Ücretsiz hesapla günde ${n} kontrol`, n => `Bittertalen yazılarını ve sözlü yanıtlarını günde ${n} kez kontrol eder`],
-  hi: ["प्रति माह", n => `मुफ़्त खाते से रोज़ ${n} बार जाँच`, n => `Bittertalen आपके लिखित और बोले गए जवाबों की रोज़ ${n} बार जाँच करता है`],
-  zh: ["每月", n => `免费账号：每天 ${n} 次批改`, n => `Bittertalen 批改你的写作和口语回答：每天 ${n} 次`],
-  es: ["al mes", n => `Revisiones diarias con una cuenta gratuita: ${n}`, n => `Bittertalen revisa tus textos y respuestas orales: ${n} revisiones al día`],
-  ru: ["в месяц", n => `Проверок в день с бесплатным аккаунтом: ${n}`, n => `Bittertalen проверяет ваши тексты и устные ответы. Проверок в день: ${n}`],
+  nl: ["per maand", n => `Met een gratis account: ${n} nakijkbeurten per week`, n => `Bittertalen kijkt je teksten en gesproken antwoorden na: ${n} nakijkbeurten per dag`],
+  en: ["per month", n => `With a free account: ${n} checks a week`, n => `Bittertalen reviews your writing and spoken answers: ${n} checks a day`],
+  ar: ["شهريًا", n => `بحساب مجاني: ${n} مرات تصحيح أسبوعيًا`, n => `يصحّح Bittertalen كتاباتك وإجاباتك الشفهية: ${n} مرات يوميًا`],
+  tr: ["aylık", n => `Ücretsiz hesapla haftada ${n} kontrol`, n => `Bittertalen yazılarını ve sözlü yanıtlarını günde ${n} kez kontrol eder`],
+  hi: ["प्रति माह", n => `मुफ़्त खाते से हफ़्ते में ${n} बार जाँच`, n => `Bittertalen आपके लिखित और बोले गए जवाबों की रोज़ ${n} बार जाँच करता है`],
+  zh: ["每月", n => `免费账号：每周 ${n} 次批改`, n => `Bittertalen 批改你的写作和口语回答：每天 ${n} 次`],
+  es: ["al mes", n => `Revisiones semanales con una cuenta gratuita: ${n}`, n => `Bittertalen revisa tus textos y respuestas orales: ${n} revisiones al día`],
+  ru: ["в месяц", n => `Проверок в неделю с бесплатным аккаунтом: ${n}`, n => `Bittertalen проверяет ваши тексты и устные ответы. Проверок в день: ${n}`],
 };
 const select = document.querySelector("#language");
+const trialCopy = {
+  nl: n => `${n} eenmalige proefbeurten zonder account in deze browser`,
+  en: n => `${n} one-time trial checks without an account in this browser`,
+  ar: n => `${n} تصحيحات تجريبية لمرة واحدة بدون حساب في هذا المتصفح`,
+  tr: n => `Bu tarayıcıda hesap açmadan bir defaya mahsus ${n} deneme kontrolü`,
+  hi: n => `इस ब्राउज़र में बिना खाते के एक बार मिलने वाली ${n} परीक्षण जाँचें`,
+  zh: n => `无需账号，在此浏览器一次性体验 ${n} 次批改`,
+  es: n => `${n} revisiones de prueba por única vez sin cuenta en este navegador`,
+  ru: n => `${n} пробные проверки однократно без аккаунта в этом браузере`,
+};
 const nodes = [...document.querySelectorAll("[data-t]")].map(node => [node, node.textContent]);
 const alts = [...document.querySelectorAll("[data-alt]")].map(node => [node, node.dataset.alt]);
 const $ = id => document.getElementById(id);
@@ -136,6 +146,8 @@ function render() {
   const active = Boolean(plus?.price && plus?.limit);
   $("free-checks").hidden = !config?.limit;
   if (config?.limit) $("free-checks").textContent = free(config.limit);
+  $("trial-checks").hidden = !config?.free;
+  if (config?.free) $("trial-checks").textContent = trialCopy[lang](config.free);
   for (const [level, card, price, check] of [["A2", "plus-card", "plus-price", "plus-checks"], ["B1", "plus-b1-card", "plus-b1-price", "plus-b1-checks"]]) {
     const offer = plus?.plans?.[level] || (level === "A2" ? plus : null);
     $(card).hidden = !active || !offer?.price;
@@ -225,7 +237,7 @@ render();
   window.addEventListener("resize", () => states.forEach(state => { if (state.animation) finish(state); }));
 }
 
-fetch("/api/config").then(r => {
+fetch("/api/config?v=weekly1").then(r => {
   if (!r.ok) throw new Error("Config unavailable");
   return r.json();
 }).then(value => { config = value; }, () => { config = null; }).then(render).then(homeDay);
