@@ -154,6 +154,33 @@ select.addEventListener("change", () => {
   render();
 });
 render();
+
+// Touch and keyboard use the summary; a mouse can reveal the same information on hover.
+// Native details keep the headings usable even if this script is unavailable.
+{
+  const features = [...document.querySelectorAll(".feature-grid details")];
+  const hover = matchMedia("(hover: hover) and (pointer: fine)");
+  const expand = (card, open) => {
+    for (const feature of features) feature.open = feature === card && open;
+  };
+  for (const card of features) {
+    const summary = card.querySelector("summary");
+    summary.addEventListener("click", event => {
+      event.preventDefault();
+      expand(card, !card.open);
+    });
+    card.addEventListener("pointerenter", event => {
+      if (event.pointerType === "mouse" && hover.matches) expand(card, true);
+    });
+    card.addEventListener("pointerleave", event => {
+      if (event.pointerType === "mouse" && hover.matches && !summary.matches(":focus-visible")) card.open = false;
+    });
+    card.addEventListener("focusout", event => {
+      if (hover.matches && !card.contains(event.relatedTarget) && !card.matches(":hover")) card.open = false;
+    });
+  }
+}
+
 fetch("/api/config").then(r => {
   if (!r.ok) throw new Error("Config unavailable");
   return r.json();

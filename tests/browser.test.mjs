@@ -69,6 +69,62 @@ test('The homepage and the app work in a real browser', async t => {
       assert.equal(await s.p.locator('#qfb').isVisible(), true);
       assert.deepEqual(s.errors, []); await s.ctx.close();
     });
+    await t.test('learning features: compact headings, touch, hover and keyboard', async () => {
+      for (const lang of ['en', 'ru', 'ar']) {
+        const s = await page(browser, base, {lang, reducedMotion: 'reduce'}); await s.go('/');
+        const cards = s.p.locator('.feature-grid details'), descriptions = cards.locator('p');
+        assert.equal(await cards.count(), 7);
+        assert.equal(await s.p.locator('.feature-grid details[open]').count(), 0);
+        for (const description of await descriptions.all()) assert.equal(await description.isHidden(), true);
+        assert.ok((await s.p.locator('.feature-grid').boundingBox()).height < 650, `${lang}: compact list`);
+        await cards.nth(0).locator('summary').tap();
+        assert.equal(await descriptions.nth(0).isVisible(), true);
+        assert.equal(await cards.nth(0).evaluate(e => getComputedStyle(e).backgroundColor), 'rgb(31, 60, 150)');
+        await cards.nth(1).locator('summary').tap();
+        assert.equal(await descriptions.nth(0).isHidden(), true);
+        assert.equal(await descriptions.nth(1).isVisible(), true);
+        assert.equal(await s.p.locator('.feature-grid details[open]').count(), 1);
+        await cards.nth(1).locator('summary').tap();
+        assert.equal(await s.p.locator('.feature-grid details[open]').count(), 0);
+        assert.equal(await overflow(s.p), 0);
+        assert.deepEqual(s.errors, []); await s.ctx.close();
+      }
+      const s = await page(browser, base, {lang: 'en', viewport: {width: 1280, height: 900}, isMobile: false, hasTouch: false, reducedMotion: 'reduce'});
+      await s.go('/');
+      const cards = s.p.locator('.feature-grid details');
+      assert.equal(await s.p.locator('.feature-grid details[open]').count(), 0);
+      const documentTop = e => e.getBoundingClientRect().top + scrollY;
+      const nextRow = await cards.nth(2).evaluate(documentTop);
+      await cards.nth(0).locator('summary').hover();
+      assert.equal(await cards.nth(0).locator('p').isVisible(), true);
+      assert.equal(await cards.nth(0).evaluate(e => getComputedStyle(e).backgroundColor), 'rgb(31, 60, 150)');
+      assert.equal(await cards.nth(2).evaluate(documentTop), nextRow, 'hover keeps the next heading in place');
+      // Moving from the heading into its description must keep the card open.
+      await cards.nth(0).locator('p').hover();
+      assert.equal(await cards.nth(0).locator('p').isVisible(), true);
+      await cards.nth(1).locator('summary').hover();
+      assert.equal(await cards.nth(0).locator('p').isHidden(), true);
+      assert.equal(await cards.nth(1).locator('p').isVisible(), true);
+      await s.p.mouse.move(0, 0);
+      assert.equal(await s.p.locator('.feature-grid details[open]').count(), 0);
+      await cards.nth(0).locator('summary').focus();
+      await s.p.keyboard.press('Enter');
+      assert.equal(await cards.nth(0).locator('p').isVisible(), true);
+      await s.p.keyboard.press('Tab');
+      await s.p.keyboard.press('Space');
+      assert.equal(await cards.nth(0).locator('p').isHidden(), true);
+      assert.equal(await cards.nth(1).locator('p').isVisible(), true);
+      assert.equal(await s.p.locator('.feature-grid details[open]').count(), 1);
+      await s.p.keyboard.press('Space');
+      assert.equal(await s.p.locator('.feature-grid details[open]').count(), 0);
+      assert.equal(await overflow(s.p), 0);
+      assert.deepEqual(s.errors, []); await s.ctx.close();
+      // The disclosure still works with native HTML when scripts are unavailable.
+      const native = await page(browser, base, {javaScriptEnabled: false}); await native.go('/');
+      await native.p.locator('.feature-grid summary').first().tap();
+      assert.equal(await native.p.locator('.feature-grid p').first().isVisible(), true);
+      await native.ctx.close();
+    });
     // the phone's bar: two straight rows in the longest languages too (the name and the main button, then the links with
     // the language and Inloggen), nothing wrapped, overlapping or off the screen
     await t.test('homepage bar on a phone: two rows that fit', async () => {
