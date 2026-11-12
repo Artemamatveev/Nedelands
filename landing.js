@@ -97,7 +97,11 @@ const copy = {
   "Probeer het zelf": ["Try it yourself", "جرّب بنفسك", "Kendin dene", "खुद आज़माएँ", "自己试试", "Pruébalo tú", "Попробуйте сами"],
   "Een echte KNM-vraag, zoals in de app. Kies een antwoord.": ["A real KNM question, as in the app. Choose an answer.", "سؤال KNM حقيقي كما في التطبيق. اختر إجابة.", "Uygulamadaki gibi gerçek bir KNM sorusu. Bir cevap seç.", "ऐप जैसा एक असली KNM प्रश्न। एक उत्तर चुनें।", "一道真实的 KNM 题，和应用里一样。选一个答案。", "Una pregunta real de KNM, como en la app. Elige una respuesta.", "Настоящий вопрос KNM, как в приложении. Выберите ответ."],
   "Zo wordt je tekst nagekeken": ["How your writing is checked", "هكذا يصحّح Bittertalen نصك", "Bittertalen metnini böyle kontrol eder", "Bittertalen आपके लेखन को ऐसे जाँचता है", "Bittertalen 这样批改你的文章", "Así revisa Bittertalen tu texto", "Так Bittertalen проверяет ваш текст"],
-  "Contact": ["Contact", "التواصل", "İletişim", "संपर्क", "联系我们","Contacto","Контакты"]
+  "Contact": ["Contact", "التواصل", "İletişim", "संपर्क", "联系我们","Contacto","Контакты"],
+  "Meer nakijkbeurten op A2.": ["More checks at A2.", "تصحيحات إضافية لمستوى A2.", "A2 düzeyinde daha fazla kontrol.", "A2 स्तर पर ज़्यादा जाँचें।", "更多 A2 批改次数。", "Más revisiones de nivel A2.", "Больше проверок на уровне A2."],
+  "Meer nakijkbeurten op B1, inclusief A2.": ["More checks at B1, including A2.", "تصحيحات إضافية لمستوى B1، وتشمل A2.", "A2 dahil B1 düzeyinde daha fazla kontrol.", "B1 स्तर पर ज़्यादा जाँचें, A2 भी शामिल।", "更多 B1 批改次数，包含 A2。", "Más revisiones de nivel B1, con A2 incluido.", "Больше проверок на уровне B1, включая A2."],
+  "Kies Plus A2": ["Choose Plus A2", "اختر Plus A2", "Plus A2 seç", "Plus A2 चुनें", "选择 Plus A2", "Elegir Plus A2", "Выбрать Plus A2"],
+  "Kies Plus B1": ["Choose Plus B1", "اختر Plus B1", "Plus B1 seç", "Plus B1 चुनें", "选择 Plus B1", "Elegir Plus B1", "Выбрать Plus B1"],
 };
 
 const pricing = {
@@ -132,14 +136,16 @@ function render() {
   const active = Boolean(plus?.price && plus?.limit);
   $("free-checks").hidden = !config?.limit;
   if (config?.limit) $("free-checks").textContent = free(config.limit);
-  $("plus-card").hidden = !active;
-  if (active) {
+  for (const [level, card, price, check] of [["A2", "plus-card", "plus-price", "plus-checks"], ["B1", "plus-b1-card", "plus-b1-price", "plus-b1-checks"]]) {
+    const offer = plus?.plans?.[level] || (level === "A2" ? plus : null);
+    $(card).hidden = !active || !offer?.price;
+    if (!active || !offer?.price) continue;
     const amount = document.createElement("bdi");
-    amount.textContent = `€ ${lang === "en" ? String(plus.price).replace(",", ".") : plus.price}`;
+    amount.textContent = `€ ${lang === "en" ? String(offer.price).replace(",", ".") : offer.price}`;
     const period = document.createElement("small");
     period.textContent = month;
-    $("plus-price").replaceChildren(amount, " ", period);
-    $("plus-checks").textContent = checks(plus.limit);
+    $(price).replaceChildren(amount, " ", period);
+    $(check).textContent = checks(plus.limit);
   }
 }
 select.addEventListener("change", () => {

@@ -11,7 +11,7 @@ export const supaUrl = URL_;
 export const anonKey = ANON;
 // Claude checks per person per day; a proefexamen costs more than one task (see checkCost). Default 5 once Plus can be
 // bought (the Stripe env vars below), 20 until then
-const STRIPE_SET = ["STRIPE_SECRET_KEY", "STRIPE_PRICE", "STRIPE_WEBHOOK_SECRET"].every((k) => (process.env[k] || "").trim());
+const STRIPE_SET = ["STRIPE_SECRET_KEY", "STRIPE_PRICE", "STRIPE_PRICE_B1", "STRIPE_WEBHOOK_SECRET"].every((k) => (process.env[k] || "").trim());
 export const LIMIT = Math.max(1, parseInt(process.env.CHECK_LIMIT, 10) || (STRIPE_SET ? 5 : 20));
 // With Bittertalen Plus (a Stripe subscription, see below) PLUS_LIMIT a day instead
 export const PLUS = Math.max(1, parseInt(process.env.PLUS_LIMIT, 10) || 60);
@@ -162,12 +162,15 @@ export async function takeHand(h) {
 
 // Bittertalen Plus: a monthly Stripe subscription (api/plus.js starts it, api/stripe.js hears from Stripe). Plain fetch
 // to Stripe's API, no SDK. Off unless STRIPE_SECRET_KEY, STRIPE_PRICE (the price id of the monthly price) and
-// STRIPE_WEBHOOK_SECRET are set; PLUS_PRICE is only what the page shows (default "9,99").
+// STRIPE_WEBHOOK_SECRET are set. Prices are fixed in cents so the offer and Checkout agree.
 const SK = (process.env.STRIPE_SECRET_KEY || "").trim();
 export const PRICE = (process.env.STRIPE_PRICE || "").trim();
 export const HOOK = (process.env.STRIPE_WEBHOOK_SECRET || "").trim();
-export const plusOn = !!(accounts && SK && PRICE && HOOK);
-export const PLUS_PRICE = (process.env.PLUS_PRICE || "9,99").trim();
+export const PRICE_B1 = (process.env.STRIPE_PRICE_B1 || "").trim();
+export const PORTAL = (process.env.STRIPE_PORTAL_CONFIG || "").trim();
+export const plusOn = !!(accounts && SK && PRICE && PRICE_B1 && HOOK);
+export const PLANS = Object.freeze({ A2: { price: "9,99", amount: 999 }, B1: { price: "14,99", amount: 1499 } });
+export const PLUS_PRICE = PLANS.A2.price; // compatibility with an older page's config
 // Stripe's form encoding: {a:{b:1}, c:[{d:2}]} -> a[b]=1&c[0][d]=2
 const form = (o, pre = "", out = new URLSearchParams()) => {
   for (const [k, v] of Object.entries(o)) {
@@ -199,6 +202,58 @@ export async function plusOf(uid) {
 // in case the renewal reaches us a little late
 export const LIVE = new Set(["active", "trialing", "past_due"]);
 export const isPlus = (p) => !!p && LIVE.has(p.status) && (!p.until || Date.parse(p.until) + 864e5 > Date.now());
+
+const productId = p => typeof p?.product === "string" ? p.product : p?.product?.id;
+const matchesPrice = (p, level) => !!p && p.currency === "eur" && p.unit_amount === PLANS[level]?.amount &&
+  p.recurring?.interval === "month" && p.recurring.interval_count === 1 && p.recurring.usage_type !== "metered";
+let basePricePromise;
+async function basePrice() {
+  if (!basePricePromise) basePricePromise = stripe(`prices/${encodeURIComponent(PRICE)}`).then(p => {
+    if (!matchesPrice(p, "A2") || !productId(p)) throw new Error("stripe a2_price_mismatch");
+    return p;
+  }).catch(e => { basePricePromise = null; throw e; });
+  return basePricePromise;
+}
+// Configured Stripe prices are verified before Checkout: monthly EUR and the exact advertised amount.
+// A2 and B1 are separate products: the portal requires unique billing intervals within a product.
+export async function priceFor(level) {
+  if (!Object.hasOwn(PLANS, level)) throw new Error("invalid_plan");
+  const a2 = await basePrice();
+  if (level === "B1" && !PRICE_B1) throw new Error("stripe b1_not_configured");
+  const price = level === "A2" ? a2 : await stripe(`prices/${encodeURIComponent(PRICE_B1)}`);
+  if (price.active === false || !matchesPrice(price, level) || !productId(price)) throw new Error("stripe price_mismatch");
+  return price;
+}
+// Entitlements follow the actual recurring price, including changes made in Stripe's portal. Never trust a level
+// posted by the browser or stale subscription metadata. No billing fields are added to client-writable progress.
+export async function subscriptionLevel(sub) {
+  const items = sub.items?.data || [];
+  if (items.length !== 1 || items[0].quantity !== 1) return null;
+  let price = items[0].price;
+  if (typeof price === "string") price = await stripe(`prices/${encodeURIComponent(price)}`);
+  return ["A2", "B1"].find(level => price?.id === (level === "A2" ? PRICE : PRICE_B1) && matchesPrice(price, level)) || null;
+}
+export const coversLevel = (p, level) => isPlus(p) && (p.level === "B1" || p.level === "A2" && level === "A2");
+export async function plusFor(uid) {
+  const p = await plusOf(uid);
+  if (!isPlus(p)) return p && { ...p, level: null };
+  const sub = await stripe(`subscriptions/${encodeURIComponent(p.sub)}`);
+  if (sub.metadata?.uid !== uid || (typeof sub.customer === "string" ? sub.customer : sub.customer?.id) !== p.customer)
+    throw new Error("stripe subscription_owner_mismatch");
+  const end = sub.current_period_end || sub.items?.data?.[0]?.current_period_end;
+  return { ...p, status: sub.status, until: end ? new Date(end * 1000).toISOString() : p.until,
+    ends: !!(sub.cancel_at_period_end || sub.cancel_at), level: await subscriptionLevel(sub) };
+}
+// Only the preconfigured portal may confirm plan changes. Opening a session never changes a subscription itself.
+export async function tierPortal() {
+  if (!PORTAL) throw new Error("stripe portal_not_configured");
+  const config = await stripe(`billing_portal/configurations/${encodeURIComponent(PORTAL)}?expand%5B%5D=features.subscription_update.products`);
+  const update = config.features?.subscription_update;
+  if (!config.active || !update?.enabled || !update.default_allowed_updates?.includes("price") ||
+      ![PRICE, PRICE_B1].every(id => update.products?.some(p => p.prices.includes(id))))
+    throw new Error("stripe portal_price_mismatch");
+  return config.id;
+}
 // Keeps the row: true, "gone" when the user no longer exists (the account was deleted), false when it failed
 export async function putPlus(row) {
   const r = await rest("plus", { method: "POST", headers: { prefer: "resolution=merge-duplicates,return=minimal" }, body: JSON.stringify(row) });

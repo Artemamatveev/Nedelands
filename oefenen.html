@@ -1151,11 +1151,12 @@ async function initCloud(){
 // Optional account (Supabase): the progress on every device, and Claude's checks for signed-in users, a few a day.
 // /api/config says whether accounts are set up and which ways to log in are on; without it the app works as before,
 // on this device only. The library (lib/) only loads when there is, or may be, a session.
-const acc={cfg:null,sb:null,user:null,left:null,plus:null,saved:0,msg:"",step:null,mail:"",load:null};
+const acc={cfg:null,sb:null,user:null,left:null,used:null,plus:null,saved:0,msg:"",step:null,mail:"",load:null};
 // Bittertalen Plus (api/plus.js): while the Stripe subscription runs, Claude checks cfg.plus.limit times a day
 const LIVE=["active","trialing","past_due"];
-const isPlus=()=>!!(acc.cfg&&acc.cfg.plus&&acc.plus&&LIVE.includes(acc.plus.status)&&(!acc.plus.until||Date.parse(acc.plus.until)+864e5>Date.now()));
-const myLimit=()=>acc.cfg?(isPlus()?acc.cfg.plus.limit:acc.cfg.limit):20;
+const isPlus=level=>!!(acc.cfg&&acc.cfg.plus&&acc.plus&&LIVE.includes(acc.plus.status)&&(!acc.plus.until||Date.parse(acc.plus.until)+864e5>Date.now())&&(!level||acc.plus.level==="B1"||acc.plus.level==="A2"&&level==="A2"));
+const myLimit=(level=lvl())=>acc.cfg?(isPlus(level)?acc.cfg.plus.limit:acc.cfg.limit):20;
+const checksLeft=part=>acc.used==null?acc.left:Math.max(0,myLimit(part?["wb","sb"].includes(part)?"B1":"A2":lvl())-acc.used);
 const ACFG="ww-acc-cfg",ALINK="ww-acc"; // the config, and which account this device's progress was last joined with
 const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
 const lsSet=(k,v)=>{try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}};
@@ -1211,7 +1212,7 @@ async function setUser(u){
   if(!uid)lsSet(ALINK,null);
   const guest=progressOwner==="guest" && uid && (S.t || Object.keys(S.items).length) ? progressClone(S) : null;
   clearTimeout(pushT);cloud=null;syncing=null;dirty=false;
-  acc.user=u;acc.left=null;acc.plus=null;acc.saved=0;acc.step=null;acc.sync="";
+  acc.user=u;acc.left=null;acc.used=null;acc.plus=null;acc.saved=0;acc.step=null;acc.sync="";
   if(acc.admin){acc.admin=false;$("site-footer").innerHTML=siteFooter()} acc.adminOf=null;
   if(owner!==progressOwner){
     localSave();openProgress(owner);
@@ -1281,20 +1282,21 @@ function mergeS(a,b){
 async function usage(){
   if(!acc.user||!acc.cfg)return;
   const uid=acc.user.id;
-  if(acc.cfg.plus){const{data,error}=await acc.sb.from("plus").select("status,until,ends").eq("user_id",uid).maybeSingle();if(!error&&acc.user&&acc.user.id===uid)acc.plus=data}
+  if(acc.cfg.plus){try{const r=await fetch("/api/plus",{headers:await authHead()});if(r.ok){const j=await r.json();if(acc.user?.id===uid)acc.plus=j.plus||null}}catch{}}
   const{data,error}=await acc.sb.from("check_usage").select("n").eq("user_id",uid).eq("day",amsDay()).maybeSingle();
-  if(!error){acc.left=myLimit()-((data&&data.n)||0);drawProfile();if($("plusS")&&!$("talk").hidden)plusScreen()}
+  if(!error&&acc.user?.id===uid){acc.used=(data&&data.n)||0;acc.left=checksLeft();drawProfile();if($("plusS")&&!$("talk").hidden)plusScreen()}
 }
 // Stripe tells the server a few seconds after paying (api/stripe.js): look again a few times
-const plusWait=n=>usage().then(()=>{if(isPlus()){plusMsg="Bedankt! Je hebt nu Bittertalen Plus.";if($("plusS"))plusScreen()}else if(n<8)setTimeout(()=>plusWait(n+1),2000)},()=>{});
+const plusWait=(n,level)=>usage().then(()=>{if(isPlus(level)){plusMsg="Bedankt! Je hebt nu Bittertalen Plus.";if($("plusS"))plusScreen()}else if(n<8)setTimeout(()=>plusWait(n+1,level),2000)},()=>{});
 // Back from Stripe (?plus=ok, stop or back; api/plus.js): show the Plus screen
 function plusBack(){
   const q=new URLSearchParams(location.search),v=q.get("plus"); if(!v)return;
-  q.delete("plus");history.replaceState(null,"",location.pathname+(q.toString()?"?"+q:"")+location.hash);
+  const level=["A2","B1"].includes(q.get("plan"))?q.get("plan"):null;
+  q.delete("plus");q.delete("plan");history.replaceState(null,"",location.pathname+(q.toString()?"?"+q:"")+location.hash);
   if(!acc.cfg||!acc.cfg.plus)return;
   setTab("profiel");
   plusMsg=v==="ok"?"Je betaling wordt verwerkt…":v==="stop"?"Betalen is gestopt. Er is niets afgeschreven.":"";
-  plusScreen();if(v==="ok")plusWait(0);
+  plusScreen();if(v==="ok")plusWait(0,level);
 }
 // Another device may have practised in between: look again when the app comes back; send what is waiting when it goes
 document.addEventListener("visibilitychange",()=>{if(!acc.user)return;if(document.visibilityState==="visible"){pull().catch(()=>{});usage()}else if(pushT)push()});
@@ -1488,7 +1490,7 @@ async function authHead(){
   return{Authorization:"Bearer "+t};
 }
 // Why Claude can't grade now, or null
-const noCheck=c=>c==="quota_unavailable"?"Nakijken is tijdelijk niet beschikbaar. Je kunt verder oefenen.":c==="login"?(acc.free===0?`Je gratis nakijkbeurten van vandaag zijn op. Log in bij Profiel: dan kijkt Bittertalen ${acc.cfg?acc.cfg.limit:20} keer per dag na.`:"Log in bij Profiel om dit door Bittertalen te laten nakijken."):c==="limit"?`Je hebt vandaag al ${acc.cfg?myLimit()+" keer":"vaak"} laten nakijken. Morgen kan het weer.${acc.cfg&&acc.cfg.plus&&!isPlus()?` Met Bittertalen Plus ${acc.cfg.plus.limit} keer per dag (Profiel).`:""}`:c==="busy"?"Bittertalen heeft vandaag al heel veel teksten nagekeken. Morgen kan het weer.":null;
+const noCheck=c=>c==="quota_unavailable"?"Nakijken is tijdelijk niet beschikbaar. Je kunt verder oefenen.":c==="login"?(acc.free===0?`Je gratis nakijkbeurten van vandaag zijn op. Log in bij Profiel: dan kijkt Bittertalen ${acc.cfg?acc.cfg.limit:20} keer per dag na.`:"Log in bij Profiel om dit door Bittertalen te laten nakijken."):c==="limit"?`Je hebt vandaag al ${acc.cfg?myLimit()+" keer":"vaak"} laten nakijken. Morgen kan het weer.${acc.cfg&&acc.cfg.plus&&!isPlus(lvl())?` Met Bittertalen Plus ${acc.cfg.plus.limit} keer per dag (Profiel).`:""}`:c==="busy"?"Bittertalen heeft vandaag al heel veel teksten nagekeken. Morgen kan het weer.":null;
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const answer=(v,t)=>t==="past"?v[2]:t==="pastpl"?v[3]:t==="pp"?v[4]:v[5];
 
@@ -2189,7 +2191,7 @@ const sbTasks=(nk,nm)=>{const a=byFresh(shuffle(ITEMS.filter(x=>x.sec==="sb")));
 const byFresh=a=>a.map(q=>[q,seenN(q)]).sort((x,y)=>x[1]-y[1]).map(x=>x[0]);
 function examCheckLimit(e){
   const cost=e==="wr"?2:e==="wb"?4:e==="sp"||e==="sb"?6:0; // as checkCost() in api/_supa.js
-  return cost&&acc.cfg&&(!acc.user||acc.left!=null&&acc.left<cost)?cost:0;
+  return cost&&acc.cfg&&(!acc.user||checksLeft(e)!=null&&checksLeft(e)<cost)?cost:0;
 }
 // Schrijven and Spreken are graded by Claude: without a login, or with too few checks left today, say so first
 function startExam(e,go){
@@ -2318,7 +2320,7 @@ function drawProfile(){
   if(c){
     if(u){
       if(c.plus)b=ban("aplus","plus","Bittertalen Plus",plusLine());
-      h=`<h3 class="lh">Account</h3><div class="pg"><p class="pinfo"><span role="status">${acc.sync||"Wacht op synchronisatie"}</span><br>Nakijken vandaag: ${acc.left==null?"…":`nog ${Math.max(0,acc.left)} van de ${myLimit()}`}</p>`
+      h=`<h3 class="lh">Account</h3><div class="pg"><p class="pinfo"><span role="status">${acc.sync||"Wacht op synchronisatie"}</span><br>Nakijken vandaag: ${checksLeft()==null?"…":`nog ${checksLeft()} van de ${myLimit()}`}</p>`
         +(L.includes("passkey")?`<button type="button" class="pact" id="apk">Passkey toevoegen</button>`:"")
         +`<button type="button" class="pact" id="aout">Uitloggen</button><button type="button" class="pact bad" id="adel">Account verwijderen</button></div>`;
     }else if(L.length)b=ban("alogin","me","Inloggen of account maken","Bewaar je voortgang en laat je teksten nakijken.");
@@ -2583,7 +2585,7 @@ function examGate(e,preview=false){
   const details=preview?`<h3 id="exam-preview-title" tabindex="-1"><span>Proefexamen</span> · <span>${PART[e]}</span></h3>
     <p class="note">${draft?`<span>Je hebt een opgeslagen concept.</span>`:`<span>${exam.min} min</span> · ${countPrefix}${exam.n} <span>${countLabel}</span><br><span>De timer start zodra je begint.</span>`}</p>
     <p class="note"><span>Stoppen? Kies × en bevestig.</span></p>`:"";
-  const warning=cost?`<p class="note">${acc.user?`Je kunt vandaag nog ${Math.max(0,acc.left)} keer laten nakijken, en dit proefexamen telt als ${cost}. Zonder nakijken zie je aan het eind alleen de voorbeeldantwoorden.`
+  const warning=cost?`<p class="note">${acc.user?`Je kunt vandaag nog ${Math.max(0,checksLeft(e))} keer laten nakijken, en dit proefexamen telt als ${cost}. Zonder nakijken zie je aan het eind alleen de voorbeeldantwoorden.`
     :"Je bent niet ingelogd. Dan kijkt Bittertalen je antwoorden niet na, en zie je aan het eind alleen de voorbeeldantwoorden."}</p>`:"";
   d.innerHTML=`${details}${warning}<div class="two"><button class="ghost" id="gback">Terug</button>
     ${cost&&!acc.user?`<button class="ghost" id="glog">Inloggen</button>`:""}
@@ -2755,7 +2757,7 @@ async function nakijken(tasks,part){
   const r=await fetch("/api/check",{method:"POST",headers:{"Content-Type":"application/json",...h},body:JSON.stringify(part?{part,tasks}:{tasks})});
   const j=await r.json().catch(()=>({}));
   if(typeof j.free==="number")acc.free=j.free; // checks left today without an account
-  if(acc.user){if(typeof j.left==="number")acc.left=j.left; else if(j.error==="limit")acc.left=0}
+  if(acc.user){if(typeof j.left==="number"){acc.left=j.left;acc.used=(j.limit||myLimit(part?["wb","sb"].includes(part)?"B1":"A2":lvl()))-j.left} else if(j.error==="limit"){acc.left=0;acc.used=Math.max(acc.used||0,j.limit||myLimit())}}
   if(!r.ok||!Array.isArray(j.tasks))throw{code:j.error||"failed"};
   return j.tasks;
 }
@@ -3410,7 +3412,7 @@ function uitScreen(y=0){
 let plusMsg="";
 const plusDay=t=>new Date(t).toLocaleDateString("nl-NL",{day:"numeric",month:"long"});
 const plusLine=()=>{const p=acc.plus,c=acc.cfg.plus;
-  if(!isPlus())return`${c.limit} keer per dag nakijken voor € ${c.price} per maand`;
+  if(!isPlus())return`Plus A2 · € ${c.plans?.A2?.price||c.price} / Plus B1 · € ${c.plans?.B1?.price||"14,99"}`;
   return p.status==="past_due"?"Je betaling is niet gelukt":!p.until?"Actief":p.ends?`Loopt af op ${plusDay(p.until)}`:`Actief · verlengt op ${plusDay(p.until)}`};
 // Kies je avatar: a grid of the avatars, the chosen one with an orange ring; a tap picks it and goes back to Profiel
 function avScreen(){
@@ -3426,24 +3428,30 @@ function plusScreen(){
   closePop();hush();TK=null;$("card").innerHTML="";
   $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;window.scrollTo(0,0);
   tBack(TABN[tab],home);
-  const c=acc.cfg.plus,p=acc.plus,on=isPlus();
+  const c=acc.cfg.plus,p=acc.plus,on=isPlus(),plans=c.plans||{A2:{price:c.price}};
   $("tbody").innerHTML=`<h2 id="plusS">Bittertalen Plus</h2>`
-    +(on?(p.status==="past_due"?"":`<p class="sub">${plusLine()}</p>`)
-      :`<p class="sub">Bittertalen kijkt je teksten en antwoorden ${c.limit} keer per dag na, in plaats van ${acc.cfg.limit}.</p><p class="sub">Al het andere in Bittertalen blijft gratis.</p><p class="sub">€ ${c.price} per maand. Je kunt elke maand opzeggen.</p>`)
+    +(on?`<p class="sub"><b>Bittertalen Plus ${p.level||""}</b> · ${plusLine()}</p>`:"")
+    +`<p class="sub">Bittertalen kijkt je teksten en antwoorden ${c.limit} keer per dag na, in plaats van ${acc.cfg.limit}.</p><p class="sub">Al het andere in Bittertalen blijft gratis.</p>`
     +(on&&p.status==="past_due"?`<p class="note">Je laatste betaling is niet gelukt. Stripe probeert het nog een paar keer.</p>`:"")
     +(plusMsg?`<p class="note" role="status">${esc(plusMsg)}</p>`:"")
-    +(!acc.user?`<p class="note">Log in om Plus te nemen.</p><button class="btn wide" id="pgo">Inloggen</button>`
-      :on||p&&p.status!=="canceled"?`<button class="ghost wide" id="pman">Abonnement beheren</button><p class="note">Opzeggen, je betaalmethode veranderen en je facturen: bij Abonnement beheren.</p>`
-      :`<button class="btn wide" id="pbuy">Word Plus</button>`)
+    +["A2","B1"].filter(level=>plans[level]).map(level=>`<section class="list" data-plus-plan="${level}"><div style="padding:16px"><h3>Bittertalen Plus ${level}</h3>
+      <p>${level==="A2"?"Meer nakijkbeurten op A2.":"Meer nakijkbeurten op B1, inclusief A2."}</p>
+      <p><b dir="ltr">€ ${esc(plans[level].price)}</b> <span>per maand</span></p>
+      <p class="note">Je kunt elke maand opzeggen.</p>
+      ${!acc.user?`<button class="btn wide" data-plus-login>${level==="A2"?"Kies Plus A2":"Kies Plus B1"}</button>`
+        :on?level==="B1"&&p.level==="A2"?`<button class="btn wide" data-plus-buy="B1">Overstappen naar Plus B1</button>`:""
+        :p&&p.status!=="canceled"?"":`<button class="btn wide" data-plus-buy="${level}">${level==="A2"?"Kies Plus A2":"Kies Plus B1"}</button>`}
+      </div></section>`).join("")
+    +(acc.user&&(on||p&&p.status!=="canceled")?`<button class="ghost wide" id="pman">Abonnement beheren</button><p class="note">Opzeggen, je betaalmethode veranderen en je facturen: bij Abonnement beheren.</p>`:"")
     +`<p class="note">Je betaalt bij Stripe. Bittertalen ziet je kaart- of bankgegevens niet.</p><p class="note"><a href="/privacy">Privacyverklaring</a></p>`;
-  const go=async(w,b)=>{b.disabled=true;plusMsg="";
-    try{const r=await fetch("/api/plus",{method:"POST",headers:{"Content-Type":"application/json",...await authHead()},body:JSON.stringify({go:w})});
+  const go=async(w,b,level)=>{b.disabled=true;document.querySelectorAll("[data-plus-buy],#pman").forEach(x=>x.disabled=true);plusMsg="";
+    try{const r=await fetch("/api/plus",{method:"POST",headers:{"Content-Type":"application/json",...await authHead()},body:JSON.stringify({go:w,...(level?{level}:{})})});
       const j=await r.json().catch(()=>({}));if(!r.ok||!j.url)throw 0;
       if(pushT)push(); location.href=j.url}
     catch(e){plusMsg="Dat lukt nu niet. Probeer het later opnieuw.";plusScreen()}};
-  if($("pbuy"))$("pbuy").onclick=()=>go("buy",$("pbuy"));
+  document.querySelectorAll("[data-plus-buy]").forEach(b=>b.onclick=()=>go("buy",b,b.dataset.plusBuy));
   if($("pman"))$("pman").onclick=()=>go("manage",$("pman"));
-  if($("pgo"))$("pgo").onclick=()=>{acc.msg="";welcome()};
+  document.querySelectorAll("[data-plus-login]").forEach(b=>b.onclick=()=>{acc.msg="";welcome()});
 }
 function onaScreen(){
   closePop();hush();TK=null;$("card").innerHTML="";
@@ -3918,7 +3926,7 @@ if(OLD==="nedelands.vercel.app")location.replace(NEWURL); else if(OLD==="bittert
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="f9ed76769a";
+const UIV="348ca2c6d3";
 let uiP=null;
 function uiLoaded(){ // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});

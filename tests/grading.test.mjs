@@ -24,8 +24,8 @@ async function handler(options={}){
     useFree:async(_id,cost)=>{usage.push(cost);return options.freeLeft??1},
     useTotal:async cost=>{quotas.push(cost);return 'total' in options?options.total:399},
     PLUS:60,plusOn:!!options.pay,
-    plusOf:async()=>{if(options.plusFails)throw Error('down');return options.plan??null},
-    isPlus:p=>!!p&&['active','trialing','past_due'].includes(p.status)
+    plusFor:async()=>{if(options.plusFails)throw Error('down');return options.plan??null},
+    coversLevel:(p,level)=>!!p&&['active','trialing','past_due'].includes(p.status)&&(p.level==='B1'||(p.level||'A2')==='A2'&&level==='A2')
   };
   const context=vm.createContext({process:{env:{ANTHROPIC_API_KEY:'test-only'}},console:{info:x=>logs.push(x),error:x=>logs.push(x)}});
   const sdk=new vm.SyntheticModule(['default'],function(){this.setExport('default',Anthropic)},{context});
@@ -119,4 +119,17 @@ test('B1 rules: a sentence task needs both points, an e-mail 70% with inhoud 2, 
   assert.equal(k.res.body.tasks[0].passed,true);
   const k1=await handler({part:'sb',kind:'k',scores:{inhoud:1,grammatica:1}});
   assert.equal(k1.res.body.tasks[0].passed,false);
+});
+
+test('A2 Plus cannot grant B1 paid checks; B1 Plus covers both levels',async()=>{
+  for(const part of ['wb','sb']){
+    const a2=await handler({pay:true,plan:{status:'active',level:'A2'},part});
+    assert.deepEqual(a2.lims,[20]);assert.deepEqual(a2.quotas,[1]);
+    const b1=await handler({pay:true,plan:{status:'active',level:'B1'},part});
+    assert.deepEqual(b1.lims,[60]);assert.deepEqual(b1.quotas,[]);
+  }
+  const a2=await handler({pay:true,plan:{status:'active',level:'B1'}});
+  assert.deepEqual(a2.lims,[60]);
+  const unknown=await handler({pay:true,plan:{status:'active',level:'unknown'},part:'wb'});
+  assert.deepEqual(unknown.lims,[20]);
 });
