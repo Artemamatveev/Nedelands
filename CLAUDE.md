@@ -12,6 +12,10 @@ out the middle link; the browser test measures it in the longest languages). The
 start as compact headings in native `details`: tapping or keyboard activation opens one description and colors that
 card blue; a fine mouse pointer also opens it on hover and closes it on leaving. No card starts highlighted. Keep the
 summary's icon and disclosure indicator, all eight languages, and the native fallback without JavaScript.
+Descriptions expand and collapse over 360/280 ms with height and opacity, reversing from their current frame on rapid
+interaction. Reduced motion skips the animation; resize settles it. Phone cards have no border; keyboard focus stays visible.
+Scroll anchoring is paused during disclosure motion, and feature-section entrance motion settles on hover so the heading
+cannot move away from a stationary pointer.
 How the two pages hand over (`tests/browser.test.mjs` checks it):
 the site always opens with the homepage in a browser, on phones, tablets and computers, including returning learners
 with saved progress or an account (the user's wish, 12 November 2026). The bar's button leads into the app. On a computer,

@@ -104,7 +104,7 @@
         observer.unobserve(el);
         if (revealed.has(el)) continue;
         revealed.add(el);
-        if (el.contains(document.activeElement) || location.hash === '#' + el.id) continue;
+        if (el.contains(document.activeElement) || location.hash === '#' + el.id || el.matches('#oefenvormen:hover')) continue;
         const cards = [...el.querySelectorAll('.ways > li, .pricing > .card')].filter(node => !node.hidden);
         const tween = gsap.from(cards.length ? cards : [el], {
           y: 24, opacity: 0, duration: 0.85, stagger: 0.075, ease: 'power3.out',
@@ -119,11 +119,18 @@
       for (const [el, tween] of pending) if (el.contains(event.target)) tween.progress(1);
     };
     document.addEventListener('focusin', finishFocused);
+    // A moving entrance must never carry a disclosure away from a stationary mouse.
+    const finishFeatureHover = event => {
+      const section = event.target.closest?.('#oefenvormen');
+      if (section) pending.get(section)?.progress(1);
+    };
+    document.addEventListener('pointerover', finishFeatureHover);
     return () => {
       visibility.disconnect(); observer.disconnect();
       if (motionButton) { motionButton.hidden = true; motionButton.removeEventListener('click', toggleMotion); }
       document.removeEventListener('visibilitychange', syncMotion);
       document.removeEventListener('focusin', finishFocused);
+      document.removeEventListener('pointerover', finishFeatureHover);
       if (onPointer) hero.removeEventListener('pointermove', onPointer);
       if (resetTilt) hero.removeEventListener('pointerleave', resetTilt);
       for (const tween of pending.values()) tween.progress(1).kill();

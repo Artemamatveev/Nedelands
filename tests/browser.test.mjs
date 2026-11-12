@@ -76,6 +76,7 @@ test('The homepage and the app work in a real browser', async t => {
         assert.equal(await cards.count(), 7);
         assert.equal(await s.p.locator('.feature-grid details[open]').count(), 0);
         for (const description of await descriptions.all()) assert.equal(await description.isHidden(), true);
+        assert.equal(await cards.first().evaluate(e => getComputedStyle(e).borderTopWidth), '0px');
         assert.ok((await s.p.locator('.feature-grid').boundingBox()).height < 650, `${lang}: compact list`);
         await cards.nth(0).locator('summary').tap();
         assert.equal(await descriptions.nth(0).isVisible(), true);
@@ -93,6 +94,7 @@ test('The homepage and the app work in a real browser', async t => {
       await s.go('/');
       const cards = s.p.locator('.feature-grid details');
       assert.equal(await s.p.locator('.feature-grid details[open]').count(), 0);
+      assert.equal(await cards.first().evaluate(e => getComputedStyle(e).borderTopWidth), '1px');
       const documentTop = e => e.getBoundingClientRect().top + scrollY;
       const nextRow = await cards.nth(2).evaluate(documentTop);
       await cards.nth(0).locator('summary').hover();
@@ -124,6 +126,60 @@ test('The homepage and the app work in a real browser', async t => {
       await native.p.locator('.feature-grid summary').first().tap();
       assert.equal(await native.p.locator('.feature-grid p').first().isVisible(), true);
       await native.ctx.close();
+    });
+    await t.test('learning features: smooth reversal, switching and reduced motion', async () => {
+      const s = await page(browser, base, {lang: 'en'}); await s.go('/');
+      const cards = s.p.locator('.feature-grid details'), first = cards.first(), panel = first.locator('p');
+      const settle = () => s.p.waitForFunction(() => [...document.querySelectorAll('.feature-grid p')].every(e => !e.getAnimations().some(a => a.playState === 'running')));
+      const collapsed = (await first.boundingBox()).height;
+      await first.locator('summary').tap();
+      assert.ok(await panel.evaluate(e => e.getAnimations().some(a => a.effect.getKeyframes().some(k => 'height' in k))), 'description animates its height');
+      // Reverse before the opening animation ends, then reopen while it is closing.
+      await first.locator('summary').tap();
+      await first.locator('summary').tap();
+      await settle();
+      assert.equal(await panel.isVisible(), true);
+      assert.ok((await first.boundingBox()).height > collapsed + 24);
+      assert.equal(await panel.evaluate(e => e.style.overflow), '', 'settled content is not clipped');
+      assert.equal(await first.evaluate(e => getComputedStyle(e).borderTopWidth), '0px');
+      await cards.nth(1).locator('summary').tap(); await settle();
+      assert.equal(await panel.isHidden(), true);
+      assert.equal(await cards.nth(1).locator('p').isVisible(), true);
+      assert.equal(await s.p.locator('.feature-grid details[open]').count(), 1);
+      await cards.nth(1).locator('summary').tap(); await settle();
+      assert.equal(await s.p.locator('.feature-grid details[open]').count(), 0);
+      assert.equal((await first.boundingBox()).height, collapsed);
+      await first.locator('summary').tap();
+      await s.p.emulateMedia({reducedMotion: 'reduce'}); await settle();
+      assert.equal(await panel.isVisible(), true);
+      await first.locator('summary').tap();
+      assert.equal(await panel.isHidden(), true);
+      assert.equal(await panel.evaluate(e => e.getAnimations().length), 0);
+      assert.equal(await overflow(s.p), 0);
+      assert.deepEqual(s.errors, []); await s.ctx.close();
+      const d = await page(browser, base, {viewport: {width: 1280, height: 900}, isMobile: false, hasTouch: false}); await d.go('/');
+      const heading = d.p.locator('.feature-grid summary').first(), description = d.p.locator('.feature-grid p').first();
+      await d.p.evaluate(() => {
+        window.featureHoverTrace = [];
+        const card = document.querySelector('.feature-grid details');
+        for (const type of ['pointerenter', 'pointerleave']) card.addEventListener(type, e => {
+          window.featureHoverTrace.push({type, x: e.clientX, y: e.clientY, top: card.getBoundingClientRect().top, scroll: scrollY, open: card.open});
+        });
+      });
+      await heading.hover();
+      await d.p.waitForFunction(() => document.querySelector('.feature-grid details').open);
+      await d.p.mouse.move(0, 0);
+      await heading.hover();
+      await d.p.waitForFunction(() => !document.querySelector('.feature-grid p').getAnimations().some(a => a.playState === 'running'));
+      assert.equal(await description.isVisible(), true, JSON.stringify(await d.p.evaluate(() => {
+        const card = document.querySelector('.feature-grid details'), panel = card.querySelector('p');
+        return {events: window.featureHoverTrace, open: card.open, closing: card.className, hover: card.matches(':hover'), height: panel.getBoundingClientRect().height, animations: panel.getAnimations().map(a => ({state: a.playState, time: a.currentTime}))};
+      })));
+      // Resizing during a close must not leave a fixed height or a stale closing state behind.
+      await d.p.mouse.move(0, 0); await d.p.setViewportSize({width: 1100, height: 900});
+      await d.p.waitForFunction(() => !document.querySelector('.feature-grid details').open);
+      assert.equal(await description.isHidden(), true);
+      assert.deepEqual(d.errors, []); await d.ctx.close();
     });
     // the phone's bar: two straight rows in the longest languages too (the name and the main button, then the links with
     // the language and Inloggen), nothing wrapped, overlapping or off the screen
