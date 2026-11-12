@@ -93,11 +93,12 @@ test('The homepage and the app work in a real browser', async t => {
       await s.go('/');
       const cards = s.p.locator('.feature-grid details');
       assert.equal(await s.p.locator('.feature-grid details[open]').count(), 0);
-      const nextRow = await cards.nth(2).boundingBox();
+      const documentTop = e => e.getBoundingClientRect().top + scrollY;
+      const nextRow = await cards.nth(2).evaluate(documentTop);
       await cards.nth(0).locator('summary').hover();
       assert.equal(await cards.nth(0).locator('p').isVisible(), true);
       assert.equal(await cards.nth(0).evaluate(e => getComputedStyle(e).backgroundColor), 'rgb(31, 60, 150)');
-      assert.equal((await cards.nth(2).boundingBox()).y, nextRow.y, 'hover keeps the next heading in place');
+      assert.equal(await cards.nth(2).evaluate(documentTop), nextRow, 'hover keeps the next heading in place');
       // Moving from the heading into its description must keep the card open.
       await cards.nth(0).locator('p').hover();
       assert.equal(await cards.nth(0).locator('p').isVisible(), true);
