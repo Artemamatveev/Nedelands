@@ -15,7 +15,9 @@ try {
   client = new pg.Client({
     host: url.hostname, port: Number(url.port || 5432), user: decodeURIComponent(url.username),
     password: decodeURIComponent(url.password), database: decodeURIComponent(url.pathname.slice(1)),
-    ssl: { rejectUnauthorized: true }, connectionTimeoutMillis: 15000, query_timeout: 30000,
+    // Supabase's published root CA; TLS and hostname verification stay enabled.
+    ssl: { rejectUnauthorized: true, ca: fs.readFileSync(new URL('./supabase-prod-ca.crt', import.meta.url), 'utf8') },
+    connectionTimeoutMillis: 15000, query_timeout: 30000,
     application_name: 'bittertalen-weekly-allowance-migration'
   });
   phase = 'connect'; await client.connect();
