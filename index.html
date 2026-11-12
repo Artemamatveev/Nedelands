@@ -21,25 +21,14 @@
 <link rel="manifest" href="/manifest.json">
 <link rel="stylesheet" href="/landing.css?v=footer8">
 <script>
-// Keep existing sign-in, payment, migration and installed app entry points working.
-// Someone who already practises on this device (their progress is here) goes straight to the app on a phone or tablet:
-// the app lived at "/" before, so old bookmarks point here. "?home" (Profiel's Website row) shows this page all the same.
-// On a computer the site always opens with this page (the user's wish): the app's menu has Home as its first row, and
-// The header offers a daily lesson and a separate account sign-in link.
+// Browser visits start with the homepage, including returning learners on phones and tablets.
+// Sign-in, payment, migration, legacy aliases and installed app launches still enter the app.
 (() => {
   const q = new URLSearchParams(location.search);
   const alias = /^(bittertalen|nedelands)\.vercel\.app$/.test(location.hostname);
-  let mine = false;
-  try {
-    for (let i = 0; i < localStorage.length; i++) {
-      const k = localStorage.key(i);
-      if (k === "ww-v1" || k === "ww-acc" || k.startsWith("ww-progress-v2:")) { mine = true; break; }
-    }
-  } catch {}
   const installed = navigator.standalone || matchMedia("(display-mode: standalone)").matches;
-  const desktop = matchMedia("(min-width:960px) and (hover:hover) and (pointer:fine)").matches && !installed; // as the app's data-desktop
   if (alias || q.has("code") || q.has("error") || q.has("plus") || location.hash.startsWith("#verhuis=") ||
-      installed || (mine && !desktop && !q.has("home") && !/bot|crawl|spider|slurp|lighthouse/i.test(navigator.userAgent))) {
+      installed) {
     location.replace("/oefenen" + location.search + location.hash);
   } else if (q.has("home") && q.size === 1) history.replaceState(null, "", "/" + location.hash);
 })();

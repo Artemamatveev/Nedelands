@@ -118,9 +118,11 @@ test('The homepage and the app work in a real browser', async t => {
       await s.p.click('#enter'); await s.p.waitForSelector('#plan .step'); await s.p.waitForTimeout(800);
       assert.equal(await s.p.locator('#welcome').isHidden(), true);
       assert.equal(new URL(s.p.url()).search, '');
-      // someone who practises here goes from / straight to the app; ?home shows the homepage all the same
-      await s.go('/'); await s.p.waitForSelector('#plan .step');
-      assert.equal(new URL(s.p.url()).pathname, '/oefenen');
+      // returning learners on a phone also start with the homepage; saved progress never skips it
+      await s.go('/'); await s.p.waitForSelector('.hero');
+      assert.equal(new URL(s.p.url()).pathname, '/');
+      await s.p.reload(); await s.p.waitForSelector('.hero');
+      assert.equal(new URL(s.p.url()).pathname, '/');
       await s.go('/?home'); await s.p.waitForSelector('.hero');
       assert.equal(new URL(s.p.url()).pathname + new URL(s.p.url()).search, '/');
       // on a computer the site always opens with the homepage, also for someone who practises here: the bar's button
@@ -137,6 +139,10 @@ test('The homepage and the app work in a real browser', async t => {
       assert.equal(await s.p.locator('#tabs a.hm').count(), 0); // the phone page is the homepage here: no menu
       // back from a login or a payment: the app takes over
       await s.go('/?plus=stop'); await s.p.waitForSelector('#plan .step');
+      assert.equal(new URL(s.p.url()).pathname, '/oefenen');
+      // an installed app still enters practice, even when an older home-screen shortcut starts at /
+      await s.p.addInitScript(() => Object.defineProperty(navigator, 'standalone', {value:true}));
+      await s.go('/'); await s.p.waitForSelector('#plan .step');
       assert.equal(new URL(s.p.url()).pathname, '/oefenen');
       assert.deepEqual(s.errors, []); await s.ctx.close();
     });
