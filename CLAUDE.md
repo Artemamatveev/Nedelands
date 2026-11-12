@@ -9,12 +9,11 @@ wish, November 2026). The bar: the name (30 px, 28 on a phone), the page's links
 on a phone two straight rows, the name with the button, then the links with the language and Inloggen (two wrapping flex
 rows: a grid tied the second row to the button's width; the type follows the screen's width and the narrowest phones leave
 out the middle link; the browser test measures it in the longest languages). How the two pages hand over (`tests/browser.test.mjs` checks it):
-on a phone or tablet the homepage sends to the app whoever already practises on this device (a `ww-v1`, `ww-acc` or
-`ww-progress-v2:` key; on a computer the site always opens with the homepage, the user's wish: the bar's button leads
-into the app, and the app's menu has "Home" as its first row, `.tabs .hm`, a link to "/" that the
-lens never covers, with Profiel's Website row hidden; the app lived at "/" before, so old bookmarks and the "← Bittertalen" links of /over and /privacy point there),
-an installed app, the old addresses, and returns from a login (`?code`, `?error`, the handoff's `?h`), from Stripe
-(`?plus`) and from a move (`#verhuis=`), each with its address. `/?home` (Profiel's Website row, hidden in an installed
+the site always opens with the homepage in a browser, on phones, tablets and computers, including returning learners
+with saved progress or an account (the user's wish, 12 November 2026). The bar's button leads into the app. On a computer,
+the app's menu has "Home" as its first row, `.tabs .hm`, a link to "/" that the lens never covers, with Profiel's Website
+row hidden. Installed apps, old addresses and sign-in (`?code`, `?error`, with the handoff's `?h`), Stripe (`?plus`)
+or migration (`#verhuis=`) callbacks still enter the app directly, preserving their query and hash. `/?home` (Profiel's Website row, hidden in an installed
 app, which can't show the website) shows the homepage all the same. The "← Bittertalen" links of /over and /privacy go back to
 /oefenen for someone who came from the app. Arriving from the homepage (`?open=today`, `a2`,
 `b1`, `sample`) marks the login window as seen (`ww-welcome`): the homepage already offers Inloggen, so someone who
