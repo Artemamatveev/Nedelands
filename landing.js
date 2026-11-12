@@ -173,6 +173,7 @@ render();
     if (state.expanded === open) return;
     state.expanded = open;
     const { card, panel } = state;
+    card.classList.add("is-animating");
     const style = getComputedStyle(panel);
     // Start from the current frame when a tap or pointer reverses an unfinished animation.
     const from = card.open ? {
@@ -191,7 +192,6 @@ render();
       paddingBottom: open ? getComputedStyle(panel).paddingBottom : "0px"
     };
     panel.style.overflow = "hidden";
-    card.classList.add("is-animating");
     const animation = panel.animate([from, to], {
       duration: open ? 360 : 280, easing: "cubic-bezier(.22,1,.36,1)", fill: "both"
     });
