@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import {root} from './app-harness.mjs';
 
 async function handler(options={}){
-  const usage=[],quotas=[],logs=[],lims=[];let modelCalls=0;
+  const usage=[],quotas=[],logs=[],lims=[],periods=[],stamps=[];let modelCalls=0;
   class APIError extends Error{}
   class AuthenticationError extends APIError{}
   class RateLimitError extends APIError{}
@@ -19,9 +19,9 @@ async function handler(options={}){
   }
   const values={
     accounts:options.accounts??true,caller:async()=>options.guest?null:{id:'test-user'},
-    checkCost:n=>Math.max(1,Math.ceil(n/3)),LIMIT:20,FREE:2,visitor:()=> 'test-visitor',sameOrigin:()=>true,
-    useChecks:async(_id,cost,lim)=>{usage.push(cost);lims.push(lim);return options.userLeft??19},
-    useFree:async(_id,cost)=>{usage.push(cost);return options.freeLeft??1},
+    checkCost:n=>Math.max(1,Math.ceil(n/3)),LIMIT:7,FREE:2,visitor:()=> 'test-visitor',sameOrigin:()=>true,
+    useChecks:async(_id,cost,lim,period,stamp)=>{usage.push(cost);lims.push(lim);periods.push(period);stamps.push(stamp);return options.userLeft??lim-cost},
+    useFree:async(_id,cost,stamp)=>{usage.push(cost);stamps.push(stamp);return options.freeLeft??1},
     useTotal:async cost=>{quotas.push(cost);return 'total' in options?options.total:399},
     PLUS:60,plusOn:!!options.pay,
     plusFor:async()=>{if(options.plusFails)throw Error('down');return options.plan??null},
@@ -32,10 +32,10 @@ async function handler(options={}){
   const supa=new vm.SyntheticModule(Object.keys(values),function(){for(const [key,value]of Object.entries(values))this.setExport(key,value)},{context});
   const module=new vm.SourceTextModule(fs.readFileSync(new URL('api/check.js',root),'utf8'),{context});
   await module.link(name=>name==='@anthropic-ai/sdk'?sdk:supa);await module.evaluate();
-  const req={method:'POST',headers:{host:'example.test',origin:'https://example.test'},body:{...(options.part?{part:options.part}:{}),tasks:[{...(options.part?{kind:options.kind||'z'}:{}),task:'Stuur een bericht',text:'Ik kom later. Personal test content.'}]}};
+  const req={method:'POST',headers:{host:'example.test',origin:'https://example.test'},body:{...(options.part?{part:options.part}:{}),tasks:Array.from({length:options.tasksCount||1},()=>({...(options.part?{kind:options.kind||'z'}:{}),task:'Stuur een bericht',text:'Ik kom later. Personal test content.'}))}};
   const res={statusCode:200,status(n){this.statusCode=n;return this},json(body){this.body=body;return this}};
   await module.namespace.default(req,res);
-  return {res,usage,quotas,logs,lims,modelCalls};
+  return {res,usage,quotas,logs,lims,periods,stamps,modelCalls};
 }
 
 test('Missing account configuration blocks the paid provider',async()=>{
@@ -65,7 +65,7 @@ test('The real quota reader rejects JSON values that could otherwise coerce into
   for(const value of [null,'400',{},[]]){
     const context=vm.createContext({process:{env:{SUPABASE_URL:'https://example.test',SUPABASE_ANON_KEY:'test',SUPABASE_SERVICE_ROLE_KEY:'test'}},fetch:async()=>({ok:true,json:async()=>value})});
     const source=new vm.SourceTextModule(fs.readFileSync(new URL('api/_supa.js',root),'utf8'),{context});
-    const cryptoModule=new vm.SyntheticModule(['createHash'],function(){this.setExport('createHash',()=>{})},{context});
+    const cryptoModule=new vm.SyntheticModule(['createHash','createHmac','randomBytes','timingSafeEqual'],function(){for(const n of ['createHash','createHmac','randomBytes','timingSafeEqual'])this.setExport(n,()=>{})},{context});
     await source.link(()=>cryptoModule);await source.evaluate();
     await assert.rejects(source.namespace.useTotal(1));
     await assert.rejects(source.namespace.useChecks('user',1));
@@ -73,18 +73,25 @@ test('The real quota reader rejects JSON values that could otherwise coerce into
   }
 });
 
-test('Without Plus a logged-in learner gets CHECK_LIMIT a day; with Plus PLUS_LIMIT, outside the global cap',async()=>{
-  const free=await handler({pay:true,plan:null});assert.equal(free.res.statusCode,200);assert.deepEqual(free.lims,[20]);assert.deepEqual(free.quotas,[1]);
-  const plus=await handler({pay:true,plan:{status:'active'}});assert.equal(plus.res.statusCode,200);assert.deepEqual(plus.lims,[60]);assert.deepEqual(plus.quotas,[]);
-  const ended=await handler({pay:true,plan:{status:'canceled'}});assert.deepEqual(ended.lims,[20]);
-  const off=await handler({pay:false,plan:{status:'active'}});assert.deepEqual(off.lims,[20]);
+test('Free accounts use the weekly allowance; covered Plus levels keep the daily allowance',async()=>{
+  const free=await handler({pay:true,plan:null});assert.equal(free.res.statusCode,200);assert.deepEqual(free.lims,[7]);assert.deepEqual(free.periods,['week']);assert.deepEqual(free.quotas,[1]);
+  const plus=await handler({pay:true,plan:{status:'active'}});assert.equal(plus.res.statusCode,200);assert.deepEqual(plus.lims,[60]);assert.deepEqual(plus.periods,['day']);assert.deepEqual(plus.quotas,[]);
+  const ended=await handler({pay:true,plan:{status:'canceled'}});assert.deepEqual(ended.lims,[7]);
+  const off=await handler({pay:false,plan:{status:'active'}});assert.deepEqual(off.lims,[7]);
 });
 test('A full Plus day says limit with the Plus allowance; a failed Plus lookup grades with the free allowance',async()=>{
   const full=await handler({pay:true,plan:{status:'active'},userLeft:-1});assert.equal(full.res.statusCode,429);assert.equal(full.res.body.limit,60);assert.equal(full.res.body.plus,true);assert.equal(full.modelCalls,0);
-  const down=await handler({pay:true,plusFails:true});assert.equal(down.res.statusCode,200);assert.deepEqual(down.lims,[20]);
+  const down=await handler({pay:true,plusFails:true});assert.equal(down.res.statusCode,200);assert.deepEqual(down.lims,[7]);
 });
 test('A Plus check that fails gives the learner the check back at the Plus allowance and reserves nothing globally',async()=>{
   const r=await handler({pay:true,plan:{status:'trialing'},providerFailure:true});assert.equal(r.res.statusCode,502);assert.deepEqual(r.usage,[1,-1]);assert.deepEqual(r.lims,[60,60]);assert.deepEqual(r.quotas,[]);
+  assert.equal(r.stamps[0],r.stamps[1]);assert.deepEqual(r.periods,['day','day']);
+});
+test('An A2 subscriber uses the free weekly B1 budget; a full free speaking exam costs six units',async()=>{
+  const b1=await handler({pay:true,plan:{status:'active',level:'A2'},part:'sb'});assert.deepEqual(b1.periods,['week']);assert.deepEqual(b1.lims,[7]);
+  const exam=await handler({part:'sp',tasksCount:16});assert.equal(exam.res.statusCode,200);assert.deepEqual(exam.usage,[6]);assert.equal(exam.res.body.period,'week');assert.equal(exam.res.body.left,1);
+  const failed=await handler({providerFailure:true});assert.deepEqual(failed.periods,['week','week']);assert.equal(failed.stamps[0],failed.stamps[1]);
+  const cap=await handler({guest:true,freeLeft:-2});assert.equal(cap.res.statusCode,429);assert.equal(cap.res.body.error,'busy');
 });
 test('Without a login only the free single checks, then a login answer',async()=>{
   const guest=await handler({guest:true});assert.equal(guest.res.statusCode,200);assert.equal(guest.res.body.free,1);
@@ -124,12 +131,12 @@ test('B1 rules: a sentence task needs both points, an e-mail 70% with inhoud 2, 
 test('A2 Plus cannot grant B1 paid checks; B1 Plus covers both levels',async()=>{
   for(const part of ['wb','sb']){
     const a2=await handler({pay:true,plan:{status:'active',level:'A2'},part});
-    assert.deepEqual(a2.lims,[20]);assert.deepEqual(a2.quotas,[1]);
+    assert.deepEqual(a2.lims,[7]);assert.deepEqual(a2.quotas,[1]);
     const b1=await handler({pay:true,plan:{status:'active',level:'B1'},part});
     assert.deepEqual(b1.lims,[60]);assert.deepEqual(b1.quotas,[]);
   }
   const a2=await handler({pay:true,plan:{status:'active',level:'B1'}});
   assert.deepEqual(a2.lims,[60]);
   const unknown=await handler({pay:true,plan:{status:'active',level:'unknown'},part:'wb'});
-  assert.deepEqual(unknown.lims,[20]);
+  assert.deepEqual(unknown.lims,[7]);
 });

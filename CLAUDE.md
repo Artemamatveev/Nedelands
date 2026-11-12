@@ -373,21 +373,26 @@ vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one comin
   only reaches the project's team (it needs custom SMTP); passkeys (experimental in Supabase) only with
   `LOGIN_PASSKEY=1`, and a passkey is added after logging in another way.
 - Sync uses the account-scoped state and retry journal described above. Supabase RLS still limits reads and conditional updates to the signed-in user's row. No new table or privileged client API is needed.
-- Free checks without an account: `FREE_CHECKS` a day per visitor (default 2, 0 turns it off), single tasks only (cost
-  1, no proefexamens), and `FREE_CAP` a day for all visitors together (default 50). The visitor is a hash of the IP
-  with the service key (`visitor()` in `api/_supa.js`), counted in `free_checks` by `use_free_checks()` (in
-  `supabase/schema.sql`, rows deleted after a day; privacy.html says so). Without that function in the database the
-  server answers `login` as before. `/api/config` gives `free`; the page shows how many are left (`acc.free`,
-  `freeNote()`) and asks to log in when they are used up.
-- Grading: with accounts on, `/api/check` needs the user's access token (or a free check, above) and takes checks from `CHECK_LIMIT` a day
-  (default 5 when Plus is set up, else 20, Amsterdam days, `check_usage`; `PLUS_LIMIT`, default 60, with Bittertalen Plus): one task 1, a Schrijven proefexamen 2, Schrijven B1 4, a Spreken proefexamen 6
-  (`checkCost()`; the page's `examGate()` uses the same numbers and warns before such a proefexamen). A failed grading gives the learner their checks back. Once the provider call starts, its global reservation is retained even if the reply is lost, since that request may have incurred cost. Structured `grading_usage` logs record model/token usage without learner text. Configure deployment-log alerts for `grading_quota_unavailable` and review token usage in the provider dashboard. The code does not configure external alert recipients. The answer has `left`.
-- Welcome screen = the login window (`#welcome`, `drawWelcome()`): a fixed full screen with the painting of the day
-  behind a rounded white card (the logo, "Inloggen of account maken", the login block (no level), "Eerst rondkijken"
-  or "Terug"); under the card on the painting what an account gives, the privacy link and the painting's name. It opens
-  by itself the first time the app opens with accounts on and nobody logged in (once per device, `ww-welcome`, also
-  shown once to people who already had progress), and from Profiel ("Inloggen of account maken"); after logging in
-  you are back where you were.
+- Free accounts get `FREE_WEEKLY_CHECKS` (default 7) per Amsterdam calendar week, resetting Monday at 00:00.
+  Writing and speaking share this allowance at levels not covered by Plus. Paid checks use a separate `PLUS_LIMIT`
+  (default 60) daily ledger. `check_week_usage` and `check_day_usage` are server-written, with read-own RLS; daily
+  `check_usage` still records all account usage for owner analytics. The server-only invoker RPC `use_plan_checks()`
+  atomically reserves/refunds the budget. A captured timestamp keeps refunds in the original day/week.
+- Without an account there are `FREE_CHECKS` (default 2) one-time trial checks in that browser, not a daily gift.
+  `bt_trial` is a signed HttpOnly/Secure/SameSite=Lax functional cookie, valid up to 400 days. Only its hash and usage
+  are stored in the service-only `trial_checks`; `trial_check_total` retains the daily global guest cap (`FREE_CAP`,
+  default 50). Zero-cost lookups do not create usage rows. Deleting a browser's site data loses its trial identifier;
+  anonymous trials cannot establish a person's identity. Privacy describes the cookie and retention.
+- `GET /api/allowance` is never cached: an authenticated user gets only their own daily/weekly counters; a guest gets
+  the remaining browser trial. The config says `period:"week"` and `freePeriod:"once"`; new pages request the versioned
+  config URL so a cached old daily plan is not used. The app tracks the two counters independently when switching levels.
+- One task costs 1 check, Schrijven A2 2, Schrijven B1 4, and Spreken A2/B1 6. All other practice and example answers
+  stay free. Errors refund the learner; an uncertain paid provider outcome still retains its global spend reservation.
+- Apply the reviewed migration `supabase/migrations/20261112192552_weekly_free_checks.sql` before releasing the new
+  API. `tools/apply-weekly-checks.mjs --apply --project=bleeegmutxepidfkabgs` runs only inside an explicitly targeted
+  Vercel build using its existing database connection, validates the project and schema, verifies quota behavior in a
+  rolled-back savepoint, and records the migration checksum transactionally. It prints no credentials. Local tests use
+  real Postgres via PGlite; `supabase/verify-weekly-checks.sql` checks limits, Monday resets, refunds and permissions.
 - A ceiling for everyone: all Claude checks of a day together, logged-in and free, stop at `CHECK_CAP` (default 400,
   `use_total()` and `check_total` in `supabase/schema.sql`), so many new accounts can't run up the bill; then the
   server answers 429 `busy` and the page says "Morgen kan het weer". Without that function, or if its reply is invalid, grading returns 503 `quota_unavailable` before calling the model. `/api/check` also refuses bodies over 200 KB (413).
@@ -444,7 +449,7 @@ owner: `adminCheck()` asks `/api/admin?me=1` once per login (200 only for an `AD
 
 The current pricing (12 November 2026): Plus A2 is €9,99/month and raises the daily AI allowance to `PLUS_LIMIT`
 (default 60) on A2 only. Plus B1 is €14,99/month and includes A2. All practice and timed proefexamens remain free;
-`CHECK_LIMIT` checks a day (default 5 when billing is configured, otherwise 20) remain available without Plus.
+Seven checks per Amsterdam calendar week remain available without Plus (`FREE_WEEKLY_CHECKS`).
 There is no trial or yearly price. Videos and podcasts remain free.
 - `STRIPE_SECRET_KEY`, `STRIPE_PRICE` (the existing A2 monthly price), `STRIPE_PRICE_B1` and `STRIPE_WEBHOOK_SECRET`
   enable billing. `STRIPE_PORTAL_CONFIG` identifies the portal configuration offering the two plans. A2 and B1 are

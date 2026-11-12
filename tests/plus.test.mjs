@@ -32,9 +32,9 @@ const send=async(type,secret,age=0)=>{const raw=JSON.stringify({type,data:{objec
   await hook({method:'POST',headers:{'stripe-signature':sign(raw,secret,Math.floor(Date.now()/1000)-age)},body:raw},r);return r};
 const last=s=>calls.filter(c=>c.includes(s)).pop();
 
-test('Config offers Plus with its allowance; the free allowance drops to 5',async()=>{
+test('Config offers seven weekly free checks, a one-time trial, and the paid daily allowance',async()=>{
   const r=res();await config({method:'GET',headers:H},r);
-  assert.deepEqual(r.body.plus,{limit:60,price:'9,99',plans:{A2:{price:'9,99'},B1:{price:'14,99'}}});assert.equal(r.body.limit,5);
+  assert.deepEqual(r.body.plus,{limit:60,price:'9,99',plans:{A2:{price:'9,99'},B1:{price:'14,99'}}});assert.equal(r.body.limit,7);assert.equal(r.body.period,'week');assert.equal(r.body.freePeriod,'once');
 });
 test('Buying opens Checkout for the monthly price with the user in the subscription',async()=>{
   const r=res();await plus({method:'POST',headers:H,body:{go:'buy'}},r);
@@ -105,12 +105,12 @@ test('An incorrect configured B1 amount cannot reach Checkout',async()=>{
 test('Plus screen lists both prices, sends the chosen level, and recalculates allowances when levels change',async()=>{
   const {app}=await import('./app-harness.mjs');
   const a=await app();
-  a.run(`acc.cfg={limit:5,plus:{limit:60,price:'9,99',plans:{A2:{price:'9,99'},B1:{price:'14,99'}}}};plusScreen()`);
+  a.run(`acc.cfg={limit:7,period:'week',plus:{limit:60,price:'9,99',plans:{A2:{price:'9,99'},B1:{price:'14,99'}}}};plusScreen()`);
   assert.equal(a.document.querySelectorAll('[data-plus-plan]').length,2);
   assert.match(a.document.querySelector('[data-plus-plan="A2"]').textContent,/9,99/);
   assert.match(a.document.querySelector('[data-plus-plan="B1"]').textContent,/14,99/);
-  a.run(`acc.user={id:'u1'};acc.plus={status:'active',level:'A2'};acc.used=3;S.lvl='B1';plusScreen()`);
-  assert.equal(a.run('myLimit()'),5);assert.equal(a.run('checksLeft()'),2);
+  a.run(`acc.user={id:'u1'};acc.plus={status:'active',level:'A2'};acc.used=3;acc.weekUsed=1;S.lvl='B1';plusScreen()`);
+  assert.equal(a.run('myLimit()'),7);assert.equal(a.run('checksLeft()'),6);
   assert.equal(a.run('myLimit("A2")'),60);assert.equal(a.run('checksLeft("wr")'),57);
   assert.equal(a.document.querySelector('[data-plus-buy="A2"]'),null);
   assert.ok(a.document.querySelector('[data-plus-buy="B1"]'));

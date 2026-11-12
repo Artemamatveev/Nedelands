@@ -104,7 +104,7 @@ geheugen tot je de pagina sluit.</p>
 naar je profielfoto). Zij zien dan ook dat je bij Bittertalen inlogt, en voor hen gelden hun eigen privacyregels;</li>
 <li>je voornaam en achternaam, als je die invult;</li>
 <li>je voortgang, zodat die op al je apparaten hetzelfde is (ook fouten uit je eigen teksten en hoeveel minuten je per dag oefent);</li>
-<li>hoe vaak je per dag hebt laten nakijken, voor de dagelijkse limiet.</li>
+<li>hoe vaak je hebt laten nakijken: per week voor een gratis account en per dag voor Plus, om het tegoed te tellen.</li>
 </ul>
 <p>We doen dat omdat je zelf om een account vraagt (uitvoering van een overeenkomst, artikel 6 lid 1 b AVG). De gegevens
 staan bij Supabase, in een datacenter in Frankfurt (Duitsland). Supabase bewaart ook een logboek van het inloggen
@@ -119,9 +119,11 @@ tekst via onze server naar Anthropic, in de Verenigde Staten. Je naam en e-maila
 niet mee. Wij bewaren je teksten niet op onze server. Anthropic gebruikt ze niet om modellen te trainen en verwijdert
 ze volgens zijn eigen regels binnen 30 dagen, behalve als het ze langer nodig heeft om misbruik te onderzoeken of omdat
 de wet dat vraagt.</p>
-<p>Zonder account kun je een paar keer per dag gratis laten nakijken. Om dat te tellen bewaren we een code die we uit
-je IP-adres maken (een hash met een geheime sleutel, niet het adres zelf), met het aantal keer. Die code wissen we na
-een dag. We doen dit om misbruik te voorkomen (gerechtvaardigd belang, artikel 6 lid 1 f AVG).</p>
+<p>Zonder account kun je twee nakijkbeurten eenmalig proberen in deze browser. Een noodzakelijke cookie, <code>bt_trial</code>,
+onthoudt daarvoor een willekeurige, door onze server ondertekende code. De cookie is alleen voor dit proeftegoed, niet voor
+advertenties of statistiek. Hij bevat geen naam, e-mailadres of IP-adres en blijft maximaal 400 dagen bestaan. Op de server
+bewaren we alleen een hash van die code en het verbruikte proeftegoed, eveneens maximaal 400 dagen. De code is niet gekoppeld
+aan je account. We doen dit om het proeftegoed te leveren en misbruik te beperken (gerechtvaardigd belang).</p>
 <p><b>Tip:</b> in een oefentekst of formulier hoef je geen echte gegevens te gebruiken. Verzin gerust een naam, adres of
 telefoonnummer.</p>
 
@@ -191,7 +193,7 @@ vraagt, zoals het EU-VS Data Privacy Framework of de standaardcontractbepalingen
 <li>Teksten die je laat nakijken: niet bij ons; bij Anthropic hooguit 30 dagen (zie boven).</li>
 <li>Logboeken van Vercel, Supabase en Resend: korte tijd, voor beveiliging en om problemen op te lossen.</li>
 <li>Op je eigen apparaat: tot je de gegevens van de site wist in je browser.</li>
-<li>De code voor gratis nakijken zonder account: hooguit twee dagen.</li>
+<li>De cookie en code voor het eenmalige proeftegoed zonder account: hooguit 400 dagen.</li>
 <li>De uitslag die je zelf doorgeeft: hooguit drie jaar, of tot je hem weghaalt.</li>
 <li>De anonieme tellingen: hooguit twee jaar.</li>
 <li>Betalingen en facturen: zeven jaar, omdat de belastingwet dat vraagt (bij Stripe en in onze administratie). Je
