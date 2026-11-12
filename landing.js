@@ -166,7 +166,7 @@ render();
     state.animation?.cancel();
     state.animation = null;
     state.card.open = state.expanded;
-    state.card.classList.remove("is-closing");
+    state.card.classList.remove("is-closing", "is-animating");
     state.panel.style.removeProperty("overflow");
   };
   const reveal = (state, open) => {
@@ -191,6 +191,7 @@ render();
       paddingBottom: open ? getComputedStyle(panel).paddingBottom : "0px"
     };
     panel.style.overflow = "hidden";
+    card.classList.add("is-animating");
     const animation = panel.animate([from, to], {
       duration: open ? 360 : 280, easing: "cubic-bezier(.22,1,.36,1)", fill: "both"
     });

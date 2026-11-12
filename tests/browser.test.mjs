@@ -163,7 +163,7 @@ test('The homepage and the app work in a real browser', async t => {
         window.featureHoverTrace = [];
         const card = document.querySelector('.feature-grid details');
         for (const type of ['pointerenter', 'pointerleave']) card.addEventListener(type, e => {
-          window.featureHoverTrace.push({type, x: e.clientX, y: e.clientY, top: card.getBoundingClientRect().top, open: card.open});
+          window.featureHoverTrace.push({type, x: e.clientX, y: e.clientY, top: card.getBoundingClientRect().top, scroll: scrollY, open: card.open});
         });
       });
       await heading.hover();
