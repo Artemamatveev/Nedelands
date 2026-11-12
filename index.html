@@ -38,7 +38,6 @@
   } catch {}
   const installed = navigator.standalone || matchMedia("(display-mode: standalone)").matches;
   const desktop = matchMedia("(min-width:960px) and (hover:hover) and (pointer:fine)").matches && !installed; // as the app's data-desktop
-  if (mine) document.documentElement.dataset.mine = "";
   if (alias || q.has("code") || q.has("error") || q.has("plus") || location.hash.startsWith("#verhuis=") ||
       installed || (mine && !desktop && !q.has("home") && !/bot|crawl|spider|slurp|lighthouse/i.test(navigator.userAgent))) {
     location.replace("/oefenen" + location.search + location.hash);
@@ -78,14 +77,8 @@
 <main class="wrap">
   <section class="hero" aria-labelledby="intro">
     <div class="hero-copy">
-      <p class="eyebrow" data-t>Nederlands A2 &amp; B1</p>
-      <h1 id="intro" data-t>Oefen Nederlands op jouw tempo.</h1>
+      <h1 id="intro" data-t>Oefen Nederlands op jouw tempo</h1>
       <p class="lead" data-t>Bereid je voor op je inburgeringsexamen of Staatsexamen NT2. Doe een korte les, oefen een onderdeel of maak een proefexamen met een timer.</p>
-      <div class="actions hero-actions">
-        <a class="button primary" href="/oefenen?open=today" data-t>Begin gratis</a>
-        <a class="button outline" href="/oefenen?open=sample" data-t>Probeer één vraag</a>
-      </div>
-      <p class="note" data-t>Gratis beginnen, ook zonder account.</p>
     </div>
     <figure class="hero-art">
       <button class="preview-motion" id="preview-motion" type="button" aria-pressed="true" hidden><span aria-hidden="true">Ⅱ</span><span data-t>Animatie</span></button>

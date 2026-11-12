@@ -25,7 +25,7 @@ a {color:inherit}
 .bar,.nav,.actions,.footer {display:flex;align-items:center;gap:clamp(10px,2.2vw,26px)}
 .bar,.footer {justify-content:space-between}
 .bar {min-height:76px}
-.brand {font-size:24px;font-weight:700;letter-spacing:-.045em;text-decoration:none}
+.brand {font-size:30px;font-weight:700;letter-spacing:-.045em;line-height:1.1;text-decoration:none}
 .brand-i {position:relative}
 .brand-i::after {content:"";position:absolute;inset-inline-start:12%;top:.23em;width:.19em;height:.19em;border-radius:50%;background:var(--oranje)}
 .nav a,.footer a {text-decoration:none;color:var(--muted);font-size:15px}
@@ -230,11 +230,25 @@ h3 {font-size:22px;letter-spacing:-.02em}
 .header-actions .button {white-space:nowrap}
 .language:hover {background:var(--wash)}
 @media(max-width:640px) {
- .header-actions {display:grid;grid-template-columns:auto auto;gap:2px 10px;justify-items:end;align-items:center}
- .header-actions .language {grid-column:1;grid-row:1;min-width:44px;min-height:40px;font-size:13px}
- .header-actions .signin {grid-column:2;grid-row:1;min-height:40px;font-size:13px}
- .header-actions #enter {grid-column:1/-1;grid-row:2;font-size:13px;min-height:40px;padding:8px 11px}
- .bar .brand {font-size:22px;align-self:start;padding-block-start:6px}
+ /* a phone: two straight rows (the user found the stacked block on the right crooked): the name and the main button,
+    then the page's links with the language and Inloggen at the end of the same row. Two rows of one wrapping flex line
+    each (a grid tied the second row's columns to the button's width, and the links ran into the language) */
+ .bar {display:flex;flex-wrap:wrap;align-items:center;gap:0 8px;padding-block:10px 4px}
+ .bar::before {content:"";order:3;flex-basis:100%;height:0} /* the break between the rows */
+ .header-actions {display:contents}
+ .bar .brand {order:1;margin-inline-end:auto;font-size:28px}
+ .header-actions #enter {order:2;font-size:14px;min-height:42px;padding:8px 14px}
+ /* the second row has five words in eight languages: its type and gaps follow the screen's width, so it never wraps
+    or overlaps (the browser test measures it); the narrowest phones leave out the middle link */
+ .nav {order:4;margin-inline-end:auto;justify-content:flex-start;gap:clamp(8px,2.8vw,16px);padding-block:2px;min-width:0}
+ .nav a,.header-actions .language,.header-actions .signin {font-size:clamp(12px,3.45vw,14px);min-height:40px;white-space:nowrap}
+ .header-actions .language {order:5;min-width:0;padding-inline:2px;gap:3px;color:var(--muted)}
+ .header-actions .signin {order:6}
+}
+@media(max-width:350px) {
+ .nav a:nth-child(2) {display:none}
+ .bar .brand {font-size:24px}
+ .header-actions #enter {font-size:13px;padding:8px 10px}
 }
 
 /* Learning features: a compact tile grid rather than one long numbered list. */

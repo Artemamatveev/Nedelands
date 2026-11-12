@@ -69,6 +69,24 @@ test('The homepage and the app work in a real browser', async t => {
       assert.equal(await s.p.locator('#qfb').isVisible(), true);
       assert.deepEqual(s.errors, []); await s.ctx.close();
     });
+    // the phone's bar: two straight rows in the longest languages too (the name and the main button, then the links with
+    // the language and Inloggen), nothing wrapped, overlapping or off the screen
+    await t.test('homepage bar on a phone: two rows that fit', async () => {
+      for (const [lang, width] of [['ru', 390], ['es', 360], ['ar', 375], ['hi', 320]]) {
+        const s = await page(browser, base, {lang, viewport: {width, height: 800}}); await s.go('/'); await s.p.waitForSelector('.hero');
+        const r = await s.p.evaluate(() => {
+          const seen = [...document.querySelectorAll('.bar .brand,.bar #enter,.nav a,.language,.signin')].filter(e => e.offsetParent).map(e => e.getBoundingClientRect());
+          const rows = [...new Set(seen.map(b => Math.round(b.top + b.height / 2)))].sort((a, b) => a - b);
+          const gaps = rows.map(y => { const it = seen.filter(b => Math.round(b.top + b.height / 2) === y).sort((a, b) => a.left - b.left);
+            return Math.min(99, ...it.slice(1).map((b, i) => b.left - it[i].right)); });
+          return {rows: rows.length, gap: Math.min(...gaps), out: seen.filter(b => b.left < 0 || b.right > innerWidth).length,
+            wrapped: [...document.querySelectorAll('.bar .brand,.bar #enter,.nav a,.signin')].filter(e => e.getClientRects().length > 1).length};
+        });
+        assert.deepEqual({rows: r.rows, out: r.out, wrapped: r.wrapped}, {rows: 2, out: 0, wrapped: 0}, `${lang} ${width}`);
+        assert.ok(r.gap >= 5, `${lang} ${width}: gap ${r.gap}`);
+        assert.equal(await overflow(s.p), 0); await s.ctx.close();
+      }
+    });
     await t.test('homepage in Arabic', async () => {
       const s = await page(browser, base, {lang:'ar'}); await s.go('/'); await s.p.waitForLoadState('load');
       assert.equal(await s.p.getAttribute('html', 'dir'), 'rtl');
@@ -94,8 +112,10 @@ test('The homepage and the app work in a real browser', async t => {
       await s.ctx.route('**/api/config', r => r.fulfill({json: {url: 'https://example.supabase.co', anon: 'x', login: ['google'], limit: 5, free: 2}}));
       await s.p.evaluate(() => localStorage.clear()).catch(() => {});
       await s.go('/'); await s.p.waitForSelector('.hero');
-      // Begin gratis: into the app without the login window (the homepage already offers Inloggen)
-      await s.p.click('.hero .button.primary'); await s.p.waitForSelector('#plan .step'); await s.p.waitForTimeout(800);
+      // the bar's main button: into the app without the login window (the homepage already offers Inloggen); the hero has
+      // no buttons of its own (removed at the user's wish)
+      assert.equal(await s.p.locator('.hero-copy a').count(), 0);
+      await s.p.click('#enter'); await s.p.waitForSelector('#plan .step'); await s.p.waitForTimeout(800);
       assert.equal(await s.p.locator('#welcome').isHidden(), true);
       assert.equal(new URL(s.p.url()).search, '');
       // someone who practises here goes from / straight to the app; ?home shows the homepage all the same
@@ -105,12 +125,11 @@ test('The homepage and the app work in a real browser', async t => {
       assert.equal(new URL(s.p.url()).pathname + new URL(s.p.url()).search, '/');
       // on a computer the site always opens with the homepage, also for someone who practises here: the bar's button
       // leads into the app, and the app's menu has Home as its first row (not on a phone)
-      assert.equal(await s.p.locator('#enter').getAttribute('href'), '/oefenen');
+      assert.match(await s.p.locator('#enter').getAttribute('href'), /^\/oefenen/);
       const d = await s.ctx.browser().newContext({viewport: {width: 1280, height: 800}, serviceWorkers: 'block'}), dp = await d.newPage();
       await dp.goto(base + '/over'); await dp.evaluate(() => { localStorage.setItem('ww-v1', '{}'); localStorage.setItem('ww-welcome', '1'); });
       await dp.goto(base + '/'); await dp.waitForSelector('.hero'); await dp.waitForTimeout(300);
       assert.equal(new URL(dp.url()).pathname, '/');
-      assert.equal(await dp.textContent('#enter'), 'Open Bittertalen');
       await dp.click('#enter'); await dp.waitForSelector('#plan .step');
       assert.equal(await dp.locator('#tabs > a.hm').isVisible(), true);
       assert.equal(await dp.evaluate(() => document.querySelector('#tabs .lens').nextElementSibling.matches('a.hm[href="/"]')), true);

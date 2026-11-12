@@ -3,10 +3,15 @@
 Bittertalen (a pun on bitterballen: "bitter languages", self-irony about learning Dutch) is a single-page study app for the Dutch A2 integration exam (inburgeringsexamen).
 The public homepage is `index.html` (`landing.js` translates it: every `data-t` text and `data-alt` alt text needs all
 seven translations in `copy`, which `tests/site.test.mjs` checks) and reads Plus pricing from `/api/config`. Its main
-button "Begin gratis" opens `/oefenen?open=today`. How the two pages hand over (`tests/browser.test.mjs` checks it):
+button, "Begin met oefenen" in the bar (`#enter`), opens `/oefenen?open=today`; the hero itself has only the heading (no
+full stop), one paragraph and the app in a phone: no label above the heading, no buttons and no note under them (the user's
+wish, November 2026). The bar: the name (30 px, 28 on a phone), the page's links, the language, Inloggen and the main button;
+on a phone two straight rows, the name with the button, then the links with the language and Inloggen (two wrapping flex
+rows: a grid tied the second row to the button's width; the type follows the screen's width and the narrowest phones leave
+out the middle link; the browser test measures it in the longest languages). How the two pages hand over (`tests/browser.test.mjs` checks it):
 on a phone or tablet the homepage sends to the app whoever already practises on this device (a `ww-v1`, `ww-acc` or
-`ww-progress-v2:` key; on a computer the site always opens with the homepage, the user's wish: there the bar's button reads
-"Open Bittertalen" for such a visitor, and the app's menu has "Home" as its first row, `.tabs .hm`, a link to "/" that the
+`ww-progress-v2:` key; on a computer the site always opens with the homepage, the user's wish: the bar's button leads
+into the app, and the app's menu has "Home" as its first row, `.tabs .hm`, a link to "/" that the
 lens never covers, with Profiel's Website row hidden; the app lived at "/" before, so old bookmarks and the "← Bittertalen" links of /over and /privacy point there),
 an installed app, the old addresses, and returns from a login (`?code`, `?error`, the handoff's `?h`), from Stripe
 (`?plus`) and from a move (`#verhuis=`), each with its address. `/?home` (Profiel's Website row, hidden in an installed
