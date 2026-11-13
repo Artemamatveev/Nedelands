@@ -39,7 +39,8 @@ if(navigator.serviceWorker){navigator.serviceWorker.addEventListener("message",f
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=bittie1">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=bittie1">
 <link rel="manifest" href="/manifest.json?v=bittie1">
-<link rel="preload" as="image" type="image/webp" href="/art/bittie-loading-v1.webp" fetchpriority="high">
+<link rel="preload" as="image" type="image/webp" href="/art/bittie-dance-v1.webp" media="(prefers-reduced-motion:no-preference)" fetchpriority="high">
+<link rel="preload" as="image" type="image/webp" href="/art/bittie-loading-v1.webp" media="(prefers-reduced-motion:reduce)" fetchpriority="high">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Bittertalen — Nederlands A2 en B1 voor het inburgeringsexamen en het Staatsexamen</title>
 <meta name="description" content="Gratis oefenen voor het inburgeringsexamen A2 en het Staatsexamen NT2 B1: lezen, luisteren, schrijven, spreken en KNM, met proefexamens en feedback op je teksten. Elke dag een beetje beter.">
@@ -93,38 +94,16 @@ body{margin:0;background:var(--surface);color:var(--ink);font-family:-apple-syst
 :root[data-boot="loading"]{overflow:hidden}
 :root[data-boot="loading"] body>main,:root[data-boot="loading"] #tabs{visibility:hidden}
 :root[data-boot="leaving"] #app-loading{opacity:0;pointer-events:none}
-.boot-bittie{position:relative;width:min(62vw,240px);isolation:isolate}
-.boot-bittie::after{content:"";position:absolute;z-index:-1;left:50%;bottom:8%;width:42%;height:6px;border-radius:50%;
-  background:#0A0F1B;filter:blur(2px);transform:translateX(-50%);opacity:.16;animation:bittie-shadow 2.8s ease-in-out infinite}
-#app-loading img{display:block;width:100%;height:auto;transform-origin:50% 90%;animation:bittie-dance 2.8s ease-in-out infinite}
+.boot-bittie{width:min(62vw,240px)}
+.boot-bittie picture,#app-loading img{display:block;width:100%;height:auto}
 #app-loading b{font-size:28px;font-weight:700;letter-spacing:-.035em;line-height:1.15}
 #app-loading p{margin:0;color:var(--soft);font-size:15px;line-height:1.5}
 .boot-dots{display:flex;gap:6px;padding-top:4px;color:var(--blue)}
 .boot-dots i{width:5px;height:5px;border-radius:50%;background:currentColor;animation:bittie-dot 1.5s ease-in-out infinite}
 .boot-dots i:nth-child(2){animation-delay:150ms}.boot-dots i:nth-child(3){animation-delay:300ms}
-/* Two side steps, then a double hop; the plush toy squashes slightly as it lands. */
-@keyframes bittie-dance{
-  0%,100%{transform:translate(0,0) rotate(0deg) scale(1)}
-  8%{transform:translate(-4px,3px) rotate(-7deg) scale(1.03,.97)}
-  16%{transform:translate(-10px,-10px) rotate(-10deg) scale(.98,1.03)}
-  25%{transform:translate(-5px,0) rotate(-4deg) scale(1.03,.97)}
-  33%{transform:translate(4px,3px) rotate(7deg) scale(1.03,.97)}
-  42%{transform:translate(10px,-10px) rotate(10deg) scale(.98,1.03)}
-  50%{transform:translate(4px,0) rotate(4deg) scale(1.03,.97)}
-  58%{transform:translate(0,4px) rotate(0deg) scale(1.04,.96)}
-  67%{transform:translate(0,-18px) rotate(-4deg) scale(.99,1.02)}
-  75%{transform:translate(0,1px) rotate(4deg) scale(1.04,.96)}
-  83%{transform:translate(0,-10px) rotate(-3deg) scale(.99,1.02)}
-  92%{transform:translate(0,0) rotate(1deg) scale(1.02,.98)}
-}
-@keyframes bittie-shadow{
-  0%,25%,50%,92%,100%{transform:translateX(-50%) scale(1);opacity:.16}
-  8%,33%,58%,75%{transform:translateX(-50%) scale(1.05);opacity:.18}
-  16%,42%,83%{transform:translateX(-50%) scale(.8);opacity:.1}
-  67%{transform:translateX(-50%) scale(.65);opacity:.07}
-}
+/* The mascot's limbs move in the WebP frames; the still image is selected for reduced motion. */
 @keyframes bittie-dot{0%,70%,100%{opacity:.3}35%{opacity:1}}
-@media(prefers-reduced-motion:reduce){#app-loading{transition:none}#app-loading img,.boot-bittie::after,.boot-dots i{animation:none}}
+@media(prefers-reduced-motion:reduce){#app-loading{transition:none}.boot-dots i{animation:none}}
 main{max-width:720px;margin:0 auto;padding:0 16px 48px;overflow-x:clip}
 /* glass: a Dutch landscape (Ruisdael's windmill) faintly seen through a frosted window; the content sits on white tiles that stand out from it */
 /* art/molen-glass.jpg is the painting already blurred and small, so the page needs no live blur */
@@ -878,7 +857,10 @@ h2,h3,.verb,.step b,.it b{text-wrap:balance} p,.d,.sub,.note{text-wrap:pretty}
 </head>
 <body>
 <div id="app-loading" role="status" aria-live="polite">
-  <div class="boot-bittie"><img src="/art/bittie-loading-v1.webp" width="512" height="512" alt="" fetchpriority="high" decoding="async"></div>
+  <div class="boot-bittie"><picture>
+    <source srcset="/art/bittie-dance-v1.webp" type="image/webp" media="(prefers-reduced-motion:no-preference)">
+    <img src="/art/bittie-loading-v1.webp" width="512" height="512" alt="" fetchpriority="high" decoding="async">
+  </picture></div>
   <b translate="no">Bittertalen</b>
   <p id="boot-label">Laden…</p>
   <span class="boot-dots" aria-hidden="true"><i></i><i></i><i></i></span>
@@ -889,7 +871,11 @@ h2,h3,.verb,.step b,.it b{text-wrap:balance} p,.d,.sub,.note{text-wrap:pretty}
 let lang="nl";try{lang=localStorage.getItem("ww-ui")||"nl"}catch{}
 const labels={nl:"Laden…",en:"Loading…",ar:"جارٍ التحميل…",tr:"Yükleniyor…",hi:"लोड हो रहा है…",zh:"加载中…",es:"Cargando…",ru:"Загрузка…"};
 const label=document.getElementById("boot-label");label.textContent=labels[lang]||labels.nl;label.lang=lang;
-document.querySelector("#app-loading img").addEventListener("error",function(){this.hidden=true});})();
+document.querySelector("#app-loading img").addEventListener("error",function(){
+  const source=this.parentElement.querySelector("source");
+  if(source&&this.currentSrc.includes("/bittie-dance-v1.webp")){source.remove();return}
+  this.hidden=true;
+});})();
 </script>
 <noscript><p style="padding:16px">Bittertalen: gratis oefenen voor het inburgeringsexamen A2 en het Staatsexamen NT2 B1. Lezen, luisteren, schrijven, spreken en
 KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript aan om te oefenen.</p></noscript>

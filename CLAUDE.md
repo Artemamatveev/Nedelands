@@ -51,10 +51,12 @@ Below, "in `oefenen.html`" for these names means that file. Every local script i
 `study/` or the dictionary run `node tools/stamp.mjs` (the tests fail when a version is out of date). A data file
 must not use anything from the app's script at load time (only inside functions). `study/language-v1.js` holds stable verb and word-order data plus checking logic. `study/progress-v1.js` handles three-way progress merges and conditional cloud writes. `study/writing-v1.js` aggregates writing feedback without making another grading request. Paintings are in `art/`.
 The study app shows Bittie while it starts (`#app-loading`, the early `data-boot` attribute). The transparent
-512px WebP `art/bittie-loading-v1.webp` is preloaded and cached offline. The loading label uses the saved menu language
-before the full translations load. A 2.8-second dance loops two side steps and a double hop, with gentle tilts,
-plush squash on landing and a matching floor shadow. Only CSS transforms and opacity animate; no extra media downloads.
-The dance, shadow and dots stop for reduced motion. At the user's request, the splash stays visible for at least two
+320px `art/bittie-dance-v1.webp` has 16 distinct poses over two seconds: hands clap, feet step and kick, then Bittie hops.
+The old whole-image CSS rotation is removed. `picture` selects the static `art/bittie-loading-v1.webp` for reduced
+motion or if the animated file fails. Conditional preloads download the selected image; both are cached offline.
+The generated 4x4 source atlas is `art/bittie-dance-v1-atlas.webp`; `python tools/build-bittie-dance.py` exports the loop
+with Pillow. The loading label uses the saved menu language before the full translations load.
+The dots stop for reduced motion. At the user's request, the splash stays visible for at least two
 seconds from when its markup is shown, then fades when startup is ready; slow starts add no extra delay. Reduced motion
 and startup errors skip this minimum. Optional account work cannot cover usable local content for more than four seconds
 after local restoration. Script failures and a 20-second stalled startup expose the existing reload action instead of

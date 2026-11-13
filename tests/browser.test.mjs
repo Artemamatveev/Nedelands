@@ -72,6 +72,8 @@ test('Bittie welcomes learners during startup and never traps them behind loadin
           await s.p.locator('#app-loading').waitFor({state:'visible'});
           const shownAt=await s.p.locator('#app-loading').evaluate(e=>Number(e.dataset.shownAt));
           await s.p.waitForFunction(() => document.querySelector('#app-loading img').naturalWidth > 0);
+          assert.match(await s.p.locator('#app-loading img').evaluate(e=>e.currentSrc),
+            opt.reducedMotion?/\/bittie-loading-v1\.webp$/:/\/bittie-dance-v1\.webp$/);
           assert.equal(await s.p.locator('#boot-label').textContent(), opt.lang==='ru'?'Загрузка…':'جارٍ التحميل…');
           assert.equal(await s.p.locator('main').isVisible(), false);
           assert.equal(await s.p.locator('#tabs').isVisible(), false);
@@ -100,6 +102,25 @@ test('Bittie welcomes learners during startup and never traps them behind loadin
         await s.p.locator('#app-loading').waitFor({state:'detached'});
         assert.equal(await s.p.locator('main').isVisible(), true);
       } finally { await s.ctx.close(); }
+    });
+    await t.test('a missing dance file falls back to the still mascot', async () => {
+      const s=await page(browser,base);
+      let release;
+      const held=new Promise(ok=>{release=ok});
+      try {
+        await s.p.route('**/art/bittie-dance-v1.webp',route=>route.abort());
+        await s.p.route('**/data/knm.js?*',async route=>{await held;await route.continue().catch(()=>{})});
+        await s.p.goto(base+'/oefenen?open=today',{waitUntil:'commit'});
+        await s.p.waitForFunction(()=>{
+          const image=document.querySelector('#app-loading img');
+          return image&&image.currentSrc.endsWith('/bittie-loading-v1.webp')&&image.naturalWidth>0;
+        });
+        assert.equal(await s.p.locator('#app-loading img').isVisible(),true);
+        assert.equal(await s.p.getByRole('alert').count(),0);
+        release();
+        await s.p.locator('#app-loading').waitFor({state:'detached'});
+        assert.equal(await s.p.locator('main').isVisible(),true);
+      } finally {release();await s.ctx.close()}
     });
     await t.test('a stalled account request releases the usable local app', async () => {
       const s = await page(browser, base);
@@ -496,9 +517,10 @@ test('Offline the app opens with its own files, also after an update', async t =
     const files = await s.p.evaluate(() => [...document.scripts].map(x => x.getAttribute('src')).filter(x => x && x.includes('?v=')));
     assert.ok(files.length >= 7);
     assert.equal(files.some(f => f.startsWith('/data/ui.js')), false, 'the translations are not loaded for Dutch');
-    let c = await wait(c => c.includes('/oefenen') && c.includes('/art/bittie-loading-v1.webp') && files.every(f => c.includes(f)));
+    let c = await wait(c => c.includes('/oefenen') && c.includes('/art/bittie-loading-v1.webp') && c.includes('/art/bittie-dance-v1.webp') && files.every(f => c.includes(f)));
     assert.ok(files.every(f => c.includes(f)), 'the page\'s files are cached');
     assert.ok(c.includes('/art/bittie-loading-v1.webp'), 'Bittie is available for offline startup');
+    assert.ok(c.includes('/art/bittie-dance-v1.webp'), 'the frame animation is available offline');
     await s.ctx.setOffline(true); await s.p.reload(); await s.p.waitForSelector('#plan .step');
     await s.ctx.setOffline(false);
     // an update: the page asks for another version of one file
