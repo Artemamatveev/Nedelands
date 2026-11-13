@@ -6,6 +6,7 @@ No frame blending, new artwork, JavaScript or external SVG resources are used.
 """
 import base64
 from io import BytesIO
+from math import comb
 from pathlib import Path
 from PIL import Image
 
@@ -27,28 +28,81 @@ def photo(index):
 
 # Time, body lift/tilt, left/right palm centers, left/right foot centers.
 # The clap lands before the existing two-second minimum splash finishes.
-# Identical first/last positions and zero endpoint velocities close the loop.
-POSES = [
+# Periodic positions, velocities and accelerations close the loop without a hitch.
+KEY_POSES = [
     (0,     0,  0,  40, 194, 287, 194, 110, 280, 209, 280),
-    (.14,  -3, -1,  48, 177, 278, 202, 102, 269, 209, 281),
-    (.28,  -3,  1,  43, 200, 280, 177, 111, 281, 219, 269),
+    (.14,  -2, -.7, 48, 181, 278, 200, 104, 272, 209, 280),
+    (.28,  -2, .7, 43, 200, 280, 181, 110, 280, 217, 272),
     (.43,  -1,  0, 123, 210, 202, 210, 110, 280, 209, 280),
     (.50,  -2,  0, 145, 207, 181, 207, 110, 280, 209, 280),
     (.54,  -2,  0, 145, 207, 181, 207, 110, 280, 209, 280),
     (.62,  -1,  0, 120, 210, 207, 210, 110, 280, 209, 280),
-    (.77,  -8,  0,  53, 166, 273, 166, 104, 277, 215, 277),
-    (.90,   1,  0,  43, 195, 284, 195, 110, 281, 209, 281),
+    (.77,  -5,  0,  53, 174, 273, 174, 106, 278, 213, 278),
+    (.90,  .5,  0,  43, 195, 284, 195, 110, 280, 209, 280),
     (1,     0,  0,  40, 194, 287, 194, 110, 280, 209, 280),
 ]
-TIMES = ';'.join(str(p[0]) for p in POSES)
-EASING = ';'.join(['.42 0 .32 1'] * (len(POSES) - 1))
+DURATION = 3.6
+SAMPLES = 432  # 120 small linear segments/second, rendered at the display's refresh rate.
+# Foot rotations follow the same curves as their positions instead of separate pose easings.
+KEY_POSES = [p + (-10 if p[0] == .14 else 0, 10 if p[0] == .28 else 0) for p in KEY_POSES]
+
+
+def continuous_poses():
+    """Periodic quintic Bezier curves with matching speed and zero acceleration at joins.
+
+    Monotone controls keep paws from overshooting the clap and preserve the planted
+    feet. Only reversals/contact stop; passing an intermediate pose no longer stops
+    every limb. The forearms and palms are sampled together to keep wrists attached.
+    """
+    keys = KEY_POSES[:-1]
+    velocities = []
+    for i, point in enumerate(keys):
+        before, after = keys[i - 1], keys[(i + 1) % len(keys)]
+        left = point[0] - (before[0] if i else before[0] - 1)
+        right = (after[0] if i + 1 < len(keys) else after[0] + 1) - point[0]
+        slopes = []
+        for column in range(1, len(point)):
+            a = (point[column] - before[column]) / left
+            b = (after[column] - point[column]) / right
+            if a * b <= 0:
+                slopes.append(0)
+            else:
+                w1, w2 = 2 * right + left, right + 2 * left
+                harmonic = (w1 + w2) / (w1 / a + w2 / b)
+                limit = 1.2 * min(abs(a), abs(b))
+                slopes.append(max(-limit, min(limit, harmonic)))
+        velocities.append(slopes)
+    poses, segment = [], 0
+    for frame in range(SAMPLES):
+        time = frame / SAMPLES
+        while segment + 1 < len(KEY_POSES) - 1 and time >= KEY_POSES[segment + 1][0]:
+            segment += 1
+        start, end = KEY_POSES[segment:segment + 2]
+        span = end[0] - start[0]
+        u = (time - start[0]) / span
+        values = []
+        for column in range(1, len(start)):
+            p, q = start[column], end[column]
+            v = velocities[segment][column - 1] * span / 5
+            w = velocities[(segment + 1) % len(keys)][column - 1] * span / 5
+            controls = (p, p + v, p + 2 * v, q - 2 * w, q - w, q)
+            values.append(sum(comb(5, j) * (1 - u)**(5 - j) * u**j * c
+                              for j, c in enumerate(controls)))
+        poses.append((time, *values))
+    return poses + [(1, *poses[0][1:])]
+
+
+def number(value):
+    return '0' if abs(value) < .0005 else f'{value:.3f}'.rstrip('0').rstrip('.')
+
+
+POSES = continuous_poses()
 
 
 def moving(kind, values, content):
     return (f'<g transform="{kind}({values[0]})">'
-            f'<animateTransform attributeName="transform" type="{kind}" dur="3.2s" '
-            f'repeatCount="indefinite" calcMode="spline" keyTimes="{TIMES}" '
-            f'keySplines="{EASING}" values="{";".join(map(str, values))}"/>'
+            f'<animateTransform attributeName="transform" type="{kind}" dur="{DURATION}s" '
+            f'repeatCount="indefinite" calcMode="linear" values="{";".join(map(str, values))}"/>'
             f'{content}</g>')
 
 
@@ -57,33 +111,32 @@ def hand(side, offset, shoulder):
     # Animate endpoints with the same spline as the paw: no rotating/length-changing
     # arm can separate from its paw or spin through 360 degrees at an angle wrap.
     paths = [f'M{shoulder[0]} {shoulder[1]} '
-             f'Q{(shoulder[0] + p[offset]) / 2} {(shoulder[1] + p[offset + 1]) / 2 + 10} '
-             f'{p[offset]} {p[offset + 1]}' for p in POSES]
+             f'Q{number((shoulder[0] + p[offset]) / 2)} {number((shoulder[1] + p[offset + 1]) / 2 + 10)} '
+             f'{number(p[offset])} {number(p[offset + 1])}' for p in POSES]
     arm = (f'<path d="{paths[0]}" fill="none" stroke="url(#fur)" '
            f'stroke-width="16" stroke-linecap="round">'
-           f'<animate attributeName="d" dur="3.2s" repeatCount="indefinite" '
-           f'calcMode="spline" keyTimes="{TIMES}" keySplines="{EASING}" '
+           f'<animate attributeName="d" dur="{DURATION}s" repeatCount="indefinite" '
+           f'calcMode="linear" '
            f'values="{";".join(paths)}"/></path>')
-    palm = moving('translate', [f'{p[offset]} {p[offset + 1]}' for p in POSES],
+    palm = moving('translate', [f'{number(p[offset])} {number(p[offset + 1])}' for p in POSES],
                   f'<use href="#palm-{side}"/>')
     return arm + palm
 
 
 feet = ''
 for i, offset in enumerate((7, 9)):
-    angles = [(-16 if p[0] == .14 else 0) if i == 0 else (16 if p[0] == .28 else 0)
-              for p in POSES]
-    feet += moving('translate', [f'{p[offset]} {p[offset + 1]}' for p in POSES],
+    angles = [number(p[11 + i]) for p in POSES]
+    feet += moving('translate', [f'{number(p[offset])} {number(p[offset + 1])}' for p in POSES],
                    moving('rotate', angles, f'<use href="#foot-{i}"/>'))
 
 body = (feet + '<use href="#torso-photo" clip-path="url(#torso)"/>'
         + hand('left', 3, (78, 200)) + hand('right', 5, (247, 200)))
-dance = moving('translate', [f'0 {p[1]}' for p in POSES],
-               moving('rotate', [f'{p[2]} 160 240' for p in POSES], body))
+dance = moving('translate', [f'0 {number(p[1])}' for p in POSES],
+               moving('rotate', [f'{number(p[2])} 160 240' for p in POSES], body))
 
 svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320" viewBox="0 0 320 320">
 <title>Bittie dancing</title>
-<desc>Two gentle steps, a clap and a small hop, with smoothly eased limbs.</desc>
+<desc>Two gentle steps, a clap and a small hop, with continuous, soft limb movements.</desc>
 <defs>
 <image id="photo" width="320" height="320" href="{photo(1)}"/>
 <image id="torso-photo" width="320" height="320" href="{photo(0)}"/>
@@ -101,4 +154,4 @@ svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320" viewB
 {dance}
 </svg>
 '''
-(ROOT / 'art/bittie-dance-v2.svg').write_text(svg)
+(ROOT / 'art/bittie-dance-v3.svg').write_text(svg)
