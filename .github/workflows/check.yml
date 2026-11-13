@@ -32,3 +32,23 @@ jobs:
       - run: node --test tests/browser.test.mjs
         env:
           BROWSER_TESTS: "1"
+  startup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: [chromium, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm install --no-save --ignore-scripts playwright@1.63.0
+      - run: npx playwright install --with-deps ${{ matrix.engine }}
+      - run: node --test --test-name-pattern="Bittie|Offline" tests/browser.test.mjs
+        env:
+          BROWSER_TESTS: "1"
+          BROWSER_ENGINE: ${{ matrix.engine }}

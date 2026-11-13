@@ -34,7 +34,9 @@ if(navigator.serviceWorker){navigator.serviceWorker.addEventListener("message",f
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>@view-transition{navigation:auto}@media(prefers-reduced-motion:reduce){@view-transition{navigation:none}}</style>
-<link rel="stylesheet" href="/motion-v1.css">
+<!-- Motion tokens are optional for first paint: a slow stylesheet must never hide Bittie. -->
+<link rel="stylesheet" href="/motion-v1.css" media="print" onload="this.media='all'">
+<script src="/ios-startup-v1.js" defer></script>
 <meta name="apple-mobile-web-app-title" content="Bittertalen">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=bittie1">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=bittie1">
@@ -858,8 +860,8 @@ h2,h3,.verb,.step b,.it b{text-wrap:balance} p,.d,.sub,.note{text-wrap:pretty}
 <body>
 <div id="app-loading" role="status" aria-live="polite">
   <div class="boot-bittie"><picture>
-    <source srcset="/art/bittie-dance-v1.webp" type="image/webp" media="(prefers-reduced-motion:no-preference)">
-    <img src="/art/bittie-loading-v1.webp" width="512" height="512" alt="" fetchpriority="high" decoding="async">
+    <source srcset="/art/bittie-loading-v1.webp" type="image/webp" media="(prefers-reduced-motion:reduce)">
+    <img src="/art/bittie-dance-v1.webp" width="320" height="320" alt="" fetchpriority="high" decoding="async">
   </picture></div>
   <b translate="no">Bittertalen</b>
   <p id="boot-label">Laden…</p>
@@ -872,8 +874,10 @@ let lang="nl";try{lang=localStorage.getItem("ww-ui")||"nl"}catch{}
 const labels={nl:"Laden…",en:"Loading…",ar:"جارٍ التحميل…",tr:"Yükleniyor…",hi:"लोड हो रहा है…",zh:"加载中…",es:"Cargando…",ru:"Загрузка…"};
 const label=document.getElementById("boot-label");label.textContent=labels[lang]||labels.nl;label.lang=lang;
 document.querySelector("#app-loading img").addEventListener("error",function(){
-  const source=this.parentElement.querySelector("source");
-  if(source&&this.currentSrc.includes("/bittie-dance-v1.webp")){source.remove();return}
+  if(this.currentSrc.includes("/bittie-dance-v1.webp")){
+    this.parentElement.querySelectorAll("source").forEach(source=>source.remove());
+    this.src="/art/bittie-loading-v1.webp";return;
+  }
   this.hidden=true;
 });})();
 </script>

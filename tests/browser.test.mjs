@@ -13,12 +13,18 @@ import { fileURLToPath } from 'node:url';
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const TYPES = {'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css','.jpg':'image/jpeg','.png':'image/png','.webp':'image/webp','.json':'application/json','.mp3':'audio/mpeg','.txt':'text/plain'};
 let chromium = null;
-try { ({ chromium } = createRequire(import.meta.url)('playwright')); } catch {}
+try { chromium = createRequire(import.meta.url)('playwright')[process.env.BROWSER_ENGINE || 'chromium']; } catch {}
 
 // state.knm: another version of data/knm.js in the page's address, as after an update
 function serve(state = {}) {
-  const server = http.createServer((req, res) => {
+  const server = http.createServer(async (req, res) => {
+    if (state.disconnected) { req.destroy(); return; }
     let p = decodeURIComponent(new URL(req.url, 'http://x').pathname);
+    if (state.holdApp && (p === '/oefenen' || p === '/oefenen.html')) await state.holdApp;
+    if (state.workerRevision && p === '/sw.js') {
+      res.writeHead(200, {'content-type':TYPES['.js']});
+      return res.end(fs.readFileSync(path.join(ROOT, 'sw.js'), 'utf8')+'\n// fixture revision '+state.workerRevision);
+    }
     if (state.knm && (p === '/oefenen' || p === '/oefenen.html')) {
       res.writeHead(200, {'content-type': TYPES['.html']});
       return res.end(fs.readFileSync(path.join(ROOT, 'oefenen.html'), 'utf8').replace(/\/data\/knm\.js\?v=[0-9a-f]+/, '/data/knm.js?v=' + state.knm));
@@ -61,6 +67,51 @@ test('Bittie welcomes learners during startup and never traps them behind loadin
   if (!browser) { if (process.env.BROWSER_TESTS) assert.fail('Playwright is not installed'); return t.skip('no browser here'); }
   const server = await serve(), base = `http://127.0.0.1:${server.address().port}`;
   try {
+    await t.test('the first mascot frame paints while optional motion styles are still downloading', async () => {
+      const s = await page(browser, base);
+      let release;
+      const held = new Promise(ok => { release=ok; });
+      try {
+        await s.p.route('**/motion-v1.css', async route => { await held; await route.continue().catch(()=>{}); });
+        await s.p.route('**/data/knm.js?*', async route => { await held; await route.continue().catch(()=>{}); });
+        await s.p.goto(base+'/oefenen?open=today', {waitUntil:'commit'});
+        await s.p.locator('#app-loading').waitFor({state:'visible', timeout:1500});
+        await s.p.waitForFunction(() => document.querySelector('#app-loading img').naturalWidth > 0, null, {timeout:1500});
+        assert.equal(await s.p.locator('link[href="/motion-v1.css"]').getAttribute('media'), 'print');
+        assert.match(await s.p.locator('#app-loading img').evaluate(e=>e.currentSrc), /\/bittie-dance-v1\.webp$/);
+      } finally { release(); await s.ctx.close(); }
+    });
+    await t.test('iPhone launch metadata contains Bittie at the exact device resolution', async () => {
+      const s = await page(browser, base);
+      try {
+        await s.p.addInitScript(() => Object.defineProperty(navigator, 'standalone', {value:true, configurable:true}));
+        await s.go('/oefenen?open=today');
+        await s.p.waitForFunction(() => document.querySelector('link[rel="apple-touch-startup-image"]')?.href.startsWith('data:image/png'));
+        const result = await s.p.evaluate(async () => {
+          const image = new Image(); image.src=document.querySelector('#ios-startup-image').href; await image.decode();
+          return {width:image.naturalWidth, height:image.naturalHeight, expectedWidth:screen.width*devicePixelRatio, expectedHeight:screen.height*devicePixelRatio};
+        });
+        assert.equal(result.width, result.expectedWidth); assert.equal(result.height, result.expectedHeight);
+        assert.deepEqual(s.errors, []);
+      } finally { await s.ctx.close(); }
+    });
+    await t.test('the visible loading mascot changes pose without rotating the complete image', async () => {
+      const s=await page(browser,base);
+      let release;const held=new Promise(ok=>{release=ok});
+      try {
+        // Holding account work keeps the splash visible after HTML parsing and font readiness.
+        // Screenshots measure the displayed animated frame; drawImage() uses an image's default frame.
+        await s.p.route('**/api/config?*',async route=>{await held;await route.continue().catch(()=>{})});
+        await s.go('/oefenen?open=today');
+        await s.p.evaluate(()=>document.fonts.ready);
+        const image=s.p.locator('#app-loading img');
+        await s.p.waitForFunction(()=>document.querySelector('#app-loading img')?.naturalWidth>0);
+        assert.equal(await image.evaluate(e=>getComputedStyle(e).transform),'none');
+        const firstFrame=await image.screenshot();
+        await s.p.waitForTimeout(180);
+        assert.notDeepEqual(await image.screenshot(),firstFrame,'the rendered hands and feet change position');
+      } finally {release();await s.ctx.close()}
+    });
     await t.test('slow scripts show Bittie, the saved language and accessible reduced motion', async () => {
       for (const opt of [{lang:'ru'}, {lang:'ar', colorScheme:'dark', reducedMotion:'reduce'}]) {
         const s = await page(browser, base, opt);
@@ -79,6 +130,7 @@ test('Bittie welcomes learners during startup and never traps them behind loadin
           assert.equal(await s.p.locator('#tabs').isVisible(), false);
           assert.equal(await overflow(s.p), 0);
           if (opt.reducedMotion) assert.equal(await s.p.locator('#app-loading img').evaluate(e=>getComputedStyle(e).animationName), 'none');
+          else assert.equal(await s.p.locator('#app-loading img').evaluate(e=>getComputedStyle(e).transform),'none');
           release();
           await s.p.waitForFunction(() => window.__up===1);
           await s.p.locator('#app-loading').waitFor({state:'detached'});
@@ -503,6 +555,31 @@ test('The owner overview shows accounts and study time', async t => {
   } finally { await browser.close(); server.close(); }
 });
 
+test('Bittie gets an update notification when a new worker reuses the existing cache', async t => {
+  let browser;
+  try { browser = chromium && await chromium.launch(); } catch (e) { if (process.env.BROWSER_TESTS) throw e; }
+  if (!browser) { if (process.env.BROWSER_TESTS) assert.fail('Playwright is not installed'); return t.skip('no browser here'); }
+  const state = {}, server = await serve(state), base = `http://127.0.0.1:${server.address().port}`;
+  try {
+    const s = await page(browser, base, {serviceWorkers:'allow'});
+    try {
+      await s.go('/oefenen?open=today');
+      await s.p.locator('#app-loading').waitFor({state:'detached'});
+      await s.p.waitForFunction(async () => (await caches.open('nl-a2-v12')).match('/oefenen'));
+      await s.p.evaluate(() => navigator.serviceWorker.ready);
+      await s.p.waitForFunction(() => !!navigator.serviceWorker.controller);
+      assert.equal(await s.p.locator('#fresh').count(), 0);
+      state.knm='eeeeeeeeee'; state.workerRevision='2';
+      await s.p.evaluate(async () => (await navigator.serviceWorker.getRegistration()).update());
+      await s.p.locator('#fresh').waitFor({state:'visible', timeout:20000});
+      assert.ok(await s.p.evaluate(async () => (await (await caches.open('nl-a2-v12')).match('/oefenen')).text().then(html=>html.includes('/data/knm.js?v=eeeeeeeeee'))));
+      await s.p.locator('#fresh button').click();
+      await s.p.locator('#app-loading').waitFor({state:'detached'});
+      assert.equal(await s.p.locator('#plan .step').count() > 0, true);
+    } finally { await s.ctx.close(); }
+  } finally { await browser.close(); server.close(); }
+});
+
 test('Offline the app opens with its own files, also after an update', async t => {
   let browser;
   try { browser = chromium && await chromium.launch(); } catch (e) { if (process.env.BROWSER_TESTS) throw e; }
@@ -510,6 +587,12 @@ test('Offline the app opens with its own files, also after an update', async t =
   const state = {}, server = await serve(state), base = `http://127.0.0.1:${server.address().port}`;
   try {
     const s = await page(browser, base, {serviceWorkers: 'allow'});
+    // Playwright 1.63's WebKit offline emulation rejects even literal worker responses (#42775).
+    // Drop every origin connection instead, keeping the real service-worker/offline path under test.
+    const offline = async value => {
+      if (process.env.BROWSER_ENGINE === 'webkit') state.disconnected=value;
+      else await s.ctx.setOffline(value);
+    };
     await s.go('/oefenen'); await s.p.waitForSelector('#plan .step');
     await s.p.evaluate(() => navigator.serviceWorker.ready);
     const cached = () => s.p.evaluate(async () => (await (await caches.open('nl-a2-v12')).keys()).map(r => new URL(r.url)).map(u => u.pathname + u.search));
@@ -521,21 +604,37 @@ test('Offline the app opens with its own files, also after an update', async t =
     assert.ok(files.every(f => c.includes(f)), 'the page\'s files are cached');
     assert.ok(c.includes('/art/bittie-loading-v1.webp'), 'Bittie is available for offline startup');
     assert.ok(c.includes('/art/bittie-dance-v1.webp'), 'the frame animation is available offline');
-    await s.ctx.setOffline(true); await s.p.reload(); await s.p.waitForSelector('#plan .step');
-    await s.ctx.setOffline(false);
+    // A slow navigation refresh must not keep an installed app on its native blank launch screen.
+    await s.p.waitForFunction(() => !!navigator.serviceWorker.controller);
+    let release;
+    state.holdApp = new Promise(ok => { release=ok; });
+    try {
+      await s.p.reload({waitUntil:'commit', timeout:1500});
+      await s.p.locator('#app-loading').waitFor({state:'visible', timeout:1000});
+      await s.p.waitForFunction(() => document.querySelector('#app-loading img')?.naturalWidth > 0, null, {timeout:1000});
+      assert.match(await s.p.locator('#app-loading img').evaluate(e=>e.currentSrc), /\/bittie-dance-v1\.webp$/);
+    } finally { state.holdApp=null; release(); }
+    await s.p.locator('#app-loading').waitFor({state:'detached'});
+    await offline(true); await s.p.reload(); await s.p.waitForSelector('#plan .step');
+    if (process.env.BROWSER_ENGINE === 'webkit') {
+      const noWorker=await browser.newContext({serviceWorkers:'block'});
+      try { const control=await noWorker.newPage();await assert.rejects(control.goto(base+'/not-cached'), 'the origin really is unreachable without a worker'); }
+      finally { await noWorker.close(); }
+    }
+    await offline(false);
     // an update: the page asks for another version of one file
     state.knm = 'ffffffffff';
     await s.p.reload(); await s.p.waitForSelector('#plan .step');
     c = await wait(c => c.includes('/data/knm.js?v=ffffffffff') && c.filter(x => x.startsWith('/data/knm.js')).length === 1);
     assert.deepEqual(c.filter(x => x.startsWith('/data/knm.js')), ['/data/knm.js?v=ffffffffff'], 'only the version the stored page uses');
-    await s.ctx.setOffline(true); await s.p.reload(); await s.p.waitForSelector('#plan .step');
+    await offline(true); await s.p.reload(); await s.p.waitForSelector('#plan .step');
     assert.equal(await s.p.evaluate(() => KNM.length > 400), true);
     // in another language the translations come too, and stay for offline use
-    await s.ctx.setOffline(false);
+    await offline(false);
     await s.p.evaluate(() => localStorage.setItem('ww-ui', 'ar')); await s.p.reload(); await s.p.waitForSelector('#plan .step');
     await s.p.waitForFunction(() => document.querySelector('#tabs button[data-t=examen] span').textContent !== 'Examen');
     c = await wait(c => c.some(x => x.startsWith('/data/ui.js')));
-    await s.ctx.setOffline(true); await s.p.reload(); await s.p.waitForSelector('#plan .step');
+    await offline(true); await s.p.reload(); await s.p.waitForSelector('#plan .step');
     await s.p.waitForFunction(() => document.querySelector('#tabs button[data-t=examen] span').textContent !== 'Examen');
     assert.deepEqual(s.errors.filter(e => !/ERR_INTERNET_DISCONNECTED|Failed to load resource/.test(e)), []);
     await s.ctx.close();
