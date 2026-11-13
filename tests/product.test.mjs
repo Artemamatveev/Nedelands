@@ -4,13 +4,24 @@ import { app, storage } from './app-harness.mjs';
 
 function type(a,selector,text){const el=a.document.querySelector(selector);el.value=text;el.oninput();}
 
-test('First visit offers a real reading question before signup',async()=>{
-  const a=await app();a.run('welcome()');
-  assert.ok(a.document.querySelector('#wtry'));
-  a.document.querySelector('#wtry').click();
-  assert.equal(a.run('queue.length'),1);
-  assert.equal(a.document.querySelector('#play').hidden,false);
-  assert.ok(a.document.querySelector('#card .doc'));
+test('First visit offers guest entry or login without starting a sample exercise',async()=>{
+  const a=await app();a.run('acc.cfg={login:["email"]};welcome()');
+  assert.equal(a.document.querySelectorAll('#welcome .wcard button').length,2);
+  assert.equal(a.document.querySelector('#wtry'),null);
+  assert.equal(a.document.querySelector('#welcome .wart'),null);
+  a.document.querySelector('#wlogin').click();
+  assert.ok(a.document.querySelector('#wmail'));
+  a.run('drawWelcome()');
+  assert.ok(a.document.querySelector('#wmail'),'redraw preserves the chosen login form');
+  a.document.querySelector('#wlater').click();
+  assert.ok(a.document.querySelector('#wlogin'),'back restores both entry choices');
+  a.document.querySelector('#wlater').click();
+  assert.equal(a.document.querySelector('#welcome').hidden,true);
+  assert.equal(a.document.querySelector('#home').hidden,false);
+  assert.equal(a.document.querySelector('#play').hidden,true);
+  assert.equal(a.run('lsGet(WEL)'), '1');
+  a.run('welcome()');
+  assert.ok(a.document.querySelector('#wmail'),'explicit login remains direct after guest entry');
 });
 test('A2 and B1 daily plans fit all three time budgets and keep their steps after answers',async()=>{
   const a=await app();
