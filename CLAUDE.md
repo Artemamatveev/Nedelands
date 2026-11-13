@@ -126,8 +126,8 @@ generic "AI app" look.
   separators, flat buttons. The floating tab bar is a glass pill (like iOS 26 and Instagram); the login window
   (`#welcome`) is a card like Yandex ID (24px).
 - **Logo**: the name "Bittertalen" in the system font, with a bitterbal (`--oranje`, light crumbs) as the dot on
-  the i, the size and place of a normal dot (`h1 .idot`). The app icon is a bitterbal too: `icon-1024.png` is the
-  source; `manifest.json` lists 192 and 512 px versions and a maskable one (the picture inside the safe circle), and
+  the i, the size and place of a normal dot (`h1 .idot`). The app icon is Bittie, the waving plush bitterbal
+  in a Dutch scarf: `icon-1024.png` is the source; `manifest.json` lists 192 and 512 px versions and a maskable one (the picture inside the safe circle), and
   the pages use `favicon-32.png`. Make them again from the source when the icon changes.
 - **Dutch motifs instead of decoration**:
   - Header: the painting of the day (`ART` + `paint()` in `oefenen.html`), with a museum
@@ -207,8 +207,9 @@ Vandaag the painting hangs framed on the cobalt museum wall (360 px high), the o
 - **Profiel** looks like an iPhone settings screen (the user's example, November 2026): on top a round avatar the learner
 picks (`avScreen()` in `#talk`, "Kies je avatar": a grid of three by three, the chosen one with an orange ring; `S.me.av`, so it
 goes along). The avatars are plush (crocheted) Dutch characters, images in `art/avatars/<key>.jpg` and the bitterbal in
-`art/bitterbal-white.jpg` (`avSVG()`); the plush bitterbal is the mascot everywhere (the homepage too). Only the app icon
-is still a photo of a real bitterbal: make it plush too once there is a plush bitterbal of at least 1024 px. `AVS`
+`art/bitterbal-white.jpg` (`avSVG()`); the plush bitterbal is the mascot everywhere (the homepage too). The app icon also uses Bittie:
+`icon-1024.png` is the 1024 px master. Derived PNGs are opaque squares; the maskable version has extra safe-area
+padding. Icon and manifest URLs use `?v=bittie1` to refresh browser caches. `AVS`
 keeps their names and the earlier SVG drawings: four girls (Volendam with the white hul, a supporter in orange, a headscarf in Delfts blauw, braids with
 a tulip), four boys (Volendam, Koningsdag with a crown, a painter, a cheese carrier) and the bitterbal, the default; skin
 tones vary on purpose. Their names under them are Dutch content (`lang="nl"`). The user showed a Vexels set as the example:
