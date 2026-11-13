@@ -50,6 +50,12 @@ Below, "in `oefenen.html`" for these names means that file. Every local script i
 `?v=<hash of its content>`, and the service worker keeps it for good under that address: after editing `data/`,
 `study/` or the dictionary run `node tools/stamp.mjs` (the tests fail when a version is out of date). A data file
 must not use anything from the app's script at load time (only inside functions). `study/language-v1.js` holds stable verb and word-order data plus checking logic. `study/progress-v1.js` handles three-way progress merges and conditional cloud writes. `study/writing-v1.js` aggregates writing feedback without making another grading request. Paintings are in `art/`.
+The study app shows Bittie while it starts (`#app-loading`, the early `data-boot` attribute). The transparent
+512px WebP `art/bittie-loading-v1.webp` is preloaded and cached offline. The loading label uses the saved menu language
+before the full translations load. A quiet float and dots stop for reduced motion; the splash fades as soon as startup
+finishes, with no minimum delay. Optional account work cannot cover usable local content for more than four seconds
+after local restoration. Script failures and a 20-second stalled startup expose the existing reload action instead of
+leaving a permanent overlay. Without JavaScript the splash stays hidden and the existing noscript message is visible.
 Deployed on Vercel from `main`: every push to `main` goes live at https://bittertalen.nl (push `main` first, then the working
 branch: in November 2026 a commit built first as a branch preview got no production build when it reached `main`; then
 start one by hand, a production deployment of `main` at that commit) (Vercel project

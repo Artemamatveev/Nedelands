@@ -55,6 +55,85 @@ async function page(browser, base, {lang, ...opt} = {}) {
 }
 const overflow = p => p.evaluate(() => document.documentElement.scrollWidth - innerWidth);
 
+test('Bittie welcomes learners during startup and never traps them behind loading', async t => {
+  let browser;
+  try { browser = chromium && await chromium.launch(); } catch (e) { if (process.env.BROWSER_TESTS) throw e; }
+  if (!browser) { if (process.env.BROWSER_TESTS) assert.fail('Playwright is not installed'); return t.skip('no browser here'); }
+  const server = await serve(), base = `http://127.0.0.1:${server.address().port}`;
+  try {
+    await t.test('slow scripts show Bittie, the saved language and accessible reduced motion', async () => {
+      for (const opt of [{lang:'ru'}, {lang:'ar', colorScheme:'dark', reducedMotion:'reduce'}]) {
+        const s = await page(browser, base, opt);
+        let release;
+        const held = new Promise(ok => { release=ok; });
+        try {
+          await s.p.route('**/data/knm.js?*', async route => { await held; await route.continue().catch(()=>{}); });
+          await s.p.goto(base+'/oefenen?open=today', {waitUntil:'commit'});
+          await s.p.locator('#app-loading').waitFor({state:'visible'});
+          await s.p.waitForFunction(() => document.querySelector('#app-loading img').naturalWidth > 0);
+          assert.equal(await s.p.locator('#boot-label').textContent(), opt.lang==='ru'?'Загрузка…':'جارٍ التحميل…');
+          assert.equal(await s.p.locator('main').isVisible(), false);
+          assert.equal(await s.p.locator('#tabs').isVisible(), false);
+          assert.equal(await overflow(s.p), 0);
+          if (opt.reducedMotion) assert.equal(await s.p.locator('#app-loading img').evaluate(e=>getComputedStyle(e).animationName), 'none');
+          release();
+          await s.p.waitForFunction(() => window.__up===1);
+          await s.p.locator('#app-loading').waitFor({state:'detached'});
+          assert.equal(await s.p.locator('main').isVisible(), true);
+          assert.equal(await s.p.locator('#tabs').isVisible(), true);
+          assert.deepEqual(s.errors, []);
+        } finally { release(); await s.ctx.close(); }
+      }
+    });
+    await t.test('an unavailable script shows a retry action which can recover', async () => {
+      const s = await page(browser, base);
+      try {
+        await s.p.route('**/data/knm.js?*', route=>route.abort());
+        await s.go('/oefenen?open=today');
+        await s.p.getByRole('alert').waitFor({state:'visible'});
+        assert.equal(await s.p.locator('#app-loading').count(), 0);
+        await s.p.unroute('**/data/knm.js?*');
+        await s.p.getByRole('button', {name:'Opnieuw laden'}).click();
+        await s.p.waitForFunction(() => window.__up===1);
+        await s.p.locator('#app-loading').waitFor({state:'detached'});
+        assert.equal(await s.p.locator('main').isVisible(), true);
+      } finally { await s.ctx.close(); }
+    });
+    await t.test('a stalled account request releases the usable local app', async () => {
+      const s = await page(browser, base);
+      let release;
+      const held = new Promise(ok=>{release=ok});
+      try {
+        await s.p.clock.install();
+        await s.p.route('**/api/config?*', async route=>{await held;await route.continue().catch(()=>{})});
+        await s.go('/oefenen?open=today');
+        await s.p.waitForFunction(()=>typeof restored!=='undefined'&&restored);
+        assert.equal(await s.p.locator('#app-loading').isVisible(), true);
+        await s.p.clock.runFor(4300);
+        await s.p.locator('#app-loading').waitFor({state:'detached'});
+        assert.equal(await s.p.locator('#plan button').first().isVisible(), true);
+        release();
+        await s.p.waitForFunction(()=>window.__up===1);
+        assert.deepEqual(s.errors, []);
+      } finally { release();await s.ctx.close(); }
+    });
+    await t.test('startup that never gets its scripts offers retry instead of loading forever', async () => {
+      const s = await page(browser, base);
+      let release;
+      const held = new Promise(ok=>{release=ok});
+      try {
+        await s.p.clock.install();
+        await s.p.route('**/data/knm.js?*', async route=>{await held;await route.continue().catch(()=>{})});
+        await s.p.goto(base+'/oefenen', {waitUntil:'commit'});
+        await s.p.locator('#app-loading').waitFor({state:'visible'});
+        await s.p.clock.runFor(20100);
+        await s.p.getByRole('button', {name:'Opnieuw laden'}).waitFor({state:'visible'});
+        assert.equal(await s.p.locator('#app-loading').count(), 0);
+      } finally { release();await s.ctx.close(); }
+    });
+  } finally { await browser.close();await new Promise(ok=>server.close(ok)); }
+});
+
 test('The homepage and the app work in a real browser', async t => {
   let browser;
   try { browser = chromium && await chromium.launch(); } catch (e) { if (process.env.BROWSER_TESTS) throw e; }
@@ -413,8 +492,9 @@ test('Offline the app opens with its own files, also after an update', async t =
     const files = await s.p.evaluate(() => [...document.scripts].map(x => x.getAttribute('src')).filter(x => x && x.includes('?v=')));
     assert.ok(files.length >= 7);
     assert.equal(files.some(f => f.startsWith('/data/ui.js')), false, 'the translations are not loaded for Dutch');
-    let c = await wait(c => c.includes('/oefenen') && files.every(f => c.includes(f)));
+    let c = await wait(c => c.includes('/oefenen') && c.includes('/art/bittie-loading-v1.webp') && files.every(f => c.includes(f)));
     assert.ok(files.every(f => c.includes(f)), 'the page\'s files are cached');
+    assert.ok(c.includes('/art/bittie-loading-v1.webp'), 'Bittie is available for offline startup');
     await s.ctx.setOffline(true); await s.p.reload(); await s.p.waitForSelector('#plan .step');
     await s.ctx.setOffline(false);
     // an update: the page asks for another version of one file
