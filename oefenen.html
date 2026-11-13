@@ -329,6 +329,12 @@ textarea{display:block;width:100%;font-size:var(--fs-b);line-height:1.5;padding:
 .wcard{width:100%;max-width:400px;margin-top:auto;background:var(--card);border-radius:24px;padding:26px 22px 14px;box-shadow:0 14px 44px rgba(0,0,0,.3);text-align:center}
 .wlogo{font-size:30px;font-weight:700;letter-spacing:-.01em;margin:0 0 6px;color:var(--ink)}
 .wcard h2{display:block;text-align:center;font-size:var(--fs-xl);font-weight:600;margin:0 0 18px} .wcard h2::before{display:none}
+.wcard.is-intro .wlogo{font-size:30px;font-weight:700;margin:0;letter-spacing:-.02em}
+.wcard .wintro{margin:8px 0 22px;color:var(--soft);font-size:17px}
+.wcard.is-intro details{margin:12px 0 4px;text-align:center}
+.wcard.is-intro summary{font-size:15px}
+#welcome .wskip{display:block;margin:4px auto 0;padding:8px 12px;min-height:44px;border:0;background:none;color:var(--soft);font-size:15px;font-weight:500}
+.wcard .wbenefit{font-size:14px;color:var(--soft);text-align:center;margin:14px 0}
 .wcard .seg{margin:0 0 14px} .seg.uit{margin:0 0 14px}
 .wcard .fld{margin-bottom:0} .wcard .fld input{height:54px}
 .wcard .btn,.wcard .ghost{min-height:54px;padding:10px 14px;margin:0 0 10px}
@@ -336,8 +342,8 @@ textarea{display:block;width:100%;font-size:var(--fs-b);line-height:1.5;padding:
 .wcard .prov svg{width:28px;height:28px}
 .wcard .sub,.wcard .note{text-align:var(--ta)}
 .wcard .fld+.btn{margin-top:14px}
-.wfoot{max-width:400px;margin:16px 0 auto;text-align:center;color:#fff;font-size:var(--fs-m);text-shadow:0 1px 6px rgba(0,0,0,.5)}
-.wfoot p{margin:0 0 6px} .wfoot a{color:#fff;font-weight:600} .wfoot .wart{font-size:var(--fs-s);opacity:.85;margin-top:10px}
+.wfoot{max-width:400px;margin:16px 0 auto;text-align:center;color:#fff;font-size:14px;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+.wfoot p{margin:0 0 6px} .wfoot a{color:#fff;font-weight:600} .wfoot .wart{font-size:12px;opacity:.85;margin-top:10px}
 .login .prov{display:flex;justify-content:center;gap:10px;margin:6px 0 14px}
 .login .prov button{flex:1;max-width:76px;height:48px;display:flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--line);border-radius:var(--rc);cursor:pointer}
 .login .prov button:active{background:var(--wash)} .login .prov svg{width:24px;height:24px} .login .prov .mono{fill:var(--ink)}
@@ -1546,17 +1552,19 @@ document.addEventListener("click",e=>{
 });
 function drawWelcome(){
   // A window like Yandex ID (the user's wish): one rounded card on the painting of the day, the logo and the login
-  // block; under the card on the painting are the account benefits, the privacy link and the painting's name.
+  // block. The first visit has one brand heading and one short introduction. Account benefits
+  // appear with the login fields; only privacy and painting attribution sit beneath the card.
   // No name here: the e-mail is enough, Google and the others bring theirs, and Profiel has the fields.
   const el=$("welcome"),p=ART[today()%ART.length],first=!lsGet(WEL),mail=$("wmail")?$("wmail").value:acc.mail||"";
   const logo=document.querySelector("header h1 [aria-hidden]");
   el.style.setProperty("--wbg",`url(/art/${p.f}.jpg)`);
-  el.innerHTML=`<div class="wcard">${langHTML()}<span class="wmascot">${avSVG("bal")}</span><p class="wlogo">${logo?logo.outerHTML:"Bittertalen"}</p>
-    <h2>${acc.step==="code"?"Vul de code in":first?"Welkom bij Bittertalen":"Inloggen of account maken"}</h2>`
-    +(first && !acc.step?`<p>Oefen Nederlands met een korte leesopdracht.</p><button class="btn wide" id="wtry">Probeer één vraag</button><details><summary>Inloggen of account maken</summary>${loginHTML("w")}</details>`:loginHTML("w"))+(acc.msg?`<p class="note">${esc(acc.msg)}</p>`:"")
-    +`<button class="ghost wide" id="wlater">${first?"Eerst rondkijken":"Terug"}</button></div>
-    <div class="wfoot"><p>Met een account blijft je voortgang bewaard, ook op je andere apparaten, en kijkt Bittertalen je teksten en antwoorden na.</p>
-    <p><a href="/privacy">Privacyverklaring</a></p><p class="wart">${p.a} · ${p.t} · ${p.m}</p></div>`;
+  const intro=first&&!acc.step;
+  const login=loginHTML("w")+(acc.step==="code"?"":`<p class="wbenefit">Bewaar je voortgang op al je apparaten.</p>`);
+  el.innerHTML=`<div class="wcard${intro?" is-intro":""}">${langHTML()}<span class="wmascot">${avSVG("bal")}</span>
+    ${intro?`<h2 class="wlogo">${logo?logo.outerHTML:"Bittertalen"}</h2>`:`<p class="wlogo">${logo?logo.outerHTML:"Bittertalen"}</p><h2>${acc.step==="code"?"Vul de code in":"Inloggen of account maken"}</h2>`}`
+    +(intro?`<p class="wintro">Nederlands, stap voor stap.</p><button class="btn wide" id="wtry">Probeer één vraag</button><details><summary>Inloggen of account maken</summary>${login}</details>`:login)+(acc.msg?`<p class="note">${esc(acc.msg)}</p>`:"")
+    +`<button class="${intro?"ghost wskip":"ghost wide"}" id="wlater">${first?"Eerst rondkijken":"Terug"}</button></div>
+    <div class="wfoot"><p><a href="/privacy">Privacyverklaring</a></p><p class="wart">${p.a} · ${p.t} · ${p.m}</p></div>`;
   if($("wtry"))$("wtry").onclick=()=>{
     lsSet(WEL,"1");home();tryOne();
   };
@@ -4014,7 +4022,7 @@ if(OLD==="nedelands.vercel.app")location.replace(NEWURL); else if(OLD==="bittert
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="2eb4df1d7a";
+const UIV="d35bccd395";
 let uiP=null;
 function uiLoaded(){ // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});
@@ -4033,20 +4041,9 @@ const lName=(o,d)=>new Intl.DateTimeFormat(LANGS[LANG].c,o).format(d);
 const dayMon=(n,mo)=>{const i=NLM.indexOf(mo.toLowerCase());if(i<0)return`${n} ${mo}`;if(LANG==="es"||LANG==="ru")return lName({day:"numeric",month:"long"},new Date(2026,i,Number(n)));return LANG==="zh"?`${i+1}月${n}日`:`${n} ${lName({month:"long"},new Date(2026,i,15))}`};
 const uiT=s=>(UI[s]||[])[LI];
 Object.assign(UI,{
-  "Welkom bij Bittertalen": [
-    "Welcome to Bittertalen",
-    "مرحبًا بك في Bittertalen",
-    "Bittertalen’e hoş geldin",
-    "Bittertalen में स्वागत है",
-    "欢迎使用 Bittertalen"
-  ,"Te damos la bienvenida a Bittertalen","Добро пожаловать в Bittertalen"],
-  "Oefen Nederlands met een korte leesopdracht.": [
-    "Try Dutch with a short reading task.",
-    "جرّب الهولندية مع تمرين قراءة قصير.",
-    "Kısa bir okuma göreviyle Hollandaca çalış.",
-    "एक छोटे पढ़ने के अभ्यास से डच सीखें।",
-    "用一道简短的阅读题练习荷兰语。"
-  ,"Practica neerlandés con un ejercicio breve de lectura.","Потренируйте нидерландский на коротком задании по чтению."],
+  "Nederlands, stap voor stap.": [
+    "Dutch, step by step.","الهولندية، خطوة بخطوة.","Adım adım Hollandaca.","डच, कदम दर कदम।","荷兰语，一步一步来。","Neerlandés, paso a paso.","Нидерландский, шаг за шагом."
+  ],
   "Probeer één vraag": [
     "Try one question",
     "جرّب سؤالًا واحدًا",
