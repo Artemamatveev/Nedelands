@@ -755,14 +755,12 @@ body.vfull{overflow:hidden}
 :root[data-desktop] #talk:has(.avg){max-width:1080px}
 :root[data-desktop] .avg{grid-template-columns:repeat(9,minmax(0,1fr));gap:14px 8px}
 .pav:focus-visible{outline:3px solid var(--oranje);outline-offset:3px}
-.phero h2{margin:14px 0 2px;text-wrap:balance}
-.pmail{margin:0;color:var(--soft);font-size:var(--fs-m);word-break:break-all}
+.pmail{margin:14px 0 0;color:var(--soft);font-size:var(--fs-m);word-break:break-all}
 .pidentity{min-width:0;max-width:100%;overflow-wrap:anywhere}
 :root[data-desktop] .phero{flex-direction:row;gap:14px;text-align:start;padding:0}
 :root[data-desktop] .phero .pav{flex:none;width:96px;height:96px}
-:root[data-desktop] .phero h2{margin:0}
-:root[data-desktop] .pidentity:has(h2[data-placeholder]):has(.pmail[hidden]),
-:root[data-desktop] #pnm[data-placeholder]{
+:root[data-desktop] .phero .pmail{margin:0}
+.pidentity:has(.pmail[hidden]){
   position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;
 }
 :root[data-desktop] .phead:has(#alogin){
@@ -774,7 +772,6 @@ body.vfull{overflow:hidden}
 }
 :root:not([data-desktop]) .phead:has(#alogin) .phero{padding:0;gap:6px}
 :root:not([data-desktop]) .phead:has(#alogin) .pav{width:100%;height:auto;aspect-ratio:1}
-:root:not([data-desktop]) .phead:has(#alogin) .phero h2{margin:0;font-size:var(--fs-m)}
 :root:not([data-desktop]) #alogin{min-height:44px;margin:0;padding:10px 12px;gap:8px;overflow-wrap:anywhere}
 :root:not([data-desktop]) #alogin .ic{display:none}
 :root:not([data-desktop]) #alogin b{font-size:var(--fs-m);line-height:1.25}
@@ -904,7 +901,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
         <div class="phero">
           <button type="button" class="pav" id="pav" aria-label="Kies je avatar"><span id="pavi"></span></button>
           <div class="pidentity">
-            <h2 id="pnm">Profiel</h2>
+            <h2 id="pnm" class="sr-only">Profiel</h2>
             <p class="pmail" id="pmail" hidden></p>
           </div>
         </div>
@@ -2390,9 +2387,6 @@ function drawProfile(){
   // the portrait: a Dutch woman or man in Golden Age dress (S.me.av, so it goes along); tap to switch
   // the avatar the learner picked (an earlier portrait, "v" or "m", falls back to the bitterbal)
   $("pavi").innerHTML=avSVG(me.av); $("pav").onclick=avScreen;
-  const profileName=[me.name,me.last].filter(Boolean).join(" ");
-  $("pnm").textContent=profileName||"Profiel";
-  $("pnm").toggleAttribute("data-placeholder",!profileName);
   // the level: chosen at the start (welcome screen, starttest), changed here with a list; the other tabs show only this level
   // the options are not translated by the observer (it skips <select>); uiT is defined further down, so it may not exist yet at the first render
   const trLvl=v=>{try{return uiT(LVL[v])||LVL[v]}catch(e){return LVL[v]}};
