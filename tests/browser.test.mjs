@@ -95,6 +95,23 @@ test('Bittie welcomes learners during startup and never traps them behind loadin
         assert.deepEqual(s.errors, []);
       } finally { await s.ctx.close(); }
     });
+    await t.test('the visible loading mascot changes pose without rotating the complete image', async () => {
+      const s=await page(browser,base);
+      let release;const held=new Promise(ok=>{release=ok});
+      try {
+        // Holding account work keeps the splash visible after HTML parsing and font readiness.
+        // Screenshots measure the displayed animated frame; drawImage() uses an image's default frame.
+        await s.p.route('**/api/config?*',async route=>{await held;await route.continue().catch(()=>{})});
+        await s.go('/oefenen?open=today');
+        await s.p.evaluate(()=>document.fonts.ready);
+        const image=s.p.locator('#app-loading img');
+        await s.p.waitForFunction(()=>document.querySelector('#app-loading img')?.naturalWidth>0);
+        assert.equal(await image.evaluate(e=>getComputedStyle(e).transform),'none');
+        const firstFrame=await image.screenshot();
+        await s.p.waitForTimeout(180);
+        assert.notDeepEqual(await image.screenshot(),firstFrame,'the rendered hands and feet change position');
+      } finally {release();await s.ctx.close()}
+    });
     await t.test('slow scripts show Bittie, the saved language and accessible reduced motion', async () => {
       for (const opt of [{lang:'ru'}, {lang:'ar', colorScheme:'dark', reducedMotion:'reduce'}]) {
         const s = await page(browser, base, opt);
@@ -113,22 +130,7 @@ test('Bittie welcomes learners during startup and never traps them behind loadin
           assert.equal(await s.p.locator('#tabs').isVisible(), false);
           assert.equal(await overflow(s.p), 0);
           if (opt.reducedMotion) assert.equal(await s.p.locator('#app-loading img').evaluate(e=>getComputedStyle(e).animationName), 'none');
-          else {
-            const image = s.p.locator('#app-loading img');
-            assert.equal(await image.evaluate(e=>getComputedStyle(e).transform), 'none', 'the complete image is not being wobbled');
-            // Capture the actual decoded frame without waiting for document.fonts.ready.
-            // WebKit keeps that promise pending while the exercise script is deliberately held.
-            const frameHash = () => image.evaluate(element => {
-              const canvas=document.createElement('canvas');canvas.width=element.naturalWidth;canvas.height=element.naturalHeight;
-              const context=canvas.getContext('2d');context.drawImage(element,0,0);
-              let hash=2166136261;
-              for(const byte of context.getImageData(0,0,canvas.width,canvas.height).data) hash=Math.imul(hash^byte,16777619);
-              return hash>>>0;
-            });
-            const firstFrame = await frameHash();
-            await s.p.waitForTimeout(180);
-            assert.notEqual(await frameHash(), firstFrame, 'the character changes pose inside the image');
-          }
+          else assert.equal(await s.p.locator('#app-loading img').evaluate(e=>getComputedStyle(e).transform),'none');
           release();
           await s.p.waitForFunction(() => window.__up===1);
           await s.p.locator('#app-loading').waitFor({state:'detached'});
