@@ -11,7 +11,7 @@ import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
-const TYPES = {'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css','.jpg':'image/jpeg','.png':'image/png','.webp':'image/webp','.json':'application/json','.mp3':'audio/mpeg','.txt':'text/plain'};
+const TYPES = {'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css','.jpg':'image/jpeg','.png':'image/png','.webp':'image/webp','.svg':'image/svg+xml','.json':'application/json','.mp3':'audio/mpeg','.txt':'text/plain'};
 let chromium = null;
 try { chromium = createRequire(import.meta.url)('playwright')[process.env.BROWSER_ENGINE || 'chromium']; } catch {}
 
@@ -109,7 +109,7 @@ test('Bittie welcomes learners during startup and never traps them behind loadin
         assert.equal(await image.evaluate(e=>getComputedStyle(e).transform),'none');
         const firstFrame=await image.screenshot();
         await s.p.waitForTimeout(180);
-        assert.notDeepEqual(await image.screenshot(),firstFrame,'the rendered hands and feet change position');
+        assert.equal((await image.screenshot()).equals(firstFrame),false,'the rendered hands and feet change position');
       } finally {release();await s.ctx.close()}
     });
     await t.test('slow scripts show Bittie, the saved language and accessible reduced motion', async () => {

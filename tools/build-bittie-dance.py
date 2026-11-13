@@ -88,7 +88,7 @@ svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320" viewB
 <image id="photo" width="320" height="320" href="{photo(1)}"/>
 <image id="torso-photo" width="320" height="320" href="{photo(0)}"/>
 <pattern id="fur" width="12" height="12" patternUnits="userSpaceOnUse"><use href="#photo" transform="translate(-280 -187)"/></pattern>
-<clipPath id="torso"><path d="M160 22 C104 20 67 63 54 117 C48 143 50 165 54 184 C58 204 69 224 77 242 C93 269 126 274 157 274 C176 276 190 273 198 270 L199 282 L240 282 L242 248 C246 230 249 216 260 202 C278 194 284 179 285 168 C289 122 263 60 224 37 C204 24 181 21 160 22Z"/></clipPath>
+<clipPath id="torso"><path d="M160 22 C104 20 67 63 54 117 C48 143 50 165 54 184 C58 204 69 224 77 242 C93 269 126 274 157 274 C176 276 190 273 198 270 L199 278 L237 278 L242 248 C246 230 249 216 260 202 C278 194 284 179 285 168 C289 122 263 60 224 37 C204 24 181 21 160 22Z"/></clipPath>
 <clipPath id="left-cut"><ellipse cx="34" cy="193" rx="23" ry="20"/></clipPath>
 <clipPath id="right-cut"><ellipse cx="287" cy="192" rx="22" ry="20"/></clipPath>
 <clipPath id="foot0-cut"><ellipse cx="111" cy="280" rx="23" ry="17"/></clipPath>
