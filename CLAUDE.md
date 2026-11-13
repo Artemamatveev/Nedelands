@@ -54,8 +54,9 @@ The study app shows Bittie while it starts (`#app-loading`, the early `data-boot
 512px WebP `art/bittie-loading-v1.webp` is preloaded and cached offline. The loading label uses the saved menu language
 before the full translations load. A 2.8-second dance loops two side steps and a double hop, with gentle tilts,
 plush squash on landing and a matching floor shadow. Only CSS transforms and opacity animate; no extra media downloads.
-The dance, shadow and dots stop for reduced motion; the splash fades as soon as startup
-finishes, with no minimum delay. Optional account work cannot cover usable local content for more than four seconds
+The dance, shadow and dots stop for reduced motion. At the user's request, the splash stays visible for at least two
+seconds from when its markup is shown, then fades when startup is ready; slow starts add no extra delay. Reduced motion
+and startup errors skip this minimum. Optional account work cannot cover usable local content for more than four seconds
 after local restoration. Script failures and a 20-second stalled startup expose the existing reload action instead of
 leaving a permanent overlay. Without JavaScript the splash stays hidden and the existing noscript message is visible.
 Deployed on Vercel from `main`: every push to `main` goes live at https://bittertalen.nl (push `main` first, then the working

@@ -5,14 +5,18 @@
 <meta name="google" content="notranslate">
 <script>
 // If the app breaks while it starts, say so on the screen (with the error, for a screenshot) instead of staying empty
-(function(){var shown=0,closed=false,root=document.documentElement;
+(function(){var shown=0,closed=false,hold=0,root=document.documentElement;
 root.setAttribute("data-boot","loading");
 var watchdog=setTimeout(function(){say("Het laden duurt te lang. Controleer je verbinding en probeer het opnieuw.")},20000);
-// The study screen is usable even if an optional account request never answers. No minimum display time.
+// Let Bittie's dance be seen for two seconds in total; slow starts already include that time.
 window.__finishBoot=function(immediate){
-  if(closed&&!immediate)return;closed=true;clearTimeout(watchdog);
+  if(closed&&!immediate)return;clearTimeout(hold);
   var splash=document.getElementById("app-loading"),remove=function(){root.removeAttribute("data-boot");if(splash)splash.remove()};
-  if(immediate||matchMedia("(prefers-reduced-motion:reduce)").matches||!splash){remove();return}
+  var reduced=matchMedia("(prefers-reduced-motion:reduce)").matches;
+  var remaining=2000-(Date.now()-Number(splash&&splash.dataset.shownAt||0));
+  if(!immediate&&!reduced&&splash&&remaining>0){hold=setTimeout(window.__finishBoot,remaining);return}
+  closed=true;clearTimeout(watchdog);
+  if(immediate||reduced||!splash){remove();return}
   splash.setAttribute("aria-hidden","true");root.setAttribute("data-boot","leaving");setTimeout(remove,240);
 };
 function say(m){if(window.__up||shown)return;shown=1;window.__finishBoot(true);var put=function(){var d=document.createElement("div");
@@ -881,7 +885,8 @@ h2,h3,.verb,.step b,.it b{text-wrap:balance} p,.d,.sub,.note{text-wrap:pretty}
 </div>
 <script>
 // The loading label is available before the exercise data and the full menu translations arrive.
-(()=>{let lang="nl";try{lang=localStorage.getItem("ww-ui")||"nl"}catch{}
+(()=>{document.getElementById("app-loading").dataset.shownAt=String(Date.now());
+let lang="nl";try{lang=localStorage.getItem("ww-ui")||"nl"}catch{}
 const labels={nl:"Laden…",en:"Loading…",ar:"جارٍ التحميل…",tr:"Yükleniyor…",hi:"लोड हो रहा है…",zh:"加载中…",es:"Cargando…",ru:"Загрузка…"};
 const label=document.getElementById("boot-label");label.textContent=labels[lang]||labels.nl;label.lang=lang;
 document.querySelector("#app-loading img").addEventListener("error",function(){this.hidden=true});})();

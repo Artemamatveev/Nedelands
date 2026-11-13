@@ -70,6 +70,7 @@ test('Bittie welcomes learners during startup and never traps them behind loadin
           await s.p.route('**/data/knm.js?*', async route => { await held; await route.continue().catch(()=>{}); });
           await s.p.goto(base+'/oefenen?open=today', {waitUntil:'commit'});
           await s.p.locator('#app-loading').waitFor({state:'visible'});
+          const shownAt=await s.p.locator('#app-loading').evaluate(e=>Number(e.dataset.shownAt));
           await s.p.waitForFunction(() => document.querySelector('#app-loading img').naturalWidth > 0);
           assert.equal(await s.p.locator('#boot-label').textContent(), opt.lang==='ru'?'Загрузка…':'جارٍ التحميل…');
           assert.equal(await s.p.locator('main').isVisible(), false);
@@ -79,6 +80,7 @@ test('Bittie welcomes learners during startup and never traps them behind loadin
           release();
           await s.p.waitForFunction(() => window.__up===1);
           await s.p.locator('#app-loading').waitFor({state:'detached'});
+          if(!opt.reducedMotion)assert.ok(await s.p.evaluate(()=>Date.now())-shownAt>=2000, 'the dance remains visible for two seconds');
           assert.equal(await s.p.locator('main').isVisible(), true);
           assert.equal(await s.p.locator('#tabs').isVisible(), true);
           assert.deepEqual(s.errors, []);
@@ -352,6 +354,7 @@ test('The homepage and the app work in a real browser', async t => {
       const AXE = fs.readFileSync(createRequire(import.meta.url).resolve('axe-core/axe.min.js'), 'utf8'), found = [];
       const check = async (name, url, prep, opt = {}) => {
         const s = await page(browser, base, opt); await s.go(url); await s.p.waitForTimeout(300);
+        await s.p.locator('#app-loading').waitFor({state:'detached'});
         if (prep) { await prep(s.p); await s.p.waitForTimeout(200); }
         await s.p.addScriptTag({content: AXE});
         const v = await s.p.evaluate(() => axe.run(document).then(r => r.violations.map(v => `${v.id}: ${v.nodes.slice(0, 3).map(n => n.target.join(' ')).join(', ')}`)));
@@ -372,6 +375,7 @@ test('The homepage and the app work in a real browser', async t => {
       assert.deepEqual(found, []);
       // the current tab's name, white on the oranje lens: at least 4.5:1 on every pixel behind it
       const s = await page(browser, base); await s.go('/oefenen'); await s.p.evaluate(() => setTab('examen')); await s.p.waitForTimeout(600);
+      await s.p.locator('#app-loading').waitFor({state:'detached'});
       const box = await s.p.locator('.tabs button[data-t="examen"] span:not([aria-hidden])').last().boundingBox();
       await s.p.addStyleTag({content: '.tabs button *{visibility:hidden!important}'});
       const png = (await s.p.screenshot({clip: box})).toString('base64');
