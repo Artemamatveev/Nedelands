@@ -41,7 +41,7 @@ KEY_POSES = [
     (.90,  .5,  0,  43, 195, 284, 195, 110, 280, 209, 280),
     (1,     0,  0,  40, 194, 287, 194, 110, 280, 209, 280),
 ]
-DURATION = 2.6
+DURATION = 2.0
 SAMPLES = round(DURATION * 120)  # Small segments, rendered at the display's refresh rate.
 # Foot rotations follow the same curves as their positions instead of separate pose easings.
 KEY_POSES = [p + (-10 if p[0] == .14 else 0, 10 if p[0] == .28 else 0) for p in KEY_POSES]
@@ -154,4 +154,4 @@ svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320" viewB
 {dance}
 </svg>
 '''
-(ROOT / 'art/bittie-dance-v4.svg').write_text(svg)
+(ROOT / 'art/bittie-dance-v5.svg').write_text(svg)
