@@ -52,7 +52,9 @@ Below, "in `oefenen.html`" for these names means that file. Every local script i
 must not use anything from the app's script at load time (only inside functions). `study/language-v1.js` holds stable verb and word-order data plus checking logic. `study/progress-v1.js` handles three-way progress merges and conditional cloud writes. `study/writing-v1.js` aggregates writing feedback without making another grading request. Paintings are in `art/`.
 The study app shows Bittie while it starts (`#app-loading`, the early `data-boot` attribute). The transparent
 512px WebP `art/bittie-loading-v1.webp` is preloaded and cached offline. The loading label uses the saved menu language
-before the full translations load. A quiet float and dots stop for reduced motion; the splash fades as soon as startup
+before the full translations load. A 2.8-second dance loops two side steps and a double hop, with gentle tilts,
+plush squash on landing and a matching floor shadow. Only CSS transforms and opacity animate; no extra media downloads.
+The dance, shadow and dots stop for reduced motion; the splash fades as soon as startup
 finishes, with no minimum delay. Optional account work cannot cover usable local content for more than four seconds
 after local restoration. Script failures and a 20-second stalled startup expose the existing reload action instead of
 leaving a permanent overlay. Without JavaScript the splash stays hidden and the existing noscript message is visible.
