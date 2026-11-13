@@ -10,7 +10,7 @@
 // Paintings, photos and icons: from the cache, refreshed in the background.
 // Recorded voices (audio/): cached on first play. api/ (grading, new texts) always goes to the network.
 // CACHE stays the same when sw.js changes: a new name would throw away every painting, photo and voice people have.
-const APP = "/oefenen", CACHE = "nl-a2-v12", CORE = [APP, "/", "/voorwaarden", "/motion-v1.css", "/contact", "/landing.css?v=features10", "/landing.js?v=weekly1", "/lib/gsap-3.15.1.min.js", "/landing-motion-v3.js?v=features10", "/lib/ScrollTrigger-3.15.1.min.js", "/shots/app-day-v2.webp", "/shots/app-practice-v2.webp", "/shots/app-exam-v2.webp", "/art/delft.jpg", "/art/bitterbal-nl-v2.jpg", "/art/bitterbal-wave-nl-v1.jpg", "/manifest.json?v=bittie1", "/apple-touch-icon.png?v=bittie1"];
+const APP = "/oefenen", CACHE = "nl-a2-v12", CORE = [APP, "/", "/voorwaarden", "/motion-v1.css", "/contact", "/landing.css?v=features10", "/landing.js?v=weekly1", "/lib/gsap-3.15.1.min.js", "/landing-motion-v3.js?v=features10", "/lib/ScrollTrigger-3.15.1.min.js", "/shots/app-day-v2.webp", "/shots/app-practice-v2.webp", "/shots/app-exam-v2.webp", "/art/delft.jpg", "/art/bitterbal-nl-v2.jpg", "/art/bitterbal-wave-nl-v1.jpg", "/art/bittie-loading-v1.webp", "/manifest.json?v=bittie1", "/apple-touch-icon.png?v=bittie1"];
 
 const assetsOf = html => [...html.matchAll(/src="(\/(?:data|study)\/[^"?]+\.js\?v=[0-9a-f]+)"/g)].map(m => m[1]);
 const dictOf = html => (/const DICTV="([0-9a-f]+)"/.exec(html) || [])[1] || "";

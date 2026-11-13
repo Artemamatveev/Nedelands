@@ -5,11 +5,26 @@
 <meta name="google" content="notranslate">
 <script>
 // If the app breaks while it starts, say so on the screen (with the error, for a screenshot) instead of staying empty
-(function(){var shown=0;function say(m){if(window.__up||shown)return;shown=1;var put=function(){var d=document.createElement("div");
+(function(){var shown=0,closed=false,root=document.documentElement;
+root.setAttribute("data-boot","loading");
+var watchdog=setTimeout(function(){say("Het laden duurt te lang. Controleer je verbinding en probeer het opnieuw.")},20000);
+// The study screen is usable even if an optional account request never answers. No minimum display time.
+window.__finishBoot=function(immediate){
+  if(closed&&!immediate)return;closed=true;clearTimeout(watchdog);
+  var splash=document.getElementById("app-loading"),remove=function(){root.removeAttribute("data-boot");if(splash)splash.remove()};
+  if(immediate||matchMedia("(prefers-reduced-motion:reduce)").matches||!splash){remove();return}
+  splash.setAttribute("aria-hidden","true");root.setAttribute("data-boot","leaving");setTimeout(remove,240);
+};
+function say(m){if(window.__up||shown)return;shown=1;window.__finishBoot(true);var put=function(){var d=document.createElement("div");
 d.setAttribute("role","alert");d.style.cssText="position:fixed;left:16px;right:16px;top:40%;z-index:99;background:#fff;color:#14213D;border-radius:20px;padding:20px;box-shadow:0 14px 44px rgba(0,0,0,.3);font:17px/1.4 -apple-system,system-ui,sans-serif";
 d.innerHTML='<b>Bittertalen kon niet starten.</b><p style="font-size:13px;color:#56617C;word-break:break-word">'+String(m).replace(/</g,"&lt;").slice(0,300)+'</p><button style="width:100%;min-height:50px;border:0;border-radius:14px;background:#1F3C96;color:#fff;font:600 17px -apple-system,system-ui" onclick="location.reload()">Opnieuw laden</button>';
 document.body.appendChild(d)};document.body?put():addEventListener("DOMContentLoaded",put)}
-addEventListener("error",function(e){say((e.message||"fout")+(e.lineno?" (regel "+e.lineno+")":""))});})();
+addEventListener("error",function(e){
+  if(e.target&&e.target.tagName==="SCRIPT"&&/\/(?:study\/|data\/(?:knm|a2|b1|extra)\.js)/.test(e.target.src||""))
+    say("Een bestand kon niet worden geladen. Controleer je verbinding en probeer het opnieuw.");
+  else if(e.message)say(e.message+(e.lineno?" (regel "+e.lineno+")":""));
+},true);
+addEventListener("unhandledrejection",function(e){say(e.reason&&e.reason.message||"Het starten is niet gelukt. Probeer het opnieuw.")});})();
 // sw.js shows the cached page at once and says {fresh:true} when a newer one has been fetched; listen from the start
 if(navigator.serviceWorker){navigator.serviceWorker.addEventListener("message",function(e){if(e.data&&e.data.fresh){window.__fresh=1;dispatchEvent(new Event("fresh"))}});if(navigator.serviceWorker.startMessages)navigator.serviceWorker.startMessages()}
 </script>
@@ -20,6 +35,7 @@ if(navigator.serviceWorker){navigator.serviceWorker.addEventListener("message",f
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=bittie1">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=bittie1">
 <link rel="manifest" href="/manifest.json?v=bittie1">
+<link rel="preload" as="image" type="image/webp" href="/art/bittie-loading-v1.webp" fetchpriority="high">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Bittertalen — Nederlands A2 en B1 voor het inburgeringsexamen en het Staatsexamen</title>
 <meta name="description" content="Gratis oefenen voor het inburgeringsexamen A2 en het Staatsexamen NT2 B1: lezen, luisteren, schrijven, spreken en KNM, met proefexamens en feedback op je teksten. Elke dag een beetje beter.">
@@ -65,6 +81,23 @@ if(navigator.serviceWorker){navigator.serviceWorker.addEventListener("message",f
 [hidden]{display:none!important}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--surface);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,sans-serif;font-size:var(--fs-b);line-height:1.47;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+/* Bittie greets learners while the scripts and local progress load, before account/network work finishes. */
+#app-loading{display:none;position:fixed;inset:0;z-index:80;place-content:center;justify-items:center;gap:12px;
+  padding:calc(24px + env(safe-area-inset-top,0px)) 24px calc(24px + env(safe-area-inset-bottom,0px));
+  background:var(--bg);color:var(--ink);text-align:center;opacity:1;transition:opacity 220ms cubic-bezier(.4,0,.2,1)}
+:root[data-boot] #app-loading{display:grid}
+:root[data-boot="loading"]{overflow:hidden}
+:root[data-boot="loading"] body>main,:root[data-boot="loading"] #tabs{visibility:hidden}
+:root[data-boot="leaving"] #app-loading{opacity:0;pointer-events:none}
+#app-loading img{display:block;width:min(62vw,240px);height:auto;animation:bittie-float 2.6s ease-in-out infinite}
+#app-loading b{font-size:28px;font-weight:700;letter-spacing:-.035em;line-height:1.15}
+#app-loading p{margin:0;color:var(--soft);font-size:15px;line-height:1.5}
+.boot-dots{display:flex;gap:6px;padding-top:4px;color:var(--blue)}
+.boot-dots i{width:5px;height:5px;border-radius:50%;background:currentColor;animation:bittie-dot 1.5s ease-in-out infinite}
+.boot-dots i:nth-child(2){animation-delay:150ms}.boot-dots i:nth-child(3){animation-delay:300ms}
+@keyframes bittie-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes bittie-dot{0%,70%,100%{opacity:.3}35%{opacity:1}}
+@media(prefers-reduced-motion:reduce){#app-loading{transition:none}#app-loading img,.boot-dots i{animation:none}}
 main{max-width:720px;margin:0 auto;padding:0 16px 48px;overflow-x:clip}
 /* glass: a Dutch landscape (Ruisdael's windmill) faintly seen through a frosted window; the content sits on white tiles that stand out from it */
 /* art/molen-glass.jpg is the painting already blurred and small, so the page needs no live blur */
@@ -817,6 +850,19 @@ h2,h3,.verb,.step b,.it b{text-wrap:balance} p,.d,.sub,.note{text-wrap:pretty}
 </style>
 </head>
 <body>
+<div id="app-loading" role="status" aria-live="polite">
+  <img src="/art/bittie-loading-v1.webp" width="512" height="512" alt="" fetchpriority="high" decoding="async">
+  <b translate="no">Bittertalen</b>
+  <p id="boot-label">Laden…</p>
+  <span class="boot-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+</div>
+<script>
+// The loading label is available before the exercise data and the full menu translations arrive.
+(()=>{let lang="nl";try{lang=localStorage.getItem("ww-ui")||"nl"}catch{}
+const labels={nl:"Laden…",en:"Loading…",ar:"جارٍ التحميل…",tr:"Yükleniyor…",hi:"लोड हो रहा है…",zh:"加载中…",es:"Cargando…",ru:"Загрузка…"};
+const label=document.getElementById("boot-label");label.textContent=labels[lang]||labels.nl;label.lang=lang;
+document.querySelector("#app-loading img").addEventListener("error",function(){this.hidden=true});})();
+</script>
 <noscript><p style="padding:16px">Bittertalen: gratis oefenen voor het inburgeringsexamen A2 en het Staatsexamen NT2 B1. Lezen, luisteren, schrijven, spreken en
 KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript aan om te oefenen.</p></noscript>
 <main>
@@ -4175,10 +4221,12 @@ function openEntry(){
   }
 }
 const returning=new URLSearchParams(location.search), moving=location.hash.startsWith("#verhuis=");
+// Local content is ready: optional cloud/auth work may continue, but cannot keep the splash over a usable app.
+ready$.then(()=>setTimeout(()=>window.__finishBoot(),4000));
 ready$.then(()=>location.hash.startsWith("#verhuis=")?arrive():0).then(initCloud).then(()=>{
   if(!moving&&!returning.has("plus")&&!returning.has("code")&&!returning.has("error"))openEntry();
   plusBack();
-}).finally(()=>{window.__up=1});
+}).finally(()=>{window.__up=1;window.__finishBoot()});
 // A newer version was fetched in the background: offer it (a reload takes it from the cache, so it is quick)
 function showFresh(){if($("fresh"))return;const d=document.createElement("div");d.id="fresh";d.setAttribute("role","status");
   d.innerHTML=`<span>Er is een nieuwe versie van Bittertalen.</span><button class="btn" type="button">Vernieuwen</button>`;
