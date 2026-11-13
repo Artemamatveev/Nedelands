@@ -331,9 +331,6 @@ textarea{display:block;width:100%;font-size:var(--fs-b);line-height:1.5;padding:
 .wcard h2{display:block;text-align:center;font-size:var(--fs-xl);font-weight:600;margin:0 0 18px} .wcard h2::before{display:none}
 .wcard.is-intro .wlogo{font-size:30px;font-weight:700;margin:0;letter-spacing:-.02em}
 .wcard .wintro{margin:8px 0 22px;color:var(--soft);font-size:17px}
-.wcard.is-intro details{margin:12px 0 4px;text-align:center}
-.wcard.is-intro summary{font-size:15px}
-#welcome .wskip{display:block;margin:4px auto 0;padding:8px 12px;min-height:44px;border:0;background:none;color:var(--soft);font-size:15px;font-weight:500}
 .wcard .wbenefit{font-size:14px;color:var(--soft);text-align:center;margin:14px 0}
 .wcard .seg{margin:0 0 14px} .seg.uit{margin:0 0 14px}
 .wcard .fld{margin-bottom:0} .wcard .fld input{height:54px}
@@ -1425,6 +1422,7 @@ function syncMeta(){
 }
 // The first time the app opens with accounts on: make an account (first name, last name, e-mail) or look around first
 const WEL="ww-welcome";
+let welcomeLogin=false;
 const segHTML=()=>["A2","B1"].map(v=>`<button type="button" data-lvl="${v}" aria-pressed="${lvl()===v}">${LVL[v]}</button>`).join("");
 const setLvl=v=>{if(v===lvl())return;S.lvl=v;save()};
 const logins=()=>acc.cfg&&acc.cfg.login||[];
@@ -1489,7 +1487,7 @@ function bindLogin(el,x,pre,mail){
     $(x+"again").onclick=()=>{acc.step=null;acc.msg="";redraw()}}
   el.querySelectorAll("[data-login]").forEach(b=>b.onclick=()=>{if(ok(b.dataset.login))login(b.dataset.login)});
 }
-function welcome(){$("home").hidden=true;$("welcome").hidden=false;window.scrollTo(0,0);drawWelcome()}
+function welcome(){welcomeLogin=!!lsGet(WEL)||!!acc.step;$("home").hidden=true;$("welcome").hidden=false;window.scrollTo(0,0);drawWelcome()}
 // Help and the pages about Bittertalen at the end of Profiel: groups of rows like the iPhone's Settings (they were two
 // <details> with browser triangles and blue links, which looked unfinished). Opzeggen stays a row of its own: cancelling
 // must be easy to find.
@@ -1552,24 +1550,22 @@ document.addEventListener("click",e=>{
 });
 function drawWelcome(){
   // A window like Yandex ID (the user's wish): one rounded card on the painting of the day, the logo and the login
-  // block. The first visit has one brand heading and one short introduction. Account benefits
-  // appear with the login fields; only privacy and painting attribution sit beneath the card.
+  // block. The first visit offers guest entry or login; account benefits appear with
+  // the login fields. Only the privacy link sits beneath this menu.
   // No name here: the e-mail is enough, Google and the others bring theirs, and Profiel has the fields.
   const el=$("welcome"),p=ART[today()%ART.length],first=!lsGet(WEL),mail=$("wmail")?$("wmail").value:acc.mail||"";
   const logo=document.querySelector("header h1 [aria-hidden]");
   el.style.setProperty("--wbg",`url(/art/${p.f}.jpg)`);
-  const intro=first&&!acc.step;
+  const intro=first&&!welcomeLogin&&!acc.step;
   const login=loginHTML("w")+(acc.step==="code"?"":`<p class="wbenefit">Bewaar je voortgang op al je apparaten.</p>`);
   el.innerHTML=`<div class="wcard${intro?" is-intro":""}">${langHTML()}<span class="wmascot">${avSVG("bal")}</span>
     ${intro?`<h2 class="wlogo" aria-label="Bittertalen" translate="no">${logo?logo.outerHTML:"Bittertalen"}</h2>`:`<p class="wlogo">${logo?logo.outerHTML:"Bittertalen"}</p><h2>${acc.step==="code"?"Vul de code in":"Inloggen of account maken"}</h2>`}`
-    +(intro?`<p class="wintro">Nederlands, stap voor stap.</p><button class="btn wide" id="wtry">Probeer één vraag</button><details><summary>Inloggen of account maken</summary>${login}</details>`:login)+(acc.msg?`<p class="note">${esc(acc.msg)}</p>`:"")
-    +`<button class="${intro?"ghost wskip":"ghost wide"}" id="wlater">${first?"Eerst rondkijken":"Terug"}</button></div>
-    <div class="wfoot"><p><a href="/privacy">Privacyverklaring</a></p><p class="wart">${p.a} · ${p.t} · ${p.m}</p></div>`;
-  if($("wtry"))$("wtry").onclick=()=>{
-    lsSet(WEL,"1");home();tryOne();
-  };
+    +(intro?`<p class="wintro">Nederlands, stap voor stap.</p><button class="btn wide" id="wlater" type="button">Doorgaan als gast</button><button class="ghost wide" id="wlogin" type="button">Inloggen of account maken</button>`:login)+(acc.msg?`<p class="note">${esc(acc.msg)}</p>`:"")
+    +(intro?"":`<button class="ghost wide" id="wlater" type="button">Terug</button>`)+`</div>
+    <div class="wfoot"><p><a href="/privacy">Privacyverklaring</a></p></div>`;
+  if($("wlogin"))$("wlogin").onclick=()=>{welcomeLogin=true;acc.msg="";drawWelcome();if($("wmail"))$("wmail").focus()};
   bindLogin(el,"w",null,mail);
-  $("wlater").onclick=()=>{lsSet(WEL,"1");acc.msg="";acc.step=null;home()};
+  $("wlater").onclick=()=>{acc.msg="";acc.step=null;if(first&&!intro){welcomeLogin=false;drawWelcome();return}lsSet(WEL,"1");home()};
 }
 // The token for /api/check; with accounts on, grading needs a login
 async function authHead(){
@@ -4022,7 +4018,7 @@ if(OLD==="nedelands.vercel.app")location.replace(NEWURL); else if(OLD==="bittert
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="d35bccd395";
+const UIV="d87ff055fc";
 let uiP=null;
 function uiLoaded(){ // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});

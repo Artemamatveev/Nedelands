@@ -200,7 +200,7 @@ Object.assign(UI,{
 "E-mailadres":["E-mail address","البريد الإلكتروني","E-posta adresi","ई-मेल पता","电子邮箱","Correo electrónico","Электронная почта"],
 "Volgende":["Next","التالي","İleri","आगे","下一步","Siguiente","Далее"],
 "Terug":["Back","رجوع","Geri","वापस","返回","Atrás","Назад"],
-"Eerst rondkijken":["Look around first","ألقِ نظرة أولًا","Önce göz at","पहले देखें","先看看","Explorar primero","Сначала осмотреться"],
+"Doorgaan als gast":["Continue as guest","المتابعة كضيف","Misafir olarak devam et","अतिथि के रूप में जारी रखें","以访客身份继续","Continuar como invitado","Продолжить как гость"],
 "Face ID of vingerafdruk":["Face ID or fingerprint","Face ID أو بصمة الإصبع","Face ID veya parmak izi","Face ID या फ़िंगरप्रिंट","Face ID 或指纹","Face ID o huella digital","Face ID или отпечаток пальца"],
 "Vul de code in":["Enter the code","أدخل الرمز","Kodu gir","कोड दर्ज करें","输入验证码","Introduce el código","Введите код"],
 "ONA en participatieverklaring":["ONA and participation statement","ONA وبيان المشاركة","ONA ve katılım beyanı","ONA और सहभागिता घोषणा","ONA 和参与声明","ONA y declaración de participación","ONA и декларация об участии"],
