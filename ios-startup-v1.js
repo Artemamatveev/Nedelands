@@ -7,7 +7,7 @@
   const dark = matchMedia('(prefers-color-scheme:dark)');
   const image = document.createElement('img');
   image.alt = '';
-  image.src = motion.matches ? '/art/bittie-loading-v1.webp' : '/art/bittie-dance-v1.webp';
+  image.src = motion.matches ? '/art/bittie-loading-v1.webp' : '/art/bittie-dance-v2.svg';
   let scheduled = false;
   function paint() {
     scheduled = false;

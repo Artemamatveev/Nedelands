@@ -41,7 +41,7 @@ if(navigator.serviceWorker){navigator.serviceWorker.addEventListener("message",f
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=bittie1">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=bittie1">
 <link rel="manifest" href="/manifest.json?v=bittie1">
-<link rel="preload" as="image" type="image/webp" href="/art/bittie-dance-v1.webp" media="(prefers-reduced-motion:no-preference)" fetchpriority="high">
+<link rel="preload" as="image" type="image/svg+xml" href="/art/bittie-dance-v2.svg" media="(prefers-reduced-motion:no-preference)" fetchpriority="high">
 <link rel="preload" as="image" type="image/webp" href="/art/bittie-loading-v1.webp" media="(prefers-reduced-motion:reduce)" fetchpriority="high">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Bittertalen — Nederlands A2 en B1 voor het inburgeringsexamen en het Staatsexamen</title>
@@ -103,7 +103,7 @@ body{margin:0;background:var(--surface);color:var(--ink);font-family:-apple-syst
 .boot-dots{display:flex;gap:6px;padding-top:4px;color:var(--blue)}
 .boot-dots i{width:5px;height:5px;border-radius:50%;background:currentColor;animation:bittie-dot 1.5s ease-in-out infinite}
 .boot-dots i:nth-child(2){animation-delay:150ms}.boot-dots i:nth-child(3){animation-delay:300ms}
-/* The mascot's limbs move in the WebP frames; the still image is selected for reduced motion. */
+/* The mascot's limbs follow smooth paths inside its self-contained SVG; the still image is selected for reduced motion. */
 @keyframes bittie-dot{0%,70%,100%{opacity:.3}35%{opacity:1}}
 @media(prefers-reduced-motion:reduce){#app-loading{transition:none}.boot-dots i{animation:none}}
 main{max-width:720px;margin:0 auto;padding:0 16px 48px;overflow-x:clip}
@@ -861,7 +861,7 @@ h2,h3,.verb,.step b,.it b{text-wrap:balance} p,.d,.sub,.note{text-wrap:pretty}
 <div id="app-loading" role="status" aria-live="polite">
   <div class="boot-bittie"><picture>
     <source srcset="/art/bittie-loading-v1.webp" type="image/webp" media="(prefers-reduced-motion:reduce)">
-    <img src="/art/bittie-dance-v1.webp" width="320" height="320" alt="" fetchpriority="high" decoding="async">
+    <img src="/art/bittie-dance-v2.svg" width="320" height="320" alt="" fetchpriority="high" decoding="async">
   </picture></div>
   <b translate="no">Bittertalen</b>
   <p id="boot-label">Laden…</p>
@@ -874,7 +874,7 @@ let lang="nl";try{lang=localStorage.getItem("ww-ui")||"nl"}catch{}
 const labels={nl:"Laden…",en:"Loading…",ar:"جارٍ التحميل…",tr:"Yükleniyor…",hi:"लोड हो रहा है…",zh:"加载中…",es:"Cargando…",ru:"Загрузка…"};
 const label=document.getElementById("boot-label");label.textContent=labels[lang]||labels.nl;label.lang=lang;
 document.querySelector("#app-loading img").addEventListener("error",function(){
-  if(this.currentSrc.includes("/bittie-dance-v1.webp")){
+  if(this.currentSrc.includes("/bittie-dance-v2.svg")){
     this.parentElement.querySelectorAll("source").forEach(source=>source.remove());
     this.src="/art/bittie-loading-v1.webp";return;
   }

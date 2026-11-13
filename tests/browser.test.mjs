@@ -11,7 +11,7 @@ import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
-const TYPES = {'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css','.jpg':'image/jpeg','.png':'image/png','.webp':'image/webp','.json':'application/json','.mp3':'audio/mpeg','.txt':'text/plain'};
+const TYPES = {'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css','.jpg':'image/jpeg','.png':'image/png','.webp':'image/webp','.svg':'image/svg+xml','.json':'application/json','.mp3':'audio/mpeg','.txt':'text/plain'};
 let chromium = null;
 try { chromium = createRequire(import.meta.url)('playwright')[process.env.BROWSER_ENGINE || 'chromium']; } catch {}
 
@@ -78,7 +78,7 @@ test('Bittie welcomes learners during startup and never traps them behind loadin
         await s.p.locator('#app-loading').waitFor({state:'visible', timeout:1500});
         await s.p.waitForFunction(() => document.querySelector('#app-loading img').naturalWidth > 0, null, {timeout:1500});
         assert.equal(await s.p.locator('link[href="/motion-v1.css"]').getAttribute('media'), 'print');
-        assert.match(await s.p.locator('#app-loading img').evaluate(e=>e.currentSrc), /\/bittie-dance-v1\.webp$/);
+        assert.match(await s.p.locator('#app-loading img').evaluate(e=>e.currentSrc), /\/bittie-dance-v2\.svg$/);
       } finally { release(); await s.ctx.close(); }
     });
     await t.test('iPhone launch metadata contains Bittie at the exact device resolution', async () => {
@@ -109,7 +109,7 @@ test('Bittie welcomes learners during startup and never traps them behind loadin
         assert.equal(await image.evaluate(e=>getComputedStyle(e).transform),'none');
         const firstFrame=await image.screenshot();
         await s.p.waitForTimeout(180);
-        assert.notDeepEqual(await image.screenshot(),firstFrame,'the rendered hands and feet change position');
+        assert.equal((await image.screenshot()).equals(firstFrame),false,'the rendered hands and feet change position');
       } finally {release();await s.ctx.close()}
     });
     await t.test('slow scripts show Bittie, the saved language and accessible reduced motion', async () => {
@@ -124,7 +124,7 @@ test('Bittie welcomes learners during startup and never traps them behind loadin
           const shownAt=await s.p.locator('#app-loading').evaluate(e=>Number(e.dataset.shownAt));
           await s.p.waitForFunction(() => document.querySelector('#app-loading img').naturalWidth > 0);
           assert.match(await s.p.locator('#app-loading img').evaluate(e=>e.currentSrc),
-            opt.reducedMotion?/\/bittie-loading-v1\.webp$/:/\/bittie-dance-v1\.webp$/);
+            opt.reducedMotion?/\/bittie-loading-v1\.webp$/:/\/bittie-dance-v2\.svg$/);
           assert.equal(await s.p.locator('#boot-label').textContent(), opt.lang==='ru'?'Загрузка…':'جارٍ التحميل…');
           assert.equal(await s.p.locator('main').isVisible(), false);
           assert.equal(await s.p.locator('#tabs').isVisible(), false);
@@ -160,7 +160,7 @@ test('Bittie welcomes learners during startup and never traps them behind loadin
       let release;
       const held=new Promise(ok=>{release=ok});
       try {
-        await s.p.route('**/art/bittie-dance-v1.webp',route=>route.abort());
+        await s.p.route('**/art/bittie-dance-v2.svg',route=>route.abort());
         await s.p.route('**/data/knm.js?*',async route=>{await held;await route.continue().catch(()=>{})});
         await s.p.goto(base+'/oefenen?open=today',{waitUntil:'commit'});
         await s.p.waitForFunction(()=>{
@@ -600,10 +600,10 @@ test('Offline the app opens with its own files, also after an update', async t =
     const files = await s.p.evaluate(() => [...document.scripts].map(x => x.getAttribute('src')).filter(x => x && x.includes('?v=')));
     assert.ok(files.length >= 7);
     assert.equal(files.some(f => f.startsWith('/data/ui.js')), false, 'the translations are not loaded for Dutch');
-    let c = await wait(c => c.includes('/oefenen') && c.includes('/art/bittie-loading-v1.webp') && c.includes('/art/bittie-dance-v1.webp') && files.every(f => c.includes(f)));
+    let c = await wait(c => c.includes('/oefenen') && c.includes('/art/bittie-loading-v1.webp') && c.includes('/art/bittie-dance-v2.svg') && files.every(f => c.includes(f)));
     assert.ok(files.every(f => c.includes(f)), 'the page\'s files are cached');
     assert.ok(c.includes('/art/bittie-loading-v1.webp'), 'Bittie is available for offline startup');
-    assert.ok(c.includes('/art/bittie-dance-v1.webp'), 'the frame animation is available offline');
+    assert.ok(c.includes('/art/bittie-dance-v2.svg'), 'the smooth animation is available offline');
     // A slow navigation refresh must not keep an installed app on its native blank launch screen.
     await s.p.waitForFunction(() => !!navigator.serviceWorker.controller);
     let release;
@@ -612,7 +612,7 @@ test('Offline the app opens with its own files, also after an update', async t =
       await s.p.reload({waitUntil:'commit', timeout:1500});
       await s.p.locator('#app-loading').waitFor({state:'visible', timeout:1000});
       await s.p.waitForFunction(() => document.querySelector('#app-loading img')?.naturalWidth > 0, null, {timeout:1000});
-      assert.match(await s.p.locator('#app-loading img').evaluate(e=>e.currentSrc), /\/bittie-dance-v1\.webp$/);
+      assert.match(await s.p.locator('#app-loading img').evaluate(e=>e.currentSrc), /\/bittie-dance-v2\.svg$/);
     } finally { state.holdApp=null; release(); }
     await s.p.locator('#app-loading').waitFor({state:'detached'});
     await offline(true); await s.p.reload(); await s.p.waitForSelector('#plan .step');

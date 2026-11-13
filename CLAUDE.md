@@ -51,11 +51,10 @@ Below, "in `oefenen.html`" for these names means that file. Every local script i
 `study/` or the dictionary run `node tools/stamp.mjs` (the tests fail when a version is out of date). A data file
 must not use anything from the app's script at load time (only inside functions). `study/language-v1.js` holds stable verb and word-order data plus checking logic. `study/progress-v1.js` handles three-way progress merges and conditional cloud writes. `study/writing-v1.js` aggregates writing feedback without making another grading request. Paintings are in `art/`.
 The study app shows Bittie while it starts (`#app-loading`, the early `data-boot` attribute). The transparent
-320px `art/bittie-dance-v1.webp` has 16 distinct poses over two seconds: hands clap, feet step and kick, then Bittie hops.
+320px `art/bittie-dance-v2.svg` moves the original photo paws independently along continuously eased paths: two small steps, a clap and a gentle hop over 3.2 seconds. The clap lands at 1.6 seconds, within the existing two-second splash minimum. Unlike the old eight-fps pose loop, it has no discrete pose changes or blended/doubled paws. Its PNG textures are embedded, so it works as a cached image with no scripts or external requests.
 The old whole-image CSS rotation is removed. `picture` selects the static `art/bittie-loading-v1.webp` for reduced
 motion or if the animated file fails. Conditional preloads download the selected image; both are cached offline.
-The generated 4x4 source atlas is `art/bittie-dance-v1-atlas.webp`; `python tools/build-bittie-dance.py` exports the loop
-with Pillow. The loading label uses the saved menu language before the full translations load.
+The generated 4x4 source atlas is `art/bittie-dance-v1-atlas.webp`; `python tools/build-bittie-dance.py` extracts the existing torso/paw textures with Pillow and builds the SVG paths. All paths share eased timing and identical loop endpoints; body tilt is limited to one degree and lift to eight pixels. The loading label uses the saved menu language before the full translations load.
 The dots stop for reduced motion. At the user's request, the splash stays visible for at least two
 seconds from when its markup is shown, then fades when startup is ready; slow starts add no extra delay. Reduced motion
 and startup errors skip this minimum. Optional account work cannot cover usable local content for more than four seconds
@@ -67,7 +66,7 @@ caching the page's scripts and both mascot assets before replacing that saved pa
 cache also remembers and announces the update, so the installed app can replace its old CSS wobble. The optional
 motion stylesheet cannot block the first mascot frame. `ios-startup-v1.js` supplies an exact-device-size static
 Bittie launch image on iOS (including from the homepage before installation); iOS cannot animate its native launch
-image. Animated frames begin inside the web view while data and optional account work continue. Startup and offline
+image. The smooth dance begins inside the web view while data and optional account work continue. Startup and offline
 browser checks run in Chromium and WebKit, including held navigation/style requests and a same-cache worker update.
 Deployed on Vercel from `main`: every push to `main` goes live at https://bittertalen.nl (push `main` first, then the working
 branch: in November 2026 a commit built first as a branch preview got no production build when it reached `main`; then
