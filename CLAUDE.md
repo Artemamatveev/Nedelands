@@ -61,6 +61,14 @@ seconds from when its markup is shown, then fades when startup is ready; slow st
 and startup errors skip this minimum. Optional account work cannot cover usable local content for more than four seconds
 after local restoration. Script failures and a 20-second stalled startup expose the existing reload action instead of
 leaving a permanent overlay. Without JavaScript the splash stays hidden and the existing noscript message is visible.
+Installed launches serve the cached `/oefenen` page immediately, while a complete update is fetched in parallel;
+the previous 2.5-second network race produced the blank screen in the user's iPhone recording. Keep validating and
+caching the page's scripts and both mascot assets before replacing that saved page. A new worker using the same
+cache also remembers and announces the update, so the installed app can replace its old CSS wobble. The optional
+motion stylesheet cannot block the first mascot frame. `ios-startup-v1.js` supplies an exact-device-size static
+Bittie launch image on iOS (including from the homepage before installation); iOS cannot animate its native launch
+image. Animated frames begin inside the web view while data and optional account work continue. Startup and offline
+browser checks run in Chromium and WebKit, including held navigation/style requests and a same-cache worker update.
 Deployed on Vercel from `main`: every push to `main` goes live at https://bittertalen.nl (push `main` first, then the working
 branch: in November 2026 a commit built first as a branch preview got no production build when it reached `main`; then
 start one by hand, a production deployment of `main` at that commit) (Vercel project
