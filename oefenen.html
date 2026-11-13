@@ -1561,7 +1561,7 @@ function drawWelcome(){
   const intro=first&&!acc.step;
   const login=loginHTML("w")+(acc.step==="code"?"":`<p class="wbenefit">Bewaar je voortgang op al je apparaten.</p>`);
   el.innerHTML=`<div class="wcard${intro?" is-intro":""}">${langHTML()}<span class="wmascot">${avSVG("bal")}</span>
-    ${intro?`<h2 class="wlogo">${logo?logo.outerHTML:"Bittertalen"}</h2>`:`<p class="wlogo">${logo?logo.outerHTML:"Bittertalen"}</p><h2>${acc.step==="code"?"Vul de code in":"Inloggen of account maken"}</h2>`}`
+    ${intro?`<h2 class="wlogo" aria-label="Bittertalen" translate="no">${logo?logo.outerHTML:"Bittertalen"}</h2>`:`<p class="wlogo">${logo?logo.outerHTML:"Bittertalen"}</p><h2>${acc.step==="code"?"Vul de code in":"Inloggen of account maken"}</h2>`}`
     +(intro?`<p class="wintro">Nederlands, stap voor stap.</p><button class="btn wide" id="wtry">Probeer één vraag</button><details><summary>Inloggen of account maken</summary>${login}</details>`:login)+(acc.msg?`<p class="note">${esc(acc.msg)}</p>`:"")
     +`<button class="${intro?"ghost wskip":"ghost wide"}" id="wlater">${first?"Eerst rondkijken":"Terug"}</button></div>
     <div class="wfoot"><p><a href="/privacy">Privacyverklaring</a></p><p class="wart">${p.a} · ${p.t} · ${p.m}</p></div>`;
