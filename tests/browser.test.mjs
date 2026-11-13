@@ -292,16 +292,8 @@ test('The homepage and the app work in a real browser', async t => {
         const s = await page(browser, base, {lang, viewport: {width, height: 800}}); await s.go('/'); await s.p.waitForSelector('.hero');
         const r = await s.p.evaluate(() => {
           const seen = [...document.querySelectorAll('.bar .brand,.bar #enter,.nav a,.language,.signin')].filter(e => e.offsetParent).map(e => e.getBoundingClientRect());
-          // Fractional font metrics can put aligned centers on either side of .5px.
-          // Group by actual distance, not by rounding each element independently.
-          const rows = [];
-          for (const b of seen) {
-            const y = b.top + b.height / 2;
-            let row = rows.find(row => Math.abs(row.y - y) <= 1);
-            if (!row) { row = {y, items: []}; rows.push(row); }
-            row.items.push(b);
-          }
-          const gaps = rows.map(row => { const it = row.items.sort((a, b) => a.left - b.left);
+          const rows = [...new Set(seen.map(b => Math.round(b.top + b.height / 2)))].sort((a, b) => a - b);
+          const gaps = rows.map(y => { const it = seen.filter(b => Math.round(b.top + b.height / 2) === y).sort((a, b) => a.left - b.left);
             return Math.min(99, ...it.slice(1).map((b, i) => b.left - it[i].right)); });
           return {rows: rows.length, gap: Math.min(...gaps), out: seen.filter(b => b.left < 0 || b.right > innerWidth).length,
             wrapped: [...document.querySelectorAll('.bar .brand,.bar #enter,.nav a,.signin')].filter(e => e.getClientRects().length > 1).length};
