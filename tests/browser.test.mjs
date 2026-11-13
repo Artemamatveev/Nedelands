@@ -18,6 +18,7 @@ try { chromium = createRequire(import.meta.url)('playwright')[process.env.BROWSE
 // state.knm: another version of data/knm.js in the page's address, as after an update
 function serve(state = {}) {
   const server = http.createServer(async (req, res) => {
+    if (state.disconnected) { req.destroy(); return; }
     let p = decodeURIComponent(new URL(req.url, 'http://x').pathname);
     if (state.holdApp && (p === '/oefenen' || p === '/oefenen.html')) await state.holdApp;
     if (state.workerRevision && p === '/sw.js') {
@@ -115,9 +116,18 @@ test('Bittie welcomes learners during startup and never traps them behind loadin
           else {
             const image = s.p.locator('#app-loading img');
             assert.equal(await image.evaluate(e=>getComputedStyle(e).transform), 'none', 'the complete image is not being wobbled');
-            const firstFrame = await image.screenshot();
+            // Capture the actual decoded frame without waiting for document.fonts.ready.
+            // WebKit keeps that promise pending while the exercise script is deliberately held.
+            const frameHash = () => image.evaluate(element => {
+              const canvas=document.createElement('canvas');canvas.width=element.naturalWidth;canvas.height=element.naturalHeight;
+              const context=canvas.getContext('2d');context.drawImage(element,0,0);
+              let hash=2166136261;
+              for(const byte of context.getImageData(0,0,canvas.width,canvas.height).data) hash=Math.imul(hash^byte,16777619);
+              return hash>>>0;
+            });
+            const firstFrame = await frameHash();
             await s.p.waitForTimeout(180);
-            assert.notDeepEqual(await image.screenshot(), firstFrame, 'the character changes pose inside the image');
+            assert.notEqual(await frameHash(), firstFrame, 'the character changes pose inside the image');
           }
           release();
           await s.p.waitForFunction(() => window.__up===1);
@@ -575,6 +585,12 @@ test('Offline the app opens with its own files, also after an update', async t =
   const state = {}, server = await serve(state), base = `http://127.0.0.1:${server.address().port}`;
   try {
     const s = await page(browser, base, {serviceWorkers: 'allow'});
+    // Playwright 1.63's WebKit offline emulation rejects even literal worker responses (#42775).
+    // Drop every origin connection instead, keeping the real service-worker/offline path under test.
+    const offline = async value => {
+      if (process.env.BROWSER_ENGINE === 'webkit') state.disconnected=value;
+      else await s.ctx.setOffline(value);
+    };
     await s.go('/oefenen'); await s.p.waitForSelector('#plan .step');
     await s.p.evaluate(() => navigator.serviceWorker.ready);
     const cached = () => s.p.evaluate(async () => (await (await caches.open('nl-a2-v12')).keys()).map(r => new URL(r.url)).map(u => u.pathname + u.search));
@@ -597,21 +613,26 @@ test('Offline the app opens with its own files, also after an update', async t =
       assert.match(await s.p.locator('#app-loading img').evaluate(e=>e.currentSrc), /\/bittie-dance-v1\.webp$/);
     } finally { state.holdApp=null; release(); }
     await s.p.locator('#app-loading').waitFor({state:'detached'});
-    await s.ctx.setOffline(true); await s.p.reload(); await s.p.waitForSelector('#plan .step');
-    await s.ctx.setOffline(false);
+    await offline(true); await s.p.reload(); await s.p.waitForSelector('#plan .step');
+    if (process.env.BROWSER_ENGINE === 'webkit') {
+      const noWorker=await browser.newContext({serviceWorkers:'block'});
+      try { const control=await noWorker.newPage();await assert.rejects(control.goto(base+'/not-cached'), 'the origin really is unreachable without a worker'); }
+      finally { await noWorker.close(); }
+    }
+    await offline(false);
     // an update: the page asks for another version of one file
     state.knm = 'ffffffffff';
     await s.p.reload(); await s.p.waitForSelector('#plan .step');
     c = await wait(c => c.includes('/data/knm.js?v=ffffffffff') && c.filter(x => x.startsWith('/data/knm.js')).length === 1);
     assert.deepEqual(c.filter(x => x.startsWith('/data/knm.js')), ['/data/knm.js?v=ffffffffff'], 'only the version the stored page uses');
-    await s.ctx.setOffline(true); await s.p.reload(); await s.p.waitForSelector('#plan .step');
+    await offline(true); await s.p.reload(); await s.p.waitForSelector('#plan .step');
     assert.equal(await s.p.evaluate(() => KNM.length > 400), true);
     // in another language the translations come too, and stay for offline use
-    await s.ctx.setOffline(false);
+    await offline(false);
     await s.p.evaluate(() => localStorage.setItem('ww-ui', 'ar')); await s.p.reload(); await s.p.waitForSelector('#plan .step');
     await s.p.waitForFunction(() => document.querySelector('#tabs button[data-t=examen] span').textContent !== 'Examen');
     c = await wait(c => c.some(x => x.startsWith('/data/ui.js')));
-    await s.ctx.setOffline(true); await s.p.reload(); await s.p.waitForSelector('#plan .step');
+    await offline(true); await s.p.reload(); await s.p.waitForSelector('#plan .step');
     await s.p.waitForFunction(() => document.querySelector('#tabs button[data-t=examen] span').textContent !== 'Examen');
     assert.deepEqual(s.errors.filter(e => !/ERR_INTERNET_DISCONNECTED|Failed to load resource/.test(e)), []);
     await s.ctx.close();
