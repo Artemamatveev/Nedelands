@@ -623,6 +623,7 @@ test('The owner overview shows accounts and study time', async t => {
         assert.match(await visits.locator('.readout span').textContent(), new RegExp(String(d.getFullYear())));
         if (process.env.ADMIN_SCREENSHOTS) {
           fs.mkdirSync(process.env.ADMIN_SCREENSHOTS, {recursive: true});
+          await s.p.locator('.trend-head h2').hover();
           await s.p.locator('.trends').screenshot({path: path.join(process.env.ADMIN_SCREENSHOTS, `statistics-${width}-${days}.png`)});
         }
       }
