@@ -67,19 +67,19 @@ tr.open td{background:var(--wash)}
 .plot{display:flex;height:208px;padding-top:22px}
 .yax{position:relative;width:36px;flex:none;font-size:11px;color:var(--soft);font-variant-numeric:tabular-nums}
 .yax span{position:absolute;right:8px;transform:translateY(50%)}
-.area{position:relative;flex:1;min-width:0}
+.area{isolation:isolate;position:relative;flex:1;min-width:0}
 .area hr{position:absolute;left:0;right:0;margin:0;border:0;border-top:1px solid var(--line)}
-.bars{position:absolute;inset:0;display:flex}
-.col{flex:1;position:relative;display:flex;align-items:flex-end;justify-content:center;min-width:0;cursor:pointer;border-radius:var(--rc)}
-.col i{display:block;width:calc(100% - 4px);max-width:28px;background:var(--chart);border-radius:4px 4px 0 0;min-height:2px}
-.col[aria-pressed=true]{background:var(--wash)}
-.col[aria-pressed=true] i{background:var(--oranje)}
-.col:hover i,.col:focus-visible i{background:var(--blue)}
-.col:focus-visible{outline:2px solid var(--oranje);outline-offset:-1px}
-.val{position:absolute;left:50%;transform:translateX(-50%);font-size:11px;font-weight:600;white-space:nowrap;pointer-events:none}
+.line{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;color:var(--chart)}
+.line path{fill:none;stroke:currentColor;stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.points{position:absolute;inset:0;display:flex;touch-action:pan-y}
+.point{flex:1;position:relative;min-width:0;cursor:crosshair}
+.point::before{content:"";position:absolute;width:6px;height:6px;border-radius:50%;background:var(--chart);left:50%;top:var(--y);transform:translate(-50%,-50%);pointer-events:none}
+.point[data-missing]::before{display:none}
+.point[aria-pressed=true]::before{width:11px;height:11px;background:var(--oranje);border:2px solid var(--card);box-shadow:0 0 0 1px var(--oranje);z-index:2}
+.point[aria-pressed=true]::after{content:"";position:absolute;top:0;bottom:0;left:50%;width:1px;background:var(--line);z-index:-1}
+.point:focus-visible{outline:2px solid var(--oranje);outline-offset:-1px}
 .xax{position:relative;height:30px;margin-inline-start:36px;font-size:11px;color:var(--soft);font-variant-numeric:tabular-nums}
 .xax span{position:absolute;top:7px;transform:translateX(-50%);white-space:nowrap}
-.xax span:first-child{transform:none;left:0!important}.xax span:last-child{transform:translateX(-100%);left:100%!important}
 .chart-hint{font-size:12px;color:var(--soft);margin:8px 0}
 .chart details{margin-top:8px;font-size:13px} summary{cursor:pointer;color:var(--soft)}
 .chart details table{margin-top:8px} .chart details td,.chart details th{padding:7px 12px}
@@ -97,8 +97,6 @@ tr.open td{background:var(--wash)}
   .tile header input[type=search]{width:100%}.tile header .grow{flex-basis:100%}
   .detail .cols{grid-template-columns:1fr}.plot{height:194px}
 }
-.tip{position:fixed;width:max-content;z-index:5;pointer-events:none;background:var(--ink);color:#fff;border-radius:var(--rc);padding:5px 9px;font-size:12px;line-height:1.3;transform:translate(-50%,-100%);max-width:calc(100vw - 16px)}
-.tip b{display:block;font-size:15px}
 .days{display:flex;align-items:flex-end;gap:4px;height:90px;margin:8px 0 2px}
 .days div{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px;height:100%;font-size:11px;color:var(--soft)}
 .days .qa{font-weight:600;color:var(--blue);min-height:14px}
@@ -123,7 +121,7 @@ const dayNo = (t = Date.now()) => { const d = new Date(t); return Math.floor((d.
 const dayLabel = n => new Date(n * 864e5).toLocaleDateString("ru-RU", {day: "numeric", month: "short", timeZone: "UTC"});
 const PART = {lz: "Чтение A2", ls: "Аудирование A2", wr: "Письмо A2", sp: "Речь A2", knm: "KNM",
   l1: "Чтение B1", lb: "Аудирование B1", wb: "Письмо B1", sb: "Речь B1"};
-const EV = [["open", "Открыли приложение"], ["new", "Новые устройства"], ["home", "Главная"], ["begin", "Перешли в приложение"],
+const EV = [["open", "Открытия приложения"], ["new", "Первые открытия"], ["home", "Главная"], ["begin", "Перешли в приложение"],
   ["quiz", "Пример вопроса"], ["test", "Стартовый тест"], ["day", "Урок дня"], ["exam", "Экзаменов начато"], ["done", "Экзаменов сдано"]];
 
 function dur(sec) {
@@ -162,6 +160,7 @@ async function token() {
 
 let DATA = null, me = "", open = new Set(), query = "", period = 7;
 const selectedDays = {};
+const DAILY_SINCE = "2026-11-11";
 async function load() {
   const t = await token().catch(() => ({}));
   if (t.off) return message("Аккаунты не настроены", "Без Supabase на сайте нет аккаунтов, и показывать нечего.");
@@ -199,7 +198,7 @@ function counts(rows) {
   const body = days.map(d => `<tr><td>${new Date(d + "T12:00:00Z").toLocaleDateString("ru-RU", {weekday: "short", day: "numeric", month: "short", timeZone: "UTC"})}</td>` +
     EV.map(([k], i) => `<td>${by[d][k] || (i ? "<span class=muted>·</span>" : "0")}</td>`).join("") + `</tr>`).join("");
   return `<section class="tile"><h2>Посещения за 30 дней</h2>
-    <p class="sub">Анонимно, все устройства, и с аккаунтом, и без: число событий за день. Одно устройство в день считается один раз.</p>
+    <p class="sub">Анонимные события, с аккаунтом и без. Это не число людей или устройств: очистка хранилища, другой браузер или повторная отправка могут увеличить счётчик.</p>
     <div class="scroll events" tabindex="0" role="region" aria-label="Посещения по дням"><table><thead><tr><th>День</th>${EV.map(([, l]) => `<th>${l}</th>`).join("")}</tr></thead>
     <tbody>${body || `<tr><td colspan="${EV.length + 1}" class="muted">Пока пусто.</td></tr>`}</tbody></table></div></section>`;
 }
@@ -214,36 +213,45 @@ const chartDate = (d, compact = false) => new Date(d + "T12:00:00Z").toLocaleDat
   ? {day: "2-digit", month: "2-digit", timeZone: "UTC"}
   : {weekday: "short", day: "numeric", month: "long", year: "numeric", timeZone: "UTC"});
 function chart(key, title, sub, pts, full) {
-  const {step, top} = axis(Math.max(...pts.map(p => p.v))), ticks = [], last = pts.length - 1;
+  const {step, top} = axis(Math.max(0, ...pts.map(p => p.v || 0))), ticks = [], last = pts.length - 1;
   for (let t = 0; t <= top; t += step) ticks.push(t);
-  const peak = pts.reduce((a, p, i) => p.v > pts[a].v ? i : a, 0);
   const selected = pts.find(p => p.d === selectedDays[key]) || pts[last];
-  const cols = pts.map((p, i) => `<div class="col" role="button" tabindex="${p === selected ? 0 : -1}" aria-pressed="${p === selected}" aria-label="${chartDate(p.d)}: ${full(p.v)}" data-date="${p.d}" data-d="${chartDate(p.d)}" data-v="${full(p.v)}">` +
-    (p.v && (i === peak || (i === last && (pts.length <= 7 || last - peak > 2))) ? `<span class="val" style="bottom:calc(${p.v / top * 100}% + 3px)">${p.v}</span>` : "") +
-    `<i style="height:${p.v / top * 100}%"></i></div>`).join("");
-  // Four labels fit even a 320px phone. Full dates stay in the readout and the table.
-  const indices = [0, Math.round(last / 3), Math.round(last * 2 / 3), last];
-  const xs = indices.map(i => `<span style="left:${(i + .5) / pts.length * 100}%">${chartDate(pts[i].d, true)}</span>`).join("");
-  const rows = [...pts].reverse().map(p => `<tr data-date="${p.d}" class="${p === selected ? "selected" : ""}"><td>${chartDate(p.d)}</td><td>${full(p.v)}</td></tr>`).join("");
+  const value = p => p.v === null ? "Нет данных" : full(p.v);
+  const x = i => (i + .5) / pts.length * 100, y = p => (1 - (p.v || 0) / top) * 100;
+  let pen = false;
+  const path = pts.map((p, i) => {
+    if (p.v === null) { pen = false; return ""; }
+    const command = pen ? "L" : "M"; pen = true;
+    return `${command}${x(i) * 10},${y(p) * 1.8}`;
+  }).join(" ");
+  const points = pts.map(p => `<div class="point" role="button" tabindex="${p === selected ? 0 : -1}" aria-pressed="${p === selected}" aria-label="${chartDate(p.d)}: ${value(p)}" data-date="${p.d}" data-d="${chartDate(p.d)}" data-v="${value(p)}"${p.v === null ? " data-missing" : ""} style="--y:${y(p)}%"></div>`).join("");
+  const indices = pts.length <= 7 ? pts.map((_, i) => i) : [0, Math.round(last / 3), Math.round(last * 2 / 3), last];
+  const xs = indices.map(i => `<span style="left:${x(i)}%">${chartDate(pts[i].d, true)}</span>`).join("");
+  const rows = [...pts].reverse().map(p => `<tr data-date="${p.d}" class="${p === selected ? "selected" : ""}"><td>${chartDate(p.d)}</td><td>${value(p)}</td></tr>`).join("");
   return `<figure class="chart" data-chart="${key}"><figcaption><h2>${title}</h2><p class="sub">${sub}</p></figcaption>
-    <div class="readout" aria-live="polite" aria-atomic="true"><span>${chartDate(selected.d)}</span><b>${full(selected.v)}</b></div>
+    <div class="readout" aria-live="polite" aria-atomic="true"><span>${chartDate(selected.d)}</span><b>${value(selected)}</b></div>
     <div class="plot"><div class="yax" aria-hidden="true">${ticks.map(t => `<span style="bottom:${t / top * 100}%">${t}</span>`).join("")}</div>
-    <div class="area" role="group" aria-label="${title}: по дням, стрелки влево и вправо">${ticks.map(t => `<hr aria-hidden="true" style="bottom:${t / top * 100}%">`).join("")}<div class="bars">${cols}</div></div></div>
+    <div class="area" role="group" aria-label="${title}: нажмите или проведите по графику, стрелки влево и вправо">${ticks.map(t => `<hr aria-hidden="true" style="bottom:${t / top * 100}%">`).join("")}
+      <svg class="line" viewBox="0 0 1000 180" preserveAspectRatio="none" aria-hidden="true"><path d="${path}"/></svg><div class="points">${points}</div></div></div>
     <div class="xax" aria-hidden="true">${xs}</div>
     <details><summary>Все дни таблицей</summary><table><thead><tr><th>Дата</th><th>Значение</th></tr></thead><tbody>${rows}</tbody></table></details></figure>`;
 }
-function charts(users, rows) {
-  const days = lastDays(period), opens = {}, secs = {};
-  for (const r of rows || []) if (r.ev === "open") opens[r.day] = (opens[r.day] || 0) + r.n;
-  for (const u of users) for (const [k, v] of Object.entries(u.tm || {})) { const d = new Date(+k * 864e5).toISOString().slice(0, 10); secs[d] = (secs[d] || 0) + (+v || 0); }
+function charts(users) {
+  const days = lastDays(period), active = {}, secs = {};
+  for (const u of users) {
+    const seen = new Set();
+    for (const [k, v] of Object.entries(u.tm || {})) { const d = new Date(+k * 864e5).toISOString().slice(0, 10); secs[d] = (secs[d] || 0) + (+v || 0); if (+v > 0) seen.add(d); }
+    for (const [k, v] of Object.entries(u.qd || {})) if (+v > 0) seen.add(new Date(+k * 864e5).toISOString().slice(0, 10));
+    for (const d of seen) active[d] = (active[d] || 0) + 1;
+  }
   const range = days.map(d => new Date(d + "T12:00:00Z"));
   const fmt = new Intl.DateTimeFormat("ru-RU", {day: "numeric", month: "long", year: "numeric", timeZone: "UTC"});
-  return `<section class="trends" aria-label="Динамика по дням"><div class="trend-head"><div><h2>Динамика по дням</h2><p class="sub">${fmt.formatRange(range[0], range[range.length - 1])} · сегодня ещё идёт</p></div>
+  return `<section class="trends" aria-label="Динамика по дням"><div class="trend-head"><div><h2>Динамика по дням</h2><p class="sub">${fmt.formatRange(range[0], range[range.length - 1])}<br>Сегодня — неполный день</p></div>
     <div class="period" role="group" aria-label="Период графиков">${[7, 30].map(n => `<button data-period="${n}" aria-pressed="${period === n}">${n} дней</button>`).join("")}</div></div>
     <div class="charts">` +
-    chart("visits", "Посещаемость", "Устройств за день · с аккаунтом и без", days.map(d => ({d, v: opens[d] || 0})), v => `${v} устр.`) +
-    chart("study", "Время занятий", "Минут за день · только с аккаунтом", days.map(d => ({d, v: Math.round((secs[d] || 0) / 60)})), v => v ? dur(v * 60) : "0 мин") +
-    `</div><p class="chart-hint">Нажмите на столбец, чтобы увидеть дату и значение. Столбцы идут от старых дней к новым.</p></section>`;
+    chart("active", "Активные аккаунты", "Занимались за день · каждый аккаунт один раз", days.map(d => ({d, v: d < DAILY_SINCE ? null : active[d] || 0})), v => `${v} акк.`) +
+    chart("study", "Время занятий", "Минут за день · только с аккаунтом", days.map(d => ({d, v: d < DAILY_SINCE ? null : Math.round((secs[d] || 0) / 60)})), v => v ? dur(v * 60) : "0 мин") +
+    `</div><p class="chart-hint">Нажмите на график или проведите по нему пальцем — появятся дата и значение каждого дня. Учёт занятий по дням ведётся с 11 ноября 2026 года. Гости без аккаунта в эти графики не входят.</p></section>`;
 }
 
 function resChips(res) {
@@ -301,11 +309,11 @@ function draw() {
     <span class="muted">обновлено в ${at}</span><button id="re">Обновить</button><a class="btn" href="/oefenen">В приложение</a></header>
     ${DATA.users.some(u => !("qd" in u)) ? `<section class="tile warn" role="status"><h2>В Supabase старая версия функции admin_overview</h2>
     <p class="sub" style="margin:0">Поэтому ответы «сегодня» и «7 дней» не показываются, хотя приложение их уже считает. Выполните в SQL Editor последний блок из <code>supabase/schema.sql</code> (<code>create or replace function public.admin_overview()</code> …) и нажмите «Обновить».</p></section>` : ""}
-    ${kpis(DATA.users)}${charts(DATA.users, DATA.counts)}${users(DATA.users)}${counts(DATA.counts)}
+    ${kpis(DATA.users)}${charts(DATA.users)}${users(DATA.users)}${counts(DATA.counts)}
     <details class="explanation"><summary>Как считаются показатели</summary><p class="sub">Время — активные минуты в приложении: страница открыта, и человек что-то нажимал за последние 90 секунд (или слушал запись). Время и ответы по дням учитываются с 11 ноября 2026 года и попадают сюда после синхронизации прогресса; «всего» у ответов — за всё время, с первого дня. «Разных вопросов» — сколько разных вопросов человек хоть раз прошёл. Ответы считают и упражнения, и пробные экзамены; повтор вопроса после ошибки в том же раунде не считается.</p></details>`;
   $("re").onclick = load;
   app.querySelectorAll("[data-period]").forEach(button => {
-    button.onclick = () => { period = +button.dataset.period; tip.hidden = true; draw(); app.querySelector(`[data-period="${period}"]`).focus({preventScroll: true}); };
+    button.onclick = () => { period = +button.dataset.period; draw(); app.querySelector(`[data-period="${period}"]`).focus({preventScroll: true}); };
   });
   const q = $("q"); q.oninput = () => { query = q.value.trim().toLowerCase(); const pos = q.selectionStart; draw(); const n = $("q"); n.focus(); n.setSelectionRange(pos, pos); };
   app.querySelectorAll("tr.u").forEach(tr => {
@@ -313,33 +321,29 @@ function draw() {
     tr.onclick = flip; // the name is a button too, for the keyboard (a click on it reaches the row)
   });
 }
-// Hover shows a tooltip; tapping or keyboard focus updates the persistent date/value readout.
-const tip = Object.assign(document.createElement("div"), {className: "tip", hidden: true});
-tip.setAttribute("aria-hidden", "true"); // a screen reader has the same words in the column's own name
-document.body.appendChild(tip);
-function showTip(c) {
-  const r = c.getBoundingClientRect(), bar = c.querySelector("i").getBoundingClientRect();
-  tip.textContent = ""; const b = document.createElement("b"); b.textContent = c.dataset.v; tip.append(b, c.dataset.d);
-  tip.hidden = false; const half = tip.offsetWidth / 2;
-  tip.style.left = `${Math.min(innerWidth - half - 8, Math.max(half + 8, r.left + r.width / 2))}px`; tip.style.top = `${Math.max(tip.offsetHeight + 8, bar.top - 8)}px`;
+// Full dates stay visible while tapping, scrubbing or navigating with arrow keys.
+function selectDay(point) {
+  const chart = point.closest(".chart"); selectedDays[chart.dataset.chart] = point.dataset.date;
+  chart.querySelectorAll(".point").forEach(p => { p.tabIndex = p === point ? 0 : -1; p.setAttribute("aria-pressed", p === point); });
+  chart.querySelector(".readout span").textContent = point.dataset.d;
+  chart.querySelector(".readout b").textContent = point.dataset.v;
+  chart.querySelectorAll("tr[data-date]").forEach(row => row.classList.toggle("selected", row.dataset.date === point.dataset.date));
 }
-function selectDay(c) {
-  const chart = c.closest(".chart"); selectedDays[chart.dataset.chart] = c.dataset.date;
-  chart.querySelectorAll(".col").forEach(col => { col.tabIndex = col === c ? 0 : -1; col.setAttribute("aria-pressed", col === c); });
-  chart.querySelector(".readout span").textContent = c.dataset.d;
-  chart.querySelector(".readout b").textContent = c.dataset.v;
-  chart.querySelectorAll("tr[data-date]").forEach(row => row.classList.toggle("selected", row.dataset.date === c.dataset.date));
+const pointOf = e => e.target.closest && e.target.closest(".point");
+function pointAt(e) {
+  const area = e.target.closest(".points"), r = area?.getBoundingClientRect();
+  if (!r) return null;
+  const i = Math.min(area.children.length - 1, Math.max(0, Math.floor((e.clientX - r.left) / r.width * area.children.length)));
+  return area.children[i];
 }
-app.addEventListener("click", e => { const c = colOf(e); if (c) selectDay(c); });
-const colOf = e => e.target.closest && e.target.closest(".col");
-app.addEventListener("pointerover", e => { const c = colOf(e); if (c && e.pointerType !== "touch") showTip(c); });
-app.addEventListener("pointerout", e => { if (colOf(e)) tip.hidden = true; });
-app.addEventListener("focusin", e => { const c = colOf(e); if (c) selectDay(c); });
-app.addEventListener("focusout", e => { if (colOf(e)) tip.hidden = true; });
+app.addEventListener("pointerdown", e => { const p = pointAt(e); if (p) { selectDay(p); p.parentElement.setPointerCapture(e.pointerId); } });
+app.addEventListener("pointermove", e => { if (e.pointerType === "mouse" || e.buttons) { const p = pointAt(e); if (p) selectDay(p); } });
+app.addEventListener("click", e => { const p = pointOf(e); if (p) selectDay(p); });
+app.addEventListener("focusin", e => { const p = pointOf(e); if (p) selectDay(p); });
 app.addEventListener("keydown", e => {
-  const c = colOf(e), to = c && (e.key === "ArrowLeft" ? c.previousElementSibling : e.key === "ArrowRight" ? c.nextElementSibling : null);
+  const p = pointOf(e), to = p && (e.key === "ArrowLeft" ? p.previousElementSibling : e.key === "ArrowRight" ? p.nextElementSibling : null);
   if (to) { e.preventDefault(); to.focus(); }
-  if (c && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); selectDay(c); }
+  if (p && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); selectDay(p); }
 });
 load();
 })();
