@@ -1,6 +1,6 @@
 # Bronnen van de foto's (Spreken, Geschiedenis en KNM)
 
-Alle foto's komen van Wikimedia Commons en zijn publiek domein of CC0.
+Alle foto's komen van Wikimedia Commons. De meeste zijn publiek domein of CC0; de licentie staat per bestand hieronder. Bij CC BY-foto's staan auteur, bron, licentie en de verkleining ook direct bij de foto in de app.
 Ze zijn verkleind (max. 640 px breed) en gecomprimeerd voor de app.
 
 | Bestand | Origineel op Commons | Maker | Licentie |
@@ -113,3 +113,6 @@ De hoofdstukken in Geschiedenis gebruiken ook `art/oranje.jpg` en `art/aardappel
 | `kantoor.jpg` | [Wikimedia Deutschland Office 2024-03-15 3.jpg](https://commons.wikimedia.org/wiki/File:Wikimedia_Deutschland_Office_2024-03-15_3.jpg) | Eugene Ormandy | CC0 |
 | `apotheek.jpg` | [A Drug Store in Nigeria.jpg](https://commons.wikimedia.org/wiki/File:A_Drug_Store_in_Nigeria.jpg) | Beendy234 | CC0 |
 | `kinderopvang.jpg` | [Kinderdagverblijf Het Kabouterhuis, Bestanddeelnr 901-2481.jpg](https://commons.wikimedia.org/wiki/File:Kinderdagverblijf_Het_Kabouterhuis%2C_Bestanddeelnr_901-2481.jpg) | Koos Raucamp / Anefo | CC0 |
+
+| `koorts-kind-v1.jpg` | [Mom checks child's temperature using digital thermometer.jpg](https://commons.wikimedia.org/wiki/File:Mom_checks_child%27s_temperature_using_digital_thermometer.jpg) | Nenad Stojković (Shixart1985) | [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/); verkleind naar 640 px en gecomprimeerd |
+| `koorts-vrouw-v1.jpg` | [A woman holds a digital thermometer, looking worried while wearing a soft robe.jpg](https://commons.wikimedia.org/wiki/File:A_woman_holds_a_digital_thermometer,_looking_worried_while_wearing_a_soft_robe.jpg) | Nenad Stojković (Shixart1985) | [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/); verkleind naar 640 px en gecomprimeerd |

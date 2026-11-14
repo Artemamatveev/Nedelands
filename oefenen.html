@@ -540,6 +540,10 @@ body.vfull{overflow:hidden}
 .tsum b{display:block;font-weight:600}
 .tsum .hint{margin:2px 0 0}
 #tre{margin-top:10px}
+.pics figure.credited{aspect-ratio:auto;overflow:visible;background:none;border:0}
+.pics .credited>button{height:auto;aspect-ratio:16/9;overflow:hidden;border:1px solid var(--line);border-radius:var(--rc)}
+.photo-credit{display:block;margin-top:5px;color:var(--soft);font-size:var(--fs-s);line-height:1.4;text-align:start}
+.photo-credit a{text-underline-offset:2px}
 /* lezen: tik op een woord */
 .pg{color:var(--soft);font-size:var(--fs-m);font-variant-numeric:tabular-nums}
 .rt{display:flex;align-items:center;gap:6px}
@@ -992,10 +996,10 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
 <script src="/study/language-v1.js?v=e94426af48"></script>
 <script src="/study/progress-v1.js?v=c45ceeaefb"></script>
 <script src="/study/writing-v1.js?v=e5690fd786"></script>
-<script src="/data/knm.js?v=48aed89ba7"></script>
+<script src="/data/knm.js?v=747640e712"></script>
 <script src="/data/a2.js?v=35efca6a73"></script>
 <script src="/data/b1.js?v=e9701bd331"></script>
-<script src="/data/extra.js?v=5054ad1737"></script>
+<script src="/data/extra.js?v=c6f4976b6b"></script>
 <script>
 
 const TYPES={past:"Imperfectum: gisteren … ik / hij",pastpl:"Imperfectum: gisteren … wij / zij",pp:"Perfectum: voltooid deelwoord",aux:"Perfectum: hebben of zijn?"};
@@ -2765,13 +2769,17 @@ function echoDone(target,r){
     <p class="note">De telefoon is geen examinator: soms mist hij een woord dat je goed zegt.</p>`;
   document.querySelectorAll("#echor .miss").forEach(b=>b.onclick=()=>speak(b.dataset.w));
 }
+function photoCreditHTML(key){
+  const credit=FOTO_CREDITS[key];
+  return credit?`<small class="photo-credit" lang="nl"><a href="${esc(credit.source)}" target="_blank" rel="noopener">${esc(credit.author)}</a> · <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener">CC BY 2.0</a> · verkleind</small>`:"";
+}
 function picsHTML(P){
-  return`<div class="pics n${P.length}">${P.map((f,i)=>`<figure><button data-pic="foto/${f}.jpg" aria-label="Plaatje ${i+1} groot bekijken"><img src="foto/${f}.jpg" alt="${FOTO[f]||""}" loading="lazy"></button>${P.length===3?`<span>${i+1}</span>`:""}</figure>`).join("")}</div>`;
+  return`<div class="pics n${P.length}">${P.map((f,i)=>`<figure${FOTO_CREDITS[f]?' class="credited"':""}><button data-pic="foto/${f}.jpg" aria-label="Plaatje ${i+1} groot bekijken"><img src="foto/${f}.jpg" alt="${FOTO[f]||""}" loading="lazy"></button>${P.length===3?`<span>${i+1}</span>`:""}${FOTO_CREDITS[f]?`<figcaption>${photoCreditHTML(f)}</figcaption>`:""}</figure>`).join("")}</div>`;
 }
 // A photo full screen in the painting viewer; closing puts the painting back
 function zoomPic(src){
   const z=$("zoom"),im=$("zimg"),c=$("zcap"),ps=im.src,pc=c.innerHTML;
-  im.src=src; c.innerHTML=""; z.hidden=false;
+  im.src=src; c.innerHTML=photoCreditHTML(src.replace(/^.*\//,"").replace(/\.jpg$/,"")); z.hidden=false;
   z.onclick=()=>{z.hidden=true;im.src=ps;c.innerHTML=pc;z.onclick=()=>{z.hidden=true}};
 }
 function docHTML(t){

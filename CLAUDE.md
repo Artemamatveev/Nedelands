@@ -314,6 +314,10 @@ The picture tasks in Spreken use real photos in `foto/`, by the same rules as th
 public domain or CC0 from Wikimedia Commons, max 640px wide (~30–100 KB), each recorded in
 `foto/CREDITS.md`. An `SP` item lists its photos in `p[3]` (two to choose from, or three, in order if the
 question says so); `FOTO` holds a short Dutch description of each for screen readers. No emoji as pictures.
+The two KNM health situations about Samira and Karin's son use separate 640px home-temperature photos (14 November
+2026). They are CC BY 2.0 exceptions, not reused in Speaking. `FOTO_CREDITS` supplies visible author, source, license and
+resize attribution under the image and in the enlarged view. Keep those credits whenever using either photo.
+The original `ziek` asset remains for existing unrelated tasks; only these two KNM photo references changed.
 
 ## Progress
 

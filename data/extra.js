@@ -75,6 +75,8 @@ const ART=[
 const FOTO={deltawerken:"de bouw van de stormvloedkering in de Oosterschelde",afsluitdijk:"auto's op de Afsluitdijk, met het monument",binnenhof:"het Binnenhof in Den Haag, met de Tweede Kamer",annefrank:"huizen aan de Prinsengracht in Amsterdam, met het huis van Anne Frank",stemmen:"mensen stemmen in een stembureau",prinsjesdag:"de Gouden Koets op Prinsjesdag, met veel mensen langs de weg",voc:"een schilderij van schepen van de VOC voor de kust",watersnood:"mensen brengen hun koeien in veiligheid na de watersnood van 1953",slavernij:"het Nationaal Monument Slavernijverleden in Amsterdam",gastarbeiders:"gastarbeiders lezen een Nederlandse krant",indonesie:"koningin Juliana tekent de soevereiniteitsoverdracht aan Indonesië",bevrijding:"mensen vieren de bevrijding in Amsterdam in 1945",thorbecke:"een portret van Johan Rudolf Thorbecke",aletta:"een portret van Aletta Jacobs",fiets:"een fiets",auto:"een auto",stad:"huizen aan een gracht in de stad",dorp:"een dorp met water en bruggetjes",
   supermarkt:"boodschappen doen in de supermarkt",koken:"een man en een vrouw koken",eten:"een gezin eet samen",restaurant:"twee mensen eten in een restaurant",
   wekker:"een wekker",douche:"een douche",trein:"mensen stappen in de trein",zomer:"een park in de zomer",winter:"een fiets in de sneeuw",
+  "koorts-kind-v1":"een ouder houdt een digitale thermometer vast, met een kind op de achtergrond",
+  "koorts-vrouw-v1":"een vrouw bekijkt thuis een digitale thermometer",
   ziek:"iemand ligt ziek in bed",bellen:"een man belt",dokter:"een dokter praat met een patiënt",kok:"een kok in een keuken",
   tv:"een gezin kijkt televisie",boek:"een vrouw leest een boek",zwemmen:"mensen zwemmen in een zwembad",voetbal:"een voetbalwedstrijd",
   bus:"een bus",strand:"het strand",bergen:"de bergen",winkel:"een kledingwinkel",laptop:"iemand werkt op een laptop",hond:"een hond",kat:"een kat",
@@ -82,6 +84,11 @@ const FOTO={deltawerken:"de bouw van de stormvloedkering in de Oosterschelde",af
   fietsen:"een vrouw op de fiets",fietstocht:"een vrouw fietst",lekkeband:"een lekke band plakken",fietsenmaker:"een fietsenmaker repareert een fiets",
   ambulance:"een ambulance",apotheek:"medicijnen in de kast van een apotheek",kantoor:"een vergaderzaal op kantoor",kinderopvang:"kinderen eten samen op een kinderdagverblijf, lang geleden",afval:"containers voor afval in de straat",baby:"een baby op een weegschaal, lang geleden",bakker:"brood bij de bakker",flat:"een flat",gemeentehuis:"een gemeentehuis",koningsdag:"Koningsdag: veel mensen op de vrijmarkt",markt:"een markt met groente en fruit",politie:"een politieauto",sollicitatie:"twee mannen praten aan een bureau",tandarts:"een tandarts helpt een patiënt",verhuizen:"een verhuiswagen in Amsterdam, lang geleden",verjaardag:"een verjaardagstaart met kaarsjes",
   fabriek:"veel mensen werken in een grote fabriek",paardwater:"een paard drinkt water",paardborstel:"een vrouw verzorgt haar paardje",paardlopen:"een vrouw loopt met een paard",ladekast:"een ladekast",fauteuil:"een fauteuil",tafel:"een tafel",studenten:"studenten lezen en schrijven samen aan een tafel",raam:"een kapot raam",sleutel:"een sleutel die in twee stukken is gebroken",cadeau:"een cadeau",konijn:"een konijn",siroop:"een lepel met hoestsiroop",kleed:"een vierkant vloerkleed",kleedrond:"een rond vloerkleed",stel:"een blij stel: de vrouw zit op de rug van de man en ze lachen"};
+// These two KNM photos require attribution wherever they are displayed.
+const FOTO_CREDITS = {
+  "koorts-kind-v1": {source:"https://commons.wikimedia.org/wiki/File:Mom_checks_child%27s_temperature_using_digital_thermometer.jpg",author:"Nenad Stojković"},
+  "koorts-vrouw-v1": {source:"https://commons.wikimedia.org/wiki/File:A_woman_holds_a_digital_thermometer,_looking_worried_while_wearing_a_soft_robe.jpg",author:"Nenad Stojković"}
+};
 // Boekenkast: short A2 stories built in, plus the reader's own books.
 // Own books live in IndexedDB ("books" = list, "book:<id>" = text); S only keeps positions (S.bk) and saved words (S.words).
 // Book text: paragraphs separated by \n, chapters by \f, "# " marks a heading.
