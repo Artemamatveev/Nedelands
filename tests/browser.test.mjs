@@ -61,6 +61,54 @@ async function page(browser, base, {lang, ...opt} = {}) {
 }
 const overflow = p => p.evaluate(() => document.documentElement.scrollWidth - innerWidth);
 
+test('Quick Dutch praise never delays practice', async t => {
+  let browser;
+  try { browser=chromium&&await chromium.launch(); } catch(e) { if(process.env.BROWSER_TESTS)throw e; }
+  if(!browser){if(process.env.BROWSER_TESTS)assert.fail('Playwright is not installed');return t.skip('no browser here')}
+  const server=await serve(),base=`http://127.0.0.1:${server.address().port}`,s=await page(browser,base,{lang:'ru'});
+  try {
+    await s.go('/oefenen');await s.p.locator('#app-loading').waitFor({state:'hidden'});
+    await s.p.evaluate(()=>{
+      build('knm',{...SEC.find(s=>s.id==='knm'),n:3});
+      // Hold only the decorative timer so the next-button test cannot accidentally wait for it to finish.
+      window.__praiseSetTimeout=window.setTimeout;
+      window.setTimeout=(fn,delay,...args)=>window.__praiseSetTimeout(fn,delay===650?30000:delay,...args);
+    });
+    const right=await s.p.evaluate(()=>queue[pos].right.toLowerCase());
+    const buttons=s.p.locator('#card .opt');
+    const index=await buttons.evaluateAll((bs,right)=>bs.findIndex(b=>b.querySelector('.tx').textContent.trim().toLowerCase()===right),right);
+    assert.ok(index>=0);await buttons.nth(index).click();
+    const flash=s.p.locator('#quick-praise'),next=s.p.locator('#next');
+    assert.equal(await flash.isVisible(),true);assert.equal(await flash.getAttribute('lang'),'nl');
+    assert.equal(await flash.getAttribute('aria-hidden'),'true');
+    assert.equal(await flash.evaluate(e=>getComputedStyle(e).pointerEvents),'none');
+    assert.equal(await next.isEnabled(),true);assert.equal(await s.p.evaluate(()=>document.activeElement.id),'next');
+    const phrase=await flash.getAttribute('data-phrase');
+    assert.ok(['Goed zo!','Lekker bezig!','Helemaal goed!','Top!','Netjes!','Mooi zo!'].includes(phrase));
+    const svg=flash.locator('svg');
+    for(const width of [320,390,1280]){
+      await s.p.setViewportSize({width,height:844});
+      await svg.evaluate(e=>e.getAnimations().forEach(a=>{a.pause();a.currentTime=220}));
+      assert.equal(await overflow(s.p),0);
+      const bounds=await svg.boundingBox();assert.ok(bounds.x>=0&&bounds.x+bounds.width<=width,JSON.stringify(bounds));
+      if(process.env.ADMIN_SCREENSHOTS){
+        fs.mkdirSync(process.env.ADMIN_SCREENSHOTS,{recursive:true});
+        await s.p.screenshot({path:path.join(process.env.ADMIN_SCREENSHOTS,`dutch-praise-${width}.png`)});
+      }
+    }
+    await s.p.emulateMedia({reducedMotion:'reduce'});
+    assert.equal(await svg.evaluate(e=>getComputedStyle(e).animationName),'none');
+    assert.equal(await svg.evaluate(e=>getComputedStyle(e).transform),'none');
+    await next.click({timeout:1000}); // The pulse is still held for 30s: progression must be immediate.
+    assert.equal(await s.p.evaluate(()=>pos),1);assert.equal(await flash.isHidden(),true);
+    await s.p.evaluate(()=>{window.setTimeout=window.__praiseSetTimeout;quickPraise.show()});
+    assert.equal(await flash.isVisible(),true);await flash.waitFor({state:'hidden',timeout:2000});
+    await s.p.evaluate(()=>startExam('knm',true));await s.p.locator('#card .opt').first().click();
+    assert.equal(await flash.isHidden(),true);
+    assert.deepEqual(s.errors,[]);
+  } finally {await s.ctx.close();await browser.close();server.close()}
+});
+
 test('Website home and Contact open from the installed app and return to practice', async t => {
   let browser;
   try { browser=chromium&&await chromium.launch(); } catch(e) { if(process.env.BROWSER_TESTS)throw e; }
