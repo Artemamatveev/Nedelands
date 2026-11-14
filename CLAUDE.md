@@ -403,6 +403,7 @@ vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one comin
   code, so an iPhone home-screen app never has to open a link) only with `LOGIN_EMAIL=1`, because Supabase's own mail
   only reaches the project's team (it needs custom SMTP); passkeys (experimental in Supabase) only with
   `LOGIN_PASSKEY=1`, and a passkey is added after logging in another way.
+- Signing out uses `scope:"local"`: leaving Safari must not revoke the installed app or other devices. Deferred auth events carry a version so stale sign-out callbacks cannot overwrite newer sessions.
 - Sync uses the account-scoped state and retry journal described above. Supabase RLS still limits reads and conditional updates to the signed-in user's row. No new table or privileged client API is needed.
 - Free accounts get `FREE_WEEKLY_CHECKS` (default 7) per Amsterdam calendar week, resetting Monday at 00:00.
   Writing and speaking share this allowance at levels not covered by Plus. Paid checks use a separate `PLUS_LIMIT`
@@ -455,8 +456,10 @@ bezoekers tellen", "Cookies" and "Hoe lang", in all eight languages: change them
 ## The owner's overview (admin)
 
 `admin.html` (served as /admin, noindex, not linked anywhere, in Russian because only the owner reads it, light only)
-works on phones and computers. Six totals lead into daily charts (7 days by default, switchable to 30); each has a full-date
-readout changed by tapping a column or using arrow keys, four short axis dates, and a table including zero days. The exact
+works on phones and computers. Six totals lead into daily charts (7 days by default, switchable to 30); each line chart has a full-date readout changed by tapping, scrubbing, or arrow keys. Seven-day views label every date;
+30-day views use four axis dates and an exact readout for every point. Tables include zero days and mark days before
+11 November 2026 as unavailable instead of zero. The first chart counts distinct accounts with study time or answers per
+day, not anonymous opens or devices. Anonymous event totals cannot identify unique people/devices and are labelled accordingly. The exact
 period includes the year and notes that today is incomplete. Charts stack below 900px. Below are the accounts and the
 anonymous 30-day event table, with a sticky date column. Accounts show name and e-mail, level, last activity, study time and
 answers (with the share right) today / 7 days / in all, different questions, proefexamens per part (number and last score),

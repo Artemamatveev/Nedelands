@@ -1278,13 +1278,19 @@ let dayBusy=false;
 function trackDay(){ if(!trackOn()||dayBusy)return; const d=amsDay(),was=lsGet("ww-day"); if(was===d)return;
   const first=!was&&!Object.keys(S.items||{}).length; dayBusy=true;
   track("open").then(ok=>{dayBusy=false;if(!ok)return;lsSet("ww-day",d);if(first)track("new")}); }
+let authEventVersion=0;
+function accountChanged(ev,ses){
+  const version=++authEventVersion,u=ses?.user||null;
+  // A delayed SIGNED_OUT callback must not overwrite a newer SIGNED_IN/TOKEN_REFRESHED event.
+  setTimeout(()=>{if(version===authEventVersion && u?.id!==acc.user?.id)setUser(u)});
+}
 function loadSb(){
   if(acc.sb)return Promise.resolve(acc.sb);
   return acc.load||(acc.load=new Promise((ok,no)=>{const t=document.createElement("script");t.src="/lib/supabase-2.117.3.js";t.onload=ok;t.onerror=no;document.head.appendChild(t)})
     .then(()=>{
       acc.sb=supabase.createClient(acc.cfg.url,acc.cfg.anon,{auth:{flowType:"pkce",detectSessionInUrl:true,persistSession:true,autoRefreshToken:true}});
       // no Supabase calls inside this callback (they would wait on it): hand over to setUser
-      acc.sb.auth.onAuthStateChange((ev,ses)=>{const u=ses&&ses.user||null;if((u&&u.id)!==(acc.user&&acc.user.id))setTimeout(()=>setUser(u))});
+      acc.sb.auth.onAuthStateChange(accountChanged);
       return acc.sb})
     .catch(e=>{acc.load=null;throw e}));
 }
@@ -2443,7 +2449,7 @@ function drawProfile(){
     try{const{error}=await acc.sb.auth.registerPasskey();if(error)throw error;acc.msg="Je passkey is gemaakt. Nu kun je ook met Face ID, Touch ID of je vingerafdruk inloggen."}
     catch(e){acc.msg=/NotAllowed|abort|cancel/i.test(String(e&&(e.message||e.name)))?"Gestopt.":"Een passkey maken lukt hier niet."}
     drawProfile()};
-  if($("aout"))$("aout").onclick=async()=>{await push();acc.msg="";const {error}=await acc.sb.auth.signOut();if(error){acc.msg=loginErr(error);return drawProfile()}await setUser(null)};
+  if($("aout"))$("aout").onclick=async()=>{await push();acc.msg="";const {error}=await acc.sb.auth.signOut({scope:"local"});if(error){acc.msg=loginErr(error);return drawProfile()}await setUser(null)};
   if($("adel"))$("adel").onclick=async()=>{const b=$("adel");
     if(!b.dataset.ok){b.dataset.ok=1;b.textContent="Tik nog een keer: je account en alles erin worden gewist";return}
     b.disabled=true;
