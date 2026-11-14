@@ -78,8 +78,9 @@ tr.open td{background:var(--wash)}
 .point[aria-pressed=true]::before{width:11px;height:11px;background:var(--oranje);border:2px solid var(--card);box-shadow:0 0 0 1px var(--oranje);z-index:2}
 .point[aria-pressed=true]::after{content:"";position:absolute;top:0;bottom:0;left:50%;width:1px;background:var(--line);z-index:-1}
 .point:focus-visible{outline:2px solid var(--oranje);outline-offset:-1px}
-.xax{position:relative;height:30px;margin-inline-start:36px;font-size:11px;color:var(--soft);font-variant-numeric:tabular-nums}
-.xax span{position:absolute;top:7px;transform:translateX(-50%);white-space:nowrap}
+.xax{position:relative;height:42px;margin-inline-start:36px;font-size:11px;color:var(--soft);font-variant-numeric:tabular-nums}
+.xax span{position:absolute;top:7px;transform:translateX(-50%);white-space:nowrap;text-align:center}
+.xax b{display:block;font-size:12px;font-weight:600;color:var(--ink)}.xax small{display:block;font-size:11px}
 .chart-hint{font-size:12px;color:var(--soft);margin:8px 0}
 .chart details{margin-top:8px;font-size:13px} summary{cursor:pointer;color:var(--soft)}
 .chart details table{margin-top:8px} .chart details td,.chart details th{padding:7px 12px}
@@ -226,7 +227,11 @@ function chart(key, title, sub, pts, full) {
   }).join(" ");
   const points = pts.map(p => `<div class="point" role="button" tabindex="${p === selected ? 0 : -1}" aria-pressed="${p === selected}" aria-label="${chartDate(p.d)}: ${value(p)}" data-date="${p.d}" data-d="${chartDate(p.d)}" data-v="${value(p)}"${p.v === null ? " data-missing" : ""} style="--y:${y(p)}%"></div>`).join("");
   const indices = pts.length <= 7 ? pts.map((_, i) => i) : [0, Math.round(last / 3), Math.round(last * 2 / 3), last];
-  const xs = indices.map(i => `<span style="left:${x(i)}%">${chartDate(pts[i].d, true)}</span>`).join("");
+  const xs = indices.map(i => {
+    const d = new Date(pts[i].d + "T12:00:00Z"), month = d.toLocaleDateString("ru-RU", {month:"short",timeZone:"UTC"}).replace(".", "").slice(0, 3);
+    const label = pts.length <= 7 ? `<b>${pts[i].d.slice(-2)}</b><small>${month}</small>` : chartDate(pts[i].d, true);
+    return `<span style="left:${x(i)}%">${label}</span>`;
+  }).join("");
   const rows = [...pts].reverse().map(p => `<tr data-date="${p.d}" class="${p === selected ? "selected" : ""}"><td>${chartDate(p.d)}</td><td>${value(p)}</td></tr>`).join("");
   return `<figure class="chart" data-chart="${key}"><figcaption><h2>${title}</h2><p class="sub">${sub}</p></figcaption>
     <div class="readout" aria-live="polite" aria-atomic="true"><span>${chartDate(selected.d)}</span><b>${value(selected)}</b></div>
@@ -324,6 +329,7 @@ function draw() {
 // Full dates stay visible while tapping, scrubbing or navigating with arrow keys.
 function selectDay(point) {
   const chart = point.closest(".chart"); selectedDays[chart.dataset.chart] = point.dataset.date;
+  if (point.getAttribute("aria-pressed") === "true") return;
   chart.querySelectorAll(".point").forEach(p => { p.tabIndex = p === point ? 0 : -1; p.setAttribute("aria-pressed", p === point); });
   chart.querySelector(".readout span").textContent = point.dataset.d;
   chart.querySelector(".readout b").textContent = point.dataset.v;

@@ -633,6 +633,7 @@ test('The owner overview shows accounts and study time', async t => {
     }
     await s.p.setViewportSize({width:390, height:844});
     await s.p.locator('[data-period="7"]').click();
+    await visits.locator('.area').scrollIntoViewIfNeeded();
     const middle = await visits.locator('.point').nth(3).boundingBox();
     await s.p.touchscreen.tap(middle.x + middle.width / 2, middle.y + middle.height / 2);
     assert.equal(await visits.locator('.point[aria-pressed=true]').getAttribute('data-date'), new Date((day - 3) * 864e5).toISOString().slice(0, 10));
