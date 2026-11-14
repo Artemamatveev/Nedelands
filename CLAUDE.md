@@ -177,11 +177,12 @@ with a finger (it grows and clears while held; where you let go is the tab that 
 shows on the five tabs; exercises and inner screens hide it and go back with their back button or a swipe. The tab
 you were on is kept (`tab`), so every back button returns to it and is named after it.
 
-On installed iPhone apps at normal zoom, `data-iphone-dock` anchors the bar from the top using the oriented
-`screen.width`/`screen.height` and the existing safe-area gap. WebKit can leave the layout/visual viewport at keyboard
+On installed iPhone apps at normal zoom, `data-iphone-dock` anchors the bar from the top using the
+CSS large viewport height (`100lvh`, with a `100vh` fallback) and the existing safe-area gap. WebKit can leave the layout/visual viewport at keyboard
 height after dismissal, which made a bottom-fixed bar float halfway up the display (user screenshot, 14 November 2026).
 This scoped workaround leaves document scrolling, scroll-to-top, the lens drag and the compact-on-scroll behaviour
-intact. Rotation and app resume resync the height. Browsers, iPads, Android and pinch zoom use the existing CSS anchor.
+intact. CSS handles rotation without reading a stale `innerHeight` or `visualViewport.height`; app resume rechecks the scope. Browsers, iPads, Android and pinch zoom use the existing CSS anchor.
+Use the available app viewport rather than `screen.height`, which can include system areas outside the web view.
 Desktop WebKit/emulated viewport checks cannot prove a native iPhone compositor bug is resolved on the user's device.
 
 - **Mijn dag** (the first tab; it was called "Vandaag", which the user found unclear, November 2026; its key in the

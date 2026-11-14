@@ -24,21 +24,17 @@ function phone({installed=true, userAgent='iPhone', legacy=false}={}) {
     fire:name=>{for(const fn of events.get(name)||[])fn()}};
 }
 
-test('The installed iPhone dock ignores stale keyboard viewport metrics and resyncs on rotation',()=>{
+test('The installed iPhone dock remains enabled when keyboard viewport metrics become stale',()=>{
   const p=phone();
-  const height=()=>p.root.style.getPropertyValue('--app-screen-height');
   assert.ok(p.root.hasAttribute('data-iphone-dock'));
-  assert.equal(height(),'844px');
   p.sandbox.innerHeight=480;p.viewport.height=480;p.viewport.offsetTop=120;
-  p.fire('resize');p.fire('viewport:resize');
-  assert.equal(height(),'844px','a keyboard-sized viewport must not raise the dock');
-  p.media.get('(orientation:landscape)').matches=true;p.fire('orientationchange');
-  assert.equal(height(),'390px');
-  p.media.get('(orientation:landscape)').matches=false;p.fire('pageshow');
-  assert.equal(height(),'844px','resume restores portrait even with stale visual metrics');
+  p.fire('viewport:resize');
+  assert.ok(p.root.hasAttribute('data-iphone-dock'));
+  p.sandbox.screen.height=0;p.fire('pageshow');
+  assert.ok(p.root.hasAttribute('data-iphone-dock'),'physical screen dimensions are not the app viewport');
   p.viewport.scale=2;p.fire('viewport:resize');
-  assert.ok(!p.root.hasAttribute('data-iphone-dock'));assert.equal(height(),'');
-  p.viewport.scale=1;p.fire('viewport:resize');assert.equal(height(),'844px');
+  assert.ok(!p.root.hasAttribute('data-iphone-dock'));
+  p.viewport.scale=1;p.fire('viewport:resize');assert.ok(p.root.hasAttribute('data-iphone-dock'));
 });
 
 test('The workaround leaves browser visits and other devices on the native anchor',()=>{
@@ -46,6 +42,4 @@ test('The workaround leaves browser visits and other devices on the native ancho
     assert.ok(!phone(options).root.hasAttribute('data-iphone-dock'));
   }
   assert.ok(phone({installed:false,legacy:true}).root.hasAttribute('data-iphone-dock'));
-  const p=phone();p.sandbox.screen.height=0;p.fire('resize');
-  assert.ok(!p.root.hasAttribute('data-iphone-dock'));
 });
