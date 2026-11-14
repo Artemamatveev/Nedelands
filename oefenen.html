@@ -746,7 +746,6 @@ body.vfull{overflow:hidden}
   border-radius:var(--rc);color:var(--ink);font-size:var(--fs-b);font-weight:600;line-height:1.1;text-decoration:none;white-space:nowrap}
 @media (hover:hover){:root[data-desktop] .tabs .hm:hover{background:rgba(255,255,255,.55)}}
 :root[dir=rtl][data-desktop] .tabs .hm{padding:0 17px 0 0}
-:root[data-desktop] .site-footer a[href="/?home"]{display:none} /* Profiel's Website row: the menu has it here */
 :root[data-desktop] .tabs svg{flex:none;width:22px;height:22px}
 :root[data-desktop] .tabs span,:root[data-desktop] .tabs.min span{display:block;opacity:0;transition:opacity var(--motion-ui) var(--motion-settle)}
 :root[data-desktop]:has(.tabs:is(:hover,:focus-within),header .lang:is(:hover,:focus-within)) .tabs span{opacity:1;transition-delay:.06s}
@@ -812,6 +811,10 @@ body.vfull{overflow:hidden}
 .pg .it{min-height:54px}
 .prow{display:flex;align-items:center;gap:12px;min-height:54px;margin:0;font-size:var(--fs-b);color:var(--ink)}
 .prow>span{flex:none}
+.site-home{text-decoration:none}.site-home>span{flex:1;min-width:0}
+.site-home svg{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8}
+.site-home:focus-visible{outline:2px solid var(--oranje);outline-offset:2px}
+:root[dir=rtl] .site-home svg:last-child{transform:scaleX(-1)}
 .prow input:not([switch]){flex:1;min-width:0;height:44px;padding:0;border:0;border-radius:0;background:none;font-size:var(--fs-b);font-weight:400;text-align:var(--te);color:var(--soft)}
 .prow input:not([switch]):focus{color:var(--ink)}
 .pickrow{position:relative}
@@ -937,6 +940,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
         </div>
         <div id="pban"></div>
       </div>
+      <div class="pg"><a class="prow site-home" href="/?home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7v9h-5.5v-6h-5v6H4z"/></svg><span>Naar de website</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></a></div>
       <div class="pg">
         <label class="prow"><span>Voornaam</span><input id="pname" autocomplete="given-name" maxlength="40"></label>
         <label class="prow"><span>Achternaam</span><input id="plast" autocomplete="family-name" maxlength="60"></label>
@@ -1536,7 +1540,7 @@ function siteFooter(){
   const row=(site,t)=>`<button type="button" class="it" data-site="${site}"><span><span class="th"><b>${t}</b></span></span></button>`,
     link=(href,t)=>`<a class="it" href="${href}"><span><span class="th"><b>${t}</b></span></span></a>`;
   return `<h3 class="lh">Hulp</h3><div class="pg">${row("faq","Veelgestelde vragen")}${row("exam","Uitleg over de examens")}${row("prices","Prijzen")}${row("cancel","Abonnement opzeggen")}${link("mailto:hallo@bittertalen.nl","Contact")}</div>
-    <h3 class="lh">Bittertalen</h3><div class="pg">${link("/over","Over Bittertalen")}${link("/privacy","Privacyverklaring")}${inApp()?"":link("/?home","Website")}${acc.admin?link("/admin","Statistiek"):""}</div>`; // an installed app can't show the website: it opens itself again
+    <h3 class="lh">Bittertalen</h3><div class="pg">${link("/over","Over Bittertalen")}${link("/privacy","Privacyverklaring")}${acc.admin?link("/admin","Statistiek"):""}</div>`;
 }
 function tryOne(){
   const section=lvl()==="B1"?"l1":"lz";
@@ -4052,7 +4056,7 @@ if(OLD==="nedelands.vercel.app")location.replace(NEWURL); else if(OLD==="bittert
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="d87ff055fc";
+const UIV="f93381d021";
 let uiP=null;
 function uiLoaded(){ // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});

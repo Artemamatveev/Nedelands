@@ -61,6 +61,39 @@ async function page(browser, base, {lang, ...opt} = {}) {
 }
 const overflow = p => p.evaluate(() => document.documentElement.scrollWidth - innerWidth);
 
+test('Website home opens from the installed app and returns to practice', async t => {
+  let browser;
+  try { browser=chromium&&await chromium.launch(); } catch(e) { if(process.env.BROWSER_TESTS)throw e; }
+  if(!browser){if(process.env.BROWSER_TESTS)assert.fail('Playwright is not installed');return t.skip('no browser here')}
+  const server=await serve(),base=`http://127.0.0.1:${server.address().port}`;
+  const s=await page(browser,base,{lang:'ru'});
+  await s.p.addInitScript(()=>Object.defineProperty(navigator,'standalone',{value:true}));
+  try {
+    await s.go('/');await s.p.locator('#plan .step').first().waitFor();await s.p.locator('#app-loading').waitFor({state:'hidden'});
+    assert.equal(new URL(s.p.url()).pathname,'/oefenen');
+    await s.p.locator('#tabs [data-t="profiel"]').click();
+    const link=s.p.locator('#prof a.site-home');
+    await s.p.waitForFunction(()=>document.querySelector('#prof a.site-home')?.textContent==='Главная сайта');
+    assert.equal(await link.isVisible(),true);
+    assert.equal(await overflow(s.p),0);
+    if(process.env.ADMIN_SCREENSHOTS){
+      fs.mkdirSync(process.env.ADMIN_SCREENSHOTS,{recursive:true});
+      await s.p.locator('#prof').screenshot({path:path.join(process.env.ADMIN_SCREENSHOTS,'profile-website-home.png')});
+    }
+    await link.click();await s.p.locator('.hero').waitFor();
+    assert.equal(new URL(s.p.url()).pathname,'/');
+    assert.equal(new URL(s.p.url()).search,'?home');
+    await s.p.reload();await s.p.locator('.hero').waitFor();
+    assert.equal(new URL(s.p.url()).pathname,'/');
+    await s.p.locator('#enter').click();await s.p.locator('#plan .step').first().waitFor();
+    assert.equal(new URL(s.p.url()).pathname,'/oefenen');
+    // Login/payment callbacks keep priority over the explicit home request.
+    await s.go('/?home&plus=stop');await s.p.locator('#plan .step').first().waitFor();
+    assert.equal(new URL(s.p.url()).pathname,'/oefenen');
+    assert.deepEqual(s.errors,[]);
+  } finally {await s.ctx.close();await browser.close();server.close()}
+});
+
 test('iPhone dock stays attached during scroll, stale viewport metrics and rotation', async t => {
   let browser;
   try { browser=chromium&&await chromium.launch(); } catch(e) { if(process.env.BROWSER_TESTS)throw e; }

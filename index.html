@@ -23,15 +23,16 @@
 <link rel="stylesheet" href="/landing.css?v=features10">
 <script>
 // Browser visits start with the homepage, including returning learners on phones and tablets.
-// Sign-in, payment, migration, legacy aliases and installed app launches still enter the app.
+// Installed launches enter practice; an explicit Website home link stays on the public homepage.
+// Sign-in, payment, migration and legacy aliases still enter the app.
 (() => {
   const q = new URLSearchParams(location.search);
   const alias = /^(bittertalen|nedelands)\.vercel\.app$/.test(location.hostname);
   const installed = navigator.standalone || matchMedia("(display-mode: standalone)").matches;
   if (alias || q.has("code") || q.has("error") || q.has("plus") || location.hash.startsWith("#verhuis=") ||
-      installed) {
+      (installed && !q.has("home"))) {
     location.replace("/oefenen" + location.search + location.hash);
-  } else if (q.has("home") && q.size === 1) history.replaceState(null, "", "/" + location.hash);
+  } else if (!installed && q.has("home") && q.size === 1) history.replaceState(null, "", "/" + location.hash);
 })();
 </script>
 <script type="application/ld+json">

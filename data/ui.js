@@ -15,6 +15,7 @@ Object.assign(UI,{
 "Gratis oefenvraag":["Free practice question","سؤال تدريبي مجاني","Ücretsiz alıştırma sorusu","मुफ़्त अभ्यास प्रश्न","免费练习题","Pregunta de práctica gratuita","Бесплатное пробное задание"],
 "Uitleg over de examens":["About the exams","عن الامتحانات","Sınavlar hakkında","परीक्षाओं के बारे में","考试介绍","Sobre los exámenes","Об экзаменах"],
 "Prijzen":["Pricing","الأسعار","Fiyatlar","कीमतें","价格","Precios","Цены"],
+"Naar de website":["Website home","الصفحة الرئيسية للموقع","Web sitesi ana sayfası","वेबसाइट का मुख्य पृष्ठ","网站首页","Página de inicio del sitio","Главная сайта"],
 "Website":["Website","الموقع","Web sitesi","वेबसाइट","网站","Sitio web","Сайт"],
 "Home":["Home","الرئيسية","Ana sayfa","होम","首页","Inicio","Главная"],
 "Statistiek":["Statistics","الإحصاءات","İstatistikler","आँकड़े","统计","Estadísticas","Статистика"],
