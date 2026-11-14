@@ -72,8 +72,11 @@ test('Website home opens from the installed app and returns to practice', async 
     await s.go('/');await s.p.locator('#plan .step').first().waitFor();await s.p.locator('#app-loading').waitFor({state:'hidden'});
     assert.equal(new URL(s.p.url()).pathname,'/oefenen');
     await s.p.locator('#tabs [data-t="profiel"]').click();
-    const link=s.p.locator('#prof a.site-home');
-    await s.p.waitForFunction(()=>document.querySelector('#prof a.site-home')?.textContent==='Главная сайта');
+    await s.p.evaluate(()=>{acc.admin=true;document.getElementById('site-footer').innerHTML=siteFooter()});
+    const link=s.p.locator('#site-footer a[href="/?home"]');
+    await s.p.waitForFunction(()=>document.querySelector('#site-footer a[href="/?home"]')?.textContent==='Главная сайта');
+    assert.equal(await link.evaluate(a=>a.parentElement===document.querySelector('#site-footer a[href="/admin"]').parentElement),true);
+    assert.equal(await s.p.locator('#prof > .pg a[href="/?home"]').count(),0);
     assert.equal(await link.isVisible(),true);
     assert.equal(await overflow(s.p),0);
     if(process.env.ADMIN_SCREENSHOTS){
