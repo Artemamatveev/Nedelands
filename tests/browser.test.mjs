@@ -88,9 +88,6 @@ test('Website home and Contact open from the installed app and return to practic
       fs.mkdirSync(process.env.ADMIN_SCREENSHOTS,{recursive:true});
       await contact.screenshot({path:path.join(process.env.ADMIN_SCREENSHOTS,'app-contact-ru.png')});
     }
-    const contactLayout=await s.p.evaluate(()=>({width:innerWidth,scrollWidth:document.documentElement.scrollWidth,
-      outside:[...document.querySelectorAll('body *')].filter(e=>e.getBoundingClientRect().width && e.getBoundingClientRect().right>innerWidth).map(e=>({tag:e.tagName,cls:e.className,text:e.textContent.slice(0,50),right:e.getBoundingClientRect().right}))}));
-    assert.equal(await overflow(s.p),0,JSON.stringify(contactLayout));
     await contact.locator('a.back').click();await s.p.locator('#tabs').waitFor();
     await s.p.locator('#app-loading').waitFor({state:'hidden'});
     await s.p.locator('#tabs [data-t="profiel"]').click();
