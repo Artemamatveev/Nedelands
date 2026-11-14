@@ -38,7 +38,7 @@ itself in a phone (`shots/app.webp`, the top of Mijn dag, taken with Playwright)
 (no caption on the painting there: removed at the user's wish; the credit is in `art/CREDITS.md`);
 Bitterbal, the plush mascot, stands small beside it with a speech bubble (the user wanted the app there, not the
 mascot instead of it; they want Bitterbal in another pose, waving: swap `art/bitterbal-white.jpg` there once there is
-such a picture). Contact on the homepage is hallo@bittertalen.nl (the catch-all mailbox). The study app is served at `/oefenen` from `oefenen.html` (the code, the styles and the small tables, about 340 KB).
+such a picture). Contact on the homepage and in the app opens `/contact`: the same eight-language contact page, with hallo@bittertalen.nl (the catch-all mailbox), explicit email/copy actions, and a back link to the app when entered from it. The study app is served at `/oefenen` from `oefenen.html` (the code, the styles and the small tables, about 340 KB).
 Its large data lives in `data/`, plain scripts loaded before the app's own script, each a set of top-level `const`s
 that depend on nothing: `data/knm.js` (`KNM`), `data/a2.js` (`LZ`, `LS`, `LSM`, `SP`, `WR`,
 `WT`, `BG`), `data/b1.js` (`LZ1`, `LSB`, `WRB`, `SPB`, `G1`, `VO1`, `GSB`) and `data/extra.js` (`GP`, `GS`, `BOOKS`,

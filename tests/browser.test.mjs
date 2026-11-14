@@ -61,7 +61,7 @@ async function page(browser, base, {lang, ...opt} = {}) {
 }
 const overflow = p => p.evaluate(() => document.documentElement.scrollWidth - innerWidth);
 
-test('Website home opens from the installed app and returns to practice', async t => {
+test('Website home and Contact open from the installed app and return to practice', async t => {
   let browser;
   try { browser=chromium&&await chromium.launch(); } catch(e) { if(process.env.BROWSER_TESTS)throw e; }
   if(!browser){if(process.env.BROWSER_TESTS)assert.fail('Playwright is not installed');return t.skip('no browser here')}
@@ -71,6 +71,22 @@ test('Website home opens from the installed app and returns to practice', async 
   try {
     await s.go('/');await s.p.locator('#plan .step').first().waitFor();await s.p.locator('#app-loading').waitFor({state:'hidden'});
     assert.equal(new URL(s.p.url()).pathname,'/oefenen');
+    await s.p.locator('#tabs [data-t="profiel"]').click();
+    await s.p.locator('#site-footer a[href="/contact"]').click();
+    const contact=s.p.locator('article[data-l="ru"]');
+    await contact.locator('h1').waitFor();
+    assert.equal(new URL(s.p.url()).pathname,'/contact');
+    assert.equal(await contact.locator('h1').textContent(),'Связаться с нами');
+    assert.equal(await contact.locator('.contact-actions a.write').getAttribute('href'),'mailto:hallo@bittertalen.nl');
+    assert.equal(await contact.locator('.copy').count(),1);
+    assert.equal(await contact.locator('a.back').getAttribute('href'),'/oefenen');
+    assert.equal(await overflow(s.p),0);
+    if(process.env.ADMIN_SCREENSHOTS){
+      fs.mkdirSync(process.env.ADMIN_SCREENSHOTS,{recursive:true});
+      await contact.screenshot({path:path.join(process.env.ADMIN_SCREENSHOTS,'app-contact-ru.png')});
+    }
+    await contact.locator('a.back').click();await s.p.locator('#tabs').waitFor();
+    await s.p.locator('#app-loading').waitFor({state:'hidden'});
     await s.p.locator('#tabs [data-t="profiel"]').click();
     await s.p.evaluate(()=>{acc.admin=true;document.getElementById('site-footer').innerHTML=siteFooter()});
     const link=s.p.locator('#site-footer a[href="/?home"]');
