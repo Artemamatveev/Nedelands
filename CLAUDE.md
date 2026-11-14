@@ -177,13 +177,13 @@ with a finger (it grows and clears while held; where you let go is the tab that 
 shows on the five tabs; exercises and inner screens hide it and go back with their back button or a swipe. The tab
 you were on is kept (`tab`), so every back button returns to it and is named after it.
 
-On installed iPhone apps at normal zoom, `data-iphone-dock` anchors the bar from the top using the
-CSS large viewport height (`100lvh`, with a `100vh` fallback) and the existing safe-area gap. WebKit can leave the layout/visual viewport at keyboard
-height after dismissal, which made a bottom-fixed bar float halfway up the display (user screenshot, 14 November 2026).
-This scoped workaround leaves document scrolling, scroll-to-top, the lens drag and the compact-on-scroll behaviour
-intact. CSS handles rotation without reading a stale `innerHeight` or `visualViewport.height`; app resume rechecks the scope. Browsers, iPads, Android and pinch zoom use the existing CSS anchor.
-Use the available app viewport rather than `screen.height`, which can include system areas outside the web view.
-Desktop WebKit/emulated viewport checks cannot prove a native iPhone compositor bug is resolved on the user's device.
+On installed iPhone apps at normal zoom, `data-iphone-dock` anchors the bar from the top using a calibrated
+`--app-viewport-height` and the existing safe-area gap. Record the largest observed `window.innerHeight` separately
+for each viewport width, before keyboard resizing. A smaller keyboard/stale viewport cannot raise the dock, and
+returning to portrait restores its previous height. Do not use `screen.height` or `100vh`/`100lvh`: they can include
+system space outside the app's web view and the CSS-unit version clipped the bar on the user's phone (14 November
+2026). Document scrolling, lens dragging and compact-on-scroll remain unchanged. Browsers, iPads, Android and pinch
+zoom use the native CSS anchor. Desktop WebKit/emulated checks cannot fully reproduce a native iPhone compositor bug.
 
 - **Mijn dag** (the first tab; it was called "Vandaag", which the user found unclear, November 2026; its key in the
 code is still `vandaag`, and "Vandaag" below means this tab): the painting and its label, then today's lesson: how far you are today (a bar of six pills, "2 van 6

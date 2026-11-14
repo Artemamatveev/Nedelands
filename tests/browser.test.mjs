@@ -71,35 +71,38 @@ test('iPhone dock stays attached during scroll, stale viewport metrics and rotat
     await s.p.addInitScript(()=>{
       Object.defineProperty(navigator,'standalone',{value:true});
       Object.defineProperty(screen,'width',{get:()=>390});
-      Object.defineProperty(screen,'height',{get:()=>904}); // Native system areas need not equal the app viewport.
-      window.__testViewportHeight=844;window.__testViewportScale=1;
+      Object.defineProperty(screen,'height',{get:()=>904}); // Both CSS large viewport (844px) and physical screen (904px) exceed the usable app window (784px).
+      window.__testViewportHeight=784;window.__testViewportScale=1;
       Object.defineProperty(window,'innerHeight',{get:()=>window.__testViewportHeight});
       Object.defineProperty(visualViewport,'height',{get:()=>window.__testViewportHeight});
       Object.defineProperty(visualViewport,'scale',{get:()=>window.__testViewportScale});
     });
     await s.go('/oefenen?open=today');await s.p.locator('#app-loading').waitFor({state:'hidden'});
     const pinned=async height=>{
-      await s.p.waitForFunction(()=>document.documentElement.hasAttribute('data-iphone-dock'));
+      await s.p.waitForFunction(h=>document.documentElement.style.getPropertyValue('--app-viewport-height')===h+'px',height);
       const r=await s.p.locator('#tabs').evaluate(e=>({bottom:e.getBoundingClientRect().bottom,top:parseFloat(getComputedStyle(e).top)}));
       assert.ok(Math.abs(r.top-(height-10))<1,JSON.stringify(r));
       assert.ok(Math.abs(r.bottom-(height-10))<1,JSON.stringify(r));
     };
-    await pinned(844);
+    await pinned(784);
     await s.p.locator('#tabs [data-t="oefenen"]').click();await s.p.locator('#parts [data-knm]').click();
-    await s.p.evaluate(()=>scrollTo(0,500));await pinned(844);
-    await s.p.evaluate(()=>scrollTo(0,150));await pinned(844);
+    await s.p.evaluate(()=>scrollTo(0,500));await pinned(784);
+    await s.p.evaluate(()=>scrollTo(0,150));await pinned(784);
     await s.p.locator('#tabs [data-t="profiel"]').click();await s.p.locator('#pname').focus();
     await s.p.evaluate(()=>{window.__testViewportHeight=480;dispatchEvent(new Event('resize'));visualViewport.dispatchEvent(new Event('resize'))});
-    await pinned(844); // The app viewport stays full-sized while keyboard metrics are stale; raw screen height also differs.
+    await pinned(784); // The app viewport stays full-sized while keyboard metrics are stale; raw screen height also differs.
     await s.p.locator('#pname').evaluate(e=>e.blur());
-    await s.p.evaluate(()=>{window.__testViewportHeight=844;dispatchEvent(new Event('resize'))});
-    await pinned(844);
-    await s.p.setViewportSize({width:844,height:390});await pinned(390);
-    await s.p.setViewportSize({width:390,height:844});await pinned(844);
+    await s.p.evaluate(()=>{window.__testViewportHeight=784;dispatchEvent(new Event('resize'))});
+    await pinned(784);
+    await s.p.evaluate(()=>{window.__testViewportHeight=330});
+    await s.p.setViewportSize({width:844,height:390});await pinned(330);
+    await s.p.evaluate(()=>{window.__testViewportHeight=480});
+    await s.p.setViewportSize({width:390,height:844});await pinned(784);
+    await s.p.evaluate(()=>{window.__testViewportHeight=784;dispatchEvent(new Event('resize'))});
     await s.p.evaluate(()=>{window.__testViewportScale=2;visualViewport.dispatchEvent(new Event('resize'))});
     assert.equal(await s.p.locator('html[data-iphone-dock]').count(),0);
     await s.p.evaluate(()=>{window.__testViewportScale=1;visualViewport.dispatchEvent(new Event('resize'))});
-    await pinned(844);
+    await pinned(784);
     assert.equal(await overflow(s.p),0);assert.deepEqual(s.errors,[]);
   } finally {await s.ctx.close();await browser.close();server.close()}
 });

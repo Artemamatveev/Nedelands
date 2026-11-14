@@ -55,13 +55,25 @@ if(navigator.serviceWorker){navigator.serviceWorker.addEventListener("message",f
   desktop.addEventListener("change",update);
   installed.addEventListener("change",update);
   update();
-  // Installed iPhone apps can retain a shorter viewport after the keyboard closes.
-  // Use the stable CSS large viewport, which also respects the app's system insets.
-  const dock=()=>document.documentElement.toggleAttribute("data-iphone-dock",
-    /iPhone|iPod/.test(navigator.userAgent)&&(installed.matches||navigator.standalone===true)&&
-    Math.abs((window.visualViewport?.scale||1)-1)<.01);
+  // Keep the last full app-window height for each orientation/width. CSS vh/lvh can
+  // include system space outside an installed iPhone's web view; keyboard metrics can shrink it.
+  const root=document.documentElement,dockHeights=new Map();
+  const dock=()=>{
+    const width=Math.round(window.innerWidth),height=window.innerHeight;
+    const enabled=/iPhone|iPod/.test(navigator.userAgent)&&(installed.matches||navigator.standalone===true)&&
+      Math.abs((window.visualViewport?.scale||1)-1)<.01&&Number.isFinite(height)&&height>0&&width>0;
+    root.toggleAttribute("data-iphone-dock",!!enabled);
+    if(!enabled){root.style.removeProperty("--app-viewport-height");return}
+    const full=Math.max(dockHeights.get(width)||0,height);
+    dockHeights.set(width,full);
+    const value=full+"px";
+    if(root.style.getPropertyValue("--app-viewport-height")!==value)root.style.setProperty("--app-viewport-height",value);
+  };
   installed.addEventListener("change",dock);
+  addEventListener("resize",dock);
+  addEventListener("orientationchange",()=>requestAnimationFrame(dock));
   addEventListener("pageshow",dock);
+  document.addEventListener("focusin",dock);
   document.addEventListener("visibilitychange",()=>{if(!document.hidden)dock()});
   window.visualViewport?.addEventListener("resize",dock);
   dock();
@@ -254,8 +266,7 @@ a.it{text-decoration:none} .it.ext::after{content:none}
   border:1px solid color-mix(in srgb,var(--ink) 12%,transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 2px 6px rgba(8,16,40,.10),0 12px 32px rgba(8,16,40,.22);
   touch-action:none;-webkit-user-select:none;user-select:none;transition:width 380ms var(--motion-ease)}
 :root[data-iphone-dock]:not([data-desktop]) .tabs{
-  top:calc(100vh - 10px - env(safe-area-inset-bottom,0px));
-  top:calc(100lvh - 10px - env(safe-area-inset-bottom,0px));bottom:auto;
+  top:calc(var(--app-viewport-height) - 10px - env(safe-area-inset-bottom,0px));bottom:auto;
   transform:translate(-50%,-100%);
 }
 .tabs button{position:relative;z-index:1;flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 4px 8px;border:0;border-radius:19px;background:none;color:var(--ink);font-size:var(--fs-xs);font-weight:600;line-height:1.1;transition:color var(--motion-ui) var(--motion-settle),padding 380ms var(--motion-ease);-webkit-tap-highlight-color:transparent}
