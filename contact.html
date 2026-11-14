@@ -36,7 +36,8 @@
 :root[data-desktop]{color-scheme:light}
 *{box-sizing:border-box}
 body{margin:0;background:var(--surface);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.55}
-body::before{content:"";position:fixed;inset:-24px;z-index:-2;background:url(/art/molen-glass.jpg) 70% 40%/cover}
+/* Keep the fixed backdrop inside the viewport: overscan creates horizontal scrolling in WebKit. */
+body::before{content:"";position:fixed;inset:0;z-index:-2;background:url(/art/molen-glass.jpg) 70% 40%/cover}
 body::after{content:"";position:fixed;inset:0;z-index:-1;background:var(--glass)}
 main{max-width:720px;margin:0 auto;padding:16px 16px 48px}
 article{background:var(--card);border-radius:var(--r);box-shadow:var(--lift);padding:8px 20px 24px}
