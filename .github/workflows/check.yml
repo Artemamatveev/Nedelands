@@ -48,7 +48,14 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npm install --no-save --ignore-scripts playwright@1.63.0
       - run: npx playwright install --with-deps ${{ matrix.engine }}
-      - run: node --test --test-name-pattern="Bittie|Offline|iPhone dock" tests/browser.test.mjs
+      - run: node --test --test-name-pattern="Bittie|Offline|iPhone dock|owner overview" tests/browser.test.mjs
         env:
           BROWSER_TESTS: "1"
           BROWSER_ENGINE: ${{ matrix.engine }}
+          ADMIN_SCREENSHOTS: /tmp/admin-statistics
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: admin-statistics-${{ matrix.engine }}
+          path: /tmp/admin-statistics/*.png
+          if-no-files-found: ignore
