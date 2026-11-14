@@ -7,14 +7,13 @@
 <title>Bittertalen · статистика</title>
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=bittie1">
 <style>
-/* The owner's overview: only the owner sees it (api/admin.js checks ADMIN_EMAILS), so it is in Russian and made for a
-   computer. The app's Delfts blauw: tin-glaze white, cobalt, oranje as the one accent, round tiles, nearly square controls */
+/* The owner's overview: only the owner sees it (api/admin.js checks ADMIN_EMAILS), so it is in Russian and works on a phone as well as a computer. The app's Delfts blauw: tin-glaze white, cobalt, oranje as the one accent, round tiles, nearly square controls */
 :root{
   --bg:#EEF2FA; --card:#fff; --ink:#14213D; --soft:#56617C; --line:#D6DDEB; --blue:#1F3C96; --fill:#1F3C96; --wash:#E4EBFA;
   --oranje:#C8500C; --good:#21613A; --bad:#C0392B; --r:20px; --rc:4px;
   --lift:0 1px 2px rgba(8,16,40,.06),0 8px 24px rgba(8,16,40,.10);
 }
-/* light only: a page for the computer, like the app there (no dark mode on a desktop) */
+/* The owner overview uses a light palette. */
 :root{color-scheme:light}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 -apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,sans-serif}
@@ -52,27 +51,52 @@ tr.open td{background:var(--wash)}
 .ok{color:var(--good)} .no{color:var(--bad)}
 .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-inline-end:6px;background:var(--line)}
 .dot.now{background:var(--good)} .dot.week{background:var(--oranje)}
-/* charts: one series and one axis each; columns of at most 24px with a 4px rounded top on a hairline baseline, recessive
-   grid, the value only on the highest day and on today, the rest on hover or focus (and in the table under it).
-   --chart is the cobalt one step lighter: it passes the palette validator's lightness band on white */
+/* Each chart keeps its own scale and a persistent readout of the selected day. */
 :root{--chart:#2F52C0}
-.charts{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
+.trends{margin-bottom:20px}
+.trend-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:14px;flex-wrap:wrap}
+.trend-head h2{font-size:20px}.trend-head .sub{margin:0}
+.period{display:flex;gap:4px;background:var(--wash);padding:4px;border-radius:var(--rc)}
+.period button{border:0;background:transparent;min-height:40px;padding:6px 14px}
+.period button[aria-pressed=true]{background:var(--card);box-shadow:0 1px 3px #14213D26;color:var(--blue)}
+.charts{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 .chart{margin:0;min-width:0;background:var(--card);border-radius:var(--r);box-shadow:var(--lift);padding:20px 22px}
-.plot{display:flex;height:216px;padding-top:18px}
+.chart .sub{min-height:38px;margin-bottom:12px}
+.readout{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid var(--line);font-size:13px;color:var(--soft)}
+.readout b{font-size:22px;font-weight:600;color:var(--ink);white-space:nowrap;font-variant-numeric:tabular-nums}
+.plot{display:flex;height:208px;padding-top:22px}
 .yax{position:relative;width:36px;flex:none;font-size:11px;color:var(--soft);font-variant-numeric:tabular-nums}
 .yax span{position:absolute;right:8px;transform:translateY(50%)}
 .area{position:relative;flex:1;min-width:0}
 .area hr{position:absolute;left:0;right:0;margin:0;border:0;border-top:1px solid var(--line)}
 .bars{position:absolute;inset:0;display:flex}
-.col{flex:1;position:relative;display:flex;align-items:flex-end;justify-content:center;min-width:0}
-.col i{display:block;width:calc(100% - 2px);max-width:24px;background:var(--chart);border-radius:4px 4px 0 0}
+.col{flex:1;position:relative;display:flex;align-items:flex-end;justify-content:center;min-width:0;cursor:pointer;border-radius:var(--rc)}
+.col i{display:block;width:calc(100% - 4px);max-width:28px;background:var(--chart);border-radius:4px 4px 0 0;min-height:2px}
+.col[aria-pressed=true]{background:var(--wash)}
+.col[aria-pressed=true] i{background:var(--oranje)}
 .col:hover i,.col:focus-visible i{background:var(--blue)}
 .col:focus-visible{outline:2px solid var(--oranje);outline-offset:-1px}
-.val{position:absolute;left:50%;transform:translateX(-50%);font-size:11px;font-weight:600;white-space:nowrap}
-.xax{position:relative;height:20px;margin-inline-start:36px;font-size:11px;color:var(--soft)}
-.xax span{position:absolute;top:5px;transform:translateX(-50%);white-space:nowrap}
-.chart details{margin-top:8px;font-size:13px} .chart summary{cursor:pointer;color:var(--soft)}
-.chart details table{width:auto;margin-top:8px} .chart details td,.chart details th{padding:4px 12px}
+.val{position:absolute;left:50%;transform:translateX(-50%);font-size:11px;font-weight:600;white-space:nowrap;pointer-events:none}
+.xax{position:relative;height:30px;margin-inline-start:36px;font-size:11px;color:var(--soft);font-variant-numeric:tabular-nums}
+.xax span{position:absolute;top:7px;transform:translateX(-50%);white-space:nowrap}
+.xax span:first-child{transform:none;left:0!important}.xax span:last-child{transform:translateX(-100%);left:100%!important}
+.chart-hint{font-size:12px;color:var(--soft);margin:8px 0}
+.chart details{margin-top:8px;font-size:13px} summary{cursor:pointer;color:var(--soft)}
+.chart details table{margin-top:8px} .chart details td,.chart details th{padding:7px 12px}
+.chart details td:first-child{text-align:start}.chart details td:last-child{text-align:end}
+.chart details tr.selected td{background:var(--wash)}
+.events th:first-child,.events td:first-child{position:sticky;left:0;background:var(--card);text-align:start;z-index:1;box-shadow:1px 0 var(--line)}
+.events th:first-child{background:#F5F7FC}
+.explanation{margin-top:20px;font-size:13px}.explanation p{margin:10px 0}
+@media(max-width:900px){.charts{grid-template-columns:1fr}.chart .sub{min-height:0}}
+@media(max-width:600px){
+  main{padding:20px 16px 40px}header{flex-wrap:wrap;gap:10px}h1{width:100%;font-size:22px}h1 small{display:block;margin:2px 0 0;overflow-wrap:anywhere;font-size:13px}
+  header>.grow:empty{display:none}header>.muted{margin-inline-end:auto;font-size:12px}
+  .tile,.chart{padding:18px 16px}.kpis{grid-template-columns:1fr 1fr;gap:10px}.kpi{padding:14px}.kpi b{font-size:24px}
+  .trend-head{gap:10px}.trend-head>div:first-child{width:100%}.charts{gap:16px}.readout b{font-size:21px}
+  .tile header input[type=search]{width:100%}.tile header .grow{flex-basis:100%}
+  .detail .cols{grid-template-columns:1fr}.plot{height:194px}
+}
 .tip{position:fixed;z-index:5;pointer-events:none;background:var(--ink);color:#fff;border-radius:var(--rc);padding:5px 9px;font-size:12px;line-height:1.3;transform:translate(-50%,-100%)}
 .tip b{display:block;font-size:15px}
 .days{display:flex;align-items:flex-end;gap:4px;height:90px;margin:8px 0 2px}
@@ -136,7 +160,8 @@ async function token() {
   return {token: data.session && data.session.access_token, email: data.session && data.session.user.email};
 }
 
-let DATA = null, me = "", open = new Set(), query = "";
+let DATA = null, me = "", open = new Set(), query = "", period = 7;
+const selectedDays = {};
 async function load() {
   const t = await token().catch(() => ({}));
   if (t.off) return message("Аккаунты не настроены", "Без Supabase на сайте нет аккаунтов, и показывать нечего.");
@@ -171,11 +196,11 @@ function counts(rows) {
     d[k] = (d[k] || 0) + r.n;
   }
   const days = Object.keys(by).sort().reverse();
-  const body = days.map(d => `<tr><td>${new Date(d + "T12:00:00Z").toLocaleDateString("ru-RU", {weekday: "short", day: "numeric", month: "short"})}</td>` +
+  const body = days.map(d => `<tr><td>${new Date(d + "T12:00:00Z").toLocaleDateString("ru-RU", {weekday: "short", day: "numeric", month: "short", timeZone: "UTC"})}</td>` +
     EV.map(([k], i) => `<td>${by[d][k] || (i ? "<span class=muted>·</span>" : "0")}</td>`).join("") + `</tr>`).join("");
   return `<section class="tile"><h2>Посещения за 30 дней</h2>
     <p class="sub">Анонимно, все устройства, и с аккаунтом, и без: число событий за день. Одно устройство в день считается один раз.</p>
-    <div class="scroll" tabindex="0" role="region" aria-label="Посещения по дням"><table><thead><tr><th>День</th>${EV.map(([, l]) => `<th>${l}</th>`).join("")}</tr></thead>
+    <div class="scroll events" tabindex="0" role="region" aria-label="Посещения по дням"><table><thead><tr><th>День</th>${EV.map(([, l]) => `<th>${l}</th>`).join("")}</tr></thead>
     <tbody>${body || `<tr><td colspan="${EV.length + 1}" class="muted">Пока пусто.</td></tr>`}</tbody></table></div></section>`;
 }
 
@@ -185,33 +210,40 @@ function lastDays(n = 30) { const t = dayNo(), out = []; for (let d = t - n + 1;
 function axis(max) {
   for (let p = 1; ; p *= 10) for (const m of [1, 2, 5]) { const step = m * p; if (max <= step * 4) return {step, top: Math.max(1, Math.ceil(max / step)) * step}; }
 }
-// One column chart: pts [{d, v}], short(v) for the label on a column, full(v) for the tooltip, the table and screen readers
-function chart(title, sub, pts, short, full) {
+const chartDate = (d, compact = false) => new Date(d + "T12:00:00Z").toLocaleDateString("ru-RU", compact
+  ? {day: "2-digit", month: "2-digit", timeZone: "UTC"}
+  : {weekday: "short", day: "numeric", month: "long", year: "numeric", timeZone: "UTC"});
+function chart(key, title, sub, pts, full) {
   const {step, top} = axis(Math.max(...pts.map(p => p.v))), ticks = [], last = pts.length - 1;
   for (let t = 0; t <= top; t += step) ticks.push(t);
   const peak = pts.reduce((a, p, i) => p.v > pts[a].v ? i : a, 0);
-  const lab = d => new Date(d + "T12:00:00Z").toLocaleDateString("ru-RU", {day: "numeric", month: "short", timeZone: "UTC"});
-  const cols = pts.map((p, i) => `<div class="col" role="img" tabindex="${i === last ? 0 : -1}" aria-label="${lab(p.d)}: ${full(p.v)}" data-d="${lab(p.d)}" data-v="${full(p.v)}">` +
-    (p.v && (i === peak || i === last) ? `<span class="val" style="bottom:calc(${p.v / top * 100}% + 3px)">${short(p.v)}</span>` : "") +
+  const selected = pts.find(p => p.d === selectedDays[key]) || pts[last];
+  const cols = pts.map((p, i) => `<div class="col" role="button" tabindex="${p === selected ? 0 : -1}" aria-pressed="${p === selected}" aria-label="${chartDate(p.d)}: ${full(p.v)}" data-date="${p.d}" data-d="${chartDate(p.d)}" data-v="${full(p.v)}">` +
+    (p.v && (i === peak || (i === last && (pts.length <= 7 || last - peak > 2))) ? `<span class="val" style="bottom:calc(${p.v / top * 100}% + 3px)">${p.v}</span>` : "") +
     `<i style="height:${p.v / top * 100}%"></i></div>`).join("");
-  const xs = pts.map((p, i) => (last - i) % 5 ? "" : `<span style="left:${(i + .5) / pts.length * 100}%">${lab(p.d)}</span>`).join("");
-  const rows = pts.filter(p => p.v).reverse().map(p => `<tr><td>${lab(p.d)}</td><td>${full(p.v)}</td></tr>`).join("");
-  return `<figure class="chart"><figcaption><h2>${title}</h2><p class="sub">${sub}</p></figcaption>
+  // Four labels fit even a 320px phone. Full dates stay in the readout and the table.
+  const indices = [0, Math.round(last / 3), Math.round(last * 2 / 3), last];
+  const xs = indices.map(i => `<span style="left:${(i + .5) / pts.length * 100}%">${chartDate(pts[i].d, true)}</span>`).join("");
+  const rows = [...pts].reverse().map(p => `<tr data-date="${p.d}" class="${p === selected ? "selected" : ""}"><td>${chartDate(p.d)}</td><td>${full(p.v)}</td></tr>`).join("");
+  return `<figure class="chart" data-chart="${key}"><figcaption><h2>${title}</h2><p class="sub">${sub}</p></figcaption>
+    <div class="readout" aria-live="polite" aria-atomic="true"><span>${chartDate(selected.d)}</span><b>${full(selected.v)}</b></div>
     <div class="plot"><div class="yax" aria-hidden="true">${ticks.map(t => `<span style="bottom:${t / top * 100}%">${t}</span>`).join("")}</div>
     <div class="area" role="group" aria-label="${title}: по дням, стрелки влево и вправо">${ticks.map(t => `<hr aria-hidden="true" style="bottom:${t / top * 100}%">`).join("")}<div class="bars">${cols}</div></div></div>
     <div class="xax" aria-hidden="true">${xs}</div>
-    <details><summary>Таблица</summary>${rows ? `<table><tbody>${rows}</tbody></table>` : `<p class="muted">Пока пусто.</p>`}</details></figure>`;
+    <details><summary>Все дни таблицей</summary><table><thead><tr><th>Дата</th><th>Значение</th></tr></thead><tbody>${rows}</tbody></table></details></figure>`;
 }
-// Under the tables: how many devices opened the app a day (anonymous, everyone) and how long the accounts practised a day
 function charts(users, rows) {
-  const days = lastDays(), opens = {}, secs = {};
+  const days = lastDays(period), opens = {}, secs = {};
   for (const r of rows || []) if (r.ev === "open") opens[r.day] = (opens[r.day] || 0) + r.n;
   for (const u of users) for (const [k, v] of Object.entries(u.tm || {})) { const d = new Date(+k * 864e5).toISOString().slice(0, 10); secs[d] = (secs[d] || 0) + (+v || 0); }
-  return `<div class="charts">` +
-    chart("Посещаемость по дням", "Сколько устройств открыло приложение за день, за 30 дней. Анонимно, с аккаунтом и без.",
-      days.map(d => ({d, v: opens[d] || 0})), v => v, v => `${v} устр.`) +
-    chart("Время занятий по дням", "Минуты занятий всех аккаунтов вместе за день, за 30 дней. Гости без аккаунта не учитываются.",
-      days.map(d => ({d, v: Math.round((secs[d] || 0) / 60)})), v => v, v => dur(v * 60)) + `</div>`;
+  const range = days.map(d => new Date(d + "T12:00:00Z"));
+  const fmt = new Intl.DateTimeFormat("ru-RU", {day: "numeric", month: "long", year: "numeric", timeZone: "UTC"});
+  return `<section class="trends" aria-label="Динамика по дням"><div class="trend-head"><div><h2>Динамика по дням</h2><p class="sub">${fmt.formatRange(range[0], range[range.length - 1])} · сегодня ещё идёт</p></div>
+    <div class="period" role="group" aria-label="Период графиков">${[7, 30].map(n => `<button data-period="${n}" aria-pressed="${period === n}">${n} дней</button>`).join("")}</div></div>
+    <div class="charts">` +
+    chart("visits", "Посещаемость", "Устройств за день · с аккаунтом и без", days.map(d => ({d, v: opens[d] || 0})), v => `${v} устр.`) +
+    chart("study", "Время занятий", "Минут за день · только с аккаунтом", days.map(d => ({d, v: Math.round((secs[d] || 0) / 60)})), v => v ? dur(v * 60) : "0 мин") +
+    `</div><p class="chart-hint">Нажмите на столбец, чтобы увидеть дату и значение. Столбцы идут от старых дней к новым.</p></section>`;
 }
 
 function resChips(res) {
@@ -269,9 +301,12 @@ function draw() {
     <span class="muted">обновлено в ${at}</span><button id="re">Обновить</button><a class="btn" href="/oefenen">В приложение</a></header>
     ${DATA.users.some(u => !("qd" in u)) ? `<section class="tile warn" role="status"><h2>В Supabase старая версия функции admin_overview</h2>
     <p class="sub" style="margin:0">Поэтому ответы «сегодня» и «7 дней» не показываются, хотя приложение их уже считает. Выполните в SQL Editor последний блок из <code>supabase/schema.sql</code> (<code>create or replace function public.admin_overview()</code> …) и нажмите «Обновить».</p></section>` : ""}
-    ${kpis(DATA.users)}${users(DATA.users)}${counts(DATA.counts)}${charts(DATA.users, DATA.counts)}
-    <p class="sub">Время — активные минуты в приложении: страница открыта, и человек что-то нажимал за последние 90 секунд (или слушал запись). Время и ответы по дням учитываются с 11 ноября 2026 года и попадают сюда после синхронизации прогресса; «всего» у ответов — за всё время, с первого дня. «Разных вопросов» — сколько разных вопросов человек хоть раз прошёл. Ответы считают и упражнения, и пробные экзамены; повтор вопроса после ошибки в том же раунде не считается.</p>`;
+    ${kpis(DATA.users)}${charts(DATA.users, DATA.counts)}${users(DATA.users)}${counts(DATA.counts)}
+    <details class="explanation"><summary>Как считаются показатели</summary><p class="sub">Время — активные минуты в приложении: страница открыта, и человек что-то нажимал за последние 90 секунд (или слушал запись). Время и ответы по дням учитываются с 11 ноября 2026 года и попадают сюда после синхронизации прогресса; «всего» у ответов — за всё время, с первого дня. «Разных вопросов» — сколько разных вопросов человек хоть раз прошёл. Ответы считают и упражнения, и пробные экзамены; повтор вопроса после ошибки в том же раунде не считается.</p></details>`;
   $("re").onclick = load;
+  app.querySelectorAll("[data-period]").forEach(button => {
+    button.onclick = () => { period = +button.dataset.period; tip.hidden = true; draw(); app.querySelector(`[data-period="${period}"]`).focus({preventScroll: true}); };
+  });
   const q = $("q"); q.oninput = () => { query = q.value.trim().toLowerCase(); const pos = q.selectionStart; draw(); const n = $("q"); n.focus(); n.setSelectionRange(pos, pos); };
   app.querySelectorAll("tr.u").forEach(tr => {
     const flip = () => { const k = tr.dataset.k; open.has(k) ? open.delete(k) : open.add(k); draw(); };
@@ -287,14 +322,23 @@ function showTip(c) {
   tip.textContent = ""; const b = document.createElement("b"); b.textContent = c.dataset.v; tip.append(b, c.dataset.d);
   tip.style.left = `${Math.min(innerWidth - 60, Math.max(60, r.left + r.width / 2))}px`; tip.style.top = `${Math.max(48, bar.top - 8)}px`; tip.hidden = false;
 }
+function selectDay(c) {
+  const chart = c.closest(".chart"); selectedDays[chart.dataset.chart] = c.dataset.date;
+  chart.querySelectorAll(".col").forEach(col => { col.tabIndex = col === c ? 0 : -1; col.setAttribute("aria-pressed", col === c); });
+  chart.querySelector(".readout span").textContent = c.dataset.d;
+  chart.querySelector(".readout b").textContent = c.dataset.v;
+  chart.querySelectorAll("tr[data-date]").forEach(row => row.classList.toggle("selected", row.dataset.date === c.dataset.date));
+}
+app.addEventListener("click", e => { const c = colOf(e); if (c) selectDay(c); });
 const colOf = e => e.target.closest && e.target.closest(".col");
-app.addEventListener("pointerover", e => { const c = colOf(e); if (c) showTip(c); });
+app.addEventListener("pointerover", e => { const c = colOf(e); if (c && e.pointerType !== "touch") showTip(c); });
 app.addEventListener("pointerout", e => { if (colOf(e)) tip.hidden = true; });
-app.addEventListener("focusin", e => { const c = colOf(e); if (c) showTip(c); });
+app.addEventListener("focusin", e => { const c = colOf(e); if (c) selectDay(c); });
 app.addEventListener("focusout", e => { if (colOf(e)) tip.hidden = true; });
 app.addEventListener("keydown", e => {
   const c = colOf(e), to = c && (e.key === "ArrowLeft" ? c.previousElementSibling : e.key === "ArrowRight" ? c.nextElementSibling : null);
-  if (to) { e.preventDefault(); c.tabIndex = -1; to.tabIndex = 0; to.focus(); }
+  if (to) { e.preventDefault(); to.focus(); }
+  if (c && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); selectDay(c); }
 });
 load();
 })();
