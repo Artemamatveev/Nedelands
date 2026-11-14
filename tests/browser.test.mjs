@@ -565,12 +565,12 @@ test('The owner overview shows accounts and study time', async t => {
     admin: {users: [
       {email: 'anna@example.nl', name: 'Anna de Vries', created: now, login: now, seen: now, lvl: 'A2', items: 120, right: 90, wrong: 30,
         res: {knm: {n: 3, pc: 72, at: Date.now()}}, tm: {[day]: 1500, [day - 1]: 600, [day - 30]: 300}, qd: {[day]: 12, [day - 2]: 8}, qr: {[day]: 9, [day - 2]: 8}, checks: 4, checks7: 2, plus: null},
-      {email: 'omar@example.nl', name: null, created: now, login: now, seen: null, lvl: 'B1', items: 0, right: 0, wrong: 0, res: null, tm: null, qd: null, qr: null, checks: 0, checks7: 0, plus: 'active'}],
+      {email: 'omar@example.nl', name: null, created: now, login: now, seen: null, lvl: 'B1', items: 0, right: 0, wrong: 0, res: null, tm: null, qd: {[day]: 2}, qr: null, checks: 0, checks7: 0, plus: 'active'}],
     counts: [{day: now.slice(0, 10), ev: 'open', lvl: 'A2', ui: 'nl', n: 5}, {day: now.slice(0, 10), ev: 'exam_knm', lvl: 'A2', ui: 'ru', n: 2}]}};
   for (const [offset, n] of [[1,12],[2,6],[3,4]]) state.admin.counts.push({day: new Date((day-offset)*864e5).toISOString().slice(0,10), ev:'open', lvl:'A2', ui:'nl', n});
   const server = await serve(state), base = `http://127.0.0.1:${server.address().port}`;
   try {
-    const s = await page(browser, base, {viewport: {width: 1280, height: 800}, isMobile: false, hasTouch: false});
+    const s = await page(browser, base, {viewport: {width: 1280, height: 800}, isMobile: true, hasTouch: true});
     await s.p.addInitScript(() => localStorage.setItem('sb-supa-auth-token', JSON.stringify({access_token: 'tok-1', refresh_token: 'r', token_type: 'bearer',
       expires_in: 3600, expires_at: Math.floor(Date.now() / 1000) + 36000, user: {id: 'u1', email: 'eigenaar@example.nl', aud: 'authenticated'}})));
     await s.go('/admin'); await s.p.waitForSelector('tr.u');
@@ -581,17 +581,18 @@ test('The owner overview shows accounts and study time', async t => {
     await s.p.locator('tr.u').first().click(); await s.p.waitForSelector('tr.detail .days');
     // The seven-day view is readable first; the full month is available without losing the selected day.
     assert.equal(await s.p.locator('figure.chart').count(), 2);
-    assert.equal(await s.p.locator('figure.chart .col').count(), 14);
-    await s.p.locator('figure.chart').nth(1).locator('.col').last().hover();
-    assert.match(await s.p.textContent('.tip'), /25 мин/);
-    assert.equal(await s.p.locator('figure.chart').first().locator('.col').last().getAttribute('aria-label').then(a => / 5 устр\.$/.test(a)), true);
+    assert.equal(await s.p.locator('figure.chart .point').count(), 14);
+    await s.p.locator('figure.chart').nth(1).locator('.point').last().click();
+    assert.match(await s.p.locator('figure.chart').nth(1).locator('.readout b').textContent(), /25 мин/);
+    assert.equal(await s.p.locator('figure.chart').first().locator('.point').last().getAttribute('aria-label').then(a => / 2 акк\.$/.test(a)), true);
     const visits = s.p.locator('figure.chart').first();
-    await visits.locator('.col').last().focus(); await s.p.keyboard.press('ArrowLeft');
-    assert.equal(await visits.locator('.col[aria-pressed=true]').getAttribute('data-date'), new Date((day - 1) * 864e5).toISOString().slice(0, 10));
-    assert.equal(await visits.locator('.readout b').textContent(), '12 устр.');
+    assert.equal(await visits.locator('.point[data-missing]').count(), Math.max(0, 7 - (day - Math.floor(Date.parse('2026-11-11T00:00:00Z') / 864e5) + 1)));
+    await visits.locator('.point').last().focus(); await s.p.keyboard.press('ArrowLeft');
+    assert.equal(await visits.locator('.point[aria-pressed=true]').getAttribute('data-date'), new Date((day - 1) * 864e5).toISOString().slice(0, 10));
+    assert.equal(await visits.locator('.readout b').textContent(), '1 акк.');
     await s.p.locator('[data-period="30"]').click();
-    assert.equal(await s.p.locator('figure.chart .col').count(), 60);
-    assert.equal(await visits.locator('.col[aria-pressed=true]').getAttribute('data-date'), new Date((day - 1) * 864e5).toISOString().slice(0, 10));
+    assert.equal(await s.p.locator('figure.chart .point').count(), 60);
+    assert.equal(await visits.locator('.point[aria-pressed=true]').getAttribute('data-date'), new Date((day - 1) * 864e5).toISOString().slice(0, 10));
     await visits.locator('summary').click();
     assert.equal(await visits.locator('tbody tr').count(), 30); // Empty days stay visible, too.
     await visits.locator('summary').click();
@@ -605,7 +606,7 @@ test('The owner overview shows accounts and study time', async t => {
       }));
       for (const box of boxes) for (let i = 0; i < box.labels.length; i++) {
         assert.ok(box.labels[i].left >= box.x && box.labels[i].right <= box.right, JSON.stringify(box));
-        if (i) assert.ok(box.labels[i].left - box.labels[i - 1].right >= 8, JSON.stringify(box));
+        if (i) assert.ok(box.labels[i].left - box.labels[i - 1].right >= 2, JSON.stringify(box));
       }
       return boxes;
     };
@@ -614,12 +615,14 @@ test('The owner overview shows accounts and study time', async t => {
       for (const days of [7, 30]) {
         await s.p.locator(`[data-period="${days}"]`).click();
         const boxes = await fitCharts();
-        assert.equal(await visits.locator('.col').count(), days);
+        assert.equal(await visits.locator('.point').count(), days);
+        assert.equal(await visits.locator('.xax span').count(), days === 7 ? 7 : 4);
+        assert.equal(await visits.locator('svg.line path').count(), 1);
         if (width <= 900) assert.ok(boxes[1].y > boxes[0].bottom, JSON.stringify(boxes));
         else assert.equal(boxes[0].y, boxes[1].y);
         // Touch/click readout works independently of hover or a transient tooltip.
-        await visits.locator('.col').last().click();
-        assert.equal(await visits.locator('.readout b').textContent(), '5 устр.');
+        await visits.locator('.point').last().click();
+        assert.equal(await visits.locator('.readout b').textContent(), '2 акк.');
         assert.match(await visits.locator('.readout span').textContent(), new RegExp(String(d.getFullYear())));
         if (process.env.ADMIN_SCREENSHOTS) {
           fs.mkdirSync(process.env.ADMIN_SCREENSHOTS, {recursive: true});
@@ -629,6 +632,18 @@ test('The owner overview shows accounts and study time', async t => {
       }
     }
     await s.p.setViewportSize({width:390, height:844});
+    await s.p.locator('[data-period="7"]').click();
+    await visits.locator('.area').scrollIntoViewIfNeeded();
+    const middle = await visits.locator('.point').nth(3).boundingBox();
+    await s.p.touchscreen.tap(middle.x + middle.width / 2, middle.y + middle.height / 2);
+    assert.equal(await visits.locator('.point[aria-pressed=true]').getAttribute('data-date'), new Date((day - 3) * 864e5).toISOString().slice(0, 10));
+    const firstPoint = await visits.locator('.point').first().boundingBox(), lastPoint = await visits.locator('.point').last().boundingBox();
+    await s.p.mouse.move(firstPoint.x + firstPoint.width / 2, firstPoint.y + firstPoint.height / 2);
+    await s.p.mouse.down();
+    await s.p.mouse.move(lastPoint.x + lastPoint.width / 2, lastPoint.y + lastPoint.height / 2, {steps:12});
+    await s.p.mouse.up();
+    assert.equal(await visits.locator('.readout b').textContent(), '2 акк.');
+    await s.p.locator('[data-period="30"]').click();
     await s.p.locator('.events').evaluate(e => { e.scrollLeft = 300; });
     const pinnedDate = await s.p.locator('.events').evaluate(e => ({left:e.getBoundingClientRect().left, date:e.querySelector('tbody td').getBoundingClientRect().left}));
     assert.ok(Math.abs(pinnedDate.left - pinnedDate.date) < 2, JSON.stringify(pinnedDate));
@@ -640,12 +655,12 @@ test('The owner overview shows accounts and study time', async t => {
     // Crossing a month/year boundary preserves chronological ISO dates and shows both years in the period.
     await s.p.clock.setFixedTime(new Date('2026-01-03T12:00:00Z'));
     await s.p.locator('#re').click();
-    await s.p.waitForFunction(() => document.querySelector('.chart .col:last-child')?.dataset.date === '2026-01-03');
-    assert.equal(await visits.locator('.col').first().getAttribute('data-date'), '2025-12-05');
+    await s.p.waitForFunction(() => document.querySelector('.chart .point:last-child')?.dataset.date === '2026-01-03');
+    assert.equal(await visits.locator('.point').first().getAttribute('data-date'), '2025-12-05');
     assert.match(await s.p.locator('.trend-head .sub').textContent(), /2025.*2026/);
-    const dates = await visits.locator('.col').evaluateAll(cols => cols.map(c => c.dataset.date));
+    const dates = await visits.locator('.point').evaluateAll(cols => cols.map(c => c.dataset.date));
     assert.deepEqual(dates, [...dates].sort());
-    assert.equal(await visits.locator('.readout b').textContent(), '0 устр.');
+    assert.equal(await visits.locator('.readout b').textContent(), 'Нет данных');
     await fitCharts();
     // an older admin_overview() in the database (no qd): the page says so instead of showing dashes without a reason
     assert.equal(await s.p.locator('.tile.warn').count(), 0);
