@@ -811,10 +811,6 @@ body.vfull{overflow:hidden}
 .pg .it{min-height:54px}
 .prow{display:flex;align-items:center;gap:12px;min-height:54px;margin:0;font-size:var(--fs-b);color:var(--ink)}
 .prow>span{flex:none}
-.site-home{text-decoration:none}.site-home>span{flex:1;min-width:0}
-.site-home svg{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8}
-.site-home:focus-visible{outline:2px solid var(--oranje);outline-offset:2px}
-:root[dir=rtl] .site-home svg:last-child{transform:scaleX(-1)}
 .prow input:not([switch]){flex:1;min-width:0;height:44px;padding:0;border:0;border-radius:0;background:none;font-size:var(--fs-b);font-weight:400;text-align:var(--te);color:var(--soft)}
 .prow input:not([switch]):focus{color:var(--ink)}
 .pickrow{position:relative}
@@ -940,7 +936,6 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
         </div>
         <div id="pban"></div>
       </div>
-      <div class="pg"><a class="prow site-home" href="/?home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7v9h-5.5v-6h-5v6H4z"/></svg><span>Naar de website</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></a></div>
       <div class="pg">
         <label class="prow"><span>Voornaam</span><input id="pname" autocomplete="given-name" maxlength="40"></label>
         <label class="prow"><span>Achternaam</span><input id="plast" autocomplete="family-name" maxlength="60"></label>
@@ -1540,7 +1535,7 @@ function siteFooter(){
   const row=(site,t)=>`<button type="button" class="it" data-site="${site}"><span><span class="th"><b>${t}</b></span></span></button>`,
     link=(href,t)=>`<a class="it" href="${href}"><span><span class="th"><b>${t}</b></span></span></a>`;
   return `<h3 class="lh">Hulp</h3><div class="pg">${row("faq","Veelgestelde vragen")}${row("exam","Uitleg over de examens")}${row("prices","Prijzen")}${row("cancel","Abonnement opzeggen")}${link("mailto:hallo@bittertalen.nl","Contact")}</div>
-    <h3 class="lh">Bittertalen</h3><div class="pg">${link("/over","Over Bittertalen")}${link("/privacy","Privacyverklaring")}${acc.admin?link("/admin","Statistiek"):""}</div>`;
+    <h3 class="lh">Bittertalen</h3><div class="pg">${link("/over","Over Bittertalen")}${link("/privacy","Privacyverklaring")}${link("/?home","Naar de website")}${acc.admin?link("/admin","Statistiek"):""}</div>`;
 }
 function tryOne(){
   const section=lvl()==="B1"?"l1":"lz";

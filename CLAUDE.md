@@ -19,7 +19,7 @@ cannot move away from a stationary pointer.
 How the two pages hand over (`tests/browser.test.mjs` checks it):
 the site always opens with the homepage in a browser, on phones, tablets and computers, including returning learners
 with saved progress or an account (the user's wish, 12 November 2026). The bar's button leads into the app. On a computer,
-the app's menu has "Home" as its first row, `.tabs .hm`, a link to "/" that the lens never covers. Profiel also has a prominent "Naar de website" row above the name fields, on every device. Installed apps, old addresses and sign-in (`?code`, `?error`, with the handoff's `?h`), Stripe (`?plus`)
+the app's menu has "Home" as its first row, `.tabs .hm`, a link to "/" that the lens never covers. Profiel has a "Naar de website" row in its bottom Bittertalen group, next to Statistiek for the owner, on every device. Installed apps, old addresses and sign-in (`?code`, `?error`, with the handoff's `?h`), Stripe (`?plus`)
 or migration (`#verhuis=`) callbacks still enter the app directly, preserving their query and hash. `/?home` explicitly opens the public homepage, including inside an installed app. An installed app keeps the query
 so reloading stays on the homepage; ordinary browser visits remove that query. A fresh installed launch still opens practice. The "← Bittertalen" links of /over and /privacy go back to
 /oefenen for someone who came from the app. Arriving from the homepage (`?open=today`, `a2`,
@@ -245,7 +245,7 @@ rounded grey groups of rows on the white tile (`.pg`, `.prow`: the name fields w
 row with a native select over it, Taal (the menus' language, each named in itself, `.langrow`; on a computer both lists are the
 same visible box at the end of the row), Trillen; the account with its status and Uitloggen / Account verwijderen as plain rows;
 then `siteFooter()`: "Hulp" (Veelgestelde vragen, Uitleg over de examens, Prijzen, Abonnement opzeggen, Contact) and
-"Bittertalen" (Over, Privacyverklaring; the Website link is above the name fields) as rows like the iPhone's Settings). Content: first and last name, the level (A2 or B1, a list, see B1) (`S.me` `{name, last}`, so they sync, and they also go to the account's
+"Bittertalen" (Over, Privacyverklaring, Naar de website, and Statistiek for the owner) as rows like the iPhone's Settings). Content: first and last name, the level (A2 or B1, a list, see B1) (`S.me` `{name, last}`, so they sync, and they also go to the account's
 `user_metadata` by `syncMeta()`; an exam date was asked here once and removed at the user's wish, an old `exam` field is
 kept as it is but not shown), the account
 (see Accounts). No "Mijn resultaten" tile any more (removed at the user's wish, November 2026): the scores stay in
