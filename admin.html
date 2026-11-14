@@ -97,7 +97,7 @@ tr.open td{background:var(--wash)}
   .tile header input[type=search]{width:100%}.tile header .grow{flex-basis:100%}
   .detail .cols{grid-template-columns:1fr}.plot{height:194px}
 }
-.tip{position:fixed;z-index:5;pointer-events:none;background:var(--ink);color:#fff;border-radius:var(--rc);padding:5px 9px;font-size:12px;line-height:1.3;transform:translate(-50%,-100%)}
+.tip{position:fixed;z-index:5;pointer-events:none;background:var(--ink);color:#fff;border-radius:var(--rc);padding:5px 9px;font-size:12px;line-height:1.3;transform:translate(-50%,-100%);max-width:calc(100vw - 16px)}
 .tip b{display:block;font-size:15px}
 .days{display:flex;align-items:flex-end;gap:4px;height:90px;margin:8px 0 2px}
 .days div{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px;height:100%;font-size:11px;color:var(--soft)}
@@ -204,7 +204,7 @@ function counts(rows) {
     <tbody>${body || `<tr><td colspan="${EV.length + 1}" class="muted">Пока пусто.</td></tr>`}</tbody></table></div></section>`;
 }
 
-// The last 30 days as date strings, oldest first (today last)
+// Calendar days as date strings, oldest first (today last)
 function lastDays(n = 30) { const t = dayNo(), out = []; for (let d = t - n + 1; d <= t; d++) out.push(new Date(d * 864e5).toISOString().slice(0, 10)); return out; }
 // A round top for the axis and its step: at most four steps of 1, 2 or 5 times a power of ten
 function axis(max) {
@@ -313,14 +313,15 @@ function draw() {
     tr.onclick = flip; // the name is a button too, for the keyboard (a click on it reaches the row)
   });
 }
-// One tooltip for every column: the value first, then the day; the same on keyboard focus. Arrow keys walk the columns.
+// Hover shows a tooltip; tapping or keyboard focus updates the persistent date/value readout.
 const tip = Object.assign(document.createElement("div"), {className: "tip", hidden: true});
 tip.setAttribute("aria-hidden", "true"); // a screen reader has the same words in the column's own name
 document.body.appendChild(tip);
 function showTip(c) {
   const r = c.getBoundingClientRect(), bar = c.querySelector("i").getBoundingClientRect();
   tip.textContent = ""; const b = document.createElement("b"); b.textContent = c.dataset.v; tip.append(b, c.dataset.d);
-  tip.style.left = `${Math.min(innerWidth - 60, Math.max(60, r.left + r.width / 2))}px`; tip.style.top = `${Math.max(48, bar.top - 8)}px`; tip.hidden = false;
+  tip.hidden = false; const half = tip.offsetWidth / 2;
+  tip.style.left = `${Math.min(innerWidth - half - 8, Math.max(half + 8, r.left + r.width / 2))}px`; tip.style.top = `${Math.max(tip.offsetHeight + 8, bar.top - 8)}px`;
 }
 function selectDay(c) {
   const chart = c.closest(".chart"); selectedDays[chart.dataset.chart] = c.dataset.date;

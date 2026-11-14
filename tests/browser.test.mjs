@@ -637,11 +637,11 @@ test('The owner overview shows accounts and study time', async t => {
     await s.p.addScriptTag({content: AXE});
     assert.deepEqual(await s.p.evaluate(() => axe.run(document).then(r => r.violations.map(v => v.id + ': ' + v.nodes.map(n => n.target.join(' ')).slice(0, 3).join(', ')))), []);
     // Crossing a month/year boundary preserves chronological ISO dates and shows both years in the period.
-    await s.p.clock.setFixedTime(new Date('2027-01-03T12:00:00Z'));
+    await s.p.clock.setFixedTime(new Date('2026-01-03T12:00:00Z'));
     await s.p.locator('#re').click();
-    await s.p.waitForFunction(() => document.querySelector('.chart .col:last-child')?.dataset.date === '2027-01-03');
-    assert.equal(await visits.locator('.col').first().getAttribute('data-date'), '2026-12-05');
-    assert.match(await s.p.locator('.trend-head .sub').textContent(), /2026.*2027/);
+    await s.p.waitForFunction(() => document.querySelector('.chart .col:last-child')?.dataset.date === '2026-01-03');
+    assert.equal(await visits.locator('.col').first().getAttribute('data-date'), '2025-12-05');
+    assert.match(await s.p.locator('.trend-head .sub').textContent(), /2025.*2026/);
     const dates = await visits.locator('.col').evaluateAll(cols => cols.map(c => c.dataset.date));
     assert.deepEqual(dates, [...dates].sort());
     assert.equal(await visits.locator('.readout b').textContent(), '0 устр.');
