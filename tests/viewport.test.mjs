@@ -9,7 +9,7 @@ function phone({installed=true, userAgent='iPhone', legacy=false}={}) {
   const listen=(name,fn)=>{const list=events.get(name)||[];list.push(fn);events.set(name,list)};
   const viewport={height:844,offsetTop:0,scale:1,addEventListener:(name,fn)=>listen('viewport:'+name,fn)};
   const sandbox={document,navigator:{userAgent,standalone:legacy},screen:{width:390,height:844},
-    innerHeight:844,visualViewport:viewport,addEventListener:listen,requestAnimationFrame:fn=>fn(),
+    innerWidth:390,innerHeight:844,visualViewport:viewport,addEventListener:listen,requestAnimationFrame:fn=>fn(),
     matchMedia:query=>{
       if(!media.has(query))media.set(query,{matches:query.includes('standalone')&&installed,
         addEventListener:(name,fn)=>listen(query+':'+name,fn)});
@@ -24,17 +24,19 @@ function phone({installed=true, userAgent='iPhone', legacy=false}={}) {
     fire:name=>{for(const fn of events.get(name)||[])fn()}};
 }
 
-test('The installed iPhone dock remains enabled when keyboard viewport metrics become stale',()=>{
-  const p=phone();
-  assert.ok(p.root.hasAttribute('data-iphone-dock'));
+test('The iPhone dock uses app-window height, keeps it after the keyboard and restores it after rotation',()=>{
+  const p=phone(),height=()=>p.root.style.getPropertyValue('--app-viewport-height');
+  assert.ok(p.root.hasAttribute('data-iphone-dock'));assert.equal(height(),'844px');
+  p.sandbox.screen.height=904; // The device screen is taller than the app's actual window.
+  p.fire('pageshow');assert.equal(height(),'844px');
   p.sandbox.innerHeight=480;p.viewport.height=480;p.viewport.offsetTop=120;
-  p.fire('viewport:resize');
-  assert.ok(p.root.hasAttribute('data-iphone-dock'));
-  p.sandbox.screen.height=0;p.fire('pageshow');
-  assert.ok(p.root.hasAttribute('data-iphone-dock'),'physical screen dimensions are not the app viewport');
+  p.fire('resize');p.fire('viewport:resize');assert.equal(height(),'844px');
+  p.sandbox.innerWidth=844;p.sandbox.innerHeight=390;p.fire('resize');assert.equal(height(),'390px');
+  p.sandbox.innerWidth=390;p.sandbox.innerHeight=480;p.fire('resize');
+  assert.equal(height(),'844px','portrait must recover even if the keyboard viewport remains stale');
   p.viewport.scale=2;p.fire('viewport:resize');
-  assert.ok(!p.root.hasAttribute('data-iphone-dock'));
-  p.viewport.scale=1;p.fire('viewport:resize');assert.ok(p.root.hasAttribute('data-iphone-dock'));
+  assert.ok(!p.root.hasAttribute('data-iphone-dock'));assert.equal(height(),'');
+  p.viewport.scale=1;p.fire('viewport:resize');assert.equal(height(),'844px');
 });
 
 test('The workaround leaves browser visits and other devices on the native anchor',()=>{
