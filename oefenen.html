@@ -2691,7 +2691,7 @@ function examGate(e,preview=false){
   const cost=examCheckLimit(e), exam=EX[e], draft=isWr(e)&&getDraft(e,true);
   const countLabel=isWr(e)||e==="sp"||e==="sb"?"opdrachten":"vragen";
   const countPrefix=["lz","l1","ls","lb"].includes(e)?"<span>Maximaal</span> ":"";
-  const details=preview?`<h3 id="exam-preview-title" tabindex="-1"><span>Proefexamen</span> · <span>${PART[e]}</span></h3>
+  const details=preview?`<h3 class="sr-only" id="exam-preview-title"><span>Proefexamen</span> · <span>${PART[e]}</span></h3>
     <p class="note">${draft?`<span>Je hebt een opgeslagen concept.</span>`:`<span>${exam.min} min</span> · ${countPrefix}${exam.n} <span>${countLabel}</span><br><span>De timer start zodra je begint.</span>`}</p>
     <p class="note"><span>Stoppen? Kies × en bevestig.</span></p>`:"";
   const warning=cost?`<p class="note">${acc.user?`Je hebt nog ${Math.max(0,checksLeft(e))} nakijkbeurten in je tegoed. Dit proefexamen kost ${cost} nakijkbeurten. Zonder nakijken zie je aan het eind alleen de voorbeeldantwoorden.`
@@ -2701,7 +2701,7 @@ function examGate(e,preview=false){
     <button class="btn" id="ggo">${draft?"Verder met je concept":cost?"Toch beginnen":"Start proefexamen"}</button></div>`;
   d.id="exam-preview";
   row.after(d);row.setAttribute("aria-expanded","true");d.scrollIntoView({block:"nearest"});
-  ($("exam-preview-title")||$("ggo")).focus({preventScroll:true});
+  $("ggo").focus({preventScroll:true});
   $("gback").onclick=()=>{d.remove();row.setAttribute("aria-expanded","false");row.focus()};
   if($("glog"))$("glog").onclick=()=>setTab("profiel");
   $("ggo").onclick=()=>startExam(e,1);
