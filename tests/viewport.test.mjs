@@ -1,0 +1,45 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import vm from 'node:vm';
+import {parseHTML} from 'linkedom';
+
+function phone({installed=true, userAgent='iPhone', legacy=false}={}) {
+  const {document}=parseHTML('<html></html>'), events=new Map(), media=new Map();
+  const listen=(name,fn)=>{const list=events.get(name)||[];list.push(fn);events.set(name,list)};
+  const viewport={height:844,offsetTop:0,scale:1,addEventListener:(name,fn)=>listen('viewport:'+name,fn)};
+  const sandbox={document,navigator:{userAgent,standalone:legacy},screen:{width:390,height:844},
+    innerHeight:844,visualViewport:viewport,addEventListener:listen,requestAnimationFrame:fn=>fn(),
+    matchMedia:query=>{
+      if(!media.has(query))media.set(query,{matches:query.includes('standalone')&&installed,
+        addEventListener:(name,fn)=>listen(query+':'+name,fn)});
+      return media.get(query);
+    }};
+  sandbox.window=sandbox;
+  const html=fs.readFileSync(new URL('../oefenen.html',import.meta.url),'utf8');
+  const script=[...html.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g)].find(m=>m[1].includes('data-iphone-dock'))?.[1];
+  assert.ok(script);
+  vm.runInNewContext(script,sandbox);
+  return {root:document.documentElement,viewport,sandbox,media,
+    fire:name=>{for(const fn of events.get(name)||[])fn()}};
+}
+
+test('The installed iPhone dock remains enabled when keyboard viewport metrics become stale',()=>{
+  const p=phone();
+  assert.ok(p.root.hasAttribute('data-iphone-dock'));
+  p.sandbox.innerHeight=480;p.viewport.height=480;p.viewport.offsetTop=120;
+  p.fire('viewport:resize');
+  assert.ok(p.root.hasAttribute('data-iphone-dock'));
+  p.sandbox.screen.height=0;p.fire('pageshow');
+  assert.ok(p.root.hasAttribute('data-iphone-dock'),'physical screen dimensions are not the app viewport');
+  p.viewport.scale=2;p.fire('viewport:resize');
+  assert.ok(!p.root.hasAttribute('data-iphone-dock'));
+  p.viewport.scale=1;p.fire('viewport:resize');assert.ok(p.root.hasAttribute('data-iphone-dock'));
+});
+
+test('The workaround leaves browser visits and other devices on the native anchor',()=>{
+  for(const options of [{installed:false},{userAgent:'iPad'},{userAgent:'Android'},{userAgent:'Macintosh'}]){
+    assert.ok(!phone(options).root.hasAttribute('data-iphone-dock'));
+  }
+  assert.ok(phone({installed:false,legacy:true}).root.hasAttribute('data-iphone-dock'));
+});
