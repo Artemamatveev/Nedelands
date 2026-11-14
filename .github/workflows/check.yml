@@ -32,13 +32,6 @@ jobs:
       - run: node --test tests/browser.test.mjs
         env:
           BROWSER_TESTS: "1"
-          ADMIN_SCREENSHOTS: /tmp/admin-statistics
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: admin-statistics
-          path: /tmp/admin-statistics/*.png
-          if-no-files-found: ignore
   startup:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -59,3 +52,10 @@ jobs:
         env:
           BROWSER_TESTS: "1"
           BROWSER_ENGINE: ${{ matrix.engine }}
+          ADMIN_SCREENSHOTS: /tmp/admin-statistics
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: admin-statistics-${{ matrix.engine }}
+          path: /tmp/admin-statistics/*.png
+          if-no-files-found: ignore
