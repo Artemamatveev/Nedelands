@@ -61,6 +61,43 @@ async function page(browser, base, {lang, ...opt} = {}) {
 }
 const overflow = p => p.evaluate(() => document.documentElement.scrollWidth - innerWidth);
 
+test('Legacy public addresses move progress to the main site and stop offering practice', async t => {
+  let browser;
+  try { browser=chromium&&await chromium.launch(); } catch(e) { if(process.env.BROWSER_TESTS)throw e; }
+  if(!browser){if(process.env.BROWSER_TESTS)assert.fail('Playwright is not installed');return t.skip('no browser here')}
+  const server=await serve(),base=`http://127.0.0.1:${server.address().port}`;
+  try {
+    for(const host of ['bittertalen.vercel.app','nedelands.vercel.app']){
+      const s=await page(browser,base,{});
+      try {
+        await s.ctx.route(/https:\/\/(?:bittertalen\.nl|(?:bittertalen|nedelands)\.vercel\.app)\//, async route=>{
+          const u=new URL(route.request().url());
+          const response=await route.fetch({url:base+u.pathname+u.search});await route.fulfill({response});
+        });
+        await s.p.addInitScript(()=>{
+          if(location.hostname.endsWith('.vercel.app'))localStorage.setItem('ww-v1',JSON.stringify({items:{'knm|0':{r:2,w:1,b:1,d:10}},words:[{w:'de fiets',en:'bicycle'}],streak:3}));
+        });
+        await s.p.goto(`https://${host}/?open=a2`);
+        await s.p.waitForURL(u=>u.hostname==='bittertalen.nl'&&u.pathname==='/oefenen');
+        await s.p.locator('#mvdone').waitFor();
+        assert.equal(await s.p.evaluate(()=>S.items['knm|0'].r),2);assert.equal(await s.p.evaluate(()=>S.words[0].w),'de fiets');
+        await s.p.locator('#mvdone').click();await s.p.evaluate(()=>build('knm',{...SEC.find(s=>s.id==='knm'),n:3}));
+        assert.equal(await s.p.locator('#play').isVisible(),true);assert.deepEqual(s.errors,[]);
+      } finally {await s.ctx.close()}
+    }
+    const s=await page(browser,base,{});
+    try {
+      await s.ctx.route('https://bittertalen.vercel.app/**',async route=>{const u=new URL(route.request().url());await route.fulfill({response:await route.fetch({url:base+u.pathname+u.search})})});
+      await s.p.addInitScript(()=>Object.defineProperty(navigator,'standalone',{value:true}));
+      await s.p.goto('https://bittertalen.vercel.app/oefenen');await s.p.locator('#move ol').waitFor();
+      assert.equal(await s.p.locator('#mvlater').count(),0);
+      await s.p.evaluate(()=>{home();build('knm');startExam('knm',true)});
+      assert.equal(await s.p.locator('#play').isHidden(),true);assert.equal(await s.p.locator('#home').isHidden(),true);
+      assert.equal(await s.p.locator('#move a').getAttribute('href'),'https://bittertalen.nl/');assert.deepEqual(s.errors,[]);
+    } finally {await s.ctx.close()}
+  } finally {await browser.close();server.close()}
+});
+
 test('Quick Dutch praise never delays practice', async t => {
   let browser;
   try { browser=chromium&&await chromium.launch(); } catch(e) { if(process.env.BROWSER_TESTS)throw e; }

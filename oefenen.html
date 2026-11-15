@@ -1276,7 +1276,7 @@ async function trialUsage(){
 }
 // Anonymous usage counts (api/event.js): only "one more today" per event, level and menu language; no id, cookie, account
 // or IP address. Only when the server offers it (cfg.events), never with Global Privacy Control or Do Not Track.
-const trackOn=()=>!!(acc.cfg&&acc.cfg.events)&&!navigator.globalPrivacyControl&&navigator.doNotTrack!=="1";
+const trackOn=()=>!legacyOrigin()&&!!(acc.cfg&&acc.cfg.events)&&!navigator.globalPrivacyControl&&navigator.doNotTrack!=="1";
 function track(ev){ if(!trackOn())return Promise.resolve(false);
   try{return fetch("/api/event",{method:"POST",keepalive:true,headers:{"Content-Type":"application/json"},
     body:JSON.stringify({ev,lvl:lvl(),ui:lsGet("ww-ui")||"nl"})}).then(r=>r.ok,()=>false)}catch(e){return Promise.resolve(false)} }
@@ -1378,7 +1378,7 @@ async function setUser(u){
   })};
   drawProfile();await push();if(!active())return;
   addGenerated();refresh();usage();syncMeta();lsSet(WEL,"1");
-  if(OLD==="bittertalen.vercel.app")moveScreen();
+  if(legacyOrigin()&&legacyReady)moveScreen();
 }
 function pull(){return push()}
 function mergeS(a,b){
@@ -2039,6 +2039,7 @@ function itHTML(attr,t,d,o={}){
 }
 var knmOpen=false; // the theme list under KNM on Oefenen is open
 function home(){
+  if(legacyOrigin())return legacyReady?moveScreen():moveShow();
   quickPraise.hide();
   paint();
   $("play").hidden=true;$("welcome").hidden=true;$("move").hidden=true;$("stats").hidden=true;$("lib").hidden=true;$("read").hidden=true;$("media").hidden=true;$("story").hidden=true;$("hist").hidden=true;$("talk").hidden=true;stopMedia();closePop();$("home").hidden=false;head();clock(0);hush();planId=null;drawPlan();
@@ -2323,6 +2324,7 @@ function examCheckLimit(e){
 }
 // Schrijven and Spreken are graded by Claude: without a login, or with too few checks left today, say so first
 function startExam(e,go){
+  if(legacyOrigin())return moveScreen();
   if(!go&&examCheckLimit(e))return examGate(e);
   track("exam_"+e);
   build("exam",{id:"exam",exam:1,part:e,keep:["lz","l1","ls","lb","sp","wb","sb"].includes(e),write:isWr(e),speak:e==="sp"||e==="sb",...EX[e],pool:()=>{if(e==="wb")return wbTasks(8,3);if(e==="sb")return sbTasks(8,8);const a=byFresh(shuffle(ITEMS.filter(x=>x.sec===e)));
@@ -2535,6 +2537,7 @@ function resumeWriting(section,exam,slot=""){
   if(exam){setTab("examen");startExam(section,true)}else build(section,{...SEC.find(item=>item.id===section),draftSlot:slot});
 }
 function build(id,custom){
+  if(legacyOrigin())return moveScreen();
   cur={...(custom||SEC.find(s=>s.id===id))}; cur.zs=[]; const d=today(), due=[],fresh=[];
   const lv=x=>lvl()==="B1"||!x.k.startsWith("gb|"); // the B1 history questions only at B1
   // cur.theme: one KNM theme only (the list under KNM on Oefenen)
@@ -3983,10 +3986,9 @@ document.addEventListener("keydown",e=>{
 addGenerated();
 // saved book words show up in the Mix; their wrong options come from the dictionary
 ruWords().catch(()=>{});
-// Bittertalen moved to bittertalen.nl. Progress lives per address (and on iPhone per home-screen app), so on the old
-// address bittertalen.vercel.app a move screen takes it along: in a browser everything goes in the link to the new address
-// (#verhuis=…, never sent to a server); a home-screen app is reinstalled from the new address and the account brings the
-// progress. nedelands.vercel.app (the address before that, moved in October) just forwards.
+// Both old public origins are migration-only. Never offer practice there: browser storage belongs to its origin.
+function legacyOrigin(){return /^(bittertalen|nedelands)\.vercel\.app$/.test(location.hostname)}
+let legacyReady=false,legacyTransfer=false;
 const NEWURL="https://bittertalen.nl/", CODE="BITTERTALEN2:";
 const b64=u=>{let t="";for(let i=0;i<u.length;i+=32768)t+=String.fromCharCode.apply(null,u.subarray(i,i+32768));return btoa(t).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")};
 const unb64=t=>{t=t.replace(/-/g,"+").replace(/_/g,"/");while(t.length%4)t+="=";return Uint8Array.from(atob(t),c=>c.charCodeAt(0))};
@@ -4016,16 +4018,21 @@ function moveShow(){paint();["home","stats","lib","read","media","story","hist",
 async function moveScreen(){
   moveShow(); $("move").innerHTML=`<h2>Bittertalen verhuist</h2><p class="note">Even wachten…</p>`;
   await within(ready$,4000);
-  const app=navigator.standalone===true||matchMedia("(display-mode: standalone)").matches, has=Object.keys(S.items).length>0;
-  if(!app&&!has)return location.replace(NEWURL);
-  const later=`<button class="ghost wide" id="mvlater">Nu niet</button>`;
+  const app=navigator.standalone===true||matchMedia("(display-mode: standalone)").matches;
   if(!app){
     $("move").innerHTML=`<h2>Bittertalen verhuist</h2>
-      <p class="sub">De app heeft een nieuw adres: <b>bittertalen.nl</b>. Je voortgang gaat mee: je resultaten, je woorden${acc.user?"":" en je boeken"}.</p>
-      <button class="btn wide" id="mvgo">Verhuis naar bittertalen.nl</button><p class="note" id="mvnote"></p>${later}`;
-    $("mvgo").onclick=async()=>{const b=$("mvgo");b.disabled=true;b.textContent="Even wachten…";
-      try{if(pushT)push();const p=await packProgress();location.replace(NEWURL+"#verhuis="+p.code+(p.books?"":"&zonderboeken"))}
-      catch(e){b.disabled=false;b.textContent="Verhuis naar bittertalen.nl";$("mvnote").textContent="Er ging iets mis. Probeer het nog een keer."}};
+      <p class="sub">Je gaat naar <b>bittertalen.nl</b>. Je opgeslagen voortgang gaat mee. Oefenen kan alleen op het nieuwe adres.</p>
+      <button class="btn wide" id="mvgo">Naar bittertalen.nl</button><p class="note" id="mvnote"></p>`;
+    $("mvgo").onclick=async()=>{
+      if(legacyTransfer)return;legacyTransfer=true;
+      const b=$("mvgo");b.disabled=true;b.textContent="Even wachten…";
+      try{
+        const p=await packProgress(),to=new URL("oefenen",NEWURL),q=new URLSearchParams(location.search);
+        for(const k of ["open","plus"])if(q.has(k))to.searchParams.set(k,q.get(k));
+        to.hash="verhuis="+p.code+(p.books?"":"&zonderboeken");location.replace(to.href);
+      }catch(e){legacyTransfer=false;b.disabled=false;b.textContent="Naar bittertalen.nl";$("mvnote").textContent="Je voortgang blijft hier bewaard. Probeer de verhuizing opnieuw."}
+    };
+    $("mvgo").click();
   }else{
     // a home-screen app can't take its memory to another address: the account carries the progress
     $("move").innerHTML=`<h2>Bittertalen verhuist</h2>
@@ -4034,10 +4041,9 @@ async function moveScreen(){
       <li>Open <a href="${NEWURL}" target="_blank" rel="noopener">bittertalen.nl ↗</a> in Safari, tik op <b>Deel</b> en dan op <b>Zet op beginscherm</b>.</li>
       <li>Open de nieuwe app en log in met hetzelfde e-mailadres. Je voortgang komt mee.</li>
       <li>Verwijder daarna dit oude icoon.</li></ol>
-      ${acc.user||!acc.cfg?"":`<button class="btn wide" id="mvlogin">Log hier eerst in</button>`}${later}`;
+      ${acc.user||!acc.cfg?"":`<button class="btn wide" id="mvlogin">Log hier eerst in</button>`}`;
     if($("mvlogin"))$("mvlogin").onclick=()=>{welcome();$("move").hidden=true};
   }
-  $("mvlater").onclick=home;
 }
 // The new address: progress that came along in the link is added to what is here (both kept, as when joining an account)
 async function arrive(){
@@ -4055,8 +4061,8 @@ async function arrive(){
     <button class="btn wide" id="mvdone">Naar Mijn dag</button>`;
   $("mvdone").onclick=()=>{home();if(acc.cfg&&!acc.user&&!lsGet(WEL))welcome()};
 }
-const OLD=location.hostname, entry=new URLSearchParams(location.search).get("open"), ready$=restore();
-if(OLD==="nedelands.vercel.app")location.replace(NEWURL); else if(OLD==="bittertalen.vercel.app")moveScreen(); else home();
+const entry=new URLSearchParams(location.search).get("open"), ready$=restore();
+if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2><p class="note">Even wachten…</p>`}else home();
 // The menus and navigation in other languages, for beginners (the language pill in the header and on the login window).
 // Exercises, texts, stories and questions stay Dutch: only text nodes and labels that match a menu string are
 // translated, never inside #play (the exercises) or #read (the book reader). A text node keeps its Dutch original
@@ -4281,10 +4287,11 @@ function openEntry(){
 const returning=new URLSearchParams(location.search), moving=location.hash.startsWith("#verhuis=");
 // Local content is ready: optional cloud/auth work may continue, but cannot keep the splash over a usable app.
 ready$.then(()=>setTimeout(()=>window.__finishBoot(),4000));
-ready$.then(()=>location.hash.startsWith("#verhuis=")?arrive():0).then(initCloud).then(()=>{
+ready$.then(()=>!legacyOrigin()&&location.hash.startsWith("#verhuis=")?arrive():0).then(initCloud).then(()=>{
+  legacyReady=true;if(legacyOrigin())return moveScreen();
   if(!moving&&!returning.has("plus")&&!returning.has("code")&&!returning.has("error"))openEntry();
   plusBack();
-}).finally(()=>{window.__up=1;window.__finishBoot()});
+}).catch(e=>{if(legacyOrigin()){legacyReady=true;return moveScreen()}throw e}).finally(()=>{window.__up=1;window.__finishBoot()});
 // A newer version was fetched in the background: offer it (a reload takes it from the cache, so it is quick)
 function showFresh(){if($("fresh"))return;const d=document.createElement("div");d.id="fresh";d.setAttribute("role","status");
   d.innerHTML=`<span>Er is een nieuwe versie van Bittertalen.</span><button class="btn" type="button">Vernieuwen</button>`;
