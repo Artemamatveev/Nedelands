@@ -888,8 +888,8 @@ h2,h3,.verb,.step b,.it b{text-wrap:balance} p,.d,.sub,.note{text-wrap:pretty}
 .quick-praise{position:fixed;top:calc(env(safe-area-inset-top,0px) + 66px);left:50%;width:min(76vw,290px);transform:translateX(-50%);z-index:60;pointer-events:none}
 .quick-praise *{pointer-events:none}
 .quick-praise[data-tone="try"]{--praise-fill:#C8500C;--praise-accent:var(--fill)}
-.quick-praise-mark{display:block;width:100%;height:auto;transform-origin:50% 65%;animation:quick-praise-flash 650ms var(--motion-settle,ease-out) both}
-@keyframes quick-praise-flash{0%{opacity:0;transform:translateY(5px) rotate(-4deg) scale(.94)}20%,70%{opacity:1;transform:translateY(0) rotate(-4deg) scale(1)}100%{opacity:0;transform:translateY(-4px) rotate(-4deg) scale(1)}}
+.quick-praise-mark{display:block;width:100%;height:auto;transform-origin:50% 65%;animation:quick-praise-flash 1500ms var(--motion-settle,ease-out) both}
+@keyframes quick-praise-flash{0%{opacity:0;transform:translateY(5px) rotate(-4deg) scale(.94)}8%,88%{opacity:1;transform:translateY(0) rotate(-4deg) scale(1)}100%{opacity:0;transform:translateY(-4px) rotate(-4deg) scale(1)}}
 @media(prefers-reduced-motion:reduce){.quick-praise-mark{transform:none;animation:none!important}}
 </style>
 </head>
@@ -1027,14 +1027,14 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
 <div class="quick-praise" id="quick-praise" lang="nl" aria-hidden="true" hidden></div>
 <div class="zoom" id="zoom" hidden><img id="zimg" alt=""><p id="zcap"></p></div>
 <script src="/study/praise-art-v1.js?v=c86fa67273"></script>
-<script src="/study/praise-v1.js?v=8ebdc5d7a8"></script>
+<script src="/study/praise-v1.js?v=cf226a4a76"></script>
 <script src="/study/language-v1.js?v=e94426af48"></script>
 <script src="/study/progress-v1.js?v=c45ceeaefb"></script>
 <script src="/study/writing-v1.js?v=e5690fd786"></script>
-<script src="/data/knm.js?v=747640e712"></script>
+<script src="/data/knm.js?v=80147f3b9f"></script>
 <script src="/data/a2.js?v=35efca6a73"></script>
 <script src="/data/b1.js?v=e9701bd331"></script>
-<script src="/data/extra.js?v=c6f4976b6b"></script>
+<script src="/data/extra.js?v=63cb92e8f1"></script>
 <script>
 
 const TYPES={past:"Imperfectum: gisteren … ik / hij",pastpl:"Imperfectum: gisteren … wij / zij",pp:"Perfectum: voltooid deelwoord",aux:"Perfectum: hebben of zijn?"};

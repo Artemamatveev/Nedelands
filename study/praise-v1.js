@@ -1,6 +1,6 @@
 // A short, decorative Dutch encouragement. It never owns focus or advances a question.
 const quickPraise=(()=>{
-  const el=document.getElementById('quick-praise'),duration=650;
+  const el=document.getElementById('quick-praise'),duration=1500;
   let timer=null;const last={good:-1,try:-1};
   function hide(){clearTimeout(timer);timer=null;el.hidden=true;el.replaceChildren();delete el.dataset.phrase;delete el.dataset.tone}
   function show(ok=true){
