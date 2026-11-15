@@ -72,7 +72,7 @@ branch: in November 2026 a commit built first as a branch preview got no product
 start one by hand, a production deployment of `main` at that commit) (Vercel project
 `nedelands`; the domain is registered at TransIP with Vercel's nameservers, so its DNS records are in Vercel, including
 Resend's). The old addresses https://bittertalen.vercel.app and https://nedelands.vercel.app serve the same deployment
-(see Progress for the move).
+as migration-only entry points (see Progress). Practice is available only on bittertalen.nl.
 Search: `robots.txt`, `sitemap.xml` (only https://bittertalen.nl/), a canonical link to bittertalen.nl, Open Graph tags
 with `art/og-delft.jpg`, JSON-LD (`WebApplication`) and a `<noscript>` line, and search engines don't get the welcome
 screen. Until the public launch every address sends `X-Robots-Tag: noindex` (`vercel.json`, one rule for all hosts). At
@@ -374,13 +374,15 @@ start, asks for a new sw.js at every start and return (`r.update()`), (Profiel's
 Saving progress to a file was removed on purpose. On an iPhone in Safari a tile on Vandaag (`drawA2hs()`)
 asks to put the app on the home screen, because Safari can wipe a site's storage after a week without a visit; the
 home-screen app has its own storage, so the progress goes along by the clipboard (Kopieer / Plak mijn voortgang).
-The app moved to https://bittertalen.nl. Storage is per address, so on bittertalen.vercel.app a move screen
-(`moveScreen()`) takes the progress along: in a browser it packs `S`, `ww-media` and own books (gzip, base64url,
-`BITTERTALEN2:`, books dropped if the link would pass 60 000 characters) into the link `bittertalen.nl/#verhuis=…`,
-and `arrive()` there merges it in (`mergeS()`; the fragment never reaches a server). A home-screen app can't carry its
-memory to another address, so it is told to log in, reinstall from bittertalen.nl and log in there. With nothing to
-move, the old address forwards at once; https://nedelands.vercel.app (the address before, moved in October) always
-forwards. Remove the move screen once nobody uses the old address any more.
+The app moved to https://bittertalen.nl. Both old public origins are migration-only: home, practice and exam entry points
+return to `moveScreen()` with no “Nu niet” bypass. Browser visits automatically carry `S`, `ww-media` and own books
+(gzip/base64url, `BITTERTALEN2:`, books omitted above 60,000 characters) in the fragment to bittertalen.nl/oefenen;
+`arrive()` merges it there. Account initialization finishes before transfer, and old storage is retained. A failed transfer
+shows only a retry. Installed apps retain login/reinstall instructions and a link to the new address; there is no route
+back to exercises. Migration visits do not emit usage events. On legacy origins the worker skips precaching, activates
+immediately, navigates open windows to the migration gate, and uses network-only navigation. Offline it shows a blocking
+move message rather than cached practice; all local data/cache remains intact. Devices must connect once to receive
+this worker update. Normal bittertalen.nl startup, offline caching and account isolation are unchanged.
 
 ## Accounts (optional)
 

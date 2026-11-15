@@ -10,6 +10,8 @@
 // CACHE stays the same when sw.js changes: a new name would throw away every painting, photo and voice people have.
 const APP = "/oefenen", CACHE = "nl-a2-v12", CORE = [APP, "/", "/voorwaarden", "/motion-v1.css", "/ios-startup-v1.js", "/contact", "/landing.css?v=features10", "/landing.js?v=weekly1", "/lib/gsap-3.15.1.min.js", "/landing-motion-v3.js?v=features10", "/lib/ScrollTrigger-3.15.1.min.js", "/shots/app-day-v2.webp", "/shots/app-practice-v2.webp", "/shots/app-exam-v2.webp", "/art/delft.jpg", "/art/bitterbal-nl-v2.jpg", "/art/bitterbal-wave-nl-v1.jpg", "/art/bittie-loading-v1.webp", "/art/bittie-dance-v5.svg", "/manifest.json?v=bittie1", "/apple-touch-icon.png?v=bittie1"];
 
+// Legacy installations must fetch the migration gate, never reopen cached practice. Keep their data/cache intact.
+const LEGACY_ORIGIN = /^(bittertalen|nedelands)\.vercel\.app$/.test(new URL(location.origin).hostname);
 const assetsOf = html => [...html.matchAll(/src="(\/(?:data|study)\/[^"?]+\.js\?v=[0-9a-f]+)"/g)].map(m => m[1]);
 const bootAssetsOf = html => [...new Set([...html.matchAll(/(?:src|srcset|href)="(\/art\/bittie-(?:dance|loading)-v\d+\.(?:webp|svg))"/g)].map(m => m[1]))];
 const dictOf = html => (/const DICTV="([0-9a-f]+)"/.exec(html) || [])[1] || "";
@@ -64,6 +66,7 @@ async function rememberUpdate(c) {
 // opens offline.
 self.addEventListener("install", e => {
   self.skipWaiting();
+  if (LEGACY_ORIGIN) return;
   e.waitUntil(caches.open(CACHE).then(async c => {
     // Save the app and the actual dance before unrelated homepage pictures compete for the connection.
     const old = await c.match(APP);
@@ -88,6 +91,17 @@ self.addEventListener("install", e => {
 // A new sw.js that replaces an older one comes with a new version of the page: the open windows offer to reload. Not on
 // the first visit (no older cache), or a new learner would see "nieuwe versie" at once.
 self.addEventListener("activate", e => {
+  if (LEGACY_ORIGIN) {
+    e.waitUntil((async () => {
+      await self.clients.claim();
+      const windows = await self.clients.matchAll({type:"window",includeUncontrolled:true});
+      await Promise.all(windows.map(w => {
+        const u = new URL(w.url); if (u.origin !== location.origin) return;
+        u.pathname = APP; return w.navigate(u.href).catch(() => {});
+      }));
+    })());
+    return;
+  }
   e.waitUntil(caches.keys().then(async ks => {
     const old = ks.filter(k => k !== CACHE);
     await Promise.all(old.map(k => caches.delete(k)));
@@ -100,6 +114,7 @@ self.addEventListener("activate", e => {
 });
 // The page sends the files to keep before they are first needed: paintings and photos, and the dictionary's parts
 self.addEventListener("message", e => {
+  if (LEGACY_ORIGIN) return;
   const urls = e.data && Array.isArray(e.data.warm) ? e.data.warm : [];
   e.waitUntil(caches.open(CACHE).then(async c => {
     for (const u of urls) if (!(await c.match(u))) await c.add(u).catch(() => {}); // one by one: it is background work
@@ -108,6 +123,13 @@ self.addEventListener("message", e => {
 self.addEventListener("fetch", e => {
   const r = e.request, u = new URL(r.url);
   if (r.method !== "GET" || u.origin !== location.origin || u.pathname.startsWith("/api/")) return;
+  if (LEGACY_ORIGIN && (r.mode === "navigate" || u.pathname === APP || u.pathname === APP + ".html")) {
+    e.respondWith(fetch(r.url, {cache:"no-store",credentials:"same-origin"}).catch(() => new Response(
+      '<!doctype html><html lang="nl"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Bittertalen verhuist</title><h1>Bittertalen verhuist</h1><p>Maak verbinding met internet om je opgeslagen voortgang mee te nemen. Op dit oude adres kun je niet meer oefenen.</p><a href="https://bittertalen.nl/oefenen">Naar bittertalen.nl</a></html>',
+      {headers:{"Content-Type":"text/html; charset=utf-8"}}
+    )));
+    return;
+  }
   // When the page last changed (ms): the open page compares it with when it started
   if (u.pathname === "/__changed") {
     e.respondWith(caches.open(CACHE).then(c => c.match("/__changed")).then(h => h || new Response("0")));
