@@ -103,6 +103,27 @@ test('Quick Dutch praise never delays practice', async t => {
     assert.equal(await s.p.evaluate(()=>pos),1);assert.equal(await flash.isHidden(),true);
     await s.p.evaluate(()=>{window.setTimeout=window.__praiseSetTimeout;quickPraise.show()});
     assert.equal(await flash.isVisible(),true);await flash.waitFor({state:'hidden',timeout:2000});
+    await s.p.emulateMedia({reducedMotion:'no-preference'});
+    await s.p.evaluate(()=>{
+      build('knm',{...SEC.find(s=>s.id==='knm'),n:3});
+      window.setTimeout=(fn,delay,...args)=>window.__praiseSetTimeout(fn,delay===650?30000:delay,...args);
+    });
+    const wrongRight=await s.p.evaluate(()=>queue[pos].right.toLowerCase());
+    const wrongIndex=await buttons.evaluateAll((bs,right)=>bs.findIndex(b=>b.querySelector('.tx').textContent.trim().toLowerCase()!==right),wrongRight);
+    await buttons.nth(wrongIndex).click();
+    assert.equal(await flash.isVisible(),true);assert.equal(await flash.getAttribute('data-tone'),'try');
+    assert.ok(['Wat jammer!','Helaas!','Oeps!','Geeft niks!','Nog een keer!','Volgende keer beter!'].includes(await flash.getAttribute('data-phrase')));
+    assert.match(await s.p.locator('#fb').textContent(),/Goed is:/);
+    assert.equal(await next.isEnabled(),true);
+    for(const width of [320,390]){
+      await s.p.setViewportSize({width,height:844});
+      await svg.evaluate(e=>e.getAnimations().forEach(a=>{a.pause();a.currentTime=220}));
+      assert.equal(await overflow(s.p),0);
+      if(process.env.ADMIN_SCREENSHOTS)await s.p.screenshot({path:path.join(process.env.ADMIN_SCREENSHOTS,`dutch-retry-${width}.png`)});
+    }
+    await next.click({timeout:1000});assert.equal(await s.p.evaluate(()=>pos),1);assert.equal(await flash.isHidden(),true);
+    await s.p.evaluate(()=>{window.setTimeout=window.__praiseSetTimeout;quickPraise.show(false)});
+    assert.equal(await flash.isVisible(),true);await flash.waitFor({state:'hidden',timeout:2000});
     await s.p.evaluate(()=>startExam('knm',true));await s.p.locator('#card .opt').first().click();
     assert.equal(await flash.isHidden(),true);
     assert.deepEqual(s.errors,[]);
