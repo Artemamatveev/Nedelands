@@ -116,3 +116,14 @@ De hoofdstukken in Geschiedenis gebruiken ook `art/oranje.jpg` en `art/aardappel
 
 | `koorts-kind-v1.jpg` | [Mom checks child's temperature using digital thermometer.jpg](https://commons.wikimedia.org/wiki/File:Mom_checks_child%27s_temperature_using_digital_thermometer.jpg) | Nenad Stojković (Shixart1985) | [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/); verkleind naar 640 px en gecomprimeerd |
 | `koorts-vrouw-v1.jpg` | [A woman holds a digital thermometer, looking worried while wearing a soft robe.jpg](https://commons.wikimedia.org/wiki/File:A_woman_holds_a_digital_thermometer,_looking_worried_while_wearing_a_soft_robe.jpg) | Nenad Stojković (Shixart1985) | [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/); verkleind naar 640 px en gecomprimeerd |
+
+## KNM birth situations · 15 November 2026
+
+These neutral scenes replace four reuses of the baby-on-scales photo. Resized to 640px wide; no answer is pictured.
+
+| File | Source | Author | License |
+| --- | --- | --- | --- |
+| `geboorte-v1.jpg` | [Sleeping-baby.jpg](https://commons.wikimedia.org/wiki/File:Sleeping-baby.jpg) | Stephanie Pratt | CC0 1.0 |
+| `ouders-baby-v1.jpg` | [Parents and their baby.jpg](https://commons.wikimedia.org/wiki/File:Parents_and_their_baby.jpg) | sheldonl | CC0 1.0 |
+| `geboorte-hand-v1.jpg` | [Baby-Parenthood-Finger-Father-Hand-Love-Mother-1271742.jpg](https://commons.wikimedia.org/wiki/File:Baby-Parenthood-Finger-Father-Hand-Love-Mother-1271742.jpg) | trestletech | CC0 1.0 |
+| `kraamvisite-v1.jpg` | [Motherandbaby.jpg](https://commons.wikimedia.org/wiki/File:Motherandbaby.jpg) | Wobble | Public domain (PD-self) |

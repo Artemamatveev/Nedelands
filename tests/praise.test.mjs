@@ -27,12 +27,12 @@ test('Exam selections do not reveal whether an answer is correct',async()=>{
   const a=await app();a.run('startExam("knm",true)');a.document.querySelector('#card .opt').click();
   assert.equal(a.document.getElementById('quick-praise').hidden,true);
 });
-test('The 650ms pulse cleans up, rapid pulses replace each other, and consecutive phrases differ',async()=>{
+test('The 1500ms pulse cleans up, rapid pulses replace each other, and consecutive phrases differ',async()=>{
   const a=await app();practice(a);a.run('quickPraise.show()');
   const el=a.document.getElementById('quick-praise'),first=el.dataset.phrase;
   a.run('quickPraise.show()');assert.notEqual(el.dataset.phrase,first);
   assert.equal(el.querySelectorAll('svg').length,1);
-  const timers=[...a.timers.values()].filter(t=>t.delay===650);
+  const timers=[...a.timers.values()].filter(t=>t.delay===1500);
   assert.equal(timers.length,1);timers[0].fn();
   assert.equal(el.hidden,true);assert.equal(el.childElementCount,0);
 });

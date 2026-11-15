@@ -72,7 +72,7 @@ test('Quick Dutch praise never delays practice', async t => {
       build('knm',{...SEC.find(s=>s.id==='knm'),n:3});
       // Hold only the decorative timer so the next-button test cannot accidentally wait for it to finish.
       window.__praiseSetTimeout=window.setTimeout;
-      window.setTimeout=(fn,delay,...args)=>window.__praiseSetTimeout(fn,delay===650?30000:delay,...args);
+      window.setTimeout=(fn,delay,...args)=>window.__praiseSetTimeout(fn,delay===1500?30000:delay,...args);
     });
     const right=await s.p.evaluate(()=>queue[pos].right.toLowerCase());
     const buttons=s.p.locator('#card .opt');
@@ -102,11 +102,11 @@ test('Quick Dutch praise never delays practice', async t => {
     await next.click({timeout:1000}); // The pulse is still held for 30s: progression must be immediate.
     assert.equal(await s.p.evaluate(()=>pos),1);assert.equal(await flash.isHidden(),true);
     await s.p.evaluate(()=>{window.setTimeout=window.__praiseSetTimeout;quickPraise.show()});
-    assert.equal(await flash.isVisible(),true);await flash.waitFor({state:'hidden',timeout:2000});
+    assert.equal(await flash.isVisible(),true);await s.p.waitForTimeout(900);assert.equal(await flash.isVisible(),true);await flash.waitFor({state:'hidden',timeout:2000});
     await s.p.emulateMedia({reducedMotion:'no-preference'});
     await s.p.evaluate(()=>{
       build('knm',{...SEC.find(s=>s.id==='knm'),n:3});
-      window.setTimeout=(fn,delay,...args)=>window.__praiseSetTimeout(fn,delay===650?30000:delay,...args);
+      window.setTimeout=(fn,delay,...args)=>window.__praiseSetTimeout(fn,delay===1500?30000:delay,...args);
     });
     const wrongRight=await s.p.evaluate(()=>queue[pos].right.toLowerCase());
     const wrongIndex=await buttons.evaluateAll((bs,right)=>bs.findIndex(b=>b.querySelector('.tx').textContent.trim().toLowerCase()!==right),wrongRight);
@@ -123,7 +123,7 @@ test('Quick Dutch praise never delays practice', async t => {
     }
     await next.click({timeout:1000});assert.equal(await s.p.evaluate(()=>pos),1);assert.equal(await flash.isHidden(),true);
     await s.p.evaluate(()=>{window.setTimeout=window.__praiseSetTimeout;quickPraise.show(false)});
-    assert.equal(await flash.isVisible(),true);await flash.waitFor({state:'hidden',timeout:2000});
+    assert.equal(await flash.isVisible(),true);await s.p.waitForTimeout(900);assert.equal(await flash.isVisible(),true);await flash.waitFor({state:'hidden',timeout:2000});
     await s.p.evaluate(()=>startExam('knm',true));await s.p.locator('#card .opt').first().click();
     assert.equal(await flash.isHidden(),true);
     assert.deepEqual(s.errors,[]);
