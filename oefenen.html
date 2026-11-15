@@ -887,6 +887,7 @@ h2,h3,.verb,.step b,.it b{text-wrap:balance} p,.d,.sub,.note{text-wrap:pretty}
 /* Quick Dutch brush lettering: decorative, no layout or hit-testing changes. */
 .quick-praise{position:fixed;top:calc(env(safe-area-inset-top,0px) + 66px);left:50%;width:min(76vw,290px);transform:translateX(-50%);z-index:60;pointer-events:none}
 .quick-praise *{pointer-events:none}
+.quick-praise[data-tone="try"]{--praise-fill:#C8500C;--praise-accent:var(--fill)}
 .quick-praise-mark{display:block;width:100%;height:auto;transform-origin:50% 65%;animation:quick-praise-flash 650ms var(--motion-settle,ease-out) both}
 @keyframes quick-praise-flash{0%{opacity:0;transform:translateY(5px) rotate(-4deg) scale(.94)}20%,70%{opacity:1;transform:translateY(0) rotate(-4deg) scale(1)}100%{opacity:0;transform:translateY(-4px) rotate(-4deg) scale(1)}}
 @media(prefers-reduced-motion:reduce){.quick-praise-mark{transform:none;animation:none!important}}
@@ -1025,8 +1026,8 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
 </nav>
 <div class="quick-praise" id="quick-praise" lang="nl" aria-hidden="true" hidden></div>
 <div class="zoom" id="zoom" hidden><img id="zimg" alt=""><p id="zcap"></p></div>
-<script src="/study/praise-art-v1.js?v=612483dca4"></script>
-<script src="/study/praise-v1.js?v=a739eb91f8"></script>
+<script src="/study/praise-art-v1.js?v=c86fa67273"></script>
+<script src="/study/praise-v1.js?v=8ebdc5d7a8"></script>
 <script src="/study/language-v1.js?v=e94426af48"></script>
 <script src="/study/progress-v1.js?v=c45ceeaefb"></script>
 <script src="/study/writing-v1.js?v=e5690fd786"></script>
@@ -1905,7 +1906,7 @@ async function spGrade(q,r){
     const res=(await nakijken([{kind:q.kind,task:spTask(q),text:r.text}],q.sec==="sb"?"sb":"sp"))[0];
     if(q!==queue[pos])return;
     const errs=Array.isArray(res.errors)?res.errors:[], ok=!!res.passed;
-    b.disabled=false; $("rev").hidden=true; keepErrs(errs); record(ok); if(ok&&!cur.exam)quickPraise.show();
+    b.disabled=false; $("rev").hidden=true; keepErrs(errs); record(ok); if(!cur.exam)quickPraise.show(ok);
     $("fb").innerHTML=`<b class="${ok?"good":"bad"}">${ok?"Goed zo! Voldoende":"Nog niet voldoende"}</b>
       <p class="note">${esc(res.verdict)}</p>${scoreHTML(res.scores,q.mx)}
       ${ownHTML(r.text,errs,"Wat ik heb verstaan")}${errsHTML(errs)}${freeNote()}
@@ -2689,7 +2690,7 @@ const optLt=(i,x)=>`<span class="lt" aria-hidden="true">${"ABCDEF"[i]}</span><sp
 const CAPSEC=new Set(["knm","lz","l1","ls","lb","gs"]);
 const capA=(q,s)=>CAPSEC.has(q.sec)?String(s).replace(/^((?:\s|<[^>]+>)*)(\p{Ll})/u,(m,a,c)=>a+c.toUpperCase()):s;
 function feedback(ok,q){
-  if(ok&&!cur.exam)quickPraise.show();else quickPraise.hide();
+  if(!cur.exam)quickPraise.show(ok);else quickPraise.hide();
   buzz(ok?"good":"bad");
   $("fb").className="fb sheet "+(ok?"ok":"no");
   // wrong: a short heading, then the right answer in ink (a long red heading was loud)
@@ -2978,7 +2979,7 @@ async function check(q){
     const errs=Array.isArray(res.errors)?res.errors:[];
     btn.hidden=true; const ok=!!res.passed;
     const RD=redoItems(q,form,text,res.corrected,errs);
-    keepErrs(errs); record(ok); if(ok&&!cur.exam)quickPraise.show();
+    keepErrs(errs); record(ok); if(!cur.exam)quickPraise.show(ok);
     $("fb").innerHTML=`<b class="${ok?"good":"bad"}">${ok?"Goed zo! Voldoende":"Nog niet voldoende"}</b>
       <p class="note">${esc(res.verdict)}</p>${scoreHTML(res.scores,q.mx)}
       ${ownHTML(text,errs)}${errsHTML(errs)}${freeNote()}
@@ -3015,7 +3016,7 @@ async function checkZ(q){
         ${ownHTML(z.text,errs,"Jouw zin")}${errs.length?errsHTML(errs):""}
         <p class="ask">Verbeterd</p><div class="sample">${esc(t.corrected||z.text)}</div><details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(z.q.right)}</div></details>`}).join("")
       +`${freeNote()}${RD.length?redoBtn:""}${docBtn}<button class="btn wide" id="next">Verder</button>`;
-    if(!cur.exam&&T.length===Z.length&&T.every(t=>t.passed))quickPraise.show();
+    if(!cur.exam&&T.length===Z.length&&T.every(t=>typeof t?.passed==="boolean"))quickPraise.show(T.every(t=>t.passed));
     $("next").onclick=()=>{pos++;show()}; $("docx").onclick=()=>saveDocx(doc);
     if(RD.length)$("redo").onclick=()=>redo(RD);
   }catch(e){
