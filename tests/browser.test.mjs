@@ -98,6 +98,52 @@ test('Legacy public addresses move progress to the main site and stop offering p
   } finally {await browser.close();server.close()}
 });
 
+test('Speaking exam Stop confirms completion and advances without waiting for the answer timer',async t=>{
+  let browser;
+  try{browser=chromium&&await chromium.launch()}catch(e){if(process.env.BROWSER_TESTS)throw e}
+  if(!browser){if(process.env.BROWSER_TESTS)assert.fail('Playwright is not installed');return t.skip('no browser here')}
+  const server=await serve(),base=`http://127.0.0.1:${server.address().port}`,s=await page(browser,base,{});let checks=0;
+  try{
+    await s.ctx.route('**/api/check',async route=>{checks++;await route.fulfill({status:503,body:'no grading expected'})});
+    await s.p.addInitScript(()=>{
+      window.__speech=[];
+      class Recognition{
+        constructor(){window.__speech.push(this);this.stops=0;this.aborts=0}
+        start(){} stop(){this.stops++} abort(){this.aborts++;this.onend?.()}
+        result(text){this.onresult?.({results:[[{transcript:text}]]})} end(){this.onend?.()}
+      }
+      Object.defineProperty(window,'SpeechRecognition',{configurable:true,value:Recognition});
+      Object.defineProperty(window,'webkitSpeechRecognition',{configurable:true,value:Recognition});
+    });
+    await s.go('/oefenen');await s.p.locator('#app-loading').waitFor({state:'hidden'});
+    for(const part of ['sp','sb']){
+      await s.p.evaluate(p=>startExam(p,true),part);const before=await s.p.evaluate(()=>tEnd);
+      const b=s.p.locator('#recb');await b.click();assert.match(await b.textContent(),/Antwoord klaar/);
+      await s.p.evaluate(()=>{window.__firstSpeech=window.__speech.at(-1);window.__firstSpeech.result('Mijn familie woont in Nederland')});
+      await b.click();assert.equal(await b.isDisabled(),true);assert.match(await b.textContent(),/afronden/);
+      await s.p.getByRole('button',{name:'Volgende vraag'}).waitFor({timeout:2500});
+      assert.equal(await b.isEnabled(),true);assert.match(await s.p.locator('#recn').textContent(),/Antwoord klaar/);
+      assert.equal(await s.p.locator('#rect').textContent(),'Klaar');assert.equal(await s.p.evaluate(()=>cur.ans[0].text),'Mijn familie woont in Nederland');
+      assert.equal(await s.p.evaluate(()=>tEnd),before);assert.equal(await s.p.evaluate(()=>pos),0);
+      assert.equal(await overflow(s.p),0);
+      if(process.env.ADMIN_SCREENSHOTS){fs.mkdirSync(process.env.ADMIN_SCREENSHOTS,{recursive:true});await s.p.screenshot({path:path.join(process.env.ADMIN_SCREENSHOTS,`speaking-ready-${part}.png`)})}
+      await b.click();assert.equal(await s.p.evaluate(()=>pos),1);
+      await s.p.evaluate(()=>{window.__firstSpeech.end();window.__firstSpeech.result('Late woorden')});assert.equal(await s.p.evaluate(()=>cur.ans.length),1);
+      await b.click();await s.p.evaluate(()=>window.__speech.at(-1).result('Ik heb een broer en een zus'));await b.click();
+      await s.p.evaluate(()=>window.__speech.at(-1).end());assert.match(await b.textContent(),/Volgende vraag/);
+      assert.equal(await s.p.evaluate(()=>cur.ans.length),2);
+    }
+    await s.p.evaluate(()=>startExam('sb',true));await s.p.locator('#recb').click();
+    await s.p.evaluate(()=>{window.__speech.at(-1).result('Ik maak graag een afspraak');rec.start=Date.now()-rec.lim*1000;rec.end=Date.now()-1});
+    await s.p.getByRole('button',{name:'Volgende vraag'}).waitFor({timeout:2500});
+    assert.match(await s.p.locator('#recn').textContent(),/De tijd is om/);
+    await s.p.evaluate(()=>{pos=queue.length-1;show()});await s.p.locator('#recb').click();
+    await s.p.evaluate(()=>window.__speech.at(-1).result('Dit is mijn laatste antwoord'));await s.p.locator('#recb').click();
+    await s.p.evaluate(()=>window.__speech.at(-1).end());assert.equal(await s.p.locator('#recb').textContent(),'Antwoorden inleveren');
+    assert.equal(checks,0);assert.deepEqual(s.errors,[]);
+  }finally{await s.ctx.close();await browser.close();server.close()}
+});
+
 test('Quick Dutch praise never delays practice', async t => {
   let browser;
   try { browser=chromium&&await chromium.launch(); } catch(e) { if(process.env.BROWSER_TESTS)throw e; }

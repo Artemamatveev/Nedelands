@@ -635,7 +635,12 @@ remembered both kinds from the real exam, so the part's label leaves the order t
 video on the exam, and speech stops before the microphone opens; `SP` items fall into a part by their number of photos. Claude can't take audio, so the phone writes the answer down first (Web Speech
 API, `nl-NL`). Recording (`MediaRecorder`, to play the answer back) and transcribing are
 separate takes, never at the same time: on iPhone they compete for the microphone. One
-minute per answer. Recordings and transcripts stay in memory only. "Zeg het na" (free, no Claude call):
+minute per answer. During a speaking exam, “Antwoord klaar” ends a take early. A tap immediately shows a finishing
+state and stops the per-answer timer; normal final speech results are accepted, with an 800ms fallback for native
+recognisers that omit their end event. The last available transcript is retained and a stuck recogniser is aborted and
+replaced. Completed takes show “Antwoord klaar” (or explicitly no speech recognised), a stopped clock and “Volgende vraag”;
+the last task shows “Antwoorden inleveren”. Navigation/late native events cannot complete a different task or append an
+answer twice. Natural MediaRecorder stop also completes the active take. Recordings and transcripts stay in memory only. "Zeg het na" (free, no Claude call):
 the learner reads the example or corrected answer aloud and the words speech recognition missed are marked.
 
 Making new Lezen and Luisteren material with Claude was removed (it cost a call per tap and its

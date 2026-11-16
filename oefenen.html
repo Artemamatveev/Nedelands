@@ -1807,6 +1807,7 @@ const hush=()=>{recEnd(false);if(recUrl){URL.revokeObjectURL(recUrl);recUrl=null
 const SPK=60, canRec=!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.MediaRecorder),
   SR=window.SpeechRecognition||window.webkitSpeechRecognition;
 let sr=null; // one recogniser, reused: iOS asks for permission again for every new one
+const REC_FINISH_MS=800; // drain final speech results briefly; a missing native end event must not trap the learner
 const mmss=s=>Math.floor(s/60)+":"+String(s%60).padStart(2,"0");
 // The question as it is read aloud and sent for grading: without the picture emoji
 // What Claude gets for a Spreken task: the question, and what the photos show (it can't see them)
@@ -1849,43 +1850,61 @@ async function listen(mode,done,lim=SPK){
   if(mode==="rec"&&canRec){
     try{r.stream=await navigator.mediaDevices.getUserMedia({audio:true})}catch(e){}
     if(box!==$("rec")){if(r.stream)r.stream.getTracks().forEach(t=>t.stop());return}
-    if(r.stream)try{r.mr=new MediaRecorder(r.stream);r.mr.ondataavailable=e=>{if(e.data&&e.data.size)r.chunks.push(e.data)};r.mr.onstop=()=>recDone(r);r.mr.start()}
+    if(r.stream)try{r.mr=new MediaRecorder(r.stream);r.mr.ondataavailable=e=>{if(!r.fin&&e.data&&e.data.size)r.chunks.push(e.data)};r.mr.onstop=()=>{if(rec===r)recEnd(true);recDone(r)};r.mr.start()}
       catch(e){r.mr=null;r.stream.getTracks().forEach(t=>t.stop());r.stream=null}
   }
   r.start=Date.now(); r.end=r.start+lim*1e3; rec=r;
   if(mode==="say"&&SR)try{
     if(!sr){sr=new SR();sr.lang="nl-NL";sr.continuous=true;sr.interimResults=true}
     r.sr=sr;
-    sr.onresult=e=>{let t="";for(let i=0;i<e.results.length;i++)t+=e.results[i][0].transcript+" ";r.part=t.trim();
+    sr.onresult=e=>{if(r.fin)return;let t="";for(let i=0;i<e.results.length;i++)t+=e.results[i][0].transcript+" ";r.part=t.trim();
       if(r.box===$("rec")&&!r.fin)$("recp").innerHTML=`<p class="ask">Dit hoorde de telefoon</p><div class="sample">${esc(saidText(r))}</div>`};
     sr.onerror=e=>{if(/not-allowed|service-not-allowed|audio-capture|language-not-supported/.test(e.error))r.fail=true};
     // Recognition stops by itself after a pause: start it again while the minute runs
-    sr.onend=()=>{if(r.part){r.said.push(r.part);r.part=""}
-      if(rec!==r)return recDone(r);
+    sr.onend=()=>{if(r.fin)return;if(r.part){r.said.push(r.part);r.part=""}
+      if(r.stopping||rec!==r)return recDone(r);
       if(r.fail){r.sr=null;$("recn").textContent="Meeschrijven lukt hier niet. Spreek toch hardop: de tijd loopt.";return}
       try{sr.start()}catch(e){}};
     try{sr.start()}catch(e){setTimeout(()=>{if(rec===r)try{sr.start()}catch(e){}},400)} // the previous take may still be stopping
   }catch(e){r.sr=null}
   $("recn").textContent=mode==="rec"?(r.mr?"Spreek nu. Tik op Stop als je klaar bent.":"Opnemen lukt hier niet. Spreek toch hardop: de tijd loopt.")
     :r.sr?"Spreek nu. De telefoon schrijft mee. Tik op Stop als je klaar bent.":"Meeschrijven lukt hier niet. Spreek toch hardop: de tijd loopt.";
-  b.textContent="■ Stop";b.className="btn wide";b.disabled=false;b.onclick=()=>recEnd(true);
+  b.textContent=cur?.exam&&cur.speak?"■ Antwoord klaar":"■ Stop";b.className="btn wide";b.disabled=false;b.onclick=()=>recEnd(true);
   const tick=()=>{if(box!==$("rec"))return recEnd(false);const ms=Math.max(0,r.end-Date.now());
     $("rect").textContent=mmss(Math.ceil(ms/1e3));$("recm").style.width=ms/lim/10+"%";if(!ms)recEnd(true)};
-  tick(); r.t=setInterval(tick,250);
+  r.t=setInterval(tick,250);tick();
 }
 function recEnd(keep){
-  const r=rec; if(!r)return; rec=null; clearInterval(r.t); r.keep=keep; r.stop=Date.now();
-  if(r.sr){try{r.sr.stop()}catch(e){}setTimeout(()=>recDone(r),2500)} // onend normally comes first
-  else if(r.mr&&r.mr.state!=="inactive")r.mr.stop(); else recDone(r);
+  const r=rec;if(!r||r.fin)return;
+  if(r.stopping&&keep)return;
+  clearInterval(r.t);r.keep=keep;r.stopping=true;r.stop=r.stop||Date.now();
+  if(!keep){
+    recDone(r);if(r.sr){try{r.sr.abort()}catch(e){}if(sr===r.sr)sr=null}
+    if(r.stream)r.stream.getTracks().forEach(t=>t.stop());return;
+  }
+  if(r.box===$("rec")){
+    const b=$("recb");b.disabled=true;b.textContent="Even afronden…";
+    r.box.setAttribute("aria-busy","true");$("recn").textContent="Je antwoord wordt afgerond. Je hoeft niet op de timer te wachten.";
+  }
+  if(r.sr){
+    r.finishTimer=setTimeout(()=>{
+      // Safari can omit end after stop. Keep the last transcript and discard a recogniser still shutting down.
+      try{r.sr.abort()}catch(e){}if(sr===r.sr)sr=null;recDone(r);
+    },REC_FINISH_MS);
+    try{r.sr.stop()}catch(e){try{r.sr.abort()}catch(e){}if(sr===r.sr)sr=null;recDone(r)}
+  }else if(r.mr&&r.mr.state!=="inactive"){
+    r.finishTimer=setTimeout(()=>recDone(r),1500);
+    try{r.mr.stop()}catch(e){recDone(r)}
+  }else recDone(r);
   if(r.stream)r.stream.getTracks().forEach(t=>t.stop());
 }
 function recDone(r){
-  if(r.fin)return; r.fin=true;
+  if(r.fin)return; r.fin=true;if(rec===r)rec=null;clearTimeout(r.finishTimer);r.box.removeAttribute("aria-busy");
   if(!r.keep||r.box!==$("rec"))return;
   const s=Math.min(r.lim,Math.round((r.stop-r.start)/1e3));
   r.text=saidText(r); r.url=r.chunks.length?URL.createObjectURL(new Blob(r.chunks,{type:r.mr.mimeType||""})):"";
   r.note=(s>=r.lim?"De tijd is om. ":"")+`Je sprak ${s===1?"1 seconde":s+" seconden"}. `+(s<Math.min(15,r.lim/2)?"Dat is kort: zeg twee of drie zinnen. ":"");
-  r.done(r);
+  $("recb").disabled=false;r.done(r);
 }
 // Practice: a recording to play back
 function spTake(r){
@@ -1942,9 +1961,11 @@ function prepThen(q,go){
 }
 // Proefexamen: one answer per question, no second try; graded together at the end
 function spNext(q,r){
-  cur.ans.push({q,text:r.text,url:r.url});
-  $("recn").textContent=r.note+"Je antwoord is bewaard.";
-  const b=$("recb"); b.textContent=pos<queue.length-1?"Volgende vraag":"Klaar";b.className="btn wide";b.onclick=()=>{pos++;show()};
+  if(q!==queue[pos]||!cur.exam||!cur.speak)return;
+  stopPrep();cur.ans.push({q,text:r.text,url:r.url});
+  $("rect").textContent="Klaar";$("recm").style.width="0%";
+  $("recn").innerHTML=`<b>${r.text||r.url?"✓ Antwoord klaar":"Geen spraak herkend"}</b><br>${esc(r.note)}${r.text||r.url?"Je antwoord is bewaard voor dit proefexamen.":"Er is geen tekst voor de beoordeling. Je kunt wel doorgaan."}`;
+  const b=$("recb"); b.textContent=pos<queue.length-1?"Volgende vraag →":"Antwoorden inleveren";b.className="btn wide";b.disabled=false;b.onclick=()=>{b.disabled=true;pos++;show()};
 }
 let tmr=null,tEnd=0;
 function tick(){const s=Math.max(0,Math.round((tEnd-Date.now())/1000));$("timer").textContent=tEnd?Math.floor(s/60)+":"+String(s%60).padStart(2,"0"):"";if(tEnd&&s<=0&&cur&&cur.exam){if(cur.nav)return submitExam();const q=queue[pos];if(q&&q.type==="write"&&cur.ans.length===pos)cur.ans.push(grab(q));pos=queue.length;finish()}}
@@ -2607,7 +2628,7 @@ function show(){
     +(cur.nav?navHTML():`<div class="act"><button class="btn wide" id="chk">${cur.exam?"Volgende opdracht":zNext(q)?"Volgende zin":q.kind==="z"&&(cur.zs||[]).length?"Controleer mijn zinnen":"Controleer mijn tekst"}</button></div>`);
   else if(q.type==="reveal")h+=(canSpeak?`<button class="hint" id="sayq">▶ Luister naar de vraag</button>`:"")
     +`<div class="rec" id="rec"><div class="clk"><span class="t" id="rect">${mmss(q.spk||SPK)}</span><div class="m"><i id="recm"></i></div></div><div id="recp"></div>
-    <button class="btn wide" id="recb">${cur.exam?"● Antwoord geven":"● Opnemen"}</button><p class="note" id="recn">${q.spk?`${q.prep?`Denk eerst ${q.prep} seconden na. `:""}Je hebt ${q.spk} seconden om te antwoorden, zoals op het Staatsexamen.${cur.exam?" Na de vraag begint de tijd vanzelf.":" Daarna kun je jezelf terugluisteren."}`:cur.exam?"Je hebt één minuut per vraag.":"Je hebt één minuut. Daarna kun je jezelf terugluisteren."}</p></div>
+    <button class="btn wide" id="recb">${cur.exam?"● Antwoord geven":"● Opnemen"}</button><p class="note" id="recn" role="status" aria-atomic="true">${q.spk?`${q.prep?`Denk eerst ${q.prep} seconden na. `:""}Je hebt ${q.spk} seconden om te antwoorden, zoals op het Staatsexamen.${cur.exam?" Na de vraag begint de tijd vanzelf.":" Daarna kun je jezelf terugluisteren."}`:cur.exam?"Je hebt één minuut per vraag.":"Je hebt één minuut. Daarna kun je jezelf terugluisteren."}</p></div>
     ${cur.exam?"":`${SR?`<button class="ghost wide" id="spchk" style="margin-bottom:10px">Spreek in en laat nakijken</button>${acc.cfg&&!acc.user?(acc.cfg.free?freeNote():`<p class="note">Nakijken kan als je bent ingelogd (Profiel).</p>`):""}`:""}<button class="ghost wide" id="rev">Toon voorbeeld</button>`}`;
   else if(S.typing&&q.canType)h+=`<div class="type"><input id="inp" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Je antwoord"><button class="btn" id="chk">Controleer</button></div>`;
   else{const nv=cur.nav&&q.type==="choice";o=nv?cur.op[pos]=cur.op[pos]||q.opts():q.opts();const C=x=>capA(q,x);
