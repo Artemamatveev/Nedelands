@@ -1867,9 +1867,10 @@ async function listen(mode,done,lim=SPK){
       try{sr.start()}catch(e){}};
     try{sr.start()}catch(e){setTimeout(()=>{if(rec===r)try{sr.start()}catch(e){}},400)} // the previous take may still be stopping
   }catch(e){r.sr=null}
-  $("recn").textContent=mode==="rec"?(r.mr?"Spreek nu. Tik op Stop als je klaar bent.":"Opnemen lukt hier niet. Spreek toch hardop: de tijd loopt.")
-    :r.sr?"Spreek nu. De telefoon schrijft mee. Tik op Stop als je klaar bent.":"Meeschrijven lukt hier niet. Spreek toch hardop: de tijd loopt.";
-  b.textContent=cur?.exam&&cur.speak?"■ Antwoord klaar":"■ Stop";b.className="btn wide";b.disabled=false;b.onclick=()=>recEnd(true);
+  const doneLabel=cur?.exam&&cur.speak?"Antwoord klaar":"Stop";
+  $("recn").textContent=mode==="rec"?(r.mr?`Spreek nu. Tik op ${doneLabel} als je klaar bent.`:"Opnemen lukt hier niet. Spreek toch hardop: de tijd loopt.")
+    :r.sr?`Spreek nu. De telefoon schrijft mee. Tik op ${doneLabel} als je klaar bent.`:"Meeschrijven lukt hier niet. Spreek toch hardop: de tijd loopt.";
+  b.textContent="■ "+doneLabel;b.className="btn wide";b.disabled=false;b.onclick=()=>recEnd(true);
   const tick=()=>{if(box!==$("rec"))return recEnd(false);const ms=Math.max(0,r.end-Date.now());
     $("rect").textContent=mmss(Math.ceil(ms/1e3));$("recm").style.width=ms/lim/10+"%";if(!ms)recEnd(true)};
   r.t=setInterval(tick,250);tick();

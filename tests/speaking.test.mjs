@@ -24,7 +24,7 @@ function finishFallback(a,r){const timer=a.timers.get(r.finishTimer);assert.ok(t
 
 test('Speaking Stop immediately acknowledges the tap, accepts final words and enables Next once',async()=>{
   const {a,native,r}=await exam(),n=native.instances[0],b=a.document.getElementById('recb');
-  n.result('Ik heb een broer');assert.match(b.textContent,/Antwoord klaar/);b.click();
+  n.result('Ik heb een broer');assert.match(b.textContent,/Antwoord klaar/);assert.match(a.document.getElementById('recn').textContent,/Tik op Antwoord klaar/);b.click();
   assert.equal(b.disabled,true);assert.match(b.textContent,/afronden/);assert.equal(r.stopping,true);
   n.result('Ik heb een broer en een zus');n.end();
   assert.equal(b.disabled,false);assert.match(b.textContent,/Volgende vraag/);
