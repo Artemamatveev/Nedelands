@@ -82,4 +82,7 @@ test('Speaking MediaRecorder natural stop completes the answer and releases the 
   assert.match(a.document.getElementById('recb').textContent,/Volgende vraag/);assert.equal(a.run('cur.ans.length'),1);
   assert.match(a.run('cur.ans[0].url'),/^blob:/);assert.equal(tracks[0].stopped,true);
   recorder.onstop();assert.equal(a.run('cur.ans.length'),1);
+  a.run('startExam("sp",true)');a.document.getElementById('recb').click();await a.flush();
+  assert.equal(recorder.state,'recording');a.run('home()');
+  assert.equal(recorder.state,'inactive');assert.equal(a.run('cur.ans.length'),0);
 });

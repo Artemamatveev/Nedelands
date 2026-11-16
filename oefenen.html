@@ -1880,6 +1880,7 @@ function recEnd(keep){
   clearInterval(r.t);r.keep=keep;r.stopping=true;r.stop=r.stop||Date.now();
   if(!keep){
     recDone(r);if(r.sr){try{r.sr.abort()}catch(e){}if(sr===r.sr)sr=null}
+    if(r.mr&&r.mr.state!=="inactive")try{r.mr.stop()}catch(e){}
     if(r.stream)r.stream.getTracks().forEach(t=>t.stop());return;
   }
   if(r.box===$("rec")){
