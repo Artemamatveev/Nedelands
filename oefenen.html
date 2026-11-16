@@ -1845,6 +1845,7 @@ const spoken=t=>String(t).replace(/[\p{Extended_Pictographic}←-⇿️‍]/gu,"
 const saidText=r=>r.said.concat(r.part).join(" ").replace(/\s+/g," ").trim();
 async function listen(mode,done,lim=SPK){
   const box=$("rec"),b=$("recb"); recEnd(false); b.disabled=true; stopSpeak(); // never record the question
+  $("recp").querySelectorAll("audio").forEach(audio=>audio.pause?.());
   if(recUrl){URL.revokeObjectURL(recUrl);recUrl=null} $("recp").innerHTML="";
   const r={box,mode,done,lim,stream:null,mr:null,sr:null,chunks:[],said:[],part:"",keep:false,fin:false};
   if(mode==="rec"&&canRec){
@@ -1961,12 +1962,17 @@ function prepThen(q,go){
     if(!ms){stopPrep();$("rect").textContent=mmss(q.spk);$("recm").style.width="100%";auto()}
   },250);
 }
-// Proefexamen: one answer per question, no second try; graded together at the end
+// Proefexamen: keep one answer per question; a retake replaces it before moving on. Grade together at the end.
 function spNext(q,r){
   if(q!==queue[pos]||!cur.exam||!cur.speak)return;
-  stopPrep();cur.ans.push({q,text:r.text,url:r.url});
+  stopPrep();const previous=cur.ans[pos],has=!!(r.text||r.url),kept=!has&&!!(previous?.text||previous?.url);
+  if(!kept){
+    cur.ans[pos]={q,text:r.text,url:r.url};
+    if(previous?.url&&previous.url!==r.url)URL.revokeObjectURL(previous.url);
+  }else $("recp").innerHTML=`<p class="ask">Je vorige antwoord</p>${previous.url?`<audio controls src="${previous.url}"></audio>`:`<div class="sample">${esc(previous.text)}</div>`}`;
   $("rect").textContent="Klaar";$("recm").style.width="0%";
-  $("recn").innerHTML=`<b>${r.text||r.url?"✓ Antwoord klaar":"Geen spraak herkend"}</b><br>${esc(r.note)}${r.text||r.url?"Je antwoord is bewaard voor dit proefexamen.":"Er is geen tekst voor de beoordeling. Je kunt wel doorgaan."}`;
+  $("recn").innerHTML=`<b>${has?"✓ Antwoord klaar":"Geen spraak herkend"}</b><br>${esc(r.note)}${kept?"Je vorige antwoord is bewaard. Probeer opnieuw of ga verder.":has?"Je antwoord is bewaard voor dit proefexamen.":"Er is geen tekst voor de beoordeling. Neem opnieuw op of ga verder."}`;
+  $("spredo").hidden=false;
   const b=$("recb"); b.textContent=pos<queue.length-1?"Volgende vraag →":"Antwoorden inleveren";b.className="btn wide";b.disabled=false;b.onclick=()=>{b.disabled=true;pos++;show()};
 }
 let tmr=null,tEnd=0;
@@ -2630,7 +2636,7 @@ function show(){
     +(cur.nav?navHTML():`<div class="act"><button class="btn wide" id="chk">${cur.exam?"Volgende opdracht":zNext(q)?"Volgende zin":q.kind==="z"&&(cur.zs||[]).length?"Controleer mijn zinnen":"Controleer mijn tekst"}</button></div>`);
   else if(q.type==="reveal")h+=(canSpeak?`<button class="hint" id="sayq">▶ Luister naar de vraag</button>`:"")
     +`<div class="rec" id="rec"><div class="clk"><span class="t" id="rect">${mmss(q.spk||SPK)}</span><div class="m"><i id="recm"></i></div></div><div id="recp"></div>
-    <button class="btn wide" id="recb">${cur.exam?"● Antwoord geven":"● Opnemen"}</button><p class="note" id="recn" role="status" aria-atomic="true">${q.spk?`${q.prep?`Denk eerst ${q.prep} seconden na. `:""}Je hebt ${q.spk} seconden om te antwoorden, zoals op het Staatsexamen.${cur.exam?" Na de vraag begint de tijd vanzelf.":" Daarna kun je jezelf terugluisteren."}`:cur.exam?"Je hebt één minuut per vraag.":"Je hebt één minuut. Daarna kun je jezelf terugluisteren."}</p></div>
+    <button class="btn wide" id="recb">${cur.exam?"● Antwoord geven":"● Opnemen"}</button>${cur.exam?`<button class="ghost wide" id="spredo" hidden>↻ Opnieuw opnemen</button>`:""}<p class="note" id="recn" role="status" aria-atomic="true">${q.spk?`${q.prep?`Denk eerst ${q.prep} seconden na. `:""}Je hebt ${q.spk} seconden om te antwoorden, zoals op het Staatsexamen.${cur.exam?" Na de vraag begint de tijd vanzelf.":" Daarna kun je jezelf terugluisteren."}`:cur.exam?"Je hebt één minuut per vraag.":"Je hebt één minuut. Daarna kun je jezelf terugluisteren."}</p></div>
     ${cur.exam?"":`${SR?`<button class="ghost wide" id="spchk" style="margin-bottom:10px">Spreek in en laat nakijken</button>${acc.cfg&&!acc.user?(acc.cfg.free?freeNote():`<p class="note">Nakijken kan als je bent ingelogd (Profiel).</p>`):""}`:""}<button class="ghost wide" id="rev">Toon voorbeeld</button>`}`;
   else if(S.typing&&q.canType)h+=`<div class="type"><input id="inp" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Je antwoord"><button class="btn" id="chk">Controleer</button></div>`;
   else{const nv=cur.nav&&q.type==="choice";o=nv?cur.op[pos]=cur.op[pos]||q.opts():q.opts();const C=x=>capA(q,x);
@@ -2661,7 +2667,8 @@ function show(){
   if(q.type==="write"){$("chk").onclick=()=>{if(cur.exam){cur.ans.push(grab(q));pos++;show()}else if(q.kind==="z")checkZ(q);else check(q)};return}
   if(q.type==="reveal"){
     if($("sayq"))$("sayq").onclick=()=>speak(spoken(q.big));
-    if(cur.exam){const go=()=>listen(SR?"say":"rec",r=>spNext(q,r),q.spk);$("recb").onclick=()=>{stopPrep();go()};
+    if(cur.exam){const go=()=>{$("spredo").hidden=true;return listen(SR?"say":"rec",r=>spNext(q,r),q.spk)};
+      const begin=()=>{stopPrep();return go()};$("recb").onclick=begin;$("spredo").onclick=begin;
       if(canSpeak)speak(spoken(q.big)); // the exam asks the question aloud
       if(q.sec==="sb")prepThen(q,go);return}
     $("recb").onclick=()=>listen("rec",spTake,q.spk); $("rev").onclick=()=>reveal(q);

@@ -126,8 +126,18 @@ test('Speaking exam Stop confirms completion and advances without waiting for th
       assert.equal(await s.p.locator('#rect').textContent(),'Klaar');assert.equal(await s.p.evaluate(()=>cur.ans[0].text),'Mijn familie woont in Nederland');
       assert.equal(await s.p.evaluate(()=>tEnd),before);assert.equal(await s.p.evaluate(()=>pos),0);
       assert.equal(await overflow(s.p),0);
+      const redo=s.p.getByRole('button',{name:'Opnieuw opnemen'});assert.equal(await redo.isVisible(),true);
+      await redo.tap();assert.equal(await redo.isHidden(),true);assert.match(await b.textContent(),/Antwoord klaar/);
+      assert.equal(await s.p.evaluate(()=>cur.ans[0].text),'Mijn familie woont in Nederland');
+      await s.p.evaluate(()=>window.__speech.at(-1).result('Mijn verbeterde antwoord over mijn familie'));await b.tap();
+      await s.p.evaluate(()=>window.__speech.at(-1).end());
+      assert.equal(await s.p.evaluate(()=>cur.ans.length),1);assert.equal(await s.p.evaluate(()=>cur.ans[0].text),'Mijn verbeterde antwoord over mijn familie');
+      assert.equal(await s.p.evaluate(()=>pos),0);assert.equal(await s.p.evaluate(()=>tEnd),before);
       if(process.env.ADMIN_SCREENSHOTS){fs.mkdirSync(process.env.ADMIN_SCREENSHOTS,{recursive:true});await s.p.screenshot({path:path.join(process.env.ADMIN_SCREENSHOTS,`speaking-ready-${part}.png`)})}
-      await b.click();assert.equal(await s.p.evaluate(()=>pos),1);
+      await redo.tap();await b.tap();await s.p.evaluate(()=>window.__speech.at(-1).end());
+      assert.match(await s.p.locator('#recn').textContent(),/Je vorige antwoord is bewaard/);
+      assert.equal(await s.p.evaluate(()=>cur.ans[0].text),'Mijn verbeterde antwoord over mijn familie');
+      await b.click();assert.equal(await s.p.evaluate(()=>pos),1);assert.equal(await s.p.locator('#spredo').isHidden(),true);
       await s.p.evaluate(()=>{window.__firstSpeech.end();window.__firstSpeech.result('Late woorden')});assert.equal(await s.p.evaluate(()=>cur.ans.length),1);
       await b.click();await s.p.evaluate(()=>window.__speech.at(-1).result('Ik heb een broer en een zus'));await b.click();
       await s.p.evaluate(()=>window.__speech.at(-1).end());assert.match(await b.textContent(),/Volgende vraag/);
