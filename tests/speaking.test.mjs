@@ -86,3 +86,31 @@ test('Speaking MediaRecorder natural stop completes the answer and releases the 
   assert.equal(recorder.state,'recording');a.run('home()');
   assert.equal(recorder.state,'inactive');assert.equal(a.run('cur.ans.length'),0);
 });
+
+for(const part of ['sp','sb'])test(`Speaking ${part} retakes replace the current answer without advancing or extending the exam`,async()=>{
+  const {a,native}=await exam(part),deadline=a.run('tEnd');
+  native.instances.at(-1).result('Mijn eerste antwoord');a.document.getElementById('recb').click();native.instances.at(-1).end();
+  const redo=a.document.getElementById('spredo');assert.equal(redo.hidden,false);
+  redo.click();await a.flush();assert.equal(redo.hidden,true);assert.equal(a.run('cur.ans[0].text'),'Mijn eerste antwoord');
+  assert.equal(a.run('rec.lim'),a.run('queue[pos].spk||SPK'));assert.equal(a.run('tEnd'),deadline);
+  native.instances.at(-1).result('Mijn verbeterde antwoord');a.document.getElementById('recb').click();native.instances.at(-1).end();
+  assert.equal(a.run('cur.ans.length'),1);assert.equal(a.run('cur.ans[0].text'),'Mijn verbeterde antwoord');assert.equal(a.run('pos'),0);
+  redo.click();await a.flush();a.document.getElementById('recb').click();native.instances.at(-1).end();
+  assert.equal(a.run('cur.ans[0].text'),'Mijn verbeterde antwoord');assert.equal(a.run('cur.ans.length'),1);
+  assert.match(a.document.getElementById('recn').textContent,/Je vorige antwoord is bewaard/);
+  assert.match(a.document.getElementById('recp').textContent,/Mijn verbeterde antwoord/);
+  assert.equal(a.run('tEnd'),deadline);a.document.getElementById('recb').click();
+  assert.equal(a.run('pos'),1);assert.equal(a.document.getElementById('spredo').hidden,true);
+});
+
+test('Speaking replaced audio is released and the final question can also be retaken',async()=>{
+  const native=speech(),revoked=[];
+  class ScopedURL extends URL{static revokeObjectURL(url){revoked.push(url)}}
+  const a=await app({globals:{SpeechRecognition:native.Recognition,URL:ScopedURL}});
+  a.run('startExam("sp",true);pos=queue.length-1;show()');a.document.getElementById('recb').click();await a.flush();
+  native.instances.at(-1).result('Mijn eerste antwoord');a.document.getElementById('recb').click();native.instances.at(-1).end();
+  a.run('cur.ans[pos].url="blob:old-take"');a.document.getElementById('spredo').click();await a.flush();
+  native.instances.at(-1).result('Mijn laatste verbeterde antwoord');a.document.getElementById('recb').click();native.instances.at(-1).end();
+  assert.deepEqual(revoked,['blob:old-take']);assert.equal(a.run('cur.ans.filter(Boolean).length'),1);
+  assert.equal(a.document.getElementById('recb').textContent,'Antwoorden inleveren');assert.equal(a.document.getElementById('spredo').hidden,false);
+});

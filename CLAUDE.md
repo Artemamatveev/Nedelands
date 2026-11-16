@@ -639,8 +639,11 @@ minute per answer. During a speaking exam, “Antwoord klaar” ends a take earl
 state and stops the per-answer timer; normal final speech results are accepted, with an 800ms fallback for native
 recognisers that omit their end event. The last available transcript is retained and a stuck recogniser is aborted and
 replaced. Completed takes show “Antwoord klaar” (or explicitly no speech recognised), a stopped clock and “Volgende vraag”;
-the last task shows “Antwoorden inleveren”. Navigation/late native events cannot complete a different task or append an
-answer twice. Natural MediaRecorder stop also completes the active take. Recordings and transcripts stay in memory only. "Zeg het na" (free, no Claude call):
+the last task shows “Antwoorden inleveren”. Before advancing, “Opnieuw opnemen” starts another take with the same
+answer-time limit, without restarting thinking time or the overall exam clock. The previous answer remains until a new
+nonempty transcript/recording replaces it at the same question index; an empty failed retake explicitly retains the old
+answer. Superseded audio URLs are released. The retry control is hidden while recording and on each new question.
+Navigation/late native events cannot complete a different task or append an answer twice. Natural MediaRecorder stop also completes the active take. Recordings and transcripts stay in memory only. "Zeg het na" (free, no Claude call):
 the learner reads the example or corrected answer aloud and the words speech recognition missed are marked.
 
 Making new Lezen and Luisteren material with Claude was removed (it cost a call per tap and its
