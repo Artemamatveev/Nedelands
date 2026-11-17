@@ -23,7 +23,7 @@ function rebaseProgress(base, local, remote, path = []) {
       const item = rebaseProgress(before.get(id), mine.get(id), theirs.get(id), [...path, String(id)]);
       if (item !== undefined) merged.push(item);
     }
-    return section === "res" ? merged.sort((a,b) => a.at-b.at).slice(-10) : merged;
+    return section === "res" ? merged.sort((a,b) => a.at-b.at) : merged;
   }
   if (local && remote && typeof local === "object" && typeof remote === "object") {
     const merged = {};

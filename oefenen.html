@@ -41,7 +41,7 @@ if(navigator.serviceWorker){navigator.serviceWorker.addEventListener("message",f
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=bittie1">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=bittie1">
 <link rel="manifest" href="/manifest.json?v=bittie1">
-<link rel="preload" as="image" type="image/svg+xml" href="/art/bittie-dance-v5.svg" media="(prefers-reduced-motion:no-preference)" fetchpriority="high">
+<link rel="preload" as="image" type="image/svg+xml" href="/art/bittie-dance-v6.svg" media="(prefers-reduced-motion:no-preference)" fetchpriority="high">
 <link rel="preload" as="image" type="image/webp" href="/art/bittie-loading-v1.webp" media="(prefers-reduced-motion:reduce)" fetchpriority="high">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Bittertalen — Nederlands A2 en B1 voor het inburgeringsexamen en het Staatsexamen</title>
@@ -897,7 +897,7 @@ h2,h3,.verb,.step b,.it b{text-wrap:balance} p,.d,.sub,.note{text-wrap:pretty}
 <div id="app-loading" role="status" aria-live="polite">
   <div class="boot-bittie"><picture>
     <source srcset="/art/bittie-loading-v1.webp" type="image/webp" media="(prefers-reduced-motion:reduce)">
-    <img src="/art/bittie-dance-v5.svg" width="320" height="320" alt="" fetchpriority="high" decoding="async">
+    <img src="/art/bittie-dance-v6.svg" width="320" height="320" alt="" fetchpriority="high" decoding="async">
   </picture></div>
   <b translate="no">Bittertalen</b>
   <p id="boot-label">Laden…</p>
@@ -910,7 +910,7 @@ let lang="nl";try{lang=localStorage.getItem("ww-ui")||"nl"}catch{}
 const labels={nl:"Laden…",en:"Loading…",ar:"جارٍ التحميل…",tr:"Yükleniyor…",hi:"लोड हो रहा है…",zh:"加载中…",es:"Cargando…",ru:"Загрузка…"};
 const label=document.getElementById("boot-label");label.textContent=labels[lang]||labels.nl;label.lang=lang;
 document.querySelector("#app-loading img").addEventListener("error",function(){
-  if(this.currentSrc.includes("/bittie-dance-v5.svg")){
+  if(/\/bittie-dance-v\d+\.svg(?:\?|$)/.test(this.currentSrc)){
     this.parentElement.querySelectorAll("source").forEach(source=>source.remove());
     this.src="/art/bittie-loading-v1.webp";return;
   }
@@ -1029,9 +1029,9 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
 <script src="/study/praise-art-v1.js?v=c86fa67273"></script>
 <script src="/study/praise-v1.js?v=cf226a4a76"></script>
 <script src="/study/language-v1.js?v=e94426af48"></script>
-<script src="/study/progress-v1.js?v=c45ceeaefb"></script>
+<script src="/study/progress-v1.js?v=d7e5e64206"></script>
 <script src="/study/writing-v1.js?v=e5690fd786"></script>
-<script src="/data/knm.js?v=80147f3b9f"></script>
+<script src="/data/knm.js?v=d209144089"></script>
 <script src="/data/a2.js?v=35efca6a73"></script>
 <script src="/data/b1.js?v=e9701bd331"></script>
 <script src="/data/extra.js?v=63cb92e8f1"></script>
@@ -1389,7 +1389,7 @@ function mergeS(a,b){
   o.xs=by(a.xs,b.xs,Math.max); o.hs=by(a.hs,b.hs,Math.max); o.tm=by(a.tm,b.tm,Math.max); o.qd=by(a.qd,b.qd,Math.max); o.qr=by(a.qr,b.qr,Math.max);
   o.gp=by(a.gp,b.gp,(x,y)=>({n:Math.max(x.n||0,y.n||0),b:Math.max(x.b||0,y.b||0),at:Math.max(x.at||0,y.at||0)}));
   o.bk=by(a.bk,b.bk,(x,y)=>(y.at||0)>(x.at||0)?y:x);
-  o.res=by(a.res,b.res,(x,y)=>{const m={};x.concat(y).forEach(r=>m[r.at]=r);return Object.values(m).sort((p,q)=>p.at-q.at).slice(-10)});
+  o.res=by(a.res,b.res,(x,y)=>{const m=new Map();x.concat(y).forEach(r=>m.set(r.id||r.at,r));return [...m.values()].sort((p,q)=>p.at-q.at)});
   o.uit=by(a.uit,b.uit,(x,y)=>(y.at||0)>(x.at||0)?y:x);
   o.start=a.start&&b.start?(a.start.at>=b.start.at?a.start:b.start):a.start||b.start;
   o.errs=uni(a.errs,b.errs,e=>e.r); o.words=uni(a.words,b.words,w=>w.w);
@@ -2082,15 +2082,15 @@ function home(){
       +KNMT.map((t,i)=>{const q=p.filter(x=>x.label==="KNM: "+t),m=seen(q);return itHTML(`data-kt="${i}"`,t,"",{n:m?m+" van "+q.length:null})}).join("")+`</div>`};
   // exam parts: how ready you are (from the proefexamens, else from practice); practising them is on the Oefenen tab
   // one short row per part: the bar (proefexamen, else practice) with the 70% line; words only once there is a proefexamen
-  // the number is the share of right answers (last proefexamen, else practice), not a chance of passing; the line under it says which
+  // the number is the share of right answers (all proefexamens, else practice), not a chance of passing; the line under it says which
   const part=k=>{const r=ready(k),ex=((S.res||{})[k]||[]).length;
-    // the number is the share right (the last proefexamen, else practice); the line says where it comes from and what you need
+    // the number is the share right (all proefexamens, else practice); the line says where it comes from and what you need
     const need=`oefendoel: ${passPc(k)}%`;
     // only beside a score: without one there is nothing that could seem to include pronunciation
     const speech=["sp","sb"].includes(k)&&r.pc!=null?'<span class="st">Uitspraak en tempo zijn niet beoordeeld.</span>':"";
     const st=ex?`<span class="st ${r.cls==="good"?"good":r.cls===""?"near":""}"><i></i>${r.st} · ${need}${/kende/.test(r.t)?" · je kende de meeste vragen al":""}</span>`
       :`<span class="st">${r.pc!=null?need:"Nog niet geoefend · "+need}</span>`;
-    const scoreSource=ex?"Laatste proefexamen":"Oefeningen";
+    const scoreSource=ex?"Gemiddeld · alle examens":"Oefeningen";
     return`<button class="rd" data-e="${k}" aria-expanded="false">${icHTML(k)}<span class="rm"><b>${PART[k]}</b><small>${EX[k].min}&nbsp;min</small></span><strong class="rp${r.pc==null?" none":""}">${r.pc==null?"":r.pc+"%"}${r.pc==null?"":`<small>${scoreSource}</small>`}</strong><span class="bar pass" aria-hidden="true" style="--pass:${passPc(k)}%"><i style="width:${r.pc||0}%"></i></span>${st}${speech}</button>`};
   const lb=Object.values(S.bk||{}).filter(b=>b.t).sort((a,b)=>b.at-a.at)[0];
   const hs=S.hs||{},lh=GS.filter(c=>hs[c.id]).sort((a,b)=>hs[b.id]-hs[a.id])[0],gsDone=GS.filter(c=>gsItems(c).every(x=>(S.items[x.k]||{}).r)).length;
@@ -2373,19 +2373,19 @@ function startExam(e,go){
 const PASS=.7;
 // Lezen and Luisteren: most sources give 19 of 25 (DUO puts the line on the result, not on a public page); KNM 28 of 40
 const PASSP={lz:19/25,ls:19/25,knm:28/40,wb:25/47}, passOf=k=>PASSP[k]||PASS, passPc=k=>Math.round(passOf(k)*100);
-// Proefexamen results per part (S.res, last 10): {at, pc, nw}, nw = % of the questions that were new (missing in older results).
-// Ready = the last two average 80% or more, and at least one of them was mostly new questions
-function keepRes(k,pc,writing){if(k){track("done_"+k);S.res=S.res||{};S.res[k]=(S.res[k]||[]).concat({id:crypto.randomUUID(),at:Date.now(),pc,nw:cur.nw,...(writing?{writing}:{})}).slice(-10)}save()}
+// All completed proefexamen results per part (S.res): {at, pc, nw}, nw = % of the questions that were new (missing in older results).
+// The displayed percentage averages all saved attempts; readiness still uses the last three fresh attempts.
+function keepRes(k,pc,writing){if(k){track("done_"+k);S.res=S.res||{};S.res[k]=(S.res[k]||[]).concat({id:crypto.randomUUID(),at:Date.now(),pc,nw:cur.nw,...(writing?{writing}:{})})}save()}
 function ready(k){
   const R=(S.res||{})[k]||[],P=passPc(k);
   if(!R.length){let r=0,w=0;ITEMS.forEach(x=>{const it=x.sec===k&&S.items[x.k];if(it){r+=it.r||0;w+=it.w||0}});
     const pc=r+w>=10?Math.round(r/(r+w)*100):null;
     return{pc,st:"Nog geen proefexamen",cls:"",t:pc==null?"Nog weinig geoefend":`Bij het oefenen ${pc}% goed`}}
-  const L=R.slice(-3),avg=Math.round(L.reduce((a,x)=>a+x.pc,0)/L.length),pc=R[R.length-1].pc;
+  const L=R.slice(-3),avg=Math.round(L.reduce((a,x)=>a+x.pc,0)/L.length),pc=Math.round(R.reduce((a,x)=>a+x.pc,0)/R.length);
   // known: the last proefexamens were mostly questions you had seen before, so a high score may be memory
   const known=L.every(x=>x.nw!=null&&x.nw<50), sure=L.length===3 && avg>=80 && L.every(x=>x.pc>=P) && L.filter(x=>x.nw>=50).length>=2 && Date.now()-L[L.length-1].at<14*864e5;
   return{pc,st:sure?"Stabiel oefenresultaat":avg>=P?"Oefendoel bereikt":"Meer oefenen",cls:sure?"good":avg>=P?"":"bad",
-    t:`Laatste proefexamen ${pc}%${R.length>1?`, daarvoor ${R[R.length-2].pc}%`:""}`
+    t:`Gemiddeld ${pc}% over ${R.length} ${R.length===1?"proefexamen":"proefexamens"}`
       +(known&&avg>=P?". Je kende de meeste vragen al: doe ook een oefenexamen van DUO":"")}
 }
 const PART={wr:"Schrijven",knm:"KNM",sp:"Spreken",ls:"Luisteren",lz:"Lezen",l1:"Lezen B1",lb:"Luisteren B1",wb:"Schrijven B1",sb:"Spreken B1"}, HELP={wr:["wo","verb"],wb:["w1","g1"],sb:["g1","w1"],sp:["pr","verb"],lz:["vo","dh"],l1:["v1","g1"],ls:["vo","pr"],lb:["v1","g1"],knm:[]};
@@ -4101,7 +4101,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="f93381d021";
+const UIV="bd663a0f73";
 let uiP=null;
 function uiLoaded(){ // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});

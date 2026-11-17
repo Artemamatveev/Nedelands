@@ -18,6 +18,18 @@ test('Offline changes to different items and exam attempts all survive',()=>{
   assert.equal(result.items.a.r,3);assert.equal(result.items.b.r,1);
   assert.deepEqual(result.res.lz.map(x=>x.at),[1,2,3]);
 });
+test('All exam attempts survive concurrent sync and first account merge, including equal timestamps',async()=>{
+  const attempts=Array.from({length:12},(_,i)=>({id:`exam-${i}`,at:i,pc:40}));
+  const base={res:{knm:attempts}},local=clone(base),remote=clone(base);
+  local.res.knm.push({id:'offline-a',at:20,pc:80});
+  remote.res.knm.push({id:'offline-b',at:20,pc:100});
+  const result=merge(base,local,remote);
+  assert.equal(result.res.knm.length,14);
+  assert.equal(new Set(result.res.knm.map(x=>x.id)).size,14);
+  const a=await app();a.context.testLocal=local;a.context.testRemote=remote;
+  assert.equal(a.run('mergeS(testLocal,testRemote).res.knm.length'),14);
+  assert.equal(a.run('mergeS(mergeS(testLocal,testRemote),testRemote).res.knm.length'),14);
+});
 test('Two independent answers to the same item both count',()=>{
   const base={items:{a:{r:2,w:0}}},local=clone(base),remote=clone(base);
   local.items.a.r++;remote.items.a.r++;remote.items.a.w++;

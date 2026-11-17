@@ -106,6 +106,19 @@ test('Legacy results need fresh attempts before the stable practice label is sho
   assert.match(a.document.querySelector('#exam').textContent,/Uitspraak en tempo zijn niet beoordeeld/);
 });
 
+test('Exam cards average every saved attempt per part and retain more than ten after reopening',async()=>{
+  const store=storage(),a=await app({storage:store});
+  a.run('cur={nw:100};for(let i=0;i<12;i++)keepRes("knm",40);keepRes("knm",100);keepRes("lz",80);home()');
+  assert.equal(a.run('S.res.knm.length'),13);
+  assert.equal(a.run('ready("knm").pc'),45);
+  assert.equal(a.run('ready("lz").pc'),80);
+  assert.equal(a.document.querySelector('[data-e="knm"] .rp').textContent,'45%Gemiddeld · alle examens');
+  await a.flush();
+  const b=await app({storage:store});
+  assert.equal(b.run('S.res.knm.length'),13);
+  assert.equal(b.run('ready("knm").pc'),45);
+});
+
 test('Every existing exercise section and home tab still opens through its normal route',async()=>{
   const a=await app();
   for(const tab of ['vandaag','examen','oefenen','herhalen','profiel'])a.run(`setTab(${JSON.stringify(tab)})`);
