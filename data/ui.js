@@ -78,6 +78,7 @@ Object.assign(UI,{
 "10 vragen uit alles":["10 questions from everything","10 أسئلة من كل شيء","Her konudan 10 soru","हर विषय से 10 प्रश्न","全部内容中的 10 个问题","10 preguntas de distintos temas","10 вопросов на разные темы"],
 "Mix van de dag":["Mix of the day","مزيج اليوم","Günün karması","आज का मिक्स","今日混合练习","Mezcla del día","Подборка дня"],
 "Bekijk proefexamen":["View practice exam", "اعرض الامتحان التجريبي", "Deneme sınavını gör", "अभ्यास परीक्षा देखें", "查看模拟考试","Ver simulacro","Посмотреть пробный экзамен"],
+"Gemiddeld · alle examens":["Average · all exams","المتوسط · جميع الامتحانات","Ortalama · tüm sınavlar","औसत · सभी परीक्षाएँ","平均分 · 所有考试","Media · todos los exámenes","Среднее · все экзамены"],
 "Laatste proefexamen":["Last practice exam", "آخر امتحان تجريبي", "Son deneme sınavı", "पिछली अभ्यास परीक्षा", "上次模拟考试","Último simulacro","Последний пробный экзамен"],
 "Oefeningen":["Exercises", "تمارين", "Alıştırmalar", "अभ्यास", "练习","Ejercicios","Упражнения"],
 "Proefexamens":["Practice exams", "امتحانات تجريبية", "Deneme sınavları", "अभ्यास परीक्षाएँ", "模拟考试","Simulacros","Пробные экзамены"],
