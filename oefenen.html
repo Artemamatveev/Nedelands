@@ -910,7 +910,7 @@ let lang="nl";try{lang=localStorage.getItem("ww-ui")||"nl"}catch{}
 const labels={nl:"Laden…",en:"Loading…",ar:"جارٍ التحميل…",tr:"Yükleniyor…",hi:"लोड हो रहा है…",zh:"加载中…",es:"Cargando…",ru:"Загрузка…"};
 const label=document.getElementById("boot-label");label.textContent=labels[lang]||labels.nl;label.lang=lang;
 document.querySelector("#app-loading img").addEventListener("error",function(){
-  if(this.currentSrc.includes("/bittie-dance-v5.svg")){
+  if(/\/bittie-dance-v\d+\.svg(?:\?|$)/.test(this.currentSrc)){
     this.parentElement.querySelectorAll("source").forEach(source=>source.remove());
     this.src="/art/bittie-loading-v1.webp";return;
   }
