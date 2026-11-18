@@ -101,6 +101,10 @@ const copy = {
   "Meer nakijkbeurten op A2.": ["More checks at A2.", "تصحيحات إضافية لمستوى A2.", "A2 düzeyinde daha fazla kontrol.", "A2 स्तर पर ज़्यादा जाँचें।", "更多 A2 批改次数。", "Más revisiones de nivel A2.", "Больше проверок на уровне A2."],
   "Meer nakijkbeurten op B1, inclusief A2.": ["More checks at B1, including A2.", "تصحيحات إضافية لمستوى B1، وتشمل A2.", "A2 dahil B1 düzeyinde daha fazla kontrol.", "B1 स्तर पर ज़्यादा जाँचें, A2 भी शामिल।", "更多 B1 批改次数，包含 A2。", "Más revisiones de nivel B1, con A2 incluido.", "Больше проверок на уровне B1, включая A2."],
   "Kies Plus A2": ["Choose Plus A2", "اختر Plus A2", "Plus A2 seç", "Plus A2 चुनें", "选择 Plus A2", "Elegir Plus A2", "Выбрать Plus A2"],
+  "Examenpas": ["Exam pass", "تصريح الامتحان", "Sınav kartı", "परीक्षा पास", "考试通行证", "Pase de examen", "Экзаменационный пропуск"],
+  "Eén keer betalen, geen abonnement.": ["Pay once, no subscription.", "ادفع مرة واحدة، دون اشتراك.", "Bir kez öde, abonelik yok.", "एक बार भुगतान करें, कोई सदस्यता नहीं।", "一次付款，无需订阅。", "Pagas una vez, sin suscripción.", "Одна оплата, без подписки."],
+  "A2 of B1, met dezelfde nakijkbeurten als Plus.": ["A2 or B1, with the same checks as Plus.", "A2 أو B1، مع التصحيحات نفسها كما في Plus.", "A2 veya B1, Plus ile aynı kontrollerle.", "A2 या B1, Plus जैसी ही जाँचों के साथ।", "A2 或 B1，批改次数与 Plus 相同。", "A2 o B1, con las mismas revisiones que Plus.", "A2 или B1, с теми же проверками, что и в Plus."],
+  "Kies de Examenpas": ["Choose the exam pass", "اختر تصريح الامتحان", "Sınav kartını seç", "परीक्षा पास चुनें", "选择考试通行证", "Elegir el pase de examen", "Выбрать пропуск"],
   "Kies Plus B1": ["Choose Plus B1", "اختر Plus B1", "Plus B1 seç", "Plus B1 चुनें", "选择 Plus B1", "Elegir Plus B1", "Выбрать Plus B1"],
 };
 
@@ -113,6 +117,13 @@ const pricing = {
   zh: ["每月", n => `免费账号：每周 ${n} 次批改`, n => `Bittertalen 批改你的写作和口语回答：每天 ${n} 次`],
   es: ["al mes", n => `Revisiones semanales con una cuenta gratuita: ${n}`, n => `Bittertalen revisa tus textos y respuestas orales: ${n} revisiones al día`],
   ru: ["в месяц", n => `Проверок в неделю с бесплатным аккаунтом: ${n}`, n => `Bittertalen проверяет ваши тексты и устные ответы. Проверок в день: ${n}`],
+};
+// The Examenpas card: how long one payment lasts
+const passWeeks = {
+  nl: n => `${n} weken geldig vanaf je betaling`, en: n => `Valid for ${n} weeks from payment`,
+  ar: n => `صالح لمدة ${n} أسابيع من الدفع`, tr: n => `Ödemeden itibaren ${n} hafta geçerli`,
+  hi: n => `भुगतान से ${n} हफ़्ते तक मान्य`, zh: n => `自付款起 ${n} 周内有效`,
+  es: n => `Válido ${n} semanas desde el pago`, ru: n => `Действует ${n} недель с момента оплаты`,
 };
 const select = document.querySelector("#language");
 const trialCopy = {
@@ -161,6 +172,14 @@ function render() {
   if (config?.free) $("trial-checks").textContent = trialCopy[lang](config.free);
   $("try-free").hidden = !(config?.free && config?.limit);
   if (config?.free && config?.limit) $("try-free").textContent = tryCopy[lang](config.free, config.limit);
+  const pass = config?.pass;
+  $("pass-card").hidden = !(active && pass?.plans?.A2 && pass?.plans?.B1);
+  if (!$("pass-card").hidden) {
+    const eur = p => `€ ${lang === "en" ? String(p).replace(",", ".") : p}`;
+    const row = level => { const b = document.createElement("bdi"), sm = document.createElement("small"); b.textContent = eur(pass.plans[level].price); sm.textContent = level; return [b, " ", sm]; };
+    $("pass-price").replaceChildren(...row("A2"), document.createElement("br"), ...row("B1"));
+    $("pass-weeks").textContent = passWeeks[lang](Math.round((pass.days || 42) / 7));
+  }
   for (const [level, card, price, check] of [["A2", "plus-card", "plus-price", "plus-checks"], ["B1", "plus-b1-card", "plus-b1-price", "plus-b1-checks"]]) {
     const offer = plus?.plans?.[level] || (level === "A2" ? plus : null);
     $(card).hidden = !active || !offer?.price;

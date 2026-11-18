@@ -515,6 +515,17 @@ There is no trial or yearly price. Videos and podcasts remain free.
   checks counter (`plusLine()`) and `plusScreen()` in `#talk` (the one entry point). `plusBack()` handles the return from
   Stripe and `plusWait()` looks again a few times, because the webhook may be later than the learner. Stripe's pages are
   navigations, so the CSP needs nothing new.
+- The Examenpas (November 2026): one payment, no subscription, for `PASS_DAYS` (42) of the Plus checks at its level
+  (A2 €19,99, B1 €24,99 incl. A2; `PASSES` in `api/_supa.js`). On only with `STRIPE_PRICE_PASS_A2` and
+  `STRIPE_PRICE_PASS_B1` (one-time EUR prices of exactly those amounts, verified by `matchesPass()`). `api/plus.js`
+  `{go:"pass",level}` opens a `mode:"payment"` Checkout (409 `already` when a subscription covers that level) with the
+  withdrawal-consent text above the pay button. The webhook also takes `checkout.session.completed` and
+  `.async_payment_succeeded` (add them in Stripe), reads the session again with its line items and writes a row of
+  `exam_pass` (keyed by the session, so a repeat adds nothing; a new pass of the same level follows on from a running one;
+  migration `supabase/migrations/20261119003000_exam_pass.sql`). `plusFor()` returns the pass (`pass:true`, `ends:true`)
+  when it covers more than the subscription, so `api/check.js` needs nothing new. Refunds are not handled automatically:
+  delete the row by hand. The homepage has an Examenpas card (`#pass-card`), the app's Plus screen its two cards
+  (`data-pass-plan`), and voorwaarden.html an Examenpas section in all eight languages.
 - privacy.html has a Stripe section (Stripe Payments Europe, seven years for payment records). Before taking real
   money: KVK (within a week of the start), Stripe's account verification, live keys, algemene voorwaarden and the right
   of withdrawal for digital services.

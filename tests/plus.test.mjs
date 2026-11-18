@@ -131,3 +131,20 @@ test('Only the two configured monthly prices grant their level, with no access f
   assert.equal(coversLevel({status:'active',level:'B1'},'A2'),true);
   assert.equal(coversLevel({status:'canceled',level:'B1'},'B1'),false);
 });
+test('Plus screen offers the Examenpas next to the subscriptions, and shows a running pass without the subscription portal',async()=>{
+  const {app}=await import('./app-harness.mjs');
+  const a=await app();
+  a.run(`acc.cfg={limit:7,period:'week',plus:{limit:60,price:'9,99',plans:{A2:{price:'9,99'},B1:{price:'14,99'}}},pass:{days:42,plans:{A2:{price:'19,99'},B1:{price:'24,99'}}}};acc.user=null;acc.plus=null;plusScreen()`);
+  assert.equal(a.document.querySelectorAll('[data-pass-plan]').length,2);
+  assert.match(a.document.querySelector('[data-pass-plan="B1"]').textContent,/24,99/);
+  assert.match(a.document.querySelector('[data-pass-plan="A2"]').textContent,/6 weken/);
+  assert.equal(a.document.querySelectorAll('[data-pass-plan] [data-plus-login]').length,2);
+  a.run(`acc.user={id:'u1'};plusScreen()`);
+  assert.equal(a.document.querySelectorAll('[data-plus-pass]').length,2);
+  a.run(`acc.plus={status:'active',level:'A2',pass:true,ends:true,until:new Date(Date.now()+20*864e5).toISOString()};plusScreen()`);
+  assert.match(a.document.querySelector('#tbody').textContent,/Examenpas A2 · Geldig tot/);
+  assert.equal(a.document.getElementById('pman'),null);
+  assert.equal(a.run('myLimit("A2")'),60);
+  a.run(`acc.plus={status:'active',level:'B1'};plusScreen()`);
+  assert.equal(a.document.querySelectorAll('[data-pass-plan]').length,0);
+});
