@@ -783,7 +783,8 @@ test('The owner overview shows accounts and study time', async t => {
       {email: 'anna@example.nl', name: 'Anna de Vries', created: now, login: now, seen: now, lvl: 'A2', items: 120, right: 90, wrong: 30,
         res: {knm: {n: 3, pc: 72, at: Date.now()}}, tm: {[day]: 1500, [day - 1]: 600, [day - 30]: 300}, qd: {[day]: 12, [day - 2]: 8}, qr: {[day]: 9, [day - 2]: 8}, checks: 4, checks7: 2, plus: null},
       {email: 'omar@example.nl', name: null, created: now, login: now, seen: null, lvl: 'B1', items: 0, right: 0, wrong: 0, res: null, tm: null, qd: {[day]: 2}, qr: null, checks: 0, checks7: 0, plus: 'active'}],
-    counts: [{day: now.slice(0, 10), ev: 'open', lvl: 'A2', ui: 'nl', n: 5}, {day: now.slice(0, 10), ev: 'exam_knm', lvl: 'A2', ui: 'ru', n: 2}]}};
+    counts: [{day: now.slice(0, 10), ev: 'open', lvl: 'A2', ui: 'nl', n: 5}, {day: now.slice(0, 10), ev: 'exam_knm', lvl: 'A2', ui: 'ru', n: 2}],
+    spend: [{day: now.slice(0, 10), model: 'claude-sonnet-5-5', calls: 3, input: 9000, output: 4000, cache_read: 0, cache_write: 0}]}};
   for (const [offset, n] of [[1,12],[2,6],[3,4]]) state.admin.counts.push({day: new Date((day-offset)*864e5).toISOString().slice(0,10), ev:'open', lvl:'A2', ui:'nl', n});
   const server = await serve(state), base = `http://127.0.0.1:${server.address().port}`;
   try {

@@ -5,14 +5,14 @@ import fs from 'node:fs';
 import {root} from './app-harness.mjs';
 
 async function handler(options={}){
-  const usage=[],quotas=[],logs=[],lims=[],periods=[],stamps=[];let modelCalls=0;
+  const usage=[],quotas=[],logs=[],lims=[],periods=[],stamps=[],models=[],spends=[];let modelCalls=0;
   class APIError extends Error{}
   class AuthenticationError extends APIError{}
   class RateLimitError extends APIError{}
   class Anthropic {
     static APIError=APIError;static AuthenticationError=AuthenticationError;static RateLimitError=RateLimitError;
-    beta={messages:{create:async()=>{
-      modelCalls++;
+    beta={messages:{create:async(body)=>{
+      modelCalls++;models.push(body.model);
       if(options.providerFailure)throw Error('connection interrupted');
       return {stop_reason:options.stopReason||'end_turn',model:'test-model',usage:{input_tokens:100,output_tokens:30},content:[{type:'text',text:JSON.stringify({tasks:[{passed:options.claimPassed??true,verdict:'Goed',corrected:'Ik kom later.',errors:[],scores:options.scores||{inhoud:3,woorden:2,grammatica:2,spelling:2,samenhang:1}}]})}]};
     }}};
@@ -23,11 +23,12 @@ async function handler(options={}){
     useChecks:async(_id,cost,lim,period,stamp)=>{usage.push(cost);lims.push(lim);periods.push(period);stamps.push(stamp);return options.userLeft??lim-cost},
     useFree:async(_id,cost,stamp)=>{usage.push(cost);stamps.push(stamp);return options.freeLeft??1},
     useTotal:async cost=>{quotas.push(cost);return 'total' in options?options.total:399},
+    addSpend:async(model,u)=>{spends.push([model,u.input_tokens,u.output_tokens]);if(options.spendFails)throw Error('down');return true},
     PLUS:60,plusOn:!!options.pay,
     plusFor:async()=>{if(options.plusFails)throw Error('down');return options.plan??null},
     coversLevel:(p,level)=>!!p&&['active','trialing','past_due'].includes(p.status)&&(p.level==='B1'||(p.level||'A2')==='A2'&&level==='A2')
   };
-  const context=vm.createContext({process:{env:{ANTHROPIC_API_KEY:'test-only'}},console:{info:x=>logs.push(x),error:x=>logs.push(x)}});
+  const context=vm.createContext({process:{env:{ANTHROPIC_API_KEY:'test-only',...(options.env||{})}},console:{info:x=>logs.push(x),error:x=>logs.push(x)}});
   const sdk=new vm.SyntheticModule(['default'],function(){this.setExport('default',Anthropic)},{context});
   const supa=new vm.SyntheticModule(Object.keys(values),function(){for(const [key,value]of Object.entries(values))this.setExport(key,value)},{context});
   const module=new vm.SourceTextModule(fs.readFileSync(new URL('api/check.js',root),'utf8'),{context});
@@ -35,7 +36,7 @@ async function handler(options={}){
   const req={method:'POST',headers:{host:'example.test',origin:'https://example.test'},body:{...(options.part?{part:options.part}:{}),tasks:Array.from({length:options.tasksCount||1},()=>({...(options.part?{kind:options.kind||'z'}:{}),task:'Stuur een bericht',text:'Ik kom later. Personal test content.'}))}};
   const res={statusCode:200,status(n){this.statusCode=n;return this},json(body){this.body=body;return this}};
   await module.namespace.default(req,res);
-  return {res,usage,quotas,logs,lims,periods,stamps,modelCalls};
+  return {res,usage,quotas,logs,lims,periods,stamps,modelCalls,models,spends};
 }
 
 test('Missing account configuration blocks the paid provider',async()=>{
@@ -139,4 +140,20 @@ test('A2 Plus cannot grant B1 paid checks; B1 Plus covers both levels',async()=>
   assert.deepEqual(a2.lims,[60]);
   const unknown=await handler({pay:true,plan:{status:'active',level:'unknown'},part:'wb'});
   assert.deepEqual(unknown.lims,[7]);
+});
+
+test('Practice is graded by GRADING_MODEL (Sonnet by default), a proefexamen by GRADING_MODEL_EXAM (Opus by default)',async()=>{
+  assert.deepEqual((await handler()).models,['claude-sonnet-5-5']);
+  assert.deepEqual((await handler({tasksCount:3})).models,['claude-sonnet-5-5']);
+  assert.deepEqual((await handler({tasksCount:4})).models,['claude-opus-5-5']);
+  assert.deepEqual((await handler({part:'sp',tasksCount:16})).models,['claude-opus-5-5']);
+  const env={GRADING_MODEL:'claude-haiku-5-5',GRADING_MODEL_EXAM:' claude-sonnet-5-5 '};
+  assert.deepEqual((await handler({env})).models,['claude-haiku-5-5']);
+  assert.deepEqual((await handler({env,tasksCount:4})).models,['claude-sonnet-5-5']);
+});
+
+test('Every graded call records its tokens per model, and a failing record never fails the grading',async()=>{
+  const r=await handler();assert.deepEqual(r.spends,[['test-model',100,30]]);assert.equal(r.res.statusCode,200);
+  const f=await handler({spendFails:true});assert.equal(f.res.statusCode,200);assert.deepEqual(f.usage,[1]);
+  const refused=await handler({stopReason:'refusal'});assert.equal(refused.spends.length,1);
 });

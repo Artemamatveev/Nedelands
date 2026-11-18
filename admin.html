@@ -86,8 +86,8 @@ tr.open td{background:var(--wash)}
 .chart details table{margin-top:8px} .chart details td,.chart details th{padding:7px 12px}
 .chart details td:first-child{text-align:start}.chart details td:last-child{text-align:end}
 .chart details tr.selected td{background:var(--wash)}
-.events th:first-child,.events td:first-child{position:sticky;left:0;background:var(--card);text-align:start;z-index:1;box-shadow:1px 0 var(--line)}
-.events th:first-child{background:#F5F7FC}
+.events th:first-child,.events td:first-child,.spend th:first-child,.spend td:first-child{position:sticky;left:0;background:var(--card);text-align:start;z-index:1;box-shadow:1px 0 var(--line)}
+.events th:first-child,.spend th:first-child{background:#F5F7FC}
 .explanation{margin-top:20px;font-size:13px}.explanation p{margin:10px 0}
 @media(max-width:900px){.charts{grid-template-columns:1fr}.chart .sub{min-height:0}}
 @media(max-width:600px){
@@ -185,6 +185,23 @@ function kpis(users) {
   const k = (v, l) => `<div class="kpi"><b>${v}</b><span>${l}</span></div>`;
   return `<div class="kpis">${k(users.length, "аккаунтов")}${k(today, "занимались сегодня")}${k(week, "занимались за 7 дней")}` +
     `${k(dur(wk), "время занятий за 7 дней")}${k(ans.toLocaleString("ru-RU"), "ответов за 7 дней")}${k(ex, "пробных экзаменов всего")}</div>`;
+}
+
+// What grading costs: tokens per day and model (table ai_spend), priced in USD per million tokens
+// [input, output, cache read]; cache writes at 1.25 x input. Prices from Anthropic's pricing page, 18 November 2026.
+const PRICE = {"claude-fable-5-2": [8, 40, .2], "claude-opus-5-5": [4, 20, .2], "claude-sonnet-5-5": [2, 10, .1], "claude-haiku-5-5": [.1, .5, .01]};
+const usd = r => { const p = PRICE[Object.keys(PRICE).find(k => String(r.model).startsWith(k))]; return p ? (r.input * p[0] + r.output * p[1] + r.cache_read * p[2] + r.cache_write * p[0] * 1.25) / 1e6 : null; };
+function spend(rows) {
+  if (!rows) return `<section class="tile"><h2>Расход на ИИ</h2><p class="sub" style="overflow-wrap:anywhere">Таблицы <code>ai_spend</code> нет в базе: выполните в SQL Editor миграцию <code>20261118230000_ai_spend.sql</code> из папки <code>supabase/migrations</code>.</p></section>`;
+  const money = v => v == null ? "<span class=muted>?</span>" : "$" + v.toFixed(2);
+  const sum = (days) => { const from = new Date(Date.now() - days * 864e5).toISOString().slice(0, 10); return rows.filter(r => r.day > from).reduce((t, r) => t + (usd(r) || 0), 0); };
+  const body = rows.map(r => `<tr><td>${new Date(r.day + "T12:00:00Z").toLocaleDateString("ru-RU", {weekday: "short", day: "numeric", month: "short", timeZone: "UTC"})}</td>` +
+    `<td>${esc(String(r.model).replace(/^claude-/, ""))}</td><td>${r.calls}</td><td>${Number(r.input).toLocaleString("ru-RU")}</td><td>${Number(r.output).toLocaleString("ru-RU")}</td>` +
+    `<td>${money(usd(r))}</td><td>${r.calls ? money(usd(r) == null ? null : usd(r) / r.calls) : "—"}</td></tr>`).join("");
+  return `<section class="tile"><h2>Расход на ИИ</h2>
+    <p class="sub">Проверки письма и речи Claude: токены по дням и моделям, в долларах по ценам Anthropic (оценка, без НДС). За 7 дней: <b>$${sum(7).toFixed(2)}</b>, за 30 дней: <b>$${sum(30).toFixed(2)}</b>. Один вызов — одна отправка на проверку (пробный экзамен — тоже один).</p>
+    <div class="scroll spend" tabindex="0" role="region" aria-label="Расход на ИИ по дням"><table><thead><tr><th>День</th><th>Модель</th><th>Вызовов</th><th>Токены на входе</th><th>Токены на выходе</th><th>Стоимость</th><th>За вызов</th></tr></thead>
+    <tbody>${body || `<tr><td colspan="7" class="muted">Пока пусто.</td></tr>`}</tbody></table></div></section>`;
 }
 
 function counts(rows) {
@@ -314,7 +331,7 @@ function draw() {
     <span class="muted">обновлено в ${at}</span><button id="re">Обновить</button><a class="btn" href="/oefenen">В приложение</a></header>
     ${DATA.users.some(u => !("qd" in u)) ? `<section class="tile warn" role="status"><h2>В Supabase старая версия функции admin_overview</h2>
     <p class="sub" style="margin:0">Поэтому ответы «сегодня» и «7 дней» не показываются, хотя приложение их уже считает. Выполните в SQL Editor последний блок из <code>supabase/schema.sql</code> (<code>create or replace function public.admin_overview()</code> …) и нажмите «Обновить».</p></section>` : ""}
-    ${kpis(DATA.users)}${charts(DATA.users)}${users(DATA.users)}${counts(DATA.counts)}
+    ${kpis(DATA.users)}${charts(DATA.users)}${users(DATA.users)}${spend(DATA.spend)}${counts(DATA.counts)}
     <details class="explanation"><summary>Как считаются показатели</summary><p class="sub">Время — активные минуты в приложении: страница открыта, и человек что-то нажимал за последние 90 секунд (или слушал запись). Время и ответы по дням учитываются с 11 ноября 2026 года и попадают сюда после синхронизации прогресса; «всего» у ответов — за всё время, с первого дня. «Разных вопросов» — сколько разных вопросов человек хоть раз прошёл. Ответы считают и упражнения, и пробные экзамены; повтор вопроса после ошибки в том же раунде не считается.</p></details>`;
   $("re").onclick = load;
   app.querySelectorAll("[data-period]").forEach(button => {

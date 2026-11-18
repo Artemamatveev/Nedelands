@@ -155,12 +155,27 @@ export async function putOutcome({ id, part, ok, pc, rd }) {
 // of the last `days` days. Throws when the database can't answer.
 export async function adminData(days = 30) {
   const since = new Date(Date.now() - days * 864e5).toISOString().slice(0, 10);
-  const [a, b] = await Promise.all([
+  const [a, b, c] = await Promise.all([
     rest("rpc/admin_overview", { method: "POST", body: "{}" }),
     rest(`usage_counts?select=day,ev,lvl,ui,n&day=gte.${since}&order=day.asc`),
+    rest(`ai_spend?select=day,model,calls,input,output,cache_read,cache_write&day=gte.${since}&order=day.desc`),
   ]);
   if (!a.ok) throw new Error(`admin_overview ${a.status}`);
-  return { users: await a.json(), counts: b.ok ? await b.json() : null };
+  return { users: await a.json(), counts: b.ok ? await b.json() : null, spend: c.ok ? await c.json() : null };
+}
+// Claude's tokens for one grading call, added to today's row for that model (table ai_spend, add_ai_spend() in
+// supabase/schema.sql). Only totals per day and model: no account, answer or IP.
+export async function addSpend(model, usage) {
+  if (!accounts || !model || !usage) return false;
+  const n = (v) => Math.max(0, Math.round(Number(v) || 0));
+  const r = await rest("rpc/add_ai_spend", {
+    method: "POST",
+    body: JSON.stringify({
+      s_model: String(model).slice(0, 80), s_in: n(usage.input_tokens), s_out: n(usage.output_tokens),
+      s_cache_read: n(usage.cache_read_input_tokens), s_cache_write: n(usage.cache_creation_input_tokens),
+    }),
+  });
+  return r.ok;
 }
 // Anonymous usage counts (api/event.js, table usage_counts): one more for today's event, level and menu language.
 // EVENT_CAP a day per count (default 50000), so a stranger can't run it up: true when added, false when full; throws on failure.
