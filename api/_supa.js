@@ -274,7 +274,49 @@ export async function subscriptionLevel(sub) {
   return ["A2", "B1"].find(level => price?.id === (level === "A2" ? PRICE : PRICE_B1) && matchesPrice(price, level)) || null;
 }
 export const coversLevel = (p, level) => isPlus(p) && (p.level === "B1" || p.level === "A2" && level === "A2");
+// The Examenpas: one payment (no subscription) for PASS_DAYS of the same checks as Plus at its level. Off unless both
+// one-time prices are set (STRIPE_PRICE_PASS_A2, STRIPE_PRICE_PASS_B1). A purchase is a row of `exam_pass`, keyed by
+// the Checkout session, so the same webhook twice can't add days twice.
+export const PASS_DAYS = 42;
+export const PASSES = Object.freeze({ A2: { price: "19,99", amount: 1999 }, B1: { price: "24,99", amount: 2499 } });
+export const PASS_PRICE = Object.freeze({ A2: (process.env.STRIPE_PRICE_PASS_A2 || "").trim(), B1: (process.env.STRIPE_PRICE_PASS_B1 || "").trim() });
+export const passOn = plusOn && !!(PASS_PRICE.A2 && PASS_PRICE.B1);
+// A configured one-time EUR price with exactly the advertised amount, for that level only
+export const matchesPass = (p, level) => !!p && Object.hasOwn(PASSES, level) && p.id === PASS_PRICE[level] &&
+  p.active !== false && p.currency === "eur" && p.unit_amount === PASSES[level].amount && !p.recurring;
+export async function passPrice(level) {
+  if (!passOn || !Object.hasOwn(PASSES, level)) throw new Error("invalid_plan");
+  const price = await stripe(`prices/${encodeURIComponent(PASS_PRICE[level])}`);
+  if (!matchesPass(price, level)) throw new Error("stripe pass_price_mismatch");
+  return price;
+}
+// The user's running pass: the highest level still valid, and until when; or null
+export async function passOf(uid) {
+  const now = new Date().toISOString();
+  const r = await rest(`exam_pass?user_id=eq.${encodeURIComponent(uid)}&until=gt.${encodeURIComponent(now)}&select=level,until&order=until.desc`);
+  if (!r.ok) throw new Error(`exam_pass ${r.status}`);
+  const rows = await r.json();
+  const level = rows.some((x) => x.level === "B1") ? "B1" : rows.length ? "A2" : null;
+  if (!level) return null;
+  return { level, until: rows.filter((x) => x.level === level)[0].until };
+}
+// One purchase; true when kept (or already kept), "gone" when the account no longer exists
+export async function putPass(row) {
+  const r = await rest("exam_pass", { method: "POST", headers: { prefer: "resolution=ignore-duplicates,return=minimal" }, body: JSON.stringify(row) });
+  if (r.ok) return true;
+  const j = await r.json().catch(() => ({}));
+  return j.code === "23503" ? "gone" : false;
+}
+// What the user may use now: the subscription, or a running Examenpas when it covers more
 export async function plusFor(uid) {
+  const sub = await subscriptionFor(uid);
+  if (!passOn) return sub;
+  const pass = await passOf(uid).catch(() => null);
+  const subLevel = isPlus(sub) ? sub.level : null;
+  if (!pass || subLevel === "B1" || subLevel === pass.level) return sub;
+  return { ...(sub || {}), status: "active", until: pass.until, ends: true, level: pass.level, pass: true };
+}
+async function subscriptionFor(uid) {
   const p = await plusOf(uid);
   if (!isPlus(p)) return p && { ...p, level: null };
   const sub = await stripe(`subscriptions/${encodeURIComponent(p.sub)}`);
