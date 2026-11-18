@@ -86,8 +86,8 @@ tr.open td{background:var(--wash)}
 .chart details table{margin-top:8px} .chart details td,.chart details th{padding:7px 12px}
 .chart details td:first-child{text-align:start}.chart details td:last-child{text-align:end}
 .chart details tr.selected td{background:var(--wash)}
-.events th:first-child,.events td:first-child{position:sticky;left:0;background:var(--card);text-align:start;z-index:1;box-shadow:1px 0 var(--line)}
-.events th:first-child{background:#F5F7FC}
+.events th:first-child,.events td:first-child,.spend th:first-child,.spend td:first-child{position:sticky;left:0;background:var(--card);text-align:start;z-index:1;box-shadow:1px 0 var(--line)}
+.events th:first-child,.spend th:first-child{background:#F5F7FC}
 .explanation{margin-top:20px;font-size:13px}.explanation p{margin:10px 0}
 @media(max-width:900px){.charts{grid-template-columns:1fr}.chart .sub{min-height:0}}
 @media(max-width:600px){
@@ -200,7 +200,7 @@ function spend(rows) {
     `<td>${money(usd(r))}</td><td>${r.calls ? money(usd(r) == null ? null : usd(r) / r.calls) : "—"}</td></tr>`).join("");
   return `<section class="tile"><h2>Расход на ИИ</h2>
     <p class="sub">Проверки письма и речи Claude: токены по дням и моделям, в долларах по ценам Anthropic (оценка, без НДС). За 7 дней: <b>$${sum(7).toFixed(2)}</b>, за 30 дней: <b>$${sum(30).toFixed(2)}</b>. Один вызов — одна отправка на проверку (пробный экзамен — тоже один).</p>
-    <div class="scroll events" tabindex="0" role="region" aria-label="Расход на ИИ по дням"><table><thead><tr><th>День</th><th>Модель</th><th>Вызовов</th><th>Токены на входе</th><th>Токены на выходе</th><th>Стоимость</th><th>За вызов</th></tr></thead>
+    <div class="scroll spend" tabindex="0" role="region" aria-label="Расход на ИИ по дням"><table><thead><tr><th>День</th><th>Модель</th><th>Вызовов</th><th>Токены на входе</th><th>Токены на выходе</th><th>Стоимость</th><th>За вызов</th></tr></thead>
     <tbody>${body || `<tr><td colspan="7" class="muted">Пока пусто.</td></tr>`}</tbody></table></div></section>`;
 }
 
