@@ -125,6 +125,17 @@ const trialCopy = {
   es: n => `${n} revisiones de prueba por única vez sin cuenta en este navegador`,
   ru: n => `${n} пробные проверки однократно без аккаунта в этом браузере`,
 };
+// Under the writing example (Vraag 4): the check itself can be tried for free, with the real numbers from /api/config
+const tryCopy = {
+  nl: (n, w) => `Probeer het zelf: ${n} teksten of antwoorden gratis nagekeken, zonder account. Daarna ${w} per week met een gratis account.`,
+  en: (n, w) => `Try it yourself: ${n} texts or answers checked for free, no account needed. Then ${w} a week with a free account.`,
+  ar: (n, w) => `جرّب بنفسك: تصحيح ${n} نصوص أو إجابات مجانًا دون حساب. ثم ${w} أسبوعيًا بحساب مجاني.`,
+  tr: (n, w) => `Kendin dene: hesap açmadan ${n} metin veya yanıt ücretsiz kontrol edilir. Sonra ücretsiz hesapla haftada ${w}.`,
+  hi: (n, w) => `ख़ुद आज़माएँ: बिना खाते के ${n} लेख या जवाब मुफ़्त जाँचे जाते हैं। फिर मुफ़्त खाते से हर हफ़्ते ${w}।`,
+  zh: (n, w) => `亲自试试：无需账号，免费批改 ${n} 篇文字或回答。之后用免费账号每周 ${w} 次。`,
+  es: (n, w) => `Pruébalo: ${n} textos o respuestas revisados gratis, sin cuenta. Después, ${w} a la semana con una cuenta gratuita.`,
+  ru: (n, w) => `Попробуйте сами: ${n} текста или ответа проверяются бесплатно, без аккаунта. Потом ${w} в неделю с бесплатным аккаунтом.`,
+};
 const nodes = [...document.querySelectorAll("[data-t]")].map(node => [node, node.textContent]);
 const alts = [...document.querySelectorAll("[data-alt]")].map(node => [node, node.dataset.alt]);
 const $ = id => document.getElementById(id);
@@ -148,6 +159,8 @@ function render() {
   if (config?.limit) $("free-checks").textContent = free(config.limit);
   $("trial-checks").hidden = !config?.free;
   if (config?.free) $("trial-checks").textContent = trialCopy[lang](config.free);
+  $("try-free").hidden = !(config?.free && config?.limit);
+  if (config?.free && config?.limit) $("try-free").textContent = tryCopy[lang](config.free, config.limit);
   for (const [level, card, price, check] of [["A2", "plus-card", "plus-price", "plus-checks"], ["B1", "plus-b1-card", "plus-b1-price", "plus-b1-checks"]]) {
     const offer = plus?.plans?.[level] || (level === "A2" ? plus : null);
     $(card).hidden = !active || !offer?.price;

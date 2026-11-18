@@ -49,6 +49,7 @@ h3 {font-size:22px;letter-spacing:-.02em}
 .lead {font-size:clamp(17px,2vw,20px);color:var(--ink);opacity:.82;max-width:46ch;margin:21px 0 24px}
 .hero-actions {flex-wrap:wrap;gap:10px}
 .note {font-size:15px;color:var(--muted);margin:14px 0 0}
+.try-free {font-size:17px;font-weight:600;color:var(--blue);margin:16px 0 0;text-wrap:balance}
 #plus-status:empty {display:none}
 .hero-art {position:relative;isolation:isolate;display:grid;place-items:center;min-height:470px;margin:0;padding:34px 0 48px;border-radius:20px;overflow:hidden;background:#25364c url('/art/delft.jpg') center 48%/cover no-repeat;box-shadow:var(--shadow)}
 .hero-art::before {content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,#0c193c10 40%,#0c193cb0)}

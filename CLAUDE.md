@@ -31,7 +31,7 @@ form, in the app's Examenblad style (the user found icon cards and phone screens
 · Probeer het zelf", a real KNM question marked on the page like in the app (`landing.js`; the question and its
 feedback stay Dutch); "Vraag 3", the three ways to practise as a numbered list; "Vraag 4 · Zo kijkt Claude je tekst
 na", the writing check set in HTML like in the app, with the same checklist (a made-up example, the page says so; its errors and points must follow the scoring
-rules). "Veelgestelde vragen" uses native `<details>`; keep the answers true (not DUO, offline, no pass guarantee). The
+rules); under it `#try-free` says the check can be tried for free, with `free` and `limit` from `/api/config` (`tryCopy` in `landing.js`, eight languages; hidden without them). "Veelgestelde vragen" uses native `<details>`; keep the answers true (not DUO, offline, no pass guarantee). The
 Plus card only shows when Plus is on (a card saying it was unavailable looked broken). The page looks like the app (dark only on phones and tablets, light on a computer, like the app): the
 blurred windmill behind frosted glass, white tiles with the app's shadow, a glass bar on top. The hero shows the app
 itself in a phone (`shots/app.webp`, the top of Mijn dag, taken with Playwright) in front of Vermeer's Gezicht op Delft
