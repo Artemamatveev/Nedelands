@@ -192,7 +192,7 @@ function kpis(users) {
 const PRICE = {"claude-fable-5-2": [8, 40, .2], "claude-opus-5-5": [4, 20, .2], "claude-sonnet-5-5": [2, 10, .1], "claude-haiku-5-5": [.1, .5, .01]};
 const usd = r => { const p = PRICE[Object.keys(PRICE).find(k => String(r.model).startsWith(k))]; return p ? (r.input * p[0] + r.output * p[1] + r.cache_read * p[2] + r.cache_write * p[0] * 1.25) / 1e6 : null; };
 function spend(rows) {
-  if (!rows) return `<section class="tile"><h2>Расход на ИИ</h2><p class="sub">Таблицы <code>ai_spend</code> нет в базе: выполните в SQL Editor <code>supabase/migrations/20261118230000_ai_spend.sql</code>.</p></section>`;
+  if (!rows) return `<section class="tile"><h2>Расход на ИИ</h2><p class="sub" style="overflow-wrap:anywhere">Таблицы <code>ai_spend</code> нет в базе: выполните в SQL Editor миграцию <code>20261118230000_ai_spend.sql</code> из папки <code>supabase/migrations</code>.</p></section>`;
   const money = v => v == null ? "<span class=muted>?</span>" : "$" + v.toFixed(2);
   const sum = (days) => { const from = new Date(Date.now() - days * 864e5).toISOString().slice(0, 10); return rows.filter(r => r.day > from).reduce((t, r) => t + (usd(r) || 0), 0); };
   const body = rows.map(r => `<tr><td>${new Date(r.day + "T12:00:00Z").toLocaleDateString("ru-RU", {weekday: "short", day: "numeric", month: "short", timeZone: "UTC"})}</td>` +
