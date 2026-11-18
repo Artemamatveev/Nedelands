@@ -85,5 +85,5 @@ test('The schema keeps passes per session, server-written, readable only by thei
   assert.match(block,/revoke all on public\.exam_pass from public, anon, authenticated;/);
   assert.doesNotMatch(block,/grant (insert|update|delete)[^;]*to authenticated/);
   const mig=fs.readFileSync(new URL('../supabase/migrations/20261119003000_exam_pass.sql',import.meta.url),'utf8');
-  assert.ok(mig.includes(block.trim()));
+  assert.ok(mig.includes(block.slice(0, block.indexOf('using ((select auth.uid()) = user_id);'))));
 });

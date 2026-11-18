@@ -59,5 +59,7 @@ test('AI spend is kept per day and model only, and only the server writes it', (
   assert.doesNotMatch(block.slice(0, block.indexOf(');')), /user_id|ip|email/);
   assert.match(sql, /revoke execute on function public\.add_ai_spend\(text, bigint, bigint, bigint, bigint\) from public, anon, authenticated;/);
   const migration = fs.readFileSync(new URL('supabase/migrations/20261118230000_ai_spend.sql', root), 'utf8');
-  assert.ok(migration.includes(sql.slice(sql.indexOf('create table if not exists public.ai_spend'))));
+  const end = 'grant execute on function public.add_ai_spend(text, bigint, bigint, bigint, bigint) to service_role;';
+  const from = sql.indexOf('create table if not exists public.ai_spend');
+  assert.ok(migration.includes(sql.slice(from, sql.indexOf(end, from) + end.length)));
 });
