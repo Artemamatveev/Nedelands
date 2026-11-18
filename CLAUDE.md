@@ -468,7 +468,9 @@ period includes the year and notes that today is incomplete. Charts stack below 
 anonymous 30-day event table, with a sticky date column. Accounts show name and e-mail, level, last activity, study time and
 answers (with the share right) today / 7 days / in all, different questions, proefexamens per part (number and last score),
 Claude checks and Plus; a row opens its minutes of the last 14 days and its exam history. Tables keep bordered, centred cells
-(the user's wish); the measurement explanation is expandable. It loads the vendored Supabase library, reads the session the app left in
+(the user's wish); the measurement explanation is expandable. "Расход на ИИ" lists `ai_spend` (the last 30 days, per day and
+model) in dollars from `PRICE` in the page (Anthropic's list prices, 18 November 2026: update them when they change), with
+the 7- and 30-day totals. It loads the vendored Supabase library, reads the session the app left in
 this browser and asks `/api/admin` (`api/admin.js`) with the access token; the server answers only a confirmed e-mail in
 `ADMIN_EMAILS` (a Vercel env var, comma-separated; without it nobody gets in) and reads `admin_overview()` (in
 `supabase/schema.sql`, run it in the SQL editor; it works out the summaries inside the database, so the large progress rows
@@ -614,8 +616,12 @@ same result, not marked again. A sentence to finish comes back whole (`zWhole()`
 A B1 form gets one box per answer that differs: `SYSTEM_WB` asks for one line per form answer with the open answer last, and
 another shape gives no button. An A2 form's `corrected` is the open answer only, so only that comes back.
 
-`api/check.js` is a Vercel function that grades writing with Claude (`claude-opus-5-5`,
-structured JSON output, server-side refusal fallback). The page posts
+`api/check.js` is a Vercel function that grades writing with Claude (practice, 1 to 3 tasks: `GRADING_MODEL`, default
+`claude-sonnet-5-5`; a proefexamen, 4 or more tasks: `GRADING_MODEL_EXAM`, default `claude-opus-5-5`; both Vercel env vars,
+so the model changes without code; structured JSON output, server-side refusal fallback). Every call adds its tokens to
+today's row per model in `ai_spend` (`add_ai_spend()`, `supabase/migrations/20261118230000_ai_spend.sql`, also in
+`schema.sql`: day, model and token totals only, no account, answer or IP, so privacy.html needs no change; rows go after
+two years); a failure there never fails the grading. The page posts
 `{tasks:[{task, form, text}]}` and gets `{tasks:[{passed, verdict, corrected, errors, scores}]}`;
 the prompt is built on the server, so the page can't send arbitrary prompts. Schrijven is scored on DUO's
 beoordelingsmodel: inhoud 0–3, woorden 0–2, grammatica 0–2, spelling 0–2, samenhang 0–1 (inhoud 0 makes everything 0;

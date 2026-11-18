@@ -52,3 +52,12 @@ test('?me=1 only says whether the account is the owner, without reading the data
   const n = await ask({user: {...owner, email: 'iemand@example.nl'}, query: {me: '1'}});
   assert.equal(n.res.statusCode, 403); assert.equal(n.asked, 0);
 });
+test('AI spend is kept per day and model only, and only the server writes it', () => {
+  const sql = fs.readFileSync(new URL('supabase/schema.sql', root), 'utf8');
+  const block = sql.slice(sql.indexOf('create table if not exists public.ai_spend'));
+  assert.match(block, /primary key \(day, model\)/);
+  assert.doesNotMatch(block.slice(0, block.indexOf(');')), /user_id|ip|email/);
+  assert.match(sql, /revoke execute on function public\.add_ai_spend\(text, bigint, bigint, bigint, bigint\) from public, anon, authenticated;/);
+  const migration = fs.readFileSync(new URL('supabase/migrations/20261118230000_ai_spend.sql', root), 'utf8');
+  assert.ok(migration.includes(sql.slice(sql.indexOf('create table if not exists public.ai_spend'))));
+});

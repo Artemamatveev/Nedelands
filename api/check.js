@@ -13,12 +13,16 @@
 // With accounts set up (Supabase, see _supa.js) only a signed-in user may grade, CHECK_LIMIT checks a day;
 // the answer then also has `left`, the checks left today. With Bittertalen Plus (api/plus.js) PLUS_LIMIT a day.
 import Anthropic from "@anthropic-ai/sdk";
-import { accounts, caller, checkCost, useChecks, LIMIT, PLUS, plusOn, plusFor, coversLevel, sameOrigin, FREE, visitor, useFree, useTotal } from "./_supa.js";
+import { accounts, caller, checkCost, useChecks, LIMIT, PLUS, plusOn, plusFor, coversLevel, sameOrigin, FREE, visitor, useFree, useTotal, addSpend } from "./_supa.js";
 
 // Created only when the key is set, so a missing key gives a clear error instead of a crash
 // (trimmed: a key pasted into the dashboard with a trailing newline breaks the request header)
 const KEY = (process.env.ANTHROPIC_API_KEY || "").trim();
 const client = KEY ? new Anthropic({ apiKey: KEY }) : null;
+// Which Claude model grades. Practice (1 to 3 tasks at once) uses GRADING_MODEL, a whole proefexamen (4 or more tasks)
+// GRADING_MODEL_EXAM. Set them in the Vercel project's environment variables to switch without a code change.
+const MODEL = (process.env.GRADING_MODEL || "claude-sonnet-5-5").trim();
+const MODEL_EXAM = (process.env.GRADING_MODEL_EXAM || "claude-opus-5-5").trim();
 
 const RESULT = {
   type: "object",
@@ -230,7 +234,7 @@ export default async function handler(req, res) {
   try {
     providerStarted = true;
     const response = await client.beta.messages.create({
-      model: "claude-opus-5-5",
+      model: tasks.length >= 4 ? MODEL_EXAM : MODEL,
       max_tokens: 16000,
       betas: ["server-side-fallback-2026-07-01"],
       fallbacks: "default",
@@ -239,6 +243,8 @@ export default async function handler(req, res) {
       messages: [{ role: "user", content: prompt }],
     });
     console.info(JSON.stringify({ event: "grading_usage", model: response.model, usage: response.usage, units: cost }));
+    // Tokens per day and model (table ai_spend), so the owner sees what grading costs; never blocks the answer
+    await addSpend(response.model, response.usage).catch(() => {});
     if (response.stop_reason === "refusal") { await giveBack(); return res.status(422).json({ error: "refused" }); }
     if (response.stop_reason === "max_tokens") { await giveBack(); return res.status(502).json({ error: "failed" }); }
     const text = response.content.find((b) => b.type === "text")?.text;
