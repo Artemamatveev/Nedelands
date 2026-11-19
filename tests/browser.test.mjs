@@ -705,7 +705,7 @@ test('The homepage and the app work in a real browser', async t => {
       }
       await check('KNM proefexamen', '/oefenen', p => p.evaluate(() => startExam('knm')));
       await check('login window', '/oefenen?open=login');
-      await check('over', '/over'); await check('privacy dark', '/privacy', null, {colorScheme: 'dark'});
+      await check('over', '/over'); await check('nakijken', '/nakijken'); await check('nakijken Arabic dark', '/nakijken', null, {lang: 'ar', colorScheme: 'dark'}); await check('privacy dark', '/privacy', null, {colorScheme: 'dark'});
       await check('Arabic', '/oefenen', null, {lang: 'ar'});
       await check('desktop', '/oefenen', null, {viewport: {width: 1280, height: 800}, isMobile: false, hasTouch: false});
       assert.deepEqual(found, []);
