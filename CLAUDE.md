@@ -388,6 +388,16 @@ immediately, navigates open windows to the migration gate, and uses network-only
 move message rather than cached practice; all local data/cache remains intact. Devices must connect once to receive
 this worker update. Normal bittertalen.nl startup, offline caching and account isolation are unchanged.
 
+## App Store and Google Play (native/)
+
+`native/` is a Capacitor 8 shell that loads https://bittertalen.nl/oefenen (`capacitor.config.json` `server.url`), so the
+website deploy updates the apps; `native/README.md` has the build and review steps (the user builds on a Mac). The page
+knows it runs there by `NATIVE` (`Capacitor.isNativePlatform()`), which counts as an installed app (`inApp()`): OAuth
+opens in the system browser (`skipBrowserRedirect`, `Capacitor.Plugins.Browser`) and comes back through the existing
+`/api/handoff` flow; no purchases, prices or offers inside the apps (Plus, passes and groups from the website still
+work); Profiel shows "Dagelijkse herinnering" (`remindRow()`, local notifications, `ww-remind`). Keep these when changing
+login, Plus or Profiel. `native/` is not deployed as part of the site (`.vercelignore`).
+
 ## Accounts (optional)
 
 Logging in is optional; everything works without it except Claude's grading. Supabase (connected to the Vercel project

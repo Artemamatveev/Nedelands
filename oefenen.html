@@ -954,6 +954,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
         <div class="prow pickrow"><span id="plvlt">Ik oefen voor</span><b id="plvlv"></b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg><select id="plvl" aria-labelledby="plvlt"></select></div>
         <div class="prow pickrow langrow"><span id="plangt">Taal</span><b data-langn></b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg><select id="plang" data-lang aria-labelledby="plangt"></select></div>
         <label class="prow tog" id="ptrilw" hidden><span>Trillen bij een antwoord</span><input type="checkbox" switch id="ptril"></label>
+        <div class="prow pickrow" id="premw" hidden><span id="premt">Dagelijkse herinnering</span><b id="premv"></b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg><select id="prem" aria-labelledby="premt"></select></div>
       </div>
       <div id="acct"></div>
       <footer class="site-footer" id="site-footer"></footer>
@@ -1269,6 +1270,8 @@ const checksLeft=part=>{
   return used==null?null:Math.max(0,myLimit(level)-used);
 };
 const ACFG="ww-acc-cfg",ALINK="ww-acc"; // the config, and which account this device's progress was last joined with
+// The App Store / Google Play app (native/, Capacitor) loads this page from bittertalen.nl: it counts as an installed app
+const NATIVE=!!(window.Capacitor&&typeof Capacitor.isNativePlatform==="function"&&Capacitor.isNativePlatform());
 const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
 const lsSet=(k,v)=>{try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}};
 // Invite a friend: a friend's code from a shared link (?ref=, also kept by the homepage) waits in ww-ref until this
@@ -1440,8 +1443,11 @@ async function login(p){
   try{await loadSb();
     let to=location.origin+"/";
     if(p!=="passkey"&&inApp()){const h=b64(crypto.getRandomValues(new Uint8Array(18)));lsSet(HAND,JSON.stringify({h,t:Date.now()}));to+="?h="+h}
-    const{error}=p==="passkey"?await acc.sb.auth.signInWithPasskey():await acc.sb.auth.signInWithOAuth({provider:p,options:{redirectTo:to}});
+    // In the store app Google and Apple refuse a login inside the app's web view: the system browser logs in and leaves
+    // the code at /api/handoff, and the app takes it when it is visible again (claimHand)
+    const{data,error}=p==="passkey"?await acc.sb.auth.signInWithPasskey():await acc.sb.auth.signInWithOAuth({provider:p,options:{redirectTo:to,skipBrowserRedirect:NATIVE}});
     if(error)throw error;
+    if(NATIVE&&data?.url){const B=Capacitor.Plugins?.Browser;B?await B.open({url:data.url}):location.assign(data.url)}
   }catch(e){acc.msg=loginErr(e);redraw()}
 }
 // Logging in happens on Profiel and on the welcome screen; both show the same state
@@ -1479,7 +1485,7 @@ const logins=()=>acc.cfg&&acc.cfg.login||[];
 // a window that comes back with an h it did not make passes the one-time code to the server (/api/handoff), and the
 // app takes it from there when you return and exchanges it itself (PKCE: the code is useless without the secret that
 // only the app holds). If the login comes back in the app itself, nothing changes.
-const HAND="ww-hand",inApp=()=>navigator.standalone===true||matchMedia("(display-mode: standalone)").matches;
+const HAND="ww-hand",inApp=()=>NATIVE||navigator.standalone===true||matchMedia("(display-mode: standalone)").matches;
 const handOf=()=>{try{const o=JSON.parse(lsGet(HAND));return o&&o.h&&Date.now()-o.t<6e5?o:null}catch(e){return null}};
 let handBusy=false;
 async function claimHand(){
@@ -1550,7 +1556,7 @@ async function adminCheck(){
 function siteFooter(){
   const row=(site,t)=>`<button type="button" class="it" data-site="${site}"><span><span class="th"><b>${t}</b></span></span></button>`,
     link=(href,t)=>`<a class="it" href="${href}"><span><span class="th"><b>${t}</b></span></span></a>`;
-  return `<h3 class="lh">Hulp</h3><div class="pg">${row("faq","Veelgestelde vragen")}${row("exam","Uitleg over de examens")}${row("prices","Prijzen")}${row("cancel","Abonnement opzeggen")}${link("/nakijken","Zo kijkt Bittertalen na")}${link("/contact","Contact")}</div>
+  return `<h3 class="lh">Hulp</h3><div class="pg">${row("faq","Veelgestelde vragen")}${row("exam","Uitleg over de examens")}${NATIVE?"":row("prices","Prijzen")+row("cancel","Abonnement opzeggen")}${link("/nakijken","Zo kijkt Bittertalen na")}${link("/contact","Contact")}</div>
     <h3 class="lh">Bittertalen</h3><div class="pg">${link("/over","Over Bittertalen")}${link("/privacy","Privacyverklaring")}${link("/?home","Naar de website")}${acc.admin?link("/admin","Statistiek"):""}</div>`;
 }
 function tryOne(){
@@ -1626,7 +1632,7 @@ async function authHead(){
 // Offering the paid checks where a learner wants them: when the free checks are used up, and after a writing or speaking
 // proefexamen below the practice target (the moments the buyer panel named). Only with an account, Plus or the Examenpas
 // switched on, and a level that isn't covered yet. The button opens the one Plus screen.
-const canOffer=()=>!!(acc.user&&acc.cfg&&(acc.cfg.pass||acc.cfg.plus)&&!isPlus(lvl()));
+const canOffer=()=>!NATIVE&&!!(acc.user&&acc.cfg&&(acc.cfg.pass||acc.cfg.plus)&&!isPlus(lvl()));
 const offerBtn=()=>`<button type="button" class="ghost wide" data-offer>${acc.cfg.pass?"Bekijk de Examenpas":"Bekijk Bittertalen Plus"}</button>`;
 const offerHTML=c=>c==="limit"&&canOffer()?"<br>"+offerBtn():"";
 const examOffer=()=>canOffer()?`<div class="offer"><p class="note">${acc.cfg.pass?`Wil je tot je examen elke dag laten nakijken? Met de Examenpas kan dat ${Math.round((acc.cfg.pass.days||42)/7)} weken lang, voor één betaling.`:"Wil je tot je examen elke dag laten nakijken? Met Bittertalen Plus kan dat."}</p>${offerBtn()}</div>`:"";
@@ -2489,7 +2495,7 @@ function drawProfile(){
   $("pmail").hidden=!(u&&u.email); $("pmail").textContent=u&&u.email||"";
   if(c){
     if(u){
-      if(c.plus)b=ban("aplus","plus","Bittertalen Plus",plusLine());
+      if(c.plus&&(!NATIVE||isPlus()))b=ban("aplus","plus","Bittertalen Plus",plusLine());
       h=`<h3 class="lh">Account</h3><div class="pg"><p class="pinfo"><span role="status">${acc.sync||"Wacht op synchronisatie"}</span><br>${myPeriod()==="day"?"Nakijken vandaag:":"Gratis nakijkbeurten:"} ${checksLeft()==null?"…":`nog ${checksLeft()} van de ${myLimit()}`}</p>`
         +(L.includes("passkey")?`<button type="button" class="pact" id="apk">Passkey toevoegen</button>`:"")
         +`<button type="button" class="pact" id="agrp">Code van je school of werk</button><button type="button" class="pact" id="aref">Nodig een vriend uit</button><button type="button" class="pact" id="aout">Uitloggen</button><button type="button" class="pact bad" id="adel">Account verwijderen</button></div>`;
@@ -2517,6 +2523,7 @@ function drawProfile(){
       lsSet(progressKey("guest"),JSON.stringify({data:mergeS(retained,guestEntry?.data||freshProgress()),frame:{},version:++localVersion}));
       acc.msg="Je account is verwijderd. Je voortgang op dit apparaat blijft.";await setUser(null)}
     catch(e){acc.msg="Verwijderen is niet gelukt. Probeer het later opnieuw.";drawProfile()}};
+  remindRow();
   if(canBuzz()){$("ptrilw").hidden=false;$("ptril").checked=lsGet("ww-tril")!=="0";$("ptril").onchange=()=>{lsSet("ww-tril",$("ptril").checked?"1":"0");if($("ptril").checked)buzz("good")}}
 }
 function drawPlan(){
@@ -3628,6 +3635,28 @@ function groupScreen(msg){
     }catch{groupScreen("Dat lukt nu niet. Probeer het later nog eens.")}
   };
 }
+// Dagelijkse herinnering (store app only): a local notification every day at the chosen hour (ww-remind), no server
+const REMH=["8","12","19","21"];
+function remindRow(){
+  const N=NATIVE&&Capacitor.Plugins?.LocalNotifications; if(!N)return;
+  const sel=$("prem"),cur=lsGet("ww-remind")||"";
+  $("premw").hidden=false;
+  sel.innerHTML=`<option value="">Uit</option>`+REMH.map(h=>`<option value="${h}"${cur===h?" selected":""}>${h.padStart(2,"0")}:00</option>`).join("");
+  $("premv").textContent=cur?cur.padStart(2,"0")+":00":"Uit";
+  sel.onchange=async()=>{
+    const h=sel.value;
+    try{
+      await N.cancel({notifications:[{id:1}]});
+      if(h){
+        const perm=await N.requestPermissions();
+        if(perm.display!=="granted"){lsSet("ww-remind",null);acc.msg="Meldingen staan uit voor Bittertalen. Zet ze aan in Instellingen.";return drawProfile()}
+        await N.schedule({notifications:[{id:1,title:"Bittertalen",body:"Tijd voor je les van vandaag.",schedule:{on:{hour:+h,minute:0},repeats:true,allowWhileIdle:true}}]});
+      }
+      lsSet("ww-remind",h||null);
+    }catch{lsSet("ww-remind",null)}
+    drawProfile();
+  };
+}
 async function claimRef(){
   const code=lsGet("ww-ref"),uid=acc.user?.id; if(!code||!uid)return;
   try{
@@ -3685,6 +3714,7 @@ function plusScreen(){
   $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;window.scrollTo(0,0);
   tBack(TABN[tab],home);
   const c=acc.cfg.plus,p=acc.plus,on=isPlus(),plans=c.plans||{A2:{price:c.price}};
+  if(NATIVE){$("tbody").innerHTML=`<h2 id="plusS">Bittertalen Plus</h2>`+(on?`<p class="sub"><b>${p.group?`<span lang="nl">${esc(p.group)}</span>`:p.pass?"Examenpas":"Bittertalen Plus"} ${p.level||""}</b> · ${plusLine()}</p>`:`<p class="sub">Bittertalen Plus is niet beschikbaar in deze app.</p>`)+`<p class="sub">Al het andere in Bittertalen blijft gratis.</p>`;return}
   $("tbody").innerHTML=`<h2 id="plusS">Bittertalen Plus</h2>`
     +(on?`<p class="sub"><b>${p.group?`<span lang="nl">${esc(p.group)}</span>`:p.pass?"Examenpas":"Bittertalen Plus"} ${p.level||""}</b> · ${plusLine()}</p>`:"")
     +`<p class="sub">Met Plus: ${c.limit} nakijkbeurten per dag. Met een gratis account: ${acc.cfg.limit} gratis.</p><p class="sub">Al het andere in Bittertalen blijft gratis.</p>`
@@ -4192,7 +4222,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="fcf86bfc52";
+const UIV="570b4de0e0";
 let uiP=null;
 function uiLoaded(){ // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});

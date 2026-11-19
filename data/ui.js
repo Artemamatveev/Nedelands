@@ -685,3 +685,9 @@ Object.assign(UI,{
   "Je hoort al bij deze groep.": ["You are already in this group.", "أنت بالفعل في هذه المجموعة.", "Zaten bu gruptasın.", "आप पहले से इस समूह में हैं।", "你已经在这个小组里了。", "Ya formas parte de este grupo.", "Вы уже в этой группе."],
   "Dat lukt nu niet. Probeer het later nog eens.": ["That isn't possible right now. Please try again later.", "تعذّر ذلك الآن. حاول مرة أخرى لاحقًا.", "Bu şu anda olmuyor. Lütfen daha sonra tekrar dene.", "अभी यह नहीं हो पा रहा है। कृपया बाद में फिर कोशिश करें।", "现在无法完成，请稍后再试。", "Ahora no es posible. Inténtalo más tarde.", "Сейчас не получается. Попробуйте позже."]
 });
+Object.assign(UI,{
+  "Dagelijkse herinnering": ["Daily reminder", "تذكير يومي", "Günlük hatırlatma", "रोज़ का रिमाइंडर", "每日提醒", "Recordatorio diario", "Ежедневное напоминание"],
+  "Uit": ["Off", "إيقاف", "Kapalı", "बंद", "关闭", "Desactivado", "Выкл."],
+  "Meldingen staan uit voor Bittertalen. Zet ze aan in Instellingen.": ["Notifications are off for Bittertalen. Turn them on in Settings.", "الإشعارات متوقفة لـ Bittertalen. فعّلها في الإعدادات.", "Bittertalen için bildirimler kapalı. Ayarlar'dan aç.", "Bittertalen के लिए सूचनाएँ बंद हैं। उन्हें सेटिंग्स में चालू करें।", "Bittertalen 的通知已关闭。请在设置中开启。", "Las notificaciones de Bittertalen están desactivadas. Actívalas en Ajustes.", "Уведомления для Bittertalen выключены. Включите их в Настройках."],
+  "Bittertalen Plus is niet beschikbaar in deze app.": ["Bittertalen Plus is not available in this app.", "Bittertalen Plus غير متاح في هذا التطبيق.", "Bittertalen Plus bu uygulamada mevcut değil.", "Bittertalen Plus इस ऐप में उपलब्ध नहीं है।", "此应用中无法使用 Bittertalen Plus。", "Bittertalen Plus no está disponible en esta aplicación.", "Bittertalen Plus недоступен в этом приложении."]
+});

@@ -1,0 +1,23 @@
+{
+  "appId": "nl.bittertalen.app",
+  "appName": "Bittertalen",
+  "webDir": "www",
+  "server": {
+    "url": "https://bittertalen.nl/oefenen?open=today",
+    "allowNavigation": ["bittertalen.nl", "*.supabase.co"],
+    "errorPath": "offline.html"
+  },
+  "ios": {
+    "contentInset": "never",
+    "limitsNavigationsToAppBoundDomains": false
+  },
+  "android": {
+    "allowMixedContent": false
+  },
+  "plugins": {
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_bittertalen",
+      "iconColor": "#1F3C96"
+    }
+  }
+}
