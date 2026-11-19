@@ -36,6 +36,7 @@ function serve(state = {}) {
       state.adminAuth = req.headers.authorization || '';
       res.writeHead(200, {'content-type': 'application/json'}); return res.end(JSON.stringify(state.admin));
     }
+    if (p === '/api/group' && state.admin) { res.writeHead(200, {'content-type': 'application/json'}); return res.end(JSON.stringify({groups: [{name: 'Taalschool', code: 'ABCDEFGH', level: 'B1', seats: 20, until: '2027-06-30', teacher: 'docent@school.nl', members: 3}]})); }
     if (p === '/api/event' && state.events) {
       let b = ''; req.on('data', d => b += d); req.on('end', () => { state.events.push(JSON.parse(b)); res.writeHead(state.fail ? 502 : 204); res.end(); }); return;
     }
@@ -793,6 +794,7 @@ test('The owner overview shows accounts and study time', async t => {
       expires_in: 3600, expires_at: Math.floor(Date.now() / 1000) + 36000, user: {id: 'u1', email: 'eigenaar@example.nl', aud: 'authenticated'}})));
     await s.go('/admin'); await s.p.waitForSelector('tr.u');
     assert.equal(state.adminAuth, 'Bearer tok-1');
+    await s.p.waitForFunction(() => document.querySelector('main').textContent.includes('ABCDEFGH')); // the groups, with their code
     const text = await s.p.textContent('main');
     assert.match(text, /Anna de Vries/); assert.match(text, /anna@example\.nl/); assert.match(text, /35 мин/); // 25 today + 10 yesterday in 7 days
     assert.match(text, /KNM ×3 · 72%/); assert.match(text, /12 \(75%\)/); assert.match(text, /20 \(85%\)/); assert.match(text, /120 \(75%\)/); // today, 7 days, in all assert.match(text, /Без имени/);
