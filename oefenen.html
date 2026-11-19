@@ -387,6 +387,7 @@ textarea{display:block;width:100%;font-size:var(--fs-b);line-height:1.5;padding:
 .ghost{background:none;border:1px solid var(--line);color:var(--ink);border-radius:var(--rc);padding:11px 12px;min-height:50px;font-weight:600;font-size:var(--fs-b)}
 .ghost:active,.back:active{background:var(--surface)}
 .wide{width:100%}
+.offer{margin-block:14px} .note>[data-offer]{margin-top:10px}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .opt.sel{border-color:var(--oranje);box-shadow:inset 0 0 0 2px var(--oranje)}
 .opts.one .opt.sel{box-shadow:none;border-color:var(--line);font-weight:600}
@@ -1616,6 +1617,14 @@ async function authHead(){
   return{Authorization:"Bearer "+t};
 }
 // Why Claude can't grade now, or null
+// Offering the paid checks where a learner wants them: when the free checks are used up, and after a writing or speaking
+// proefexamen below the practice target (the moments the buyer panel named). Only with an account, Plus or the Examenpas
+// switched on, and a level that isn't covered yet. The button opens the one Plus screen.
+const canOffer=()=>!!(acc.user&&acc.cfg&&(acc.cfg.pass||acc.cfg.plus)&&!isPlus(lvl()));
+const offerBtn=()=>`<button type="button" class="ghost wide" data-offer>${acc.cfg.pass?"Bekijk de Examenpas":"Bekijk Bittertalen Plus"}</button>`;
+const offerHTML=c=>c==="limit"&&canOffer()?"<br>"+offerBtn():"";
+const examOffer=()=>canOffer()?`<div class="offer"><p class="note">${acc.cfg.pass?`Wil je tot je examen elke dag laten nakijken? Met de Examenpas kan dat ${Math.round((acc.cfg.pass.days||42)/7)} weken lang, voor één betaling.`:"Wil je tot je examen elke dag laten nakijken? Met Bittertalen Plus kan dat."}</p>${offerBtn()}</div>`:"";
+document.addEventListener("click",e=>{if(e.target.closest("[data-offer]")){stopSpeak();plusScreen()}});
 const noCheck=c=>c==="quota_unavailable"?"Nakijken is tijdelijk niet beschikbaar. Je kunt verder oefenen.":c==="login"?(acc.free===0?"Je gratis proefbeurten zijn op. Maak een gratis account voor nog 7 gratis nakijkbeurten.":"Log in bij Profiel om dit door Bittertalen te laten nakijken."):c==="limit"?((acc.checkPeriod||myPeriod())!=="day"?(acc.cfg?.plus&&!isPlus(lvl())?"Je gratis nakijkbeurten zijn op. Met Plus of de Examenpas kun je verder laten nakijken.":"Je gratis nakijkbeurten zijn op."):"Je dagtegoed is op. Morgen kun je weer laten nakijken."):c==="busy"?"Bittertalen heeft vandaag al heel veel teksten nagekeken. Morgen kan het weer.":null;
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const answer=(v,t)=>t==="past"?v[2]:t==="pastpl"?v[3]:t==="pp"?v[4]:v[5];
@@ -1940,7 +1949,7 @@ async function spGrade(q,r){
     const k=e&&e.code; b.disabled=false;
     if(k==="rate_limited"){c.hidden=false;c.disabled=false;$("fb").innerHTML=`<p class="note">Te veel verzoeken achter elkaar. Wacht een minuut en probeer het opnieuw.</p>`;return}
     $("rev").hidden=true;
-    selfGrade(q,noCheck(k)?noCheck(k)+" Vergelijk je antwoord nu met het voorbeeld.":k==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je antwoord met het voorbeeld.":"Het nakijken is niet gelukt. Vergelijk je antwoord met het voorbeeld.");
+    selfGrade(q,noCheck(k)?noCheck(k)+" Vergelijk je antwoord nu met het voorbeeld."+offerHTML(k):k==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je antwoord met het voorbeeld.":"Het nakijken is niet gelukt. Vergelijk je antwoord met het voorbeeld.");
   }
 }
 // Spreken B1 proefexamen, as on the Staatsexamen: the question is read aloud, then the thinking time runs (15 seconds for a
@@ -3024,7 +3033,7 @@ async function check(q){
     const c=e&&e.code;
     if(c==="rate_limited"){btn.disabled=false;$("txt").readOnly=false;$("fb").innerHTML=`<p class="note">Te veel verzoeken achter elkaar. Wacht een minuut en probeer het opnieuw.</p>`;return}
     btn.hidden=true;
-    selfGrade(q,noCheck(c)?noCheck(c)+" Vergelijk je tekst nu met het voorbeeld.":c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je tekst met het voorbeeld.":"Het nakijken is niet gelukt. Vergelijk je tekst met het voorbeeld.",{task,form,text});
+    selfGrade(q,noCheck(c)?noCheck(c)+" Vergelijk je tekst nu met het voorbeeld."+offerHTML(c):c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je tekst met het voorbeeld.":"Het nakijken is niet gelukt. Vergelijk je tekst met het voorbeeld.",{task,form,text});
   }
 }
 // Schrijven B1 practice: zinsopdrachten that follow each other are checked together, in one call (one check, not three)
@@ -3054,7 +3063,7 @@ async function checkZ(q){
     const c=e&&e.code;
     if(c==="rate_limited"){cur.zs=Z.slice(0,-1);btn.disabled=false;$("txt").readOnly=false;$("fb").innerHTML=`<p class="note">Te veel verzoeken achter elkaar. Wacht een minuut en probeer het opnieuw.</p>`;return}
     btn.hidden=true;
-    const msg=noCheck(c)?noCheck(c)+" Vergelijk je zinnen nu met de voorbeelden.":c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je zinnen met de voorbeelden.":"Het nakijken is niet gelukt. Vergelijk je zinnen met de voorbeelden.";
+    const msg=noCheck(c)?noCheck(c)+" Vergelijk je zinnen nu met de voorbeelden."+offerHTML(c):c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je zinnen met de voorbeelden.":"Het nakijken is niet gelukt. Vergelijk je zinnen met de voorbeelden.";
     $("fb").innerHTML=`<p class="note">${msg}</p>`+Z.map(z=>`<p class="note">${z.q.big}</p><p class="ask">Jouw zin</p><div class="sample">${esc(z.text)}</div><p class="ask">Voorbeeld</p><div class="sample">${esc(z.q.right)}</div>`).join("")
       +`<div class="two"><button class="ghost" id="again">Later herhalen</button><button class="btn" id="got">Gelukt</button></div>`;
     const go=ok=>{Z.forEach(z=>record(ok,z.q));pos++;show()};
@@ -3152,7 +3161,7 @@ async function examWrite(){
       <p class="ru">${review.complete?`${review.earned} van ${review.max} punten, `:""}${good} van ${tasks.length} opdrachten voldoende${review.unfinished?`; ${review.unfinished} niet gemaakt`:""}</p></div>
       <p><b class="${review.complete?(passed?"good":"bad"):""}">${!review.complete?"Onvolledige beoordeling":passed?"Oefendoel bereikt":"Meer oefenen"}</b></p>
       <p class="note">Het oefendoel is ${passPc(exam.part)}% van de punten. Dit is een oefenresultaat. De officiële uitslag wordt door DUO bepaald.</p>
-      ${writingReviewHTML(review)}
+      ${review.complete&&!passed?examOffer():""}${writingReviewHTML(review)}
       <details class="writing-details"><summary>Bekijk elke opdracht en de verbeterde teksten</summary>${body}</details>${foot}`;
     const html=card.innerHTML, state={cur:exam,queue:tasks,pos,total,right,answered,planId}, backAction=$("back").onclick, backLabel=$("back").getAttribute("aria-label");
     const restoreResult=()=>{
@@ -3174,7 +3183,7 @@ async function examWrite(){
     wire();
   }catch(error){
     const code=error?.code;
-    fallback(noCheck(code)?noCheck(code)+" Vergelijk je teksten nu met de voorbeelden.":code==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je teksten met de voorbeelden.":code==="rate_limited"?"Te veel verzoeken achter elkaar. Probeer het over een minuut opnieuw.":"Het nakijken is niet gelukt. Vergelijk je teksten met de voorbeelden.");
+    fallback(noCheck(code)?noCheck(code)+" Vergelijk je teksten nu met de voorbeelden."+offerHTML(code):code==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je teksten met de voorbeelden.":code==="rate_limited"?"Te veel verzoeken achter elkaar. Probeer het over een minuut opnieuw.":"Het nakijken is niet gelukt. Vergelijk je teksten met de voorbeelden.");
   }
 }
 async function examSpeak(){
@@ -3198,10 +3207,10 @@ async function examSpeak(){
     keepRes(cur.part,pc);
     card.innerHTML=`<div class="done"><p class="ask">${cur.t}: uitslag</p><div class="big">${pc}%</div><p class="ru">${scored?`${pts} van ${max} punten, `:""}${good} van ${queue.length} antwoorden voldoende${A.length<queue.length?`; ${queue.length-A.length} ${queue.length-A.length===1?"vraag":"vragen"} niet beantwoord`:""}</p></div>
       <p><b class="${pass?"good":"bad"}">${pass?"Oefendoel bereikt":"Meer oefenen"}</b></p>
-      <p class="note">Het oefendoel is ${passPc(cur.part)}%. Dit beoordeelt alleen je uitgeschreven antwoord. Uitspraak en tempo tellen op het examen ook mee.</p>`+body+foot; bind();
+      <p class="note">Het oefendoel is ${passPc(cur.part)}%. Dit beoordeelt alleen je uitgeschreven antwoord. Uitspraak en tempo tellen op het examen ook mee.</p>`+(pass?"":examOffer())+body+foot; bind();
   }catch(e){
     const c=e&&e.code;
-    plain(noCheck(c)?noCheck(c)+" Vergelijk je antwoorden nu met de voorbeelden.":c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je antwoorden met de voorbeelden.":c==="rate_limited"?"Te veel verzoeken achter elkaar. Probeer het over een minuut opnieuw.":"Het nakijken is niet gelukt. Vergelijk je antwoorden met de voorbeelden.");
+    plain(noCheck(c)?noCheck(c)+" Vergelijk je antwoorden nu met de voorbeelden."+offerHTML(c):c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je antwoorden met de voorbeelden.":c==="rate_limited"?"Te veel verzoeken achter elkaar. Probeer het over een minuut opnieuw.":"Het nakijken is niet gelukt. Vergelijk je antwoorden met de voorbeelden.");
   }
 }
 function finish(){
@@ -4107,7 +4116,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="ce1d003d3e";
+const UIV="d8d1f77199";
 let uiP=null;
 function uiLoaded(){ // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});
