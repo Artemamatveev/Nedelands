@@ -9,8 +9,10 @@ const SERVICE = (process.env.SUPABASE_SERVICE_ROLE_KEY || "").trim();
 export const accounts = !!(URL_ && ANON && SERVICE);
 export const supaUrl = URL_;
 export const anonKey = ANON;
-// Free account checks per Amsterdam calendar week, shared by the levels not covered by Plus.
-export const LIMIT = Math.max(1, parseInt(process.env.FREE_WEEKLY_CHECKS, 10) || 7);
+// Free account checks in all (once, not per week), shared by the levels not covered by Plus.
+export const LIMIT = Math.max(1, parseInt(process.env.FREE_ACCOUNT_CHECKS, 10) || 7);
+// The lifetime bucket of check_week_usage (see the free_total_checks migration)
+export const ONCE_BUCKET = "2000-01-03";
 // With Bittertalen Plus (a Stripe subscription, see below) PLUS_LIMIT a day instead
 export const PLUS = Math.max(1, parseInt(process.env.PLUS_LIMIT, 10) || 60);
 // One task is 1; a proefexamen Schrijven (4 tasks) 2, Schrijven B1 (12) 4, Spreken A2 or B1 (16 answers) 6: roughly what they cost in tokens
@@ -27,7 +29,7 @@ export async function caller(req) {
 }
 
 // Reserve/refund in the same period, including when grading crosses midnight or Monday.
-export async function useChecks(uid, cost, lim = LIMIT, period = "week", checkedAt = new Date().toISOString()) {
+export async function useChecks(uid, cost, lim = LIMIT, period = "once", checkedAt = new Date().toISOString()) {
   const r = await fetch(`${URL_}/rest/v1/rpc/use_plan_checks`, {
     method: "POST",
     headers: { apikey: SERVICE, authorization: `Bearer ${SERVICE}`, "content-type": "application/json" },
@@ -85,8 +87,8 @@ export async function allowanceOf(uid) {
     if (!Number.isSafeInteger(n) || n < 0) throw new Error("Invalid quota counter");
     return n;
   };
-  const [dailyUsed, weeklyUsed] = await Promise.all([read("check_day_usage", "day", day), read("check_week_usage", "week", week)]);
-  return { dailyUsed, weeklyUsed, day, week };
+  const [dailyUsed, weeklyUsed, totalUsed] = await Promise.all([read("check_day_usage", "day", day), read("check_week_usage", "week", week), read("check_week_usage", "week", ONCE_BUCKET)]);
+  return { dailyUsed, weeklyUsed, totalUsed, day, week };
 }
 
 // All checks of a day together, logged-in and free (default 400, CHECK_CAP): a ceiling on what Claude can cost in a

@@ -74,8 +74,8 @@ test('The real quota reader rejects JSON values that could otherwise coerce into
   }
 });
 
-test('Free accounts use the weekly allowance; covered Plus levels keep the daily allowance',async()=>{
-  const free=await handler({pay:true,plan:null});assert.equal(free.res.statusCode,200);assert.deepEqual(free.lims,[7]);assert.deepEqual(free.periods,['week']);assert.deepEqual(free.quotas,[1]);
+test('Free accounts use the one-time allowance; covered Plus levels keep the daily allowance',async()=>{
+  const free=await handler({pay:true,plan:null});assert.equal(free.res.statusCode,200);assert.deepEqual(free.lims,[7]);assert.deepEqual(free.periods,['once']);assert.deepEqual(free.quotas,[1]);
   const plus=await handler({pay:true,plan:{status:'active'}});assert.equal(plus.res.statusCode,200);assert.deepEqual(plus.lims,[60]);assert.deepEqual(plus.periods,['day']);assert.deepEqual(plus.quotas,[]);
   const ended=await handler({pay:true,plan:{status:'canceled'}});assert.deepEqual(ended.lims,[7]);
   const off=await handler({pay:false,plan:{status:'active'}});assert.deepEqual(off.lims,[7]);
@@ -88,10 +88,10 @@ test('A Plus check that fails gives the learner the check back at the Plus allow
   const r=await handler({pay:true,plan:{status:'trialing'},providerFailure:true});assert.equal(r.res.statusCode,502);assert.deepEqual(r.usage,[1,-1]);assert.deepEqual(r.lims,[60,60]);assert.deepEqual(r.quotas,[]);
   assert.equal(r.stamps[0],r.stamps[1]);assert.deepEqual(r.periods,['day','day']);
 });
-test('An A2 subscriber uses the free weekly B1 budget; a full free speaking exam costs six units',async()=>{
-  const b1=await handler({pay:true,plan:{status:'active',level:'A2'},part:'sb'});assert.deepEqual(b1.periods,['week']);assert.deepEqual(b1.lims,[7]);
-  const exam=await handler({part:'sp',tasksCount:16});assert.equal(exam.res.statusCode,200);assert.deepEqual(exam.usage,[6]);assert.equal(exam.res.body.period,'week');assert.equal(exam.res.body.left,1);
-  const failed=await handler({providerFailure:true});assert.deepEqual(failed.periods,['week','week']);assert.equal(failed.stamps[0],failed.stamps[1]);
+test('An A2 subscriber uses the free one-time B1 budget; a full free speaking exam costs six units',async()=>{
+  const b1=await handler({pay:true,plan:{status:'active',level:'A2'},part:'sb'});assert.deepEqual(b1.periods,['once']);assert.deepEqual(b1.lims,[7]);
+  const exam=await handler({part:'sp',tasksCount:16});assert.equal(exam.res.statusCode,200);assert.deepEqual(exam.usage,[6]);assert.equal(exam.res.body.period,'once');assert.equal(exam.res.body.left,1);
+  const failed=await handler({providerFailure:true});assert.deepEqual(failed.periods,['once','once']);assert.equal(failed.stamps[0],failed.stamps[1]);
   const cap=await handler({guest:true,freeLeft:-2});assert.equal(cap.res.statusCode,429);assert.equal(cap.res.body.error,'busy');
 });
 test('Without a login only the free single checks, then a login answer',async()=>{
@@ -142,14 +142,20 @@ test('A2 Plus cannot grant B1 paid checks; B1 Plus covers both levels',async()=>
   assert.deepEqual(unknown.lims,[7]);
 });
 
-test('Practice is graded by GRADING_MODEL (Sonnet by default), a proefexamen by GRADING_MODEL_EXAM (Opus by default)',async()=>{
-  assert.deepEqual((await handler()).models,['claude-sonnet-5-5']);
-  assert.deepEqual((await handler({tasksCount:3})).models,['claude-sonnet-5-5']);
-  assert.deepEqual((await handler({tasksCount:4})).models,['claude-opus-5-5']);
-  assert.deepEqual((await handler({part:'sp',tasksCount:16})).models,['claude-opus-5-5']);
-  const env={GRADING_MODEL:'claude-haiku-5-5',GRADING_MODEL_EXAM:' claude-sonnet-5-5 '};
-  assert.deepEqual((await handler({env})).models,['claude-haiku-5-5']);
-  assert.deepEqual((await handler({env,tasksCount:4})).models,['claude-sonnet-5-5']);
+test('Free checks use GRADING_MODEL_FREE (Haiku); paid practice GRADING_MODEL (Sonnet), a paid proefexamen GRADING_MODEL_EXAM (Opus)',async()=>{
+  const paid={pay:true,plan:{status:'active',level:'B1'}};
+  assert.deepEqual((await handler(paid)).models,['claude-sonnet-5-5']);
+  assert.deepEqual((await handler({...paid,tasksCount:3})).models,['claude-sonnet-5-5']);
+  assert.deepEqual((await handler({...paid,tasksCount:4})).models,['claude-opus-5-5']);
+  assert.deepEqual((await handler({...paid,part:'sp',tasksCount:16})).models,['claude-opus-5-5']);
+  assert.deepEqual((await handler()).models,['claude-haiku-5-5']);
+  assert.deepEqual((await handler({tasksCount:4})).models,['claude-haiku-5-5']);
+  assert.deepEqual((await handler({guest:true})).models,['claude-haiku-5-5']);
+  assert.deepEqual((await handler({pay:true,plan:{status:'active',level:'A2'},part:'sb'})).models,['claude-haiku-5-5'],'a level Plus does not cover is free');
+  const env={GRADING_MODEL:'claude-haiku-5-5',GRADING_MODEL_EXAM:' claude-sonnet-5-5 ',GRADING_MODEL_FREE:'claude-sonnet-5-5'};
+  assert.deepEqual((await handler({...paid,env})).models,['claude-haiku-5-5']);
+  assert.deepEqual((await handler({...paid,env,tasksCount:4})).models,['claude-sonnet-5-5']);
+  assert.deepEqual((await handler({env})).models,['claude-sonnet-5-5']);
 });
 
 test('Every graded call records its tokens per model, and a failing record never fails the grading',async()=>{
