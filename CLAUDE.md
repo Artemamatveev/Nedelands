@@ -398,6 +398,13 @@ opens in the system browser (`skipBrowserRedirect`, `Capacitor.Plugins.Browser`)
 work); Profiel shows "Dagelijkse herinnering" (`remindRow()`, local notifications, `ww-remind`). Keep these when changing
 login, Plus or Profiel. `native/` is not deployed as part of the site (`.vercelignore`).
 
+## Functions and the Vercel plan
+
+The Hobby plan deploys at most 12 functions (files in `api/` not starting with `_`); a 13th made the production build
+fail at "Deploying outputs" on 19 November 2026. `/api/thumb`, `/api/compare` and `/api/referral` are therefore rewrites
+(`vercel.json`) to `feed.js`, `admin.js` (POST) and `group.js` (`?kind=ref`), with their code in `_thumb.js`,
+`_compare.js` and `_referral.js`. Add a new endpoint the same way, or check the count first (`tests/group.test.mjs`).
+
 ## Accounts (optional)
 
 Logging in is optional; everything works without it except Claude's grading. Supabase (connected to the Vercel project
@@ -440,7 +447,7 @@ vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one comin
   config URL so a cached old daily plan is not used. The app tracks the two counters independently when switching levels.
 - Invite a friend (19 November 2026): Profiel's account group has "Nodig een vriend uit" (`refScreen()` in `#talk`): the
   link `/?ref=<code>` to share or copy. A `?ref=` on the homepage or the app is kept in `ww-ref` until there is an
-  account; `claimRef()` then posts it once to `/api/referral` (`api/referral.js`; GET gives `{code, invited, bonus}`).
+  account; `claimRef()` then posts it once to `/api/referral` (`api/_referral.js`, through `group.js`; GET gives `{code, invited, bonus}`).
   Only an account made in the last 14 days can claim (`REF_DAYS`), never its own code, once. Both get 3 extra free
   checks, the inviter for at most 10 friends (`referral_bonus()`); `api/check.js` and `/api/allowance` add `bonus` to
   the free limit, and the page's `myLimit()` follows. Tables `referral_codes` and `referrals`, server-only, migration
@@ -503,7 +510,7 @@ answers (with the share right) today / 7 days / in all, different questions, pro
 Claude checks and Plus; a row opens its minutes of the last 14 days and its exam history. Tables keep bordered, centred cells
 (the user's wish); the measurement explanation is expandable. "Расход на ИИ" lists `ai_spend` (the last 30 days, per day and
 model) in dollars from `PRICE` in the page (Anthropic's list prices, 18 November 2026: update them when they change), with
-the 7- and 30-day totals. "Сравнение моделей" (a button, ~$0.25 a run) posts to `/api/compare` (`api/compare.js`, owner
+the 7- and 30-day totals. "Сравнение моделей" (a button, ~$0.25 a run) posts to `/api/compare` (`api/_compare.js`, through `admin.js`, owner
 only, same origin): the ten made-up Schrijven A2 answers in `api/_samples.js` are graded by `GRADING_MODEL_FREE` and
 `GRADING_MODEL` through `gradeWriting()` in `api/check.js` (the practice prompt, schema, clamping and pass rule), and the
 table shows points, voldoende and error counts side by side, the rows where the verdicts differ highlighted. It loads the vendored Supabase library, reads the session the app left in
@@ -800,7 +807,7 @@ Only free sources whose episodes are entirely in Dutch. Videos play in the YouTu
 (`youtube-nocookie.com`, Dutch captions on; a Short, `sh` from the feed's /shorts/ link, gets an upright 9:16 box;
 "Volledig scherm" uses the browser's fullscreen, or on an iPhone, which has none for a page element, lets the box cover the
 screen with a ✕, `vFull()`), podcasts in `<audio>` with 10 s back and 0.75/1/1.25×.
-Thumbnails come through `api/thumb.js` (`/api/thumb?v=<id>`, only i.ytimg.com's mqdefault, CDN-cached a week), so
+Thumbnails come through `api/_thumb.js` (via `feed.js`) (`/api/thumb?v=<id>`, only i.ytimg.com's mqdefault, CDN-cached a week), so
 Google sees nobody until a video is opened. YouTube's developer policies: keep the player as it is (no overlays, ads
 and branding intact), never put the videos behind a paywall, and privacy.html links YouTube's Terms and Google's
 privacy policy.

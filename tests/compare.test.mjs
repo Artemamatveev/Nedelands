@@ -22,7 +22,7 @@ async function ask({user = null, method = 'POST', same = true, fails = ''} = {})
   };
   const context = vm.createContext({String, Math, Promise});
   const mods = Object.fromEntries(Object.entries(deps).map(([k, v]) => [k, new vm.SyntheticModule(Object.keys(v), function () { for (const [n, x] of Object.entries(v)) this.setExport(n, x); }, {context})]));
-  const module = new vm.SourceTextModule(fs.readFileSync(new URL('api/compare.js', root), 'utf8'), {context});
+  const module = new vm.SourceTextModule(fs.readFileSync(new URL('api/_compare.js', root), 'utf8'), {context});
   await module.link(s => mods[s]); await module.evaluate();
   const res = {statusCode: 200, headers: {}, setHeader(k, v) { this.headers[k] = v; }, status(n) { this.statusCode = n; return this; }, json(b) { this.body = b; return this; }};
   await module.namespace.default({method, headers: {}}, res);
