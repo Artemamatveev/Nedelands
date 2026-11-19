@@ -428,6 +428,13 @@ vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one comin
 - `GET /api/allowance` is never cached: an authenticated user gets only their own daily counter and free total (`totalUsed`); a guest gets
   the remaining browser trial. The config says `period:"once"` and `freePeriod:"once"`; new pages request the versioned
   config URL so a cached old daily plan is not used. The app tracks the two counters independently when switching levels.
+- Invite a friend (19 November 2026): Profiel's account group has "Nodig een vriend uit" (`refScreen()` in `#talk`): the
+  link `/?ref=<code>` to share or copy. A `?ref=` on the homepage or the app is kept in `ww-ref` until there is an
+  account; `claimRef()` then posts it once to `/api/referral` (`api/referral.js`; GET gives `{code, invited, bonus}`).
+  Only an account made in the last 14 days can claim (`REF_DAYS`), never its own code, once. Both get 3 extra free
+  checks, the inviter for at most 10 friends (`referral_bonus()`); `api/check.js` and `/api/allowance` add `bonus` to
+  the free limit, and the page's `myLimit()` follows. Tables `referral_codes` and `referrals`, server-only, migration
+  `20261119160000_referrals.sql` (also in `schema.sql`; run it in the SQL editor before deploying). privacy.html says so.
 - One task costs 1 check, Schrijven A2 2, Schrijven B1 4, and Spreken A2/B1 6. All other practice and example answers
   stay free. Errors refund the learner; an uncertain paid provider outcome still retains its global spend reservation.
 - Apply the reviewed migration `supabase/migrations/20261112192552_weekly_free_checks.sql` before releasing the new

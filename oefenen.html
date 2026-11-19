@@ -387,6 +387,7 @@ textarea{display:block;width:100%;font-size:var(--fs-b);line-height:1.5;padding:
 .ghost{background:none;border:1px solid var(--line);color:var(--ink);border-radius:var(--rc);padding:11px 12px;min-height:50px;font-weight:600;font-size:var(--fs-b)}
 .ghost:active,.back:active{background:var(--surface)}
 .wide{width:100%}
+.reflink{overflow-wrap:anywhere;margin-block:10px}
 .offer{margin-block:14px} .note>[data-offer]{margin-top:10px}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .opt.sel{border-color:var(--oranje);box-shadow:inset 0 0 0 2px var(--oranje)}
@@ -1259,7 +1260,7 @@ const acc={cfg:null,sb:null,user:null,left:null,used:null,freeUsed:null,usedDay:
 // Bittertalen Plus (api/plus.js): while the Stripe subscription runs, Claude checks cfg.plus.limit times a day
 const LIVE=["active","trialing","past_due"];
 const isPlus=level=>!!(acc.cfg&&acc.cfg.plus&&acc.plus&&LIVE.includes(acc.plus.status)&&(!acc.plus.until||Date.parse(acc.plus.until)+864e5>Date.now())&&(!level||acc.plus.level==="B1"||acc.plus.level==="A2"&&level==="A2"));
-const myLimit=(level=lvl())=>acc.cfg?(isPlus(level)?acc.cfg.plus.limit:acc.cfg.limit):7;
+const myLimit=(level=lvl())=>acc.cfg?(isPlus(level)?acc.cfg.plus.limit:acc.cfg.limit+(acc.bonus||0)):7;
 const myPeriod=(level=lvl())=>isPlus(level)?"day":"once";
 const checksLeft=part=>{
   const level=part?["wb","sb"].includes(part)?"B1":"A2":lvl(),daily=myPeriod(level)==="day";
@@ -1269,6 +1270,10 @@ const checksLeft=part=>{
 const ACFG="ww-acc-cfg",ALINK="ww-acc"; // the config, and which account this device's progress was last joined with
 const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
 const lsSet=(k,v)=>{try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}};
+// Invite a friend: a friend's code from a shared link (?ref=, also kept by the homepage) waits in ww-ref until this
+// browser has an account; claimRef() then hands it to /api/referral once (api/referral.js).
+const REFRE=/^[A-HJ-NP-Z2-9]{8}$/i;
+{const r=new URLSearchParams(location.search).get("ref");if(r&&REFRE.test(r))lsSet("ww-ref",r.toUpperCase())}
 const amsDay=(at=new Date())=>new Intl.DateTimeFormat("en-CA",{timeZone:"Europe/Amsterdam"}).format(at);
 async function trialUsage(){
   if(!acc.cfg?.free||acc.user)return;
@@ -1333,7 +1338,7 @@ async function setUser(u){
   if(!uid)lsSet(ALINK,null);
   const guest=progressOwner==="guest" && uid && (S.t || Object.keys(S.items).length) ? progressClone(S) : null;
   clearTimeout(pushT);cloud=null;syncing=null;dirty=false;
-  acc.user=u;acc.left=null;acc.used=null;acc.freeUsed=null;acc.usedDay=null;acc.plus=null;acc.saved=0;acc.step=null;acc.sync="";
+  acc.user=u;acc.left=null;acc.used=null;acc.freeUsed=null;acc.bonus=0;acc.ref=null;acc.usedDay=null;acc.plus=null;acc.saved=0;acc.step=null;acc.sync="";
   if(acc.admin){acc.admin=false;$("site-footer").innerHTML=siteFooter()} acc.adminOf=null;
   if(owner!==progressOwner){
     localSave();openProgress(owner);
@@ -1351,7 +1356,7 @@ async function setUser(u){
     addGenerated();home();
   }
   if(!u){trialUsage();return drawProfile()}
-  adminCheck();
+  adminCheck();claimRef();
   // Each tab keeps its own receipt even while another tab is syncing the same account.
   let device;
   try{device=sessionStorage.getItem("ww-sync-tab")||crypto.randomUUID();sessionStorage.setItem("ww-sync-tab",device)}catch{device=crypto.randomUUID()}
@@ -1407,7 +1412,7 @@ async function usage(){
   try{const r=await fetch("/api/allowance",{headers:await authHead(),cache:"no-store"});if(!r.ok)return;
     const j=await r.json();if(acc.user?.id!==uid)return;
     if(Number.isSafeInteger(j.dailyUsed)&&Number.isSafeInteger(j.totalUsed)){
-      acc.used=j.dailyUsed;acc.freeUsed=j.totalUsed;acc.usedDay=j.day;
+      acc.used=j.dailyUsed;acc.freeUsed=j.totalUsed;acc.usedDay=j.day;acc.bonus=Number.isSafeInteger(j.bonus)?j.bonus:0;
       acc.left=checksLeft();drawProfile();if($("plusS")&&!$("talk").hidden)plusScreen()
     }
   }catch{}
@@ -2486,7 +2491,7 @@ function drawProfile(){
       if(c.plus)b=ban("aplus","plus","Bittertalen Plus",plusLine());
       h=`<h3 class="lh">Account</h3><div class="pg"><p class="pinfo"><span role="status">${acc.sync||"Wacht op synchronisatie"}</span><br>${myPeriod()==="day"?"Nakijken vandaag:":"Gratis nakijkbeurten:"} ${checksLeft()==null?"…":`nog ${checksLeft()} van de ${myLimit()}`}</p>`
         +(L.includes("passkey")?`<button type="button" class="pact" id="apk">Passkey toevoegen</button>`:"")
-        +`<button type="button" class="pact" id="aout">Uitloggen</button><button type="button" class="pact bad" id="adel">Account verwijderen</button></div>`;
+        +`<button type="button" class="pact" id="aref">Nodig een vriend uit</button><button type="button" class="pact" id="aout">Uitloggen</button><button type="button" class="pact bad" id="adel">Account verwijderen</button></div>`;
     }else if(L.length)b=ban("alogin","me","Inloggen of account maken","Bewaar je voortgang en laat je teksten nakijken.");
     else h=`<p class="note">Inloggen is nog niet ingesteld.</p>`;
     if(acc.msg)h+=`<p class="note">${esc(acc.msg)}</p>`;
@@ -2494,6 +2499,7 @@ function drawProfile(){
   $("pban").innerHTML=b; el.innerHTML=h;
   if($("alogin"))$("alogin").onclick=()=>{acc.msg="";welcome()};
   if($("aplus"))$("aplus").onclick=()=>{plusMsg="";plusScreen()};
+  if($("aref"))$("aref").onclick=refScreen;
   if($("apk"))$("apk").onclick=async()=>{
     try{const{error}=await acc.sb.auth.registerPasskey();if(error)throw error;acc.msg="Je passkey is gemaakt. Nu kun je ook met Face ID, Touch ID of je vingerafdruk inloggen."}
     catch(e){acc.msg=/NotAllowed|abort|cancel/i.test(String(e&&(e.message||e.name)))?"Gestopt.":"Een passkey maken lukt hier niet."}
@@ -3595,6 +3601,49 @@ const plusLine=()=>{const p=acc.plus,c=acc.cfg.plus;
   if(p.pass)return`Geldig tot ${plusDay(p.until)}`;
   return p.status==="past_due"?"Je betaling is niet gelukt":!p.until?"Actief":p.ends?`Loopt af op ${plusDay(p.until)}`:`Actief · verlengt op ${plusDay(p.until)}`};
 // Kies je avatar: a grid of the avatars, the chosen one with an orange ring; a tap picks it and goes back to Profiel
+async function claimRef(){
+  const code=lsGet("ww-ref"),uid=acc.user?.id; if(!code||!uid)return;
+  try{
+    const r=await fetch("/api/referral",{method:"POST",headers:{...await authHead(),"content-type":"application/json"},body:JSON.stringify({code})});
+    if(!r.ok)return; // try again at the next start
+    const j=await r.json(); if(acc.user?.id!==uid)return;
+    lsSet("ww-ref",null);
+    if(j.result==="ok"){acc.msg="Welkom! Jij en je vriend krijgen allebei 3 extra gratis nakijkbeurten.";await usage();drawProfile()}
+  }catch{}
+}
+const REFSHARE={nl:"Ik oefen voor het inburgeringsexamen met Bittertalen. Met mijn link krijg je 3 extra gratis nakijkbeurten:",
+  en:"I practise for the Dutch integration exam with Bittertalen. With my link you get 3 extra free checks:",
+  ar:"أتدرّب على امتحان الاندماج الهولندي مع Bittertalen. برابطي تحصل على 3 تصحيحات مجانية إضافية:",
+  tr:"Hollanda uyum sınavına Bittertalen ile hazırlanıyorum. Linkimle 3 ek ücretsiz kontrol alırsın:",
+  hi:"मैं Bittertalen से डच एकीकरण परीक्षा का अभ्यास करता/करती हूँ। मेरे लिंक से आपको 3 अतिरिक्त मुफ़्त जाँचें मिलेंगी:",
+  zh:"我在用 Bittertalen 准备荷兰融入考试。通过我的链接，你可以多获得 3 次免费批改：",
+  es:"Practico para el examen de integración neerlandés con Bittertalen. Con mi enlace recibes 3 revisiones gratis extra:",
+  ru:"Я готовлюсь к экзамену на интеграцию в Нидерландах с Bittertalen. По моей ссылке вы получите 3 дополнительные бесплатные проверки:"};
+async function refScreen(){
+  if(!acc.user)return home();
+  closePop();hush();TK=null;$("card").innerHTML="";
+  $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;window.scrollTo(0,0);
+  tBack(TABN[tab],home);
+  const draw=msg=>{
+    const r=acc.ref, url=r&&location.origin+"/?ref="+r.code;
+    $("tbody").innerHTML=`<h2>Nodig een vriend uit</h2>
+      <p>Deel je link met een vriend. Maakt je vriend binnen 14 dagen een account met jouw link, dan krijgen jullie allebei 3 extra gratis nakijkbeurten. Dat kan met maximaal 10 vrienden.</p>
+      ${r?`<div class="sample reflink" lang="nl" dir="ltr">${esc(url)}</div>
+      <div class="two">${navigator.share?`<button type="button" class="btn" id="rshare">Deel je link</button>`:""}<button type="button" class="${navigator.share?"ghost":"btn"}" id="rcopy">Kopieer de link</button></div>
+      <p class="note" role="status">${msg||(r.invited?`Via jouw link: ${r.invited} vrienden · +${r.bonus} nakijkbeurten`:"Nog niemand heeft je link gebruikt.")}</p>`
+      :`<p class="note refwait" role="status">${msg||"Je link wordt geladen…"}</p>`}`;
+    if(!r)return;
+    const text=REFSHARE[lsGet("ww-ui")]||REFSHARE.nl;
+    if($("rshare"))$("rshare").onclick=()=>navigator.share({title:"Bittertalen",text,url}).catch(()=>{});
+    $("rcopy").onclick=()=>navigator.clipboard.writeText(url).then(()=>draw("Gekopieerd"),()=>draw("Kopieer de link hierboven."));
+  };
+  draw();
+  try{
+    const r=await fetch("/api/referral",{headers:await authHead(),cache:"no-store"});
+    if(!r.ok)throw 0; const j=await r.json(); if(!REFRE.test(j.code||""))throw 0;
+    acc.ref=j; if(!$("talk").hidden&&$("tbody").querySelector(".refwait"))draw();
+  }catch{if(!$("talk").hidden&&$("tbody").querySelector(".refwait"))draw("Je link laden lukt nu niet. Probeer het later nog eens.")}
+}
 function avScreen(){
   closePop();hush();TK=null;$("card").innerHTML="";
   $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;window.scrollTo(0,0);
@@ -4116,7 +4165,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="f3dd30ce3b";
+const UIV="5206b60f51";
 let uiP=null;
 function uiLoaded(){ // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});

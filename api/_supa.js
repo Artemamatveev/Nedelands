@@ -345,3 +345,29 @@ export async function putPlus(row) {
   const j = await r.json().catch(() => ({}));
   return j.code === "23503" ? "gone" : false;
 }
+
+// Invite a friend (table referrals, schema.sql): 3 extra free checks for both, at most 10 friends per inviter. A code can
+// only be claimed by an account made in the last REF_DAYS days, so old accounts can't swap codes.
+export const REF_DAYS = 14;
+const rpcCall = async (name, body) => {
+  const r = await rest(`rpc/${name}`, { method: "POST", body: JSON.stringify(body) });
+  if (!r.ok) throw new Error(`${name} ${r.status}`);
+  return r.json();
+};
+export async function bonusFor(uid) {
+  const rows = await rpcCall("referral_bonus", { uid });
+  const n = Array.isArray(rows) ? rows[0]?.bonus : rows?.bonus;
+  return Number.isSafeInteger(n) && n >= 0 ? n : 0;
+}
+export async function referralOf(uid) {
+  const [code, rows] = await Promise.all([rpcCall("referral_code", { uid }), rpcCall("referral_bonus", { uid })]);
+  const row = Array.isArray(rows) ? rows[0] : rows;
+  if (typeof code !== "string") throw new Error("Invalid referral code");
+  return { code, invited: row?.invited | 0, bonus: row?.bonus | 0 };
+}
+export async function claimReferral(user, code) {
+  if (!/^[A-HJ-NP-Z2-9]{8}$/i.test(String(code || ""))) return "unknown";
+  const made = Date.parse(user.created_at || "");
+  if (!(made > Date.now() - REF_DAYS * 864e5)) return "old";
+  return rpcCall("claim_referral", { uid: user.id, ref: String(code).toUpperCase() });
+}

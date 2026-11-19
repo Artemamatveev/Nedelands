@@ -1,3 +1,5 @@
+// A friend's code from a shared link (?ref=): kept for the app, which hands it over once there is an account
+try{const r=new URLSearchParams(location.search).get("ref");if(r&&/^[A-HJ-NP-Z2-9]{8}$/i.test(r))localStorage.setItem("ww-ref",r.toUpperCase())}catch{}
 const languages = ["en", "ar", "tr", "hi", "zh", "es", "ru"];
 // Dutch copy is also in the HTML so the page is readable without scripts.
 const copy = {

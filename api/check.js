@@ -13,7 +13,7 @@
 // With accounts set up (Supabase, see _supa.js) only a signed-in user may grade, CHECK_LIMIT checks a day;
 // the answer then also has `left`, the checks left today. With Bittertalen Plus (api/plus.js) PLUS_LIMIT a day.
 import Anthropic from "@anthropic-ai/sdk";
-import { accounts, caller, checkCost, useChecks, LIMIT, PLUS, plusOn, plusFor, coversLevel, sameOrigin, FREE, visitor, useFree, useTotal, addSpend } from "./_supa.js";
+import { accounts, caller, checkCost, useChecks, LIMIT, PLUS, plusOn, plusFor, coversLevel, sameOrigin, FREE, visitor, useFree, useTotal, addSpend, bonusFor } from "./_supa.js";
 
 // Created only when the key is set, so a missing key gives a clear error instead of a crash
 // (trimmed: a key pasted into the dashboard with a trailing newline breaks the request header)
@@ -216,6 +216,7 @@ export default async function handler(req, res) {
       uid = user.id;
       plus = plusOn && coversLevel(await plusFor(uid).catch(() => null), wb || sb ? "B1" : "A2");
       if (plus) { lim = PLUS; period = "day"; }
+      else lim = LIMIT + (await bonusFor(uid).catch(() => 0)); // invited friends: extra free checks (api/referral.js)
       left = await useChecks(uid, cost, lim, period, checkedAt).catch(() => null);
       if (left == null) return res.status(502).json({ error: "failed" });
       if (left < 0) return res.status(429).json({ error: "limit", limit: lim, period, checkedAt, plus });
