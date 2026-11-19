@@ -8,7 +8,7 @@ Object.assign(process.env,{SUPABASE_URL:'https://x.supabase.test',SUPABASE_ANON_
   STRIPE_SECRET_KEY:'sk_test_x',STRIPE_PRICE:'price_1',STRIPE_PRICE_B1:'price_b1',STRIPE_WEBHOOK_SECRET:'whsec_test',
   STRIPE_PRICE_PASS_A2:'price_pa2',STRIPE_PRICE_PASS_B1:'price_pb1'});
 const DAY=864e5;
-const db={plus:null,passes:[],session:null,gone:false},calls=[];
+const db={plus:null,passes:[],session:null,gone:false,groups:[]},calls=[];
 const passPrice=id=>({id,active:true,currency:'eur',unit_amount:id==='price_pb1'?2499:1999,recurring:null,type:'one_time'});
 globalThis.fetch=async(url,init={})=>{
   url=String(url);const m=init.method||'GET';calls.push(`${m} ${url} ${init.body||''}`);
@@ -19,6 +19,7 @@ globalThis.fetch=async(url,init={})=>{
     return J(db.passes.filter(p=>p.until>since).sort((a,b)=>b.until.localeCompare(a.until)).map(({level,until})=>({level,until})))}
   if(url.endsWith('/rest/v1/exam_pass')&&m==='POST'){if(db.gone)return J({code:'23503'},409);const row=JSON.parse(init.body);
     if(!db.passes.some(p=>p.session===row.session))db.passes.push(row);return new Response(null,{status:201})}
+  if(url.endsWith('/rest/v1/rpc/group_access'))return J(db.groups);
   if(url.includes('/v1/prices/price_p'))return J(passPrice(url.split('/').pop()));
   if(url.includes('/v1/checkout/sessions/'))return J(db.session);
   if(url.includes('/v1/checkout/sessions'))return J({url:'https://checkout.stripe.test/pass'});
@@ -86,4 +87,13 @@ test('The schema keeps passes per session, server-written, readable only by thei
   assert.doesNotMatch(block,/grant (insert|update|delete)[^;]*to authenticated/);
   const mig=fs.readFileSync(new URL('../supabase/migrations/20261119003000_exam_pass.sql',import.meta.url),'utf8');
   assert.ok(mig.includes(block.slice(0, block.indexOf('using ((select auth.uid()) = user_id);'))));
+});
+
+test('A school group gives the Plus checks of its level until its end date, unless something covers more',async()=>{
+  db.plus=null;db.passes=[];db.groups=[{name:'Taalschool Delft',level:'B1',until:'2099-06-30'}];
+  const p=await plusFor('u1');assert.equal(p.level,'B1');assert.equal(p.group,'Taalschool Delft');assert.equal(p.pass,true);assert.ok(coversLevel(p,'B1'));
+  db.groups=[{name:'Bedrijf',level:'A2',until:'2099-06-30'}];db.passes=[{session:'cs_g',level:'B1',until:new Date(Date.now()+5*DAY).toISOString()}];
+  const q=await plusFor('u1');assert.equal(q.level,'B1');assert.equal(q.group,undefined,'a B1 pass covers more than an A2 group');
+  db.groups=[];db.passes=[];
+  assert.equal(await plusFor('u1'),null);
 });

@@ -24,6 +24,7 @@ async function handler(options={}){
     useFree:async(_id,cost,stamp)=>{usage.push(cost);stamps.push(stamp);return options.freeLeft??1},
     useTotal:async cost=>{quotas.push(cost);return 'total' in options?options.total:399},
     addSpend:async(model,u)=>{spends.push([model,u.input_tokens,u.output_tokens]);if(options.spendFails)throw Error('down');return true},
+    bonusFor:async()=>{if(options.bonusFails)throw Error('down');return options.bonus??0},
     PLUS:60,plusOn:!!options.pay,
     plusFor:async()=>{if(options.plusFails)throw Error('down');return options.plan??null},
     coversLevel:(p,level)=>!!p&&['active','trialing','past_due'].includes(p.status)&&(p.level==='B1'||(p.level||'A2')==='A2'&&level==='A2')
@@ -162,4 +163,10 @@ test('Every graded call records its tokens per model, and a failing record never
   const r=await handler();assert.deepEqual(r.spends,[['test-model',100,30]]);assert.equal(r.res.statusCode,200);
   const f=await handler({spendFails:true});assert.equal(f.res.statusCode,200);assert.deepEqual(f.usage,[1]);
   const refused=await handler({stopReason:'refusal'});assert.equal(refused.spends.length,1);
+});
+
+test('Invited friends add their extra checks to the free allowance; a failed lookup keeps the plain seven; Plus is untouched',async()=>{
+  assert.deepEqual((await handler({bonus:6})).lims,[13]);
+  assert.deepEqual((await handler({bonusFails:true})).lims,[7]);
+  assert.deepEqual((await handler({bonus:6,pay:true,plan:{status:'active'}})).lims,[60]);
 });

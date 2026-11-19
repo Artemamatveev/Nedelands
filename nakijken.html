@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>@view-transition{navigation:auto}@media(prefers-reduced-motion:reduce){@view-transition{navigation:none}}</style>
+<link rel="stylesheet" href="/motion-v1.css">
+<title>Zo kijkt Bittertalen na</title>
+<meta name="description" content="Hoe Bittertalen je teksten en gesproken antwoorden nakijkt: de punten van DUO, twee voorbeelden en wat je moet weten.">
+<link rel="canonical" href="https://bittertalen.nl/nakijken">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=bittie1">
+<script>
+(() => {
+  const desktop=matchMedia("(min-width:960px) and (hover:hover) and (pointer:fine)");
+  const installed=matchMedia("(display-mode: standalone)");
+  const update=()=>document.documentElement.toggleAttribute("data-desktop",desktop.matches&&!installed.matches&&navigator.standalone!==true);
+  desktop.addEventListener("change",update);
+  installed.addEventListener("change",update);
+  update();
+})();
+</script>
+<style>
+/* The same Delfts blauw as the app: tin-glaze white, cobalt, the system font, one plain tile on the frosted windmill;
+   Examenblad shapes (round tile, nearly square controls), sections like the exam form, the language as a plain globe */
+:root{
+  --surface:#EEF2FA; --wash:#C9D6F2; --ink:#14213D; --soft:#56617C; --line:#D6DDEB; --blue:#1F3C96; --oranje:#C8500C;
+  --card:#FFFFFF; --glass:rgba(240,244,252,.55); --lift:0 1px 2px rgba(8,16,40,.06),0 8px 24px rgba(8,16,40,.10);
+  --r:20px; --rc:4px;
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"],[data-desktop]){
+  --surface:#0A0F1B; --wash:#1D2436; --ink:#EEF1F7; --soft:#9EA7BA; --line:#283149; --blue:#9DB4F5; --oranje:#FF8A3D;
+  --card:#131A2A; --glass:rgba(10,15,27,.7); --lift:0 1px 2px rgba(0,0,0,.4),0 10px 28px rgba(0,0,0,.45); } }
+:root[data-theme="dark"]:not([data-desktop]){
+  --surface:#0A0F1B; --wash:#1D2436; --ink:#EEF1F7; --soft:#9EA7BA; --line:#283149; --blue:#9DB4F5; --oranje:#FF8A3D;
+  --card:#131A2A; --glass:rgba(10,15,27,.7); --lift:0 1px 2px rgba(0,0,0,.4),0 10px 28px rgba(0,0,0,.45); }
+:root[data-desktop]{color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.55}
+body::before{content:"";position:fixed;inset:-24px;z-index:-2;background:url(/art/molen-glass.jpg) 70% 40%/cover}
+body::after{content:"";position:fixed;inset:0;z-index:-1;background:var(--glass)}
+main{max-width:720px;margin:0 auto;padding:16px 16px 48px}
+article{background:var(--card);border-radius:var(--r);box-shadow:var(--lift);padding:8px 20px 24px}
+.back{display:inline-flex;align-items:center;gap:6px;min-height:44px;margin-top:12px;border:1px solid var(--line);color:var(--ink);font-weight:600;font-size:16px;padding-block:5px 6px;padding-inline:10px 14px;border-radius:var(--rc);text-decoration:none}
+@media (hover:hover){.back:hover{background:var(--surface)}}
+h1{font-size:28px;font-weight:600;line-height:1.2;margin:20px 0 6px}
+h2{color:var(--blue);font-size:15px;font-weight:600;line-height:1.3;margin:26px 0 8px;padding-top:18px;border-top:1px solid var(--line)}
+p,li{margin:0 0 10px} ul{padding-inline-start:22px;margin:0 0 10px}
+.sub{color:var(--soft)}
+a{color:var(--blue)}
+a:focus-visible{outline:3px solid var(--oranje);outline-offset:2px}
+.box{border-inline-start:3px solid var(--wash);padding-block:2px;padding-inline-start:14px;margin:14px 0}
+@media (min-width:768px){article{padding:12px 36px 32px}}
+.top{display:flex;justify-content:flex-start;margin:0 0 6px}
+.lang{position:relative;display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;color:var(--ink)}
+.lang svg{flex:none;width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8}
+.lang :is(#langs,.dn){display:none}
+.lang select{position:absolute;inset:0;width:100%;height:100%;opacity:0;font-size:16px;border:0;cursor:pointer}
+.lang:focus-within{outline:2px solid var(--oranje);outline-offset:2px}
+[dir=rtl] .back>span{display:inline-block;transform:scaleX(-1)}
+.hero{display:block;width:100%;aspect-ratio:1200/630;object-fit:cover;border-radius:var(--rc);margin:18px 0 6px}
+.cap{font-size:13px;color:var(--soft);margin:0 0 6px}
+.pts{width:100%;border-collapse:collapse;margin:6px 0 12px;font-size:15px}
+.pts th,.pts td{text-align:start;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+.pts th{color:var(--soft);font-weight:600}
+.pts td:nth-child(2){white-space:nowrap;font-variant-numeric:tabular-nums}
+.ex{border:1px solid var(--line);border-radius:var(--rc);padding:12px 14px;margin:12px 0}
+.ex .q{font-size:15px;color:var(--soft);margin:0 0 8px}
+.ex .a{white-space:pre-line;margin:0 0 10px}
+.ex .s{font-size:15px;margin:0}
+.ex .s b{font-weight:600}
+[lang=nl].ex,.ex [lang=nl]{direction:ltr;text-align:left}
+.cta{display:inline-flex;align-items:center;min-height:44px;margin-top:4px;padding:8px 16px;border-radius:var(--rc);background:#1F3C96;color:#fff;text-decoration:none;font-weight:600}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"],[data-desktop]) .cta{background:#2A4AAE}}
+.cta:focus-visible{outline:3px solid var(--oranje);outline-offset:2px}
+</style>
+</head>
+<body>
+<main>
+<div class="top"><label class="lang"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.6 3.9 5.6 3.9 9s-1.3 6.4-3.9 9c-2.6-2.6-3.9-5.6-3.9-9s1.3-6.4 3.9-9z"/></svg><span id="langs">NL</span><svg class="dn" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4"/></svg><select id="lang" aria-label="Taal"><option value="nl">Nederlands</option><option value="en">English</option><option value="ar">العربية</option><option value="tr">Türkçe</option><option value="hi">हिन्दी</option><option value="zh">中文</option><option value="es">Español</option><option value="ru">Русский</option></select></label></div>
+<article data-l="nl" lang="nl">
+<a class="back" href="/"><span aria-hidden="true">←</span>Bittertalen</a>
+<h1>Zo kijkt Bittertalen na</h1>
+<p>Bij Schrijven en Spreken leest Claude, een AI van Anthropic, je antwoord. Claude geeft punten op dezelfde onderdelen die DUO beoordeelt, wijst je fouten aan en geeft de verbeterde tekst. Hier zie je hoe dat werkt.</p>
+<h2>De punten bij Schrijven A2</h2>
+<table class="pts"><thead><tr><th>Onderdeel</th><th>Punten</th><th>Wat telt</th></tr></thead><tbody><tr><td>Inhoud</td><td>0–3</td><td>Heb je gedaan wat de opdracht vraagt? Is je tekst duidelijk, met een passende aanhef en groet?</td></tr><tr><td>Woorden</td><td>0–2</td><td>Gebruik je genoeg en passende woorden?</td></tr><tr><td>Grammatica</td><td>0–2</td><td>0–2 fouten: 2 punten, 3–5 fouten: 1 punt, 6 of meer: 0 punten.</td></tr><tr><td>Spelling</td><td>0–2</td><td>Hoeveel spelfouten, en kun je de woorden nog goed herkennen?</td></tr><tr><td>Samenhang</td><td>0–1</td><td>Hangen je zinnen samen, met woorden als en, maar, want en daarna?</td></tr></tbody></table>
+<p class="sub">Krijg je 0 voor inhoud, dan zijn alle punten 0. In Bittertalen is een tekst voldoende met minstens 2 punten voor inhoud en 7 van de 10 punten. Dat is ons oefendoel, niet de officiële norm van DUO.</p>
+<h2>Twee voorbeelden</h2>
+<p>De voorbeelden zijn verzonnen. Zo tellen de punten volgens de regels hierboven.</p>
+<h2>Voorbeeld 1: voldoende</h2>
+<div class="ex"><p class="q"><b>Opdracht:</b> <span lang="nl">Je vriendin Lotte heeft je uitgenodigd voor haar verjaardag op zaterdag. Je kunt niet komen. Schrijf haar een berichtje. Feliciteer haar, schrijf waarom je niet kunt komen en stel voor om een andere keer af te spreken.</span></p>
+<p class="q"><b>Antwoord:</b></p><p class="a" lang="nl">Hoi Lotte,
+Gefeliciteerd met je verjaardag! Helaas ik kan niet komen op zaterdag, want mijn moeder komt uit Turkije en ik moet haar ophalen van Schiphol. Zullen we volgende week samen koffie drinken?
+Liefs,
+Elif</p>
+<p class="s"><b>Punten:</b> Inhoud 3/3 · Woorden 2/2 · Grammatica 2/2 · Spelling 2/2 · Samenhang 1/1 · <b>Totaal 10/10</b></p></div>
+<p>Alle drie de punten van de opdracht staan erin. Er is één fout in de woordvolgorde: na ‘helaas’ komt eerst het werkwoord (‘helaas kan ik’). Dat is één grammaticafout, dus nog 2 punten.</p>
+<h2>Voorbeeld 2: nog niet voldoende</h2>
+<div class="ex"><p class="q"><b>Opdracht:</b> <span lang="nl">Je nieuwe buren maken elke avond laat veel lawaai. Schrijf een briefje aan de buren. Stel jezelf voor, schrijf wat het probleem is en vraag of ze na tien uur stiller kunnen zijn.</span></p>
+<p class="q"><b>Antwoord:</b></p><p class="a" lang="nl">Hoi buren,
+Ik ben jullie buurman. Jullie maken altijd lawaai. Ik kan niet slapen. Dat is niet goed.</p>
+<p class="s"><b>Punten:</b> Inhoud 1/3 · Woorden 1/2 · Grammatica 2/2 · Spelling 2/2 · Samenhang 0/1 · <b>Totaal 6/10</b></p></div>
+<p>Er zijn bijna geen fouten, maar de vraag ontbreekt: de schrijver vraagt niet of de buren na tien uur stiller kunnen zijn. Daarom 1 punt voor inhoud, en dan is de tekst niet voldoende. De zinnen staan ook los van elkaar.</p>
+<h2>Spreken</h2>
+<p>Je telefoon schrijft je antwoord eerst uit. Daarna geeft Claude punten voor inhoud (0–3), woorden (0–2), grammatica (0–2) en samenhang (0–1). Uitspraak en tempo kan Bittertalen niet beoordelen. Op het echte examen tellen die wel mee.</p>
+<h2>Wat je moet weten</h2>
+<ul><li>Bittertalen is niet van DUO. Je punten zijn een oefenresultaat. Ze voorspellen niet of je slaagt.</li><li>Een AI kan zich vergissen. Vergelijk je antwoord altijd ook met het voorbeeldantwoord.</li><li>Gratis nakijkbeurten gebruiken Claude Haiku, een sneller model. Met Plus of de Examenpas kijkt Claude Sonnet na, en bij een proefexamen Claude Opus. We vergelijken de modellen regelmatig met dezelfde teksten.</li><li>De officiële oefenexamens vind je op <a href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" rel="noopener">inburgeren.nl ↗</a>.</li></ul>
+<h2>Probeer het zelf</h2>
+<p><a class="cta" href="/oefenen?open=today">Probeer gratis een tekst →</a></p>
+</article>
+<article data-l="en" lang="en" hidden>
+<a class="back" href="/"><span aria-hidden="true">←</span>Bittertalen</a>
+<h1>How Bittertalen checks your work</h1>
+<p>In Writing and Speaking, Claude, an AI by Anthropic, reads your answer. Claude gives points on the same parts that DUO assesses, marks your mistakes and gives you the corrected text. Here you can see how that works.</p>
+<h2>The points in Writing A2</h2>
+<table class="pts"><thead><tr><th>Part</th><th>Points</th><th>What counts</th></tr></thead><tbody><tr><td>Content</td><td>0–3</td><td>Did you do what the task asks? Is your text clear, with a suitable greeting and closing?</td></tr><tr><td>Words</td><td>0–2</td><td>Do you use enough suitable words?</td></tr><tr><td>Grammar</td><td>0–2</td><td>0–2 mistakes: 2 points, 3–5 mistakes: 1 point, 6 or more: 0 points.</td></tr><tr><td>Spelling</td><td>0–2</td><td>How many spelling mistakes, and can the words still be recognised?</td></tr><tr><td>Coherence</td><td>0–1</td><td>Do your sentences connect, with words like en, maar, want and daarna?</td></tr></tbody></table>
+<p class="sub">If you get 0 for content, all points are 0. In Bittertalen a text is sufficient with at least 2 points for content and 7 of the 10 points. That is our practice target, not DUO&#x27;s official standard.</p>
+<h2>Two examples</h2>
+<p>The examples are made up. This is how the points add up under the rules above.</p>
+<h2>Example 1: sufficient</h2>
+<div class="ex"><p class="q"><b>Task:</b> <span lang="nl">Je vriendin Lotte heeft je uitgenodigd voor haar verjaardag op zaterdag. Je kunt niet komen. Schrijf haar een berichtje. Feliciteer haar, schrijf waarom je niet kunt komen en stel voor om een andere keer af te spreken.</span></p>
+<p class="q"><b>Answer:</b></p><p class="a" lang="nl">Hoi Lotte,
+Gefeliciteerd met je verjaardag! Helaas ik kan niet komen op zaterdag, want mijn moeder komt uit Turkije en ik moet haar ophalen van Schiphol. Zullen we volgende week samen koffie drinken?
+Liefs,
+Elif</p>
+<p class="s"><b>Points:</b> Content 3/3 · Words 2/2 · Grammar 2/2 · Spelling 2/2 · Coherence 1/1 · <b>Total 10/10</b></p></div>
+<p>All three points of the task are there. There is one word-order mistake: after ‘helaas’ the verb comes first (‘helaas kan ik’). That is one grammar mistake, so still 2 points.</p>
+<h2>Example 2: not sufficient yet</h2>
+<div class="ex"><p class="q"><b>Task:</b> <span lang="nl">Je nieuwe buren maken elke avond laat veel lawaai. Schrijf een briefje aan de buren. Stel jezelf voor, schrijf wat het probleem is en vraag of ze na tien uur stiller kunnen zijn.</span></p>
+<p class="q"><b>Answer:</b></p><p class="a" lang="nl">Hoi buren,
+Ik ben jullie buurman. Jullie maken altijd lawaai. Ik kan niet slapen. Dat is niet goed.</p>
+<p class="s"><b>Points:</b> Content 1/3 · Words 1/2 · Grammar 2/2 · Spelling 2/2 · Coherence 0/1 · <b>Total 6/10</b></p></div>
+<p>There are almost no mistakes, but the request is missing: the writer does not ask the neighbours to be quieter after ten. So 1 point for content, and then the text is not sufficient. The sentences are also not connected.</p>
+<h2>Speaking</h2>
+<p>Your phone first writes your answer down. Then Claude gives points for content (0–3), words (0–2), grammar (0–2) and coherence (0–1). Bittertalen cannot judge pronunciation and pace. In the real exam they do count.</p>
+<h2>What you should know</h2>
+<ul><li>Bittertalen does not belong to DUO. Your points are a practice result. They do not predict whether you will pass.</li><li>An AI can make mistakes. Always compare your answer with the example answer too.</li><li>Free checks use Claude Haiku, a faster model. With Plus or the exam pass, Claude Sonnet checks your work, and Claude Opus in a practice exam. We regularly compare the models on the same texts.</li><li>You can find the official practice exams at <a href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" rel="noopener">inburgeren.nl ↗</a>.</li></ul>
+<h2>Try it yourself</h2>
+<p><a class="cta" href="/oefenen?open=today">Try a text for free →</a></p>
+</article>
+<article data-l="ar" lang="ar" hidden>
+<a class="back" href="/"><span aria-hidden="true">←</span>Bittertalen</a>
+<h1>كيف يصحّح Bittertalen</h1>
+<p>في الكتابة والمحادثة يقرأ Claude، وهو ذكاء اصطناعي من Anthropic، إجابتك. يعطي Claude نقاطًا على الأجزاء نفسها التي تقيّمها DUO، ويحدد أخطاءك ويعطيك النص المصحّح. هنا ترى كيف يعمل ذلك.</p>
+<h2>النقاط في الكتابة A2</h2>
+<table class="pts"><thead><tr><th>الجزء</th><th>النقاط</th><th>ما الذي يُحسب</th></tr></thead><tbody><tr><td>المحتوى</td><td>0–3</td><td>هل فعلت ما تطلبه المهمة؟ هل نصّك واضح، مع تحية وختام مناسبين؟</td></tr><tr><td>الكلمات</td><td>0–2</td><td>هل تستخدم كلمات كافية ومناسبة؟</td></tr><tr><td>القواعد</td><td>0–2</td><td>من 0 إلى 2 أخطاء: نقطتان، من 3 إلى 5 أخطاء: نقطة واحدة، 6 أخطاء أو أكثر: 0 نقاط.</td></tr><tr><td>الإملاء</td><td>0–2</td><td>كم عدد الأخطاء الإملائية، وهل ما زال يمكن التعرّف على الكلمات؟</td></tr><tr><td>الترابط</td><td>0–1</td><td>هل جملك مترابطة، بكلمات مثل en وmaar وwant وdaarna؟</td></tr></tbody></table>
+<p class="sub">إذا حصلت على 0 في المحتوى فكل النقاط 0. في Bittertalen يكون النص كافيًا إذا حصل على نقطتين على الأقل في المحتوى و7 من 10 نقاط. هذا هدفنا للتدرّب، وليس المعيار الرسمي لـ DUO.</p>
+<h2>مثالان</h2>
+<p>المثالان مختلقان. هكذا تُحسب النقاط حسب القواعد أعلاه.</p>
+<h2>المثال 1: كافٍ</h2>
+<div class="ex"><p class="q"><b>المهمة:</b> <span lang="nl">Je vriendin Lotte heeft je uitgenodigd voor haar verjaardag op zaterdag. Je kunt niet komen. Schrijf haar een berichtje. Feliciteer haar, schrijf waarom je niet kunt komen en stel voor om een andere keer af te spreken.</span></p>
+<p class="q"><b>الإجابة:</b></p><p class="a" lang="nl">Hoi Lotte,
+Gefeliciteerd met je verjaardag! Helaas ik kan niet komen op zaterdag, want mijn moeder komt uit Turkije en ik moet haar ophalen van Schiphol. Zullen we volgende week samen koffie drinken?
+Liefs,
+Elif</p>
+<p class="s"><b>النقاط:</b> المحتوى 3/3 · الكلمات 2/2 · القواعد 2/2 · الإملاء 2/2 · الترابط 1/1 · <b>المجموع 10/10</b></p></div>
+<p>النقاط الثلاث في المهمة موجودة. يوجد خطأ واحد في ترتيب الكلمات: بعد ‘helaas’ يأتي الفعل أولًا (‘helaas kan ik’). هذا خطأ قواعد واحد، لذلك ما زالت نقطتان.</p>
+<h2>المثال 2: ليس كافيًا بعد</h2>
+<div class="ex"><p class="q"><b>المهمة:</b> <span lang="nl">Je nieuwe buren maken elke avond laat veel lawaai. Schrijf een briefje aan de buren. Stel jezelf voor, schrijf wat het probleem is en vraag of ze na tien uur stiller kunnen zijn.</span></p>
+<p class="q"><b>الإجابة:</b></p><p class="a" lang="nl">Hoi buren,
+Ik ben jullie buurman. Jullie maken altijd lawaai. Ik kan niet slapen. Dat is niet goed.</p>
+<p class="s"><b>النقاط:</b> المحتوى 1/3 · الكلمات 1/2 · القواعد 2/2 · الإملاء 2/2 · الترابط 0/1 · <b>المجموع 6/10</b></p></div>
+<p>لا توجد أخطاء تقريبًا، لكن الطلب ناقص: الكاتب لا يطلب من الجيران أن يكونوا أهدأ بعد الساعة العاشرة. لذلك نقطة واحدة للمحتوى، وعندها لا يكون النص كافيًا. والجمل أيضًا غير مترابطة.</p>
+<h2>المحادثة</h2>
+<p>يكتب هاتفك إجابتك أولًا. ثم يعطي Claude نقاطًا للمحتوى (0–3) والكلمات (0–2) والقواعد (0–2) والترابط (0–1). لا يستطيع Bittertalen تقييم النطق والسرعة. في الامتحان الحقيقي تُحسب هذه أيضًا.</p>
+<h2>ما يجب أن تعرفه</h2>
+<ul><li>Bittertalen ليس تابعًا لـ DUO. نقاطك نتيجة تدريب. وهي لا تتنبأ بنجاحك.</li><li>قد يخطئ الذكاء الاصطناعي. قارن إجابتك دائمًا بالإجابة النموذجية أيضًا.</li><li>التصحيحات المجانية تستخدم Claude Haiku، وهو نموذج أسرع. مع Plus أو تصريح الامتحان يصحّح Claude Sonnet، وفي الامتحان التجريبي Claude Opus. نقارن النماذج بانتظام على النصوص نفسها.</li><li>تجد الامتحانات التجريبية الرسمية على <a href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" rel="noopener">inburgeren.nl ↗</a>.</li></ul>
+<h2>جرّب بنفسك</h2>
+<p><a class="cta" href="/oefenen?open=today">جرّب نصًا مجانًا ←</a></p>
+</article>
+<article data-l="tr" lang="tr" hidden>
+<a class="back" href="/"><span aria-hidden="true">←</span>Bittertalen</a>
+<h1>Bittertalen nasıl kontrol eder</h1>
+<p>Yazma ve Konuşma bölümlerinde, Anthropic&#x27;in yapay zekâsı Claude yanıtını okur. Claude, DUO&#x27;nun değerlendirdiği aynı bölümlere puan verir, hatalarını gösterir ve düzeltilmiş metni verir. Burada bunun nasıl çalıştığını görebilirsin.</p>
+<h2>Yazma A2&#x27;de puanlar</h2>
+<table class="pts"><thead><tr><th>Bölüm</th><th>Puan</th><th>Ne sayılır</th></tr></thead><tbody><tr><td>İçerik</td><td>0–3</td><td>Görevin istediğini yaptın mı? Metnin açık mı, uygun bir hitap ve kapanışla?</td></tr><tr><td>Kelimeler</td><td>0–2</td><td>Yeterli ve uygun kelimeler kullanıyor musun?</td></tr><tr><td>Dil bilgisi</td><td>0–2</td><td>0–2 hata: 2 puan, 3–5 hata: 1 puan, 6 veya daha fazla: 0 puan.</td></tr><tr><td>Yazım</td><td>0–2</td><td>Kaç yazım hatası var ve kelimeler hâlâ tanınabiliyor mu?</td></tr><tr><td>Bağlantı</td><td>0–1</td><td>Cümlelerin en, maar, want ve daarna gibi kelimelerle bağlanıyor mu?</td></tr></tbody></table>
+<p class="sub">İçerikten 0 alırsan tüm puanlar 0 olur. Bittertalen&#x27;de bir metin, içerikten en az 2 puan ve 10 puanın 7&#x27;si ile yeterlidir. Bu bizim alıştırma hedefimizdir, DUO&#x27;nun resmî ölçütü değildir.</p>
+<h2>İki örnek</h2>
+<p>Örnekler uydurmadır. Puanlar yukarıdaki kurallara göre böyle hesaplanır.</p>
+<h2>Örnek 1: yeterli</h2>
+<div class="ex"><p class="q"><b>Görev:</b> <span lang="nl">Je vriendin Lotte heeft je uitgenodigd voor haar verjaardag op zaterdag. Je kunt niet komen. Schrijf haar een berichtje. Feliciteer haar, schrijf waarom je niet kunt komen en stel voor om een andere keer af te spreken.</span></p>
+<p class="q"><b>Yanıt:</b></p><p class="a" lang="nl">Hoi Lotte,
+Gefeliciteerd met je verjaardag! Helaas ik kan niet komen op zaterdag, want mijn moeder komt uit Turkije en ik moet haar ophalen van Schiphol. Zullen we volgende week samen koffie drinken?
+Liefs,
+Elif</p>
+<p class="s"><b>Puan:</b> İçerik 3/3 · Kelimeler 2/2 · Dil bilgisi 2/2 · Yazım 2/2 · Bağlantı 1/1 · <b>Toplam 10/10</b></p></div>
+<p>Görevin üç maddesi de var. Bir kelime sırası hatası var: ‘helaas’tan sonra önce fiil gelir (‘helaas kan ik’). Bu bir dil bilgisi hatasıdır, yani yine 2 puan.</p>
+<h2>Örnek 2: henüz yeterli değil</h2>
+<div class="ex"><p class="q"><b>Görev:</b> <span lang="nl">Je nieuwe buren maken elke avond laat veel lawaai. Schrijf een briefje aan de buren. Stel jezelf voor, schrijf wat het probleem is en vraag of ze na tien uur stiller kunnen zijn.</span></p>
+<p class="q"><b>Yanıt:</b></p><p class="a" lang="nl">Hoi buren,
+Ik ben jullie buurman. Jullie maken altijd lawaai. Ik kan niet slapen. Dat is niet goed.</p>
+<p class="s"><b>Puan:</b> İçerik 1/3 · Kelimeler 1/2 · Dil bilgisi 2/2 · Yazım 2/2 · Bağlantı 0/1 · <b>Toplam 6/10</b></p></div>
+<p>Neredeyse hiç hata yok, ama istek eksik: yazar komşulardan saat ondan sonra daha sessiz olmalarını istemiyor. Bu yüzden içerikten 1 puan, ve metin yeterli değil. Cümleler de birbirine bağlı değil.</p>
+<h2>Konuşma</h2>
+<p>Telefonun önce yanıtını yazıya döker. Sonra Claude içerik (0–3), kelimeler (0–2), dil bilgisi (0–2) ve bağlantı (0–1) için puan verir. Bittertalen telaffuzu ve hızı değerlendiremez. Gerçek sınavda bunlar da sayılır.</p>
+<h2>Bilmen gerekenler</h2>
+<ul><li>Bittertalen DUO'ya ait değildir. Puanların bir alıştırma sonucudur. Geçip geçmeyeceğini tahmin etmez.</li><li>Yapay zekâ hata yapabilir. Yanıtını her zaman örnek yanıtla da karşılaştır.</li><li>Ücretsiz kontroller daha hızlı bir model olan Claude Haiku'yu kullanır. Plus veya sınav kartıyla Claude Sonnet, deneme sınavında ise Claude Opus kontrol eder. Modelleri düzenli olarak aynı metinlerle karşılaştırıyoruz.</li><li>Resmî deneme sınavlarını <a href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" rel="noopener">inburgeren.nl ↗</a> adresinde bulabilirsin.</li></ul>
+<h2>Kendin dene</h2>
+<p><a class="cta" href="/oefenen?open=today">Bir metni ücretsiz dene →</a></p>
+</article>
+<article data-l="hi" lang="hi" hidden>
+<a class="back" href="/"><span aria-hidden="true">←</span>Bittertalen</a>
+<h1>Bittertalen कैसे जाँचता है</h1>
+<p>लिखने और बोलने में Claude, Anthropic का एक AI, आपका जवाब पढ़ता है। Claude उन्हीं हिस्सों पर अंक देता है जिन्हें DUO जाँचता है, आपकी गलतियाँ दिखाता है और सुधरा हुआ पाठ देता है। यहाँ देखें कि यह कैसे काम करता है।</p>
+<h2>लिखना A2 में अंक</h2>
+<table class="pts"><thead><tr><th>हिस्सा</th><th>अंक</th><th>क्या गिना जाता है</th></tr></thead><tbody><tr><td>विषय-वस्तु</td><td>0–3</td><td>क्या आपने वह किया जो काम माँगता है? क्या आपका पाठ स्पष्ट है, सही संबोधन और समापन के साथ?</td></tr><tr><td>शब्द</td><td>0–2</td><td>क्या आप पर्याप्त और सही शब्दों का इस्तेमाल करते हैं?</td></tr><tr><td>व्याकरण</td><td>0–2</td><td>0–2 गलतियाँ: 2 अंक, 3–5 गलतियाँ: 1 अंक, 6 या ज़्यादा: 0 अंक।</td></tr><tr><td>वर्तनी</td><td>0–2</td><td>कितनी वर्तनी की गलतियाँ हैं, और क्या शब्द अब भी पहचाने जा सकते हैं?</td></tr><tr><td>जुड़ाव</td><td>0–1</td><td>क्या आपके वाक्य en, maar, want और daarna जैसे शब्दों से जुड़े हैं?</td></tr></tbody></table>
+<p class="sub">अगर विषय-वस्तु में 0 मिलता है, तो सभी अंक 0 हैं। Bittertalen में कोई पाठ तब पर्याप्त है जब विषय-वस्तु में कम से कम 2 अंक और 10 में से 7 अंक हों। यह हमारा अभ्यास लक्ष्य है, DUO का आधिकारिक मानक नहीं।</p>
+<h2>दो उदाहरण</h2>
+<p>ये उदाहरण काल्पनिक हैं। ऊपर के नियमों के अनुसार अंक ऐसे गिने जाते हैं।</p>
+<h2>उदाहरण 1: पर्याप्त</h2>
+<div class="ex"><p class="q"><b>काम:</b> <span lang="nl">Je vriendin Lotte heeft je uitgenodigd voor haar verjaardag op zaterdag. Je kunt niet komen. Schrijf haar een berichtje. Feliciteer haar, schrijf waarom je niet kunt komen en stel voor om een andere keer af te spreken.</span></p>
+<p class="q"><b>जवाब:</b></p><p class="a" lang="nl">Hoi Lotte,
+Gefeliciteerd met je verjaardag! Helaas ik kan niet komen op zaterdag, want mijn moeder komt uit Turkije en ik moet haar ophalen van Schiphol. Zullen we volgende week samen koffie drinken?
+Liefs,
+Elif</p>
+<p class="s"><b>अंक:</b> विषय-वस्तु 3/3 · शब्द 2/2 · व्याकरण 2/2 · वर्तनी 2/2 · जुड़ाव 1/1 · <b>कुल 10/10</b></p></div>
+<p>काम के तीनों बिंदु मौजूद हैं। शब्द-क्रम की एक गलती है: ‘helaas’ के बाद पहले क्रिया आती है (‘helaas kan ik’)। यह व्याकरण की एक गलती है, इसलिए फिर भी 2 अंक।</p>
+<h2>उदाहरण 2: अभी पर्याप्त नहीं</h2>
+<div class="ex"><p class="q"><b>काम:</b> <span lang="nl">Je nieuwe buren maken elke avond laat veel lawaai. Schrijf een briefje aan de buren. Stel jezelf voor, schrijf wat het probleem is en vraag of ze na tien uur stiller kunnen zijn.</span></p>
+<p class="q"><b>जवाब:</b></p><p class="a" lang="nl">Hoi buren,
+Ik ben jullie buurman. Jullie maken altijd lawaai. Ik kan niet slapen. Dat is niet goed.</p>
+<p class="s"><b>अंक:</b> विषय-वस्तु 1/3 · शब्द 1/2 · व्याकरण 2/2 · वर्तनी 2/2 · जुड़ाव 0/1 · <b>कुल 6/10</b></p></div>
+<p>लगभग कोई गलती नहीं है, लेकिन अनुरोध नहीं है: लेखक पड़ोसियों से दस बजे के बाद शांत रहने को नहीं कहता। इसलिए विषय-वस्तु में 1 अंक, और तब पाठ पर्याप्त नहीं है। वाक्य भी आपस में जुड़े नहीं हैं।</p>
+<h2>बोलना</h2>
+<p>आपका फ़ोन पहले आपका जवाब लिखता है। फिर Claude विषय-वस्तु (0–3), शब्द (0–2), व्याकरण (0–2) और जुड़ाव (0–1) के लिए अंक देता है। Bittertalen उच्चारण और गति नहीं जाँच सकता। असली परीक्षा में ये भी गिने जाते हैं।</p>
+<h2>ज़रूरी बातें</h2>
+<ul><li>Bittertalen DUO का नहीं है। आपके अंक अभ्यास का परिणाम हैं। ये नहीं बताते कि आप पास होंगे या नहीं।</li><li>AI से गलती हो सकती है। अपने जवाब की तुलना हमेशा उदाहरण उत्तर से भी करें।</li><li>मुफ़्त जाँचें Claude Haiku का इस्तेमाल करती हैं, जो एक तेज़ मॉडल है। Plus या परीक्षा पास के साथ Claude Sonnet जाँचता है, और अभ्यास परीक्षा में Claude Opus। हम नियमित रूप से मॉडलों की तुलना एक ही पाठों पर करते हैं।</li><li>आधिकारिक अभ्यास परीक्षाएँ <a href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" rel="noopener">inburgeren.nl ↗</a> पर मिलती हैं।</li></ul>
+<h2>ख़ुद आज़माएँ</h2>
+<p><a class="cta" href="/oefenen?open=today">एक पाठ मुफ़्त में आज़माएँ →</a></p>
+</article>
+<article data-l="zh" lang="zh-Hans" hidden>
+<a class="back" href="/"><span aria-hidden="true">←</span>Bittertalen</a>
+<h1>Bittertalen 如何批改</h1>
+<p>在写作和口语中，Anthropic 的 AI Claude 会阅读你的回答。Claude 按照 DUO 评估的相同部分打分，标出你的错误，并给出改正后的文本。下面介绍它如何运作。</p>
+<h2>写作 A2 的评分</h2>
+<table class="pts"><thead><tr><th>部分</th><th>分数</th><th>看什么</th></tr></thead><tbody><tr><td>内容</td><td>0–3</td><td>你是否完成了任务要求？文本是否清楚，开头称呼和结尾问候是否合适？</td></tr><tr><td>词汇</td><td>0–2</td><td>你是否使用了足够且合适的词？</td></tr><tr><td>语法</td><td>0–2</td><td>0–2 个错误：2 分；3–5 个错误：1 分；6 个或更多：0 分。</td></tr><tr><td>拼写</td><td>0–2</td><td>有多少拼写错误，单词是否仍能认出？</td></tr><tr><td>连贯</td><td>0–1</td><td>句子之间是否用 en、maar、want、daarna 等词连接？</td></tr></tbody></table>
+<p class="sub">内容得 0 分时，所有分数都是 0。在 Bittertalen 中，内容至少 2 分且总分 10 分中至少 7 分，文本才算合格。这是我们的练习目标，不是 DUO 的官方标准。</p>
+<h2>两个例子</h2>
+<p>例子是虚构的。按照上面的规则，分数是这样计算的。</p>
+<h2>例 1：合格</h2>
+<div class="ex"><p class="q"><b>任务:</b> <span lang="nl">Je vriendin Lotte heeft je uitgenodigd voor haar verjaardag op zaterdag. Je kunt niet komen. Schrijf haar een berichtje. Feliciteer haar, schrijf waarom je niet kunt komen en stel voor om een andere keer af te spreken.</span></p>
+<p class="q"><b>回答:</b></p><p class="a" lang="nl">Hoi Lotte,
+Gefeliciteerd met je verjaardag! Helaas ik kan niet komen op zaterdag, want mijn moeder komt uit Turkije en ik moet haar ophalen van Schiphol. Zullen we volgende week samen koffie drinken?
+Liefs,
+Elif</p>
+<p class="s"><b>分数:</b> 内容 3/3 · 词汇 2/2 · 语法 2/2 · 拼写 2/2 · 连贯 1/1 · <b>总分 10/10</b></p></div>
+<p>任务的三个要点都写到了。有一个语序错误：‘helaas’ 之后动词要先出现（‘helaas kan ik’）。这是一个语法错误，所以仍得 2 分。</p>
+<h2>例 2：还不合格</h2>
+<div class="ex"><p class="q"><b>任务:</b> <span lang="nl">Je nieuwe buren maken elke avond laat veel lawaai. Schrijf een briefje aan de buren. Stel jezelf voor, schrijf wat het probleem is en vraag of ze na tien uur stiller kunnen zijn.</span></p>
+<p class="q"><b>回答:</b></p><p class="a" lang="nl">Hoi buren,
+Ik ben jullie buurman. Jullie maken altijd lawaai. Ik kan niet slapen. Dat is niet goed.</p>
+<p class="s"><b>分数:</b> 内容 1/3 · 词汇 1/2 · 语法 2/2 · 拼写 2/2 · 连贯 0/1 · <b>总分 6/10</b></p></div>
+<p>几乎没有错误，但缺少请求：作者没有请邻居在十点以后安静一点。所以内容只得 1 分，文本因此不合格。句子之间也没有连接。</p>
+<h2>口语</h2>
+<p>手机先把你的回答转成文字。然后 Claude 按内容（0–3）、词汇（0–2）、语法（0–2）和连贯（0–1）打分。Bittertalen 无法评估发音和语速，而在真实考试中它们也会计分。</p>
+<h2>你需要知道的事</h2>
+<ul><li>Bittertalen 不属于 DUO。你的分数是练习结果，不能预测你是否会通过。</li><li>AI 可能出错。请始终把你的回答和参考答案进行对比。</li><li>免费批改使用速度更快的 Claude Haiku。使用 Plus 或考试通行证时由 Claude Sonnet 批改，模拟考试由 Claude Opus 批改。我们会定期用相同的文本比较这些模型。</li><li>官方模拟考试请见 <a href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" rel="noopener">inburgeren.nl ↗</a>。</li></ul>
+<h2>亲自试试</h2>
+<p><a class="cta" href="/oefenen?open=today">免费试批一篇 →</a></p>
+</article>
+<article data-l="es" lang="es" hidden>
+<a class="back" href="/"><span aria-hidden="true">←</span>Bittertalen</a>
+<h1>Cómo revisa Bittertalen</h1>
+<p>En Escritura y Expresión oral, Claude, una IA de Anthropic, lee tu respuesta. Claude da puntos en las mismas partes que evalúa DUO, marca tus errores y te da el texto corregido. Aquí ves cómo funciona.</p>
+<h2>Los puntos en Escritura A2</h2>
+<table class="pts"><thead><tr><th>Parte</th><th>Puntos</th><th>Qué cuenta</th></tr></thead><tbody><tr><td>Contenido</td><td>0–3</td><td>¿Hiciste lo que pide la tarea? ¿Tu texto es claro, con un saludo y una despedida adecuados?</td></tr><tr><td>Vocabulario</td><td>0–2</td><td>¿Usas suficientes palabras adecuadas?</td></tr><tr><td>Gramática</td><td>0–2</td><td>0–2 errores: 2 puntos; 3–5 errores: 1 punto; 6 o más: 0 puntos.</td></tr><tr><td>Ortografía</td><td>0–2</td><td>¿Cuántas faltas de ortografía hay y se reconocen todavía las palabras?</td></tr><tr><td>Coherencia</td><td>0–1</td><td>¿Tus frases están conectadas con palabras como en, maar, want y daarna?</td></tr></tbody></table>
+<p class="sub">Si obtienes 0 en contenido, todos los puntos son 0. En Bittertalen un texto es suficiente con al menos 2 puntos de contenido y 7 de los 10 puntos. Es nuestro objetivo de práctica, no la norma oficial de DUO.</p>
+<h2>Dos ejemplos</h2>
+<p>Los ejemplos son inventados. Así se suman los puntos según las reglas de arriba.</p>
+<h2>Ejemplo 1: suficiente</h2>
+<div class="ex"><p class="q"><b>Tarea:</b> <span lang="nl">Je vriendin Lotte heeft je uitgenodigd voor haar verjaardag op zaterdag. Je kunt niet komen. Schrijf haar een berichtje. Feliciteer haar, schrijf waarom je niet kunt komen en stel voor om een andere keer af te spreken.</span></p>
+<p class="q"><b>Respuesta:</b></p><p class="a" lang="nl">Hoi Lotte,
+Gefeliciteerd met je verjaardag! Helaas ik kan niet komen op zaterdag, want mijn moeder komt uit Turkije en ik moet haar ophalen van Schiphol. Zullen we volgende week samen koffie drinken?
+Liefs,
+Elif</p>
+<p class="s"><b>Puntos:</b> Contenido 3/3 · Vocabulario 2/2 · Gramática 2/2 · Ortografía 2/2 · Coherencia 1/1 · <b>Total 10/10</b></p></div>
+<p>Están los tres puntos de la tarea. Hay un error de orden de palabras: después de ‘helaas’ va primero el verbo (‘helaas kan ik’). Es un error de gramática, así que siguen siendo 2 puntos.</p>
+<h2>Ejemplo 2: todavía no suficiente</h2>
+<div class="ex"><p class="q"><b>Tarea:</b> <span lang="nl">Je nieuwe buren maken elke avond laat veel lawaai. Schrijf een briefje aan de buren. Stel jezelf voor, schrijf wat het probleem is en vraag of ze na tien uur stiller kunnen zijn.</span></p>
+<p class="q"><b>Respuesta:</b></p><p class="a" lang="nl">Hoi buren,
+Ik ben jullie buurman. Jullie maken altijd lawaai. Ik kan niet slapen. Dat is niet goed.</p>
+<p class="s"><b>Puntos:</b> Contenido 1/3 · Vocabulario 1/2 · Gramática 2/2 · Ortografía 2/2 · Coherencia 0/1 · <b>Total 6/10</b></p></div>
+<p>Casi no hay errores, pero falta la petición: quien escribe no pide a los vecinos que hagan menos ruido después de las diez. Por eso 1 punto de contenido, y entonces el texto no es suficiente. Además, las frases no están conectadas.</p>
+<h2>Expresión oral</h2>
+<p>Tu teléfono primero escribe tu respuesta. Después Claude da puntos de contenido (0–3), vocabulario (0–2), gramática (0–2) y coherencia (0–1). Bittertalen no puede evaluar la pronunciación ni el ritmo. En el examen real sí cuentan.</p>
+<h2>Lo que debes saber</h2>
+<ul><li>Bittertalen no pertenece a DUO. Tus puntos son un resultado de práctica. No predicen si vas a aprobar.</li><li>Una IA puede equivocarse. Compara siempre tu respuesta también con la respuesta de ejemplo.</li><li>Las revisiones gratuitas usan Claude Haiku, un modelo más rápido. Con Plus o el pase de examen revisa Claude Sonnet, y en un simulacro Claude Opus. Comparamos los modelos con regularidad con los mismos textos.</li><li>Los exámenes de práctica oficiales están en <a href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" rel="noopener">inburgeren.nl ↗</a>.</li></ul>
+<h2>Pruébalo</h2>
+<p><a class="cta" href="/oefenen?open=today">Prueba un texto gratis →</a></p>
+</article>
+<article data-l="ru" lang="ru" hidden>
+<a class="back" href="/"><span aria-hidden="true">←</span>Bittertalen</a>
+<h1>Как Bittertalen проверяет ответы</h1>
+<p>В разделах «Письмо» и «Устная речь» ваш ответ читает Claude — ИИ компании Anthropic. Claude ставит баллы по тем же критериям, что и DUO, отмечает ошибки и даёт исправленный текст. Здесь показано, как это работает.</p>
+<h2>Баллы в письме A2</h2>
+<table class="pts"><thead><tr><th>Критерий</th><th>Баллы</th><th>Что учитывается</th></tr></thead><tbody><tr><td>Содержание</td><td>0–3</td><td>Выполнено ли всё, что требует задание? Понятен ли текст, есть ли подходящее обращение и прощание?</td></tr><tr><td>Лексика</td><td>0–2</td><td>Достаточно ли подходящих слов?</td></tr><tr><td>Грамматика</td><td>0–2</td><td>0–2 ошибки: 2 балла, 3–5 ошибок: 1 балл, 6 и больше: 0 баллов.</td></tr><tr><td>Орфография</td><td>0–2</td><td>Сколько орфографических ошибок и можно ли узнать слова?</td></tr><tr><td>Связность</td><td>0–1</td><td>Связаны ли предложения словами вроде en, maar, want и daarna?</td></tr></tbody></table>
+<p class="sub">Если за содержание 0, то все баллы 0. В Bittertalen текст засчитывается, если за содержание не меньше 2 баллов и всего не меньше 7 из 10. Это наша цель для тренировки, а не официальная норма DUO.</p>
+<h2>Два примера</h2>
+<p>Примеры придуманы. Так баллы складываются по правилам выше.</p>
+<h2>Пример 1: засчитано</h2>
+<div class="ex"><p class="q"><b>Задание:</b> <span lang="nl">Je vriendin Lotte heeft je uitgenodigd voor haar verjaardag op zaterdag. Je kunt niet komen. Schrijf haar een berichtje. Feliciteer haar, schrijf waarom je niet kunt komen en stel voor om een andere keer af te spreken.</span></p>
+<p class="q"><b>Ответ:</b></p><p class="a" lang="nl">Hoi Lotte,
+Gefeliciteerd met je verjaardag! Helaas ik kan niet komen op zaterdag, want mijn moeder komt uit Turkije en ik moet haar ophalen van Schiphol. Zullen we volgende week samen koffie drinken?
+Liefs,
+Elif</p>
+<p class="s"><b>Баллы:</b> Содержание 3/3 · Лексика 2/2 · Грамматика 2/2 · Орфография 2/2 · Связность 1/1 · <b>Итого 10/10</b></p></div>
+<p>Все три пункта задания выполнены. Одна ошибка в порядке слов: после ‘helaas’ сначала идёт глагол (‘helaas kan ik’). Это одна грамматическая ошибка, поэтому по-прежнему 2 балла.</p>
+<h2>Пример 2: пока не засчитано</h2>
+<div class="ex"><p class="q"><b>Задание:</b> <span lang="nl">Je nieuwe buren maken elke avond laat veel lawaai. Schrijf een briefje aan de buren. Stel jezelf voor, schrijf wat het probleem is en vraag of ze na tien uur stiller kunnen zijn.</span></p>
+<p class="q"><b>Ответ:</b></p><p class="a" lang="nl">Hoi buren,
+Ik ben jullie buurman. Jullie maken altijd lawaai. Ik kan niet slapen. Dat is niet goed.</p>
+<p class="s"><b>Баллы:</b> Содержание 1/3 · Лексика 1/2 · Грамматика 2/2 · Орфография 2/2 · Связность 0/1 · <b>Итого 6/10</b></p></div>
+<p>Ошибок почти нет, но нет просьбы: автор не просит соседей вести себя тише после десяти. Поэтому за содержание 1 балл, и текст не засчитан. Кроме того, предложения не связаны между собой.</p>
+<h2>Устная речь</h2>
+<p>Сначала телефон записывает ваш ответ текстом. Затем Claude ставит баллы за содержание (0–3), лексику (0–2), грамматику (0–2) и связность (0–1). Произношение и темп Bittertalen оценить не может, а на настоящем экзамене они тоже учитываются.</p>
+<h2>Что важно знать</h2>
+<ul><li>Bittertalen не относится к DUO. Ваши баллы — результат тренировки. Они не предсказывают, сдадите ли вы экзамен.</li><li>ИИ может ошибаться. Всегда сравнивайте свой ответ и с примером ответа.</li><li>Бесплатные проверки делает Claude Haiku, более быстрая модель. С Plus или пропуском проверяет Claude Sonnet, а в пробном экзамене — Claude Opus. Мы регулярно сравниваем модели на одних и тех же текстах.</li><li>Официальные пробные экзамены есть на <a href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" rel="noopener">inburgeren.nl ↗</a>.</li></ul>
+<h2>Попробуйте сами</h2>
+<p><a class="cta" href="/oefenen?open=today">Проверить текст бесплатно →</a></p>
+</article>
+
+<script>
+// The page follows the language of the app (ww-ui); the Dutch text is the official one and shows without a script
+(function(){
+  var S={nl:["nl","NL"],en:["en","EN"],ar:["ar","عربي"],tr:["tr","TR"],hi:["hi","हिं"],zh:["zh-Hans","中文"],es:["es","ES"],ru:["ru","RU"]},sel=document.getElementById("lang"),l=null,suffix="";
+  try{l=localStorage.getItem("ww-ui")}catch(e){}
+  function show(k){if(!S[k])k="nl";var h=document.documentElement;
+    document.querySelectorAll("article").forEach(function(a){var on=a.getAttribute("data-l")===k;a.hidden=!on;if(on)document.title=a.querySelector("h1").textContent+suffix});
+    h.lang=S[k][0];h.dir=k==="ar"?"rtl":"ltr";sel.value=k;sel.setAttribute("aria-label",k==="es"?"Idioma":k==="ru"?"Язык":"Taal");document.getElementById("langs").textContent=S[k][1]}
+  show(l);
+  // "← Bittertalen" goes back to the app for someone who came from it (on a computer "/" is the homepage)
+  try{if(new URL(document.referrer).origin===location.origin&&/^\/oefenen/.test(new URL(document.referrer).pathname))
+    document.querySelectorAll("a.back").forEach(function(a){a.href="/oefenen"})}catch(e){}
+  sel.onchange=function(){try{sel.value==="nl"?localStorage.removeItem("ww-ui"):localStorage.setItem("ww-ui",sel.value)}catch(e){}show(sel.value)};
+})();
+</script>
+
+</body>
+</html>

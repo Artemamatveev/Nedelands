@@ -1,3 +1,5 @@
+// A friend's code from a shared link (?ref=): kept for the app, which hands it over once there is an account
+try{const r=new URLSearchParams(location.search).get("ref");if(r&&/^[A-HJ-NP-Z2-9]{8}$/i.test(r))localStorage.setItem("ww-ref",r.toUpperCase())}catch{}
 const languages = ["en", "ar", "tr", "hi", "zh", "es", "ru"];
 // Dutch copy is also in the HTML so the page is readable without scripts.
 const copy = {
@@ -105,6 +107,7 @@ const copy = {
   "Eén keer betalen, geen abonnement.": ["Pay once, no subscription.", "ادفع مرة واحدة، دون اشتراك.", "Bir kez öde, abonelik yok.", "एक बार भुगतान करें, कोई सदस्यता नहीं।", "一次付款，无需订阅。", "Pagas una vez, sin suscripción.", "Одна оплата, без подписки."],
   "A2 of B1, met dezelfde nakijkbeurten als Plus.": ["A2 or B1, with the same checks as Plus.", "A2 أو B1، مع التصحيحات نفسها كما في Plus.", "A2 veya B1, Plus ile aynı kontrollerle.", "A2 या B1, Plus जैसी ही जाँचों के साथ।", "A2 或 B1，批改次数与 Plus 相同。", "A2 o B1, con las mismas revisiones que Plus.", "A2 или B1, с теми же проверками, что и в Plus."],
   "Kies de Examenpas": ["Choose the exam pass", "اختر تصريح الامتحان", "Sınav kartını seç", "परीक्षा पास चुनें", "选择考试通行证", "Elegir el pase de examen", "Выбрать пропуск"],
+  "Zo kijkt Bittertalen na →": ["How Bittertalen checks your work →", "كيف يصحّح Bittertalen ←", "Bittertalen nasıl kontrol eder →", "Bittertalen कैसे जाँचता है →", "Bittertalen 如何批改 →", "Cómo revisa Bittertalen →", "Как Bittertalen проверяет ответы →"],
   "Kies Plus B1": ["Choose Plus B1", "اختر Plus B1", "Plus B1 seç", "Plus B1 चुनें", "选择 Plus B1", "Elegir Plus B1", "Выбрать Plus B1"],
 };
 

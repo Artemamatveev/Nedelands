@@ -298,6 +298,10 @@ Every section appears once; don't add a second entry point to the same exercise.
   none, in `<head>`), clicks it inside the tap and removes it (Safari 18+ gives the switch's own tap; a hidden switch
   kept in the page gave nothing on the user's iPhone). A switch in Profiel turns it off per device
   (`ww-tril`); it shows only on phones that can do it.
+- **Zo kijkt Bittertalen na**: `nakijken.html` (served as /nakijken, in the sitemap; linked under Vraag 4 on the homepage
+  and from Profiel's Hulp group), built like over.html in eight languages: DUO's Schrijven A2 points and Bittertalen's
+  practice pass rule, two made-up examples scored by those rules (the examples stay Dutch), Speaking, and what to know
+  (not DUO, AI can be wrong, Haiku for free checks, Sonnet/Opus for paid ones). Keep it true when the scoring rules or models change.
 - **Over Bittertalen**: `over.html` (served as /over, in the sitemap, linked from Profiel above the privacy row):
   what it is, the name, who makes it, how it works, what it is not (not DUO), where everything comes from, contact.
   The maker's own story and photo go there when the user gives them.
@@ -384,6 +388,16 @@ immediately, navigates open windows to the migration gate, and uses network-only
 move message rather than cached practice; all local data/cache remains intact. Devices must connect once to receive
 this worker update. Normal bittertalen.nl startup, offline caching and account isolation are unchanged.
 
+## App Store and Google Play (native/)
+
+`native/` is a Capacitor 8 shell that loads https://bittertalen.nl/oefenen (`capacitor.config.json` `server.url`), so the
+website deploy updates the apps; `native/README.md` has the build and review steps (the user builds on a Mac). The page
+knows it runs there by `NATIVE` (`Capacitor.isNativePlatform()`), which counts as an installed app (`inApp()`): OAuth
+opens in the system browser (`skipBrowserRedirect`, `Capacitor.Plugins.Browser`) and comes back through the existing
+`/api/handoff` flow; no purchases, prices or offers inside the apps (Plus, passes and groups from the website still
+work); Profiel shows "Dagelijkse herinnering" (`remindRow()`, local notifications, `ww-remind`). Keep these when changing
+login, Plus or Profiel. `native/` is not deployed as part of the site (`.vercelignore`).
+
 ## Accounts (optional)
 
 Logging in is optional; everything works without it except Claude's grading. Supabase (connected to the Vercel project
@@ -424,6 +438,23 @@ vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one comin
 - `GET /api/allowance` is never cached: an authenticated user gets only their own daily counter and free total (`totalUsed`); a guest gets
   the remaining browser trial. The config says `period:"once"` and `freePeriod:"once"`; new pages request the versioned
   config URL so a cached old daily plan is not used. The app tracks the two counters independently when switching levels.
+- Invite a friend (19 November 2026): Profiel's account group has "Nodig een vriend uit" (`refScreen()` in `#talk`): the
+  link `/?ref=<code>` to share or copy. A `?ref=` on the homepage or the app is kept in `ww-ref` until there is an
+  account; `claimRef()` then posts it once to `/api/referral` (`api/referral.js`; GET gives `{code, invited, bonus}`).
+  Only an account made in the last 14 days can claim (`REF_DAYS`), never its own code, once. Both get 3 extra free
+  checks, the inviter for at most 10 friends (`referral_bonus()`); `api/check.js` and `/api/allowance` add `bonus` to
+  the free limit, and the page's `myLimit()` follows. Tables `referral_codes` and `referrals`, server-only, migration
+  `20261119160000_referrals.sql` (also in `schema.sql`; run it in the SQL editor before deploying). privacy.html says so.
+- Groups for schools and employers (B2B, 19 November 2026): the owner makes a group in /admin ("Группы": name, level,
+  places, end date, the teacher's e-mail; `api/group.js` `{go:"make"}`) and gives its 8-character code to the school.
+  A learner enters it in Profiel ("Code van je school of werk", `groupScreen()`, which says first that the teacher will
+  see their practice) and gets the Plus checks of the group's level until the end date: `plusFor()` returns the group
+  (`pass:true`, `group:<name>`) when it covers more than a subscription or Examenpas. The teacher logs in with that
+  e-mail (confirmed) and opens /docent (`docent.html`, Dutch, noindex, not linked): their groups and per member name,
+  e-mail, level, last activity, practice time and answers in the last 7 days and the last proefexamen scores
+  (`teacher_overview()`, the owner's summary without checks or Plus). Tables `groups` and `group_members`, server-only,
+  migration `20261119170000_groups.sql` (also in `schema.sql`). privacy.html says what the teacher sees. Invoicing is by
+  hand for now.
 - One task costs 1 check, Schrijven A2 2, Schrijven B1 4, and Spreken A2/B1 6. All other practice and example answers
   stay free. Errors refund the learner; an uncertain paid provider outcome still retains its global spend reservation.
 - Apply the reviewed migration `supabase/migrations/20261112192552_weekly_free_checks.sql` before releasing the new
@@ -472,7 +503,10 @@ answers (with the share right) today / 7 days / in all, different questions, pro
 Claude checks and Plus; a row opens its minutes of the last 14 days and its exam history. Tables keep bordered, centred cells
 (the user's wish); the measurement explanation is expandable. "Расход на ИИ" lists `ai_spend` (the last 30 days, per day and
 model) in dollars from `PRICE` in the page (Anthropic's list prices, 18 November 2026: update them when they change), with
-the 7- and 30-day totals. It loads the vendored Supabase library, reads the session the app left in
+the 7- and 30-day totals. "Сравнение моделей" (a button, ~$0.25 a run) posts to `/api/compare` (`api/compare.js`, owner
+only, same origin): the ten made-up Schrijven A2 answers in `api/_samples.js` are graded by `GRADING_MODEL_FREE` and
+`GRADING_MODEL` through `gradeWriting()` in `api/check.js` (the practice prompt, schema, clamping and pass rule), and the
+table shows points, voldoende and error counts side by side, the rows where the verdicts differ highlighted. It loads the vendored Supabase library, reads the session the app left in
 this browser and asks `/api/admin` (`api/admin.js`) with the access token; the server answers only a confirmed e-mail in
 `ADMIN_EMAILS` (a Vercel env var, comma-separated; without it nobody gets in) and reads `admin_overview()` (in
 `supabase/schema.sql`, run it in the SQL editor; it works out the summaries inside the database, so the large progress rows

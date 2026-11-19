@@ -387,6 +387,9 @@ textarea{display:block;width:100%;font-size:var(--fs-b);line-height:1.5;padding:
 .ghost{background:none;border:1px solid var(--line);color:var(--ink);border-radius:var(--rc);padding:11px 12px;min-height:50px;font-weight:600;font-size:var(--fs-b)}
 .ghost:active,.back:active{background:var(--surface)}
 .wide{width:100%}
+.reflink{overflow-wrap:anywhere;margin-block:10px}
+.gform{display:flex;gap:8px;margin-block:12px} .gform input{flex:1;min-width:0;height:52px;border:1.5px solid var(--ink);border-radius:var(--rc);padding:0 12px;font:inherit;font-size:var(--fs-b);letter-spacing:.08em;background:var(--card);color:var(--ink)} .gform .btn{flex:none}
+.offer{margin-block:14px} .note>[data-offer]{margin-top:10px}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .opt.sel{border-color:var(--oranje);box-shadow:inset 0 0 0 2px var(--oranje)}
 .opts.one .opt.sel{box-shadow:none;border-color:var(--line);font-weight:600}
@@ -951,6 +954,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
         <div class="prow pickrow"><span id="plvlt">Ik oefen voor</span><b id="plvlv"></b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg><select id="plvl" aria-labelledby="plvlt"></select></div>
         <div class="prow pickrow langrow"><span id="plangt">Taal</span><b data-langn></b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg><select id="plang" data-lang aria-labelledby="plangt"></select></div>
         <label class="prow tog" id="ptrilw" hidden><span>Trillen bij een antwoord</span><input type="checkbox" switch id="ptril"></label>
+        <div class="prow pickrow" id="premw" hidden><span id="premt">Dagelijkse herinnering</span><b id="premv"></b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg><select id="prem" aria-labelledby="premt"></select></div>
       </div>
       <div id="acct"></div>
       <footer class="site-footer" id="site-footer"></footer>
@@ -1258,7 +1262,7 @@ const acc={cfg:null,sb:null,user:null,left:null,used:null,freeUsed:null,usedDay:
 // Bittertalen Plus (api/plus.js): while the Stripe subscription runs, Claude checks cfg.plus.limit times a day
 const LIVE=["active","trialing","past_due"];
 const isPlus=level=>!!(acc.cfg&&acc.cfg.plus&&acc.plus&&LIVE.includes(acc.plus.status)&&(!acc.plus.until||Date.parse(acc.plus.until)+864e5>Date.now())&&(!level||acc.plus.level==="B1"||acc.plus.level==="A2"&&level==="A2"));
-const myLimit=(level=lvl())=>acc.cfg?(isPlus(level)?acc.cfg.plus.limit:acc.cfg.limit):7;
+const myLimit=(level=lvl())=>acc.cfg?(isPlus(level)?acc.cfg.plus.limit:acc.cfg.limit+(acc.bonus||0)):7;
 const myPeriod=(level=lvl())=>isPlus(level)?"day":"once";
 const checksLeft=part=>{
   const level=part?["wb","sb"].includes(part)?"B1":"A2":lvl(),daily=myPeriod(level)==="day";
@@ -1266,8 +1270,14 @@ const checksLeft=part=>{
   return used==null?null:Math.max(0,myLimit(level)-used);
 };
 const ACFG="ww-acc-cfg",ALINK="ww-acc"; // the config, and which account this device's progress was last joined with
+// The App Store / Google Play app (native/, Capacitor) loads this page from bittertalen.nl: it counts as an installed app
+const NATIVE=!!(window.Capacitor&&typeof Capacitor.isNativePlatform==="function"&&Capacitor.isNativePlatform());
 const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
 const lsSet=(k,v)=>{try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}};
+// Invite a friend: a friend's code from a shared link (?ref=, also kept by the homepage) waits in ww-ref until this
+// browser has an account; claimRef() then hands it to /api/referral once (api/referral.js).
+const REFRE=/^[A-HJ-NP-Z2-9]{8}$/i;
+{const r=new URLSearchParams(location.search).get("ref");if(r&&REFRE.test(r))lsSet("ww-ref",r.toUpperCase())}
 const amsDay=(at=new Date())=>new Intl.DateTimeFormat("en-CA",{timeZone:"Europe/Amsterdam"}).format(at);
 async function trialUsage(){
   if(!acc.cfg?.free||acc.user)return;
@@ -1332,7 +1342,7 @@ async function setUser(u){
   if(!uid)lsSet(ALINK,null);
   const guest=progressOwner==="guest" && uid && (S.t || Object.keys(S.items).length) ? progressClone(S) : null;
   clearTimeout(pushT);cloud=null;syncing=null;dirty=false;
-  acc.user=u;acc.left=null;acc.used=null;acc.freeUsed=null;acc.usedDay=null;acc.plus=null;acc.saved=0;acc.step=null;acc.sync="";
+  acc.user=u;acc.left=null;acc.used=null;acc.freeUsed=null;acc.bonus=0;acc.ref=null;acc.usedDay=null;acc.plus=null;acc.saved=0;acc.step=null;acc.sync="";
   if(acc.admin){acc.admin=false;$("site-footer").innerHTML=siteFooter()} acc.adminOf=null;
   if(owner!==progressOwner){
     localSave();openProgress(owner);
@@ -1350,7 +1360,7 @@ async function setUser(u){
     addGenerated();home();
   }
   if(!u){trialUsage();return drawProfile()}
-  adminCheck();
+  adminCheck();claimRef();
   // Each tab keeps its own receipt even while another tab is syncing the same account.
   let device;
   try{device=sessionStorage.getItem("ww-sync-tab")||crypto.randomUUID();sessionStorage.setItem("ww-sync-tab",device)}catch{device=crypto.randomUUID()}
@@ -1406,7 +1416,7 @@ async function usage(){
   try{const r=await fetch("/api/allowance",{headers:await authHead(),cache:"no-store"});if(!r.ok)return;
     const j=await r.json();if(acc.user?.id!==uid)return;
     if(Number.isSafeInteger(j.dailyUsed)&&Number.isSafeInteger(j.totalUsed)){
-      acc.used=j.dailyUsed;acc.freeUsed=j.totalUsed;acc.usedDay=j.day;
+      acc.used=j.dailyUsed;acc.freeUsed=j.totalUsed;acc.usedDay=j.day;acc.bonus=Number.isSafeInteger(j.bonus)?j.bonus:0;
       acc.left=checksLeft();drawProfile();if($("plusS")&&!$("talk").hidden)plusScreen()
     }
   }catch{}
@@ -1433,8 +1443,11 @@ async function login(p){
   try{await loadSb();
     let to=location.origin+"/";
     if(p!=="passkey"&&inApp()){const h=b64(crypto.getRandomValues(new Uint8Array(18)));lsSet(HAND,JSON.stringify({h,t:Date.now()}));to+="?h="+h}
-    const{error}=p==="passkey"?await acc.sb.auth.signInWithPasskey():await acc.sb.auth.signInWithOAuth({provider:p,options:{redirectTo:to}});
+    // In the store app Google and Apple refuse a login inside the app's web view: the system browser logs in and leaves
+    // the code at /api/handoff, and the app takes it when it is visible again (claimHand)
+    const{data,error}=p==="passkey"?await acc.sb.auth.signInWithPasskey():await acc.sb.auth.signInWithOAuth({provider:p,options:{redirectTo:to,skipBrowserRedirect:NATIVE}});
     if(error)throw error;
+    if(NATIVE&&data?.url){const B=Capacitor.Plugins?.Browser;B?await B.open({url:data.url}):location.assign(data.url)}
   }catch(e){acc.msg=loginErr(e);redraw()}
 }
 // Logging in happens on Profiel and on the welcome screen; both show the same state
@@ -1472,7 +1485,7 @@ const logins=()=>acc.cfg&&acc.cfg.login||[];
 // a window that comes back with an h it did not make passes the one-time code to the server (/api/handoff), and the
 // app takes it from there when you return and exchanges it itself (PKCE: the code is useless without the secret that
 // only the app holds). If the login comes back in the app itself, nothing changes.
-const HAND="ww-hand",inApp=()=>navigator.standalone===true||matchMedia("(display-mode: standalone)").matches;
+const HAND="ww-hand",inApp=()=>NATIVE||navigator.standalone===true||matchMedia("(display-mode: standalone)").matches;
 const handOf=()=>{try{const o=JSON.parse(lsGet(HAND));return o&&o.h&&Date.now()-o.t<6e5?o:null}catch(e){return null}};
 let handBusy=false;
 async function claimHand(){
@@ -1543,7 +1556,7 @@ async function adminCheck(){
 function siteFooter(){
   const row=(site,t)=>`<button type="button" class="it" data-site="${site}"><span><span class="th"><b>${t}</b></span></span></button>`,
     link=(href,t)=>`<a class="it" href="${href}"><span><span class="th"><b>${t}</b></span></span></a>`;
-  return `<h3 class="lh">Hulp</h3><div class="pg">${row("faq","Veelgestelde vragen")}${row("exam","Uitleg over de examens")}${row("prices","Prijzen")}${row("cancel","Abonnement opzeggen")}${link("/contact","Contact")}</div>
+  return `<h3 class="lh">Hulp</h3><div class="pg">${row("faq","Veelgestelde vragen")}${row("exam","Uitleg over de examens")}${NATIVE?"":row("prices","Prijzen")+row("cancel","Abonnement opzeggen")}${link("/nakijken","Zo kijkt Bittertalen na")}${link("/contact","Contact")}</div>
     <h3 class="lh">Bittertalen</h3><div class="pg">${link("/over","Over Bittertalen")}${link("/privacy","Privacyverklaring")}${link("/?home","Naar de website")}${acc.admin?link("/admin","Statistiek"):""}</div>`;
 }
 function tryOne(){
@@ -1616,6 +1629,14 @@ async function authHead(){
   return{Authorization:"Bearer "+t};
 }
 // Why Claude can't grade now, or null
+// Offering the paid checks where a learner wants them: when the free checks are used up, and after a writing or speaking
+// proefexamen below the practice target (the moments the buyer panel named). Only with an account, Plus or the Examenpas
+// switched on, and a level that isn't covered yet. The button opens the one Plus screen.
+const canOffer=()=>!NATIVE&&!!(acc.user&&acc.cfg&&(acc.cfg.pass||acc.cfg.plus)&&!isPlus(lvl()));
+const offerBtn=()=>`<button type="button" class="ghost wide" data-offer>${acc.cfg.pass?"Bekijk de Examenpas":"Bekijk Bittertalen Plus"}</button>`;
+const offerHTML=c=>c==="limit"&&canOffer()?"<br>"+offerBtn():"";
+const examOffer=()=>canOffer()?`<div class="offer"><p class="note">${acc.cfg.pass?`Wil je tot je examen elke dag laten nakijken? Met de Examenpas kan dat ${Math.round((acc.cfg.pass.days||42)/7)} weken lang, voor één betaling.`:"Wil je tot je examen elke dag laten nakijken? Met Bittertalen Plus kan dat."}</p>${offerBtn()}</div>`:"";
+document.addEventListener("click",e=>{if(e.target.closest("[data-offer]")){stopSpeak();plusScreen()}});
 const noCheck=c=>c==="quota_unavailable"?"Nakijken is tijdelijk niet beschikbaar. Je kunt verder oefenen.":c==="login"?(acc.free===0?"Je gratis proefbeurten zijn op. Maak een gratis account voor nog 7 gratis nakijkbeurten.":"Log in bij Profiel om dit door Bittertalen te laten nakijken."):c==="limit"?((acc.checkPeriod||myPeriod())!=="day"?(acc.cfg?.plus&&!isPlus(lvl())?"Je gratis nakijkbeurten zijn op. Met Plus of de Examenpas kun je verder laten nakijken.":"Je gratis nakijkbeurten zijn op."):"Je dagtegoed is op. Morgen kun je weer laten nakijken."):c==="busy"?"Bittertalen heeft vandaag al heel veel teksten nagekeken. Morgen kan het weer.":null;
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const answer=(v,t)=>t==="past"?v[2]:t==="pastpl"?v[3]:t==="pp"?v[4]:v[5];
@@ -1940,7 +1961,7 @@ async function spGrade(q,r){
     const k=e&&e.code; b.disabled=false;
     if(k==="rate_limited"){c.hidden=false;c.disabled=false;$("fb").innerHTML=`<p class="note">Te veel verzoeken achter elkaar. Wacht een minuut en probeer het opnieuw.</p>`;return}
     $("rev").hidden=true;
-    selfGrade(q,noCheck(k)?noCheck(k)+" Vergelijk je antwoord nu met het voorbeeld.":k==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je antwoord met het voorbeeld.":"Het nakijken is niet gelukt. Vergelijk je antwoord met het voorbeeld.");
+    selfGrade(q,noCheck(k)?noCheck(k)+" Vergelijk je antwoord nu met het voorbeeld."+offerHTML(k):k==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je antwoord met het voorbeeld.":"Het nakijken is niet gelukt. Vergelijk je antwoord met het voorbeeld.");
   }
 }
 // Spreken B1 proefexamen, as on the Staatsexamen: the question is read aloud, then the thinking time runs (15 seconds for a
@@ -2474,10 +2495,10 @@ function drawProfile(){
   $("pmail").hidden=!(u&&u.email); $("pmail").textContent=u&&u.email||"";
   if(c){
     if(u){
-      if(c.plus)b=ban("aplus","plus","Bittertalen Plus",plusLine());
+      if(c.plus&&(!NATIVE||isPlus()))b=ban("aplus","plus","Bittertalen Plus",plusLine());
       h=`<h3 class="lh">Account</h3><div class="pg"><p class="pinfo"><span role="status">${acc.sync||"Wacht op synchronisatie"}</span><br>${myPeriod()==="day"?"Nakijken vandaag:":"Gratis nakijkbeurten:"} ${checksLeft()==null?"…":`nog ${checksLeft()} van de ${myLimit()}`}</p>`
         +(L.includes("passkey")?`<button type="button" class="pact" id="apk">Passkey toevoegen</button>`:"")
-        +`<button type="button" class="pact" id="aout">Uitloggen</button><button type="button" class="pact bad" id="adel">Account verwijderen</button></div>`;
+        +`<button type="button" class="pact" id="agrp">Code van je school of werk</button><button type="button" class="pact" id="aref">Nodig een vriend uit</button><button type="button" class="pact" id="aout">Uitloggen</button><button type="button" class="pact bad" id="adel">Account verwijderen</button></div>`;
     }else if(L.length)b=ban("alogin","me","Inloggen of account maken","Bewaar je voortgang en laat je teksten nakijken.");
     else h=`<p class="note">Inloggen is nog niet ingesteld.</p>`;
     if(acc.msg)h+=`<p class="note">${esc(acc.msg)}</p>`;
@@ -2485,6 +2506,8 @@ function drawProfile(){
   $("pban").innerHTML=b; el.innerHTML=h;
   if($("alogin"))$("alogin").onclick=()=>{acc.msg="";welcome()};
   if($("aplus"))$("aplus").onclick=()=>{plusMsg="";plusScreen()};
+  if($("aref"))$("aref").onclick=refScreen;
+  if($("agrp"))$("agrp").onclick=()=>groupScreen("");
   if($("apk"))$("apk").onclick=async()=>{
     try{const{error}=await acc.sb.auth.registerPasskey();if(error)throw error;acc.msg="Je passkey is gemaakt. Nu kun je ook met Face ID, Touch ID of je vingerafdruk inloggen."}
     catch(e){acc.msg=/NotAllowed|abort|cancel/i.test(String(e&&(e.message||e.name)))?"Gestopt.":"Een passkey maken lukt hier niet."}
@@ -2500,6 +2523,7 @@ function drawProfile(){
       lsSet(progressKey("guest"),JSON.stringify({data:mergeS(retained,guestEntry?.data||freshProgress()),frame:{},version:++localVersion}));
       acc.msg="Je account is verwijderd. Je voortgang op dit apparaat blijft.";await setUser(null)}
     catch(e){acc.msg="Verwijderen is niet gelukt. Probeer het later opnieuw.";drawProfile()}};
+  remindRow();
   if(canBuzz()){$("ptrilw").hidden=false;$("ptril").checked=lsGet("ww-tril")!=="0";$("ptril").onchange=()=>{lsSet("ww-tril",$("ptril").checked?"1":"0");if($("ptril").checked)buzz("good")}}
 }
 function drawPlan(){
@@ -3024,7 +3048,7 @@ async function check(q){
     const c=e&&e.code;
     if(c==="rate_limited"){btn.disabled=false;$("txt").readOnly=false;$("fb").innerHTML=`<p class="note">Te veel verzoeken achter elkaar. Wacht een minuut en probeer het opnieuw.</p>`;return}
     btn.hidden=true;
-    selfGrade(q,noCheck(c)?noCheck(c)+" Vergelijk je tekst nu met het voorbeeld.":c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je tekst met het voorbeeld.":"Het nakijken is niet gelukt. Vergelijk je tekst met het voorbeeld.",{task,form,text});
+    selfGrade(q,noCheck(c)?noCheck(c)+" Vergelijk je tekst nu met het voorbeeld."+offerHTML(c):c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je tekst met het voorbeeld.":"Het nakijken is niet gelukt. Vergelijk je tekst met het voorbeeld.",{task,form,text});
   }
 }
 // Schrijven B1 practice: zinsopdrachten that follow each other are checked together, in one call (one check, not three)
@@ -3054,7 +3078,7 @@ async function checkZ(q){
     const c=e&&e.code;
     if(c==="rate_limited"){cur.zs=Z.slice(0,-1);btn.disabled=false;$("txt").readOnly=false;$("fb").innerHTML=`<p class="note">Te veel verzoeken achter elkaar. Wacht een minuut en probeer het opnieuw.</p>`;return}
     btn.hidden=true;
-    const msg=noCheck(c)?noCheck(c)+" Vergelijk je zinnen nu met de voorbeelden.":c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je zinnen met de voorbeelden.":"Het nakijken is niet gelukt. Vergelijk je zinnen met de voorbeelden.";
+    const msg=noCheck(c)?noCheck(c)+" Vergelijk je zinnen nu met de voorbeelden."+offerHTML(c):c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je zinnen met de voorbeelden.":"Het nakijken is niet gelukt. Vergelijk je zinnen met de voorbeelden.";
     $("fb").innerHTML=`<p class="note">${msg}</p>`+Z.map(z=>`<p class="note">${z.q.big}</p><p class="ask">Jouw zin</p><div class="sample">${esc(z.text)}</div><p class="ask">Voorbeeld</p><div class="sample">${esc(z.q.right)}</div>`).join("")
       +`<div class="two"><button class="ghost" id="again">Later herhalen</button><button class="btn" id="got">Gelukt</button></div>`;
     const go=ok=>{Z.forEach(z=>record(ok,z.q));pos++;show()};
@@ -3152,7 +3176,7 @@ async function examWrite(){
       <p class="ru">${review.complete?`${review.earned} van ${review.max} punten, `:""}${good} van ${tasks.length} opdrachten voldoende${review.unfinished?`; ${review.unfinished} niet gemaakt`:""}</p></div>
       <p><b class="${review.complete?(passed?"good":"bad"):""}">${!review.complete?"Onvolledige beoordeling":passed?"Oefendoel bereikt":"Meer oefenen"}</b></p>
       <p class="note">Het oefendoel is ${passPc(exam.part)}% van de punten. Dit is een oefenresultaat. De officiële uitslag wordt door DUO bepaald.</p>
-      ${writingReviewHTML(review)}
+      ${review.complete&&!passed?examOffer():""}${writingReviewHTML(review)}
       <details class="writing-details"><summary>Bekijk elke opdracht en de verbeterde teksten</summary>${body}</details>${foot}`;
     const html=card.innerHTML, state={cur:exam,queue:tasks,pos,total,right,answered,planId}, backAction=$("back").onclick, backLabel=$("back").getAttribute("aria-label");
     const restoreResult=()=>{
@@ -3174,7 +3198,7 @@ async function examWrite(){
     wire();
   }catch(error){
     const code=error?.code;
-    fallback(noCheck(code)?noCheck(code)+" Vergelijk je teksten nu met de voorbeelden.":code==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je teksten met de voorbeelden.":code==="rate_limited"?"Te veel verzoeken achter elkaar. Probeer het over een minuut opnieuw.":"Het nakijken is niet gelukt. Vergelijk je teksten met de voorbeelden.");
+    fallback(noCheck(code)?noCheck(code)+" Vergelijk je teksten nu met de voorbeelden."+offerHTML(code):code==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je teksten met de voorbeelden.":code==="rate_limited"?"Te veel verzoeken achter elkaar. Probeer het over een minuut opnieuw.":"Het nakijken is niet gelukt. Vergelijk je teksten met de voorbeelden.");
   }
 }
 async function examSpeak(){
@@ -3198,10 +3222,10 @@ async function examSpeak(){
     keepRes(cur.part,pc);
     card.innerHTML=`<div class="done"><p class="ask">${cur.t}: uitslag</p><div class="big">${pc}%</div><p class="ru">${scored?`${pts} van ${max} punten, `:""}${good} van ${queue.length} antwoorden voldoende${A.length<queue.length?`; ${queue.length-A.length} ${queue.length-A.length===1?"vraag":"vragen"} niet beantwoord`:""}</p></div>
       <p><b class="${pass?"good":"bad"}">${pass?"Oefendoel bereikt":"Meer oefenen"}</b></p>
-      <p class="note">Het oefendoel is ${passPc(cur.part)}%. Dit beoordeelt alleen je uitgeschreven antwoord. Uitspraak en tempo tellen op het examen ook mee.</p>`+body+foot; bind();
+      <p class="note">Het oefendoel is ${passPc(cur.part)}%. Dit beoordeelt alleen je uitgeschreven antwoord. Uitspraak en tempo tellen op het examen ook mee.</p>`+(pass?"":examOffer())+body+foot; bind();
   }catch(e){
     const c=e&&e.code;
-    plain(noCheck(c)?noCheck(c)+" Vergelijk je antwoorden nu met de voorbeelden.":c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je antwoorden met de voorbeelden.":c==="rate_limited"?"Te veel verzoeken achter elkaar. Probeer het over een minuut opnieuw.":"Het nakijken is niet gelukt. Vergelijk je antwoorden met de voorbeelden.");
+    plain(noCheck(c)?noCheck(c)+" Vergelijk je antwoorden nu met de voorbeelden."+offerHTML(c):c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je antwoorden met de voorbeelden.":c==="rate_limited"?"Te veel verzoeken achter elkaar. Probeer het over een minuut opnieuw.":"Het nakijken is niet gelukt. Vergelijk je antwoorden met de voorbeelden.");
   }
 }
 function finish(){
@@ -3586,6 +3610,96 @@ const plusLine=()=>{const p=acc.plus,c=acc.cfg.plus;
   if(p.pass)return`Geldig tot ${plusDay(p.until)}`;
   return p.status==="past_due"?"Je betaling is niet gelukt":!p.until?"Actief":p.ends?`Loopt af op ${plusDay(p.until)}`:`Actief · verlengt op ${plusDay(p.until)}`};
 // Kies je avatar: a grid of the avatars, the chosen one with an orange ring; a tap picks it and goes back to Profiel
+// A code from a school or employer (api/group.js): the Plus checks of the group's level until its end date; the teacher
+// sees the member's practice, which the screen says before the code is used
+const GROUPMSG={ok:"Gelukt! Je hoort nu bij deze groep.",unknown:"Deze code bestaat niet.",ended:"Deze groep is afgelopen.",full:"Deze groep is vol.",already:"Je hoort al bij deze groep."};
+function groupScreen(msg){
+  if(!acc.user)return home();
+  closePop();hush();TK=null;$("card").innerHTML="";
+  $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;window.scrollTo(0,0);
+  tBack(TABN[tab],home);
+  $("tbody").innerHTML=`<h2>Code van je school of werk</h2>
+    <p>Heb je een code van je school of werkgever? Vul hem hier in. Dan kun je net zo vaak laten nakijken als met Plus, tot de einddatum van je groep.</p>
+    <p class="note">Je docent of werkgever ziet dan je oefenresultaten: je naam, je e-mailadres, je oefentijd en je scores.</p>
+    <form id="gform" class="gform"><input id="gcode" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="8" aria-label="Code" placeholder="Bijvoorbeeld ABCD2345" dir="ltr"><button class="btn" id="ggo">Gebruik de code</button></form>
+    ${msg?`<p class="note" role="status">${esc(msg)}</p>`:""}`;
+  $("gform").onsubmit=async e=>{
+    e.preventDefault();const code=$("gcode").value.trim().toUpperCase(),uid=acc.user?.id;
+    if(!REFRE.test(code))return groupScreen(GROUPMSG.unknown);
+    $("ggo").disabled=true;
+    try{
+      const r=await fetch("/api/group",{method:"POST",headers:{...await authHead(),"content-type":"application/json"},body:JSON.stringify({go:"join",code})});
+      const j=r.ok?await r.json():null; if(acc.user?.id!==uid)return;
+      if(j?.result==="ok"||j?.result==="already")await usage();
+      groupScreen(GROUPMSG[j?.result]||"Dat lukt nu niet. Probeer het later nog eens.");
+    }catch{groupScreen("Dat lukt nu niet. Probeer het later nog eens.")}
+  };
+}
+// Dagelijkse herinnering (store app only): a local notification every day at the chosen hour (ww-remind), no server
+const REMH=["8","12","19","21"];
+function remindRow(){
+  const N=NATIVE&&Capacitor.Plugins?.LocalNotifications; if(!N)return;
+  const sel=$("prem"),cur=lsGet("ww-remind")||"";
+  $("premw").hidden=false;
+  sel.innerHTML=`<option value="">Uit</option>`+REMH.map(h=>`<option value="${h}"${cur===h?" selected":""}>${h.padStart(2,"0")}:00</option>`).join("");
+  $("premv").textContent=cur?cur.padStart(2,"0")+":00":"Uit";
+  sel.onchange=async()=>{
+    const h=sel.value;
+    try{
+      await N.cancel({notifications:[{id:1}]});
+      if(h){
+        const perm=await N.requestPermissions();
+        if(perm.display!=="granted"){lsSet("ww-remind",null);acc.msg="Meldingen staan uit voor Bittertalen. Zet ze aan in Instellingen.";return drawProfile()}
+        await N.schedule({notifications:[{id:1,title:"Bittertalen",body:"Tijd voor je les van vandaag.",schedule:{on:{hour:+h,minute:0},repeats:true,allowWhileIdle:true}}]});
+      }
+      lsSet("ww-remind",h||null);
+    }catch{lsSet("ww-remind",null)}
+    drawProfile();
+  };
+}
+async function claimRef(){
+  const code=lsGet("ww-ref"),uid=acc.user?.id; if(!code||!uid)return;
+  try{
+    const r=await fetch("/api/referral",{method:"POST",headers:{...await authHead(),"content-type":"application/json"},body:JSON.stringify({code})});
+    if(!r.ok)return; // try again at the next start
+    const j=await r.json(); if(acc.user?.id!==uid)return;
+    lsSet("ww-ref",null);
+    if(j.result==="ok"){acc.msg="Welkom! Jij en je vriend krijgen allebei 3 extra gratis nakijkbeurten.";await usage();drawProfile()}
+  }catch{}
+}
+const REFSHARE={nl:"Ik oefen voor het inburgeringsexamen met Bittertalen. Met mijn link krijg je 3 extra gratis nakijkbeurten:",
+  en:"I practise for the Dutch integration exam with Bittertalen. With my link you get 3 extra free checks:",
+  ar:"أتدرّب على امتحان الاندماج الهولندي مع Bittertalen. برابطي تحصل على 3 تصحيحات مجانية إضافية:",
+  tr:"Hollanda uyum sınavına Bittertalen ile hazırlanıyorum. Linkimle 3 ek ücretsiz kontrol alırsın:",
+  hi:"मैं Bittertalen से डच एकीकरण परीक्षा का अभ्यास करता/करती हूँ। मेरे लिंक से आपको 3 अतिरिक्त मुफ़्त जाँचें मिलेंगी:",
+  zh:"我在用 Bittertalen 准备荷兰融入考试。通过我的链接，你可以多获得 3 次免费批改：",
+  es:"Practico para el examen de integración neerlandés con Bittertalen. Con mi enlace recibes 3 revisiones gratis extra:",
+  ru:"Я готовлюсь к экзамену на интеграцию в Нидерландах с Bittertalen. По моей ссылке вы получите 3 дополнительные бесплатные проверки:"};
+async function refScreen(){
+  if(!acc.user)return home();
+  closePop();hush();TK=null;$("card").innerHTML="";
+  $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;window.scrollTo(0,0);
+  tBack(TABN[tab],home);
+  const draw=msg=>{
+    const r=acc.ref, url=r&&location.origin+"/?ref="+r.code;
+    $("tbody").innerHTML=`<h2>Nodig een vriend uit</h2>
+      <p>Deel je link met een vriend. Maakt je vriend binnen 14 dagen een account met jouw link, dan krijgen jullie allebei 3 extra gratis nakijkbeurten. Dat kan met maximaal 10 vrienden.</p>
+      ${r?`<div class="sample reflink" lang="nl" dir="ltr">${esc(url)}</div>
+      <div class="two">${navigator.share?`<button type="button" class="btn" id="rshare">Deel je link</button>`:""}<button type="button" class="${navigator.share?"ghost":"btn"}" id="rcopy">Kopieer de link</button></div>
+      <p class="note" role="status">${msg||(r.invited?`Via jouw link: ${r.invited} vrienden · +${r.bonus} nakijkbeurten`:"Nog niemand heeft je link gebruikt.")}</p>`
+      :`<p class="note refwait" role="status">${msg||"Je link wordt geladen…"}</p>`}`;
+    if(!r)return;
+    const text=REFSHARE[lsGet("ww-ui")]||REFSHARE.nl;
+    if($("rshare"))$("rshare").onclick=()=>navigator.share({title:"Bittertalen",text,url}).catch(()=>{});
+    $("rcopy").onclick=()=>navigator.clipboard.writeText(url).then(()=>draw("Gekopieerd"),()=>draw("Kopieer de link hierboven."));
+  };
+  draw();
+  try{
+    const r=await fetch("/api/referral",{headers:await authHead(),cache:"no-store"});
+    if(!r.ok)throw 0; const j=await r.json(); if(!REFRE.test(j.code||""))throw 0;
+    acc.ref=j; if(!$("talk").hidden&&$("tbody").querySelector(".refwait"))draw();
+  }catch{if(!$("talk").hidden&&$("tbody").querySelector(".refwait"))draw("Je link laden lukt nu niet. Probeer het later nog eens.")}
+}
 function avScreen(){
   closePop();hush();TK=null;$("card").innerHTML="";
   $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;window.scrollTo(0,0);
@@ -3600,8 +3714,9 @@ function plusScreen(){
   $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;window.scrollTo(0,0);
   tBack(TABN[tab],home);
   const c=acc.cfg.plus,p=acc.plus,on=isPlus(),plans=c.plans||{A2:{price:c.price}};
+  if(NATIVE){$("tbody").innerHTML=`<h2 id="plusS">Bittertalen Plus</h2>`+(on?`<p class="sub"><b>${p.group?`<span lang="nl">${esc(p.group)}</span>`:p.pass?"Examenpas":"Bittertalen Plus"} ${p.level||""}</b> · ${plusLine()}</p>`:`<p class="sub">Bittertalen Plus is niet beschikbaar in deze app.</p>`)+`<p class="sub">Al het andere in Bittertalen blijft gratis.</p>`;return}
   $("tbody").innerHTML=`<h2 id="plusS">Bittertalen Plus</h2>`
-    +(on?`<p class="sub"><b>${p.pass?"Examenpas":"Bittertalen Plus"} ${p.level||""}</b> · ${plusLine()}</p>`:"")
+    +(on?`<p class="sub"><b>${p.group?`<span lang="nl">${esc(p.group)}</span>`:p.pass?"Examenpas":"Bittertalen Plus"} ${p.level||""}</b> · ${plusLine()}</p>`:"")
     +`<p class="sub">Met Plus: ${c.limit} nakijkbeurten per dag. Met een gratis account: ${acc.cfg.limit} gratis.</p><p class="sub">Al het andere in Bittertalen blijft gratis.</p>`
     +(on&&p.status==="past_due"?`<p class="note">Je laatste betaling is niet gelukt. Stripe probeert het nog een paar keer.</p>`:"")
     +(plusMsg?`<p class="note" role="status">${esc(plusMsg)}</p>`:"")
@@ -4107,7 +4222,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="ce1d003d3e";
+const UIV="570b4de0e0";
 let uiP=null;
 function uiLoaded(){ // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});

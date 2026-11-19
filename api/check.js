@@ -13,7 +13,7 @@
 // With accounts set up (Supabase, see _supa.js) only a signed-in user may grade, CHECK_LIMIT checks a day;
 // the answer then also has `left`, the checks left today. With Bittertalen Plus (api/plus.js) PLUS_LIMIT a day.
 import Anthropic from "@anthropic-ai/sdk";
-import { accounts, caller, checkCost, useChecks, LIMIT, PLUS, plusOn, plusFor, coversLevel, sameOrigin, FREE, visitor, useFree, useTotal, addSpend } from "./_supa.js";
+import { accounts, caller, checkCost, useChecks, LIMIT, PLUS, plusOn, plusFor, coversLevel, sameOrigin, FREE, visitor, useFree, useTotal, addSpend, bonusFor } from "./_supa.js";
 
 // Created only when the key is set, so a missing key gives a clear error instead of a crash
 // (trimmed: a key pasted into the dashboard with a trailing newline breaks the request header)
@@ -153,6 +153,37 @@ Geef voor elk antwoord, in dezelfde volgorde:
 Bij een vraag met foto's staat tussen haakjes wat er op de foto's te zien is.`;
 
 const str = (v, max) => (typeof v === "string" ? v.slice(0, max) : "");
+// Schrijven A2: the prompt for 1 to 4 tasks {task, form, text}
+const promptWR = (tasks, max) =>
+  tasks
+    .map(
+      (t, i) =>
+        `OPDRACHT ${i + 1}: ${t.task}` +
+        (t.form ? `\nIngevuld formulier (controleer of alle velden zijn ingevuld en logisch zijn):\n${t.form}` : "") +
+        `\nTEKST VAN DE CURSIST ${i + 1}:\n<<<\n${t.text || "(leeg)"}\n>>>`,
+    )
+    .join("\n\n") + `\n\nNoem per opdracht maximaal ${max} fouten.`;
+
+// One Schrijven A2 task graded by a given model, exactly as practice grades it (the same prompt, schema, clamping and
+// pass rule), for the owner's model comparison (api/compare.js). No allowance is used; the tokens go into ai_spend.
+export const MODELS = { free: MODEL_FREE, paid: MODEL };
+export async function gradeWriting(task, model) {
+  if (!client) throw new Error("not_configured");
+  const response = await client.beta.messages.create({
+    model,
+    max_tokens: 16000,
+    betas: ["server-side-fallback-2026-07-01"],
+    fallbacks: "default",
+    output_config: { effort: "medium", format: { type: "json_schema", schema: SCHEMA_WR } },
+    system: SYSTEM,
+    messages: [{ role: "user", content: promptWR([{ task: str(task.task, 1200), form: str(task.form, 1500), text: str(task.text, 2500) }], 8) }],
+  });
+  await addSpend(response.model, response.usage).catch(() => {});
+  if (response.stop_reason === "refusal" || response.stop_reason === "max_tokens") throw new Error(response.stop_reason);
+  const t = JSON.parse(response.content.find((b) => b.type === "text")?.text || "{}").tasks?.[0] || {};
+  const scores = clampScores(t.scores, SCORES_WR);
+  return { model: response.model, scores, total: sum(scores), passed: wrPassed(scores), errors: Array.isArray(t.errors) ? t.errors.length : 0, verdict: str(t.verdict, 400) };
+}
 
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "method_not_allowed" });
@@ -185,6 +216,7 @@ export default async function handler(req, res) {
       uid = user.id;
       plus = plusOn && coversLevel(await plusFor(uid).catch(() => null), wb || sb ? "B1" : "A2");
       if (plus) { lim = PLUS; period = "day"; }
+      else lim = LIMIT + (await bonusFor(uid).catch(() => 0)); // invited friends: extra free checks (api/referral.js)
       left = await useChecks(uid, cost, lim, period, checkedAt).catch(() => null);
       if (left == null) return res.status(502).json({ error: "failed" });
       if (left < 0) return res.status(429).json({ error: "limit", limit: lim, period, checkedAt, plus });
@@ -224,14 +256,7 @@ export default async function handler(req, res) {
     ? tasks
         .map((t, i) => `VRAAG ${i + 1}: ${t.task}\nANTWOORD VAN DE CURSIST ${i + 1}:\n<<<\n${t.text || "(niets gezegd)"}\n>>>`)
         .join("\n\n") + `\n\nNoem per antwoord maximaal ${max} fouten.`
-    : tasks
-      .map(
-        (t, i) =>
-          `OPDRACHT ${i + 1}: ${t.task}` +
-          (t.form ? `\nIngevuld formulier (controleer of alle velden zijn ingevuld en logisch zijn):\n${t.form}` : "") +
-          `\nTEKST VAN DE CURSIST ${i + 1}:\n<<<\n${t.text || "(leeg)"}\n>>>`,
-      )
-      .join("\n\n") + `\n\nNoem per opdracht maximaal ${max} fouten.`;
+    : promptWR(tasks, max);
 
   try {
     providerStarted = true;

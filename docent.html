@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Bittertalen · docent</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=bittie1">
+<style>
+/* The owner's overview: only the owner sees it (api/admin.js checks ADMIN_EMAILS), so it is in Russian and works on a phone as well as a computer. The app's Delfts blauw: tin-glaze white, cobalt, oranje as the one accent, round tiles, nearly square controls */
+:root{
+  --bg:#EEF2FA; --card:#fff; --ink:#14213D; --soft:#56617C; --line:#D6DDEB; --blue:#1F3C96; --fill:#1F3C96; --wash:#E4EBFA;
+  --oranje:#C8500C; --good:#21613A; --bad:#C0392B; --r:20px; --rc:4px;
+  --lift:0 1px 2px rgba(8,16,40,.06),0 8px 24px rgba(8,16,40,.10);
+}
+/* The owner overview uses a light palette. */
+:root{color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 -apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,sans-serif}
+main{max-width:1400px;margin:0 auto;padding:24px 24px 64px}
+header{display:flex;align-items:center;gap:16px;margin-bottom:20px}
+h1{font-size:24px;font-weight:600;margin:0;letter-spacing:-.01em}
+h1 small{color:var(--soft);font-weight:400;font-size:15px;margin-inline-start:8px}
+h2{font-size:17px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--soft);font-size:13px;margin:0 0 14px}
+.grow{flex:1}
+button,.btn{font:inherit;font-weight:600;border-radius:var(--rc);padding:8px 14px;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--ink);text-decoration:none}
+.btn.main{background:var(--fill);border-color:var(--fill);color:#fff}
+button:focus-visible,.btn:focus-visible,input:focus-visible,.scroll:focus-visible{outline:2px solid var(--oranje);outline-offset:2px}
+.tile{background:var(--card);border-radius:var(--r);box-shadow:var(--lift);padding:20px 22px;margin-bottom:20px}
+.tile.warn{border-inline-start:4px solid var(--oranje)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:20px}
+.kpi{background:var(--card);border-radius:var(--r);box-shadow:var(--lift);padding:16px 18px}
+.kpi b{display:block;font-size:28px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kpi span{color:var(--soft);font-size:13px}
+.scroll{overflow-x:auto;position:relative} /* also holds .sr, which would otherwise widen the page */
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+/* a grid: every cell with a border and centred, so a number is read under its heading */
+th{color:var(--soft);font-weight:600;font-size:13px;line-height:1.25;text-align:center;vertical-align:middle;padding:8px 6px;border:1px solid var(--line);background:#F5F7FC}
+td{padding:9px 6px;border:1px solid var(--line);text-align:center;vertical-align:middle;white-space:nowrap}
+tbody tr.u{cursor:pointer}
+@media (hover:hover){tbody tr.u:hover td{background:var(--wash)}}
+tr.open td{background:var(--wash)}
+.who button{all:unset;cursor:pointer;display:block}
+.who button:focus-visible{outline:2px solid var(--oranje);outline-offset:2px}
+.who b{display:block;font-weight:600}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.who span{color:var(--soft);font-size:13px}
+.muted{color:var(--soft)}
+.chip{display:inline-block;border:1px solid var(--line);border-radius:var(--rc);padding:1px 6px;margin:0 4px 3px 0;font-size:13px}
+.ok{color:var(--good)} .no{color:var(--bad)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-inline-end:6px;background:var(--line)}
+.dot.now{background:var(--good)} .dot.week{background:var(--oranje)}
+/* Each chart keeps its own scale and a persistent readout of the selected day. */
+:root{--chart:#2F52C0}
+.trends{margin-bottom:20px}
+.trend-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:14px;flex-wrap:wrap}
+.trend-head h2{font-size:20px}.trend-head .sub{margin:0}
+.period{display:flex;gap:4px;background:var(--wash);padding:4px;border-radius:var(--rc)}
+.period button{border:0;background:transparent;min-height:40px;padding:6px 14px}
+.period button[aria-pressed=true]{background:var(--card);box-shadow:0 1px 3px #14213D26;color:var(--blue)}
+.charts{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.chart{margin:0;min-width:0;background:var(--card);border-radius:var(--r);box-shadow:var(--lift);padding:20px 22px}
+.chart .sub{min-height:38px;margin-bottom:12px}
+.readout{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid var(--line);font-size:13px;color:var(--soft)}
+.readout b{font-size:22px;font-weight:600;color:var(--ink);white-space:nowrap;font-variant-numeric:tabular-nums}
+.plot{display:flex;height:208px;padding-top:22px}
+.yax{position:relative;width:36px;flex:none;font-size:11px;color:var(--soft);font-variant-numeric:tabular-nums}
+.yax span{position:absolute;right:8px;transform:translateY(50%)}
+.area{isolation:isolate;position:relative;flex:1;min-width:0}
+.area hr{position:absolute;left:0;right:0;margin:0;border:0;border-top:1px solid var(--line)}
+.line{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;color:var(--chart)}
+.line path{fill:none;stroke:currentColor;stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.points{position:absolute;inset:0;display:flex;touch-action:pan-y}
+.point{flex:1;position:relative;min-width:0;cursor:crosshair}
+.point::before{content:"";position:absolute;width:6px;height:6px;border-radius:50%;background:var(--chart);left:50%;top:var(--y);transform:translate(-50%,-50%);pointer-events:none}
+.point[data-missing]::before{display:none}
+.point[aria-pressed=true]::before{width:11px;height:11px;background:var(--oranje);border:2px solid var(--card);box-shadow:0 0 0 1px var(--oranje);z-index:2}
+.point[aria-pressed=true]::after{content:"";position:absolute;top:0;bottom:0;left:50%;width:1px;background:var(--line);z-index:-1}
+.point:focus-visible{outline:2px solid var(--oranje);outline-offset:-1px}
+.xax{position:relative;height:42px;margin-inline-start:36px;font-size:11px;color:var(--soft);font-variant-numeric:tabular-nums}
+.xax span{position:absolute;top:7px;transform:translateX(-50%);white-space:nowrap;text-align:center}
+.xax b{display:block;font-size:12px;font-weight:600;color:var(--ink)}.xax small{display:block;font-size:11px}
+.chart-hint{font-size:12px;color:var(--soft);margin:8px 0}
+.chart details{margin-top:8px;font-size:13px} summary{cursor:pointer;color:var(--soft)}
+.chart details table{margin-top:8px} .chart details td,.chart details th{padding:7px 12px}
+.chart details td:first-child{text-align:start}.chart details td:last-child{text-align:end}
+.chart details tr.selected td{background:var(--wash)}
+.events th:first-child,.events td:first-child,.spend th:first-child,.spend td:first-child{position:sticky;left:0;background:var(--card);text-align:start;z-index:1;box-shadow:1px 0 var(--line)}
+.events th:first-child,.spend th:first-child{background:#F5F7FC}
+.explanation{margin-top:20px;font-size:13px}.explanation p{margin:10px 0}
+@media(max-width:900px){.charts{grid-template-columns:1fr}.chart .sub{min-height:0}}
+@media(max-width:600px){
+  main{padding:20px 16px 40px}header{flex-wrap:wrap;gap:10px}h1{width:100%;font-size:22px}h1 small{display:block;margin:2px 0 0;overflow-wrap:anywhere;font-size:13px}
+  header>.grow:empty{display:none}header>.muted{margin-inline-end:auto;font-size:12px}
+  .tile,.chart{padding:18px 16px}.kpis{grid-template-columns:1fr 1fr;gap:10px}.kpi{padding:14px}.kpi b{font-size:24px}
+  .trend-head{gap:10px}.trend-head>div:first-child{width:100%}.charts{gap:16px}.readout b{font-size:21px}
+  .tile header input[type=search]{width:100%}.tile header .grow{flex-basis:100%}
+  .detail .cols{grid-template-columns:1fr}.plot{height:194px}
+}
+.days{display:flex;align-items:flex-end;gap:4px;height:90px;margin:8px 0 2px}
+.days div{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px;height:100%;font-size:11px;color:var(--soft)}
+.days .qa{font-weight:600;color:var(--blue);min-height:14px}
+.days i{display:block;width:100%;background:var(--fill);border-radius:2px 2px 0 0;min-height:1px}
+.detail td{white-space:normal;background:var(--wash);text-align:start}
+.detail .cols{display:grid;grid-template-columns:2fr 1fr;gap:24px;padding:4px 4px 10px}
+.msg{max-width:560px;margin:80px auto;text-align:center}
+.msg p{color:var(--soft)}
+input[type=search]{font:inherit;border:1.5px solid var(--ink);border-radius:var(--rc);padding:7px 10px;background:var(--card);color:var(--ink);width:260px}
+code{font-size:13px;background:var(--wash);padding:1px 5px;border-radius:3px}
+</style>
+</head>
+<body>
+<main id="app"><p class="sub">Laden…</p></main>
+<script src="/lib/supabase-2.117.3.js"></script>
+<script>
+// The teacher's overview (api/group.js ?teach=1): the groups whose teacher is the confirmed e-mail of this login, with
+// each member's practice: last activity, practice time and answers in the last 7 days, and the last proefexamen score per
+// part. Members agreed to this when they entered the group's code. Dutch only, light, like the owner's overview.
+(() => {
+const $ = id => document.getElementById(id), app = $("app");
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"})[c]);
+const dayNo = (t = Date.now()) => { const d = new Date(t); return Math.floor((d.getTime() - d.getTimezoneOffset() * 6e4) / 864e5); };
+const PART = {lz: "Lezen", ls: "Luisteren", wr: "Schrijven", sp: "Spreken", knm: "KNM", l1: "Lezen B1", lb: "Luisteren B1", wb: "Schrijven B1", sb: "Spreken B1"};
+const week = o => { const t = dayNo(); let n = 0; for (const [k, v] of Object.entries(o || {})) if (+k > t - 7) n += +v || 0; return n; };
+const dur = s => { s = Math.round(s || 0); if (s < 60) return s ? "<1 min" : "—"; const h = Math.floor(s / 3600), m = Math.round(s % 3600 / 60); return h ? `${h} u ${String(m).padStart(2, "0")} min` : `${m} min`; };
+const when = iso => { if (!iso) return "—"; const t = Date.parse(iso), d = dayNo() - dayNo(t);
+  return d <= 0 ? "vandaag" : d === 1 ? "gisteren" : d < 7 ? `${d} dagen geleden` : new Date(t).toLocaleDateString("nl-NL", {day: "numeric", month: "short"}); };
+const day = s => new Date(s + "T12:00:00Z").toLocaleDateString("nl-NL", {day: "numeric", month: "long", year: "numeric"});
+const message = (title, text, action) => { app.innerHTML = `<div class="msg"><h1>${title}</h1><p>${text}</p>${action || ""}</div>`; };
+
+async function load() {
+  const cfg = await fetch("/api/config").then(r => r.ok ? r.json() : {}).catch(() => ({}));
+  if (!cfg.url) return message("Niet beschikbaar", "Accounts zijn op deze site nog niet ingesteld.");
+  const sb = supabase.createClient(cfg.url, cfg.anon, {auth: {flowType: "pkce", detectSessionInUrl: false, persistSession: true, autoRefreshToken: true}});
+  const {data} = await sb.auth.getSession(), s = data.session;
+  if (!s) return message("Log eerst in", "Log in in de app met het e-mailadres waarmee je groep is gemaakt, en kom dan hier terug.", `<a class="btn main" href="/oefenen?open=login">Inloggen</a>`);
+  const r = await fetch("/api/group?teach=1", {headers: {authorization: `Bearer ${s.access_token}`}}).catch(() => null);
+  if (!r || !r.ok) return message("Dat lukt nu niet", "Probeer het later nog eens.", `<button onclick="location.reload()">Opnieuw</button>`);
+  const {groups} = await r.json(), me = esc(s.user.email || "");
+  if (!groups.length) return message("Geen groepen", `Er zijn geen groepen voor <b>${me}</b>. Is dit het adres dat je aan Bittertalen hebt gegeven? Schrijf naar <a href="mailto:hallo@bittertalen.nl">hallo@bittertalen.nl</a>.`);
+  app.innerHTML = `<header><h1>Bittertalen <small>docent · ${me}</small></h1><div class="grow"></div><a class="btn" href="/oefenen">Naar de app</a></header>` + groups.map(g => {
+    const rows = g.members.map(u => {
+      const qd = week(u.qd), qr = week(u.qr), res = Object.entries(u.res || {}).map(([k, v]) => `${esc(PART[k] || k)} ${v.pc ?? "–"}%`).join(", ");
+      return `<tr><td>${esc(u.name || "—")}</td><td>${esc(u.email)}</td><td>${esc(u.lvl || "A2")}</td><td>${when(u.seen)}</td><td>${dur(week(u.tm))}</td>
+        <td>${qd ? `${qd} (${Math.round(qr / qd * 100)}% goed)` : "—"}</td><td>${res || "—"}</td></tr>`;
+    }).join("");
+    return `<section class="tile"><h2>${esc(g.name)} · ${esc(g.level)}</h2>
+      <p class="sub">Code <b>${esc(g.code)}</b> · ${g.members.length} van ${g.seats} plaatsen · tot en met ${day(g.until)}</p>
+      <div class="scroll" tabindex="0" role="region" aria-label="Cursisten van ${esc(g.name)}"><table><thead><tr><th>Naam</th><th>E-mail</th><th>Niveau</th><th>Laatst actief</th><th>Oefentijd 7 dagen</th><th>Antwoorden 7 dagen</th><th>Laatste proefexamens</th></tr></thead>
+      <tbody>${rows || `<tr><td colspan="7" class="muted">Nog niemand heeft de code gebruikt.</td></tr>`}</tbody></table></div></section>`;
+  }).join("") + `<p class="sub">Oefenresultaten zijn geen voorspelling van de examenuitslag. Cursisten zien in de app dat jij hun resultaten ziet.</p>`;
+}
+load();
+})();
+</script>
+</body>
+</html>

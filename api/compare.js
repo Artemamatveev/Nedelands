@@ -1,0 +1,36 @@
+// The owner's model comparison (admin.html, "Сравнение моделей"): POST with the owner's access token grades every made-up
+// answer in _samples.js with the free model (GRADING_MODEL_FREE, Haiku by default) and the paid one (GRADING_MODEL, Sonnet
+// by default), in parallel, and returns both results per answer. About 20 calls (~$0.25); the tokens go into ai_spend
+// like any grading. Only for a confirmed e-mail in ADMIN_EMAILS; same origin only; never cached.
+import { accounts, caller, sameOrigin } from "./_supa.js";
+import { admins } from "./admin.js";
+import { gradeWriting, MODELS } from "./check.js";
+import { SAMPLES } from "./_samples.js";
+
+export const config = { maxDuration: 120 };
+
+export default async function handler(req, res) {
+  res.setHeader("Cache-Control", "no-store");
+  res.setHeader("X-Robots-Tag", "noindex");
+  if (req.method !== "POST") return res.status(405).json({ error: "method_not_allowed" });
+  if (!sameOrigin(req)) return res.status(403).json({ error: "forbidden" });
+  if (!accounts) return res.status(503).json({ error: "not_configured" });
+  const u = await caller(req).catch(() => null);
+  if (!u) return res.status(401).json({ error: "login" });
+  const mail = String(u.email || "").toLowerCase();
+  if (!mail || !u.email_confirmed_at || !admins().includes(mail)) return res.status(403).json({ error: "forbidden" });
+  const one = (sample, model) => gradeWriting(sample, model).catch((e) => ({ error: String(e?.message || "failed").slice(0, 120) }));
+  const rows = await Promise.all(SAMPLES.map(async (s) => {
+    const [free, paid] = await Promise.all([one(s, MODELS.free), one(s, MODELS.paid)]);
+    return { id: s.id, task: s.task, text: s.text, free, paid };
+  }));
+  const both = rows.filter((r) => !r.free.error && !r.paid.error);
+  const summary = {
+    models: MODELS,
+    compared: both.length,
+    samePassed: both.filter((r) => r.free.passed === r.paid.passed).length,
+    meanDiff: both.length ? Math.round(both.reduce((a, r) => a + Math.abs(r.free.total - r.paid.total), 0) / both.length * 10) / 10 : null,
+    maxDiff: both.length ? Math.max(...both.map((r) => Math.abs(r.free.total - r.paid.total))) : null,
+  };
+  return res.status(200).json({ summary, rows });
+}
