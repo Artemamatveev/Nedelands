@@ -7,7 +7,6 @@ import { admins } from "./admin.js";
 import { gradeWriting, MODELS } from "./check.js";
 import { SAMPLES } from "./_samples.js";
 
-export const config = { maxDuration: 120 };
 
 export default async function handler(req, res) {
   res.setHeader("Cache-Control", "no-store");

@@ -88,7 +88,11 @@ function parseItems(xml) {
     .slice(0, MAX);
 }
 
+import thumb from "./_thumb.js";
+
+// /api/thumb is rewritten here (vercel.json), to stay within the plan's number of functions
 export default async function handler(req, res) {
+  if (req.query?.thumb) return thumb(req, res);
   if (req.method !== "GET") return res.status(405).json({ error: "method_not_allowed" });
   // Only this site's own pages: a same-origin GET carries Sec-Fetch-Site (older Safari: only Referer), not Origin
   const hostOf = (u) => { try { return new URL(u).host; } catch { return ""; } };

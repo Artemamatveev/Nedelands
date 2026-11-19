@@ -13,7 +13,8 @@ async function ask({user = null, env = {ADMIN_EMAILS: 'Eigenaar@Example.nl, twee
   const context = vm.createContext({process: {env}, String, URL});
   const supa = new vm.SyntheticModule(Object.keys(values), function () { for (const [k, v] of Object.entries(values)) this.setExport(k, v); }, {context});
   const module = new vm.SourceTextModule(fs.readFileSync(new URL('api/admin.js', root), 'utf8'), {context});
-  await module.link(() => supa); await module.evaluate();
+  const cmp = new vm.SyntheticModule(['default'], function () { this.setExport('default', async (q, r) => r.status(200).json({compare: true})); }, {context});
+  await module.link(s => s === './_compare.js' ? cmp : supa); await module.evaluate();
   const res = {statusCode: 200, headers: {}, setHeader(k, v) { this.headers[k] = v; }, status(n) { this.statusCode = n; return this; }, json(b) { this.body = b; return this; }};
   await module.namespace.default({method, headers: {}, query}, res);
   return {res, asked};
@@ -37,7 +38,8 @@ test('Nobody else gets in, and nobody without ADMIN_EMAILS', async () => {
     const r = await ask({user, ...(env ? {env} : {})});
     assert.equal(r.res.statusCode, code, JSON.stringify([user, env])); assert.equal(r.asked, 0);
   }
-  assert.equal((await ask({user: owner, method: 'POST'})).res.statusCode, 405);
+  assert.deepEqual((await ask({user: owner, method: 'POST'})).res.body, {compare: true}, 'POST is the model comparison');
+  assert.equal((await ask({user: owner, method: 'PUT'})).res.statusCode, 405);
   assert.equal((await ask({user: owner, accounts: false})).res.statusCode, 503);
   assert.equal((await ask({user: owner, fail: true})).res.statusCode, 502);
 });

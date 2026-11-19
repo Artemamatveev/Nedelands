@@ -398,6 +398,13 @@ opens in the system browser (`skipBrowserRedirect`, `Capacitor.Plugins.Browser`)
 work); Profiel shows "Dagelijkse herinnering" (`remindRow()`, local notifications, `ww-remind`). Keep these when changing
 login, Plus or Profiel. `native/` is not deployed as part of the site (`.vercelignore`).
 
+## Functions and the Vercel plan
+
+The Hobby plan deploys at most 12 functions (files in `api/` not starting with `_`); a 13th made the production build
+fail at "Deploying outputs" on 19 November 2026. `/api/thumb`, `/api/compare` and `/api/referral` are therefore rewrites
+(`vercel.json`) to `feed.js`, `admin.js` (POST) and `group.js` (`?kind=ref`), with their code in `_thumb.js`,
+`_compare.js` and `_referral.js`. Add a new endpoint the same way, or check the count first (`tests/group.test.mjs`).
+
 ## Accounts (optional)
 
 Logging in is optional; everything works without it except Claude's grading. Supabase (connected to the Vercel project

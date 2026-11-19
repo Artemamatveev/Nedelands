@@ -7,7 +7,11 @@ import { accounts, caller, adminData } from "./_supa.js";
 
 export const admins = () => String(process.env.ADMIN_EMAILS || "").split(",").map(s => s.trim().toLowerCase()).filter(Boolean);
 
+import compare from "./_compare.js";
+
+// POST is the model comparison (/api/compare is rewritten here, vercel.json; _compare.js checks the owner itself)
 export default async function handler(req, res) {
+  if (req.method === "POST") return compare(req, res);
   res.setHeader("Cache-Control", "no-store");
   res.setHeader("X-Robots-Tag", "noindex");
   if (req.method !== "GET") return res.status(405).json({ error: "method_not_allowed" });

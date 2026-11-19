@@ -1,10 +1,15 @@
 {
   "cleanUrls": true,
+  "rewrites": [
+    { "source": "/api/thumb", "destination": "/api/feed?thumb=1" },
+    { "source": "/api/compare", "destination": "/api/admin" },
+    { "source": "/api/referral", "destination": "/api/group?kind=ref" }
+  ],
   "functions": {
     "api/check.js": {
       "maxDuration": 120
     },
-    "api/compare.js": {
+    "api/admin.js": {
       "maxDuration": 120
     }
   },

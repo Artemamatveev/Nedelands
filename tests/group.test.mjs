@@ -53,6 +53,7 @@ async function ask({user, method = 'POST', body = {}, query = {}}) {
       groupList: async () => { calls.push(['list']); return []; },
       teacherOverview: async mail => { calls.push(['teach', mail]); return []; }},
     './admin.js': {admins: () => ['eigenaar@example.nl']},
+    './_referral.js': {default: async (req, res) => res.status(200).json({referral: true})},
   };
   const context = vm.createContext({String, Math, parseInt});
   const mods = Object.fromEntries(Object.entries(deps).map(([k, v]) => [k, new vm.SyntheticModule(Object.keys(v), function () { for (const [n, x] of Object.entries(v)) this.setExport(n, x); }, {context})]));
@@ -78,4 +79,13 @@ test('Only the owner makes or lists groups; anyone logged in can join; a teacher
   const t = await ask({user: learner, method: 'GET', query: {teach: 1}});
   assert.deepEqual(t.calls, [['teach', 'leerling@example.nl']]);
   assert.equal((await ask({user: {...learner, email_confirmed_at: null}, method: 'GET', query: {teach: 1}})).res.statusCode, 403);
+});
+
+test('/api/referral is rewritten to the group function as ?kind=ref and handled by _referral.js', async () => {
+  const r = await ask({user: learner, method: 'GET', query: {kind: 'ref'}});
+  assert.deepEqual(r.res.body, {referral: true}); assert.deepEqual(r.calls, []);
+  const v = JSON.parse(fs.readFileSync(new URL('vercel.json', root), 'utf8'));
+  assert.ok(v.rewrites.some(x => x.source === '/api/referral' && x.destination === '/api/group?kind=ref'));
+  const fns = fs.readdirSync(new URL('api/', root)).filter(f => f.endsWith('.js') && !f.startsWith('_'));
+  assert.ok(fns.length <= 12, `the Hobby plan allows 12 functions, there are ${fns.length}`);
 });

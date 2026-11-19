@@ -8,7 +8,11 @@ import { admins } from "./admin.js";
 
 const confirmed = (u) => (u && u.email_confirmed_at ? String(u.email || "").toLowerCase() : "");
 
+import referral from "./_referral.js";
+
+// /api/referral is rewritten here as ?kind=ref (vercel.json), to stay within the plan's number of functions
 export default async function handler(req, res) {
+  if (req.query?.kind === "ref") return referral(req, res);
   res.setHeader("Cache-Control", "no-store");
   res.setHeader("X-Robots-Tag", "noindex");
   if (req.method !== "GET" && req.method !== "POST") return res.status(405).json({ error: "method_not_allowed" });
