@@ -18,10 +18,22 @@ test('Postgres enforces weekly, daily and one-time budgets, refunds, resets and 
       create table public.plus(user_id uuid references auth.users,status text,until timestamptz);
     `);
     await db.exec(fs.readFileSync(new URL('../supabase/migrations/20261112192552_weekly_free_checks.sql',import.meta.url),'utf8'));
+    await db.exec(fs.readFileSync(new URL('../supabase/migrations/20261119140000_free_total_checks.sql',import.meta.url),'utf8'));
     await db.exec('begin');
     await db.exec(fs.readFileSync(new URL('../supabase/verify-weekly-checks.sql',import.meta.url),'utf8'));
     await db.exec('rollback');
     assert.equal((await db.query('select count(*)::int as n from check_week_usage')).rows[0].n,0);
+    // Free accounts: seven in all. A new week or year gives nothing back; a refund goes to the same total.
+    await db.exec('begin');
+    const once=async(cost,at)=>(await db.query(`select use_plan_checks('11111111-1111-1111-1111-111111111111',$1,7,'once',$2) as n`,[cost,at])).rows[0].n;
+    assert.equal(await once(6,'2099-01-05T10:00Z'),1);
+    assert.equal(await once(1,'2099-01-12T10:00Z'),0);
+    assert.equal(await once(1,'2100-06-01T10:00Z'),-1);
+    assert.equal(await once(-1,'2099-01-12T10:00Z'),1);
+    assert.equal(await once(0,'2101-01-01T10:00Z'),1);
+    assert.equal((await db.query(`select week::text from check_week_usage`)).rows[0].week,'2000-01-03');
+    await assert.rejects(db.query(`select use_plan_checks('11111111-1111-1111-1111-111111111111',1,7,'month',now())`),/Invalid allowance/);
+    await db.exec('rollback');
     await db.exec(`set role service_role;
       select use_plan_checks('11111111-1111-1111-1111-111111111111',1,7,'week','2099-01-05T10:00Z');
       select use_plan_checks('22222222-2222-2222-2222-222222222222',1,7,'week','2099-01-05T10:00Z');

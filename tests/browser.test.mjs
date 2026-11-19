@@ -979,38 +979,38 @@ test('Offline the app opens with its own files, also after an update', async t =
   } finally { await browser.close(); server.close(); }
 });
 
-test('Weekly free allowance, browser trial and daily Plus counters remain distinct',async t=>{
+test('One-time free allowance, browser trial and daily Plus counters remain distinct',async t=>{
   let browser;
   try{browser=chromium&&await chromium.launch()}catch(e){if(process.env.BROWSER_TESTS)throw e}
   if(!browser){if(process.env.BROWSER_TESTS)assert.fail('Playwright is not installed');return t.skip('no browser here')}
-  const config={url:'https://example.supabase.co',anon:'fixture',login:[],limit:7,period:'week',free:2,freePeriod:'once',plus:{limit:60,price:'9,99',plans:{A2:{price:'9,99'},B1:{price:'14,99'}}}};
+  const config={url:'https://example.supabase.co',anon:'fixture',login:[],limit:7,period:'once',free:2,freePeriod:'once',plus:{limit:60,price:'9,99',plans:{A2:{price:'9,99'},B1:{price:'14,99'}}}};
   const state={config,allowance:{free:1},plus:null},server=await serve(state),base=`http://127.0.0.1:${server.address().port}`;
   try{
     const s=await page(browser,base,{lang:'en'});await s.go('/');
-    await s.p.waitForFunction(()=>document.querySelector('#free-checks').textContent.includes('7 checks a week'));
+    await s.p.waitForFunction(()=>document.querySelector('#free-checks').textContent.includes('7 free checks'));
     assert.match(await s.p.locator('#trial-checks').textContent(),/2 one-time trial checks/);
     await s.go('/oefenen?open=today');await s.p.waitForFunction(()=>acc.free===1);
     await s.p.reload();await s.p.waitForFunction(()=>acc.free===1);
     const now=new Date(),day=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Amsterdam'}).format(now),week=new Date(day+'T12:00:00Z');
     week.setUTCDate(week.getUTCDate()-(week.getUTCDay()+6)%7);
-    state.allowance={dailyUsed:12,weeklyUsed:3,day,week:week.toISOString().slice(0,10)};
+    state.allowance={dailyUsed:12,weeklyUsed:0,totalUsed:3,day,week:week.toISOString().slice(0,10)};
     await s.p.evaluate(async cfg=>{
       acc.cfg=cfg;acc.user={id:'quota-test',email:'quota@example.test'};
       acc.sb={auth:{getSession:async()=>({data:{session:{access_token:'fixture'}}})}};
       S.lvl='A2';await usage();setTab('profiel');
     },config);
-    await s.p.waitForFunction(()=>document.querySelector('#prof').textContent.includes('Checks this week: 4 of 7 left'));
+    await s.p.waitForFunction(()=>document.querySelector('#prof').textContent.includes('Free checks: 4 of 7 left'));
     state.plus={status:'active',level:'A2'};
     await s.p.evaluate(async()=>{await usage();drawProfile()});
     await s.p.waitForFunction(()=>document.querySelector('#prof').textContent.includes('Checks left today: 48 of 60'));
     await s.p.evaluate(()=>{S.lvl='B1';drawProfile()});
-    await s.p.waitForFunction(()=>document.querySelector('#prof').textContent.includes('Checks this week: 4 of 7 left'));
-    await s.ctx.route('**/api/check',r=>r.fulfill({json:{tasks:[{passed:true}],left:0,limit:7,period:'week',checkedAt:new Date().toISOString()}}));
+    await s.p.waitForFunction(()=>document.querySelector('#prof').textContent.includes('Free checks: 4 of 7 left'));
+    await s.ctx.route('**/api/check',r=>r.fulfill({json:{tasks:[{passed:true}],left:0,limit:7,period:'once',checkedAt:new Date().toISOString()}}));
     await s.p.evaluate(async()=>{await nakijken([{task:'Test',text:'Ik kom morgen.'}],'wb');drawProfile()});
-    await s.p.waitForFunction(()=>document.querySelector('#prof').textContent.includes('Checks this week: 0 of 7 left'));
+    await s.p.waitForFunction(()=>document.querySelector('#prof').textContent.includes('Free checks: 0 of 7 left'));
     assert.equal(await s.p.evaluate(()=>checksLeft('wr')),48,'B1 free checks leave A2 paid checks intact');
     await s.p.evaluate(()=>{S.lvl='A2';plusScreen()});
-    await s.p.waitForFunction(()=>document.querySelector('#tbody').textContent.includes('60 checks a day. With a free account: 7 a week'));
+    await s.p.waitForFunction(()=>document.querySelector('#tbody').textContent.includes('60 checks a day. With a free account: 7 free'));
     assert.equal(await overflow(s.p),0);assert.deepEqual(s.errors,[]);await s.ctx.close();
   }finally{await browser.close();await new Promise(ok=>server.close(ok))}
 });
@@ -1019,7 +1019,7 @@ test('Monthly A2 and B1 offers fit the homepage and the app sends the selected l
   let browser;
   try{browser=chromium&&await chromium.launch()}catch(e){if(process.env.BROWSER_TESTS)throw e}
   if(!browser){if(process.env.BROWSER_TESTS)assert.fail('Playwright is not installed');return t.skip('no browser here')}
-  const config={limit:7,period:'week',free:2,freePeriod:'once',plus:{limit:60,price:'9,99',plans:{A2:{price:'9,99'},B1:{price:'14,99'}}}};
+  const config={limit:7,period:'once',free:2,freePeriod:'once',plus:{limit:60,price:'9,99',plans:{A2:{price:'9,99'},B1:{price:'14,99'}}}};
   const server=await serve({config}),base=`http://127.0.0.1:${server.address().port}`;
   try{
     for(const [lang,width] of [['nl',1280],['ru',390],['ar',375],['hi',320]]){

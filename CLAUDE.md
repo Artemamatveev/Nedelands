@@ -409,8 +409,10 @@ vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one comin
   `LOGIN_PASSKEY=1`, and a passkey is added after logging in another way.
 - Signing out uses `scope:"local"`: leaving Safari must not revoke the installed app or other devices. Deferred auth events carry a version so stale sign-out callbacks cannot overwrite newer sessions.
 - Sync uses the account-scoped state and retry journal described above. Supabase RLS still limits reads and conditional updates to the signed-in user's row. No new table or privileged client API is needed.
-- Free accounts get `FREE_WEEKLY_CHECKS` (default 7) per Amsterdam calendar week, resetting Monday at 00:00.
-  Writing and speaking share this allowance at levels not covered by Plus. Paid checks use a separate `PLUS_LIMIT`
+- Free accounts get `FREE_ACCOUNT_CHECKS` (default 7) checks in all, never renewed (the user's wish, 19 November
+  2026: the weekly seven replaced buying). The total is one `check_week_usage` row per user under the fixed bucket
+  date 2000-01-03 (`window_kind 'once'`, migration `20261119140000_free_total_checks.sql`, also in `schema.sql`; run it
+  in the SQL editor before deploying); old weekly rows stay as history. Writing and speaking share this allowance at levels not covered by Plus. Paid checks use a separate `PLUS_LIMIT`
   (default 60) daily ledger. `check_week_usage` and `check_day_usage` are server-written, with read-own RLS; daily
   `check_usage` still records all account usage for owner analytics. The server-only invoker RPC `use_plan_checks()`
   atomically reserves/refunds the budget. A captured timestamp keeps refunds in the original day/week.
@@ -419,8 +421,8 @@ vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one comin
   are stored in the service-only `trial_checks`; `trial_check_total` retains the daily global guest cap (`FREE_CAP`,
   default 50). Zero-cost lookups do not create usage rows. Deleting a browser's site data loses its trial identifier;
   anonymous trials cannot establish a person's identity. Privacy describes the cookie and retention.
-- `GET /api/allowance` is never cached: an authenticated user gets only their own daily/weekly counters; a guest gets
-  the remaining browser trial. The config says `period:"week"` and `freePeriod:"once"`; new pages request the versioned
+- `GET /api/allowance` is never cached: an authenticated user gets only their own daily counter and free total (`totalUsed`); a guest gets
+  the remaining browser trial. The config says `period:"once"` and `freePeriod:"once"`; new pages request the versioned
   config URL so a cached old daily plan is not used. The app tracks the two counters independently when switching levels.
 - One task costs 1 check, Schrijven A2 2, Schrijven B1 4, and Spreken A2/B1 6. All other practice and example answers
   stay free. Errors refund the learner; an uncertain paid provider outcome still retains its global spend reservation.
@@ -489,7 +491,7 @@ owner: `adminCheck()` asks `/api/admin?me=1` once per login (200 only for an `AD
 
 The current pricing (12 November 2026): Plus A2 is €9,99/month and raises the daily AI allowance to `PLUS_LIMIT`
 (default 60) on A2 only. Plus B1 is €14,99/month and includes A2. All practice and timed proefexamens remain free;
-Seven checks per Amsterdam calendar week remain available without Plus (`FREE_WEEKLY_CHECKS`).
+Seven checks in all remain available with a free account (`FREE_ACCOUNT_CHECKS`).
 There is no trial or yearly price. Videos and podcasts remain free.
 - `STRIPE_SECRET_KEY`, `STRIPE_PRICE` (the existing A2 monthly price), `STRIPE_PRICE_B1` and `STRIPE_WEBHOOK_SECRET`
   enable billing. `STRIPE_PORTAL_CONFIG` identifies the portal configuration offering the two plans. A2 and B1 are
@@ -627,8 +629,9 @@ same result, not marked again. A sentence to finish comes back whole (`zWhole()`
 A B1 form gets one box per answer that differs: `SYSTEM_WB` asks for one line per form answer with the open answer last, and
 another shape gives no button. An A2 form's `corrected` is the open answer only, so only that comes back.
 
-`api/check.js` is a Vercel function that grades writing with Claude (practice, 1 to 3 tasks: `GRADING_MODEL`, default
-`claude-sonnet-5-5`; a proefexamen, 4 or more tasks: `GRADING_MODEL_EXAM`, default `claude-opus-5-5`; both Vercel env vars,
+`api/check.js` is a Vercel function that grades writing with Claude (free checks, a guest's trial and a free account's,
+practice or proefexamen: `GRADING_MODEL_FREE`, default `claude-haiku-5-5`; paid practice, 1 to 3 tasks: `GRADING_MODEL`,
+default `claude-sonnet-5-5`; a paid proefexamen, 4 or more tasks: `GRADING_MODEL_EXAM`, default `claude-opus-5-5`; all Vercel env vars,
 so the model changes without code; structured JSON output, server-side refusal fallback). Every call adds its tokens to
 today's row per model in `ai_spend` (`add_ai_spend()`, `supabase/migrations/20261118230000_ai_spend.sql`, also in
 `schema.sql`: day, model and token totals only, no account, answer or IP, so privacy.html needs no change; rows go after

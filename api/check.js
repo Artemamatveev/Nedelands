@@ -23,6 +23,8 @@ const client = KEY ? new Anthropic({ apiKey: KEY }) : null;
 // GRADING_MODEL_EXAM. Set them in the Vercel project's environment variables to switch without a code change.
 const MODEL = (process.env.GRADING_MODEL || "claude-sonnet-5-5").trim();
 const MODEL_EXAM = (process.env.GRADING_MODEL_EXAM || "claude-opus-5-5").trim();
+// Free checks (a guest's trial and a free account's seven) use the cheaper GRADING_MODEL_FREE, also for a proefexamen.
+const MODEL_FREE = (process.env.GRADING_MODEL_FREE || "claude-haiku-5-5").trim();
 
 const RESULT = {
   type: "object",
@@ -165,7 +167,7 @@ export default async function handler(req, res) {
   if (!input.length) return res.status(400).json({ error: "no_tasks" });
 
   // Accounts: who is asking, and take the checks before calling Claude (given back if grading fails)
-  let uid = null, left, lim = LIMIT, plus = false, period = "week";
+  let uid = null, left, lim = LIMIT, plus = false, period = "once";
   const checkedAt = new Date().toISOString();
   const cost = checkCost(input.length);
   let who = null, free;
@@ -234,7 +236,7 @@ export default async function handler(req, res) {
   try {
     providerStarted = true;
     const response = await client.beta.messages.create({
-      model: tasks.length >= 4 ? MODEL_EXAM : MODEL,
+      model: !plus ? MODEL_FREE : tasks.length >= 4 ? MODEL_EXAM : MODEL,
       max_tokens: 16000,
       betas: ["server-side-fallback-2026-07-01"],
       fallbacks: "default",

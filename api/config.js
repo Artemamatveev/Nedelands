@@ -1,5 +1,5 @@
 // What the page needs for accounts: GET /api/config -> {url, anon, login:["google","apple","azure","facebook","email","passkey"], limit, free, plus?}
-// (limit: weekly free account checks; free: one-time browser trial; Plus keeps daily checks;
+// (limit: free account checks in all; free: one-time browser trial; Plus keeps daily checks;
 // events: the anonymous usage counts are on, see api/event.js)
 // or {} when accounts are not set up. The anon key is public by design (row level security protects the data).
 // Google, Apple, Microsoft (azure) and Facebook show when they are switched on in Supabase (Authentication → Sign In / Providers);
@@ -21,7 +21,7 @@ export default async function handler(req, res) {
   if (process.env.LOGIN_EMAIL === "1" && ext.email !== false) login.push("email");
   if (process.env.LOGIN_PASSKEY === "1") login.push("passkey");
   return res.status(200).json({
-    url: supaUrl, anon: anonKey, login, limit: LIMIT, period: "week", free: FREE, freePeriod: "once",
+    url: supaUrl, anon: anonKey, login, limit: LIMIT, period: "once", free: FREE, freePeriod: "once",
     ...(plusOn ? { plus: { limit: PLUS, price: PLUS_PRICE, plans: Object.fromEntries(Object.entries(PLANS).map(([level, p]) => [level, { price: p.price }])) } } : {}),
     // the Examenpas: one payment for PASS_DAYS of Plus at that level, only when its prices are configured
     ...(passOn ? { pass: { days: PASS_DAYS, plans: Object.fromEntries(Object.entries(PASSES).map(([level, p]) => [level, { price: p.price }])) } } : {}),

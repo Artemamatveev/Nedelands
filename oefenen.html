@@ -1254,22 +1254,21 @@ async function initCloud(){
 // Optional account (Supabase): the progress on every device, and Claude's checks for signed-in users, a few a day.
 // /api/config says whether accounts are set up and which ways to log in are on; without it the app works as before,
 // on this device only. The library (lib/) only loads when there is, or may be, a session.
-const acc={cfg:null,sb:null,user:null,left:null,used:null,weekUsed:null,usedDay:null,usedWeek:null,free:null,plus:null,saved:0,msg:"",step:null,mail:"",load:null};
+const acc={cfg:null,sb:null,user:null,left:null,used:null,freeUsed:null,usedDay:null,free:null,plus:null,saved:0,msg:"",step:null,mail:"",load:null};
 // Bittertalen Plus (api/plus.js): while the Stripe subscription runs, Claude checks cfg.plus.limit times a day
 const LIVE=["active","trialing","past_due"];
 const isPlus=level=>!!(acc.cfg&&acc.cfg.plus&&acc.plus&&LIVE.includes(acc.plus.status)&&(!acc.plus.until||Date.parse(acc.plus.until)+864e5>Date.now())&&(!level||acc.plus.level==="B1"||acc.plus.level==="A2"&&level==="A2"));
 const myLimit=(level=lvl())=>acc.cfg?(isPlus(level)?acc.cfg.plus.limit:acc.cfg.limit):7;
-const myPeriod=(level=lvl())=>isPlus(level)?"day":"week";
+const myPeriod=(level=lvl())=>isPlus(level)?"day":"once";
 const checksLeft=part=>{
   const level=part?["wb","sb"].includes(part)?"B1":"A2":lvl(),daily=myPeriod(level)==="day";
-  const used=daily?(acc.usedDay&&acc.usedDay!==amsDay()?null:acc.used):(acc.usedWeek&&acc.usedWeek!==amsWeek()?null:acc.weekUsed);
+  const used=daily?(acc.usedDay&&acc.usedDay!==amsDay()?null:acc.used):acc.freeUsed;
   return used==null?null:Math.max(0,myLimit(level)-used);
 };
 const ACFG="ww-acc-cfg",ALINK="ww-acc"; // the config, and which account this device's progress was last joined with
 const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
 const lsSet=(k,v)=>{try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}};
 const amsDay=(at=new Date())=>new Intl.DateTimeFormat("en-CA",{timeZone:"Europe/Amsterdam"}).format(at);
-const amsWeek=(at=new Date())=>{const d=new Date(amsDay(at)+"T12:00:00Z");d.setUTCDate(d.getUTCDate()-(d.getUTCDay()+6)%7);return d.toISOString().slice(0,10)};
 async function trialUsage(){
   if(!acc.cfg?.free||acc.user)return;
   try{const r=await fetch("/api/allowance",{cache:"no-store"});if(r.ok){const j=await r.json();if(!acc.user&&typeof j.free==="number")acc.free=j.free}}catch{}
@@ -1305,8 +1304,8 @@ function loadSb(){
 }
 async function initAccount(){
   let cfg=null; try{cfg=JSON.parse(lsGet(ACFG))}catch(e){}
-  if(cfg?.period!=="week")cfg=null;
-  const fresh=fetch("/api/config?v=weekly1").then(r=>r.ok?r.json():null).catch(()=>null).then(c=>{if(c)lsSet(ACFG,JSON.stringify(c));return c});
+  if(cfg?.period!=="once")cfg=null;
+  const fresh=fetch("/api/config?v=once1").then(r=>r.ok?r.json():null).catch(()=>null).then(c=>{if(c)lsSet(ACFG,JSON.stringify(c));return c});
   if(!cfg||!cfg.url)cfg=await fresh; // a cached "off" is asked again: accounts may have been switched on since
   else fresh.then(c=>{if(c&&(c.url||!acc.user)){acc.cfg=c.url?c:null;drawProfile();setTimeout(trackDay,1500)}});
   acc.cfg=cfg&&cfg.url?cfg:null; drawProfile();
@@ -1333,7 +1332,7 @@ async function setUser(u){
   if(!uid)lsSet(ALINK,null);
   const guest=progressOwner==="guest" && uid && (S.t || Object.keys(S.items).length) ? progressClone(S) : null;
   clearTimeout(pushT);cloud=null;syncing=null;dirty=false;
-  acc.user=u;acc.left=null;acc.used=null;acc.weekUsed=null;acc.usedDay=null;acc.usedWeek=null;acc.plus=null;acc.saved=0;acc.step=null;acc.sync="";
+  acc.user=u;acc.left=null;acc.used=null;acc.freeUsed=null;acc.usedDay=null;acc.plus=null;acc.saved=0;acc.step=null;acc.sync="";
   if(acc.admin){acc.admin=false;$("site-footer").innerHTML=siteFooter()} acc.adminOf=null;
   if(owner!==progressOwner){
     localSave();openProgress(owner);
@@ -1406,8 +1405,8 @@ async function usage(){
   if(acc.cfg.plus){try{const r=await fetch("/api/plus",{headers:await authHead()});if(r.ok){const j=await r.json();if(acc.user?.id===uid)acc.plus=j.plus||null}}catch{}}
   try{const r=await fetch("/api/allowance",{headers:await authHead(),cache:"no-store"});if(!r.ok)return;
     const j=await r.json();if(acc.user?.id!==uid)return;
-    if(Number.isSafeInteger(j.dailyUsed)&&Number.isSafeInteger(j.weeklyUsed)){
-      acc.used=j.dailyUsed;acc.weekUsed=j.weeklyUsed;acc.usedDay=j.day;acc.usedWeek=j.week;
+    if(Number.isSafeInteger(j.dailyUsed)&&Number.isSafeInteger(j.totalUsed)){
+      acc.used=j.dailyUsed;acc.freeUsed=j.totalUsed;acc.usedDay=j.day;
       acc.left=checksLeft();drawProfile();if($("plusS")&&!$("talk").hidden)plusScreen()
     }
   }catch{}
@@ -1617,7 +1616,7 @@ async function authHead(){
   return{Authorization:"Bearer "+t};
 }
 // Why Claude can't grade now, or null
-const noCheck=c=>c==="quota_unavailable"?"Nakijken is tijdelijk niet beschikbaar. Je kunt verder oefenen.":c==="login"?(acc.free===0?"Je gratis proefbeurten zijn op. Maak een gratis account voor 7 nakijkbeurten per week.":"Log in bij Profiel om dit door Bittertalen te laten nakijken."):c==="limit"?((acc.checkPeriod||myPeriod())==="week"?(acc.cfg?.plus&&!isPlus(lvl())?"Je gratis weektegoed is op. Je krijgt maandag nieuw tegoed. Met Plus kun je vaker laten nakijken.":"Je gratis weektegoed is op. Je krijgt maandag nieuw tegoed."):"Je dagtegoed is op. Morgen kun je weer laten nakijken."):c==="busy"?"Bittertalen heeft vandaag al heel veel teksten nagekeken. Morgen kan het weer.":null;
+const noCheck=c=>c==="quota_unavailable"?"Nakijken is tijdelijk niet beschikbaar. Je kunt verder oefenen.":c==="login"?(acc.free===0?"Je gratis proefbeurten zijn op. Maak een gratis account voor nog 7 gratis nakijkbeurten.":"Log in bij Profiel om dit door Bittertalen te laten nakijken."):c==="limit"?((acc.checkPeriod||myPeriod())!=="day"?(acc.cfg?.plus&&!isPlus(lvl())?"Je gratis nakijkbeurten zijn op. Met Plus of de Examenpas kun je verder laten nakijken.":"Je gratis nakijkbeurten zijn op."):"Je dagtegoed is op. Morgen kun je weer laten nakijken."):c==="busy"?"Bittertalen heeft vandaag al heel veel teksten nagekeken. Morgen kan het weer.":null;
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const answer=(v,t)=>t==="past"?v[2]:t==="pastpl"?v[3]:t==="pp"?v[4]:v[5];
 
@@ -2476,7 +2475,7 @@ function drawProfile(){
   if(c){
     if(u){
       if(c.plus)b=ban("aplus","plus","Bittertalen Plus",plusLine());
-      h=`<h3 class="lh">Account</h3><div class="pg"><p class="pinfo"><span role="status">${acc.sync||"Wacht op synchronisatie"}</span><br>${myPeriod()==="day"?"Nakijken vandaag:":"Nakijken deze week:"} ${checksLeft()==null?"…":`nog ${checksLeft()} van de ${myLimit()}`}</p>`
+      h=`<h3 class="lh">Account</h3><div class="pg"><p class="pinfo"><span role="status">${acc.sync||"Wacht op synchronisatie"}</span><br>${myPeriod()==="day"?"Nakijken vandaag:":"Gratis nakijkbeurten:"} ${checksLeft()==null?"…":`nog ${checksLeft()} van de ${myLimit()}`}</p>`
         +(L.includes("passkey")?`<button type="button" class="pact" id="apk">Passkey toevoegen</button>`:"")
         +`<button type="button" class="pact" id="aout">Uitloggen</button><button type="button" class="pact bad" id="adel">Account verwijderen</button></div>`;
     }else if(L.length)b=ban("alogin","me","Inloggen of account maken","Bewaar je voortgang en laat je teksten nakijken.");
@@ -2922,18 +2921,17 @@ async function nakijken(tasks,part){
   const j=await r.json().catch(()=>({}));
   acc.checkPeriod=j.period||null;
   if(typeof j.free==="number")acc.free=j.free; // remaining one-time browser trial
-  if(acc.user){const daily=j.period==="day",key=daily?"used":"weekUsed";
+  if(acc.user){const daily=j.period==="day",key=daily?"used":"freeUsed";
     if(typeof j.left==="number"){acc.left=j.left;acc[key]=(j.limit||myLimit(part?["wb","sb"].includes(part)?"B1":"A2":lvl()))-j.left}
     else if(j.error==="limit"){acc.left=0;acc[key]=Math.max(acc[key]||0,j.limit||myLimit())}
     const at=j.checkedAt?new Date(j.checkedAt):new Date();
-    if(daily)acc.usedDay=amsDay(at);else acc.usedWeek=amsWeek(at);
-    if((daily?acc.usedDay!==amsDay():acc.usedWeek!==amsWeek()))usage();
+    if(daily){acc.usedDay=amsDay(at);if(acc.usedDay!==amsDay())usage()}
   }
   if(!r.ok||!Array.isArray(j.tasks))throw{code:j.error||"failed"};
   return j.tasks;
 }
 // A one-time browser trial, followed by the separate free account allowance.
-const freeNote=()=>acc.cfg&&acc.cfg.free&&!acc.user?`<p class="note"><span>${acc.free==null?`Probeer ${acc.cfg.free} nakijkbeurten gratis in deze browser.`:acc.free>0?`Nog ${acc.free} gratis proefbeurten in deze browser.`:"Je gratis proefbeurten zijn op."}</span> <span>Met een gratis account: ${acc.cfg.limit} nakijkbeurten per week.</span></p>`:"";
+const freeNote=()=>acc.cfg&&acc.cfg.free&&!acc.user?`<p class="note"><span>${acc.free==null?`Probeer ${acc.cfg.free} nakijkbeurten gratis in deze browser.`:acc.free>0?`Nog ${acc.free} gratis proefbeurten in deze browser.`:"Je gratis proefbeurten zijn op."}</span> <span>Met een gratis account: ${acc.cfg.limit} gratis nakijkbeurten.</span></p>`:"";
 function selfGrade(q,msg,doc){
   $("fb").innerHTML=`<p class="note">${msg}</p><p class="ask">Voorbeeld</p><div class="sample">${esc(q.right)}</div>
     ${q.type==="reveal"?echoHTML("het voorbeeld"):""}${doc?docBtn:""}<div class="two"><button class="ghost" id="again">Later herhalen</button><button class="btn" id="got">Gelukt</button></div>`;
@@ -3604,7 +3602,7 @@ function plusScreen(){
   const c=acc.cfg.plus,p=acc.plus,on=isPlus(),plans=c.plans||{A2:{price:c.price}};
   $("tbody").innerHTML=`<h2 id="plusS">Bittertalen Plus</h2>`
     +(on?`<p class="sub"><b>${p.pass?"Examenpas":"Bittertalen Plus"} ${p.level||""}</b> · ${plusLine()}</p>`:"")
-    +`<p class="sub">Met Plus: ${c.limit} nakijkbeurten per dag. Met een gratis account: ${acc.cfg.limit} per week.</p><p class="sub">Al het andere in Bittertalen blijft gratis.</p>`
+    +`<p class="sub">Met Plus: ${c.limit} nakijkbeurten per dag. Met een gratis account: ${acc.cfg.limit} gratis.</p><p class="sub">Al het andere in Bittertalen blijft gratis.</p>`
     +(on&&p.status==="past_due"?`<p class="note">Je laatste betaling is niet gelukt. Stripe probeert het nog een paar keer.</p>`:"")
     +(plusMsg?`<p class="note" role="status">${esc(plusMsg)}</p>`:"")
     +["A2","B1"].filter(level=>plans[level]).map(level=>`<section class="list" data-plus-plan="${level}"><div style="padding:16px"><h3>Bittertalen Plus ${level}</h3>
@@ -4109,7 +4107,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="4bd217fce4";
+const UIV="ce1d003d3e";
 let uiP=null;
 function uiLoaded(){ // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});

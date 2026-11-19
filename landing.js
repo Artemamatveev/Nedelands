@@ -109,14 +109,14 @@ const copy = {
 };
 
 const pricing = {
-  nl: ["per maand", n => `Met een gratis account: ${n} nakijkbeurten per week`, n => `Bittertalen kijkt je teksten en gesproken antwoorden na: ${n} nakijkbeurten per dag`],
-  en: ["per month", n => `With a free account: ${n} checks a week`, n => `Bittertalen reviews your writing and spoken answers: ${n} checks a day`],
-  ar: ["شهريًا", n => `بحساب مجاني: ${n} مرات تصحيح أسبوعيًا`, n => `يصحّح Bittertalen كتاباتك وإجاباتك الشفهية: ${n} مرات يوميًا`],
-  tr: ["aylık", n => `Ücretsiz hesapla haftada ${n} kontrol`, n => `Bittertalen yazılarını ve sözlü yanıtlarını günde ${n} kez kontrol eder`],
-  hi: ["प्रति माह", n => `मुफ़्त खाते से हफ़्ते में ${n} बार जाँच`, n => `Bittertalen आपके लिखित और बोले गए जवाबों की रोज़ ${n} बार जाँच करता है`],
-  zh: ["每月", n => `免费账号：每周 ${n} 次批改`, n => `Bittertalen 批改你的写作和口语回答：每天 ${n} 次`],
-  es: ["al mes", n => `Revisiones semanales con una cuenta gratuita: ${n}`, n => `Bittertalen revisa tus textos y respuestas orales: ${n} revisiones al día`],
-  ru: ["в месяц", n => `Проверок в неделю с бесплатным аккаунтом: ${n}`, n => `Bittertalen проверяет ваши тексты и устные ответы. Проверок в день: ${n}`],
+  nl: ["per maand", n => `Met een gratis account: ${n} gratis nakijkbeurten`, n => `Bittertalen kijkt je teksten en gesproken antwoorden na: ${n} nakijkbeurten per dag`],
+  en: ["per month", n => `With a free account: ${n} free checks`, n => `Bittertalen reviews your writing and spoken answers: ${n} checks a day`],
+  ar: ["شهريًا", n => `بحساب مجاني: ${n} تصحيحات مجانية`, n => `يصحّح Bittertalen كتاباتك وإجاباتك الشفهية: ${n} مرات يوميًا`],
+  tr: ["aylık", n => `Ücretsiz hesapla ${n} ücretsiz kontrol`, n => `Bittertalen yazılarını ve sözlü yanıtlarını günde ${n} kez kontrol eder`],
+  hi: ["प्रति माह", n => `मुफ़्त खाते से ${n} मुफ़्त जाँचें`, n => `Bittertalen आपके लिखित और बोले गए जवाबों की रोज़ ${n} बार जाँच करता है`],
+  zh: ["每月", n => `免费账号：${n} 次免费批改`, n => `Bittertalen 批改你的写作和口语回答：每天 ${n} 次`],
+  es: ["al mes", n => `Revisiones gratis con una cuenta gratuita: ${n}`, n => `Bittertalen revisa tus textos y respuestas orales: ${n} revisiones al día`],
+  ru: ["в месяц", n => `Бесплатных проверок с бесплатным аккаунтом: ${n}`, n => `Bittertalen проверяет ваши тексты и устные ответы. Проверок в день: ${n}`],
 };
 // The Examenpas card: how long one payment lasts
 const passWeeks = {
@@ -138,14 +138,14 @@ const trialCopy = {
 };
 // Under the writing example (Vraag 4): the check itself can be tried for free, with the real numbers from /api/config
 const tryCopy = {
-  nl: (n, w) => `Probeer het zelf: ${n} teksten of antwoorden gratis nagekeken, zonder account. Daarna ${w} per week met een gratis account.`,
-  en: (n, w) => `Try it yourself: ${n} texts or answers checked for free, no account needed. Then ${w} a week with a free account.`,
-  ar: (n, w) => `جرّب بنفسك: تصحيح ${n} نصوص أو إجابات مجانًا دون حساب. ثم ${w} أسبوعيًا بحساب مجاني.`,
-  tr: (n, w) => `Kendin dene: hesap açmadan ${n} metin veya yanıt ücretsiz kontrol edilir. Sonra ücretsiz hesapla haftada ${w}.`,
-  hi: (n, w) => `ख़ुद आज़माएँ: बिना खाते के ${n} लेख या जवाब मुफ़्त जाँचे जाते हैं। फिर मुफ़्त खाते से हर हफ़्ते ${w}।`,
-  zh: (n, w) => `亲自试试：无需账号，免费批改 ${n} 篇文字或回答。之后用免费账号每周 ${w} 次。`,
-  es: (n, w) => `Pruébalo: ${n} textos o respuestas revisados gratis, sin cuenta. Después, ${w} a la semana con una cuenta gratuita.`,
-  ru: (n, w) => `Попробуйте сами: ${n} текста или ответа проверяются бесплатно, без аккаунта. Потом ${w} в неделю с бесплатным аккаунтом.`,
+  nl: (n, w) => `Probeer het zelf: ${n} teksten of antwoorden gratis nagekeken, zonder account. Daarna nog ${w} gratis met een gratis account.`,
+  en: (n, w) => `Try it yourself: ${n} texts or answers checked for free, no account needed. Then ${w} more free with a free account.`,
+  ar: (n, w) => `جرّب بنفسك: تصحيح ${n} نصوص أو إجابات مجانًا دون حساب. ثم ${w} أخرى مجانًا بحساب مجاني.`,
+  tr: (n, w) => `Kendin dene: hesap açmadan ${n} metin veya yanıt ücretsiz kontrol edilir. Sonra ücretsiz hesapla ${w} ücretsiz kontrol daha.`,
+  hi: (n, w) => `ख़ुद आज़माएँ: बिना खाते के ${n} लेख या जवाब मुफ़्त जाँचे जाते हैं। फिर मुफ़्त खाते से ${w} और मुफ़्त जाँचें।`,
+  zh: (n, w) => `亲自试试：无需账号，免费批改 ${n} 篇文字或回答。之后用免费账号再免费批改 ${w} 次。`,
+  es: (n, w) => `Pruébalo: ${n} textos o respuestas revisados gratis, sin cuenta. Después, ${w} más gratis con una cuenta gratuita.`,
+  ru: (n, w) => `Попробуйте сами: ${n} текста или ответа проверяются бесплатно, без аккаунта. Потом ещё ${w} бесплатно с бесплатным аккаунтом.`,
 };
 const nodes = [...document.querySelectorAll("[data-t]")].map(node => [node, node.textContent]);
 const alts = [...document.querySelectorAll("[data-alt]")].map(node => [node, node.dataset.alt]);
@@ -269,7 +269,7 @@ render();
   window.addEventListener("resize", () => states.forEach(state => { if (state.animation) finish(state); }));
 }
 
-fetch("/api/config?v=weekly1").then(r => {
+fetch("/api/config?v=once1").then(r => {
   if (!r.ok) throw new Error("Config unavailable");
   return r.json();
 }).then(value => { config = value; }, () => { config = null; }).then(render).then(homeDay);
