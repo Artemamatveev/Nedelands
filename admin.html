@@ -26,6 +26,7 @@ h2{font-size:17px;font-weight:600;margin:0 0 4px}
 .grow{flex:1}
 button,.btn{font:inherit;font-weight:600;border-radius:var(--rc);padding:8px 14px;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--ink);text-decoration:none}
 .btn.main{background:var(--fill);border-color:var(--fill);color:#fff}
+.gnew{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px} .gnew input,.gnew select{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:var(--rc);background:var(--card);color:var(--ink);min-width:0} .gnew input[name=name],.gnew input[name=teacher]{flex:1 1 200px}
 button:focus-visible,.btn:focus-visible,input:focus-visible,.scroll:focus-visible{outline:2px solid var(--oranje);outline-offset:2px}
 .tile{background:var(--card);border-radius:var(--r);box-shadow:var(--lift);padding:20px 22px;margin-bottom:20px}
 .tile.warn{border-inline-start:4px solid var(--oranje)}
@@ -159,7 +160,7 @@ async function token() {
   return {token: data.session && data.session.access_token, email: data.session && data.session.user.email};
 }
 
-let DATA = null, me = "", open = new Set(), query = "", period = 7, TOKEN = "", CMP = null, cmpBusy = false;
+let DATA = null, me = "", open = new Set(), query = "", period = 7, TOKEN = "", CMP = null, cmpBusy = false, GROUPS = null, groupMsg = "";
 const selectedDays = {};
 const DAILY_SINCE = "2026-11-11";
 async function load() {
@@ -175,6 +176,7 @@ async function load() {
   if (!r.ok) return message("База не ответила", "Скорее всего, в Supabase ещё нет функции <code>admin_overview</code>: выполните последний блок из <code>supabase/schema.sql</code> в SQL Editor.",
     `<button onclick="location.reload()">Обновить</button>`);
   DATA = await r.json(); DATA.at = new Date(); draw();
+  loadGroups();
 }
 
 function kpis(users) {
@@ -219,6 +221,33 @@ function compare() {
     <p class="sub">Сравнено ${S.compared} из ${CMP.rows.length}: одинаковый вердикт «сдал / не сдал» в <b>${S.samePassed}</b>; разница в баллах в среднем <b>${S.meanDiff ?? "—"}</b> из 10, максимум <b>${S.maxDiff ?? "—"}</b>. Строки, где вердикты разошлись, выделены.</p>
     <div class="scroll" tabindex="0" role="region" aria-label="Сравнение моделей"><table><thead><tr><th rowspan="2">Ответ</th><th colspan="3">${short(m.free)} (бесплатно)</th><th colspan="3">${short(m.paid)} (платно)</th></tr>
     <tr><th>Баллы</th><th>Сдал</th><th>Ошибок</th><th>Баллы</th><th>Сдал</th><th>Ошибок</th></tr></thead><tbody>${body}</tbody></table></div>${btn}</section>`;
+}
+// Groups for schools and employers (api/group.js): the owner makes one and gives the code to the school; the teacher
+// opens /docent with the e-mail given here. Members get the Plus checks of the level until the end date.
+async function loadGroups() {
+  const r = await fetch("/api/group?list=1", {headers: {authorization: `Bearer ${TOKEN}`}}).catch(() => null);
+  GROUPS = r && r.ok ? (await r.json()).groups : false; draw();
+}
+function groups() {
+  const form = `<form id="gnew" class="gnew"><input name="name" required maxlength="80" placeholder="Название (видят ученики)" aria-label="Название">
+    <select name="level" aria-label="Уровень"><option>A2</option><option>B1</option></select>
+    <input name="seats" type="number" min="1" max="500" value="20" required aria-label="Мест">
+    <input name="until" type="date" required aria-label="До даты">
+    <input name="teacher" type="email" required placeholder="e-mail преподавателя" aria-label="E-mail преподавателя">
+    <button class="btn main">Создать группу</button></form>`;
+  const head = `<h2>Группы (школы и работодатели)</h2><p class="sub">Ученик вводит код в профиле и до конца срока получает проверки как в Plus этого уровня. Преподаватель входит в приложение с указанным e-mail и открывает <a href="/docent">bittertalen.nl/docent</a>, где видит прогресс группы. Нужна миграция <code>20261119170000_groups.sql</code>.</p>`;
+  if (GROUPS === false) return `<section class="tile">${head}<p class="sub">Список не загрузился: скорее всего, миграции ещё нет в базе.</p></section>`;
+  const rows = (GROUPS || []).map(g => `<tr><td>${esc(g.name)}</td><td><b>${esc(g.code)}</b></td><td>${esc(g.level)}</td><td>${g.members} / ${g.seats}</td><td>${esc(g.until)}</td><td>${esc(g.teacher)}</td></tr>`).join("");
+  return `<section class="tile">${head}${form}${groupMsg ? `<p class="sub" role="status">${esc(groupMsg)}</p>` : ""}
+    <div class="scroll" tabindex="0" role="region" aria-label="Группы"><table><thead><tr><th>Название</th><th>Код</th><th>Уровень</th><th>Учеников</th><th>До</th><th>Преподаватель</th></tr></thead>
+    <tbody>${rows || `<tr><td colspan="6" class="muted">${GROUPS ? "Пока нет групп." : "Загружаю…"}</td></tr>`}</tbody></table></div></section>`;
+}
+async function makeGroup(f) {
+  const body = Object.fromEntries(new FormData(f)); body.go = "make";
+  const r = await fetch("/api/group", {method: "POST", headers: {authorization: `Bearer ${TOKEN}`, "content-type": "application/json"}, body: JSON.stringify(body)}).catch(() => null);
+  const j = r && r.ok ? await r.json() : null;
+  groupMsg = j?.code ? `Группа создана, код ${j.code}.` : "Не получилось создать группу: проверьте поля.";
+  await loadGroups();
 }
 async function runCompare() {
   cmpBusy = true; draw();
@@ -354,10 +383,11 @@ function draw() {
     <span class="muted">обновлено в ${at}</span><button id="re">Обновить</button><a class="btn" href="/oefenen">В приложение</a></header>
     ${DATA.users.some(u => !("qd" in u)) ? `<section class="tile warn" role="status"><h2>В Supabase старая версия функции admin_overview</h2>
     <p class="sub" style="margin:0">Поэтому ответы «сегодня» и «7 дней» не показываются, хотя приложение их уже считает. Выполните в SQL Editor последний блок из <code>supabase/schema.sql</code> (<code>create or replace function public.admin_overview()</code> …) и нажмите «Обновить».</p></section>` : ""}
-    ${kpis(DATA.users)}${charts(DATA.users)}${users(DATA.users)}${spend(DATA.spend)}${compare()}${counts(DATA.counts)}
+    ${kpis(DATA.users)}${charts(DATA.users)}${users(DATA.users)}${spend(DATA.spend)}${compare()}${groups()}${counts(DATA.counts)}
     <details class="explanation"><summary>Как считаются показатели</summary><p class="sub">Время — активные минуты в приложении: страница открыта, и человек что-то нажимал за последние 90 секунд (или слушал запись). Время и ответы по дням учитываются с 11 ноября 2026 года и попадают сюда после синхронизации прогресса; «всего» у ответов — за всё время, с первого дня. «Разных вопросов» — сколько разных вопросов человек хоть раз прошёл. Ответы считают и упражнения, и пробные экзамены; повтор вопроса после ошибки в том же раунде не считается.</p></details>`;
   $("re").onclick = load;
   if ($("cmp")) $("cmp").onclick = runCompare;
+  if ($("gnew")) $("gnew").onsubmit = e => { e.preventDefault(); makeGroup(e.target); };
   app.querySelectorAll("[data-period]").forEach(button => {
     button.onclick = () => { period = +button.dataset.period; draw(); app.querySelector(`[data-period="${period}"]`).focus({preventScroll: true}); };
   });

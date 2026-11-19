@@ -388,6 +388,7 @@ textarea{display:block;width:100%;font-size:var(--fs-b);line-height:1.5;padding:
 .ghost:active,.back:active{background:var(--surface)}
 .wide{width:100%}
 .reflink{overflow-wrap:anywhere;margin-block:10px}
+.gform{display:flex;gap:8px;margin-block:12px} .gform input{flex:1;min-width:0;height:52px;border:1.5px solid var(--ink);border-radius:var(--rc);padding:0 12px;font:inherit;font-size:var(--fs-b);letter-spacing:.08em;background:var(--card);color:var(--ink)} .gform .btn{flex:none}
 .offer{margin-block:14px} .note>[data-offer]{margin-top:10px}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .opt.sel{border-color:var(--oranje);box-shadow:inset 0 0 0 2px var(--oranje)}
@@ -2491,7 +2492,7 @@ function drawProfile(){
       if(c.plus)b=ban("aplus","plus","Bittertalen Plus",plusLine());
       h=`<h3 class="lh">Account</h3><div class="pg"><p class="pinfo"><span role="status">${acc.sync||"Wacht op synchronisatie"}</span><br>${myPeriod()==="day"?"Nakijken vandaag:":"Gratis nakijkbeurten:"} ${checksLeft()==null?"…":`nog ${checksLeft()} van de ${myLimit()}`}</p>`
         +(L.includes("passkey")?`<button type="button" class="pact" id="apk">Passkey toevoegen</button>`:"")
-        +`<button type="button" class="pact" id="aref">Nodig een vriend uit</button><button type="button" class="pact" id="aout">Uitloggen</button><button type="button" class="pact bad" id="adel">Account verwijderen</button></div>`;
+        +`<button type="button" class="pact" id="agrp">Code van je school of werk</button><button type="button" class="pact" id="aref">Nodig een vriend uit</button><button type="button" class="pact" id="aout">Uitloggen</button><button type="button" class="pact bad" id="adel">Account verwijderen</button></div>`;
     }else if(L.length)b=ban("alogin","me","Inloggen of account maken","Bewaar je voortgang en laat je teksten nakijken.");
     else h=`<p class="note">Inloggen is nog niet ingesteld.</p>`;
     if(acc.msg)h+=`<p class="note">${esc(acc.msg)}</p>`;
@@ -2500,6 +2501,7 @@ function drawProfile(){
   if($("alogin"))$("alogin").onclick=()=>{acc.msg="";welcome()};
   if($("aplus"))$("aplus").onclick=()=>{plusMsg="";plusScreen()};
   if($("aref"))$("aref").onclick=refScreen;
+  if($("agrp"))$("agrp").onclick=()=>groupScreen("");
   if($("apk"))$("apk").onclick=async()=>{
     try{const{error}=await acc.sb.auth.registerPasskey();if(error)throw error;acc.msg="Je passkey is gemaakt. Nu kun je ook met Face ID, Touch ID of je vingerafdruk inloggen."}
     catch(e){acc.msg=/NotAllowed|abort|cancel/i.test(String(e&&(e.message||e.name)))?"Gestopt.":"Een passkey maken lukt hier niet."}
@@ -3601,6 +3603,31 @@ const plusLine=()=>{const p=acc.plus,c=acc.cfg.plus;
   if(p.pass)return`Geldig tot ${plusDay(p.until)}`;
   return p.status==="past_due"?"Je betaling is niet gelukt":!p.until?"Actief":p.ends?`Loopt af op ${plusDay(p.until)}`:`Actief · verlengt op ${plusDay(p.until)}`};
 // Kies je avatar: a grid of the avatars, the chosen one with an orange ring; a tap picks it and goes back to Profiel
+// A code from a school or employer (api/group.js): the Plus checks of the group's level until its end date; the teacher
+// sees the member's practice, which the screen says before the code is used
+const GROUPMSG={ok:"Gelukt! Je hoort nu bij deze groep.",unknown:"Deze code bestaat niet.",ended:"Deze groep is afgelopen.",full:"Deze groep is vol.",already:"Je hoort al bij deze groep."};
+function groupScreen(msg){
+  if(!acc.user)return home();
+  closePop();hush();TK=null;$("card").innerHTML="";
+  $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;window.scrollTo(0,0);
+  tBack(TABN[tab],home);
+  $("tbody").innerHTML=`<h2>Code van je school of werk</h2>
+    <p>Heb je een code van je school of werkgever? Vul hem hier in. Dan kun je net zo vaak laten nakijken als met Plus, tot de einddatum van je groep.</p>
+    <p class="note">Je docent of werkgever ziet dan je oefenresultaten: je naam, je e-mailadres, je oefentijd en je scores.</p>
+    <form id="gform" class="gform"><input id="gcode" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="8" aria-label="Code" placeholder="Bijvoorbeeld ABCD2345" dir="ltr"><button class="btn" id="ggo">Gebruik de code</button></form>
+    ${msg?`<p class="note" role="status">${esc(msg)}</p>`:""}`;
+  $("gform").onsubmit=async e=>{
+    e.preventDefault();const code=$("gcode").value.trim().toUpperCase(),uid=acc.user?.id;
+    if(!REFRE.test(code))return groupScreen(GROUPMSG.unknown);
+    $("ggo").disabled=true;
+    try{
+      const r=await fetch("/api/group",{method:"POST",headers:{...await authHead(),"content-type":"application/json"},body:JSON.stringify({go:"join",code})});
+      const j=r.ok?await r.json():null; if(acc.user?.id!==uid)return;
+      if(j?.result==="ok"||j?.result==="already")await usage();
+      groupScreen(GROUPMSG[j?.result]||"Dat lukt nu niet. Probeer het later nog eens.");
+    }catch{groupScreen("Dat lukt nu niet. Probeer het later nog eens.")}
+  };
+}
 async function claimRef(){
   const code=lsGet("ww-ref"),uid=acc.user?.id; if(!code||!uid)return;
   try{
@@ -3659,7 +3686,7 @@ function plusScreen(){
   tBack(TABN[tab],home);
   const c=acc.cfg.plus,p=acc.plus,on=isPlus(),plans=c.plans||{A2:{price:c.price}};
   $("tbody").innerHTML=`<h2 id="plusS">Bittertalen Plus</h2>`
-    +(on?`<p class="sub"><b>${p.pass?"Examenpas":"Bittertalen Plus"} ${p.level||""}</b> · ${plusLine()}</p>`:"")
+    +(on?`<p class="sub"><b>${p.group?`<span lang="nl">${esc(p.group)}</span>`:p.pass?"Examenpas":"Bittertalen Plus"} ${p.level||""}</b> · ${plusLine()}</p>`:"")
     +`<p class="sub">Met Plus: ${c.limit} nakijkbeurten per dag. Met een gratis account: ${acc.cfg.limit} gratis.</p><p class="sub">Al het andere in Bittertalen blijft gratis.</p>`
     +(on&&p.status==="past_due"?`<p class="note">Je laatste betaling is niet gelukt. Stripe probeert het nog een paar keer.</p>`:"")
     +(plusMsg?`<p class="note" role="status">${esc(plusMsg)}</p>`:"")
@@ -4165,7 +4192,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="5206b60f51";
+const UIV="fcf86bfc52";
 let uiP=null;
 function uiLoaded(){ // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});

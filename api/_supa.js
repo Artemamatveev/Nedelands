@@ -312,11 +312,16 @@ export async function putPass(row) {
 // What the user may use now: the subscription, or a running Examenpas when it covers more
 export async function plusFor(uid) {
   const sub = await subscriptionFor(uid);
-  if (!passOn) return sub;
-  const pass = await passOf(uid).catch(() => null);
+  const pass = passOn ? await passOf(uid).catch(() => null) : null;
   const subLevel = isPlus(sub) ? sub.level : null;
-  if (!pass || subLevel === "B1" || subLevel === pass.level) return sub;
-  return { ...(sub || {}), status: "active", until: pass.until, ends: true, level: pass.level, pass: true };
+  let best = !pass || subLevel === "B1" || subLevel === pass.level ? sub
+    : { ...(sub || {}), status: "active", until: pass.until, ends: true, level: pass.level, pass: true };
+  // A school's or employer's group (api/group.js) gives the same checks until its end date, when it covers more
+  const group = await groupOf(uid).catch(() => null);
+  const bestLevel = isPlus(best) ? best.level : null;
+  if (group && bestLevel !== "B1" && bestLevel !== group.level)
+    best = { ...(best || {}), status: "active", until: `${group.until}T23:59:59+01:00`, ends: true, level: group.level, pass: true, group: group.name };
+  return best;
 }
 async function subscriptionFor(uid) {
   const p = await plusOf(uid);
@@ -371,3 +376,19 @@ export async function claimReferral(user, code) {
   if (!(made > Date.now() - REF_DAYS * 864e5)) return "old";
   return rpcCall("claim_referral", { uid: user.id, ref: String(code).toUpperCase() });
 }
+
+// Groups for schools and employers (tables groups and group_members, schema.sql): a code gives the Plus checks of the
+// group's level until its end date; the teacher sees the members' practice (api/group.js, docent.html).
+export async function groupOf(uid) {
+  const rows = await rpcCall("group_access", { uid });
+  const g = Array.isArray(rows) ? rows[0] : null;
+  return g && (g.level === "A2" || g.level === "B1") ? { name: String(g.name), level: g.level, until: String(g.until) } : null;
+}
+export const GROUP_RE = /^[A-HJ-NP-Z2-9]{8}$/i;
+export async function joinGroup(uid, code) {
+  if (!GROUP_RE.test(String(code || ""))) return "unknown";
+  return rpcCall("join_group", { uid, ref: String(code).toUpperCase() });
+}
+export const makeGroup = (g) => rpcCall("make_group", { g_name: g.name, g_level: g.level, g_seats: g.seats, g_until: g.until, g_teacher: g.teacher });
+export const groupList = () => rpcCall("group_list", {});
+export const teacherOverview = (mail) => rpcCall("teacher_overview", { mail });

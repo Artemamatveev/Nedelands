@@ -435,6 +435,16 @@ vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one comin
   checks, the inviter for at most 10 friends (`referral_bonus()`); `api/check.js` and `/api/allowance` add `bonus` to
   the free limit, and the page's `myLimit()` follows. Tables `referral_codes` and `referrals`, server-only, migration
   `20261119160000_referrals.sql` (also in `schema.sql`; run it in the SQL editor before deploying). privacy.html says so.
+- Groups for schools and employers (B2B, 19 November 2026): the owner makes a group in /admin ("Группы": name, level,
+  places, end date, the teacher's e-mail; `api/group.js` `{go:"make"}`) and gives its 8-character code to the school.
+  A learner enters it in Profiel ("Code van je school of werk", `groupScreen()`, which says first that the teacher will
+  see their practice) and gets the Plus checks of the group's level until the end date: `plusFor()` returns the group
+  (`pass:true`, `group:<name>`) when it covers more than a subscription or Examenpas. The teacher logs in with that
+  e-mail (confirmed) and opens /docent (`docent.html`, Dutch, noindex, not linked): their groups and per member name,
+  e-mail, level, last activity, practice time and answers in the last 7 days and the last proefexamen scores
+  (`teacher_overview()`, the owner's summary without checks or Plus). Tables `groups` and `group_members`, server-only,
+  migration `20261119170000_groups.sql` (also in `schema.sql`). privacy.html says what the teacher sees. Invoicing is by
+  hand for now.
 - One task costs 1 check, Schrijven A2 2, Schrijven B1 4, and Spreken A2/B1 6. All other practice and example answers
   stay free. Errors refund the learner; an uncertain paid provider outcome still retains its global spend reservation.
 - Apply the reviewed migration `supabase/migrations/20261112192552_weekly_free_checks.sql` before releasing the new
