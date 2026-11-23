@@ -28,7 +28,10 @@
 (() => {
   const q = new URLSearchParams(location.search);
   const alias = /^(bittertalen|nedelands)\.vercel\.app$/.test(location.hostname);
-  const installed = navigator.standalone || matchMedia("(display-mode: standalone)").matches;
+  // The App Store / Google Play shell counts as installed: its links to "/" (Over, Privacy) return to practice
+  // instead of the homepage with its prices.
+  const installed = navigator.standalone || matchMedia("(display-mode: standalone)").matches ||
+    !!(window.Capacitor && typeof Capacitor.isNativePlatform === "function" && Capacitor.isNativePlatform());
   if (alias || q.has("code") || q.has("error") || q.has("plus") || location.hash.startsWith("#verhuis=") ||
       (installed && !q.has("home"))) {
     location.replace("/oefenen" + location.search + location.hash);

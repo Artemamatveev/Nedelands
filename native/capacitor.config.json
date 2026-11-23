@@ -4,7 +4,10 @@
   "webDir": "www",
   "server": {
     "url": "https://bittertalen.nl/oefenen?open=today",
-    "allowNavigation": ["bittertalen.nl", "*.supabase.co"],
+    "allowNavigation": [
+      "bittertalen.nl",
+      "*.supabase.co"
+    ],
     "errorPath": "offline.html"
   },
   "ios": {
@@ -18,6 +21,13 @@
     "LocalNotifications": {
       "smallIcon": "ic_stat_bittertalen",
       "iconColor": "#1F3C96"
+    },
+    "SplashScreen": {
+      "launchAutoHide": true,
+      "launchShowDuration": 3000,
+      "launchFadeOutDuration": 250,
+      "showSpinner": false,
+      "iosSpinnerStyle": "small"
     }
   }
 }
