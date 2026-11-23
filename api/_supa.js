@@ -57,6 +57,9 @@ export const visitor = (req, res) => {
   }
   return createHash("sha256").update(id).digest("hex");
 };
+// A conversation with Claude (api/_talk.js) is paid once, at its start; the signed ticket it gets then lets the next
+// turns through without taking another check. The secret never leaves the server.
+export const talkSign = s => createHmac("sha256", SERVICE).update("bittertalen-talk|" + s).digest("base64url");
 // A zero-cost lookup does not create a usage row. No new allowance on the next day.
 export async function useFree(who, cost, checkedAt = new Date().toISOString()) {
   const r = await fetch(`${URL_}/rest/v1/rpc/use_trial_checks`, {

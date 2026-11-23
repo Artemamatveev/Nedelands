@@ -189,6 +189,8 @@ export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "method_not_allowed" });
   // Only accept calls from this site's own pages
   if (!sameOrigin(req)) return res.status(403).json({ error: "forbidden" });
+  // /api/talk (a rewrite, see vercel.json): a conversation with Claude, in api/_talk.js
+  if (req.query?.kind === "talk") return (await import("./_talk.js")).talk(req, res);
   if (!client || !accounts) return res.status(503).json({ error: "not_configured" });
 
   // A real request is at most ~80 KB (16 answers or 12 texts, each cut below); refuse anything far bigger
