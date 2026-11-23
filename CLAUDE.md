@@ -852,6 +852,15 @@ conversation. Two menu buttons (aiMenu remembers the choice when returning from 
   Permission checks are scoped to the specific take, so old timers cannot cancel a later answer. Test doubles cover
   five consecutive spoken replies, a deaf third take, late timers, cancellation and late audio decoding. A real iPhone
   microphone check is still needed; automated tests cannot certify the WebKit workaround on every iOS version.
+  Recognition uses nl-NL and up to three alternatives. AI dictation supplies modest context phrases (current task,
+  person, last question; fish vocabulary for Haringboer Dirk) only when SpeechRecognitionPhrase/phrases are supported.
+  An unsupported-phrases error clears the hints and permits the normal restart. Do not promise this improves iOS's
+  acoustic model: support varies, and speech recognition accuracy has not been measured on the user's microphone.
+  Interim or low-confidence final results (0 < confidence < .55; 0 means unavailable) get an editable draft instead
+  of being sent automatically. Close domain words with a shared ending (e.g. kering → haring in the fish conversation)
+  are suggestions, never silent substitutions. Native alternatives are shown only in that review, not on every turn.
+  A final result replaces its interim hypothesis; continuation speech cancels the pending send, and the ready message
+  waits for the recogniser's start event. No additional model calls or providers are used for these checks.
 - `/api/talk` is a rewrite to `/api/check?kind=talk` (the 12-function limit); `check.js` imports `_talk.js` only then.
   `S.ai` `{id: {n, at}}` (merged like `S.gp`); the event `ai` counts started conversations. privacy.html says, in all
   eight languages under the checking section, what goes to Anthropic and Google.

@@ -1909,7 +1909,7 @@ const ownHTML=(text,errs,label="Jouw tekst")=>`<p class="ask">${label}</p><div c
 const errsHTML=errs=>errs.length?`<p class="ask">Fouten: ${errs.length}</p><ol class="errs fixes">${errs.map(e=>`<li><s>${esc(e.wrong)}</s> <strong>${esc(e.right)}</strong><span>${esc(e.why)}</span></li>`).join("")}</ol>`:`<p class="note">Geen fouten gevonden.</p>`;
 const spoken=t=>String(t).replace(/[\p{Extended_Pictographic}←-⇿️‍]/gu,"").replace(/\s+/g," ").trim();
 const saidText=r=>r.said.concat(r.part).join(" ").replace(/\s+/g," ").trim();
-async function listen(mode,done,lim=SPK,auto=0){ // auto: in a conversation, end the take after that many ms of silence
+async function listen(mode,done,lim=SPK,auto=0,hints=[]){ // auto: in a conversation, end the take after that many ms of silence
   const box=$("rec"),b=$("recb"); recEnd(false); b.disabled=true; stopSpeak(); // never record the question
   $("recp").querySelectorAll("audio").forEach(audio=>audio.pause?.());
   if(recUrl){URL.revokeObjectURL(recUrl);recUrl=null} $("recp").innerHTML="";
@@ -1925,17 +1925,39 @@ async function listen(mode,done,lim=SPK,auto=0){ // auto: in a conversation, end
     // Reusing a recogniser after TTS can leave iOS listening without receiving any words.
     if(auto&&sr){try{sr.abort()}catch(e){}sr=null}
     if(!sr){sr=new SR();sr.lang="nl-NL";sr.continuous=true;sr.interimResults=true}
+    sr.maxAlternatives=3;
+    // Context biasing is optional and is not implemented by every iOS/browser recogniser.
+    if(auto&&"phrases" in sr&&typeof window.SpeechRecognitionPhrase==="function"&&hints.length)try{
+      sr.phrases=hints.map(word=>new SpeechRecognitionPhrase(word,2));r.hints=true;
+    }catch(e){}
     r.sr=sr;
-    sr.onresult=e=>{if(r.fin)return;let t="";for(let i=0;i<e.results.length;i++)t+=e.results[i][0].transcript+" ";if(t.trim())r.part=t.trim();
+    sr.onstart=()=>{if(rec===r&&!r.fin&&!r.stopping&&r.auto)$("recn").textContent="Spreek nu. De telefoon schrijft mee."};
+    sr.onspeechstart=()=>{if(rec===r&&!r.fin&&!r.stopping)clearTimeout(r.quiet)};
+    sr.onresult=e=>{
+      if(r.fin)return;
+      const results=Array.from(e.results),text=results.map(x=>x[0]?.transcript||"").join(" ").trim();
+      // Rebuild the current session: a corrected final result replaces its interim words, never appends them.
+      // If the browser retracts its entire interim hypothesis, keep it only as a draft for review.
+      if(text){r.part=text;r.unconfirmed=results.some(x=>x.isFinal!==true);
+        r.uncertain=results.some(x=>x.isFinal===true&&x[0]?.confidence>0&&x[0].confidence<.55)}
+      else if(r.unconfirmed!==false)r.unconfirmed=true;
+      r.choices=[];
+      results.forEach((x,i)=>Array.from(x).slice(1).forEach(alt=>{
+        const variant=results.map((v,j)=>j===i?alt.transcript:v[0]?.transcript||"").join(" ").trim();
+        if(variant&&variant!==text&&r.choices.length<3)r.choices.push(r.said.concat(variant).join(" ").trim());
+      }));
       if(r.box===$("rec")&&!r.fin)$("recp").innerHTML=`<p class="ask">Dit hoorde de telefoon</p><div class="sample">${esc(saidText(r))}</div>`;
       if(r.auto){
-        // A final result is the recogniser's sentence boundary; interim words need a longer thinking pause.
-        const final=e.results.length>0&&e.results[e.results.length-1].isFinal===true;
-        clearTimeout(r.quiet);r.quiet=setTimeout(()=>{if(rec===r&&saidText(r))recEnd(true)},final?Math.min(r.auto,1200):r.auto)}};
-    sr.onerror=e=>{if(r.fin)return;if(/not-allowed|service-not-allowed|audio-capture|language-not-supported|network/.test(e.error)){
+        const final=text&&results.length>0&&results.every(x=>x.isFinal===true);
+        clearTimeout(r.quiet);r.quiet=setTimeout(()=>{if(rec===r&&saidText(r))recEnd(true)},final?Math.min(r.auto,1200):r.auto);
+      }
+    };
+    sr.onerror=e=>{if(r.fin)return;
+      if(e.error==="phrases-not-supported"&&r.hints){try{r.sr.phrases=[]}catch(e){}r.hints=false;return}
+      if(/not-allowed|service-not-allowed|audio-capture|language-not-supported|network/.test(e.error)){
       r.fail=true;if(r.auto)setTimeout(()=>{if(rec===r)recEnd(true)},0)}};
     // Recognition stops by itself after a pause: start it again while the minute runs
-    sr.onend=()=>{if(r.fin)return;if(r.part){r.said.push(r.part);r.part=""}
+    sr.onend=()=>{if(r.fin)return;if(r.part){r.reviewParts=r.reviewParts||r.unconfirmed||r.uncertain;r.said.push(r.part);r.part=""}
       if(r.stopping||rec!==r)return recDone(r);
       if(r.fail){r.sr=null;$("recn").textContent="Meeschrijven lukt hier niet. Spreek toch hardop: de tijd loopt.";return}
       r.restart=setTimeout(()=>{if(rec!==r||r.fin||r.stopping)return;
@@ -1944,7 +1966,7 @@ async function listen(mode,done,lim=SPK,auto=0){ // auto: in a conversation, end
   }catch(e){r.sr=null}
   const doneLabel=cur?.exam&&cur.speak?"Antwoord klaar":"Stop";
   $("recn").textContent=mode==="rec"?(r.mr?`Spreek nu. Tik op ${doneLabel} als je klaar bent.`:"Opnemen lukt hier niet. Spreek toch hardop: de tijd loopt.")
-    :r.sr?`Spreek nu. De telefoon schrijft mee. Tik op ${doneLabel} als je klaar bent.`:"Meeschrijven lukt hier niet. Spreek toch hardop: de tijd loopt.";
+    :r.sr?(r.auto?"De microfoon start… Wacht tot je kunt spreken.":`Spreek nu. De telefoon schrijft mee. Tik op ${doneLabel} als je klaar bent.`):"Meeschrijven lukt hier niet. Spreek toch hardop: de tijd loopt.";
   b.textContent="■ "+doneLabel;b.className="btn wide";b.disabled=false;b.onclick=()=>recEnd(true);
   const tick=()=>{if(box!==$("rec"))return recEnd(false);const ms=Math.max(0,r.end-Date.now());
     $("rect").textContent=mmss(Math.ceil(ms/1e3));$("recm").style.width=ms/lim/10+"%";if(!ms)recEnd(true)};
@@ -1984,7 +2006,7 @@ function recDone(r){
   }
   if(!r.keep||r.box!==$("rec"))return;
   const s=Math.min(r.lim,Math.round((r.stop-r.start)/1e3));
-  r.text=saidText(r); r.url=r.chunks.length?URL.createObjectURL(new Blob(r.chunks,{type:r.mr.mimeType||""})):"";
+  r.text=saidText(r);r.review=!!(r.auto&&(r.reviewParts||r.unconfirmed||r.uncertain)); r.url=r.chunks.length?URL.createObjectURL(new Blob(r.chunks,{type:r.mr.mimeType||""})):"";
   r.note=(s>=r.lim?"De tijd is om. ":"")+`Je sprak ${s===1?"1 seconde":s+" seconden"}. `+(s<Math.min(15,r.lim/2)?"Dat is kort: zeg twee of drie zinnen. ":"");
   $("recb").disabled=false;r.done(r);
 }
@@ -3901,7 +3923,7 @@ const PEOPLE=[
   {id:"slager",who:"Slager Henk",wie:"In de slagerij"},
   {id:"collega",who:"Collega Mo",wie:"Je collega, bij de koffieautomaat"},
   {id:"fleur",who:"Fleur",wie:"Studente in Leiden",av:"fietser"},
-  {id:"haring",who:"Haringboer Dirk",wie:"Op de markt in Scheveningen",av:"haringverkoper"},
+  {id:"haring",who:"Haringboer Dirk",wie:"Op de markt in Scheveningen",av:"haringverkoper",words:["haring","kibbeling","uitjes","Scheveningen"]},
   {id:"kaas",who:"Kaasdrager Piet",wie:"Op de kaasmarkt in Alkmaar",av:"kaas"},
   {id:"schaatser",who:"Klaas",wie:"Op het ijs in Friesland",av:"schaatser",m:[11,0,1]},
   {id:"koningsdag",who:"Bram",wie:"Op Koningsdag in Amsterdam",av:"fanm",m:[3]},
@@ -4071,7 +4093,7 @@ function aiTurn(note,keep){
 }
 function aiRec(){
   const k=AK; if(!k||k.busy||k.ending||k.done||rec)return;
-  listen("say",r=>{if(aiOn(k)&&!k.ending)aiHeard(r)},SPK,AI_QUIET);
+  listen("say",r=>{if(aiOn(k)&&!k.ending)aiHeard(r)},SPK,AI_QUIET,aiSpeechWords());
   const take=rec;
   // A recogniser can go deaf without emitting error/end on iOS. Never leave a fake listening state for a minute.
   if(take)take.watchTimer=setTimeout(()=>{
@@ -4081,10 +4103,40 @@ function aiRec(){
   // Scope this check to this take: an old timer must not cancel a later answer.
   setTimeout(()=>{if(AK!==k||rec!==take||!take||!take.fail||saidText(take))return;recEnd(true)},1500);
 }
+// Hints come from the current situation and the other person's last line, never from an invented learner answer.
+function aiSpeechWords(){
+  if(!AK)return[];
+  const text=[...(AK.c.words||[]),AK.c.who,AK.c.task||"",AK.log.filter(l=>!l.me).at(-1)?.t||""].join(" ");
+  return[...new Set(text.toLowerCase().match(/[\p{L}]{5,24}/gu)||[])].slice(0,40);
+}
+function aiWordDistance(a,b){
+  let row=Array.from({length:b.length+1},(_,i)=>i);
+  for(let i=0;i<a.length;i++){const next=[i+1];for(let j=0;j<b.length;j++)next[j+1]=Math.min(next[j]+1,row[j+1]+1,row[j]+(a[i]===b[j]?0:1));row=next}
+  return row[b.length];
+}
+function aiSpeechChoices(text,alternatives=[]){
+  const choices=new Set(alternatives),words=text.match(/[\p{L}]+/gu)||[],hints=aiSpeechWords();
+  for(const word of words){const low=word.toLowerCase();if(low.length<6||hints.includes(low))continue;
+    for(const hint of hints){
+      // Suggest close domain words (kering → haring); never change the transcript without the learner choosing it.
+      if(hint.length<6||hint.slice(-4)!==low.slice(-4)||Math.abs(hint.length-low.length)>1||aiWordDistance(low,hint)>2)continue;
+      choices.add(text.replace(new RegExp("(?<![\\p{L}])"+word+"(?![\\p{L}])","u"),hint));
+    }
+  }
+  return[...choices].filter(v=>v&&v!==text).slice(0,3);
+}
 function aiHeard(r){
   const b=$("recb"); if(!b||!AK)return;
   b.textContent="● Spreek";b.className="btn wide";b.onclick=()=>{AK.mic=true;aiRec()}; $("recp").innerHTML="";
   if(!r.text){AK.mic=false;$("recn").textContent=r.fail?"De microfoon geeft geen tekst door. Tik op Spreek en zeg je antwoord opnieuw, of typ het hieronder.":"Ik heb niets verstaan. Tik op Spreek en praat wat harder.";return}
+  const contextual=aiSpeechChoices(r.text);
+  if(r.review||contextual.length){
+    const choices=[...new Set([...contextual,...(r.choices||[])])].filter(t=>t!==r.text).slice(0,3);
+    aiTurn("Controleer wat de telefoon hoorde. Pas het aan en tik op Stuur, of spreek opnieuw.",r.text);
+    if(choices.length){$("recp").innerHTML=`<p class="ask">Bedoelde je:</p>`+choices.map((t,i)=>`<button class="ghost wide" data-aichoice="${i}">${esc(t)}</button>`).join("");
+      document.querySelectorAll("[data-aichoice]").forEach(b=>b.onclick=()=>{$("tin").value=choices[+b.dataset.aichoice]})}
+    return;
+  }
   aiSend(r.text);
 }
 async function aiSend(t){

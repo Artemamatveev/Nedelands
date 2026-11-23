@@ -208,14 +208,14 @@ test('A random person greets at once; a situation waits until the learner has re
   assert.ok(a.document.querySelector('#aigo'));
 });
 
-async function voiceConversation({failOnce=false,refuse=false,globals={},audio=null}={}){
+async function voiceConversation({failOnce=false,refuse=false,globals={},audio=null,topic="saskia"}={}){
   const requests=[],instances=[];
   class Recognition{
     constructor(){instances.push(this);this.starts=0;this.aborts=0}
     start(){this.starts++;if(refuse)throw Error('gesture required')}
     stop(){this.onend?.()}
     abort(){this.aborts++;this.onend?.()}
-    result(text){this.onresult?.({results:[[{transcript:text}]]})}
+    result(text,final=true,confidence=.9){const r=[{transcript:text,confidence}];r.isFinal=final;this.onresult?.({results:[r]})}
   }
   const fetch=async(url,init)=>{
     if(url!=='/api/talk')return new Response(JSON.stringify(url==='/api/config'?{}:[]));
@@ -224,7 +224,7 @@ async function voiceConversation({failOnce=false,refuse=false,globals={},audio=n
     return new Response(JSON.stringify(b.go==='start'?{token:'tok',reply:'Hoe was je dag?',audio}:{reply:'Ik heb vandaag gewerkt.',audio,done:false}));
   };
   const a=await app({fetch,globals:{SpeechRecognition:Recognition,...globals}});
-  a.run('aiTalk("saskia")');await a.run('aiStart()');await a.flush();
+  a.run(`aiTalk(${JSON.stringify(topic)})`);await a.run('aiStart()');await a.flush();
   return {a,requests,instances};
 }
 
@@ -233,7 +233,7 @@ test('The greeting opens the microphone, silence sends the visible answer, and t
   assert.ok(a.run('rec'),'the first answer needs no extra Spreek tap');
   instances[0].result('Ik ben naar de markt geweest');
   assert.match(a.document.getElementById('recp').textContent,/naar de markt/);
-  const r=a.run('rec');assert.equal(a.timers.get(r.quiet).delay,2600);
+  const r=a.run('rec');assert.equal(a.timers.get(r.quiet).delay,1200);
   // Some browsers send an empty result while finalising; it must not erase speech.
   instances[0].result('');
   a.timers.get(r.quiet).fn();await a.flush();
@@ -284,7 +284,7 @@ test('Final speech sends sooner, but continuing speech restores the thinking pau
   const result=[{transcript:'Ik heb gewerkt'}];result.isFinal=true;
   native.onresult({results:[result]});
   const first=r.quiet;assert.equal(a.timers.get(first).delay,1200);
-  native.result('Ik heb gewerkt en daarna');
+  native.result('Ik heb gewerkt en daarna',false);
   assert.equal(a.timers.has(first),false);assert.equal(a.timers.get(r.quiet).delay,2600);
   assert.equal(a.run('rec.stopping'),undefined);
 });
@@ -380,4 +380,58 @@ test('Stopping a conversation stops Web Audio and a late decode cannot reopen it
   a.run('home()');assert.equal(source.stopped,true);assert.equal(source.onended,null);assert.equal(a.run('rec'),null);
   a.run('aiTalk("saskia");AK.tok="tok";aiHear("Hoi!","QUJD",false);home()');await a.flush();
   assert.equal(a.run('rec'),null);assert.equal(voice.sources.at(-1),source);
+});
+
+
+test('Kering in the fish conversation suggests haring, preserving the original until confirmed',async()=>{
+  const {a,instances,requests}=await voiceConversation({topic:'haring'});
+  instances[0].result('Ik wil kering met uitjes');a.run('recEnd(true)');await a.flush();
+  assert.equal(requests.length,1,'do not send a likely misheard word automatically');
+  assert.equal(a.document.getElementById('tin').value,'Ik wil kering met uitjes');
+  const choice=a.document.querySelector('[data-aichoice]');assert.equal(choice.textContent,'Ik wil haring met uitjes');
+  choice.click();assert.equal(a.document.getElementById('tin').value,'Ik wil haring met uitjes');
+  assert.equal(requests.length,1,'choosing a suggestion only edits the draft');
+  a.document.getElementById('tsend').click();await a.flush();
+  assert.equal(requests[1].history.at(-1).t,'Ik wil haring met uitjes');
+});
+
+test('Tentative speech is reviewed rather than passed off as a final recognised answer',async()=>{
+  const {a,instances,requests}=await voiceConversation();
+  instances[0].result('Ik heb een hond',false);a.run('recEnd(true)');await a.flush();
+  assert.equal(requests.length,1);assert.equal(a.document.getElementById('tin').value,'Ik heb een hond');
+  assert.match(a.document.getElementById('recn').textContent,/Controleer/);
+});
+
+test('A final correction replaces interim words without duplication or an unnecessary review',async()=>{
+  const {a,instances,requests}=await voiceConversation();
+  instances[0].result('Ik heb een hand',false);instances[0].result('Ik heb een hond',true);
+  a.run('recEnd(true)');await a.flush();assert.equal(requests[1].history.at(-1).t,'Ik heb een hond');
+});
+
+test('Low confidence speech offers native alternatives; confidence zero is treated as unavailable',async()=>{
+  const {a,instances,requests}=await voiceConversation();
+  const result=[{transcript:'Ik heb een hand',confidence:.3},{transcript:'Ik heb een hond',confidence:.25}];result.isFinal=true;
+  instances[0].onresult({results:[result]});a.run('recEnd(true)');await a.flush();
+  assert.equal(requests.length,1);assert.equal(a.document.querySelector('[data-aichoice]').textContent,'Ik heb een hond');
+  a.document.getElementById('recb').click();await a.flush();instances.at(-1).result('Ik heb een hond',true,0);
+  a.run('recEnd(true)');await a.flush();assert.equal(requests.length,2);
+});
+
+test('Recognition receives Dutch domain hints only where contextual biasing is supported',async()=>{
+  class Phrase{constructor(phrase,boost){this.phrase=phrase;this.boost=boost}}
+  const {a,instances}=await voiceConversation({topic:'haring',globals:{SpeechRecognitionPhrase:Phrase}});
+  // Simulate a browser exposing phrases on a subsequently created recogniser.
+  a.run('recEnd(false);SR.prototype.phrases=[];aiRec()');await a.flush();
+  const native=instances.at(-1);assert.equal(native.lang,'nl-NL');assert.equal(native.maxAlternatives,3);
+  assert.ok(native.phrases.some(p=>p.phrase==='haring'));assert.ok(native.phrases.some(p=>p.phrase==='kibbeling'));
+  native.onerror({error:'phrases-not-supported'});assert.equal(a.run('rec.fail'),undefined);assert.equal(native.phrases.length,0);
+  assert.equal(a.run('rec.hints'),false);
+});
+
+test('The microphone ready message waits for the actual start event, and new speech cancels premature sending',async()=>{
+  const {a,instances}=await voiceConversation();const native=instances[0];
+  assert.match(a.document.getElementById('recn').textContent,/microfoon start/);
+  native.onstart();assert.match(a.document.getElementById('recn').textContent,/Spreek nu/);
+  native.result('Ik wil een afspraak');const timer=a.run('rec.quiet');assert.ok(a.timers.has(timer));
+  native.onspeechstart();assert.equal(a.timers.has(timer),false);
 });
