@@ -3957,7 +3957,8 @@ function aiUnlock(){
       aiSilent=URL.createObjectURL(new Blob([b],{type:"audio/wav"}))}
     stopSpeak();sayA.src=aiSilent;sayA.play().catch(()=>{});
     // the phone's own voice (without Google's) is also allowed only from a tap: start it once, silently, inside this one
-    if(canSpeak){const u=new SpeechSynthesisUtterance(" ");u.lang="nl-NL";u.volume=0;speechSynthesis.speak(u)}
+    // (a real word at volume 0: iOS skips an empty utterance without counting it)
+    if(canSpeak){const u=new SpeechSynthesisUtterance("hallo");u.lang="nl-NL";u.volume=0;speechSynthesis.speak(u)}
   }catch(e){}
 }
 async function aiPost(body){
@@ -3986,8 +3987,17 @@ function aiHear(t,audio,done){
   aiPlay(l,()=>{if(AK===k&&!k.busy&&!rec&&k.mic&&SR&&$("rec"))aiRec()});
 }
 function aiPlay(l,done,slow){
-  stopSpeak(); const n=sayN,end=()=>{if(n!==sayN)return;sayOn=false;aiSpk(false);done&&done()},
-    alt=()=>{if(n!==sayN)return;try{canSpeak?utter(l.t,end):end()}catch(e){end()}};
+  // not stopSpeak(): on iOS a speak() right after cancel() is dropped, so cancel only what is really still talking
+  sayN++;sayOn=false;sayA.pause();
+  if(canSpeak&&(speechSynthesis.speaking||speechSynthesis.pending))try{speechSynthesis.cancel()}catch(e){}
+  const n=sayN,end=()=>{if(n!==sayN)return;sayOn=false;aiSpk(false);done&&done()},
+    mute=()=>{if(n!==sayN)return;aiSpk(false);const s=$("aist");if(s)s.textContent="Geen geluid? Tik op ▶ om te luisteren.";done&&done()},
+    alt=()=>{if(n!==sayN)return;if(!canSpeak)return mute();
+      try{const u=new SpeechSynthesisUtterance(l.t);let on=false;u.lang="nl-NL";u.rate=slow?.85:.95;
+        u.onstart=()=>{on=true};u.onend=u.onerror=()=>{if(on)end();else mute()};
+        speechSynthesis.speak(u);try{speechSynthesis.resume()}catch(e){}
+        setTimeout(()=>{if(!on&&n===sayN){try{speechSynthesis.cancel()}catch(e){}mute()}},2500); // the phone kept it silent
+      }catch(e){mute()}};
   aiSpk(true);
   if(!l.url)return alt();
   sayOn=true;sayA.onended=end;sayA.onerror=alt;sayA.src=l.url;sayA.playbackRate=slow?.85:1;sayA.play().catch(alt);

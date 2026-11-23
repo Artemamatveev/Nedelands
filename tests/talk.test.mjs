@@ -201,6 +201,7 @@ test('A random person greets at once; a situation waits until the learner has re
   a.run('aiAny()');await a.flush();
   assert.equal(sent.length,1);assert.equal(sent[0].go,'start');
   assert.match(a.document.querySelector('#tlog').textContent,/Hoi!/);
+  assert.match(a.document.querySelector('#aist').textContent,/Tik op ▶/,'without any voice the learner is told how to listen');
   a.run('aiTalk("apotheek")');await a.flush();
   assert.equal(sent.length,1,'no start before Begin het gesprek');
   assert.ok(a.document.querySelector('#aigo'));

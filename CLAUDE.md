@@ -839,7 +839,10 @@ conversation. Two parts:
   when Google fails, the page uses the phone's voice. The MP3 comes back as base64 and plays from a blob URL on the
   shared `sayA` element, which `aiUnlock()` starts with a moment of silence inside the tap (iPhone plays sound only from
   a tap); it also starts the phone's speech synthesis with a silent utterance there, or the phone's voice stays mute
-  after the network wait (the user heard nothing on 23 November 2026). A random person starts the conversation
+  after the network wait (the user heard nothing on 23 November 2026). `aiPlay()` cancels speech only when something is
+  really talking (on iOS a speak() right after cancel() is dropped), and when the phone stays silent for 2.5 s it says
+  "Geen geluid? Tik op ▶ om te luisteren." (▶ plays inside a tap). The phone's voice is only a fallback: the reliable
+  voice is Google's, which needs `GOOGLE_TTS_KEY`. A random person starts the conversation
   in the same tap as "Praat met iemand" (`aiTalk(id, true)`), so the greeting is heard at once; a situation waits for
   "Begin het gesprek" so the task can be read first. ▶ replays a line a little slower.
 - The learner speaks through `listen("say", …, SPK, AI_QUIET)`: the `auto` argument ends the take after 1.8 s of silence,
