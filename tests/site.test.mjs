@@ -37,7 +37,7 @@ test('The numbers on the homepage are true', async () => {
   assert.ok(a.run('ITEMS.filter(x=>x.sec==="knm").length') >= n('KNM-vragen'));
   assert.equal(a.run('S.lvl="A2";parts().length'), n('proefexamens per niveau'));
   assert.equal(a.run('S.lvl="B1";parts().length'), n('proefexamens per niveau'));
-  assert.ok(a.run('GP.length') >= n('gesprekken'));
+  assert.ok(a.run('PEOPLE.length+GP.filter(c=>!c.ona).length') >= n('gesprekken'));
 });
 
 test('The manifest has installable icons that exist', () => {

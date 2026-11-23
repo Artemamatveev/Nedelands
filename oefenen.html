@@ -573,6 +573,28 @@ body.vfull{overflow:hidden}
 .tsum b{display:block;font-weight:600}
 .tsum .hint{margin:2px 0 0}
 #tre{margin-top:10px}
+/* gesprekken met AI: wie er spreekt, met een oranje rand zolang die praat */
+.aic{display:flex;align-items:center;gap:12px;margin:18px 0 2px}
+.aic b{display:block;font-weight:600}
+.aiav{flex:none;width:48px;height:48px;border-radius:50%;background:var(--fill);color:var(--on-fill);display:grid;place-items:center;font-size:var(--fs-l);font-weight:600;box-shadow:0 0 0 0 var(--oranje);transition:box-shadow .25s}
+.aiav.on{box-shadow:0 0 0 4px var(--oranje);animation:aipulse 1.2s ease-in-out infinite}
+@keyframes aipulse{50%{box-shadow:0 0 0 7px var(--oranje)}}
+.aist{display:block;color:var(--soft);font-size:var(--fs-s);min-height:1.2em}
+.aip{text-align:center;margin:22px 0 4px}
+.aip h2{margin:12px 0 0}
+.aip .sub{margin:2px 0 0}
+.aiav.big{width:112px;height:112px;margin:0 auto;font-size:44px;overflow:hidden}
+.aiav.pic{background:#fff}
+.aiav img{width:100%;height:100%;object-fit:cover}
+.aiany{margin:16px 0 4px}
+.aifix{margin-top:4px!important;font-size:var(--fs-m)}
+.aifix span{display:block;color:var(--soft)}
+.aiwait{margin:14px 0}
+.aigood{margin:6px 0 16px;padding-inline-start:20px}
+.aigood li{margin:4px 0}
+#aiend{margin-top:10px}
+#ainx+#aire{margin-top:10px}
+@media (prefers-reduced-motion:reduce){.aiav.on{animation:none}}
 .pics figure.credited{aspect-ratio:auto;overflow:visible;background:none;border:0}
 .pics .credited>button{height:auto;aspect-ratio:16/9;overflow:hidden;border:1px solid var(--line);border-radius:var(--rc)}
 .photo-credit{display:block;margin-top:5px;color:var(--soft);font-size:var(--fs-s);line-height:1.4;text-align:start}
@@ -1046,7 +1068,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
 <script src="/data/knm.js?v=d209144089"></script>
 <script src="/data/a2.js?v=35efca6a73"></script>
 <script src="/data/b1.js?v=e9701bd331"></script>
-<script src="/data/extra.js?v=63cb92e8f1"></script>
+<script src="/data/extra.js?v=b209595ae3"></script>
 <script>
 
 const TYPES={past:"Imperfectum: gisteren … ik / hij",pastpl:"Imperfectum: gisteren … wij / zij",pp:"Perfectum: voltooid deelwoord",aux:"Perfectum: hebben of zijn?"};
@@ -1405,6 +1427,7 @@ function mergeS(a,b){
   const uni=(x,y,k)=>{const h=new Set((x||[]).map(k));return(x||[]).concat((y||[]).filter(e=>!h.has(k(e))))};
   o.items=by(a.items,b.items,(x,y)=>n(y)>n(x)||n(y)===n(x)&&(y.d||0)>(x.d||0)?y:x);
   o.xs=by(a.xs,b.xs,Math.max); o.hs=by(a.hs,b.hs,Math.max); o.tm=by(a.tm,b.tm,Math.max); o.qd=by(a.qd,b.qd,Math.max); o.qr=by(a.qr,b.qr,Math.max);
+  o.ai=by(a.ai,b.ai,(x,y)=>({n:Math.max(x.n||0,y.n||0),at:Math.max(x.at||0,y.at||0)}));
   o.gp=by(a.gp,b.gp,(x,y)=>({n:Math.max(x.n||0,y.n||0),b:Math.max(x.b||0,y.b||0),at:Math.max(x.at||0,y.at||0)}));
   o.bk=by(a.bk,b.bk,(x,y)=>(y.at||0)>(x.at||0)?y:x);
   o.res=by(a.res,b.res,(x,y)=>{const m=new Map();x.concat(y).forEach(r=>m.set(r.id||r.at,r));return [...m.values()].sort((p,q)=>p.at-q.at)});
@@ -1838,7 +1861,7 @@ function voiceTexts(){
   ART.forEach(p=>{(p.v||"").split("\n").forEach(l=>add(l,"r"));(p.w||"").split("|").filter(Boolean).forEach(x=>add(x.split("=")[0],"w"))});
   GS.forEach(c=>c.x.split("\n").forEach(l=>add(l,"r")));
   BG.forEach(l=>{pairs(l.v).forEach(x=>add(x[0],"r"));pairs(l.w).forEach(x=>add(x[0],"w"))});
-  GP.forEach(c=>{c.d.forEach(s=>{add(s.a,"gp",c.w);add(s.r||GPNO,"gp",c.w);add(s.m.replace(/\[|\]/g,""),"gpm",c.w)});add(c.e,"gp",c.w)});
+  GP.filter(c=>c.ona).forEach(c=>{c.d.forEach(s=>{add(s.a,"gp",c.w);add(s.r||GPNO,"gp",c.w);add(s.m.replace(/\[|\]/g,""),"gpm",c.w)});add(c.e,"gp",c.w)});
   return out}
 let rec=null,recUrl=null;
 const hush=()=>{recEnd(false);if(recUrl){URL.revokeObjectURL(recUrl);recUrl=null}stopSpeak()};
@@ -1885,11 +1908,11 @@ const ownHTML=(text,errs,label="Jouw tekst")=>`<p class="ask">${label}</p><div c
 const errsHTML=errs=>errs.length?`<p class="ask">Fouten: ${errs.length}</p><ol class="errs fixes">${errs.map(e=>`<li><s>${esc(e.wrong)}</s> <strong>${esc(e.right)}</strong><span>${esc(e.why)}</span></li>`).join("")}</ol>`:`<p class="note">Geen fouten gevonden.</p>`;
 const spoken=t=>String(t).replace(/[\p{Extended_Pictographic}←-⇿️‍]/gu,"").replace(/\s+/g," ").trim();
 const saidText=r=>r.said.concat(r.part).join(" ").replace(/\s+/g," ").trim();
-async function listen(mode,done,lim=SPK){
+async function listen(mode,done,lim=SPK,auto=0){ // auto: in a conversation, end the take after that many ms of silence
   const box=$("rec"),b=$("recb"); recEnd(false); b.disabled=true; stopSpeak(); // never record the question
   $("recp").querySelectorAll("audio").forEach(audio=>audio.pause?.());
   if(recUrl){URL.revokeObjectURL(recUrl);recUrl=null} $("recp").innerHTML="";
-  const r={box,mode,done,lim,stream:null,mr:null,sr:null,chunks:[],said:[],part:"",keep:false,fin:false};
+  const r={box,mode,done,lim,auto,stream:null,mr:null,sr:null,chunks:[],said:[],part:"",keep:false,fin:false};
   if(mode==="rec"&&canRec){
     try{r.stream=await navigator.mediaDevices.getUserMedia({audio:true})}catch(e){}
     if(box!==$("rec")){if(r.stream)r.stream.getTracks().forEach(t=>t.stop());return}
@@ -1901,7 +1924,8 @@ async function listen(mode,done,lim=SPK){
     if(!sr){sr=new SR();sr.lang="nl-NL";sr.continuous=true;sr.interimResults=true}
     r.sr=sr;
     sr.onresult=e=>{if(r.fin)return;let t="";for(let i=0;i<e.results.length;i++)t+=e.results[i][0].transcript+" ";r.part=t.trim();
-      if(r.box===$("rec")&&!r.fin)$("recp").innerHTML=`<p class="ask">Dit hoorde de telefoon</p><div class="sample">${esc(saidText(r))}</div>`};
+      if(r.box===$("rec")&&!r.fin)$("recp").innerHTML=`<p class="ask">Dit hoorde de telefoon</p><div class="sample">${esc(saidText(r))}</div>`;
+      if(r.auto){clearTimeout(r.quiet);r.quiet=setTimeout(()=>{if(rec===r&&saidText(r))recEnd(true)},r.auto)}};
     sr.onerror=e=>{if(/not-allowed|service-not-allowed|audio-capture|language-not-supported/.test(e.error))r.fail=true};
     // Recognition stops by itself after a pause: start it again while the minute runs
     sr.onend=()=>{if(r.fin)return;if(r.part){r.said.push(r.part);r.part=""}
@@ -1944,7 +1968,7 @@ function recEnd(keep){
   if(r.stream)r.stream.getTracks().forEach(t=>t.stop());
 }
 function recDone(r){
-  if(r.fin)return; r.fin=true;if(rec===r)rec=null;clearTimeout(r.finishTimer);r.box.removeAttribute("aria-busy");
+  if(r.fin)return; r.fin=true;if(rec===r)rec=null;clearTimeout(r.finishTimer);clearTimeout(r.quiet);r.box.removeAttribute("aria-busy");
   if(!r.keep||r.box!==$("rec"))return;
   const s=Math.min(r.lim,Math.round((r.stop-r.start)/1e3));
   r.text=saidText(r); r.url=r.chunks.length?URL.createObjectURL(new Blob(r.chunks,{type:r.mr.mimeType||""})):"";
@@ -2100,6 +2124,7 @@ me:'<path d="M12 12a4.6 4.6 0 1 0 0-9.2 4.6 4.6 0 0 0 0 9.2zm0 2.2c-4.6 0-8.3 2.
 plus:'<path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z"/>',
 uit:'<path d="M12 4 1.5 9.5 12 15l8.5-4.45V16h2V9.5z"/><path d="M6 14.2V17c0 1.6 2.7 3 6 3s6-1.4 6-3v-2.8l-6 3.1z"/>',
 ona:'<path d="M9 3.5h6A1.5 1.5 0 0 1 16.5 5v1.5h3.5A2 2 0 0 1 22 8.5V12H2V8.5a2 2 0 0 1 2-2h3.5V5A1.5 1.5 0 0 1 9 3.5zm.5 3h5V5.5h-5zM2 13.5h8.5v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1H22v5a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2z"/>',
+  ai:'<path d="M6.6 2.6c.6-.4 1.5-.2 1.9.4l2 3.2c.4.6.3 1.4-.2 1.9L8.9 9.4a12 12 0 0 0 5.7 5.7l1.3-1.4c.5-.5 1.3-.6 1.9-.2l3.2 2c.6.4.8 1.3.4 1.9l-1 1.7c-.7 1.1-2 1.7-3.3 1.4C10.6 19.2 4.8 13.4 3.5 7c-.3-1.3.3-2.6 1.4-3.3z"/><path class="s" d="M14.5 3.5a6 6 0 0 1 6 6M14.5 7a2.5 2.5 0 0 1 2.5 2.5"/>',
   talk:'<path d="M3.5 2.5h10A1.6 1.6 0 0 1 15 4.1v6.3a1.6 1.6 0 0 1-1.5 1.6H8.2l-3.7 3.2V12h-1A1.6 1.6 0 0 1 2 10.4V4.1a1.6 1.6 0 0 1 1.5-1.6z"/><path d="M16.7 7.5h3.8A1.6 1.6 0 0 1 22 9.1v6.3a1.6 1.6 0 0 1-1.5 1.6h-1v3.2L15.8 17H10.5A1.6 1.6 0 0 1 9 15.4V13.6h4.6a3.1 3.1 0 0 0 3.1-3.1z"/>',
   privacy:'<path fill-rule="evenodd" d="M12 2l8.5 3.4v6c0 5.2-3.6 9.2-8.5 10.9-4.9-1.7-8.5-5.7-8.5-10.9v-6zM10.7 13.4L8.3 11l-1.5 1.5 3.9 3.9 6.4-6.4-1.5-1.5z"/>',
   duo:'<path fill-rule="evenodd" d="M6.5 2h7.8L19.5 7.2v13.3A1.5 1.5 0 0 1 18 22H6.5A1.5 1.5 0 0 1 5 20.5v-17A1.5 1.5 0 0 1 6.5 2zM8.4 14.2l2.7 2.7 4.9-4.9-1.4-1.4-3.5 3.5-1.3-1.3z"/>'};
@@ -2158,7 +2183,7 @@ function home(){
   $("books").innerHTML=itHTML(`data-x="books"`,"Boekenkast",lb?`Je leest nu: ${esc(lb.t)}, blz. ${lb.p+1}`:"Verhalen en je eigen e-books.",{ic:"books"})
     +itHTML(`data-x="hist"`,"Geschiedenis van Nederland",lh?`Je was bij: ${lh.t}`:"Van de hunebedden tot nu.",{n:gsDone?`${gsDone} van ${GS.length}`:null,ic:"hist"})
     +itHTML(`data-x="media"`,"Luisteren en kijken","Nieuws, video's en podcasts.",{ic:"media"})
-    +itHTML(`data-x="talk"`,"Gesprekken","Bel de dokter, koop brood, praat met de buren.",{n:(n=>n?`${n} van ${GP.filter(c=>!c.ona).length}`:null)(GP.filter(c=>!c.ona&&(S.gp||{})[c.id]).length),ic:"talk"});
+    +itHTML(`data-x="ai"`,"Gesprekken","Praat met AI: met je buurvrouw, de slager of Van Gogh.",{n:(n=>n?`${n} van ${aiIds().length}`:null)(aiIds().filter(id=>(S.ai||{})[id]).length),ic:"talk"});
   $("mine").innerHTML=itHTML(`data-x="stats"`,"Kies een lastig onderwerp","Waar je de meeste fouten maakt.",{ic:"stats"})
     +((S.errs||[]).length?itHTML(`data-x="errs"`,"Oefen met je eigen fouten","Kies de juiste versie van zinnen uit je eerdere teksten en antwoorden.",{n:S.errs.length,ic:"errs"}):"")
     +((S.words||[]).length?itHTML(`data-x="words"`,"Mijn woorden","Die je bij het lezen hebt bewaard.",{n:S.words.length,ic:"words"}):"")
@@ -2172,7 +2197,7 @@ function home(){
     else if(d.x==="books")library();
     else if(d.x==="media")media();
     else if(d.x==="hist")hist();
-    else if(d.x==="talk")talks();
+    else if(d.x==="ai")aiList();
     else if(d.x==="ona")onaScreen();
     else if(d.x==="uit")uitScreen();
     else if(d.x==="bg")bgList();
@@ -2965,16 +2990,20 @@ async function nakijken(tasks,part){
   const h=await authHead();
   const r=await fetch("/api/check",{method:"POST",headers:{"Content-Type":"application/json",...h},body:JSON.stringify(part?{part,tasks}:{tasks})});
   const j=await r.json().catch(()=>({}));
+  chkCount(j,part?["wb","sb"].includes(part)?"B1":"A2":lvl());
+  if(!r.ok||!Array.isArray(j.tasks))throw{code:j.error||"failed"};
+  return j.tasks;
+}
+// The checks left, from an answer of /api/check or /api/talk (both take checks)
+function chkCount(j,lv){
   acc.checkPeriod=j.period||null;
   if(typeof j.free==="number")acc.free=j.free; // remaining one-time browser trial
   if(acc.user){const daily=j.period==="day",key=daily?"used":"freeUsed";
-    if(typeof j.left==="number"){acc.left=j.left;acc[key]=(j.limit||myLimit(part?["wb","sb"].includes(part)?"B1":"A2":lvl()))-j.left}
+    if(typeof j.left==="number"){acc.left=j.left;acc[key]=(j.limit||myLimit(lv))-j.left}
     else if(j.error==="limit"){acc.left=0;acc[key]=Math.max(acc[key]||0,j.limit||myLimit())}
     const at=j.checkedAt?new Date(j.checkedAt):new Date();
     if(daily){acc.usedDay=amsDay(at);if(acc.usedDay!==amsDay())usage()}
   }
-  if(!r.ok||!Array.isArray(j.tasks))throw{code:j.error||"failed"};
-  return j.tasks;
 }
 // A one-time browser trial, followed by the separate free account allowance.
 const freeNote=()=>acc.cfg&&acc.cfg.free&&!acc.user?`<p class="note"><span>${acc.free==null?`Probeer ${acc.cfg.free} nakijkbeurten gratis in deze browser.`:acc.free>0?`Nog ${acc.free} gratis proefbeurten in deze browser.`:"Je gratis proefbeurten zijn op."}</span> <span>Met een gratis account: ${acc.cfg.limit} gratis nakijkbeurten.</span></p>`:"";
@@ -3498,19 +3527,8 @@ function gpFits(k,said){
 const gpGroup=i=>{while(i>0&&!GP[i].g)i--;return GP[i].g};
 let TK=null,tGo=null; // the open conversation; where the back button (and a swipe) on the screen goes
 function tBack(t,f){$("tback").innerHTML=`<span aria-hidden="true">←</span>${t}`;$("tback").onclick=tGo=f}
-function talks(){
-  closePop();hush();TK=null;$("card").innerHTML=""; // the card may hold an old #rec, which listen() would find first
-  $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;window.scrollTo(0,0);
-  tBack(TABN[tab],home);
-  const st=c=>{const g=(S.gp||{})[c.id];return g?`<span class="good">Gelukt</span>`:null};
-  let h=`<h2>Gesprekken</h2><p class="sub">Je hoort de ander en je antwoordt hardop${SR?"":" (of je typt)"}.</p>`;
-  const L=GP.map((c,i)=>[c,i]).filter(x=>!x[0].ona),O=lvl()==="B1"?L.filter(x=>x[0].b1).concat(L.filter(x=>!x[0].b1)):L; // at B1 the B1 group first
-  O.forEach(([c,i],n)=>{if(c.g)h+=(n?"</div>":"")+`<h3 class="lh">${c.g}</h3><div class="list">`;h+=itHTML(`data-t="${i}"`,c.t,c.s,{n:st(c)})});
-  $("tbody").innerHTML=h+"</div>";
-  document.querySelectorAll("#tbody [data-t]").forEach(b=>b.onclick=()=>talk(+b.dataset.t));
-}
 // ONA and the participatieverklaring: two parts of inburgeren that not everyone has to do. What they are, who needs
-// them, and the ONA final interview to practise as conversations (GP items with ona, not in the Gesprekken list).
+// them, and the ONA final interview to practise as scripted conversations (GP items with ona).
 // The facts follow DUO (inburgeren.nl); check them there when the rules change.
 // Beginnen (data in BG, START): the list, one lesson, and the test that says where to begin. All in #talk.
 function bgOpen(back,f){
@@ -3790,7 +3808,7 @@ function onaScreen(){
 function talk(i){
   const c=GP[i]; closePop();hush();$("card").innerHTML="";
   $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;
-  if(c.ona)tBack("ONA",onaScreen);else tBack("Gesprekken",talks);
+  tBack("ONA",onaScreen); // only the ONA final interview is still a script; everyday conversations are with AI (aiList)
   TK={i,c,n:0,log:[],miss:0,hint:false,self:0};
   $("tbody").innerHTML=`<div lang="nl"><p class="ask">${gpGroup(i)}</p><h2>${c.t}</h2>`+(c.p?picsHTML([c.p]):"")
     +`<p class="ask">Jouw opdracht</p><div class="sample">${c.o}</div><div class="talk" id="tlog" aria-live="polite"></div><div id="tctl"></div></div>`;
@@ -3855,6 +3873,183 @@ function talkEnd(){
     <button class="btn wide" id="tnx">Volgende: ${GP[nx].t}</button><button class="ghost wide" id="tre">Nog een keer</button>`;
   document.querySelectorAll("#tctl [data-m]").forEach(b=>b.onclick=()=>speak(c.d[b.dataset.m].m.replace(/\[|\]/g,"")));
   $("tnx").onclick=()=>talk(nx); $("tre").onclick=()=>talk(TK.i);
+}
+// Gesprekken: a real conversation with Claude (api/_talk.js), like a video call. The other person speaks with
+// Google's Chirp voice (or the phone's own), the learner answers aloud (the phone writes it down; a pause ends the turn)
+// or types. One check per conversation, taken at the start. At the end Claude says what went well and gives tips, which
+// also go to Mijn fouten. Kept: S.ai {id: {n, at}}; the conversation itself only lives in memory.
+// "Praat met iemand" picks one of PEOPLE at random (not one of the last six; seasonal people only in their months, `m`,
+// 0 = January); wie says who they are, av is their plush avatar in art/avatars. The situations are the scripts in GP
+// (not the ONA ones), which the server gives Claude as a model conversation (api/_scenes.js, tools/build-scenes.mjs).
+// Ids and who (and a situation's task) must match TOPICS in api/_talk.js (tests/talk.test.mjs).
+const PEOPLE=[
+  {id:"saskia",who:"Saskia",wie:"Je vriendin uit Utrecht"},
+  {id:"jansen",who:"Mevrouw Jansen",wie:"Je buurvrouw"},
+  {id:"slager",who:"Slager Henk",wie:"In de slagerij"},
+  {id:"collega",who:"Collega Mo",wie:"Je collega, bij de koffieautomaat"},
+  {id:"fleur",who:"Fleur",wie:"Studente in Leiden",av:"fietser"},
+  {id:"haring",who:"Haringboer Dirk",wie:"Op de markt in Scheveningen",av:"haringverkoper"},
+  {id:"kaas",who:"Kaasdrager Piet",wie:"Op de kaasmarkt in Alkmaar",av:"kaas"},
+  {id:"schaatser",who:"Klaas",wie:"Op het ijs in Friesland",av:"schaatser",m:[11,0,1]},
+  {id:"koningsdag",who:"Bram",wie:"Op Koningsdag in Amsterdam",av:"fanm",m:[3]},
+  {id:"sint",who:"Sinterklaas",wie:"Op bezoek uit Spanje",av:"sinterklaas",m:[10,11]},
+  {id:"vangogh",who:"Vincent van Gogh",wie:"Schilder · Arles, 1888",av:"vangogh"},
+  {id:"rembrandt",who:"Rembrandt",wie:"Schilder · Amsterdam, 1642",av:"rembrandt"},
+  {id:"vermeer",who:"Johannes Vermeer",wie:"Schilder · Delft, 1665",av:"schilder"},
+  {id:"visser",who:"Jan uit Volendam",wie:"Vissersjongen · Volendam, 1910",av:"volm"},
+];
+function aiAny(){
+  const recent=(lsGet("ww-ai-recent")||"").split(","),mo=new Date().getMonth(),
+    open=PEOPLE.filter(p=>!p.m||p.m.includes(mo)),L=open.filter(p=>!recent.includes(p.id)),
+    p=(L.length?L:open)[Math.floor(Math.random()*(L.length||open.length))];
+  lsSet("ww-ai-recent",[p.id,...recent.filter(x=>x&&x!==p.id)].slice(0,6).join(","));
+  aiTalk(p.id);
+}
+const aiScene=i=>({id:GP[i].id,who:GP[i].w,t:GP[i].t,s:GP[i].s,task:GP[i].o,p:GP[i].p,g:gpGroup(i),b1:GP[i].b1});
+const aiScenes=()=>{const L=GP.map((c,i)=>c.ona?null:aiScene(i)).filter(Boolean);return lvl()==="B1"?L.filter(c=>c.b1).concat(L.filter(c=>!c.b1)):L}; // at B1 the B1 group first
+const aiIds=()=>PEOPLE.map(c=>c.id).concat(aiScenes().map(c=>c.id));
+const aiTopic=id=>PEOPLE.find(c=>c.id===id)||aiScenes().find(c=>c.id===id);
+const AI_QUIET=1800; // a pause this long (ms) after the learner said something ends their turn
+let AK=null; // the open conversation: {c, log:[{me, t, url, fix}], tok, n, busy, mic}
+const aiOn=k=>AK===k&&!$("talk").hidden&&!!$("tlog"); // still on this conversation's screen (a late answer must not land elsewhere)
+function aiList(){
+  bgOpen(TABN[tab],home); aiDrop();
+  const st=c=>(S.ai||{})[c.id]?`<span class="good">Gelukt</span>`:null, row=c=>itHTML(`data-ai="${c.id}"`,c.t,c.s,{n:st(c)});
+  let h=`<h2>Gesprekken</h2><p class="sub">Een echt gesprek met AI. Jij spreekt, de ander antwoordt.</p>
+    <p class="note"><span>Elk gesprek kost 1 nakijkbeurt.</span>${SR?"":` <span>Meeschrijven lukt hier niet: je typt je antwoorden.</span>`}</p>${freeNote()}
+    <button class="btn wide aiany" id="aiany">Praat met iemand</button><p class="note">Elke keer iemand anders: je buurvrouw, de slager, Van Gogh…</p>`;
+  aiScenes().forEach((c,n,L)=>{if(!n||L[n-1].g!==c.g)h+=(n?"</div>":"")+`<h3 class="lh">${c.g}</h3><div class="list">`;h+=row(c)});
+  $("tbody").innerHTML=h+"</div>";
+  document.querySelectorAll("#tbody [data-ai]").forEach(b=>b.onclick=()=>aiTalk(b.dataset.ai));
+  $("aiany").onclick=aiAny;
+}
+// Blob URLs of the replies' voices are released when the conversation closes
+function aiDrop(){if(AK)AK.log.forEach(l=>{if(l.url)URL.revokeObjectURL(l.url)});AK=null}
+function aiTalk(id){
+  const c=aiTopic(id); if(!c)return aiList();
+  bgOpen("Gesprekken",aiList); aiDrop();
+  AK={c,log:[],tok:null,n:0,busy:false,mic:false};
+  const init=esc(c.who.replace(/^(De|Dokter|Meneer|Mevrouw|Juf|Buurman|Buurvrouw|Slager|Collega|Haringboer|Kaasdrager|Het) /,"")[0]);
+  $("tbody").innerHTML=`<div lang="nl">`+(c.task
+    ?`<p class="ask">${c.g}</p><h2>${esc(c.t)}</h2>`+(c.p?picsHTML([c.p]):"")+`<p class="ask">Jouw opdracht</p><div class="sample">${esc(c.task)}</div>
+    <div class="aic"><span class="aiav" id="aiav" aria-hidden="true">${init}</span><span><b>${esc(c.who)}</b><span class="aist" id="aist"></span></span></div>`
+    :`<div class="aip"><span class="aiav big${c.av?" pic":""}" id="aiav" aria-hidden="true">${c.av?`<img src="/art/avatars/${c.av}.jpg" alt="">`:init}</span>
+    <h2>${esc(c.who)}</h2><p class="sub">${esc(c.wie)}</p><span class="aist" id="aist"></span></div>`)
+    +`    <div class="talk" id="tlog" aria-live="polite"></div><div id="tctl"></div></div>`;
+  document.querySelectorAll("#tbody [data-pic]").forEach(b=>b.onclick=()=>zoomPic(b.dataset.pic));
+  aiReady();
+  window.scrollTo(0,0);
+}
+function aiReady(msg){
+  $("tctl").innerHTML=(msg?`<p class="note">${msg}</p>`:"")+`<button class="btn wide" id="aigo">Begin het gesprek</button>
+    <p class="note">Dit kost 1 nakijkbeurt. Zet het geluid aan.</p>${freeNote()}`;
+  $("aigo").onclick=aiStart;
+}
+// iPhone plays sound only from a tap: the first play of the (shared) audio element happens inside the tap, with a
+// fraction of a second of silence, so the replies that come later may play on it too
+let aiSilent=null;
+function aiUnlock(){
+  try{
+    if(!aiSilent){const n=400,b=new Uint8Array(44+n),v=new DataView(b.buffer),w=(o,x)=>[...x].forEach((ch,i)=>b[o+i]=ch.charCodeAt(0));
+      w(0,"RIFF");v.setUint32(4,36+n,true);w(8,"WAVEfmt ");v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);
+      v.setUint32(24,8000,true);v.setUint32(28,8000,true);v.setUint16(32,1,true);v.setUint16(34,8,true);w(36,"data");v.setUint32(40,n,true);b.fill(128,44);
+      aiSilent=URL.createObjectURL(new Blob([b],{type:"audio/wav"}))}
+    stopSpeak();sayA.src=aiSilent;sayA.play().catch(()=>{});
+  }catch(e){}
+}
+async function aiPost(body){
+  try{
+    const h=await authHead(),r=await fetch("/api/talk",{method:"POST",headers:{"Content-Type":"application/json",...h},body:JSON.stringify(body)});
+    const j=await r.json().catch(()=>({}));
+    return r.ok?{...j,ok:true}:{...j,code:j.error||"failed"};
+  }catch(e){return{code:e&&e.code||"offline"}}
+}
+const aiWhy=c=>noCheck(c)?noCheck(c)+offerHTML(c):c==="offline"?"Geen verbinding. Probeer het opnieuw.":c==="not_configured"?"Praten met AI is nog niet ingesteld.":c==="rate_limited"?"Te veel verzoeken achter elkaar. Wacht een minuut en probeer het opnieuw.":"Dat lukte niet. Probeer het opnieuw.";
+async function aiStart(){
+  const k=AK; aiUnlock(); $("aigo").disabled=true; $("aigo").textContent="Even bellen…";
+  const j=await aiPost({go:"start",topic:k.c.id,level:lvl()});
+  chkCount(j,lvl());
+  if(!aiOn(k))return;
+  if(!j.ok||!j.token)return aiReady(aiWhy(j.code));
+  k.tok=j.token; track("ai"); aiHear(j.reply,j.audio,false);
+}
+// The other person's line: shown, then spoken; then it is the learner's turn (or the end)
+function aiHear(t,audio,done){
+  let url="";
+  if(audio)try{url=URL.createObjectURL(new Blob([Uint8Array.from(atob(audio),ch=>ch.charCodeAt(0))],{type:"audio/mpeg"}))}catch(e){}
+  const l={t,url}; AK.log.push(l); aiDraw();
+  if(done){AK.done=true;$("tctl").innerHTML="";aiPlay(l,()=>{});return aiEnd()}
+  aiTurn(); const k=AK;
+  aiPlay(l,()=>{if(AK===k&&!k.busy&&!rec&&k.mic&&SR&&$("rec"))aiRec()});
+}
+function aiPlay(l,done,slow){
+  stopSpeak(); const n=sayN,end=()=>{if(n!==sayN)return;sayOn=false;aiSpk(false);done&&done()},
+    alt=()=>{if(n!==sayN)return;try{canSpeak?utter(l.t,end):end()}catch(e){end()}};
+  aiSpk(true);
+  if(!l.url)return alt();
+  sayOn=true;sayA.onended=end;sayA.onerror=alt;sayA.src=l.url;sayA.playbackRate=slow?.85:1;sayA.play().catch(alt);
+}
+function aiSpk(on){const a=$("aiav"),s=$("aist");if(a)a.classList.toggle("on",on);if(s&&AK)s.textContent=on?"spreekt":""}
+function aiDraw(){
+  const k=AK; if(!k||!$("tlog"))return;
+  $("tlog").innerHTML=k.log.map((l,j)=>l.me
+    ?`<div class="tl me"><p class="ask">Jij</p><p>${esc(l.t)}</p>${l.fix?`<p class="aifix"><b>Beter:</b> ${esc(l.fix.right)}${l.fix.why?`<span>${esc(l.fix.why)}</span>`:""}</p>`:""}</div>`
+    :`<div class="tl"><p class="ask">${esc(k.c.who)} <button class="say" data-j="${j}" aria-label="Nog een keer luisteren">▶</button></p><p>${esc(l.t)}</p></div>`).join("");
+  document.querySelectorAll("#tlog .say").forEach(b=>b.onclick=()=>{if(rec)recEnd(false);aiPlay(k.log[b.dataset.j],null,true)});
+}
+function aiTurn(note,keep){
+  $("tctl").innerHTML=(SR?`<div class="rec" id="rec"><div class="clk"><span class="t" id="rect">${mmss(SPK)}</span><div class="m"><i id="recm"></i></div></div><div id="recp"></div>
+    <button class="btn wide" id="recb">● Spreek</button><p class="note" id="recn">${note||""}</p></div>`:note?`<p class="note">${note}</p>`:"")
+    +`<div class="type"><input id="tin" placeholder="${SR?"Of typ je antwoord":"Typ je antwoord"}" autocomplete="off" autocapitalize="sentences" spellcheck="false" aria-label="Je antwoord"><button class="${SR?"ghost":"btn"}" id="tsend">Stuur</button></div>
+    <button class="ghost wide" id="aiend">Ophangen</button>`;
+  if(keep)$("tin").value=keep;
+  if(SR)$("recb").onclick=()=>{AK.mic=true;aiRec()};
+  $("tsend").onclick=()=>{const v=$("tin").value.trim();if(v){aiUnlock();aiSend(v)}};
+  $("tin").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();$("tsend").click()}};
+  $("aiend").onclick=()=>{hush();aiEnd()};
+}
+function aiRec(){
+  const k=AK; listen("say",aiHeard,SPK,AI_QUIET);
+  // the phone may refuse the microphone without a tap: then the button asks for one
+  setTimeout(()=>{const r=rec;if(AK!==k||!r||!r.fail||saidText(r))return;recEnd(false);const b=$("recb");if(!b)return;
+    b.textContent="● Spreek";b.className="btn wide";b.disabled=false;b.onclick=()=>{k.mic=true;aiRec()};$("recn").textContent="Tik op Spreek om te antwoorden."},1500);
+}
+function aiHeard(r){
+  const b=$("recb"); if(!b||!AK)return;
+  b.textContent="● Spreek";b.className="btn wide";b.onclick=()=>{AK.mic=true;aiRec()}; $("recp").innerHTML="";
+  if(!r.text){AK.mic=false;$("recn").textContent=r.fail?"Meeschrijven lukt hier niet. Typ je antwoord.":"Ik heb niets verstaan. Tik op Spreek en praat wat harder.";return}
+  aiSend(r.text);
+}
+async function aiSend(t){
+  const k=AK; if(!k||k.busy||!k.tok)return;
+  k.busy=true; k.log.push({me:1,t}); k.n++; aiDraw();
+  $("tctl").innerHTML=`<p class="note aiwait">${esc(k.c.who)} denkt na…</p>`;
+  const j=await aiPost({go:"say",token:k.tok,history:k.log.map(l=>({me:!!l.me,t:l.t}))});
+  k.busy=false; if(!aiOn(k))return;
+  if(!j.ok){k.log.pop();k.n--;aiDraw();
+    if(j.code==="expired")return aiEnd();
+    return aiTurn(aiWhy(j.code),t)}
+  if(j.fix)k.log[k.log.length-1].fix=j.fix;
+  aiHear(String(j.reply||""),j.audio,!!j.done);
+}
+// Hanging up or the natural end: what went well and the tips (no extra check)
+async function aiEnd(){
+  const k=AK; if(!k||k.ending)return; k.ending=true;
+  const c=k.c, L=aiScenes(), nx=c.task&&L[(L.findIndex(x=>x.id===c.id)+1)%L.length];
+  const tail=nx?`<button class="btn wide" id="ainx">Volgende: ${esc(nx.t)}</button><button class="ghost wide" id="aire">Nog een keer</button>`
+      :`<button class="btn wide" id="ainx">Praat met iemand anders</button><button class="ghost wide" id="aire">Nog een keer met ${esc(c.who)}</button>`,
+    bind=()=>{$("ainx").onclick=()=>nx?aiTalk(nx.id):aiAny();$("aire").onclick=()=>aiTalk(c.id)};
+  if(k.n<2){$("tctl").innerHTML=`<div class="tend"><b>Gesprek gestopt</b><p class="note">Te kort voor tips. Zeg de volgende keer wat meer.</p></div>`+tail;return bind()}
+  S.ai=S.ai||{}; const g=S.ai[c.id]||{n:0}; S.ai[c.id]={n:(g.n||0)+1,at:Date.now()}; complete();
+  $("tctl").innerHTML=`<div class="tend"><b class="good">Gesprek klaar!</b><p class="note aiwait">Ik kijk het gesprek na…</p></div>`;
+  const j=await aiPost({go:"end",token:k.tok,history:k.log.map(l=>({me:!!l.me,t:l.t}))});
+  if(j.ok&&Array.isArray(j.tips)&&j.tips.length){keepErrs(j.tips);save()}
+  if(!aiOn(k))return;
+  const tips=j.ok&&Array.isArray(j.tips)?j.tips:[], good=j.ok&&Array.isArray(j.good)?j.good:[];
+  $("tctl").innerHTML=`<div class="tend"><b class="good">Gesprek klaar!</b><p class="note">${j.ok?esc(j.verdict||""):"De tips lukten nu niet, maar het gesprek telt wel."}</p></div>`
+    +(good.length?`<h3 class="lh">Dit ging goed</h3><ul class="aigood">${good.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:"")
+    +(j.ok?`<h3 class="lh">Zo zeg je het beter</h3>${errsHTML(tips)}`:"")+tail;
+  bind();
 }
 // Luisteren en kijken: real Dutch from YouTube channels and podcasts. api/feed.js fetches the latest episodes
 // (YouTube's feeds can't be read from the page); videos play in YouTube's own player, podcasts in <audio>.
@@ -4244,7 +4439,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="c6b2d443a6";
+const UIV="6d2a6c20f4";
 let uiP=null;
 function uiLoaded(){ // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});

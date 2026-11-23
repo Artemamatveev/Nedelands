@@ -3,7 +3,8 @@
   "rewrites": [
     { "source": "/api/thumb", "destination": "/api/feed?thumb=1" },
     { "source": "/api/compare", "destination": "/api/admin" },
-    { "source": "/api/referral", "destination": "/api/group?kind=ref" }
+    { "source": "/api/referral", "destination": "/api/group?kind=ref" },
+    { "source": "/api/talk", "destination": "/api/check?kind=talk" }
   ],
   "functions": {
     "api/check.js": {

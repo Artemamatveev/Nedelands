@@ -201,7 +201,7 @@ everyone does, as DUO says them (who: the 2013 law and voluntary inburgering, th
 exemption after 6 of the last 12 months of work, 48 hours a month; the portfolio of eight resultaatkaarten, then the
 eindgesprek or a 64-hour course with the Blik op Werk keurmerk; the PVT with the four values, no mark), links to
 inburgeren.nl ↗, and the eindgesprek to practise as four conversations (`GP` items with `ona:1`, the learner is a kok,
-examiner "Mevrouw Bakker"), which the Gesprekken list and its count leave out. Check these rules when DUO changes them. Practising a part is on Oefenen.
+examiner "Mevrouw Bakker"), still scripts with keyword checks (`talk()`, `gpFits()`, `S.gp`), not AI conversations. Check these rules when DUO changes them. Practising a part is on Oefenen.
 Last on both level tabs, "Mijn examen" (`uitScreen()`, in `#talk`): per part the learner taps Geslaagd or Niet geslaagd for
 the real exam (tap again to take it back). Their own record is `S.uit` `{part: {ok, at}}`;
 a copy goes to `/api/outcome` (`api/outcome.js`, table `exam_outcomes` and `put_outcome()` in `supabase/schema.sql`, run it
@@ -504,7 +504,7 @@ when `/api/config` says `events` (accounts on and `EVENTS` not `0`) and never wi
 The events: `open` (the app, once a day per device: `ww-day` keeps only the date, set only once the server kept the
 count, so a lost one is sent again at the next start; asked again when a fresh config comes) and `new` (that first time,
 with no progress yet), `home` (the homepage, once a day: `ww-day-home`, the same way), `begin` (a button from the homepage into the app, not
-Inloggen or Plus), `quiz` (Vraag 2 answered), `test` (the starttest done), `day` (today's lesson done, with the ribbon),
+Inloggen or Plus), `quiz` (Vraag 2 answered), `test` (the starttest done), `day` (today's lesson done, with the ribbon), `ai` (an AI conversation started),
 `exam_<part>` (a proefexamen started) and `done_<part>` (handed in: `keepRes()`). A new event goes in `EVENTS` too
 (`tests/events.test.mjs` checks every `track("…")` in the pages against it). privacy.html describes this in "De website en
 bezoekers tellen", "Cookies" and "Hoe lang", in all eight languages: change them with it. Vercel Web Analytics is not used
@@ -661,7 +661,7 @@ A2-niveau", and today's grammar step helps with a B1 round. The page title, desc
   proefexamen the question is read aloud, then the thinking time (`prep`: 15 s for a medium task, 5 for a short one with
   a photo) counts down and the answer starts by itself (`prepThen()`); if the phone won't open the microphone without
   a tap, the take is dropped and the button asks for one.
-- Elsewhere at B1: six B1 conversations in Gesprekken (`b1:1`, listed first at B1), two B1 stories in the Boekenkast
+- Elsewhere at B1: six B1 situations in Gesprekken (`b1:1`, listed first at B1), two B1 stories in the Boekenkast
   (`zorg`, `molen`), and two harder questions per history chapter (`GSB`, keys `gb|<id>.<n>`, sec `gs`, only at B1:
   `gsItems()` and `lv()` in `build()` leave them out at A2).
 
@@ -787,10 +787,10 @@ element (iPhone only plays sound from a tap). `stopSpeak()` stops both; `speakin
 
 `node audio/build.mjs` records what is new or changed and deletes what no line uses any more (`--dry` only counts,
 `--dry --who` shows who says what). It reads the texts from the page itself in headless Chrome (`voiceTexts()`: every
-text the app passes to `speak()`, with its kind), so after adding or changing Luisteren, KNM, Spreken, Gesprekken,
+text the app passes to `speak()`, with its kind), so after adding or changing Luisteren, KNM, Spreken, the ONA scripts,
 words, paintings or history, run it and commit `audio/`. Who speaks: dialogue people by how they introduce themselves
 (names and titles in `FEMALE` / `MALE` in the script; add new names there), the KNM, Luisteren and Spreken questions by
-Charon (as the voice on the exam), words and reading aloud by Vindemiatrix, Gesprekken by the role (`GP .w`) and the
+Charon (as the voice on the exam), words and reading aloud by Vindemiatrix, the ONA scripts by the role (`GP .w`; the AI conversations get their voice from the server) and the
 learner's example answers by the other voice. The Google key is in `~/.config/bittertalen/tts.env` (`GOOGLE_TTS_KEY`, a
 key restricted to the Text-to-Speech API in the user's Google Cloud project); never put it in the repository or the chat.
 In a cloud session the key is a network secret of the environment `nedelands` (host texttospeech.googleapis.com, header
@@ -798,18 +798,53 @@ In a cloud session the key is a network secret of the environment `nedelands` (h
 (the page's texts then come through Playwright).
 The whole app is about 240 000 characters, inside Google's free million per month.
 
-## Gesprekken (conversations)
+## Gesprekken (conversations with AI)
 
-"Gesprekken" (a row under "Lezen, luisteren en spreken") are everyday role plays in four groups: on the phone
-(huisarts, work, landlord, school, gemeente, 112, a language school), work, school and the doctor (a job interview,
-a day off, the teacher, the GP's consulting room), in town (bakker, apotheek, café, station, exchanging a jumper,
-the bike repairer, the market, the library, asking the way) and the neighbours. Free and
-offline, no Claude (the user chose this over an AI conversation partner). Each one in `GP` in `oefenen.html` is a script:
-the other person's line is read aloud (`speak()`), the learner answers out loud through `listen("say")` or types,
-and `gpFits()` checks the answer for keywords (`k`, groups of alternatives); a line marked `x` is skipped when the
-answer already said it. Two misses show the example answer (`m`). At the end: how many answers needed no help and
-every example answer to listen to. `S.gp` keeps per conversation `{n, b, at}`. Check that every `m` fits its own `k`.
-Facts in the scripts double as KNM material: check them.
+"Gesprekken" (a row under "Lezen, luisteren en spreken", `aiList()` in `#talk`) are real conversations with Claude, like
+Duolingo's video call (the user's request, 23 November 2026). On that day the user also chose to remove the free,
+offline scripted Gesprekken (keyword checks with `gpFits()`, October 2026): they were too rigid next to a real
+conversation. Two parts:
+- "Praat met iemand" (the user's idea, 23 November 2026: no fixed topics, no "call", a surprise each time): a big button
+  that picks one of `PEOPLE` at random, never one of the last six (`ww-ai-recent`), seasonal people only in their months
+  (`m`: Sinterklaas November–December, the skater in winter, Koningsdag in April). Everyday people (Saskia the friend,
+  mevrouw Jansen the neighbour, slager Henk with "Mag het ietsje meer zijn?", collega Mo at the coffee machine, Fleur the
+  student, the herring seller, the cheese carrier in Alkmaar, Klaas the skater, Bram on
+  Koningsdag, Sinterklaas) and people from the past who live in their own time and are curious about ours (Van Gogh in
+  Arles 1888, Rembrandt in 1642, Vermeer around 1665, Jan the fisherman's son in Volendam 1910). The user removed the
+  girl with the pearl and the Delfts blauw painter, and renamed the friend Sanne to Saskia (23 November 2026). Their faces are the plush avatars from `art/avatars` where one fits (`av`); the others show an initial. The
+  personas and openers (two or three, the server picks one) are in `PEOPLE` in `api/_talk.js`, with checked facts;
+  the model is told to stay vague about history rather than invent. Check facts when adding a person.
+- The situations: the old scripts in `GP` (`data/extra.js`, the ones without `ona`), in their groups: on the phone
+  (huisarts, work, landlord, school, gemeente, 112, a language school), work, school and the doctor, in town (bakker,
+  apotheek, café, station, exchanging, the bike repairer, the market, the library, asking the way), the neighbours, and
+  the B1 group (`b1:1`, listed first at B1). Each shows its photo (`p`) and task (`o`). `tools/build-scenes.mjs` turns
+  them into `api/_scenes.js`: the server gives Claude the script (`a` lines and example answers `m`, closing `e`) as a
+  model conversation, so the facts in it stay the checked ones while Claude reacts freely. After changing `GP` run
+  `node tools/build-scenes.mjs` (the test fails otherwise). Facts in the scripts double as KNM material: check them.
+  `v` is the person's voice (F or M). `k`, `r` and `x` are only used by the ONA scripts now; `GP` ids are progress
+  keys of `S.ai` (and `S.gp` for ONA).
+`TOPICS` in `api/_talk.js` (`PEOPLE` plus `SCENES`) and the page hold the same ids, `who` and `task`
+(`tests/talk.test.mjs`); the server alone has the openers and prompts, so the page can't send its own prompt.
+- One conversation costs one check (the user's choice), taken at `go:"start"` like one writing task: a guest's trial,
+  a free account's seven, Plus's daily 60 (then no `CHECK_CAP`). Start returns the fixed opener (no model call) and a
+  signed ticket (`talkSign()` in `_supa.js`, HMAC with the service key; account or trial cookie, topic, level, Plus,
+  40 minutes); `go:"say"` and `go:"end"` need it and take no further check. At most `TURNS` (14) learner turns; the
+  character rounds off from turn 8 (A2) or 10 (B1) and says goodbye (`done`).
+- Free conversations use `TALK_MODEL_FREE` (default `GRADING_MODEL_FREE`, Haiku 5.5, no server fallback), Plus
+  `TALK_MODEL` (default Sonnet 5.5, with refusal fallback); effort low, JSON output: `reply`, one `fix` for the
+  learner's last line (shown under it as "Beter: …"), `done`. `go:"end"` gives `verdict`, `good` and up to four `tips`,
+  which also go to Mijn fouten (`keepErrs()`). Tokens go to `ai_spend`. Nothing of the conversation is stored or logged.
+- The voice: Google Chirp 3 HD (Vindemiatrix for women, Charon for men, like the recordings), synthesised per reply by
+  the server with `GOOGLE_TTS_KEY` (a Vercel env var: the user adds it in the dashboard, never in chat); without it, or
+  when Google fails, the page uses the phone's voice. The MP3 comes back as base64 and plays from a blob URL on the
+  shared `sayA` element, which `aiUnlock()` starts with a moment of silence inside the tap (iPhone plays sound only from
+  a tap). ▶ replays a line a little slower.
+- The learner speaks through `listen("say", …, SPK, AI_QUIET)`: the `auto` argument ends the take after 1.8 s of silence,
+  like a call. After the first spoken answer the next turn starts listening by itself when the other person stops
+  talking (falls back to the button when the phone refuses the microphone without a tap). Typing always works.
+- `/api/talk` is a rewrite to `/api/check?kind=talk` (the 12-function limit); `check.js` imports `_talk.js` only then.
+  `S.ai` `{id: {n, at}}` (merged like `S.gp`); the event `ai` counts started conversations. privacy.html says, in all
+  eight languages under the checking section, what goes to Anthropic and Google.
 
 ## Luisteren en kijken (real Dutch)
 
