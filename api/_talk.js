@@ -84,7 +84,7 @@ const REVIEW = {
 };
 
 const STYLE = {
-  A2: "Level A2: short sentences (at most about 12 words), everyday words, mostly the present tense, two or three sentences per turn.",
+  A2: "Level A2: short sentences (at most about 12 words), everyday words, mostly the present tense, usually one or two short sentences per turn; a brief natural response is enough.",
   B1: "Level B1: normal everyday Dutch, at most four sentences per turn, some longer sentences and the past tense are fine.",
 };
 function system(T, level, n) {
@@ -101,7 +101,9 @@ Rules for your reply:
 - Speak only Dutch, also when the learner uses another language: then say kindly, in very simple Dutch, that you practise Dutch together, and give a short example of what they could say.
 - ${STYLE[level]}
 - Speak naturally, like on the phone or face to face: no lists, no emoji, no markdown, no stage directions. Use ${T.formal ? "u (formal)" : "je and jij (informal)"}.
-- React to what the learner really said, then ask one question at a time to keep the conversation going. If you don't understand, ask again in other, simpler words.
+- Respond to the meaning of the learner's last words and answer their question before moving on. Remember details already shared; never ask for information they just gave you.
+- Make this a conversation, not an interview: share a relevant detail or reaction of your own. Do not praise every answer or repeat the learner's words. Ask at most one question, only when it follows naturally; not every reply needs a question. Let the learner lead or change the subject within your role.
+- Accept short answers and imperfect Dutch when the meaning is clear. If you truly don't understand, ask one brief, specific clarification in simpler words; never invent what the learner said.
 - Stay in your role. If the learner asks about something unrelated to practising this conversation, or something inappropriate, steer back kindly.
 - Never correct the learner inside your reply. Put the single most important mistake in the learner's last message in "fix": "wrong" is their words exactly as written, "right" the corrected words, "why" one short sentence in very simple Dutch (A2). Ignore capitals, punctuation and words that look misheard by speech recognition. Leave all three empty when there is no real mistake.
 - The learner has spoken ${n} time${n === 1 ? "" : "s"}. ${n >= TURNS - 1 ? "This is the last turn: end the conversation now with a friendly goodbye and set done to true." : T.model ? "When everything in the learner's task is settled, end with a short closing line like the last line of the model and set done to true." : n >= WRAP[level] ? "Start rounding the conversation off; when it has come to a natural end, say goodbye and set done to true." : "Set done to true only when the conversation has come to a natural end and you said goodbye."}`;
@@ -134,7 +136,7 @@ async function speech(text, g) {
   if (!TTS_KEY || !text) return null;
   try {
     const r = await fetch("https://texttospeech.googleapis.com/v1/text:synthesize", {
-      method: "POST", signal: AbortSignal.timeout(8000),
+      method: "POST", signal: AbortSignal.timeout(2500),
       headers: { "Content-Type": "application/json", "X-Goog-Api-Key": TTS_KEY },
       body: JSON.stringify({ input: { text: text.slice(0, 900) }, voice: { languageCode: "nl-NL", name: "nl-NL-Chirp3-HD-" + VOICE[g] }, audioConfig: { audioEncoding: "MP3", sampleRateHertz: 24000 } }),
     });
@@ -146,7 +148,7 @@ async function speech(text, g) {
 
 async function ask(model, sys, content, schema) {
   const params = {
-    model, max_tokens: 4000, system: sys,
+    model, max_tokens: schema === REPLY ? 700 : 1600, system: sys,
     output_config: { effort: "low", format: { type: "json_schema", schema } },
     messages: [{ role: "user", content }],
   };
@@ -154,9 +156,9 @@ async function ask(model, sys, content, schema) {
   if (!/haiku/.test(model)) Object.assign(params, { betas: ["server-side-fallback-2026-07-01"], fallbacks: "default" });
   const response = await client.beta.messages.create(params);
   console.info(JSON.stringify({ event: "talk_usage", model: response.model, usage: response.usage }));
-  await addSpend(response.model, response.usage).catch(() => {});
+  const spent = addSpend(response.model, response.usage).catch(() => {});
   if (response.stop_reason === "refusal" || response.stop_reason === "max_tokens") throw Object.assign(new Error(response.stop_reason), { code: response.stop_reason });
-  return JSON.parse(response.content.find((b) => b.type === "text")?.text || "{}");
+  return { result: JSON.parse(response.content.find((b) => b.type === "text")?.text || "{}"), spent };
 }
 
 // Who is asking: "u:<id>" for an account, "v:<hash>" for a guest's trial cookie
@@ -213,16 +215,19 @@ export async function talk(req, res) {
   const model = o.p ? MODEL_PLUS : MODEL_FREE;
   try {
     if (go === "end") {
-      const r = await ask(model, REVIEW_SYSTEM(o.l), `HET GESPREK (${T.who} en de cursist):\n${transcript(L, T)}`, REVIEW);
+      const { result: r, spent } = await ask(model, REVIEW_SYSTEM(o.l), `HET GESPREK (${T.who} en de cursist):\n${transcript(L, T)}`, REVIEW);
+      await spent;
       return res.status(200).json({
         verdict: str(r.verdict, 400), good: (Array.isArray(r.good) ? r.good : []).slice(0, 3).map((x) => str(x, 160)).filter(Boolean),
         tips: (Array.isArray(r.tips) ? r.tips : []).slice(0, 4).map((x) => ({ wrong: str(x?.wrong, 160), right: str(x?.right, 160), why: str(x?.why, 240) })).filter((x) => x.wrong && x.right && x.wrong !== x.right),
       });
     }
-    const r = await ask(model, system(T, o.l, n), `HET GESPREK TOT NU:\n${transcript(L, T)}\n\nAntwoord nu als ${T.who} op de laatste zin van de cursist.`, REPLY);
+    const { result: r, spent } = await ask(model, system(T, o.l, n), `HET GESPREK TOT NU:\n${transcript(L, T)}\n\nAntwoord nu als ${T.who} op de laatste zin van de cursist.`, REPLY);
     const reply = str(r.reply, 700) || "Sorry, kunt u dat nog een keer zeggen?";
     const f = r.fix || {}, fix = f.wrong && f.right && str(f.wrong, 160) !== str(f.right, 160) ? { wrong: str(f.wrong, 160), right: str(f.right, 160), why: str(f.why, 240) } : null;
-    return res.status(200).json({ reply, fix, done: !!r.done || n >= TURNS, audio: await speech(reply, T.g) });
+    // Synthesise while usage is saved: accounting must not delay the start of the voice request.
+    const [audio] = await Promise.all([speech(reply, T.g), spent]);
+    return res.status(200).json({ reply, fix, done: !!r.done || n >= TURNS, audio });
   } catch (error) {
     if (error?.code === "refusal") return res.status(422).json({ error: "refused" });
     if (error instanceof Anthropic.RateLimitError) return res.status(429).json({ error: "rate_limited" });

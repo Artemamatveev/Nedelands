@@ -2,6 +2,9 @@
 // tables oefenen.html defines. Loaded only when the menus are in another language than Dutch (loadUI()); edit here,
 // then run `node tools/stamp.mjs` (UIV).
 Object.assign(UI,{
+"Dagelijkse situaties":["Everyday situations","مواقف يومية","Günlük durumlar","रोज़मर्रा की स्थितियाँ","日常情境","Situaciones cotidianas","Ежедневные ситуации"],
+"Kies een onderwerp en daarna een gesprek.":["Choose a topic, then a conversation.","اختر موضوعًا، ثم محادثة.","Önce bir konu, sonra bir konuşma seç.","पहले विषय चुनें, फिर बातचीत।","先选择主题，再选择对话。","Elige un tema y después una conversación.","Выберите тему, а затем конкретный разговор."],
+
 "Examenpas":["Exam pass","تصريح الامتحان","Sınav kartı","परीक्षा पास","考试通行证","Pase de examen","Экзаменационный пропуск"],
 "Examenpas A2":["Exam pass A2","تصريح الامتحان A2","Sınav kartı A2","परीक्षा पास A2","考试通行证 A2","Pase de examen A2","Экзаменационный пропуск A2"],
 "Examenpas B1":["Exam pass B1","تصريح الامتحان B1","Sınav kartı B1","परीक्षा पास B1","考试通行证 B1","Pase de examen B1","Экзаменационный пропуск B1"],

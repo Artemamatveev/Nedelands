@@ -25,7 +25,7 @@ async function load(options={}){
     accounts:true,caller:async()=>options.guest?null:{id:options.uid||'user-1'},LIMIT:7,PLUS:60,FREE:2,plusOn:!!options.plan,
     visitor:()=>'visitor-hash',sameOrigin:()=>true,
     useChecks:async(_id,cost)=>{usage.push(cost);return options.left??5},useFree:async(_id,cost)=>{usage.push(cost);return options.free??1},
-    useTotal:async cost=>{quotas.push(cost);return 'total' in options?options.total:300},addSpend:async()=>true,bonusFor:async()=>0,
+    useTotal:async cost=>{quotas.push(cost);return 'total' in options?options.total:300},addSpend:options.addSpend|| (async()=>true),bonusFor:async()=>0,
     plusFor:async()=>options.plan||null,coversLevel:(p,l)=>!!p&&(p.level==='B1'||l==='A2'),
     talkSign:x=>crypto.createHmac('sha256','test-secret').update('bittertalen-talk|'+x).digest('base64url'),
   };
@@ -147,8 +147,10 @@ test('The app holds a whole conversation: start, a spoken turn with a fix, hangi
   };
   const a=await app({fetch});
   a.run('aiList()');
-  assert.equal(a.document.querySelectorAll('#tbody [data-ai]').length,a.run('GP.filter(c=>!c.ona).length'));
   assert.ok(a.document.querySelector('#aiany'),'the random button');
+  assert.equal(a.document.querySelectorAll('#tbody [data-ai]').length,0);
+  a.document.querySelector('[data-aimenu="scenes"]').click();
+  assert.equal(a.document.querySelectorAll('#tbody [data-ai]').length,a.run('GP.filter(c=>!c.ona).length'));
   a.run('aiTalk("spreekkamer")');
   assert.ok(a.document.querySelector('#tbody').textContent.includes(a.run('GP.find(c=>c.id==="spreekkamer").o')));
   assert.equal(a.document.querySelector('#tbody [lang=nl]')!=null,true,'the conversation is Dutch content');
@@ -204,4 +206,106 @@ test('A random person greets at once; a situation waits until the learner has re
   a.run('aiTalk("apotheek")');await a.flush();
   assert.equal(sent.length,1,'no start before Begin het gesprek');
   assert.ok(a.document.querySelector('#aigo'));
+});
+
+async function voiceConversation({failOnce=false,refuse=false}={}){
+  const requests=[],instances=[];
+  class Recognition{
+    constructor(){instances.push(this)}
+    start(){if(refuse)throw Error('gesture required')}
+    stop(){this.onend?.()}
+    abort(){this.onend?.()}
+    result(text){this.onresult?.({results:[[{transcript:text}]]})}
+  }
+  const fetch=async(url,init)=>{
+    if(url!=='/api/talk')return new Response(JSON.stringify(url==='/api/config'?{}:[]));
+    const b=JSON.parse(init.body);requests.push(b);
+    if(b.go==='say'&&failOnce){failOnce=false;throw Error('offline')}
+    return new Response(JSON.stringify(b.go==='start'?{token:'tok',reply:'Hoe was je dag?'}:{reply:'Ik heb vandaag gewerkt.',done:false}));
+  };
+  const a=await app({fetch,globals:{SpeechRecognition:Recognition}});
+  a.run('aiTalk("saskia")');await a.run('aiStart()');await a.flush();
+  return {a,requests,instances};
+}
+
+test('The greeting opens the microphone, silence sends the visible answer, and the next turn listens',async()=>{
+  const {a,instances,requests}=await voiceConversation();
+  assert.ok(a.run('rec'),'the first answer needs no extra Spreek tap');
+  instances[0].result('Ik ben naar de markt geweest');
+  assert.match(a.document.getElementById('recp').textContent,/naar de markt/);
+  const r=a.run('rec');assert.equal(a.timers.get(r.quiet).delay,2600);
+  // Some browsers send an empty result while finalising; it must not erase speech.
+  instances[0].result('');
+  a.timers.get(r.quiet).fn();await a.flush();
+  assert.equal(requests[1].history.at(-1).t,'Ik ben naar de markt geweest');
+  assert.match(a.document.getElementById('tlog').textContent,/Ik ben naar de markt geweest/);
+  assert.ok(a.run('rec'),'the next answer is hands free too');
+  assert.deepEqual(a.errors,[]);
+});
+
+test('A failed spoken request preserves the answer and retry sends it only once',async()=>{
+  const {a,instances,requests}=await voiceConversation({failOnce:true});
+  instances[0].result('Ik heb gewerkt');a.run('recEnd(true)');await a.flush();
+  assert.match(a.document.getElementById('tlog').textContent,/Ik heb gewerkt/);
+  assert.equal(a.document.getElementById('tin').value,'Ik heb gewerkt');
+  await a.run('aiSend("Ik heb vandaag gewerkt")');await a.flush();
+  assert.equal(requests.at(-1).history.filter(l=>l.me).length,1);
+  assert.equal(requests.at(-1).history.at(-1).t,'Ik heb vandaag gewerkt');
+  assert.equal(a.run('AK.n'),1);assert.equal(a.run('AK.pending'),null);
+});
+
+test('A browser refusing automatic recognition offers the microphone button again',async()=>{
+  const {a}=await voiceConversation({refuse:true});
+  const retry=[...a.timers.values()].find(t=>t.delay===400);assert.ok(retry);retry.fn();
+  const fallback=[...a.timers.values()].find(t=>t.delay===1500);assert.ok(fallback);fallback.fn();
+  assert.equal(a.run('rec'),null);
+  assert.equal(a.document.getElementById('recb').disabled,false);
+  assert.match(a.document.getElementById('recn').textContent,/Tik op Spreek/);
+});
+
+
+test('Voice synthesis begins while spend accounting is still pending',async()=>{
+  let release;
+  const saved=new Promise(resolve=>{release=resolve});
+  const t=await load({env:{GOOGLE_TTS_KEY:'k'},addSpend:()=>saved});
+  const {body:{token}}=await t.call({go:'start',topic:'saskia'});
+  const pending=t.call({go:'say',token,history:[{t:'Hoi!'},{me:true,t:'Ik heb gewerkt.'}]});
+  try{
+    for(let i=0;i<8;i++)await new Promise(setImmediate);
+    assert.equal(t.fetches.length,2,'the reply voice starts before accounting resolves');
+    assert.equal(t.bodies[0].max_tokens,700);
+  }finally{release(true)}
+  const r=await pending;assert.equal(r.statusCode,200);assert.equal(r.body.audio,'QUJD');
+});
+
+test('Final speech sends sooner, but continuing speech restores the thinking pause',async()=>{
+  const {a,instances}=await voiceConversation();
+  const native=instances[0],r=a.run('rec');
+  const result=[{transcript:'Ik heb gewerkt'}];result.isFinal=true;
+  native.onresult({results:[result]});
+  const first=r.quiet;assert.equal(a.timers.get(first).delay,1200);
+  native.result('Ik heb gewerkt en daarna');
+  assert.equal(a.timers.has(first),false);assert.equal(a.timers.get(r.quiet).delay,2600);
+  assert.equal(a.run('rec.stopping'),undefined);
+});
+
+
+test('Conversation menus separate random people from grouped daily situations and remember the menu on return',async()=>{
+  const a=await app();a.run('aiList("people")');
+  assert.equal(a.document.querySelector('[data-aimenu="people"]').getAttribute('aria-pressed'),'true');
+  assert.ok(a.document.getElementById('aiany'));
+  a.document.querySelector('[data-aimenu="scenes"]').click();
+  assert.equal(a.document.getElementById('aiany'),null);
+  const groups=[...a.document.querySelectorAll('[data-aigroup]')];assert.ok(groups.length>=4);
+  for(const b of groups)assert.equal(a.document.getElementById(b.dataset.aigroup).hidden,true);
+  const first=groups[0],panel=a.document.getElementById(first.dataset.aigroup);
+  first.click();assert.equal(panel.hidden,false);assert.equal(first.getAttribute('aria-expanded'),'true');
+  const choice=panel.querySelector('[data-ai]'),id=choice.dataset.ai;
+  choice.click();assert.equal(a.run('AK.c.id'),id);assert.ok(a.document.getElementById('aigo'));
+  a.run('aiList()');
+  assert.equal(a.document.querySelector('[data-aimenu="scenes"]').getAttribute('aria-pressed'),'true');
+  const again=a.document.querySelector('[data-aigroup]');again.click();again.click();
+  assert.equal(a.document.getElementById(again.dataset.aigroup).hidden,true);
+  a.document.querySelector('[data-aimenu="people"]').click();assert.ok(a.document.getElementById('aiany'));
+  assert.deepEqual(a.errors,[]);
 });

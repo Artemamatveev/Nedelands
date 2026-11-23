@@ -1923,16 +1923,19 @@ async function listen(mode,done,lim=SPK,auto=0){ // auto: in a conversation, end
   if(mode==="say"&&SR)try{
     if(!sr){sr=new SR();sr.lang="nl-NL";sr.continuous=true;sr.interimResults=true}
     r.sr=sr;
-    sr.onresult=e=>{if(r.fin)return;let t="";for(let i=0;i<e.results.length;i++)t+=e.results[i][0].transcript+" ";r.part=t.trim();
+    sr.onresult=e=>{if(r.fin)return;let t="";for(let i=0;i<e.results.length;i++)t+=e.results[i][0].transcript+" ";if(t.trim())r.part=t.trim();
       if(r.box===$("rec")&&!r.fin)$("recp").innerHTML=`<p class="ask">Dit hoorde de telefoon</p><div class="sample">${esc(saidText(r))}</div>`;
-      if(r.auto){clearTimeout(r.quiet);r.quiet=setTimeout(()=>{if(rec===r&&saidText(r))recEnd(true)},r.auto)}};
+      if(r.auto){
+        // A final result is the recogniser's sentence boundary; interim words need a longer thinking pause.
+        const final=e.results.length>0&&e.results[e.results.length-1].isFinal===true;
+        clearTimeout(r.quiet);r.quiet=setTimeout(()=>{if(rec===r&&saidText(r))recEnd(true)},final?Math.min(r.auto,1200):r.auto)}};
     sr.onerror=e=>{if(/not-allowed|service-not-allowed|audio-capture|language-not-supported/.test(e.error))r.fail=true};
     // Recognition stops by itself after a pause: start it again while the minute runs
     sr.onend=()=>{if(r.fin)return;if(r.part){r.said.push(r.part);r.part=""}
       if(r.stopping||rec!==r)return recDone(r);
       if(r.fail){r.sr=null;$("recn").textContent="Meeschrijven lukt hier niet. Spreek toch hardop: de tijd loopt.";return}
       try{sr.start()}catch(e){}};
-    try{sr.start()}catch(e){setTimeout(()=>{if(rec===r)try{sr.start()}catch(e){}},400)} // the previous take may still be stopping
+    try{sr.start()}catch(e){setTimeout(()=>{if(rec===r)try{sr.start()}catch(e){r.fail=true}},400)} // the previous take may still be stopping
   }catch(e){r.sr=null}
   const doneLabel=cur?.exam&&cur.speak?"Antwoord klaar":"Stop";
   $("recn").textContent=mode==="rec"?(r.mr?`Spreek nu. Tik op ${doneLabel} als je klaar bent.`:"Opnemen lukt hier niet. Spreek toch hardop: de tijd loopt.")
@@ -3909,26 +3912,49 @@ const aiScene=i=>({id:GP[i].id,who:GP[i].w,t:GP[i].t,s:GP[i].s,task:GP[i].o,p:GP
 const aiScenes=()=>{const L=GP.map((c,i)=>c.ona?null:aiScene(i)).filter(Boolean);return lvl()==="B1"?L.filter(c=>c.b1).concat(L.filter(c=>!c.b1)):L}; // at B1 the B1 group first
 const aiIds=()=>PEOPLE.map(c=>c.id).concat(aiScenes().map(c=>c.id));
 const aiTopic=id=>PEOPLE.find(c=>c.id===id)||aiScenes().find(c=>c.id===id);
-const AI_QUIET=1800; // a pause this long (ms) after the learner said something ends their turn
+const AI_QUIET=2600; // a pause this long (ms) after the learner said something ends their turn
 let AK=null; // the open conversation: {c, log:[{me, t, url, fix}], tok, n, busy, mic}
 const aiOn=k=>AK===k&&!$("talk").hidden&&!!$("tlog"); // still on this conversation's screen (a late answer must not land elsewhere)
-function aiList(){
+let aiMenu="people";
+function aiList(menu){
+  if(menu==="people"||menu==="scenes")aiMenu=menu;
   bgOpen(TABN[tab],home); aiDrop();
-  const st=c=>(S.ai||{})[c.id]?`<span class="good">Gelukt</span>`:null, row=c=>itHTML(`data-ai="${c.id}"`,c.t,c.s,{n:st(c)});
+  const st=c=>(S.ai||{})[c.id]?`<span class="good">Gelukt</span>`:null,
+    row=c=>itHTML(`data-ai="${c.id}"`,c.t,c.s,{n:st(c)});
   let h=`<h2>Gesprekken</h2><p class="sub">Een echt gesprek met AI. Jij spreekt, de ander antwoordt.</p>
-    <p class="note"><span>Elk gesprek kost 1 nakijkbeurt.</span>${SR?"":` <span>Meeschrijven lukt hier niet: je typt je antwoorden.</span>`}</p>${freeNote()}
-    <button class="btn wide aiany" id="aiany">Praat met iemand</button><p class="note">Elke keer iemand anders: je buurvrouw, de slager, Van Gogh…</p>`;
-  aiScenes().forEach((c,n,L)=>{if(!n||L[n-1].g!==c.g)h+=(n?"</div>":"")+`<h3 class="lh">${c.g}</h3><div class="list">`;h+=row(c)});
-  $("tbody").innerHTML=h+"</div>";
+    <div class="seg uit" role="group" aria-label="Gesprekken">
+      <button type="button" data-aimenu="people" aria-pressed="${aiMenu==="people"}">Praat met iemand</button>
+      <button type="button" data-aimenu="scenes" aria-pressed="${aiMenu==="scenes"}">Dagelijkse situaties</button>
+    </div>
+    <p class="note"><span>Elk gesprek kost 1 nakijkbeurt.</span>${SR?"":` <span>Meeschrijven lukt hier niet: je typt je antwoorden.</span>`}</p>${freeNote()}`;
+  if(aiMenu==="people"){
+    h+=`<p class="note">Elke keer iemand anders: je buurvrouw, de slager, Van Gogh…</p>
+      <button class="btn wide aiany" id="aiany">Praat met iemand</button>`;
+  }else{
+    h+=`<p class="note">Kies een onderwerp en daarna een gesprek.</p><div class="list">`;
+    const groups=[...new Set(aiScenes().map(c=>c.g))];
+    groups.forEach((g,i)=>{
+      const scenes=aiScenes().filter(c=>c.g===g),id=`aigroup-${i}`;
+      h+=itHTML(`data-aigroup="${id}" aria-expanded="false" aria-controls="${id}"`,g,scenes.map(c=>c.t).join(" · "))
+        +`<div class="sub" id="${id}" hidden>${scenes.map(row).join("")}</div>`;
+    });
+    h+="</div>";
+  }
+  $("tbody").innerHTML=h;
+  document.querySelectorAll("#tbody [data-aimenu]").forEach(b=>b.onclick=()=>aiList(b.dataset.aimenu));
+  document.querySelectorAll("#tbody [data-aigroup]").forEach(b=>b.onclick=()=>{
+    const panel=$(b.dataset.aigroup),open=panel.hidden;
+    panel.hidden=!open;b.setAttribute("aria-expanded",String(open));
+  });
   document.querySelectorAll("#tbody [data-ai]").forEach(b=>b.onclick=()=>aiTalk(b.dataset.ai));
-  $("aiany").onclick=aiAny;
+  if($("aiany"))$("aiany").onclick=aiAny;
 }
 // Blob URLs of the replies' voices are released when the conversation closes
 function aiDrop(){if(AK)AK.log.forEach(l=>{if(l.url)URL.revokeObjectURL(l.url)});AK=null}
 function aiTalk(id,go){ // go: start at once (a person picked by the learner's tap), so the greeting is heard right away
   const c=aiTopic(id); if(!c)return aiList();
   bgOpen("Gesprekken",aiList); aiDrop();
-  AK={c,log:[],tok:null,n:0,busy:false,mic:false};
+  AK={c,log:[],tok:null,n:0,busy:false,mic:!!SR};
   const init=esc(c.who.replace(/^(De|Dokter|Meneer|Mevrouw|Juf|Buurman|Buurvrouw|Slager|Collega|Haringboer|Kaasdrager|Het) /,"")[0]);
   $("tbody").innerHTML=`<div lang="nl">`+(c.task
     ?`<p class="ask">${c.g}</p><h2>${esc(c.t)}</h2>`+(c.p?picsHTML([c.p]):"")+`<p class="ask">Jouw opdracht</p><div class="sample">${esc(c.task)}</div>
@@ -4012,7 +4038,8 @@ function aiTurn(note,keep){
   $("aiend").onclick=()=>{hush();aiEnd()};
 }
 function aiRec(){
-  const k=AK; listen("say",aiHeard,SPK,AI_QUIET);
+  const k=AK; if(!k||k.busy||k.ending||k.done||rec)return;
+  listen("say",r=>{if(aiOn(k)&&!k.ending)aiHeard(r)},SPK,AI_QUIET);
   // the phone may refuse the microphone without a tap: then the button asks for one
   setTimeout(()=>{const r=rec;if(AK!==k||!r||!r.fail||saidText(r))return;recEnd(false);const b=$("recb");if(!b)return;
     b.textContent="● Spreek";b.className="btn wide";b.disabled=false;b.onclick=()=>{k.mic=true;aiRec()};$("recn").textContent="Tik op Spreek om te antwoorden."},1500);
@@ -4025,14 +4052,20 @@ function aiHeard(r){
 }
 async function aiSend(t){
   const k=AK; if(!k||k.busy||!k.tok)return;
-  k.busy=true; k.log.push({me:1,t}); k.n++; aiDraw();
+  recEnd(false);stopSpeak();
+  k.busy=true;
+  // Keep a failed answer visible and replace it on retry, so it is sent exactly once in history.
+  if(k.pending)k.pending.t=t;
+  else {k.pending={me:1,t};k.log.push(k.pending);k.n++}
+  aiDraw();
   $("tctl").innerHTML=`<p class="note aiwait">${esc(k.c.who)} denkt na…</p>`;
   const j=await aiPost({go:"say",token:k.tok,history:k.log.map(l=>({me:!!l.me,t:l.t}))});
   k.busy=false; if(!aiOn(k))return;
-  if(!j.ok){k.log.pop();k.n--;aiDraw();
+  if(!j.ok){
     if(j.code==="expired")return aiEnd();
     return aiTurn(aiWhy(j.code),t)}
-  if(j.fix)k.log[k.log.length-1].fix=j.fix;
+  if(j.fix)k.pending.fix=j.fix;
+  k.pending=null;
   aiHear(String(j.reply||""),j.audio,!!j.done);
 }
 // Hanging up or the natural end: what went well and the tips (no extra check)
@@ -4442,7 +4475,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="6d2a6c20f4";
+const UIV="2f90cf7d32";
 let uiP=null;
 function uiLoaded(){ // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});

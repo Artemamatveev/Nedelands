@@ -803,7 +803,7 @@ The whole app is about 240 000 characters, inside Google's free million per mont
 "Gesprekken" (a row under "Lezen, luisteren en spreken", `aiList()` in `#talk`) are real conversations with Claude, like
 Duolingo's video call (the user's request, 23 November 2026). On that day the user also chose to remove the free,
 offline scripted Gesprekken (keyword checks with `gpFits()`, October 2026): they were too rigid next to a real
-conversation. Two parts:
+conversation. Two menu buttons (aiMenu remembers the choice when returning from a conversation): "Praat met iemand" and "Dagelijkse situaties". The latter opens expandable topic groups, each with individual situation rows; choosing a situation shows its task before starting. Two parts:
 - "Praat met iemand" (the user's idea, 23 November 2026: no fixed topics, no "call", a surprise each time): a big button
   that picks one of `PEOPLE` at random, never one of the last six (`ww-ai-recent`), seasonal people only in their months
   (`m`: Sinterklaas November–December, the skater in winter, Koningsdag in April). Everyday people (Saskia the friend,
@@ -836,15 +836,15 @@ conversation. Two parts:
   which also go to Mijn fouten (`keepErrs()`). Tokens go to `ai_spend`. Nothing of the conversation is stored or logged.
 - The voice: Google Chirp 3 HD (Vindemiatrix for women, Charon for men, like the recordings), synthesised per reply by
   the server with `GOOGLE_TTS_KEY` (a Vercel env var: the user adds it in the dashboard, never in chat); without it, or
-  when Google fails, the page uses the phone's voice. The MP3 comes back as base64 and plays from a blob URL on the
+  when Google fails, the page uses the phone's voice (a synthesis request times out after 2.5 s). Synthesis runs in parallel with spend accounting. The MP3 comes back as base64 and plays from a blob URL on the
   shared `sayA` element, which `aiUnlock()` starts with a moment of silence inside the tap (iPhone plays sound only from
   a tap); it also starts the phone's speech synthesis with a silent utterance there, or the phone's voice stays mute
   after the network wait (the user heard nothing on 23 November 2026). A random person starts the conversation
   in the same tap as "Praat met iemand" (`aiTalk(id, true)`), so the greeting is heard at once; a situation waits for
   "Begin het gesprek" so the task can be read first. ▶ replays a line a little slower.
-- The learner speaks through `listen("say", …, SPK, AI_QUIET)`: the `auto` argument ends the take after 1.8 s of silence,
-  like a call. After the first spoken answer the next turn starts listening by itself when the other person stops
-  talking (falls back to the button when the phone refuses the microphone without a tap). Typing always works.
+- The learner speaks through `listen("say", …, SPK, AI_QUIET)`: the `auto` argument ends the take after 1.2 s after a final recognition result, or 2.6 s after interim words,
+  like a call. From the greeting onward, each turn starts listening by itself when the other person stops
+  talking (falls back to the button when the phone refuses the microphone without a tap). Typing always works. A failed request keeps the learner’s answer in the visible conversation; retry replaces that pending turn instead of duplicating it.
 - `/api/talk` is a rewrite to `/api/check?kind=talk` (the 12-function limit); `check.js` imports `_talk.js` only then.
   `S.ai` `{id: {n, at}}` (merged like `S.gp`); the event `ai` counts started conversations. privacy.html says, in all
   eight languages under the checking section, what goes to Anthropic and Google.
