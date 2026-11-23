@@ -3903,7 +3903,7 @@ function aiAny(){
     open=PEOPLE.filter(p=>!p.m||p.m.includes(mo)),L=open.filter(p=>!recent.includes(p.id)),
     p=(L.length?L:open)[Math.floor(Math.random()*(L.length||open.length))];
   lsSet("ww-ai-recent",[p.id,...recent.filter(x=>x&&x!==p.id)].slice(0,6).join(","));
-  aiTalk(p.id);
+  aiTalk(p.id,true);
 }
 const aiScene=i=>({id:GP[i].id,who:GP[i].w,t:GP[i].t,s:GP[i].s,task:GP[i].o,p:GP[i].p,g:gpGroup(i),b1:GP[i].b1});
 const aiScenes=()=>{const L=GP.map((c,i)=>c.ona?null:aiScene(i)).filter(Boolean);return lvl()==="B1"?L.filter(c=>c.b1).concat(L.filter(c=>!c.b1)):L}; // at B1 the B1 group first
@@ -3925,7 +3925,7 @@ function aiList(){
 }
 // Blob URLs of the replies' voices are released when the conversation closes
 function aiDrop(){if(AK)AK.log.forEach(l=>{if(l.url)URL.revokeObjectURL(l.url)});AK=null}
-function aiTalk(id){
+function aiTalk(id,go){ // go: start at once (a person picked by the learner's tap), so the greeting is heard right away
   const c=aiTopic(id); if(!c)return aiList();
   bgOpen("Gesprekken",aiList); aiDrop();
   AK={c,log:[],tok:null,n:0,busy:false,mic:false};
@@ -3938,6 +3938,7 @@ function aiTalk(id){
     +`    <div class="talk" id="tlog" aria-live="polite"></div><div id="tctl"></div></div>`;
   document.querySelectorAll("#tbody [data-pic]").forEach(b=>b.onclick=()=>zoomPic(b.dataset.pic));
   aiReady();
+  if(go&&!c.task)aiStart(); // a situation waits: the learner reads the task first
   window.scrollTo(0,0);
 }
 function aiReady(msg){
@@ -3955,6 +3956,8 @@ function aiUnlock(){
       v.setUint32(24,8000,true);v.setUint32(28,8000,true);v.setUint16(32,1,true);v.setUint16(34,8,true);w(36,"data");v.setUint32(40,n,true);b.fill(128,44);
       aiSilent=URL.createObjectURL(new Blob([b],{type:"audio/wav"}))}
     stopSpeak();sayA.src=aiSilent;sayA.play().catch(()=>{});
+    // the phone's own voice (without Google's) is also allowed only from a tap: start it once, silently, inside this one
+    if(canSpeak){const u=new SpeechSynthesisUtterance(" ");u.lang="nl-NL";u.volume=0;speechSynthesis.speak(u)}
   }catch(e){}
 }
 async function aiPost(body){
@@ -4038,7 +4041,7 @@ async function aiEnd(){
   const c=k.c, L=aiScenes(), nx=c.task&&L[(L.findIndex(x=>x.id===c.id)+1)%L.length];
   const tail=nx?`<button class="btn wide" id="ainx">Volgende: ${esc(nx.t)}</button><button class="ghost wide" id="aire">Nog een keer</button>`
       :`<button class="btn wide" id="ainx">Praat met iemand anders</button><button class="ghost wide" id="aire">Nog een keer met ${esc(c.who)}</button>`,
-    bind=()=>{$("ainx").onclick=()=>nx?aiTalk(nx.id):aiAny();$("aire").onclick=()=>aiTalk(c.id)};
+    bind=()=>{$("ainx").onclick=()=>nx?aiTalk(nx.id):aiAny();$("aire").onclick=()=>aiTalk(c.id,!nx)};
   if(k.n<2){$("tctl").innerHTML=`<div class="tend"><b>Gesprek gestopt</b><p class="note">Te kort voor tips. Zeg de volgende keer wat meer.</p></div>`+tail;return bind()}
   S.ai=S.ai||{}; const g=S.ai[c.id]||{n:0}; S.ai[c.id]={n:(g.n||0)+1,at:Date.now()}; complete();
   $("tctl").innerHTML=`<div class="tend"><b class="good">Gesprek klaar!</b><p class="note aiwait">Ik kijk het gesprek na…</p></div>`;
