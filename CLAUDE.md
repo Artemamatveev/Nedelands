@@ -19,7 +19,7 @@ cannot move away from a stationary pointer.
 How the two pages hand over (`tests/browser.test.mjs` checks it):
 the site always opens with the homepage in a browser, on phones, tablets and computers, including returning learners
 with saved progress or an account (the user's wish, 12 November 2026). The bar's button leads into the app. On a computer,
-the app's menu has "Home" as its first row, `.tabs .hm`, a link to "/" that the lens never covers. Profiel has a "Naar de website" row in its bottom Bittertalen group, next to Statistiek for the owner, on every device. Installed apps, old addresses and sign-in (`?code`, `?error`, with the handoff's `?h`), Stripe (`?plus`)
+the app's menu has "Home" as its first row, `.tabs .hm`, a link to "/" that the lens never covers. Profiel has a "Naar de website" row in its bottom Bittertalen group, next to Statistiek for the owner, on every device except the store apps (see App Store and Google Play). Installed apps, old addresses and sign-in (`?code`, `?error`, with the handoff's `?h`), Stripe (`?plus`)
 or migration (`#verhuis=`) callbacks still enter the app directly, preserving their query and hash. `/?home` explicitly opens the public homepage, including inside an installed app. An installed app keeps the query
 so reloading stays on the homepage; ordinary browser visits remove that query. A fresh installed launch still opens practice. The "← Bittertalen" links of /over and /privacy go back to
 /oefenen for someone who came from the app. Arriving from the homepage (`?open=today`, `a2`,
@@ -395,8 +395,19 @@ website deploy updates the apps; `native/README.md` has the build and review ste
 knows it runs there by `NATIVE` (`Capacitor.isNativePlatform()`), which counts as an installed app (`inApp()`): OAuth
 opens in the system browser (`skipBrowserRedirect`, `Capacitor.Plugins.Browser`) and comes back through the existing
 `/api/handoff` flow; no purchases, prices or offers inside the apps (Plus, passes and groups from the website still
-work); Profiel shows "Dagelijkse herinnering" (`remindRow()`, local notifications, `ww-remind`). Keep these when changing
-login, Plus or Profiel. `native/` is not deployed as part of the site (`.vercelignore`).
+work; the user's choice, 23 November 2026: no In-App Purchase for now, perhaps later with Apple's 15% Small Business
+rate if many learners come through the app), and no way to them either (Apple 3.1.1): no "Naar de website" row, the FAQ says only that practice is free
+(no Plus sentence, no subscription question), the out-of-checks message doesn't name Plus, and `index.html` counts the
+app as installed, so the "← Bittertalen" links of /over, /privacy and /contact lead back to practice, never to the
+homepage's prices. The web view runs under the status bar, so the page adds a frosted strip there (`#sbar`,
+`data-native` on `<html>`). On the iPhone app Apple login is Apple's own sheet (Face ID), not the browser:
+`appleNative()` (plugin `@capacitor-community/apple-sign-in`, entitlement in `App.entitlements`) sends the ID token with a
+nonce to `signInWithIdToken` (client ID `nl.bittertalen.app`); builds without the plugin keep the browser. The native
+launch image stays until the page's own Bittie has loaded (`@capacitor/splash-screen`, hidden by the inline script after
+`#app-loading`, at most 3 s), so no white screen between them. Profiel shows "Dagelijkse herinnering" (`remindRow()`, local notifications, `ww-remind`). Keep these when changing
+login, Plus or Profiel. `native/` is not deployed as part of the site (`.vercelignore`). The iOS project
+(`native/ios`, committed) is signed with the user's Individual team `GW742K94US`, bundle ID `nl.bittertalen.app`; the app
+"Bittertalen" exists in App Store Connect and build 1.0 (1) went to TestFlight on 23 November 2026, 1.0 (2) (Apple sheet, launch image) the same evening.
 
 ## Functions and the Vercel plan
 
@@ -417,7 +428,10 @@ vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one comin
   `azure`, Facebook; the brands' own logos), "Volgende" (sends the code) and "Face ID of vingerafdruk" (passkey). A
   provider shows when it is on in Supabase (`/api/config` reads `/auth/v1/settings`; Google is on since November 2026:
   the OAuth client "Bittertalen" in the user's Google Cloud project, consent screen published without a logo so it
-  needs no verification; Supabase's Site URL and Redirect URLs are https://bittertalen.nl), also in an iPhone home-screen
+  needs no verification; Supabase's Site URL and Redirect URLs are https://bittertalen.nl; Apple is on since 23 November 2026: Services ID
+  `nl.bittertalen.web` (shown to users as "Bittertalen") with Supabase's callback, Client IDs `nl.bittertalen.web,nl.bittertalen.app`,
+  key `6GMQ7P9JL6` in `~/.config/bittertalen/` (never in the repository); its client secret lasts six months, the current
+  one until 22 May 2027: `node tools/apple-secret.mjs` puts a new one on the clipboard for Supabase's Apple provider), also in an iPhone home-screen
   app: iOS may open their page in a separate Safari window, so there the app marks the login (`HAND` = `ww-hand`, a
   random `h` in the address it comes back to); a window that comes back with an `h` it did not make leaves the one-time
   code at `/api/handoff` (`handBack()`, table `handoff` in `supabase/schema.sql`, rows gone after 10 minutes) and says

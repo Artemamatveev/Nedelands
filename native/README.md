@@ -1,8 +1,8 @@
 # Bittertalen in the App Store and Google Play
 
 A Capacitor 8 shell around the website: it opens https://bittertalen.nl/oefenen, so every push to `main` reaches the
-apps too (no new store release for content or fixes). Native parts: the daily reminder (local notifications) and the
-system browser for Google/Apple login. The page detects the app with `NATIVE` in `oefenen.html`.
+apps too (no new store release for content or fixes). Native parts: the daily reminder (local notifications), Apple's own login sheet
+on iPhone, the launch image held until the page's Bittie is up, and the system browser for Google login. The page detects the app with `NATIVE` in `oefenen.html`.
 
 ## What the page does differently in the app
 
@@ -28,15 +28,22 @@ npx cap open ios       # Xcode: set the team and signing, then Product → Archi
 npx cap open android   # Android Studio: Build → Generate Signed App Bundle
 ```
 
-Icons and splash: make them from `../icon-1024.png` with `npx @capacitor/assets generate --iconBackgroundColor '#EEF2FA'`
+The iOS project (`ios/`, Swift Package Manager, no CocoaPods) is committed and already set up: iPhone only, portrait,
+iOS 15+, the icon from `../icon-1024.png`, a light and a dark launch image with Bittie (`art/bittie-loading-v1.webp` on
+the app's `#FBFCFE` / `#1D2436`), the microphone and speech recognition texts that Spreken and Gesprekken need, and
+`ITSAppUsesNonExemptEncryption` false (no export compliance question per upload). After `npm install` only
+`npx cap sync ios` is needed. In Xcode: target App → Signing & Capabilities → Team, then Product → Archive →
+Distribute App → App Store Connect. Raise `CURRENT_PROJECT_VERSION` (the build number) for every upload.
+
+Android icons and splash: make them from `../icon-1024.png` with `npx @capacitor/assets generate --iconBackgroundColor '#EEF2FA'`
 (put the source at `native/assets/icon.png` first). Android needs a white notification glyph `ic_stat_bittertalen` in
 `android/app/src/main/res/drawable*`; without it Android shows a grey square.
 
 ## Before sending it to review
 
 - Apple developer account ($99 a year) and Google Play console ($25 once), in the name that is on KVK.
-- **Sign in with Apple**: Apple requires it when Google or Facebook login is offered (Guideline 4.8). Switch the
-  Apple provider on in Supabase so the page shows it.
+- **Sign in with Apple** (Guideline 4.8, required next to Google): on since 23 November 2026, see CLAUDE.md (Accounts).
+  Renew the Supabase client secret before 22 May 2027 with `node tools/apple-secret.mjs`.
 - **Account deletion** is in Profiel (Account verwijderen): Apple requires it.
 - Privacy labels (App Store) and Data safety (Google Play): the same as privacy.html. E-mail and name (account),
   progress and practice time (app functionality), the answers sent for checking (to Anthropic), no tracking, no ads.
