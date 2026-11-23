@@ -226,7 +226,7 @@ export async function talk(req, res) {
     const reply = str(r.reply, 700) || "Sorry, kunt u dat nog een keer zeggen?";
     const f = r.fix || {}, fix = f.wrong && f.right && str(f.wrong, 160) !== str(f.right, 160) ? { wrong: str(f.wrong, 160), right: str(f.right, 160), why: str(f.why, 240) } : null;
     // Synthesise while usage is saved: accounting must not delay the start of the voice request.
-    const [audio] = await Promise.all([speech(reply, T.g), spent]);
+    const [audio] = await Promise.all([req.body?.voice === "device" ? null : speech(reply, T.g), spent]);
     return res.status(200).json({ reply, fix, done: !!r.done || n >= TURNS, audio });
   } catch (error) {
     if (error?.code === "refusal") return res.status(422).json({ error: "refused" });

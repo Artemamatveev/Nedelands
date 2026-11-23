@@ -838,13 +838,22 @@ conversation. Two menu buttons (aiMenu remembers the choice when returning from 
   the server with `GOOGLE_TTS_KEY` (a Vercel env var: the user adds it in the dashboard, never in chat); without it, or
   when Google fails, the page uses the phone's voice (a synthesis request times out after 2.5 s). Synthesis runs in parallel with spend accounting. The MP3 comes back as base64 and plays through Web Audio buffer sources;
   `aiUnlock()` unlocks its context with silence inside the tap. Browsers without Web Audio use the shared `sayA` element.
+  Each decoded clip plays through a bounded gain (target active-sample RMS .12, maximum 3x, peaks no higher than .9;
+  near-silence is not boosted), so replies have comparable levels without clipping. Where AudioSession is available,
+  replies request playback and dictation returns to auto; this is a best-effort request, not control of the phone's
+  hardware volume or Bluetooth routing. If cloud audio fails, the conversation stays on the device voice until it ends
+  instead of alternating engines; voice:"device" skips server synthesis for subsequent turns. Device utterances use
+  volume 1, never the volume 0 used by the unlock utterance. Real iPhone loudness validation is still needed.
   HTML audio between recognition sessions can silently break iOS dictation (WebKit bug 321436). It also unlocks the phone's speech synthesis with a silent utterance there, or the phone's voice stays mute
   after the network wait (the user heard nothing on 23 November 2026). A random person starts the conversation
   in the same tap as "Praat met iemand" (`aiTalk(id, true)`), so the greeting is heard at once; a situation waits for
   "Begin het gesprek" so the task can be read first. ▶ replays a line a little slower.
-- The learner speaks through `listen("say", …, SPK, AI_QUIET)`: the `auto` argument ends the take after 1.2 s after a final recognition result, or 2.6 s after interim words,
-  like a call. From the greeting onward, each turn starts listening by itself when the other person stops
-  talking (falls back to the button when the phone refuses the microphone without a tap). Typing always works. A failed request keeps the learner’s answer in the visible conversation; retry replaces that pending turn instead of duplicating it.
+- The learner speaks through `listen("say", …, SPK, {conversation:true,hints})`. AI replies are submitted only by
+  "Klaar" (the user's choice, 24 November 2026); silence, final recognition results, natural recogniser end and the old
+  one-minute limit never submit a turn. The clock shows elapsed time. After the other person finishes, listening starts
+  automatically (falls back to the button when the phone refuses the microphone without a tap). A failed microphone
+  with partial text leaves an editable draft, never a model request. Uncertain transcripts also remain reviewable.
+  Typing and Stuur remain available. A failed request keeps the learner's visible answer; retry replaces the pending turn.
 
   In AI conversations each completed take aborts and retires its recogniser before voice playback, so iOS gets a fresh
   recogniser for each answer; exams retain their existing shared recogniser. Restart exceptions and terminal errors
@@ -859,8 +868,7 @@ conversation. Two menu buttons (aiMenu remembers the choice when returning from 
   Interim or low-confidence final results (0 < confidence < .55; 0 means unavailable) get an editable draft instead
   of being sent automatically. Close domain words with a shared ending (e.g. kering → haring in the fish conversation)
   are suggestions, never silent substitutions. Native alternatives are shown only in that review, not on every turn.
-  A final result replaces its interim hypothesis; continuation speech cancels the pending send, and the ready message
-  waits for the recogniser's start event. No additional model calls or providers are used for these checks.
+  A final result replaces its interim hypothesis, and the ready message waits for the recogniser's start event. No additional model calls or providers are used for these checks.
 - `/api/talk` is a rewrite to `/api/check?kind=talk` (the 12-function limit); `check.js` imports `_talk.js` only then.
   `S.ai` `{id: {n, at}}` (merged like `S.gp`); the event `ai` counts started conversations. privacy.html says, in all
   eight languages under the checking section, what goes to Anthropic and Google.

@@ -221,22 +221,23 @@ async function voiceConversation({failOnce=false,refuse=false,globals={},audio=n
     if(url!=='/api/talk')return new Response(JSON.stringify(url==='/api/config'?{}:[]));
     const b=JSON.parse(init.body);requests.push(b);
     if(b.go==='say'&&failOnce){failOnce=false;throw Error('offline')}
-    return new Response(JSON.stringify(b.go==='start'?{token:'tok',reply:'Hoe was je dag?',audio}:{reply:'Ik heb vandaag gewerkt.',audio,done:false}));
+    const clip=typeof audio==='function'?audio(b,requests.length):audio;
+    return new Response(JSON.stringify(b.go==='start'?{token:'tok',reply:'Hoe was je dag?',audio:clip}:{reply:'Ik heb vandaag gewerkt.',audio:clip,done:false}));
   };
   const a=await app({fetch,globals:{SpeechRecognition:Recognition,...globals}});
   a.run(`aiTalk(${JSON.stringify(topic)})`);await a.run('aiStart()');await a.flush();
   return {a,requests,instances};
 }
 
-test('The greeting opens the microphone, silence sends the visible answer, and the next turn listens',async()=>{
+test('The greeting opens the microphone, Klaar sends the visible answer, and the next turn listens',async()=>{
   const {a,instances,requests}=await voiceConversation();
   assert.ok(a.run('rec'),'the first answer needs no extra Spreek tap');
   instances[0].result('Ik ben naar de markt geweest');
   assert.match(a.document.getElementById('recp').textContent,/naar de markt/);
-  const r=a.run('rec');assert.equal(a.timers.get(r.quiet).delay,1200);
+  const r=a.run('rec');assert.equal(r.quiet,undefined);
   // Some browsers send an empty result while finalising; it must not erase speech.
   instances[0].result('');
-  a.timers.get(r.quiet).fn();await a.flush();
+  a.document.getElementById('recb').click();await a.flush();
   assert.equal(requests[1].history.at(-1).t,'Ik ben naar de markt geweest');
   assert.match(a.document.getElementById('tlog').textContent,/Ik ben naar de markt geweest/);
   assert.ok(a.run('rec'),'the next answer is hands free too');
@@ -245,7 +246,7 @@ test('The greeting opens the microphone, silence sends the visible answer, and t
 
 test('A failed spoken request preserves the answer and retry sends it only once',async()=>{
   const {a,instances,requests}=await voiceConversation({failOnce:true});
-  instances[0].result('Ik heb gewerkt');a.run('recEnd(true)');await a.flush();
+  instances[0].result('Ik heb gewerkt');a.document.getElementById('recb').click();await a.flush();
   assert.match(a.document.getElementById('tlog').textContent,/Ik heb gewerkt/);
   assert.equal(a.document.getElementById('tin').value,'Ik heb gewerkt');
   await a.run('aiSend("Ik heb vandaag gewerkt")');await a.flush();
@@ -278,15 +279,13 @@ test('Voice synthesis begins while spend accounting is still pending',async()=>{
   const r=await pending;assert.equal(r.statusCode,200);assert.equal(r.body.audio,'QUJD');
 });
 
-test('Final speech sends sooner, but continuing speech restores the thinking pause',async()=>{
-  const {a,instances}=await voiceConversation();
-  const native=instances[0],r=a.run('rec');
-  const result=[{transcript:'Ik heb gewerkt'}];result.isFinal=true;
-  native.onresult({results:[result]});
-  const first=r.quiet;assert.equal(a.timers.get(first).delay,1200);
-  native.result('Ik heb gewerkt en daarna',false);
-  assert.equal(a.timers.has(first),false);assert.equal(a.timers.get(r.quiet).delay,2600);
-  assert.equal(a.run('rec.stopping'),undefined);
+test('Final and interim results never submit a conversation before Klaar',async()=>{
+  const {a,instances,requests}=await voiceConversation();const native=instances[0],r=a.run('rec');
+  native.result('Ik heb gewerkt',true);assert.equal(r.quiet,undefined);assert.equal(requests.length,1);
+  native.result('Ik heb gewerkt en daarna',false);assert.equal(requests.length,1);
+  native.result('Ik heb gewerkt en daarna gekookt',true);assert.equal(a.run('rec'),r);
+  assert.equal(requests.length,1);assert.match(a.document.getElementById('recb').textContent,/Klaar/);
+  a.document.getElementById('recb').click();await a.flush();assert.equal(requests.length,2);
 });
 
 
@@ -317,8 +316,9 @@ function bufferVoice(){
     state='running';sampleRate=24000;destination={};
     resume(){return Promise.resolve()}
     createBuffer(){return {silence:true}}
-    async decodeAudioData(){decodes++;return {voice:true}}
-    createBufferSource(){const s={playbackRate:{value:1},connect(){},disconnect(){},start(){sources.push(this)},stop(){this.stopped=true}};return s}
+    createGain(){return {gain:{value:1},connect(){},disconnect(){this.disconnected=true}}}
+    async decodeAudioData(){decodes++;return {voice:true,numberOfChannels:1,getChannelData:()=>new Float32Array([.06,-.06])}}
+    createBufferSource(){const s={playbackRate:{value:1},connect(output){this.output=output},disconnect(){},start(){sources.push(this)},stop(){this.stopped=true}};return s}
   }
   class Audio{
     paused=true;ended=false;
@@ -338,7 +338,7 @@ test('Five spoken replies including the third use fresh recognition after Web Au
     assert.equal(instances.length,turn,'each answer gets a fresh recogniser');
     const native=instances.at(-1),take=a.run('rec');assert.ok(take);
     native.result('Dit is antwoord '+turn);
-    a.timers.get(take.quiet).fn();await a.flush();
+    a.document.getElementById('recb').click();await a.flush();
     assert.equal(requests.at(-1).history.filter(l=>l.me).length,turn);
     assert.equal(requests.at(-1).history.at(-1).t,'Dit is antwoord '+turn);
     assert.equal(native.aborts,1,'release recognition before playing the reply');
@@ -352,7 +352,7 @@ test('An iOS recogniser that silently goes deaf offers a fresh retry without los
   const {a,instances,requests}=await voiceConversation();
   for(let i=0;i<2;i++){
     const take=a.run('rec');instances.at(-1).result('Mijn antwoord '+i);
-    a.timers.get(take.quiet).fn();await a.flush();
+    a.document.getElementById('recb').click();await a.flush();
   }
   const third=a.run('rec'),dead=instances.at(-1);assert.equal(instances.length,3);
   a.timers.get(third.watchTimer).fn();await a.flush();
@@ -361,7 +361,7 @@ test('An iOS recogniser that silently goes deaf offers a fresh retry without los
   assert.match(a.document.getElementById('recn').textContent,/Tik op Spreek/);
   a.document.getElementById('recb').click();await a.flush();assert.equal(instances.length,4);
   const retry=a.run('rec');instances.at(-1).result('Mijn derde antwoord');
-  a.timers.get(retry.quiet).fn();await a.flush();
+  a.document.getElementById('recb').click();await a.flush();
   assert.equal(a.run('AK.n'),3);assert.equal(requests.at(-1).history.at(-1).t,'Mijn derde antwoord');
   assert.equal(requests.at(-1).history.filter(l=>l.me).length,3);
 });
@@ -369,7 +369,7 @@ test('An iOS recogniser that silently goes deaf offers a fresh retry without los
 test('Old permission and silence timers cannot stop a newer answer',async()=>{
   const {a,instances}=await voiceConversation();const first=a.run('rec');
   const permission=[...a.timers.values()].find(t=>t.delay===1500).fn,watch=a.timers.get(first.watchTimer).fn;
-  instances[0].result('Mijn eerste antwoord');a.run('recEnd(true)');await a.flush();
+  instances[0].result('Mijn eerste antwoord');a.document.getElementById('recb').click();await a.flush();
   const second=a.run('rec');second.fail=true;
   permission();watch();assert.equal(a.run('rec'),second);assert.equal(second.fin,false);
 });
@@ -385,7 +385,7 @@ test('Stopping a conversation stops Web Audio and a late decode cannot reopen it
 
 test('Kering in the fish conversation suggests haring, preserving the original until confirmed',async()=>{
   const {a,instances,requests}=await voiceConversation({topic:'haring'});
-  instances[0].result('Ik wil kering met uitjes');a.run('recEnd(true)');await a.flush();
+  instances[0].result('Ik wil kering met uitjes');a.document.getElementById('recb').click();await a.flush();
   assert.equal(requests.length,1,'do not send a likely misheard word automatically');
   assert.equal(a.document.getElementById('tin').value,'Ik wil kering met uitjes');
   const choice=a.document.querySelector('[data-aichoice]');assert.equal(choice.textContent,'Ik wil haring met uitjes');
@@ -397,7 +397,7 @@ test('Kering in the fish conversation suggests haring, preserving the original u
 
 test('Tentative speech is reviewed rather than passed off as a final recognised answer',async()=>{
   const {a,instances,requests}=await voiceConversation();
-  instances[0].result('Ik heb een hond',false);a.run('recEnd(true)');await a.flush();
+  instances[0].result('Ik heb een hond',false);a.document.getElementById('recb').click();await a.flush();
   assert.equal(requests.length,1);assert.equal(a.document.getElementById('tin').value,'Ik heb een hond');
   assert.match(a.document.getElementById('recn').textContent,/Controleer/);
 });
@@ -405,16 +405,16 @@ test('Tentative speech is reviewed rather than passed off as a final recognised 
 test('A final correction replaces interim words without duplication or an unnecessary review',async()=>{
   const {a,instances,requests}=await voiceConversation();
   instances[0].result('Ik heb een hand',false);instances[0].result('Ik heb een hond',true);
-  a.run('recEnd(true)');await a.flush();assert.equal(requests[1].history.at(-1).t,'Ik heb een hond');
+  a.document.getElementById('recb').click();await a.flush();assert.equal(requests[1].history.at(-1).t,'Ik heb een hond');
 });
 
 test('Low confidence speech offers native alternatives; confidence zero is treated as unavailable',async()=>{
   const {a,instances,requests}=await voiceConversation();
   const result=[{transcript:'Ik heb een hand',confidence:.3},{transcript:'Ik heb een hond',confidence:.25}];result.isFinal=true;
-  instances[0].onresult({results:[result]});a.run('recEnd(true)');await a.flush();
+  instances[0].onresult({results:[result]});a.document.getElementById('recb').click();await a.flush();
   assert.equal(requests.length,1);assert.equal(a.document.querySelector('[data-aichoice]').textContent,'Ik heb een hond');
   a.document.getElementById('recb').click();await a.flush();instances.at(-1).result('Ik heb een hond',true,0);
-  a.run('recEnd(true)');await a.flush();assert.equal(requests.length,2);
+  a.document.getElementById('recb').click();await a.flush();assert.equal(requests.length,2);
 });
 
 test('Recognition receives Dutch domain hints only where contextual biasing is supported',async()=>{
@@ -428,10 +428,72 @@ test('Recognition receives Dutch domain hints only where contextual biasing is s
   assert.equal(a.run('rec.hints'),false);
 });
 
-test('The microphone ready message waits for the actual start event, and new speech cancels premature sending',async()=>{
-  const {a,instances}=await voiceConversation();const native=instances[0];
+test('The microphone ready message names Klaar and silence never arms a submit timer',async()=>{
+  const {a,instances,requests}=await voiceConversation();const native=instances[0];
   assert.match(a.document.getElementById('recn').textContent,/microfoon start/);
-  native.onstart();assert.match(a.document.getElementById('recn').textContent,/Spreek nu/);
-  native.result('Ik wil een afspraak');const timer=a.run('rec.quiet');assert.ok(a.timers.has(timer));
-  native.onspeechstart();assert.equal(a.timers.has(timer),false);
+  native.onstart();assert.match(a.document.getElementById('recn').textContent,/Tik op Klaar/);
+  native.result('Ik wil een afspraak');assert.equal(a.run('rec.quiet'),undefined);assert.equal(requests.length,1);
+});
+
+
+test('A long pause, recognition restart and expired old minute never send without Klaar',async()=>{
+  const intervals=[];
+  const {a,instances,requests}=await voiceConversation({globals:{setInterval:(fn,ms)=>{intervals.push({fn,ms});return intervals.length}}});
+  const r=a.run('rec'),native=instances[0];native.result('Ik wil graag');native.onend();
+  const restart=a.timers.get(r.restart);assert.ok(restart);restart.fn();
+  native.result('een afspraak maken');r.start-=120000;r.end=Date.now()-60000;
+  intervals.filter(t=>t.ms===250).forEach(t=>t.fn());
+  assert.equal(a.run('rec'),r);assert.equal(requests.length,1);assert.equal(r.stopping,undefined);
+  assert.equal(a.document.getElementById('rect').textContent,'2:00');
+  a.document.getElementById('recb').click();await a.flush();
+  assert.equal(requests[1].history.at(-1).t,'Ik wil graag een afspraak maken');
+});
+
+test('A microphone error keeps a partial answer as a draft instead of making AI reply without Klaar',async()=>{
+  const {a,instances,requests}=await voiceConversation();instances[0].result('Ik ben nog aan het praten');
+  instances[0].onerror({error:'network'});
+  const finish=[...a.timers.values()].find(t=>t.delay===0);assert.ok(finish);finish.fn();await a.flush();
+  assert.equal(requests.length,1);assert.equal(a.document.getElementById('tin').value,'Ik ben nog aan het praten');
+});
+
+test('Speech loudness is matched across quiet and loud buffers while peaks and silence stay bounded',async()=>{
+  const a=await app();
+  const gain=amplitude=>a.run(`aiLevel({numberOfChannels:1,getChannelData:()=>new Float32Array([${amplitude},-${amplitude}])})`);
+  const quiet=gain(.06),loud=gain(.3);
+  assert.ok(Math.abs(.06*quiet-.12)<.00001);assert.ok(Math.abs(.3*loud-.12)<.00001);
+  assert.equal(gain(0),1);assert.equal(gain(.001),1);assert.ok(gain(.01)<=3);
+  const peak=a.run('aiLevel({numberOfChannels:1,getChannelData:()=>new Float32Array([1,.01,.01,.01])})');assert.ok(peak<=.9);
+});
+
+test('Conversation audio uses the level gain and releases it before listening',async()=>{
+  const voice=bufferVoice(),{a}=await voiceConversation({globals:voice.globals,audio:'QUJD'});
+  const source=voice.sources.at(-1),gain=source.output;assert.ok(Math.abs(gain.gain.value-2)<.00001);
+  source.onended();await a.flush();assert.equal(gain.disconnected,true);assert.equal(a.run('aiGain'),null);assert.ok(a.run('rec'));
+});
+
+test('After a cloud voice fallback the same phone voice is kept for the rest of the conversation',async()=>{
+  const voice=bufferVoice(),spoken=[];
+  class Utterance{constructor(text){this.text=text}}
+  const speechSynthesis={speaking:false,pending:false,cancel(){},speak(u){spoken.push(u);queueMicrotask(()=>u.onend?.())}};
+  const {a,instances,requests}=await voiceConversation({globals:{...voice.globals,speechSynthesis,SpeechSynthesisUtterance:Utterance},audio:(_b,n)=>n===2?null:'QUJD'});
+  voice.sources.at(-1).onended();await a.flush();
+  instances.at(-1).result('Mijn eerste antwoord');a.document.getElementById('recb').click();await a.flush();
+  assert.equal(a.run('AK.voice'),'device');
+  instances.at(-1).result('Mijn tweede antwoord');a.document.getElementById('recb').click();await a.flush();
+  assert.equal(requests.at(-1).voice,'device');assert.equal(voice.decodes,1,'do not jump back to the cloud voice');
+  assert.equal(spoken.filter(u=>u.text!==' ').length,2);assert.ok(spoken.filter(u=>u.text!==' ').every(u=>u.volume===1));
+});
+
+test('Phone voice preference skips unnecessary server synthesis without spending another check',async()=>{
+  const t=await load({env:{GOOGLE_TTS_KEY:'k'}});
+  const {body:{token}}=await t.call({go:'start',topic:'saskia'});
+  const r=await t.call({go:'say',voice:'device',token,history:[{t:'Hoi'},{me:true,t:'Hallo'}]});
+  assert.equal(r.statusCode,200);assert.equal(r.body.audio,null);assert.equal(t.fetches.length,1);assert.deepEqual(t.usage,[1]);
+});
+
+test('Audio session requests playback for the reply and automatic mode for the microphone',async()=>{
+  const types=[],audioSession={set type(v){types.push(v)}};
+  const voice=bufferVoice(),{a}=await voiceConversation({globals:{...voice.globals,navigator:{userAgent:'iPhone',platform:'iPhone',onLine:true,audioSession}},audio:'QUJD'});
+  assert.equal(types.at(-1),'playback');voice.sources.at(-1).onended();await a.flush();assert.equal(types.at(-1),'auto');
+  a.run('home()');assert.equal(types.at(-1),'auto');
 });

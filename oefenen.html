@@ -1813,7 +1813,7 @@ const canSpeak="speechSynthesis" in window&&typeof SpeechSynthesisUtterance!=="u
 // per line, named by sayKeys(); audio/index.json lists them. Anything else (own books, Claude's corrections, a
 // word from the dictionary) falls back to the phone's Dutch voice. speak() stays synchronous, so the first line starts
 // inside the tap (iPhone only plays sound from a tap); the next lines follow on the same audio element.
-let VOICE=null,sayN=0,sayOn=false,aiCtx=null,aiSource=null;const sayA=new Audio();
+let VOICE=null,sayN=0,sayOn=false,aiCtx=null,aiSource=null,aiGain=null;const sayA=new Audio();
 fetch("/audio/index.json").then(r=>r.ok?r.json():[]).then(a=>{VOICE=new Set(a)}).catch(()=>{});
 function vkey(s){let a=0xdeadbeef,b=0x41c6ce57;for(let i=0,c;i<s.length;i++){c=s.charCodeAt(i);a=Math.imul(a^c,2654435761);b=Math.imul(b^c,1597334677)}
   a=Math.imul(a^a>>>16,2246822507)^Math.imul(b^b>>>13,3266489909);b=Math.imul(b^b>>>16,2246822507)^Math.imul(a^a>>>13,3266489909);
@@ -1833,11 +1833,22 @@ function tmFlush(){ if(tmAcc<1)return; const d=String(today()),old=today()-400; 
 setInterval(()=>{ if(document.visibilityState==="visible"&&(Date.now()-tmLast<9e4||speaking())){tmAcc+=15;if(tmAcc>=60)tmFlush()} },15000);
 addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")tmFlush()});
 addEventListener("pagehide",tmFlush);
-function aiVoiceStop(){const source=aiSource;aiSource=null;if(source){source.onended=null;try{source.stop();source.disconnect()}catch(e){}}}
+function aiVoiceStop(){const source=aiSource,gain=aiGain;aiSource=aiGain=null;if(source){source.onended=null;try{source.stop();source.disconnect()}catch(e){}}if(gain)try{gain.disconnect()}catch(e){}}
+function aiAudioMode(type){try{if(navigator.audioSession)navigator.audioSession.type=type}catch(e){}}
+// Match speech levels per clip, without amplifying silence or letting peaks clip.
+function aiLevel(buffer){
+  if(!buffer?.getChannelData||!buffer.numberOfChannels)return 1;
+  let sum=0,count=0,peak=0;
+  for(let c=0;c<buffer.numberOfChannels;c++){const data=buffer.getChannelData(c);
+    for(let i=0;i<data.length;i++){const v=Math.abs(data[i]);peak=Math.max(peak,v);if(v>.003){sum+=v*v;count++}}}
+  if(!count||!Number.isFinite(sum))return 1;
+  const rms=Math.sqrt(sum/count);if(rms<.004)return 1;
+  return Math.min(3,.9/peak,Math.max(.25,.12/rms));
+}
 function stopSpeak(){sayN++;sayOn=false;aiVoiceStop();if(!sayA.paused&&!sayA.ended)sayA.pause();try{if(canSpeak&&(speechSynthesis.speaking||speechSynthesis.pending))speechSynthesis.cancel()}catch(e){}}
 // The phone's voice: left unset, so the phone uses the Dutch (nl-NL) voice picked in its settings;
 // in a dialogue ("A: …" / "B: …" lines) speaker B gets a higher pitch, so the two people sound different
-function utter(l,done){const m=l.match(/^([A-C]): (.*)$/),u=new SpeechSynthesisUtterance(m?m[2]:l);u.lang="nl-NL";u.rate=.95;if(m)u.pitch={A:.9,B:1.35,C:1.1}[m[1]];
+function utter(l,done){const m=l.match(/^([A-C]): (.*)$/),u=new SpeechSynthesisUtterance(m?m[2]:l);u.lang="nl-NL";u.rate=.95;u.volume=1;if(m)u.pitch={A:.9,B:1.35,C:1.1}[m[1]];
   if(done)u.onend=u.onerror=done;speechSynthesis.speak(u)}
 function speak(t){stopSpeak();const n=sayN,L=String(t).split("\n").map(l=>l.trim()).filter(Boolean),K=sayKeys(L),has=i=>!!VOICE&&VOICE.has(K[i]);
   try{if(!L.some((l,i)=>has(i))){if(canSpeak)L.forEach(l=>utter(l));return}}catch(e){return}
@@ -1909,11 +1920,12 @@ const ownHTML=(text,errs,label="Jouw tekst")=>`<p class="ask">${label}</p><div c
 const errsHTML=errs=>errs.length?`<p class="ask">Fouten: ${errs.length}</p><ol class="errs fixes">${errs.map(e=>`<li><s>${esc(e.wrong)}</s> <strong>${esc(e.right)}</strong><span>${esc(e.why)}</span></li>`).join("")}</ol>`:`<p class="note">Geen fouten gevonden.</p>`;
 const spoken=t=>String(t).replace(/[\p{Extended_Pictographic}←-⇿️‍]/gu,"").replace(/\s+/g," ").trim();
 const saidText=r=>r.said.concat(r.part).join(" ").replace(/\s+/g," ").trim();
-async function listen(mode,done,lim=SPK,auto=0,hints=[]){ // auto: in a conversation, end the take after that many ms of silence
+async function listen(mode,done,lim=SPK,options={}){ // AI conversations finish only through Klaar; exams keep their timer
   const box=$("rec"),b=$("recb"); recEnd(false); b.disabled=true; stopSpeak(); // never record the question
   $("recp").querySelectorAll("audio").forEach(audio=>audio.pause?.());
   if(recUrl){URL.revokeObjectURL(recUrl);recUrl=null} $("recp").innerHTML="";
-  const r={box,mode,done,lim,auto,stream:null,mr:null,sr:null,chunks:[],said:[],part:"",keep:false,fin:false};
+  const hints=options.hints||[];
+  const r={box,mode,done,lim,conversation:!!options.conversation,stream:null,mr:null,sr:null,chunks:[],said:[],part:"",keep:false,fin:false};
   if(mode==="rec"&&canRec){
     try{r.stream=await navigator.mediaDevices.getUserMedia({audio:true})}catch(e){}
     if(box!==$("rec")){if(r.stream)r.stream.getTracks().forEach(t=>t.stop());return}
@@ -1921,18 +1933,18 @@ async function listen(mode,done,lim=SPK,auto=0,hints=[]){ // auto: in a conversa
       catch(e){r.mr=null;r.stream.getTracks().forEach(t=>t.stop());r.stream=null}
   }
   r.start=Date.now(); r.end=r.start+lim*1e3; rec=r;
+  if(r.conversation)aiAudioMode("auto");
   if(mode==="say"&&SR)try{
     // Reusing a recogniser after TTS can leave iOS listening without receiving any words.
-    if(auto&&sr){try{sr.abort()}catch(e){}sr=null}
+    if(r.conversation&&sr){try{sr.abort()}catch(e){}sr=null}
     if(!sr){sr=new SR();sr.lang="nl-NL";sr.continuous=true;sr.interimResults=true}
     sr.maxAlternatives=3;
     // Context biasing is optional and is not implemented by every iOS/browser recogniser.
-    if(auto&&"phrases" in sr&&typeof window.SpeechRecognitionPhrase==="function"&&hints.length)try{
+    if(r.conversation&&"phrases" in sr&&typeof window.SpeechRecognitionPhrase==="function"&&hints.length)try{
       sr.phrases=hints.map(word=>new SpeechRecognitionPhrase(word,2));r.hints=true;
     }catch(e){}
     r.sr=sr;
-    sr.onstart=()=>{if(rec===r&&!r.fin&&!r.stopping&&r.auto)$("recn").textContent="Spreek nu. De telefoon schrijft mee."};
-    sr.onspeechstart=()=>{if(rec===r&&!r.fin&&!r.stopping)clearTimeout(r.quiet)};
+    sr.onstart=()=>{if(rec===r&&!r.fin&&!r.stopping&&r.conversation)$("recn").textContent="Spreek nu. Tik op Klaar als je antwoord af is."};
     sr.onresult=e=>{
       if(r.fin)return;
       const results=Array.from(e.results),text=results.map(x=>x[0]?.transcript||"").join(" ").trim();
@@ -1947,28 +1959,26 @@ async function listen(mode,done,lim=SPK,auto=0,hints=[]){ // auto: in a conversa
         if(variant&&variant!==text&&r.choices.length<3)r.choices.push(r.said.concat(variant).join(" ").trim());
       }));
       if(r.box===$("rec")&&!r.fin)$("recp").innerHTML=`<p class="ask">Dit hoorde de telefoon</p><div class="sample">${esc(saidText(r))}</div>`;
-      if(r.auto){
-        const final=text&&results.length>0&&results.every(x=>x.isFinal===true);
-        clearTimeout(r.quiet);r.quiet=setTimeout(()=>{if(rec===r&&saidText(r))recEnd(true)},final?Math.min(r.auto,1200):r.auto);
-      }
     };
     sr.onerror=e=>{if(r.fin)return;
       if(e.error==="phrases-not-supported"&&r.hints){try{r.sr.phrases=[]}catch(e){}r.hints=false;return}
       if(/not-allowed|service-not-allowed|audio-capture|language-not-supported|network/.test(e.error)){
-      r.fail=true;if(r.auto)setTimeout(()=>{if(rec===r)recEnd(true)},0)}};
+      r.fail=true;if(r.conversation)setTimeout(()=>{if(rec===r)recEnd(true)},0)}};
     // Recognition stops by itself after a pause: start it again while the minute runs
     sr.onend=()=>{if(r.fin)return;if(r.part){r.reviewParts=r.reviewParts||r.unconfirmed||r.uncertain;r.said.push(r.part);r.part=""}
       if(r.stopping||rec!==r)return recDone(r);
       if(r.fail){r.sr=null;$("recn").textContent="Meeschrijven lukt hier niet. Spreek toch hardop: de tijd loopt.";return}
       r.restart=setTimeout(()=>{if(rec!==r||r.fin||r.stopping)return;
-        try{r.sr.start()}catch(e){r.fail=true;if(r.auto)recEnd(true)}},200)};
-    try{r.sr.start()}catch(e){r.restart=setTimeout(()=>{if(rec===r)try{r.sr.start()}catch(e){r.fail=true;if(r.auto)recEnd(true)}},400)} // the previous take may still be stopping
+        try{r.sr.start()}catch(e){r.fail=true;if(r.conversation)recEnd(true)}},200)};
+    try{r.sr.start()}catch(e){r.restart=setTimeout(()=>{if(rec===r)try{r.sr.start()}catch(e){r.fail=true;if(r.conversation)recEnd(true)}},400)} // the previous take may still be stopping
   }catch(e){r.sr=null}
-  const doneLabel=cur?.exam&&cur.speak?"Antwoord klaar":"Stop";
+  const doneLabel=r.conversation?"Klaar":cur?.exam&&cur.speak?"Antwoord klaar":"Stop";
   $("recn").textContent=mode==="rec"?(r.mr?`Spreek nu. Tik op ${doneLabel} als je klaar bent.`:"Opnemen lukt hier niet. Spreek toch hardop: de tijd loopt.")
-    :r.sr?(r.auto?"De microfoon start… Wacht tot je kunt spreken.":`Spreek nu. De telefoon schrijft mee. Tik op ${doneLabel} als je klaar bent.`):"Meeschrijven lukt hier niet. Spreek toch hardop: de tijd loopt.";
-  b.textContent="■ "+doneLabel;b.className="btn wide";b.disabled=false;b.onclick=()=>recEnd(true);
-  const tick=()=>{if(box!==$("rec"))return recEnd(false);const ms=Math.max(0,r.end-Date.now());
+    :r.sr?(r.conversation?"De microfoon start… Wacht tot je kunt spreken.":`Spreek nu. De telefoon schrijft mee. Tik op ${doneLabel} als je klaar bent.`):"Meeschrijven lukt hier niet. Spreek toch hardop: de tijd loopt.";
+  b.textContent="■ "+doneLabel;b.className="btn wide";b.disabled=false;b.onclick=()=>{r.submitted=true;recEnd(true)};
+  const tick=()=>{if(box!==$("rec"))return recEnd(false);
+    if(r.conversation){$("rect").textContent=mmss(Math.floor((Date.now()-r.start)/1e3));$("recm").style.width="100%";return}
+    const ms=Math.max(0,r.end-Date.now());
     $("rect").textContent=mmss(Math.ceil(ms/1e3));$("recm").style.width=ms/lim/10+"%";if(!ms)recEnd(true)};
   r.t=setInterval(tick,250);tick();
 }
@@ -1998,15 +2008,15 @@ function recEnd(keep){
   if(r.stream)r.stream.getTracks().forEach(t=>t.stop());
 }
 function recDone(r){
-  if(r.fin)return; r.fin=true;if(rec===r)rec=null;clearTimeout(r.finishTimer);clearTimeout(r.quiet);clearTimeout(r.restart);clearTimeout(r.watchTimer);r.box.removeAttribute("aria-busy");
-  if(r.auto&&r.sr){
+  if(r.fin)return; r.fin=true;if(rec===r)rec=null;clearTimeout(r.finishTimer);clearTimeout(r.restart);clearTimeout(r.watchTimer);r.box.removeAttribute("aria-busy");
+  if(r.conversation&&r.sr){
     // Release the old iOS audio session before the next reply; late events cannot reach the next take.
     if(sr===r.sr)sr=null;r.sr.onresult=r.sr.onerror=r.sr.onend=null;
     try{r.sr.abort()}catch(e){}
   }
   if(!r.keep||r.box!==$("rec"))return;
   const s=Math.min(r.lim,Math.round((r.stop-r.start)/1e3));
-  r.text=saidText(r);r.review=!!(r.auto&&(r.reviewParts||r.unconfirmed||r.uncertain)); r.url=r.chunks.length?URL.createObjectURL(new Blob(r.chunks,{type:r.mr.mimeType||""})):"";
+  r.text=saidText(r);r.review=!!(r.conversation&&(!r.submitted||r.reviewParts||r.unconfirmed||r.uncertain)); r.url=r.chunks.length?URL.createObjectURL(new Blob(r.chunks,{type:r.mr.mimeType||""})):"";
   r.note=(s>=r.lim?"De tijd is om. ":"")+`Je sprak ${s===1?"1 seconde":s+" seconden"}. `+(s<Math.min(15,r.lim/2)?"Dat is kort: zeg twee of drie zinnen. ":"");
   $("recb").disabled=false;r.done(r);
 }
@@ -3910,7 +3920,7 @@ function talkEnd(){
   $("tnx").onclick=()=>talk(nx); $("tre").onclick=()=>talk(TK.i);
 }
 // Gesprekken: a real conversation with Claude (api/_talk.js), like a video call. The other person speaks with
-// Google's Chirp voice (or the phone's own), the learner answers aloud (the phone writes it down; a pause ends the turn)
+// Google's Chirp voice (or the phone's own), the learner answers aloud (the phone writes it down; Klaar ends the turn)
 // or types. One check per conversation, taken at the start. At the end Claude says what went well and gives tips, which
 // also go to Mijn fouten. Kept: S.ai {id: {n, at}}; the conversation itself only lives in memory.
 // "Praat met iemand" picks one of PEOPLE at random (not one of the last six; seasonal people only in their months, `m`,
@@ -3944,7 +3954,6 @@ const aiScene=i=>({id:GP[i].id,who:GP[i].w,t:GP[i].t,s:GP[i].s,task:GP[i].o,p:GP
 const aiScenes=()=>{const L=GP.map((c,i)=>c.ona?null:aiScene(i)).filter(Boolean);return lvl()==="B1"?L.filter(c=>c.b1).concat(L.filter(c=>!c.b1)):L}; // at B1 the B1 group first
 const aiIds=()=>PEOPLE.map(c=>c.id).concat(aiScenes().map(c=>c.id));
 const aiTopic=id=>PEOPLE.find(c=>c.id===id)||aiScenes().find(c=>c.id===id);
-const AI_QUIET=2600; // a pause this long (ms) after the learner said something ends their turn
 let AK=null; // the open conversation: {c, log:[{me, t, url, fix}], tok, n, busy, mic}
 const aiOn=k=>AK===k&&!$("talk").hidden&&!!$("tlog"); // still on this conversation's screen (a late answer must not land elsewhere)
 let aiMenu="people";
@@ -3982,7 +3991,7 @@ function aiList(menu){
   if($("aiany"))$("aiany").onclick=aiAny;
 }
 // Blob URLs of the replies' voices are released when the conversation closes
-function aiDrop(){if(AK)AK.log.forEach(l=>{if(l.url)URL.revokeObjectURL(l.url)});AK=null}
+function aiDrop(){aiAudioMode("auto");if(AK)AK.log.forEach(l=>{if(l.url)URL.revokeObjectURL(l.url)});AK=null}
 function aiTalk(id,go){ // go: start at once (a person picked by the learner's tap), so the greeting is heard right away
   const c=aiTopic(id); if(!c)return aiList();
   bgOpen("Gesprekken",aiList); aiDrop();
@@ -4008,7 +4017,7 @@ function aiReady(msg){
 // (WebKit 321436); conversation MP3s use buffer sources instead. Older browsers keep the audio-element fallback.
 let aiSilent=null;
 function aiUnlock(){
-  stopSpeak();
+  if(rec)recEnd(false);stopSpeak();aiAudioMode("playback");
   try{
     const Context=window.AudioContext||window.webkitAudioContext;
     if(Context){
@@ -4040,7 +4049,7 @@ async function aiStart(){
   chkCount(j,lvl());
   if(!aiOn(k))return;
   if(!j.ok||!j.token)return aiReady(aiWhy(j.code));
-  k.tok=j.token; track("ai"); aiHear(j.reply,j.audio,false);
+  k.tok=j.token;k.voice=j.audio?"cloud":"device"; track("ai"); aiHear(j.reply,j.audio,false);
 }
 // The other person's line: shown, then spoken; then it is the learner's turn (or the end)
 function aiHear(t,audio,done){
@@ -4052,11 +4061,11 @@ function aiHear(t,audio,done){
   aiPlay(l,()=>{if(AK===k&&!k.busy&&!rec&&k.mic&&SR&&$("rec"))aiRec()});
 }
 function aiPlay(l,done,slow){
-  stopSpeak(); const n=sayN;let finished=false;
+  stopSpeak();aiAudioMode("playback"); const n=sayN;let finished=false,fallback=false;
   const end=()=>{if(n!==sayN||finished)return;finished=true;sayOn=false;aiSpk(false);done&&done()},
-    alt=()=>{if(n!==sayN||finished)return;try{canSpeak?utter(l.t,end):end()}catch(e){end()}};
+    alt=()=>{if(n!==sayN||finished||fallback)return;fallback=true;if(AK)AK.voice="device";try{canSpeak?utter(l.t,end):end()}catch(e){end()}};
   aiSpk(true);
-  if(!l.url)return alt();
+  if(AK?.voice==="device"||!l.url)return alt();
   sayOn=true;
   if(aiCtx&&l.bytes){
     Promise.resolve().then(async()=>{
@@ -4065,12 +4074,13 @@ function aiPlay(l,done,slow){
       if(n!==sayN||finished)return;
       if(aiCtx.state!=="running")return alt();
       const source=aiCtx.createBufferSource();source.buffer=l.buffer;source.playbackRate.value=slow?.85:1;
-      source.connect(aiCtx.destination);aiSource=source;
-      source.onended=()=>{source.disconnect();if(aiSource===source)aiSource=null;end()};source.start();
+      const gain=aiCtx.createGain();gain.gain.value=aiLevel(l.buffer);
+      source.connect(gain);gain.connect(aiCtx.destination);aiSource=source;aiGain=gain;
+      source.onended=()=>{source.disconnect();gain.disconnect();if(aiSource===source){aiSource=null;aiGain=null}end()};source.start();
     }).catch(alt);
     return;
   }
-  sayA.onended=end;sayA.onerror=alt;sayA.src=l.url;sayA.playbackRate=slow?.85:1;sayA.play().catch(alt);
+  sayA.onended=end;sayA.onerror=alt;sayA.src=l.url;sayA.volume=1;sayA.playbackRate=slow?.85:1;sayA.play().catch(alt);
 }
 function aiSpk(on){const a=$("aiav"),s=$("aist");if(a)a.classList.toggle("on",on);if(s&&AK)s.textContent=on?"spreekt":""}
 function aiDraw(){
@@ -4081,7 +4091,7 @@ function aiDraw(){
   document.querySelectorAll("#tlog .say").forEach(b=>b.onclick=()=>{if(rec)recEnd(false);aiPlay(k.log[b.dataset.j],null,true)});
 }
 function aiTurn(note,keep){
-  $("tctl").innerHTML=(SR?`<div class="rec" id="rec"><div class="clk"><span class="t" id="rect">${mmss(SPK)}</span><div class="m"><i id="recm"></i></div></div><div id="recp"></div>
+  $("tctl").innerHTML=(SR?`<div class="rec" id="rec"><div class="clk"><span class="t" id="rect">0:00</span><div class="m"><i id="recm"></i></div></div><div id="recp"></div>
     <button class="btn wide" id="recb">● Spreek</button><p class="note" id="recn">${note||""}</p></div>`:note?`<p class="note">${note}</p>`:"")
     +`<div class="type"><input id="tin" placeholder="${SR?"Of typ je antwoord":"Typ je antwoord"}" autocomplete="off" autocapitalize="sentences" spellcheck="false" aria-label="Je antwoord"><button class="${SR?"ghost":"btn"}" id="tsend">Stuur</button></div>
     <button class="ghost wide" id="aiend">Ophangen</button>`;
@@ -4093,7 +4103,7 @@ function aiTurn(note,keep){
 }
 function aiRec(){
   const k=AK; if(!k||k.busy||k.ending||k.done||rec)return;
-  listen("say",r=>{if(aiOn(k)&&!k.ending)aiHeard(r)},SPK,AI_QUIET,aiSpeechWords());
+  listen("say",r=>{if(aiOn(k)&&!k.ending)aiHeard(r)},SPK,{conversation:true,hints:aiSpeechWords()});
   const take=rec;
   // A recogniser can go deaf without emitting error/end on iOS. Never leave a fake listening state for a minute.
   if(take)take.watchTimer=setTimeout(()=>{
@@ -4148,7 +4158,7 @@ async function aiSend(t){
   else {k.pending={me:1,t};k.log.push(k.pending);k.n++}
   aiDraw();
   $("tctl").innerHTML=`<p class="note aiwait">${esc(k.c.who)} denkt na…</p>`;
-  const j=await aiPost({go:"say",token:k.tok,history:k.log.map(l=>({me:!!l.me,t:l.t}))});
+  const j=await aiPost({go:"say",token:k.tok,voice:k.voice,history:k.log.map(l=>({me:!!l.me,t:l.t}))});
   k.busy=false; if(!aiOn(k))return;
   if(!j.ok){
     if(j.code==="expired")return aiEnd();
