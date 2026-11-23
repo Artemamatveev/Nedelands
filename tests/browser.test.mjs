@@ -644,9 +644,8 @@ test('The homepage and the app work in a real browser', async t => {
       await s.ctx.route('**/api/config*', r => r.fulfill({json: {url: 'https://example.supabase.co', anon: 'x', login: ['google'], limit: 5, free: 2}}));
       await s.p.evaluate(() => localStorage.clear()).catch(() => {});
       await s.go('/'); await s.p.waitForSelector('.hero');
-      // the bar's main button: into the app without the login window (the homepage already offers Inloggen); the hero has
-      // no buttons of its own (removed at the user's wish)
-      assert.equal(await s.p.locator('.hero-copy a').count(), 0);
+      // The hero offers installation; the bar opens practice without the login window.
+      assert.equal(await s.p.locator('#download-app').getAttribute('href'), '#install-app');
       await s.p.click('#enter'); await s.p.waitForSelector('#plan .step'); await s.p.waitForTimeout(800);
       assert.equal(await s.p.locator('#welcome').isHidden(), true);
       assert.equal(new URL(s.p.url()).search, '');

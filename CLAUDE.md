@@ -3,9 +3,9 @@
 Bittertalen (a pun on bitterballen: "bitter languages", self-irony about learning Dutch) is a single-page study app for the Dutch A2 integration exam (inburgeringsexamen).
 The public homepage is `index.html` (`landing.js` translates it: every `data-t` text and `data-alt` alt text needs all
 seven translations in `copy`, which `tests/site.test.mjs` checks) and reads Plus pricing from `/api/config`. Its main
-button, "Begin met oefenen" in the bar (`#enter`), opens `/oefenen?open=today`; the hero itself has only the heading (no
-full stop), one paragraph and the app in a phone: no label above the heading, no buttons and no note under them (the user's
-wish, November 2026). The bar: the name (30 px, 28 on a phone), the page's links, the language, Inloggen and the main button;
+button, "Begin met oefenen" in the bar (`#enter`), opens `/oefenen?open=today`; the hero has the heading (no
+full stop), one paragraph, a Download de app button and the app in a phone. The download button uses the browser install
+prompt when available, otherwise links to #install-app with instructions for iOS, Android and desktop (November 2026). The bar: the name (30 px, 28 on a phone), the page's links, the language, Inloggen and the main button;
 on a phone two straight rows, the name with the button, then the links with the language and Inloggen (two wrapping flex
 rows: a grid tied the second row to the button's width; the type follows the screen's width and the narrowest phones leave
 out the middle link; the browser test measures it in the longest languages). The learning features (`#oefenvormen`)

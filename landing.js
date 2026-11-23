@@ -3,6 +3,13 @@ try{const r=new URLSearchParams(location.search).get("ref");if(r&&/^[A-HJ-NP-Z2-
 const languages = ["en", "ar", "tr", "hi", "zh", "es", "ru"];
 // Dutch copy is also in the HTML so the page is readable without scripts.
 const copy = {
+  "Download de app": ["Download the app", "نزّل التطبيق", "Uygulamayı indir", "ऐप डाउनलोड करें", "下载应用", "Descargar la aplicación", "Скачать приложение"],
+  "Zet Bittertalen gratis op je beginscherm. Geen account nodig.": ["Add Bittertalen to your home screen for free. No account needed.", "أضف Bittertalen إلى شاشتك الرئيسية مجانًا. لا تحتاج إلى حساب.", "Bittertalen’ı ücretsiz olarak ana ekranına ekle. Hesap gerekmez.", "Bittertalen को अपनी होम स्क्रीन पर मुफ़्त जोड़ें। खाते की ज़रूरत नहीं।", "免费将 Bittertalen 添加到主屏幕，无需账号。", "Añade Bittertalen gratis a tu pantalla de inicio. No necesitas una cuenta.", "Бесплатно добавьте Bittertalen на главный экран. Аккаунт не нужен."],
+  "Open deze website in Safari. Tik op Deel en daarna op Zet op beginscherm.": ["Open this website in Safari. Tap Share, then Add to Home Screen.", "افتح هذا الموقع في Safari. اضغط على مشاركة، ثم إضافة إلى الشاشة الرئيسية.", "Bu siteyi Safari’de aç. Paylaş’a, ardından Ana Ekrana Ekle’ye dokun.", "इस वेबसाइट को Safari में खोलें। शेयर पर टैप करें, फिर होम स्क्रीन पर जोड़ें चुनें।", "在 Safari 中打开此网站。轻点“分享”，然后选择“添加到主屏幕”。", "Abre este sitio en Safari. Toca Compartir y después Añadir a pantalla de inicio.", "Откройте этот сайт в Safari. Нажмите «Поделиться», затем «На экран Домой»."],
+  "Open deze website in Chrome. Tik op het menu ⋮ en kies App installeren of Toevoegen aan startscherm.": ["Open this website in Chrome. Tap the ⋮ menu and choose Install app or Add to home screen.", "افتح هذا الموقع في Chrome. اضغط على القائمة ⋮ واختر تثبيت التطبيق أو الإضافة إلى الشاشة الرئيسية.", "Bu siteyi Chrome’da aç. ⋮ menüsüne dokun ve Uygulamayı yükle veya Ana ekrana ekle’yi seç.", "इस वेबसाइट को Chrome में खोलें। ⋮ मेनू में ऐप इंस्टॉल करें या होम स्क्रीन पर जोड़ें चुनें।", "在 Chrome 中打开此网站。轻点 ⋮ 菜单，选择“安装应用”或“添加到主屏幕”。", "Abre este sitio en Chrome. Toca el menú ⋮ y elige Instalar aplicación o Añadir a pantalla de inicio.", "Откройте этот сайт в Chrome. В меню ⋮ выберите «Установить приложение» или «Добавить на главный экран»."],
+  "Computer": ["Computer", "الكمبيوتر", "Bilgisayar", "कंप्यूटर", "电脑", "Ordenador", "Компьютер"],
+  "Open deze website in Chrome of Edge. Klik op het installatiepictogram in de adresbalk of kies Deze pagina als app installeren in het browsermenu.": ["Open this website in Chrome or Edge. Click the install icon in the address bar or choose Install this page as an app in the browser menu.", "افتح هذا الموقع في Chrome أو Edge. انقر على رمز التثبيت في شريط العنوان أو اختر تثبيت هذه الصفحة كتطبيق من قائمة المتصفح.", "Bu siteyi Chrome veya Edge’de aç. Adres çubuğundaki yükleme simgesine tıkla veya tarayıcı menüsünden Bu sayfayı uygulama olarak yükle’yi seç.", "इस वेबसाइट को Chrome या Edge में खोलें। पता बार में इंस्टॉल आइकन पर क्लिक करें या ब्राउज़र मेनू में इस पेज को ऐप के रूप में इंस्टॉल करें चुनें।", "在 Chrome 或 Edge 中打开此网站。点击地址栏中的安装图标，或在浏览器菜单中选择“将此页面安装为应用”。", "Abre este sitio en Chrome o Edge. Haz clic en el icono de instalación de la barra de direcciones o elige Instalar esta página como una aplicación en el menú del navegador.", "Откройте этот сайт в Chrome или Edge. Нажмите значок установки в адресной строке или выберите «Установить эту страницу как приложение» в меню браузера."],
+
   "Gebruiksvoorwaarden": ["Terms of use", "شروط الاستخدام", "Kullanım koşulları", "उपयोग की शर्तें", "使用条款", "Condiciones de uso", "Условия использования"],
   "Bittertalen is een onafhankelijke oefenapp en is niet verbonden aan DUO.": ["Bittertalen is an independent practice app and is not affiliated with DUO.", "Bittertalen تطبيق مستقل للتدرّب ولا يرتبط بـ DUO.", "Bittertalen bağımsız bir alıştırma uygulamasıdır ve DUO ile bağlantılı değildir.", "Bittertalen एक स्वतंत्र अभ्यास ऐप है और DUO से संबद्ध नहीं है।", "Bittertalen 是独立的练习应用，与 DUO 没有隶属或合作关系。", "Bittertalen es una aplicación de práctica independiente y no está afiliada a DUO.", "Bittertalen — независимое приложение для подготовки, не связанное с DUO."],
   "Oefenresultaten bieden geen garantie op het behalen van een officieel examen.": ["Practice results do not guarantee passing an official exam.", "نتائج التدريب لا تضمن النجاح في الامتحان الرسمي.", "Alıştırma sonuçları resmî sınavı geçmeyi garanti etmez.", "अभ्यास के नतीजे आधिकारिक परीक्षा पास करने की गारंटी नहीं देते।", "练习成绩不保证能通过正式考试。", "Los resultados de práctica no garantizan aprobar un examen oficial.", "Результаты тренировок не гарантируют сдачу официального экзамена."],
@@ -317,3 +324,37 @@ document.querySelectorAll('a[href^="/oefenen?open="]').forEach(a => {
     fb.hidden = false; $("qmore").hidden = false;
   }));
 })();
+
+// Keep a user gesture for the browser's native installation prompt. Other browsers use the visible instructions.
+{
+  const button = $("download-app");
+  let installPrompt = null;
+  const installed = () => navigator.standalone || matchMedia("(display-mode: standalone)").matches ||
+    /[?&]native=1(?:&|$)/.test(location.search) || window.Capacitor?.isNativePlatform?.();
+  const update = () => {
+    button.hidden = !!installed();
+    $("install-app").hidden = !!installed();
+  };
+  window.addEventListener("beforeinstallprompt", event => {
+    event.preventDefault();
+    installPrompt = event;
+  });
+  window.addEventListener("appinstalled", () => {
+    installPrompt = null;
+    button.hidden = true;
+    $("install-app").hidden = true;
+  });
+  button.addEventListener("click", async event => {
+    if (!installPrompt) return;
+    event.preventDefault();
+    const prompt = installPrompt;
+    installPrompt = null;
+    try { await prompt.prompt(); await prompt.userChoice; }
+    catch { location.hash = "install-app"; }
+  });
+  matchMedia("(display-mode: standalone)").addEventListener("change", update);
+  update();
+  if ("serviceWorker" in navigator && !window.Capacitor?.isNativePlatform?.()) {
+    navigator.serviceWorker.register("/sw.js").catch(() => {});
+  }
+}

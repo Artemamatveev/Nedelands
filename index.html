@@ -20,7 +20,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=bittie1">
 <link rel="manifest" href="/manifest.json?v=bittie1">
 <script src="/ios-startup-v1.js" defer></script>
-<link rel="stylesheet" href="/landing.css?v=features13">
+<link rel="stylesheet" href="/landing.css?v=install1">
 <script>
 // Browser visits start with the homepage, including returning learners on phones and tablets.
 // Installed launches enter practice; an explicit Website home link stays on the public homepage.
@@ -41,7 +41,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Bittertalen","url":"https://bittertalen.nl/","applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":"nl","educationalLevel":["A2","B1"],"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}
 </script>
-<script defer src="/landing.js?v=ref1"></script>
+<script defer src="/landing.js?v=install1"></script>
 <script defer src="/lib/gsap-3.15.1.min.js"></script>
 <script defer src="/lib/ScrollTrigger-3.15.1.min.js"></script>
 <script defer src="/landing-motion-v3.js?v=features10"></script>
@@ -73,6 +73,7 @@
     <div class="hero-copy">
       <h1 id="intro" data-t>Oefen Nederlands op jouw tempo</h1>
       <p class="lead" data-t>Bereid je voor op je inburgeringsexamen of Staatsexamen NT2. Doe een korte les, oefen een onderdeel of maak een proefexamen met een timer.</p>
+      <a class="button outline" id="download-app" href="#install-app"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg><span data-t>Download de app</span></a>
     </div>
     <figure class="hero-art">
       <button class="preview-motion" id="preview-motion" type="button" aria-pressed="true" hidden><span aria-hidden="true">Ⅱ</span><span data-t>Animatie</span></button>
@@ -219,6 +220,14 @@
         <a class="button outline" href="/oefenen?open=plus" data-t>Kies de Examenpas</a>
       </article>
     </div>
+  </section>
+
+  <section id="install-app" class="block faq" aria-labelledby="install-title">
+    <h2 id="install-title" data-t>Download de app</h2>
+    <p data-t>Zet Bittertalen gratis op je beginscherm. Geen account nodig.</p>
+    <details><summary>iPhone / iPad</summary><p data-t>Open deze website in Safari. Tik op Deel en daarna op Zet op beginscherm.</p></details>
+    <details><summary>Android</summary><p data-t>Open deze website in Chrome. Tik op het menu ⋮ en kies App installeren of Toevoegen aan startscherm.</p></details>
+    <details><summary data-t>Computer</summary><p data-t>Open deze website in Chrome of Edge. Klik op het installatiepictogram in de adresbalk of kies Deze pagina als app installeren in het browsermenu.</p></details>
   </section>
 
   <section id="vragen" class="block faq">

@@ -317,3 +317,7 @@ html:has(.feature-grid .is-animating) {overflow-anchor:none}
 .footer-legal .footer-placeholder {font-size:12px}
 .footer-owner a {font-size:inherit;overflow-wrap:anywhere}
 @media(max-width:640px){.footer-top{align-items:flex-start;flex-direction:column}.footer-legal .actions{gap:10px 18px}.footer-owner span{display:inline-block}}
+
+#download-app {gap:10px}
+#download-app svg {flex:none}
+#install-app {scroll-margin-top:160px}
