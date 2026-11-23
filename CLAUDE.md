@@ -838,7 +838,10 @@ conversation. Two parts:
   the server with `GOOGLE_TTS_KEY` (a Vercel env var: the user adds it in the dashboard, never in chat); without it, or
   when Google fails, the page uses the phone's voice. The MP3 comes back as base64 and plays from a blob URL on the
   shared `sayA` element, which `aiUnlock()` starts with a moment of silence inside the tap (iPhone plays sound only from
-  a tap). ▶ replays a line a little slower.
+  a tap); it also starts the phone's speech synthesis with a silent utterance there, or the phone's voice stays mute
+  after the network wait (the user heard nothing on 23 November 2026). A random person starts the conversation
+  in the same tap as "Praat met iemand" (`aiTalk(id, true)`), so the greeting is heard at once; a situation waits for
+  "Begin het gesprek" so the task can be read first. ▶ replays a line a little slower.
 - The learner speaks through `listen("say", …, SPK, AI_QUIET)`: the `auto` argument ends the take after 1.8 s of silence,
   like a call. After the first spoken answer the next turn starts listening by itself when the other person stops
   talking (falls back to the button when the phone refuses the microphone without a tap). Typing always works.

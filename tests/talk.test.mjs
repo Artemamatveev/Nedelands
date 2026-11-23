@@ -192,3 +192,16 @@ test('Every person has a persona and openers; historical people stay in their ow
   await t.call({go:'say',token,history:[{t:reply},{me:true,t:'Ja, ik hou van schilderen.'}]});
   assert.match(t.bodies[0].system,/Arles/);assert.match(t.bodies[0].system,/stay in your own time/);
 });
+
+test('A random person greets at once; a situation waits until the learner has read the task', async()=>{
+  const sent=[];
+  const fetch=async(url,init)=>{if(url!=='/api/talk')return new Response(JSON.stringify(url==='/api/config'?{}:[]));
+    const b=JSON.parse(init.body);sent.push(b);return new Response(JSON.stringify({token:'tok',reply:'Hoi!',audio:null,left:1,limit:2,period:'once'}))};
+  const a=await app({fetch});
+  a.run('aiAny()');await a.flush();
+  assert.equal(sent.length,1);assert.equal(sent[0].go,'start');
+  assert.match(a.document.querySelector('#tlog').textContent,/Hoi!/);
+  a.run('aiTalk("apotheek")');await a.flush();
+  assert.equal(sent.length,1,'no start before Begin het gesprek');
+  assert.ok(a.document.querySelector('#aigo'));
+});
