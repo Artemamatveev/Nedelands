@@ -208,22 +208,22 @@ test('A random person greets at once; a situation waits until the learner has re
   assert.ok(a.document.querySelector('#aigo'));
 });
 
-async function voiceConversation({failOnce=false,refuse=false}={}){
+async function voiceConversation({failOnce=false,refuse=false,globals={},audio=null}={}){
   const requests=[],instances=[];
   class Recognition{
-    constructor(){instances.push(this)}
-    start(){if(refuse)throw Error('gesture required')}
+    constructor(){instances.push(this);this.starts=0;this.aborts=0}
+    start(){this.starts++;if(refuse)throw Error('gesture required')}
     stop(){this.onend?.()}
-    abort(){this.onend?.()}
+    abort(){this.aborts++;this.onend?.()}
     result(text){this.onresult?.({results:[[{transcript:text}]]})}
   }
   const fetch=async(url,init)=>{
     if(url!=='/api/talk')return new Response(JSON.stringify(url==='/api/config'?{}:[]));
     const b=JSON.parse(init.body);requests.push(b);
     if(b.go==='say'&&failOnce){failOnce=false;throw Error('offline')}
-    return new Response(JSON.stringify(b.go==='start'?{token:'tok',reply:'Hoe was je dag?'}:{reply:'Ik heb vandaag gewerkt.',done:false}));
+    return new Response(JSON.stringify(b.go==='start'?{token:'tok',reply:'Hoe was je dag?',audio}:{reply:'Ik heb vandaag gewerkt.',audio,done:false}));
   };
-  const a=await app({fetch,globals:{SpeechRecognition:Recognition}});
+  const a=await app({fetch,globals:{SpeechRecognition:Recognition,...globals}});
   a.run('aiTalk("saskia")');await a.run('aiStart()');await a.flush();
   return {a,requests,instances};
 }
@@ -308,4 +308,76 @@ test('Conversation menus separate random people from grouped daily situations an
   assert.equal(a.document.getElementById(again.dataset.aigroup).hidden,true);
   a.document.querySelector('[data-aimenu="people"]').click();assert.ok(a.document.getElementById('aiany'));
   assert.deepEqual(a.errors,[]);
+});
+
+
+function bufferVoice(){
+  const sources=[];let mediaPlays=0,decodes=0;
+  class Context{
+    state='running';sampleRate=24000;destination={};
+    resume(){return Promise.resolve()}
+    createBuffer(){return {silence:true}}
+    async decodeAudioData(){decodes++;return {voice:true}}
+    createBufferSource(){const s={playbackRate:{value:1},connect(){},disconnect(){},start(){sources.push(this)},stop(){this.stopped=true}};return s}
+  }
+  class Audio{
+    paused=true;ended=false;
+    pause(){this.paused=true}
+    play(){mediaPlays++;this.paused=false;return Promise.resolve()}
+    addEventListener(){}
+  }
+  return {sources,globals:{AudioContext:Context,Audio,atob:s=>Buffer.from(s,'base64').toString('binary')},get mediaPlays(){return mediaPlays},get decodes(){return decodes}};
+}
+
+test('Five spoken replies including the third use fresh recognition after Web Audio playback',async()=>{
+  const voice=bufferVoice();
+  const {a,instances,requests}=await voiceConversation({globals:voice.globals,audio:'QUJD'});
+  assert.equal(a.run('rec'),null,'do not listen over the greeting');
+  for(let turn=1;turn<=5;turn++){
+    const source=voice.sources.at(-1);assert.equal(source.buffer.voice,true);source.onended();await a.flush();
+    assert.equal(instances.length,turn,'each answer gets a fresh recogniser');
+    const native=instances.at(-1),take=a.run('rec');assert.ok(take);
+    native.result('Dit is antwoord '+turn);
+    a.timers.get(take.quiet).fn();await a.flush();
+    assert.equal(requests.at(-1).history.filter(l=>l.me).length,turn);
+    assert.equal(requests.at(-1).history.at(-1).t,'Dit is antwoord '+turn);
+    assert.equal(native.aborts,1,'release recognition before playing the reply');
+    assert.equal(native.onresult,null,'old recogniser cannot leak results into the next take');
+  }
+  assert.equal(voice.mediaPlays,0,'HTML audio must never play between microphone turns');
+  assert.equal(voice.decodes,6);assert.deepEqual(a.errors,[]);
+});
+
+test('An iOS recogniser that silently goes deaf offers a fresh retry without losing conversation history',async()=>{
+  const {a,instances,requests}=await voiceConversation();
+  for(let i=0;i<2;i++){
+    const take=a.run('rec');instances.at(-1).result('Mijn antwoord '+i);
+    a.timers.get(take.quiet).fn();await a.flush();
+  }
+  const third=a.run('rec'),dead=instances.at(-1);assert.equal(instances.length,3);
+  a.timers.get(third.watchTimer).fn();await a.flush();
+  assert.equal(a.run('rec'),null);assert.equal(a.run('AK.n'),2);assert.equal(requests.length,3);
+  assert.equal(dead.onresult,null);
+  assert.match(a.document.getElementById('recn').textContent,/Tik op Spreek/);
+  a.document.getElementById('recb').click();await a.flush();assert.equal(instances.length,4);
+  const retry=a.run('rec');instances.at(-1).result('Mijn derde antwoord');
+  a.timers.get(retry.quiet).fn();await a.flush();
+  assert.equal(a.run('AK.n'),3);assert.equal(requests.at(-1).history.at(-1).t,'Mijn derde antwoord');
+  assert.equal(requests.at(-1).history.filter(l=>l.me).length,3);
+});
+
+test('Old permission and silence timers cannot stop a newer answer',async()=>{
+  const {a,instances}=await voiceConversation();const first=a.run('rec');
+  const permission=[...a.timers.values()].find(t=>t.delay===1500).fn,watch=a.timers.get(first.watchTimer).fn;
+  instances[0].result('Mijn eerste antwoord');a.run('recEnd(true)');await a.flush();
+  const second=a.run('rec');second.fail=true;
+  permission();watch();assert.equal(a.run('rec'),second);assert.equal(second.fin,false);
+});
+
+test('Stopping a conversation stops Web Audio and a late decode cannot reopen its microphone',async()=>{
+  const voice=bufferVoice(),{a}=await voiceConversation({globals:voice.globals,audio:'QUJD'});
+  const source=voice.sources.at(-1);assert.equal(source.buffer.voice,true);
+  a.run('home()');assert.equal(source.stopped,true);assert.equal(source.onended,null);assert.equal(a.run('rec'),null);
+  a.run('aiTalk("saskia");AK.tok="tok";aiHear("Hoi!","QUJD",false);home()');await a.flush();
+  assert.equal(a.run('rec'),null);assert.equal(voice.sources.at(-1),source);
 });

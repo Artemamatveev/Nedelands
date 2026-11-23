@@ -1813,7 +1813,7 @@ const canSpeak="speechSynthesis" in window&&typeof SpeechSynthesisUtterance!=="u
 // per line, named by sayKeys(); audio/index.json lists them. Anything else (own books, Claude's corrections, a
 // word from the dictionary) falls back to the phone's Dutch voice. speak() stays synchronous, so the first line starts
 // inside the tap (iPhone only plays sound from a tap); the next lines follow on the same audio element.
-let VOICE=null,sayN=0,sayOn=false;const sayA=new Audio();
+let VOICE=null,sayN=0,sayOn=false,aiCtx=null,aiSource=null;const sayA=new Audio();
 fetch("/audio/index.json").then(r=>r.ok?r.json():[]).then(a=>{VOICE=new Set(a)}).catch(()=>{});
 function vkey(s){let a=0xdeadbeef,b=0x41c6ce57;for(let i=0,c;i<s.length;i++){c=s.charCodeAt(i);a=Math.imul(a^c,2654435761);b=Math.imul(b^c,1597334677)}
   a=Math.imul(a^a>>>16,2246822507)^Math.imul(b^b>>>13,3266489909);b=Math.imul(b^b>>>16,2246822507)^Math.imul(a^a>>>13,3266489909);
@@ -1833,7 +1833,8 @@ function tmFlush(){ if(tmAcc<1)return; const d=String(today()),old=today()-400; 
 setInterval(()=>{ if(document.visibilityState==="visible"&&(Date.now()-tmLast<9e4||speaking())){tmAcc+=15;if(tmAcc>=60)tmFlush()} },15000);
 addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")tmFlush()});
 addEventListener("pagehide",tmFlush);
-function stopSpeak(){sayN++;sayOn=false;sayA.pause();try{if(canSpeak)speechSynthesis.cancel()}catch(e){}}
+function aiVoiceStop(){const source=aiSource;aiSource=null;if(source){source.onended=null;try{source.stop();source.disconnect()}catch(e){}}}
+function stopSpeak(){sayN++;sayOn=false;aiVoiceStop();if(!sayA.paused&&!sayA.ended)sayA.pause();try{if(canSpeak&&(speechSynthesis.speaking||speechSynthesis.pending))speechSynthesis.cancel()}catch(e){}}
 // The phone's voice: left unset, so the phone uses the Dutch (nl-NL) voice picked in its settings;
 // in a dialogue ("A: …" / "B: …" lines) speaker B gets a higher pitch, so the two people sound different
 function utter(l,done){const m=l.match(/^([A-C]): (.*)$/),u=new SpeechSynthesisUtterance(m?m[2]:l);u.lang="nl-NL";u.rate=.95;if(m)u.pitch={A:.9,B:1.35,C:1.1}[m[1]];
@@ -1921,6 +1922,8 @@ async function listen(mode,done,lim=SPK,auto=0){ // auto: in a conversation, end
   }
   r.start=Date.now(); r.end=r.start+lim*1e3; rec=r;
   if(mode==="say"&&SR)try{
+    // Reusing a recogniser after TTS can leave iOS listening without receiving any words.
+    if(auto&&sr){try{sr.abort()}catch(e){}sr=null}
     if(!sr){sr=new SR();sr.lang="nl-NL";sr.continuous=true;sr.interimResults=true}
     r.sr=sr;
     sr.onresult=e=>{if(r.fin)return;let t="";for(let i=0;i<e.results.length;i++)t+=e.results[i][0].transcript+" ";if(t.trim())r.part=t.trim();
@@ -1929,13 +1932,15 @@ async function listen(mode,done,lim=SPK,auto=0){ // auto: in a conversation, end
         // A final result is the recogniser's sentence boundary; interim words need a longer thinking pause.
         const final=e.results.length>0&&e.results[e.results.length-1].isFinal===true;
         clearTimeout(r.quiet);r.quiet=setTimeout(()=>{if(rec===r&&saidText(r))recEnd(true)},final?Math.min(r.auto,1200):r.auto)}};
-    sr.onerror=e=>{if(/not-allowed|service-not-allowed|audio-capture|language-not-supported/.test(e.error))r.fail=true};
+    sr.onerror=e=>{if(r.fin)return;if(/not-allowed|service-not-allowed|audio-capture|language-not-supported|network/.test(e.error)){
+      r.fail=true;if(r.auto)setTimeout(()=>{if(rec===r)recEnd(true)},0)}};
     // Recognition stops by itself after a pause: start it again while the minute runs
     sr.onend=()=>{if(r.fin)return;if(r.part){r.said.push(r.part);r.part=""}
       if(r.stopping||rec!==r)return recDone(r);
       if(r.fail){r.sr=null;$("recn").textContent="Meeschrijven lukt hier niet. Spreek toch hardop: de tijd loopt.";return}
-      try{sr.start()}catch(e){}};
-    try{sr.start()}catch(e){setTimeout(()=>{if(rec===r)try{sr.start()}catch(e){r.fail=true}},400)} // the previous take may still be stopping
+      r.restart=setTimeout(()=>{if(rec!==r||r.fin||r.stopping)return;
+        try{r.sr.start()}catch(e){r.fail=true;if(r.auto)recEnd(true)}},200)};
+    try{r.sr.start()}catch(e){r.restart=setTimeout(()=>{if(rec===r)try{r.sr.start()}catch(e){r.fail=true;if(r.auto)recEnd(true)}},400)} // the previous take may still be stopping
   }catch(e){r.sr=null}
   const doneLabel=cur?.exam&&cur.speak?"Antwoord klaar":"Stop";
   $("recn").textContent=mode==="rec"?(r.mr?`Spreek nu. Tik op ${doneLabel} als je klaar bent.`:"Opnemen lukt hier niet. Spreek toch hardop: de tijd loopt.")
@@ -1971,7 +1976,12 @@ function recEnd(keep){
   if(r.stream)r.stream.getTracks().forEach(t=>t.stop());
 }
 function recDone(r){
-  if(r.fin)return; r.fin=true;if(rec===r)rec=null;clearTimeout(r.finishTimer);clearTimeout(r.quiet);r.box.removeAttribute("aria-busy");
+  if(r.fin)return; r.fin=true;if(rec===r)rec=null;clearTimeout(r.finishTimer);clearTimeout(r.quiet);clearTimeout(r.restart);clearTimeout(r.watchTimer);r.box.removeAttribute("aria-busy");
+  if(r.auto&&r.sr){
+    // Release the old iOS audio session before the next reply; late events cannot reach the next take.
+    if(sr===r.sr)sr=null;r.sr.onresult=r.sr.onerror=r.sr.onend=null;
+    try{r.sr.abort()}catch(e){}
+  }
   if(!r.keep||r.box!==$("rec"))return;
   const s=Math.min(r.lim,Math.round((r.stop-r.start)/1e3));
   r.text=saidText(r); r.url=r.chunks.length?URL.createObjectURL(new Blob(r.chunks,{type:r.mr.mimeType||""})):"";
@@ -3972,17 +3982,25 @@ function aiReady(msg){
     <p class="note">Dit kost 1 nakijkbeurt. Zet het geluid aan.</p>${freeNote()}`;
   $("aigo").onclick=aiStart;
 }
-// iPhone plays sound only from a tap: the first play of the (shared) audio element happens inside the tap, with a
-// fraction of a second of silence, so the replies that come later may play on it too
+// Unlock Web Audio in the tap. HTMLAudioElement playback between recognition sessions can make iOS go deaf
+// (WebKit 321436); conversation MP3s use buffer sources instead. Older browsers keep the audio-element fallback.
 let aiSilent=null;
 function aiUnlock(){
+  stopSpeak();
   try{
-    if(!aiSilent){const n=400,b=new Uint8Array(44+n),v=new DataView(b.buffer),w=(o,x)=>[...x].forEach((ch,i)=>b[o+i]=ch.charCodeAt(0));
-      w(0,"RIFF");v.setUint32(4,36+n,true);w(8,"WAVEfmt ");v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);
-      v.setUint32(24,8000,true);v.setUint32(28,8000,true);v.setUint16(32,1,true);v.setUint16(34,8,true);w(36,"data");v.setUint32(40,n,true);b.fill(128,44);
-      aiSilent=URL.createObjectURL(new Blob([b],{type:"audio/wav"}))}
-    stopSpeak();sayA.src=aiSilent;sayA.play().catch(()=>{});
-    // the phone's own voice (without Google's) is also allowed only from a tap: start it once, silently, inside this one
+    const Context=window.AudioContext||window.webkitAudioContext;
+    if(Context){
+      if(!aiCtx||aiCtx.state==="closed")aiCtx=new Context();
+      aiCtx.resume().catch(()=>{});
+      const source=aiCtx.createBufferSource();source.buffer=aiCtx.createBuffer(1,1,aiCtx.sampleRate);
+      source.connect(aiCtx.destination);source.onended=()=>source.disconnect();source.start();
+    }else{
+      if(!aiSilent){const n=400,b=new Uint8Array(44+n),v=new DataView(b.buffer),w=(o,x)=>[...x].forEach((ch,i)=>b[o+i]=ch.charCodeAt(0));
+        w(0,"RIFF");v.setUint32(4,36+n,true);w(8,"WAVEfmt ");v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);
+        v.setUint32(24,8000,true);v.setUint32(28,8000,true);v.setUint16(32,1,true);v.setUint16(34,8,true);w(36,"data");v.setUint32(40,n,true);b.fill(128,44);
+        aiSilent=URL.createObjectURL(new Blob([b],{type:"audio/wav"}))}
+      sayA.src=aiSilent;sayA.play().catch(()=>{});
+    }
     if(canSpeak){const u=new SpeechSynthesisUtterance(" ");u.lang="nl-NL";u.volume=0;speechSynthesis.speak(u)}
   }catch(e){}
 }
@@ -4004,19 +4022,33 @@ async function aiStart(){
 }
 // The other person's line: shown, then spoken; then it is the learner's turn (or the end)
 function aiHear(t,audio,done){
-  let url="";
-  if(audio)try{url=URL.createObjectURL(new Blob([Uint8Array.from(atob(audio),ch=>ch.charCodeAt(0))],{type:"audio/mpeg"}))}catch(e){}
-  const l={t,url}; AK.log.push(l); aiDraw();
+  let url="",bytes=null;
+  if(audio)try{bytes=Uint8Array.from(atob(audio),ch=>ch.charCodeAt(0));url=URL.createObjectURL(new Blob([bytes],{type:"audio/mpeg"}))}catch(e){}
+  const l={t,url,bytes}; AK.log.push(l); aiDraw();
   if(done){AK.done=true;$("tctl").innerHTML="";aiPlay(l,()=>{});return aiEnd()}
   aiTurn(); const k=AK;
   aiPlay(l,()=>{if(AK===k&&!k.busy&&!rec&&k.mic&&SR&&$("rec"))aiRec()});
 }
 function aiPlay(l,done,slow){
-  stopSpeak(); const n=sayN,end=()=>{if(n!==sayN)return;sayOn=false;aiSpk(false);done&&done()},
-    alt=()=>{if(n!==sayN)return;try{canSpeak?utter(l.t,end):end()}catch(e){end()}};
+  stopSpeak(); const n=sayN;let finished=false;
+  const end=()=>{if(n!==sayN||finished)return;finished=true;sayOn=false;aiSpk(false);done&&done()},
+    alt=()=>{if(n!==sayN||finished)return;try{canSpeak?utter(l.t,end):end()}catch(e){end()}};
   aiSpk(true);
   if(!l.url)return alt();
-  sayOn=true;sayA.onended=end;sayA.onerror=alt;sayA.src=l.url;sayA.playbackRate=slow?.85:1;sayA.play().catch(alt);
+  sayOn=true;
+  if(aiCtx&&l.bytes){
+    Promise.resolve().then(async()=>{
+      await aiCtx.resume();
+      if(!l.buffer)l.buffer=await aiCtx.decodeAudioData(l.bytes.slice().buffer);
+      if(n!==sayN||finished)return;
+      if(aiCtx.state!=="running")return alt();
+      const source=aiCtx.createBufferSource();source.buffer=l.buffer;source.playbackRate.value=slow?.85:1;
+      source.connect(aiCtx.destination);aiSource=source;
+      source.onended=()=>{source.disconnect();if(aiSource===source)aiSource=null;end()};source.start();
+    }).catch(alt);
+    return;
+  }
+  sayA.onended=end;sayA.onerror=alt;sayA.src=l.url;sayA.playbackRate=slow?.85:1;sayA.play().catch(alt);
 }
 function aiSpk(on){const a=$("aiav"),s=$("aist");if(a)a.classList.toggle("on",on);if(s&&AK)s.textContent=on?"spreekt":""}
 function aiDraw(){
@@ -4040,14 +4072,19 @@ function aiTurn(note,keep){
 function aiRec(){
   const k=AK; if(!k||k.busy||k.ending||k.done||rec)return;
   listen("say",r=>{if(aiOn(k)&&!k.ending)aiHeard(r)},SPK,AI_QUIET);
-  // the phone may refuse the microphone without a tap: then the button asks for one
-  setTimeout(()=>{const r=rec;if(AK!==k||!r||!r.fail||saidText(r))return;recEnd(false);const b=$("recb");if(!b)return;
-    b.textContent="● Spreek";b.className="btn wide";b.disabled=false;b.onclick=()=>{k.mic=true;aiRec()};$("recn").textContent="Tik op Spreek om te antwoorden."},1500);
+  const take=rec;
+  // A recogniser can go deaf without emitting error/end on iOS. Never leave a fake listening state for a minute.
+  if(take)take.watchTimer=setTimeout(()=>{
+    if(AK!==k||rec!==take||take.fin||take.stopping||saidText(take))return;
+    take.fail=true;recEnd(true);
+  },8000);
+  // Scope this check to this take: an old timer must not cancel a later answer.
+  setTimeout(()=>{if(AK!==k||rec!==take||!take||!take.fail||saidText(take))return;recEnd(true)},1500);
 }
 function aiHeard(r){
   const b=$("recb"); if(!b||!AK)return;
   b.textContent="● Spreek";b.className="btn wide";b.onclick=()=>{AK.mic=true;aiRec()}; $("recp").innerHTML="";
-  if(!r.text){AK.mic=false;$("recn").textContent=r.fail?"Meeschrijven lukt hier niet. Typ je antwoord.":"Ik heb niets verstaan. Tik op Spreek en praat wat harder.";return}
+  if(!r.text){AK.mic=false;$("recn").textContent=r.fail?"De microfoon geeft geen tekst door. Tik op Spreek en zeg je antwoord opnieuw, of typ het hieronder.":"Ik heb niets verstaan. Tik op Spreek en praat wat harder.";return}
   aiSend(r.text);
 }
 async function aiSend(t){

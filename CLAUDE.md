@@ -836,15 +836,22 @@ conversation. Two menu buttons (aiMenu remembers the choice when returning from 
   which also go to Mijn fouten (`keepErrs()`). Tokens go to `ai_spend`. Nothing of the conversation is stored or logged.
 - The voice: Google Chirp 3 HD (Vindemiatrix for women, Charon for men, like the recordings), synthesised per reply by
   the server with `GOOGLE_TTS_KEY` (a Vercel env var: the user adds it in the dashboard, never in chat); without it, or
-  when Google fails, the page uses the phone's voice (a synthesis request times out after 2.5 s). Synthesis runs in parallel with spend accounting. The MP3 comes back as base64 and plays from a blob URL on the
-  shared `sayA` element, which `aiUnlock()` starts with a moment of silence inside the tap (iPhone plays sound only from
-  a tap); it also starts the phone's speech synthesis with a silent utterance there, or the phone's voice stays mute
+  when Google fails, the page uses the phone's voice (a synthesis request times out after 2.5 s). Synthesis runs in parallel with spend accounting. The MP3 comes back as base64 and plays through Web Audio buffer sources;
+  `aiUnlock()` unlocks its context with silence inside the tap. Browsers without Web Audio use the shared `sayA` element.
+  HTML audio between recognition sessions can silently break iOS dictation (WebKit bug 321436). It also unlocks the phone's speech synthesis with a silent utterance there, or the phone's voice stays mute
   after the network wait (the user heard nothing on 23 November 2026). A random person starts the conversation
   in the same tap as "Praat met iemand" (`aiTalk(id, true)`), so the greeting is heard at once; a situation waits for
   "Begin het gesprek" so the task can be read first. ▶ replays a line a little slower.
 - The learner speaks through `listen("say", …, SPK, AI_QUIET)`: the `auto` argument ends the take after 1.2 s after a final recognition result, or 2.6 s after interim words,
   like a call. From the greeting onward, each turn starts listening by itself when the other person stops
   talking (falls back to the button when the phone refuses the microphone without a tap). Typing always works. A failed request keeps the learner’s answer in the visible conversation; retry replaces that pending turn instead of duplicating it.
+
+  In AI conversations each completed take aborts and retires its recogniser before voice playback, so iOS gets a fresh
+  recogniser for each answer; exams retain their existing shared recogniser. Restart exceptions and terminal errors
+  are handled, and an 8-second no-transcript watchdog offers a manual retry rather than waiting the whole minute.
+  Permission checks are scoped to the specific take, so old timers cannot cancel a later answer. Test doubles cover
+  five consecutive spoken replies, a deaf third take, late timers, cancellation and late audio decoding. A real iPhone
+  microphone check is still needed; automated tests cannot certify the WebKit workaround on every iOS version.
 - `/api/talk` is a rewrite to `/api/check?kind=talk` (the 12-function limit); `check.js` imports `_talk.js` only then.
   `S.ai` `{id: {n, at}}` (merged like `S.gp`); the event `ai` counts started conversations. privacy.html says, in all
   eight languages under the checking section, what goes to Anthropic and Google.
