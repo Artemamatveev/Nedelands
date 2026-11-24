@@ -864,12 +864,18 @@ conversation. Two menu buttons (aiMenu remembers the choice when returning from 
   "Klaar" (the user's choice, 24 November 2026); silence, final recognition results, natural recogniser end and the old
   one-minute limit never submit a turn. The clock shows elapsed time. After the other person finishes, listening starts
   automatically (falls back to the button when the phone refuses the microphone without a tap). A failed microphone
-  with partial text leaves an editable draft, never a model request. Uncertain transcripts also remain reviewable.
+  with partial text leaves an editable draft, never a model request. Klaar always sends what was heard, also interim or
+  uncertain words, with no second tap on Stuur (the user's complaint, 24 November 2026; a review of uncertain words came
+  in between before). After Klaar the page waits for late text: 1.5 s (`REC_TALK_MS`), 4 s when nothing arrived yet
+  (`REC_TALK_EMPTY_MS`), less once a final result or the recogniser's end comes. Text typed meanwhile counts when nothing was heard.
   Typing and Stuur remain available. A failed request keeps the learner's visible answer; retry replaces the pending turn.
 
   In AI conversations each completed take aborts and retires its recogniser before voice playback, so iOS gets a fresh
   recogniser for each answer; exams retain their existing shared recogniser. Restart exceptions and terminal errors
-  are handled, and an 8-second no-transcript watchdog offers a manual retry rather than waiting the whole minute.
+  are handled. Thinking never ends a take: the check every 8 s only fails a recogniser that never started, and quietly
+  replaces one (`r.renew()`, same take, text kept) that hears a voice without words or stays silent for two checks; after
+  three replacements it offers a retry. audio-capture and network errors without text are retried twice. A failure shows
+  its code in brackets, so a learner's report says what went wrong.
   Permission checks are scoped to the specific take, so old timers cannot cancel a later answer. Test doubles cover
   five consecutive spoken replies, a deaf third take, late timers, cancellation and late audio decoding. A real iPhone
   microphone check is still needed; automated tests cannot certify the WebKit workaround on every iOS version.
@@ -877,9 +883,8 @@ conversation. Two menu buttons (aiMenu remembers the choice when returning from 
   person, last question; fish vocabulary for Haringboer Dirk) only when SpeechRecognitionPhrase/phrases are supported.
   An unsupported-phrases error clears the hints and permits the normal restart. Do not promise this improves iOS's
   acoustic model: support varies, and speech recognition accuracy has not been measured on the user's microphone.
-  Interim or low-confidence final results (0 < confidence < .55; 0 means unavailable) get an editable draft instead
-  of being sent automatically. Close domain words with a shared ending (e.g. kering → haring in the fish conversation)
-  are suggestions, never silent substitutions. Native alternatives are shown only in that review, not on every turn.
+  Close domain words with a shared ending (e.g. kering → haring in the fish conversation) and native alternatives are
+  suggestions in the draft a stopped microphone leaves, never silent substitutions.
   A final result replaces its interim hypothesis, and the ready message waits for the recogniser's start event. No additional model calls or providers are used for these checks.
 - `/api/talk` is a rewrite to `/api/check?kind=talk` (the 12-function limit); `check.js` imports `_talk.js` only then.
   `S.ai` `{id: {n, at}}` (merged like `S.gp`); the event `ai` counts started conversations. privacy.html says, in all

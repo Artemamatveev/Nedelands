@@ -283,7 +283,7 @@ test('Final and interim results never submit a conversation before Klaar',async(
   const {a,instances,requests}=await voiceConversation();const native=instances[0],r=a.run('rec');
   native.result('Ik heb gewerkt',true);assert.equal(r.quiet,undefined);assert.equal(requests.length,1);
   native.result('Ik heb gewerkt en daarna',false);assert.equal(requests.length,1);
-  native.result('Ik heb gewerkt en daarna gekookt',true);assert.equal(a.run('rec'),r);
+  native.result('Ik heb gewerkt en daarna gekookt',true);assert.ok(a.run('rec')===r);
   assert.equal(requests.length,1);assert.match(a.document.getElementById('recb').textContent,/Klaar/);
   a.document.getElementById('recb').click();await a.flush();assert.equal(requests.length,2);
 });
@@ -383,38 +383,73 @@ test('Stopping a conversation stops Web Audio and a late decode cannot reopen it
 });
 
 
-test('Kering in the fish conversation suggests haring, preserving the original until confirmed',async()=>{
+test('A microphone that stops without Klaar leaves a draft with close words from the situation',async()=>{
   const {a,instances,requests}=await voiceConversation({topic:'haring'});
-  instances[0].result('Ik wil kering met uitjes');a.document.getElementById('recb').click();await a.flush();
-  assert.equal(requests.length,1,'do not send a likely misheard word automatically');
-  assert.equal(a.document.getElementById('tin').value,'Ik wil kering met uitjes');
+  instances[0].result('Ik wil kering met uitjes');instances[0].onerror({error:'network'});
+  [...a.timers.values()].find(t=>t.delay===0).fn();await a.flush();
+  assert.equal(requests.length,1);assert.equal(a.document.getElementById('tin').value,'Ik wil kering met uitjes');
   const choice=a.document.querySelector('[data-aichoice]');assert.equal(choice.textContent,'Ik wil haring met uitjes');
-  choice.click();assert.equal(a.document.getElementById('tin').value,'Ik wil haring met uitjes');
-  assert.equal(requests.length,1,'choosing a suggestion only edits the draft');
+  choice.click();assert.equal(requests.length,1,'choosing a suggestion only edits the draft');
   a.document.getElementById('tsend').click();await a.flush();
   assert.equal(requests[1].history.at(-1).t,'Ik wil haring met uitjes');
 });
 
-test('Tentative speech is reviewed rather than passed off as a final recognised answer',async()=>{
+test('Klaar always sends: interim, low-confidence and misheard words need no Stuur',async()=>{
+  const {a,instances,requests}=await voiceConversation({topic:'haring'});
+  instances[0].result('Ik wil kering',false);a.document.getElementById('recb').click();await a.flush();
+  assert.equal(requests.length,2);assert.equal(requests[1].history.at(-1).t,'Ik wil kering');
+  instances.at(-1).result('Met uitjes',true,.2);a.document.getElementById('recb').click();await a.flush();
+  assert.equal(requests.length,3);assert.equal(requests[2].history.at(-1).t,'Met uitjes');
+});
+
+test('Words that arrive after Klaar are still sent, on a phone that is slow and never says end',async()=>{
+  const {a,instances,requests}=await voiceConversation(),native=instances[0];
+  native.stop=()=>{};native.abort=()=>{};native.onstart();
+  a.document.getElementById('recb').click();await a.flush();
+  const r=a.run('rec');assert.equal(a.timers.get(r.finishTimer).delay,4000,'nothing heard yet: wait longest');
+  native.result('Ik ben',false);assert.equal(a.timers.get(r.finishTimer).delay,1500);
+  native.result('Ik ben moe',true);assert.equal(a.timers.get(r.finishTimer).delay,150);
+  assert.equal(requests.length,1);a.timers.get(r.finishTimer).fn();await a.flush();
+  assert.equal(requests[1].history.at(-1).t,'Ik ben moe');
+});
+
+test('Thinking for a long time keeps the microphone open; a deaf recogniser is replaced under the same answer',async()=>{
+  const {a,instances,requests}=await voiceConversation(),r=a.run('rec');
+  const check=()=>a.timers.get(r.watchTimer).fn();
+  instances[0].onstart();check();assert.ok(a.run('rec')===r);assert.equal(instances.length,1,'eight seconds of thinking changes nothing');
+  check();assert.ok(a.run('rec')===r,'still the same answer');assert.equal(instances.length,2);assert.equal(instances[0].onresult,null);
+  instances[1].onstart();instances[1].onspeechstart();check();assert.equal(instances.length,3,'a voice without words: replaced at once');
+  instances[2].onstart();instances[2].result('Ik heb even nagedacht');check();
+  a.document.getElementById('recb').click();await a.flush();
+  assert.equal(requests[1].history.at(-1).t,'Ik heb even nagedacht');
+});
+
+test('A recogniser that stays deaf ends with a retry and says why',async()=>{
+  const {a,instances}=await voiceConversation(),r=a.run('rec');
+  for(let i=0;i<12&&!r.fin;i++){instances.at(-1).onstart?.();a.timers.get(r.watchTimer).fn();await a.flush()}
+  assert.equal(r.fin,true);assert.equal(instances.length,4);assert.match(a.document.getElementById('recn').textContent,/Tik op Spreek.*\(no-text\)/);
+});
+
+test('A microphone not yet handed over after the voice is tried again before giving up',async()=>{
+  const {a,instances,requests}=await voiceConversation(),r=a.run('rec');
+  for(let i=1;i<=2;i++){const n=instances.at(-1);n.onerror({error:'audio-capture'});n.onend();
+    assert.equal(r.fail,undefined);assert.equal(a.timers.get(r.restart).delay,600);a.timers.get(r.restart).fn();assert.equal(instances.length,i+1)}
+  instances.at(-1).result('Nu hoor je mij');a.document.getElementById('recb').click();await a.flush();
+  assert.equal(requests[1].history.at(-1).t,'Nu hoor je mij');
+});
+
+test('Klaar between two recognition sessions sends at once; typed text counts when nothing was heard',async()=>{
   const {a,instances,requests}=await voiceConversation();
-  instances[0].result('Ik heb een hond',false);a.document.getElementById('recb').click();await a.flush();
-  assert.equal(requests.length,1);assert.equal(a.document.getElementById('tin').value,'Ik heb een hond');
-  assert.match(a.document.getElementById('recn').textContent,/Controleer/);
+  instances[0].result('Ik werk morgen');instances[0].stop=()=>{};instances[0].onend();
+  a.document.getElementById('recb').click();await a.flush();assert.equal(requests[1].history.at(-1).t,'Ik werk morgen');
+  a.document.getElementById('tin').value='Ik typ dit';a.document.getElementById('recb').click();await a.flush();
+  assert.equal(requests[2].history.at(-1).t,'Ik typ dit');
 });
 
 test('A final correction replaces interim words without duplication or an unnecessary review',async()=>{
   const {a,instances,requests}=await voiceConversation();
   instances[0].result('Ik heb een hand',false);instances[0].result('Ik heb een hond',true);
   a.document.getElementById('recb').click();await a.flush();assert.equal(requests[1].history.at(-1).t,'Ik heb een hond');
-});
-
-test('Low confidence speech offers native alternatives; confidence zero is treated as unavailable',async()=>{
-  const {a,instances,requests}=await voiceConversation();
-  const result=[{transcript:'Ik heb een hand',confidence:.3},{transcript:'Ik heb een hond',confidence:.25}];result.isFinal=true;
-  instances[0].onresult({results:[result]});a.document.getElementById('recb').click();await a.flush();
-  assert.equal(requests.length,1);assert.equal(a.document.querySelector('[data-aichoice]').textContent,'Ik heb een hond');
-  a.document.getElementById('recb').click();await a.flush();instances.at(-1).result('Ik heb een hond',true,0);
-  a.document.getElementById('recb').click();await a.flush();assert.equal(requests.length,2);
 });
 
 test('Recognition receives Dutch domain hints only where contextual biasing is supported',async()=>{
@@ -443,7 +478,7 @@ test('A long pause, recognition restart and expired old minute never send withou
   const restart=a.timers.get(r.restart);assert.ok(restart);restart.fn();
   native.result('een afspraak maken');r.start-=120000;r.end=Date.now()-60000;
   intervals.filter(t=>t.ms===250).forEach(t=>t.fn());
-  assert.equal(a.run('rec'),r);assert.equal(requests.length,1);assert.equal(r.stopping,undefined);
+  assert.ok(a.run('rec')===r);assert.equal(requests.length,1);assert.equal(r.stopping,undefined);
   assert.equal(a.document.getElementById('rect').textContent,'2:00');
   a.document.getElementById('recb').click();await a.flush();
   assert.equal(requests[1].history.at(-1).t,'Ik wil graag een afspraak maken');
