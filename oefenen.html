@@ -586,6 +586,13 @@ body.vfull{overflow:hidden}
 .aiav.big{width:112px;height:112px;margin:0 auto;font-size:44px;overflow:hidden}
 .aiav.pic{background:#fff}
 .aiav img{width:100%;height:100%;object-fit:cover}
+/* The approved human portrait is a still reference; no fake mouth or gesture animation. */
+.aihost{margin-top:16px}
+.aihost>img{display:block;width:100%;height:auto;max-height:280px;object-fit:cover;object-position:50% 28%;border-radius:var(--r)}
+.aihost h3{font-size:var(--fs-xl);font-weight:600;margin:14px 0 4px}
+.aiportrait{width:min(100%,300px);aspect-ratio:3/4;margin:0 auto;border-radius:var(--r);overflow:hidden;background:var(--wash);outline:2px solid transparent;outline-offset:3px;transition:outline-color .2s}
+.aiportrait img{display:block;width:100%;height:100%;object-fit:cover}
+.aiportrait.on{outline-color:var(--oranje)}
 .aiany{margin:16px 0 4px}
 .aifix{margin-top:4px!important;font-size:var(--fs-m)}
 .aifix span{display:block;color:var(--soft)}
@@ -2228,7 +2235,7 @@ function home(){
   $("books").innerHTML=itHTML(`data-x="books"`,"Boekenkast",lb?`Je leest nu: ${esc(lb.t)}, blz. ${lb.p+1}`:"Verhalen en je eigen e-books.",{ic:"books"})
     +itHTML(`data-x="hist"`,"Geschiedenis van Nederland",lh?`Je was bij: ${lh.t}`:"Van de hunebedden tot nu.",{n:gsDone?`${gsDone} van ${GS.length}`:null,ic:"hist"})
     +itHTML(`data-x="media"`,"Luisteren en kijken","Nieuws, video's en podcasts.",{ic:"media"})
-    +itHTML(`data-x="ai"`,"Gesprekken","Praat met AI: met je buurvrouw, de slager of Van Gogh.",{n:(n=>n?`${n} van ${aiIds().length}`:null)(aiIds().filter(id=>(S.ai||{})[id]).length),ic:"talk"});
+    +itHTML(`data-x="ai"`,"Gesprekken","Praat met Saskia over je dag, Nederland en kunst.",{n:(n=>n?`${n} van ${aiIds().length}`:null)(aiIds().filter(id=>(S.ai||{})[id]).length),ic:"talk"});
   $("mine").innerHTML=itHTML(`data-x="stats"`,"Kies een lastig onderwerp","Waar je de meeste fouten maakt.",{ic:"stats"})
     +((S.errs||[]).length?itHTML(`data-x="errs"`,"Oefen met je eigen fouten","Kies de juiste versie van zinnen uit je eerdere teksten en antwoorden.",{n:S.errs.length,ic:"errs"}):"")
     +((S.words||[]).length?itHTML(`data-x="words"`,"Mijn woorden","Die je bij het lezen hebt bewaard.",{n:S.words.length,ic:"words"}):"")
@@ -3928,7 +3935,7 @@ function talkEnd(){
 // (not the ONA ones), which the server gives Claude as a model conversation (api/_scenes.js, tools/build-scenes.mjs).
 // Ids and who (and a situation's task) must match TOPICS in api/_talk.js (tests/talk.test.mjs).
 const PEOPLE=[
-  {id:"saskia",who:"Saskia",wie:"Je vriendin uit Utrecht"},
+  {id:"saskia",who:"Saskia",wie:"Je gastvrouw in het museumcafé",portrait:"/art/characters/saskia-museum-v1.jpg"},
   {id:"jansen",who:"Mevrouw Jansen",wie:"Je buurvrouw"},
   {id:"slager",who:"Slager Henk",wie:"In de slagerij"},
   {id:"collega",who:"Collega Mo",wie:"Je collega, bij de koffieautomaat"},
@@ -3943,16 +3950,11 @@ const PEOPLE=[
   {id:"vermeer",who:"Johannes Vermeer",wie:"Schilder · Delft, 1665",av:"schilder"},
   {id:"visser",who:"Jan uit Volendam",wie:"Vissersjongen · Volendam, 1910",av:"volm"},
 ];
-function aiAny(){
-  const recent=(lsGet("ww-ai-recent")||"").split(","),mo=new Date().getMonth(),
-    open=PEOPLE.filter(p=>!p.m||p.m.includes(mo)),L=open.filter(p=>!recent.includes(p.id)),
-    p=(L.length?L:open)[Math.floor(Math.random()*(L.length||open.length))];
-  lsSet("ww-ai-recent",[p.id,...recent.filter(x=>x&&x!==p.id)].slice(0,6).join(","));
-  aiTalk(p.id,true);
-}
+// Saskia is the recurring host. Historical/seasonal ids remain readable for older sessions and progress.
+function aiAny(){aiTalk("saskia",true)}
 const aiScene=i=>({id:GP[i].id,who:GP[i].w,t:GP[i].t,s:GP[i].s,task:GP[i].o,p:GP[i].p,g:gpGroup(i),b1:GP[i].b1});
 const aiScenes=()=>{const L=GP.map((c,i)=>c.ona?null:aiScene(i)).filter(Boolean);return lvl()==="B1"?L.filter(c=>c.b1).concat(L.filter(c=>!c.b1)):L}; // at B1 the B1 group first
-const aiIds=()=>PEOPLE.map(c=>c.id).concat(aiScenes().map(c=>c.id));
+const aiIds=()=>["saskia",...aiScenes().map(c=>c.id)];
 const aiTopic=id=>PEOPLE.find(c=>c.id===id)||aiScenes().find(c=>c.id===id);
 let AK=null; // the open conversation: {c, log:[{me, t, url, fix}], tok, n, busy, mic}
 const aiOn=k=>AK===k&&!$("talk").hidden&&!!$("tlog"); // still on this conversation's screen (a late answer must not land elsewhere)
@@ -3969,8 +3971,9 @@ function aiList(menu){
     </div>
     <p class="note"><span>Elk gesprek kost 1 nakijkbeurt.</span>${SR?"":` <span>Meeschrijven lukt hier niet: je typt je antwoorden.</span>`}</p>${freeNote()}`;
   if(aiMenu==="people"){
-    h+=`<p class="note">Elke keer iemand anders: je buurvrouw, de slager, Van Gogh…</p>
-      <button class="btn wide aiany" id="aiany">Praat met iemand</button>`;
+    h+=`<div class="aihost"><img src="/art/characters/saskia-museum-v1.jpg" alt="" width="768" height="1024">
+      <h3>Saskia</h3><p class="note">Je ontmoet Saskia in het museumcafé. Praat over je dag, Nederland en kunst.</p>
+      <button class="btn wide aiany" id="aiany">Praat met Saskia</button></div>`;
   }else{
     h+=`<p class="note">Kies een onderwerp en daarna een gesprek.</p><div class="list">`;
     const groups=[...new Set(aiScenes().map(c=>c.g))];
@@ -4000,7 +4003,7 @@ function aiTalk(id,go){ // go: start at once (a person picked by the learner's t
   $("tbody").innerHTML=`<div lang="nl">`+(c.task
     ?`<p class="ask">${c.g}</p><h2>${esc(c.t)}</h2>`+(c.p?picsHTML([c.p]):"")+`<p class="ask">Jouw opdracht</p><div class="sample">${esc(c.task)}</div>
     <div class="aic"><span class="aiav" id="aiav" aria-hidden="true">${init}</span><span><b>${esc(c.who)}</b><span class="aist" id="aist"></span></span></div>`
-    :`<div class="aip"><span class="aiav big${c.av?" pic":""}" id="aiav" aria-hidden="true">${c.av?`<img src="/art/avatars/${c.av}.jpg" alt="">`:init}</span>
+    :`<div class="aip${c.portrait?" human":""}">${c.portrait?`<div class="aiportrait" id="aiav" aria-hidden="true"><img src="${esc(c.portrait)}" alt="" width="768" height="1024"></div>`:`<span class="aiav big${c.av?" pic":""}" id="aiav" aria-hidden="true">${c.av?`<img src="/art/avatars/${c.av}.jpg" alt="">`:init}</span>`}
     <h2>${esc(c.who)}</h2><p class="sub">${esc(c.wie)}</p><span class="aist" id="aist"></span></div>`)
     +`    <div class="talk" id="tlog" aria-live="polite"></div><div id="tctl"></div></div>`;
   document.querySelectorAll("#tbody [data-pic]").forEach(b=>b.onclick=()=>zoomPic(b.dataset.pic));
@@ -4044,7 +4047,7 @@ async function aiPost(body){
 }
 const aiWhy=c=>noCheck(c)?noCheck(c)+offerHTML(c):c==="offline"?"Geen verbinding. Probeer het opnieuw.":c==="not_configured"?"Praten met AI is nog niet ingesteld.":c==="rate_limited"?"Te veel verzoeken achter elkaar. Wacht een minuut en probeer het opnieuw.":"Dat lukte niet. Probeer het opnieuw.";
 async function aiStart(){
-  const k=AK; aiUnlock(); $("aigo").disabled=true; $("aigo").textContent="Even bellen…";
+  const k=AK; aiUnlock(); $("aigo").disabled=true; $("aigo").textContent="Een moment…";
   const j=await aiPost({go:"start",topic:k.c.id,level:lvl()});
   chkCount(j,lvl());
   if(!aiOn(k))return;
@@ -4172,8 +4175,8 @@ async function aiEnd(){
   const k=AK; if(!k||k.ending)return; k.ending=true;
   const c=k.c, L=aiScenes(), nx=c.task&&L[(L.findIndex(x=>x.id===c.id)+1)%L.length];
   const tail=nx?`<button class="btn wide" id="ainx">Volgende: ${esc(nx.t)}</button><button class="ghost wide" id="aire">Nog een keer</button>`
-      :`<button class="btn wide" id="ainx">Praat met iemand anders</button><button class="ghost wide" id="aire">Nog een keer met ${esc(c.who)}</button>`,
-    bind=()=>{$("ainx").onclick=()=>nx?aiTalk(nx.id):aiAny();$("aire").onclick=()=>aiTalk(c.id,!nx)};
+      :`<button class="btn wide" id="ainx">Nieuw gesprek met Saskia</button><button class="ghost wide" id="aire">Terug naar Gesprekken</button>`,
+    bind=()=>{$("ainx").onclick=()=>nx?aiTalk(nx.id):aiAny();$("aire").onclick=()=>nx?aiTalk(c.id):aiList()};
   if(k.n<2){$("tctl").innerHTML=`<div class="tend"><b>Gesprek gestopt</b><p class="note">Te kort voor tips. Zeg de volgende keer wat meer.</p></div>`+tail;return bind()}
   S.ai=S.ai||{}; const g=S.ai[c.id]||{n:0}; S.ai[c.id]={n:(g.n||0)+1,at:Date.now()}; complete();
   $("tctl").innerHTML=`<div class="tend"><b class="good">Gesprek klaar!</b><p class="note aiwait">Ik kijk het gesprek na…</p></div>`;
@@ -4574,7 +4577,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="2f90cf7d32";
+const UIV="6fa06ae1f5";
 let uiP=null;
 function uiLoaded(){ // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});

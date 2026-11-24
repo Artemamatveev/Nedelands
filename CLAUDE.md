@@ -804,16 +804,15 @@ The whole app is about 240 000 characters, inside Google's free million per mont
 Duolingo's video call (the user's request, 23 November 2026). On that day the user also chose to remove the free,
 offline scripted Gesprekken (keyword checks with `gpFits()`, October 2026): they were too rigid next to a real
 conversation. Two menu buttons (aiMenu remembers the choice when returning from a conversation): "Praat met iemand" and "Dagelijkse situaties". The latter opens expandable topic groups, each with individual situation rows; choosing a situation shows its task before starting. Two parts:
-- "Praat met iemand" (the user's idea, 23 November 2026: no fixed topics, no "call", a surprise each time): a big button
-  that picks one of `PEOPLE` at random, never one of the last six (`ww-ai-recent`), seasonal people only in their months
-  (`m`: Sinterklaas November–December, the skater in winter, Koningsdag in April). Everyday people (Saskia the friend,
-  mevrouw Jansen the neighbour, slager Henk with "Mag het ietsje meer zijn?", collega Mo at the coffee machine, Fleur the
-  student, the herring seller, the cheese carrier in Alkmaar, Klaas the skater, Bram on
-  Koningsdag, Sinterklaas) and people from the past who live in their own time and are curious about ours (Van Gogh in
-  Arles 1888, Rembrandt in 1642, Vermeer around 1665, Jan the fisherman's son in Volendam 1910). The user removed the
-  girl with the pearl and the Delfts blauw painter, and renamed the friend Sanne to Saskia (23 November 2026). Their faces are the plush avatars from `art/avatars` where one fits (`av`); the others show an initial. The
-  personas and openers (two or three, the server picks one) are in `PEOPLE` in `api/_talk.js`, with checked facts;
-  the model is told to stay vague about history rather than invent. Check facts when adding a person.
+- The first menu now opens Saskia, the recurring human host of a small museum cafe in Utrecht (the user's
+  approved direction, 24 November 2026). Her approved portrait is `art/characters/saskia-museum-v1.jpg` (768 pixels wide);
+  `aiList()` shows her card and `aiTalk()` her full portrait. The image is a still, not an animated video or a fake lip-sync.
+  `api/_talk.js` defines her museum-cafe persona and openers. `aiAny()` now consistently opens Saskia; `aiIds()` counts
+  her plus the situations. Older PEOPLE/TOPICS ids remain supported for old sessions and progress but are not offered
+  in the main menu. Her portrait, outfit and setting were created with built-in image generation; source and prompt
+  records are kept locally in `art/characters/`. No Tavus custom face has been trained or connected to the app. The
+  separate Tavus Dirk pilot and its stock face are not a Saskia video. Training her own face requires the user's paid
+  service activation and a later integration; do not describe the static portrait as completed video animation.
 - The situations: the old scripts in `GP` (`data/extra.js`, the ones without `ona`), in their groups: on the phone
   (huisarts, work, landlord, school, gemeente, 112, a language school), work, school and the doctor, in town (bakker,
   apotheek, café, station, exchanging, the bike repairer, the market, the library, asking the way), the neighbours, and

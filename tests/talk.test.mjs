@@ -170,16 +170,16 @@ test('The app holds a whole conversation: start, a spoken turn with a fix, hangi
   assert.deepEqual(a.errors,[]);
 });
 
-test('Praat met iemand picks someone new each time, in season, with their avatar', async()=>{
+test('The main conversation always opens Saskia with her approved human portrait; legacy avatars remain readable',async()=>{
   const a=await app();
-  const seen=[];
-  for(let i=0;i<6;i++){a.run('aiAny()');seen.push(a.run('AK.c.id'));}
-  assert.equal(new Set(seen).size,6,'no repeats among the last six');
-  const mo=new Date().getMonth();
-  for(const id of seen){const m=a.run(`JSON.stringify(PEOPLE.find(p=>p.id==="${id}").m||null)`);if(m!=='null')assert.ok(JSON.parse(m).includes(mo),id)}
+  for(let i=0;i<3;i++){a.run('aiAny()');assert.equal(a.run('AK.c.id'),'saskia')}
+  assert.equal(a.document.querySelector('#aiav img').getAttribute('src'),'/art/characters/saskia-museum-v1.jpg');
+  assert.ok(a.document.querySelector('.aiportrait'),'the human portrait is a full card rather than a plush circle');
+  assert.match(a.document.querySelector('#tbody h2').textContent,/Saskia/);
+  assert.equal(a.run('aiIds().filter(id=>PEOPLE.some(p=>p.id===id)).join(",")'),'saskia');
+  assert.ok(fs.existsSync(new URL('art/characters/saskia-museum-v1.jpg',root)));
   a.run('aiTalk("vangogh")');
   assert.equal(a.document.querySelector('#aiav img').getAttribute('src'),'/art/avatars/vangogh.jpg');
-  assert.match(a.document.querySelector('#tbody h2').textContent,/Vincent van Gogh/);
   for(const av of JSON.parse(a.run('JSON.stringify(PEOPLE.map(p=>p.av).filter(Boolean))')))assert.ok(fs.existsSync(new URL(`art/avatars/${av}.jpg`,root)),av);
   assert.deepEqual(a.errors,[]);
 });
@@ -496,4 +496,17 @@ test('Audio session requests playback for the reply and automatic mode for the m
   const voice=bufferVoice(),{a}=await voiceConversation({globals:{...voice.globals,navigator:{userAgent:'iPhone',platform:'iPhone',onLine:true,audioSession}},audio:'QUJD'});
   assert.equal(types.at(-1),'playback');voice.sources.at(-1).onended();await a.flush();assert.equal(types.at(-1),'auto');
   a.run('home()');assert.equal(types.at(-1),'auto');
+});
+
+
+test('Saskia menu and conversation identify the museum host without claiming a live video connection',async()=>{
+  const a=await app();a.run('aiList("people")');
+  assert.equal(a.document.getElementById('aiany').textContent,'Praat met Saskia');
+  assert.match(a.document.getElementById('tbody').textContent,/museumcafé/);
+  assert.equal(a.document.querySelector('.aihost img').getAttribute('src'),'/art/characters/saskia-museum-v1.jpg');
+  assert.equal(a.document.querySelector('video,iframe'),null);
+  const t=await load(),{body:{token,reply}}=await t.call({go:'start',topic:'saskia',level:'A2'});
+  assert.ok(t.ns.TOPICS.saskia.open.includes(reply));
+  await t.call({go:'say',token,history:[{t:reply},{me:true,t:'Ik hou van schilderijen.'}]});
+  assert.match(t.bodies[0].system,/museum cafe/);assert.doesNotMatch(t.bodies[0].system,/works as a nurse/);
 });

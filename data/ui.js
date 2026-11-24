@@ -2,6 +2,10 @@
 // tables oefenen.html defines. Loaded only when the menus are in another language than Dutch (loadUI()); edit here,
 // then run `node tools/stamp.mjs` (UIV).
 Object.assign(UI,{
+"Praat met Saskia":["Talk with Saskia", "تحدّث مع ساسكيا", "Saskia ile konuş", "सास्किया से बात करें", "和 Saskia 聊天", "Habla con Saskia", "Поговорить с Саскией"],
+"Je ontmoet Saskia in het museumcafé. Praat over je dag, Nederland en kunst.":["Meet Saskia in the museum café. Talk about your day, the Netherlands and art.", "تعرّف على ساسكيا في مقهى المتحف. تحدّث عن يومك وهولندا والفن.", "Saskia ile müze kafesinde tanış. Günün, Hollanda ve sanat hakkında konuş.", "संग्रहालय के कैफ़े में सास्किया से मिलें। अपने दिन, नीदरलैंड और कला के बारे में बात करें।", "在博物馆咖啡馆认识 Saskia，聊聊你的一天、荷兰和艺术。", "Conoce a Saskia en el café del museo. Habla de tu día, los Países Bajos y el arte.", "Познакомьтесь с Саскией в музейном кафе. Поговорите о своём дне, Нидерландах и искусстве."],
+"Praat met Saskia over je dag, Nederland en kunst.":["Talk with Saskia about your day, the Netherlands and art.", "تحدّث مع ساسكيا عن يومك وهولندا والفن.", "Saskia ile günün, Hollanda ve sanat hakkında konuş.", "सास्किया से अपने दिन, नीदरलैंड और कला के बारे में बात करें।", "和 Saskia 聊聊你的一天、荷兰和艺术。", "Habla con Saskia de tu día, los Países Bajos y el arte.", "Поговорите с Саскией о своём дне, Нидерландах и искусстве."],
+
 "Dagelijkse situaties":["Everyday situations","مواقف يومية","Günlük durumlar","रोज़मर्रा की स्थितियाँ","日常情境","Situaciones cotidianas","Ежедневные ситуации"],
 "Kies een onderwerp en daarna een gesprek.":["Choose a topic, then a conversation.","اختر موضوعًا، ثم محادثة.","Önce bir konu, sonra bir konuşma seç.","पहले विषय चुनें, फिर बातचीत।","先选择主题，再选择对话。","Elige un tema y después una conversación.","Выберите тему, а затем конкретный разговор."],
 
