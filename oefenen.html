@@ -1909,7 +1909,7 @@ let sr=null; // one recogniser, reused: iOS asks for permission again for every 
 const REC_FINISH_MS=800; // drain final speech results briefly; a missing native end event must not trap the learner
 // In a conversation the phone may still be turning speech into text when the learner taps Klaar (iOS does it on a server):
 // wait longer, longest when nothing arrived yet. A final result or the recogniser's end finishes at once.
-const REC_TALK_MS=1500, REC_TALK_EMPTY_MS=4000;
+const REC_TALK_MS=1500, REC_TALK_EMPTY_MS=4000, REC_TALK_STILL_MS=700;
 const mmss=s=>Math.floor(s/60)+":"+String(s%60).padStart(2,"0");
 // The question as it is read aloud and sent for grading: without the picture emoji
 // What Claude gets for a Spreken task: the question, and what the photos show (it can't see them)
@@ -1976,7 +1976,7 @@ async function listen(mode,done,lim=SPK,options={}){ // AI conversations finish 
       if(r.fin)return;
       const results=Array.from(e.results),text=results.map(x=>x[0]?.transcript||"").join(" ").trim();
       // Rebuild the current session: a corrected final result replaces its interim words, never appends them.
-      if(text){r.part=text;r.started=true}
+      if(text){if(text!==r.part)r.textAt=Date.now();r.part=text;r.started=true}
       r.choices=[];
       results.forEach((x,i)=>Array.from(x).slice(1).forEach(alt=>{
         const variant=results.map((v,j)=>j===i?alt.transcript:v[0]?.transcript||"").join(" ").trim();
@@ -2042,7 +2042,8 @@ function recEnd(keep){
       try{r.sr.abort()}catch(e){}if(sr===r.sr)sr=null;recDone(r);
     };
     if(r.conversation&&r.gap)return r.finish(); // between two sessions: nothing more is coming
-    r.finishTimer=setTimeout(r.finish,!r.conversation||r.fail?REC_FINISH_MS:saidText(r)?REC_TALK_MS:REC_TALK_EMPTY_MS);
+    r.finishTimer=setTimeout(r.finish,!r.conversation||r.fail?REC_FINISH_MS:!saidText(r)?REC_TALK_EMPTY_MS
+      :r.conversation&&Date.now()-(r.textAt||0)>=REC_TALK_STILL_MS?REC_TALK_STILL_MS:REC_TALK_MS); // the text stood still before Klaar: little can still come
     try{r.sr.stop()}catch(e){try{r.sr.abort()}catch(e){}if(sr===r.sr)sr=null;recDone(r)}
   }else if(r.mr&&r.mr.state!=="inactive"){
     r.finishTimer=setTimeout(()=>recDone(r),1500);
@@ -4126,12 +4127,23 @@ function aiUnlock(){
     if(canSpeak){const u=new SpeechSynthesisUtterance(" ");u.lang="nl-NL";u.volume=0;speechSynthesis.speak(u)}
   }catch(e){}
 }
-async function aiPost(body){
+// onFirst: the spoken part of a reply, as soon as the server has it; the correction follows in a second line
+async function aiPost(body,onFirst){
+  let first=null;
   try{
     const h=await authHead(),r=await fetch("/api/talk",{method:"POST",headers:{"Content-Type":"application/json",...h},body:JSON.stringify(body)});
+    if(onFirst&&r.ok&&r.body&&/ndjson/.test(r.headers.get("content-type")||"")){
+      const reader=r.body.getReader(),dec=new TextDecoder();let buf="",rest={};
+      for(;;){
+        const{value,done}=await reader.read();buf+=done?dec.decode():dec.decode(value,{stream:true});
+        for(let i;(i=buf.indexOf("\n"))>=0;){const x=JSON.parse(buf.slice(0,i));buf=buf.slice(i+1);if(first)rest=x;else{first=x;onFirst(x)}}
+        if(done)break;
+      }
+      return first?{...first,...rest,ok:true,streamed:true}:{code:"failed"};
+    }
     const j=await r.json().catch(()=>({}));
     return r.ok?{...j,ok:true}:{...j,code:j.error||"failed"};
-  }catch(e){return{code:e&&e.code||"offline"}}
+  }catch(e){return first?{...first,ok:true,streamed:true}:{code:e&&e.code||"offline"}}
 }
 const aiWhy=c=>noCheck(c)?noCheck(c)+offerHTML(c):c==="offline"?"Geen verbinding. Probeer het opnieuw.":c==="not_configured"?"Praten met AI is nog niet ingesteld.":c==="rate_limited"?"Te veel verzoeken achter elkaar. Wacht een minuut en probeer het opnieuw.":"Dat lukte niet. Probeer het opnieuw.";
 async function aiStart(){
@@ -4256,14 +4268,15 @@ async function aiSend(t){
   else {k.pending={me:1,t};k.log.push(k.pending);k.n++}
   aiDraw();
   $("tctl").innerHTML=`<p class="note aiwait">${esc(k.c.who)} denkt na…</p>`;
-  const j=await aiPost({go:"say",token:k.tok,voice:k.voice,history:k.log.map(l=>({me:!!l.me,t:l.t}))});
+  const mine=k.pending, hear=j=>{k.busy=false;if(!aiOn(k))return;k.pending=null;aiHear(String(j.reply||""),j.audio,!!j.done)};
+  const j=await aiPost({go:"say",stream:true,token:k.tok,voice:k.voice,history:k.log.map(l=>({me:!!l.me,t:l.t}))},hear);
+  if(j.streamed){if(j.fix){mine.fix=j.fix;if(aiOn(k))aiDraw()}return} // spoken already; the correction came after it
   k.busy=false; if(!aiOn(k))return;
   if(!j.ok){
     if(j.code==="expired")return aiEnd();
     return aiTurn(aiWhy(j.code),t)}
-  if(j.fix)k.pending.fix=j.fix;
-  k.pending=null;
-  aiHear(String(j.reply||""),j.audio,!!j.done);
+  if(j.fix)mine.fix=j.fix;
+  hear(j);
 }
 // Hanging up or the natural end: what went well and the tips (no extra check)
 async function aiEnd(){

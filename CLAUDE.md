@@ -848,7 +848,7 @@ conversation. Two menu buttons (aiMenu remembers the choice when returning from 
   which also go to Mijn fouten (`keepErrs()`). Tokens go to `ai_spend`. Nothing of the conversation is stored or logged.
 - The voice: Google Chirp 3 HD (Vindemiatrix for women, Charon for men, like the recordings), synthesised per reply by
   the server with `GOOGLE_TTS_KEY` (a Vercel env var: the user adds it in the dashboard, never in chat); without it, or
-  when Google fails, the page uses the phone's voice (a synthesis request times out after 2.5 s). Synthesis runs in parallel with spend accounting. The MP3 comes back as base64 and plays through Web Audio buffer sources;
+  when Google fails, the page uses the phone's voice (a synthesis request times out after 2.5 s). A turn is streamed (`stream:true`, the user found the replies slow, 24 November 2026): Claude writes `reply` and `done` first, so the server starts the voice when they are complete, while the correction is still being written, and sends two JSON lines: {reply, done, audio}, then {fix}. Once the first line is sent it stays (a later refusal or cut only loses the correction); after a fallback to another model the turn is one plain answer. Old pages without `stream` get one answer as before. `talk_time` in the logs has milliseconds only (auth, reply, voice, sent, model). Synthesis runs in parallel with spend accounting. The MP3 comes back as base64 and plays through Web Audio buffer sources;
   `aiUnlock()` unlocks its context with silence inside the tap. Browsers without Web Audio use the shared `sayA` element.
   Each decoded clip plays through a bounded gain (target active-sample RMS .12, maximum 3x, peaks no higher than .9;
   near-silence is not boosted), so replies have comparable levels without clipping. Where AudioSession is available,
@@ -867,7 +867,7 @@ conversation. Two menu buttons (aiMenu remembers the choice when returning from 
   with partial text leaves an editable draft, never a model request. Klaar always sends what was heard, also interim or
   uncertain words, with no second tap on Stuur (the user's complaint, 24 November 2026; a review of uncertain words came
   in between before). After Klaar the page waits for late text: 1.5 s (`REC_TALK_MS`), 4 s when nothing arrived yet
-  (`REC_TALK_EMPTY_MS`), less once a final result or the recogniser's end comes. Text typed meanwhile counts when nothing was heard.
+  (`REC_TALK_EMPTY_MS`), 0.7 s when the text had stood still before Klaar (`REC_TALK_STILL_MS`), less once a final result or the recogniser's end comes. Text typed meanwhile counts when nothing was heard.
   Typing and Stuur remain available. A failed request keeps the learner's visible answer; retry replaces the pending turn.
 
   In AI conversations each completed take aborts and retires its recogniser before voice playback, so iOS gets a fresh

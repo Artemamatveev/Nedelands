@@ -4,6 +4,7 @@
 // uses the phone's own voice).
 // POST {go:"start", topic, level} -> {token, reply, audio, left, limit, period}: takes one check (like one writing task)
 // POST {go:"say", token, history:[{me, t}]} -> {reply, fix:{wrong, right, why}|null, done, audio}
+//   With stream:true the same comes as two JSON lines: {reply, done, audio} as soon as it can be spoken, then {fix}
 // POST {go:"end", token, history} -> {verdict, good:[…], tips:[{wrong, right, why}]}
 // A conversation is paid once, at its start; the signed token lets the next turns through for TTL. The prompt is built
 // here from TOPICS, so the page can't send its own instructions. Nothing of the conversation is stored.
@@ -66,10 +67,10 @@ const REPLY = {
   type: "object",
   properties: {
     reply: { type: "string" },
-    fix: { type: "object", properties: { wrong: { type: "string" }, right: { type: "string" }, why: { type: "string" } }, required: ["wrong", "right", "why"], additionalProperties: false },
     done: { type: "boolean" },
+    fix: { type: "object", properties: { wrong: { type: "string" }, right: { type: "string" }, why: { type: "string" } }, required: ["wrong", "right", "why"], additionalProperties: false },
   },
-  required: ["reply", "fix", "done"],
+  required: ["reply", "done", "fix"], // what is spoken comes first: the voice starts while the correction is still being written
   additionalProperties: false,
 };
 const REVIEW = {
@@ -146,7 +147,15 @@ async function speech(text, g) {
   } catch (e) { console.error("tts", e?.name || "error"); return null }
 }
 
-async function ask(model, sys, content, schema) {
+// The reply and done as soon as they are complete in the answer that is still being written, else null
+const REPLY_HEAD = /^\s*\{\s*"reply"\s*:\s*"((?:[^"\\]|\\.)*)"\s*,\s*"done"\s*:\s*(true|false)/;
+function head(text) {
+  const m = REPLY_HEAD.exec(text);
+  if (!m) return null;
+  try { return { reply: JSON.parse(`"${m[1]}"`), done: m[2] === "true" } } catch { return null }
+}
+// onHead is called once with {reply, done} before the whole answer is there (never after a fallback to another model)
+async function ask(model, sys, content, schema, onHead) {
   const params = {
     model, max_tokens: schema === REPLY ? 700 : 1600, system: sys,
     output_config: { effort: "low", format: { type: "json_schema", schema } },
@@ -154,11 +163,21 @@ async function ask(model, sys, content, schema) {
   };
   // Haiku has no server-side fallback; the larger models fall back on a refusal
   if (!/haiku/.test(model)) Object.assign(params, { betas: ["server-side-fallback-2026-07-01"], fallbacks: "default" });
-  const response = await client.beta.messages.create(params);
+  let response;
+  if (onHead) {
+    const stream = client.beta.messages.stream(params);
+    let seen = false;
+    stream.on("streamEvent", (e) => { if (e.type === "content_block_start" && e.content_block?.type === "fallback") seen = true });
+    stream.on("text", (_d, text) => { if (seen) return; const h = head(text); if (h) { seen = true; onHead(h) } });
+    response = await stream.finalMessage();
+  } else response = await client.beta.messages.create(params);
   console.info(JSON.stringify({ event: "talk_usage", model: response.model, usage: response.usage }));
   const spent = addSpend(response.model, response.usage).catch(() => {});
   if (response.stop_reason === "refusal" || response.stop_reason === "max_tokens") throw Object.assign(new Error(response.stop_reason), { code: response.stop_reason });
-  return { result: JSON.parse(response.content.find((b) => b.type === "text")?.text || "{}"), spent };
+  // After a fallback the first text block can be the unfinished one
+  const texts = response.content.filter((b) => b.type === "text").map((b) => b.text).reverse();
+  for (const t of [...texts, texts.slice().reverse().join("")]) try { return { result: JSON.parse(t), spent } } catch {}
+  throw new Error("json");
 }
 
 // Who is asking: "u:<id>" for an account, "v:<hash>" for a guest's trial cookie
@@ -206,13 +225,15 @@ export async function talk(req, res) {
   }
 
   if (go !== "say" && go !== "end") return res.status(400).json({ error: "go" });
+  const began = Date.now(), ms = () => Date.now() - began;
   const o = unticket(req.body?.token);
   if (!o) return res.status(401).json({ error: "expired" });
   const me = await subject(req, res);
   if (me.s !== o.s) return res.status(401).json({ error: "expired" });
   const T = TOPICS[o.t], L = lines(req.body?.history), n = L.filter((x) => x.me).length;
   if (!n || (go === "say" && (!L[L.length - 1].me || n > TURNS))) return res.status(400).json({ error: "history" });
-  const model = o.p ? MODEL_PLUS : MODEL_FREE;
+  const model = o.p ? MODEL_PLUS : MODEL_FREE, time = { auth: ms() };
+  let early = null, stopped = false;
   try {
     if (go === "end") {
       const { result: r, spent } = await ask(model, REVIEW_SYSTEM(o.l), `HET GESPREK (${T.who} en de cursist):\n${transcript(L, T)}`, REVIEW);
@@ -222,13 +243,41 @@ export async function talk(req, res) {
         tips: (Array.isArray(r.tips) ? r.tips : []).slice(0, 4).map((x) => ({ wrong: str(x?.wrong, 160), right: str(x?.right, 160), why: str(x?.why, 240) })).filter((x) => x.wrong && x.right && x.wrong !== x.right),
       });
     }
-    const { result: r, spent } = await ask(model, system(T, o.l, n), `HET GESPREK TOT NU:\n${transcript(L, T)}\n\nAntwoord nu als ${T.who} op de laatste zin van de cursist.`, REPLY);
+    const say = async (text) => { const a = req.body?.voice === "device" ? null : await speech(text, T.g); time.voice = ms(); return a };
+    const line = (x) => res.write(JSON.stringify(x) + "\n");
+    const onHead = req.body?.stream === true && typeof res.write === "function" ? (h) => {
+      const reply = str(h.reply, 700);
+      if (!reply) return;
+      time.reply = ms();
+      early = say(reply).then((audio) => {
+        if (stopped) return;
+        res.setHeader("Content-Type", "application/x-ndjson; charset=utf-8");
+        res.setHeader("Cache-Control", "no-store, no-transform");
+        res.status(200);
+        line({ reply, done: h.done || n >= TURNS, audio });
+        time.sent = ms();
+      });
+    } : null;
+    const { result: r, spent } = await ask(model, system(T, o.l, n), `HET GESPREK TOT NU:\n${transcript(L, T)}\n\nAntwoord nu als ${T.who} op de laatste zin van de cursist.`, REPLY, onHead)
+      // the reply is already on its way: only the correction is lost
+      .catch((e) => { if (early && e?.code !== "refusal") return { result: {}, spent: null }; throw e });
+    time.model = ms();
     const reply = str(r.reply, 700) || "Sorry, kunt u dat nog een keer zeggen?";
     const f = r.fix || {}, fix = f.wrong && f.right && str(f.wrong, 160) !== str(f.right, 160) ? { wrong: str(f.wrong, 160), right: str(f.right, 160), why: str(f.why, 240) } : null;
+    if (early) {
+      await early;
+      line({ fix });
+      await spent;
+      console.info(JSON.stringify({ event: "talk_time", ...time }));
+      return res.end();
+    }
     // Synthesise while usage is saved: accounting must not delay the start of the voice request.
-    const [audio] = await Promise.all([req.body?.voice === "device" ? null : speech(reply, T.g), spent]);
+    const [audio] = await Promise.all([say(reply), spent]);
+    console.info(JSON.stringify({ event: "talk_time", ...time }));
     return res.status(200).json({ reply, fix, done: !!r.done || n >= TURNS, audio });
   } catch (error) {
+    stopped = true;
+    if (res.headersSent) return res.end();
     if (error?.code === "refusal") return res.status(422).json({ error: "refused" });
     if (error instanceof Anthropic.RateLimitError) return res.status(429).json({ error: "rate_limited" });
     if (error instanceof Anthropic.AuthenticationError) return res.status(503).json({ error: "not_configured" });
