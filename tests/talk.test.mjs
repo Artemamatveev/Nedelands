@@ -425,8 +425,9 @@ test('Thinking for a long time keeps the microphone open; a deaf recogniser is r
   const {a,instances,requests}=await voiceConversation(),r=a.run('rec');
   const check=()=>a.timers.get(r.watchTimer).fn();
   instances[0].onstart();check();assert.ok(a.run('rec')===r);assert.equal(instances.length,1,'eight seconds of thinking changes nothing');
-  check();assert.ok(a.run('rec')===r,'still the same answer');assert.equal(instances.length,2);assert.equal(instances[0].onresult,null);
-  instances[1].onstart();instances[1].onspeechstart();check();assert.equal(instances.length,3,'a voice without words: replaced at once');
+  check();check();assert.ok(a.run('rec')===r,'still the same answer');assert.equal(instances.length,2);assert.equal(instances[0].onresult,null);
+  instances[1].onstart();instances[1].onspeechstart();check();assert.equal(instances.length,2,'a voice that just began is never cut off');
+  r.soundAt=Date.now()-6000;check();assert.equal(instances.length,3,'a voice without words: replaced');
   instances[2].onstart();instances[2].result('Ik heb even nagedacht');check();
   a.document.getElementById('recb').click();await a.flush();
   assert.equal(requests[1].history.at(-1).t,'Ik heb even nagedacht');
@@ -434,7 +435,7 @@ test('Thinking for a long time keeps the microphone open; a deaf recogniser is r
 
 test('A recogniser that stays deaf ends with a retry and says why',async()=>{
   const {a,instances}=await voiceConversation(),r=a.run('rec');
-  for(let i=0;i<12&&!r.fin;i++){instances.at(-1).onstart?.();a.timers.get(r.watchTimer).fn();await a.flush()}
+  for(let i=0;i<16&&!r.fin;i++){instances.at(-1).onstart?.();a.timers.get(r.watchTimer).fn();await a.flush()}
   assert.equal(r.fin,true);assert.equal(instances.length,4);assert.match(a.document.getElementById('recn').textContent,/Tik op Spreek.*\(no-text\)/);
 });
 
@@ -474,7 +475,9 @@ test('Recognition receives Dutch domain hints only where contextual biasing is s
 test('The microphone ready message names Klaar and silence never arms a submit timer',async()=>{
   const {a,instances,requests}=await voiceConversation();const native=instances[0];
   assert.match(a.document.getElementById('recn').textContent,/microfoon start/);
-  native.onstart();assert.match(a.document.getElementById('recn').textContent,/Tik op Klaar/);
+  assert.match(a.document.getElementById('recb').textContent,/Wacht/);
+  native.onstart();assert.match(a.document.getElementById('recn').textContent,/microfoon start/,'started is not yet recording');
+  native.onaudiostart();assert.match(a.document.getElementById('recn').textContent,/Tik op Klaar/);assert.match(a.document.getElementById('recb').textContent,/Klaar/);
   native.result('Ik wil een afspraak');assert.equal(a.run('rec.quiet'),undefined);assert.equal(requests.length,1);
 });
 
@@ -598,4 +601,16 @@ test('Klaar after the words stood still waits less',async()=>{
   const {a,instances}=await voiceConversation();instances[0].stop=()=>{};instances[0].result('Ik ben moe',false);
   const r=a.run('rec');r.textAt=Date.now()-900;a.document.getElementById('recb').click();
   assert.equal(a.timers.get(r.finishTimer).delay,700);
+});
+
+test('The first words stay when the phone drops them from its own hypothesis, and a pause restarts at once',async()=>{
+  const {a,instances,requests}=await voiceConversation(),r=a.run('rec'),n=instances[0];
+  n.result('van Gogh',false);n.result('Gogh',true);assert.equal(r.part,'van Gogh');
+  n.result('Ik hou van Gogh',true);assert.equal(r.part,'Ik hou van Gogh','a longer hypothesis still replaces it');
+  n.onend();assert.equal(a.timers.get(r.restart).delay,20);
+  let refuse=true;const start=n.start;n.start=function(){if(refuse){refuse=false;throw Error('still stopping')}start.call(this)};
+  a.timers.get(r.restart).fn();assert.equal(r.fail,undefined);assert.equal(a.timers.get(r.restart).delay,200);
+  a.timers.get(r.restart).fn();n.result('en van kleuren',true);
+  a.document.getElementById('recb').click();await a.flush();
+  assert.equal(requests[1].history.at(-1).t,'Ik hou van Gogh en van kleuren');
 });

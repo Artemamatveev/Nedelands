@@ -1962,6 +1962,9 @@ async function listen(mode,done,lim=SPK,options={}){ // AI conversations finish 
   }
   r.start=Date.now(); r.end=r.start+lim*1e3; rec=r;
   if(r.conversation)aiAudioMode("auto");
+  // the microphone is open: the button becomes Klaar
+  r.go=()=>{if(r.ready||rec!==r||r.fin||r.stopping||!r.conversation)return;r.ready=true;clearTimeout(r.readyTimer);
+    $("recb").textContent="■ Klaar";$("recn").textContent="Spreek nu. Tik op Klaar als je antwoord af is."};
   if(mode==="say"&&SR)try{
     const open=()=>{
     // Reusing a recogniser after TTS can leave iOS listening without receiving any words.
@@ -1972,14 +1975,19 @@ async function listen(mode,done,lim=SPK,options={}){ // AI conversations finish 
     if(r.conversation&&"phrases" in sr&&typeof window.SpeechRecognitionPhrase==="function"&&hints.length)try{
       sr.phrases=hints.map(word=>new SpeechRecognitionPhrase(word,2));r.hints=true;
     }catch(e){}
-    r.sr=sr;r.gap=false;r.sound=false;
-    sr.onstart=()=>{r.started=true;r.gap=false;if(rec===r&&!r.fin&&!r.stopping&&r.conversation)$("recn").textContent="Spreek nu. Tik op Klaar als je antwoord af is."};
-    if(r.conversation){sr.onaudiostart=()=>{r.started=true};sr.onspeechstart=()=>{r.sound=true}}
+    r.sr=sr;r.gap=false;r.soundAt=0;
+    // "Spreek nu" only when the phone really records: words spoken between start and audiostart are lost
+    sr.onstart=()=>{r.started=true;r.gap=false;if(r.conversation&&!r.ready)r.readyTimer=setTimeout(r.go,700)};
+    if(r.conversation){sr.onaudiostart=()=>{r.started=true;r.go()};sr.onspeechstart=()=>{r.soundAt=Date.now()}}
     sr.onresult=e=>{
       if(r.fin)return;
       const results=Array.from(e.results),text=results.map(x=>x[0]?.transcript||"").join(" ").trim();
       // Rebuild the current session: a corrected final result replaces its interim words, never appends them.
-      if(text){if(text!==r.part)r.textAt=Date.now();r.part=text;r.started=true}
+      if(text){r.go();if(text!==r.part)r.textAt=Date.now();
+        // iOS can drop the first words of its own hypothesis ("van Gogh" → "Gogh"): keep them
+        const w=t=>t.toLowerCase().replace(/[^\p{L}\d ]/gu,"");
+        if(!(r.conversation&&w(r.part).endsWith(" "+w(text))))r.part=text;
+        r.started=true}
       r.choices=[];
       results.forEach((x,i)=>Array.from(x).slice(1).forEach(alt=>{
         const variant=results.map((v,j)=>j===i?alt.transcript:v[0]?.transcript||"").join(" ").trim();
@@ -2003,15 +2011,17 @@ async function listen(mode,done,lim=SPK,options={}){ // AI conversations finish 
       if(r.fail){r.sr=null;$("recn").textContent="Meeschrijven lukt hier niet. Spreek toch hardop: de tijd loopt.";return}
       if(r.gap)return; // a retry is already on its way
       r.gap=true;
-      r.restart=setTimeout(()=>{if(rec!==r||r.fin||r.stopping)return;
-        try{r.sr.start();r.gap=false}catch(e){r.fail=true;if(r.conversation)recEnd(true)}},200)};
+      // in a conversation at once: what is said between two sessions is lost
+      const again=last=>{if(rec!==r||r.fin||r.stopping)return;
+        try{r.sr.start();r.gap=false}catch(e){if(r.conversation&&!last){r.restart=setTimeout(()=>again(true),200);return}r.fail=true;if(r.conversation)recEnd(true)}};
+      r.restart=setTimeout(()=>again(false),r.conversation?20:200)};
     try{r.sr.start()}catch(e){r.restart=setTimeout(()=>{if(rec===r)try{r.sr.start()}catch(e){r.fail=true;if(r.conversation)recEnd(true)}},400)} // the previous take may still be stopping
     };
     // A recogniser that went deaf is replaced under the same take: what was already understood stays
     r.renew=()=>{
       if(rec!==r||r.fin||r.stopping)return;
       if(r.part){r.said.push(r.part);r.part=""}
-      const old=r.sr;if(old){old.onstart=old.onspeechstart=old.onresult=old.onerror=old.onend=null;try{old.abort()}catch(e){}if(sr===old)sr=null}
+      const old=r.sr;if(old){old.onstart=old.onaudiostart=old.onspeechstart=old.onresult=old.onerror=old.onend=null;try{old.abort()}catch(e){}if(sr===old)sr=null}
       r.started=false;open();
     };
     open();
@@ -2019,7 +2029,7 @@ async function listen(mode,done,lim=SPK,options={}){ // AI conversations finish 
   const doneLabel=r.conversation?"Klaar":cur?.exam&&cur.speak?"Antwoord klaar":"Stop";
   $("recn").textContent=mode==="rec"?(r.mr?`Spreek nu. Tik op ${doneLabel} als je klaar bent.`:"Opnemen lukt hier niet. Spreek toch hardop: de tijd loopt.")
     :r.sr?(r.conversation?"De microfoon start… Wacht tot je kunt spreken.":`Spreek nu. De telefoon schrijft mee. Tik op ${doneLabel} als je klaar bent.`):"Meeschrijven lukt hier niet. Spreek toch hardop: de tijd loopt.";
-  b.textContent="■ "+doneLabel;b.className="btn wide";b.disabled=false;b.onclick=()=>{r.submitted=true;recEnd(true)};
+  b.textContent=r.conversation&&r.sr&&!r.ready?"Wacht even…":"■ "+doneLabel;b.className="btn wide";b.disabled=false;b.onclick=()=>{r.submitted=true;recEnd(true)};
   const tick=()=>{if(box!==$("rec"))return recEnd(false);
     if(r.conversation){$("rect").textContent=mmss(Math.floor((Date.now()-r.start)/1e3));$("recm").style.width="100%";return}
     const ms=Math.max(0,r.end-Date.now());
@@ -2055,10 +2065,10 @@ function recEnd(keep){
   if(r.stream)r.stream.getTracks().forEach(t=>t.stop());
 }
 function recDone(r){
-  if(r.fin)return; r.fin=true;if(rec===r)rec=null;clearTimeout(r.finishTimer);clearTimeout(r.restart);clearTimeout(r.watchTimer);r.box.removeAttribute("aria-busy");
+  if(r.fin)return; r.fin=true;if(rec===r)rec=null;clearTimeout(r.finishTimer);clearTimeout(r.restart);clearTimeout(r.watchTimer);clearTimeout(r.readyTimer);r.box.removeAttribute("aria-busy");
   if(r.conversation&&r.sr){
     // Release the old iOS audio session before the next reply; late events cannot reach the next take.
-    if(sr===r.sr)sr=null;r.sr.onstart=r.sr.onspeechstart=r.sr.onresult=r.sr.onerror=r.sr.onend=null;
+    if(sr===r.sr)sr=null;r.sr.onstart=r.sr.onaudiostart=r.sr.onspeechstart=r.sr.onresult=r.sr.onerror=r.sr.onend=null;
     try{r.sr.abort()}catch(e){}
   }
   if(!r.keep||r.box!==$("rec"))return;
@@ -4214,13 +4224,14 @@ function aiRec(){
   listen("say",r=>{if(aiOn(k)&&!k.ending)aiHeard(r)},SPK,{conversation:true,hints:aiSpeechWords()});
   const take=rec;
   // A recogniser can go deaf without emitting error/end on iOS. Thinking is not deafness, so a silent learner keeps the
-  // microphone: only one that never opened fails; one that hears a voice without words, or nothing for two checks, is
-  // quietly replaced (three times, then the button offers a fresh start).
+  // microphone: only one that never opened fails; one that heard a voice five seconds ago without giving words, or
+  // nothing for three checks, is quietly replaced (never just after a voice began: that swallowed the first words), (three times, then the button offers a fresh start).
   let checks=0,renewed=0;
   const watch=()=>{take.watchTimer=setTimeout(()=>{
     if(AK!==k||rec!==take||take.fin||take.stopping||saidText(take))return;
     if(!take.started||renewed>=3){take.fail=true;take.err=take.err||(take.started?"no-text":"no-start");return recEnd(true)}
-    if(take.sound||++checks>=2){checks=0;renewed++;take.renew()}
+    const voice=take.soundAt?Date.now()-take.soundAt:-1;
+    if(voice<0?++checks>=3:voice>=5000){checks=0;renewed++;take.renew()}
     watch();
   },8000)};
   if(take)watch();
