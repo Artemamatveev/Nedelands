@@ -617,6 +617,13 @@ body.vfull{overflow:hidden}
 .aigood{margin:6px 0 16px;padding-inline-start:20px}
 .aigood li{margin:4px 0}
 #aiend{margin-top:10px}
+#aimem{margin-bottom:10px}
+.mask{margin:18px 0}
+.mask .btn{margin-bottom:10px}
+.memrow{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.memrow span{flex:1;min-width:0}
+.memrow small{display:block;color:var(--soft);font-size:var(--fs-s)}
+.memrow .ghost{flex:none;width:auto}
 #ainx+#aire{margin-top:10px}
 @media (prefers-reduced-motion:reduce){.aiav.on{animation:none}}
 .pics figure.credited{aspect-ratio:auto;overflow:visible;background:none;border:0}
@@ -1009,6 +1016,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
         <div class="prow pickrow"><span id="plvlt">Ik oefen voor</span><b id="plvlv"></b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg><select id="plvl" aria-labelledby="plvlt"></select></div>
         <div class="prow pickrow langrow"><span id="plangt">Taal</span><b data-langn></b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg><select id="plang" data-lang aria-labelledby="plangt"></select></div>
         <label class="prow tog" id="ptrilw" hidden><span>Trillen bij een antwoord</span><input type="checkbox" switch id="ptril"></label>
+        <button type="button" class="it" id="psm"><span><span class="th"><b>Wat Saskia over je weet</b></span></span></button>
         <div class="prow pickrow" id="premw" hidden><span id="premt">Dagelijkse herinnering</span><b id="premv"></b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg><select id="prem" aria-labelledby="premt"></select></div>
       </div>
       <div id="acct"></div>
@@ -1452,6 +1460,7 @@ function mergeS(a,b){
   const uni=(x,y,k)=>{const h=new Set((x||[]).map(k));return(x||[]).concat((y||[]).filter(e=>!h.has(k(e))))};
   o.items=by(a.items,b.items,(x,y)=>n(y)>n(x)||n(y)===n(x)&&(y.d||0)>(x.d||0)?y:x);
   o.xs=by(a.xs,b.xs,Math.max); o.hs=by(a.hs,b.hs,Math.max); o.tm=by(a.tm,b.tm,Math.max); o.qd=by(a.qd,b.qd,Math.max); o.qr=by(a.qr,b.qr,Math.max);
+  if(a.sm||b.sm){const n=(a.sm?.onAt||0)>=(b.sm?.onAt||0)?a.sm||b.sm:b.sm||a.sm;o.sm={...n,f:by(a.sm?.f,b.sm?.f,x=>x)}}
   o.ai=by(a.ai,b.ai,(x,y)=>({n:Math.max(x.n||0,y.n||0),at:Math.max(x.at||0,y.at||0)}));
   o.gp=by(a.gp,b.gp,(x,y)=>({n:Math.max(x.n||0,y.n||0),b:Math.max(x.b||0,y.b||0),at:Math.max(x.at||0,y.at||0)}));
   o.bk=by(a.bk,b.bk,(x,y)=>(y.at||0)>(x.at||0)?y:x);
@@ -2716,12 +2725,12 @@ function drawProfile(){
     b.disabled=true;
     try{const r=await fetch("/api/account",{method:"DELETE",headers:await authHead()});if(!r.ok)throw 0;
       lsSet(ALINK,null);cloud=null;try{await acc.sb.auth.signOut({scope:"local"})}catch(e){}
-      const retained=progressClone(S);
+      const retained=progressClone(S); delete retained.sm; // what Saskia remembered goes with the account
       const guestEntry=readLocal(progressKey("guest"));
       lsSet(progressKey("guest"),JSON.stringify({data:mergeS(retained,guestEntry?.data||freshProgress()),frame:{},version:++localVersion}));
       acc.msg="Je account is verwijderd. Je voortgang op dit apparaat blijft.";await setUser(null)}
     catch(e){acc.msg="Verwijderen is niet gelukt. Probeer het later opnieuw.";drawProfile()}};
-  remindRow();
+  remindRow(); $("psm").onclick=memScreen;
   if(canBuzz()){$("ptrilw").hidden=false;$("ptril").checked=lsGet("ww-tril")!=="0";$("ptril").onchange=()=>{lsSet("ww-tril",$("ptril").checked?"1":"0");if($("ptril").checked)buzz("good")}}
 }
 function drawPlan(){
@@ -4161,7 +4170,7 @@ async function aiPost(body,onLine){
 const aiWhy=c=>noCheck(c)?noCheck(c)+offerHTML(c):c==="offline"?"Geen verbinding. Probeer het opnieuw.":c==="not_configured"?"Praten met AI is nog niet ingesteld.":c==="rate_limited"?"Te veel verzoeken achter elkaar. Wacht een minuut en probeer het opnieuw.":"Dat lukte niet. Probeer het opnieuw.";
 async function aiStart(){
   const k=AK; aiUnlock(); $("aigo").disabled=true; $("aigo").textContent="Een moment…";
-  const j=await aiPost({go:"start",topic:k.c.id,level:lvl()});
+  const j=await aiPost({go:"start",topic:k.c.id,level:lvl(),...(memOf(k.c).length?{known:true}:{})});
   chkCount(j,lvl());
   if(!aiOn(k))return;
   if(!j.ok||!j.token)return aiReady(aiWhy(j.code));
@@ -4310,7 +4319,7 @@ async function aiSend(t){
       l.after=aiListen(k);aiTurn();aiNext(k,l);
     }
   };
-  const j=await aiPost({go:"say",stream:2,token:k.tok,voice:k.voice,history:k.log.map(l=>({me:!!l.me,t:l.t}))},line);
+  const mem=memOf(k.c),j=await aiPost({go:"say",stream:2,token:k.tok,voice:k.voice,...(mem.length?{facts:memLines(mem)}:{}),history:k.log.map(l=>({me:!!l.me,t:l.t}))},line);
   if(j.streamed&&l){
     if(j.fix)mine.fix=j.fix;
     if(aiOn(k)){if(j.fix)aiDraw();
@@ -4325,6 +4334,50 @@ async function aiSend(t){
   k.pending=null;
   aiHear(String(j.reply||""),j.audio,!!j.done);
 }
+// What Saskia remembers: S.sm {on: true|false (not asked yet: none), onAt, f: {id: {t, at}}}, with the progress. Only after a
+// yes, only Saskia; the server filters sensitive facts (PRIVATE in api/_talk.js). Seen, erased and switched off in Profiel.
+const MEM_MAX=20;
+const memAll=()=>Object.entries(S.sm?.f||{}).map(([id,x])=>({id,...x})).sort((a,b)=>a.at-b.at);
+const memOf=c=>c.id==="saskia"&&S.sm?.on===true?memAll().slice(-MEM_MAX):[];
+const memLines=L=>L.map(x=>new Date(x.at).toLocaleDateString("en-CA",{timeZone:"Europe/Amsterdam"})+" "+x.t);
+const memSet=on=>{S.sm={...(S.sm||{}),on,onAt:Date.now(),f:S.sm?.f||{}};save()};
+function memKeep(mem,j){
+  const f={...(S.sm.f||{})},have=new Set(Object.values(f).map(x=>x.t.toLowerCase())),at=Date.now(),added=[];
+  (Array.isArray(j.old)?j.old:[]).forEach(n=>{if(mem[n-1])delete f[mem[n-1].id]});
+  (Array.isArray(j.facts)?j.facts:[]).slice(0,3).forEach((t,i)=>{t=String(t).slice(0,110);
+    if(t&&!have.has(t.toLowerCase())){have.add(t.toLowerCase());f[at.toString(36)+i+Math.random().toString(36).slice(2,6)]={t,at:at+i};added.push(t)}});
+  Object.entries(f).sort((a,b)=>b[1].at-a[1].at).slice(MEM_MAX).forEach(([id])=>delete f[id]); // the oldest make room
+  S.sm={...S.sm,f};save();return added;
+}
+// Asked once, before the first review, in the learner's own menu language (outside the Dutch conversation)
+function memAsk(){
+  return new Promise(ok=>{
+    $("tctl").innerHTML="";
+    $("tbody").insertAdjacentHTML("beforeend",`<div class="mask" id="mask"><h3 class="lh">Mag Saskia dingen over je onthouden?</h3>
+      <p>Dan kan ze er een volgende keer over beginnen, bijvoorbeeld over je werk of je plannen. Ze onthoudt korte feiten uit jullie gesprekken. Die staan in je voortgang en gaan bij elk gesprek met Saskia mee naar Anthropic. Je ziet en wist ze in Profiel.</p>
+      <button type="button" class="btn wide" id="memy">Ja, dat mag</button><button type="button" class="ghost wide" id="memn">Nee, liever niet</button></div>`);
+    const end=on=>()=>{memSet(on);$("mask")?.remove();ok()};
+    $("memy").onclick=end(true);$("memn").onclick=end(false);
+    $("mask").scrollIntoView({block:"nearest",behavior:"smooth"});
+  });
+}
+function memScreen(){
+  bgOpen(TABN[tab],home);aiDrop();
+  const draw=()=>{
+    const L=memAll().reverse(),on=S.sm?.on===true,fmt=new Intl.DateTimeFormat(lsGet("ww-ui")||"nl",{day:"numeric",month:"short"});
+    $("tbody").innerHTML=`<h2>Wat Saskia over je weet</h2><p class="sub">Korte feiten uit jullie gesprekken. Ze gaan bij elk gesprek met Saskia mee naar Anthropic.</p>
+      <div class="pg"><label class="prow tog"><span>Saskia mag dingen onthouden</span><input type="checkbox" switch id="memon"${on?" checked":""}></label></div>
+      ${!on&&L.length?`<p class="note">Saskia onthoudt niets nieuws en gebruikt deze feiten niet.</p>`:""}
+      ${L.length?`<div>${L.map(x=>`<div class="memrow"><span><span lang="nl">${esc(x.t)}</span><small>${esc(fmt.format(x.at))}</small></span><button type="button" class="ghost" data-mem="${esc(x.id)}">Wis</button></div>`).join("")}</div>
+      <p></p><button type="button" class="ghost wide" id="memclr">Alles wissen</button>`:`<p class="note">Nog niets. Praat met Saskia en hang op: dan kan ze iets onthouden.</p>`}`;
+    $("memon").onchange=()=>{memSet($("memon").checked);draw()};
+    document.querySelectorAll("[data-mem]").forEach(b=>b.onclick=()=>{const f={...S.sm.f};delete f[b.dataset.mem];S.sm={...S.sm,f};save();draw()});
+    if($("memclr"))$("memclr").onclick=()=>{const b=$("memclr");
+      if(!b.dataset.ok){b.dataset.ok=1;b.textContent="Tik nog een keer: alles wordt gewist";return}
+      S.sm={...S.sm,f:{}};save();draw()};
+  };
+  draw();
+}
 // Hanging up or the natural end: what went well and the tips (no extra check)
 async function aiEnd(){
   const k=AK; if(!k||k.ending)return; k.ending=true;
@@ -4334,14 +4387,20 @@ async function aiEnd(){
     bind=()=>{$("ainx").onclick=()=>nx?aiTalk(nx.id):aiAny();$("aire").onclick=()=>nx?aiTalk(c.id):aiList()};
   if(k.n<2){$("tctl").innerHTML=`<div class="tend"><b>Gesprek gestopt</b><p class="note">Te kort voor tips. Zeg de volgende keer wat meer.</p></div>`+tail;return bind()}
   S.ai=S.ai||{}; const g=S.ai[c.id]||{n:0}; S.ai[c.id]={n:(g.n||0)+1,at:Date.now()}; complete();
+  if(c.id==="saskia"&&S.sm?.on==null){await memAsk();if(!aiOn(k))return}
   $("tctl").innerHTML=`<div class="tend"><b class="good">Gesprek klaar!</b><p class="note aiwait">Ik kijk het gesprek na…</p></div>`;
-  const j=await aiPost({go:"end",token:k.tok,history:k.log.map(l=>({me:!!l.me,t:l.t}))});
+  const owner=progressOwner,mem=memOf(c),keep=c.id==="saskia"&&S.sm?.on===true;
+  const j=await aiPost({go:"end",token:k.tok,...(keep?{remember:true,facts:memLines(mem)}:{}),history:k.log.map(l=>({me:!!l.me,t:l.t}))});
   if(j.ok&&Array.isArray(j.tips)&&j.tips.length){keepErrs(j.tips);save()}
+  // not when the account changed or the memory was switched off while waiting
+  const fresh=keep&&j.ok&&owner===progressOwner&&S.sm?.on===true?memKeep(mem,j):[];
   if(!aiOn(k))return;
   const tips=j.ok&&Array.isArray(j.tips)?j.tips:[], good=j.ok&&Array.isArray(j.good)?j.good:[];
   $("tctl").innerHTML=`<div class="tend"><b class="good">Gesprek klaar!</b><p class="note">${j.ok?esc(j.verdict||""):"De tips lukten nu niet, maar het gesprek telt wel."}</p></div>`
     +(good.length?`<h3 class="lh">Dit ging goed</h3><ul class="aigood">${good.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:"")
-    +(j.ok?`<h3 class="lh">Zo zeg je het beter</h3>${errsHTML(tips)}`:"")+tail;
+    +(j.ok?`<h3 class="lh">Zo zeg je het beter</h3>${errsHTML(tips)}`:"")
+    +(fresh.length?`<h3 class="lh">Dit onthoudt Saskia</h3><ul class="aigood">${fresh.map(x=>`<li>${esc(x)}</li>`).join("")}</ul><button class="ghost wide" id="aimem">Bekijk of wis</button>`:"")+tail;
+  if($("aimem"))$("aimem").onclick=memScreen;
   bind();
 }
 // Luisteren en kijken: real Dutch from YouTube channels and podcasts. api/feed.js fetches the latest episodes
@@ -4732,7 +4791,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="6fa06ae1f5";
+const UIV="b949c94b0c";
 let uiP=null;
 function uiLoaded(){ // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});
