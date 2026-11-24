@@ -1040,3 +1040,44 @@ test('Monthly A2 and B1 offers fit the homepage and the app sends the selected l
     assert.deepEqual(chosen,{go:'buy',level:'B1'});assert.deepEqual(s.errors,[]);await s.ctx.close();
   }finally{await browser.close();await new Promise(ok=>server.close(ok))}
 });
+
+// The lens in the phone's tab bar glides like a spring: a second tap halfway carries on from where it is (no step back,
+// no stop, no sideways push from its stretch), a drag catches up with the finger, and it always ends exactly on its tab
+test('The tab bar lens glides without jumps', async t => {
+  let browser;
+  try { browser=chromium&&await chromium.launch(); } catch(e) { if(process.env.BROWSER_TESTS)throw e; }
+  if(!browser){if(process.env.BROWSER_TESTS)assert.fail('Playwright is not installed');return t.skip('no browser here')}
+  const server=await serve(),base=`http://127.0.0.1:${server.address().port}`;
+  try {
+    for (const lang of [null, 'ar']) {
+      const s=await page(browser,base,{lang});await s.go('/oefenen');await s.p.waitForSelector('#plan .step');
+      await s.p.locator('#app-loading').waitFor({state:'hidden'});
+      // the lens's middle, in tabs from the start of the bar, every frame
+      const track=()=>s.p.evaluate(()=>{window.LT=[];const L=document.querySelector('#tabs .lens'),rtl=document.dir==='rtl';
+        const f=()=>{const r=L.getBoundingClientRect(),b=L.parentNode.getBoundingClientRect(),w=(b.width-10)/5;
+          LT.push(((rtl?b.right-5-(r.left+r.width/2):r.left+r.width/2-b.left-5)/w)-.5);if(LT.length<90)requestAnimationFrame(f)};requestAnimationFrame(f)});
+      const steps=()=>s.p.evaluate(()=>LT.slice(1).map((x,i)=>x-LT[i]));
+      await track();
+      await s.p.evaluate(()=>{const B=k=>document.querySelector(`#tabs button[data-t="${k}"]`);B('examen').click();
+        setTimeout(()=>B('profiel').click(),150);setTimeout(()=>B('oefenen').click(),450)});
+      await s.p.waitForTimeout(1600);
+      const d=await steps(),first=d.findIndex(x=>x<-.02),rev=d.slice(first);
+      assert.ok(first>0&&d.slice(0,first).every(x=>x>-.002),`${lang}: forward without a step back`);
+      assert.ok(rev.every(x=>x<.002),`${lang}: after turning, no step forward`);
+      const jerk=a=>Math.max(...a.slice(1).map((x,i)=>Math.abs(x-a[i]))); // how much the speed changes from frame to frame
+      assert.ok(jerk(d)<.3,`${lang}: the speed changes smoothly (${jerk(d).toFixed(3)})`);
+      // a drag from Oefenen towards Mijn dag (the start of the bar)
+      const box=await s.p.locator('#tabs').boundingBox(),y=box.y+box.height/2,cdp=await s.ctx.newCDPSession(s.p);
+      const bx=i=>{const x=box.x+5+(box.width-10)/5*(i+.5);return lang==='ar'?box.x+box.width-(x-box.x):x};
+      const tp=(type,x)=>cdp.send('Input.dispatchTouchEvent',{type,touchPoints:type==='touchEnd'?[]:[{x,y}]});
+      await track();await tp('touchStart',bx(2));
+      for(let k=1;k<=20;k++){await tp('touchMove',bx(2)+(bx(0)-bx(2))*k/20);await s.p.waitForTimeout(16)}
+      await tp('touchEnd');await s.p.waitForTimeout(1000);
+      const dd=await steps();assert.ok(jerk(dd)<.3,`${lang}: the drag has no jump (${jerk(dd).toFixed(3)})`);
+      assert.equal(await s.p.evaluate(()=>document.querySelector('#tabs [aria-current]').dataset.t),'vandaag');
+      const off=await s.p.evaluate(()=>{const a=document.querySelector('#tabs .lens').getBoundingClientRect(),c=document.querySelector('#tabs [aria-current]').getBoundingClientRect();return Math.abs(a.left-c.left)+Math.abs(a.right-c.right)});
+      assert.ok(off<1,`${lang}: the lens ends on its tab (${off})`);
+      assert.deepEqual(s.errors,[]);await s.ctx.close();
+    }
+  } finally{await browser.close();await new Promise(ok=>server.close(ok))}
+});

@@ -179,7 +179,13 @@ rectangle (19 px corners, the bar 24 px, so they run parallel), not a circle: a 
 "Мой день"; a name wider than its button ("Повторение") is set a little smaller, down to 9.5 px (`fitTabs()`, phone only). The current tab sits
 under a lens (`.tabs .lens`), a bitterbal (an orange gradient, lighter only at the top where the icon is, the same in
 dark mode) with the tab in white (at least 4.5:1 behind the name, measured by the browser test), that slides to the new tab with a little spring and stretch, and can be dragged along the bar
-with a finger (it grows and clears while held; where you let go is the tab that opens). The bar only
+with a finger (it grows and clears while held; where you let go is the tab that opens). On a phone `LENS` in `oefenen.html` moves it
+(24 November 2026, the user found it jerky): a critically damped spring played as Web Animations keyframes on the compositor
+(with an explicit start time, so it doesn't stand still while the new tab is drawn), each glide starting from the spring's own
+place and speed, so a second tap or a flick carries on without a stop; the place is the `translate` property in tabs, never
+`transform` (a `scale` after a transform pushed the stretched lens sideways), and the stretch follows its speed; a drag catches
+up with the finger instead of jumping under it. `tests/browser.test.mjs` ("lens glides") checks it frame by frame. The
+computer's menu keeps its CSS transition. The bar only
 shows on the five tabs; exercises and inner screens hide it and go back with their back button or a swipe. The tab
 you were on is kept (`tab`), so every back button returns to it and is named after it.
 
