@@ -497,7 +497,7 @@ test('The homepage and the app work in a real browser', async t => {
       for (const lang of ['en', 'ru', 'ar']) {
         const s = await page(browser, base, {lang, reducedMotion: 'reduce'}); await s.go('/');
         const cards = s.p.locator('.feature-grid details'), descriptions = cards.locator('p');
-        assert.equal(await cards.count(), 7);
+        assert.equal(await cards.count(), 4);
         assert.equal(await s.p.locator('.feature-grid details[open]').count(), 0);
         for (const description of await descriptions.all()) assert.equal(await description.isHidden(), true);
         assert.equal(await cards.first().evaluate(e => getComputedStyle(e).borderTopWidth), '0px');
@@ -550,6 +550,18 @@ test('The homepage and the app work in a real browser', async t => {
       await native.p.locator('.feature-grid summary').first().tap();
       assert.equal(await native.p.locator('.feature-grid p').first().isVisible(), true);
       await native.ctx.close();
+    });
+    await t.test('the four blocks beyond the exam open their screen in the app', async () => {
+      for (const [open, seen] of [['books', '#lib'], ['history', '#hist'], ['media', '#media'], ['talk', '#talk']]) {
+        const s = await page(browser, base, {lang: 'ru'}); await s.go('/ru');
+        const block = s.p.locator('.extra', {has: s.p.locator(`a[href="/oefenen?open=${open}"]`)});
+        await block.scrollIntoViewIfNeeded(); await s.p.waitForTimeout(1200);
+        await Promise.all([s.p.waitForURL(/oefenen/), block.tap({position: {x: 120, y: 80}})]); // the whole block is the link
+        await s.p.locator(seen).waitFor({state: 'visible'});
+        assert.equal(await s.p.evaluate(() => tab), 'oefenen'); // the back button leads to Oefenen
+        assert.equal(await overflow(s.p), 0);
+        assert.deepEqual(s.errors, []); await s.ctx.close();
+      }
     });
     await t.test('learning features: smooth reversal, switching and reduced motion', async () => {
       const s = await page(browser, base, {lang: 'en'}); await s.go('/');

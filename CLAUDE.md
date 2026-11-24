@@ -16,6 +16,13 @@ Descriptions expand and collapse over 360/280 ms with height and opacity, revers
 interaction. Reduced motion skips the animation; resize settles it. Phone cards have no border; keyboard focus stays visible.
 Scroll anchoring is paused during disclosure motion, and feature-section entrance motion settles on hover so the heading
 cannot move away from a stationary pointer.
+"Meer dan examenvragen" (`#ontdek`, "Vraag 2"; the user's wish, 24 November 2026) follows it: four blocks (`.extra`), each with a
+piece of the app itself in HTML or pictures instead of an icon (a sentence from a story with the word popup, paintings, a video
+frame with subtitles above a podcast player, so it is clear that you can watch and listen: our own photo, never a channel's still; Saskia with a correction): books, history and art, videos, podcasts and news, Saskia. The whole block is one link,
+to `/oefenen?open=books`, `history`, `media` or `talk` (`openEntry()`; Oefenen is behind the back button). Keep the texts true:
+words are translated into English only, and Saskia is called an AI character. Those three features left the `#oefenvormen` list
+(four headings now), so nothing appears twice. The Dutch in the pictures stays Dutch (`lang="nl"`, hidden from screen readers).
+The later questions moved one up: 3 the level, 4 the KNM question, 5 the writing check.
 How the two pages hand over (`tests/browser.test.mjs` checks it):
 the site always opens with the homepage in a browser, on phones, tablets and computers, including returning learners
 with saved progress or an account (the user's wish, 12 November 2026). The bar's button leads into the app. On a computer,
@@ -317,7 +324,7 @@ Every section appears once; don't add a second entry point to the same exercise.
   none, in `<head>`), clicks it inside the tap and removes it (Safari 18+ gives the switch's own tap; a hidden switch
   kept in the page gave nothing on the user's iPhone). A switch in Profiel turns it off per device
   (`ww-tril`); it shows only on phones that can do it.
-- **Zo kijkt Bittertalen na**: `nakijken.html` (served as /nakijken, in the sitemap; linked under Vraag 4 on the homepage
+- **Zo kijkt Bittertalen na**: `nakijken.html` (served as /nakijken, in the sitemap; linked under Vraag 5 on the homepage
   and from Profiel's Hulp group), built like over.html in eight languages: DUO's Schrijven A2 points and Bittertalen's
   practice pass rule, two made-up examples scored by those rules (the examples stay Dutch), Speaking, and what to know
   (not DUO, AI can be wrong, Haiku for free checks, Sonnet/Opus for paid ones). Keep it true when the scoring rules or models change.
@@ -524,7 +531,7 @@ when `/api/config` says `events` (accounts on and `EVENTS` not `0`) and never wi
 The events: `open` (the app, once a day per device: `ww-day` keeps only the date, set only once the server kept the
 count, so a lost one is sent again at the next start; asked again when a fresh config comes) and `new` (that first time,
 with no progress yet), `home` (the homepage, once a day: `ww-day-home`, the same way), `begin` (a button from the homepage into the app, not
-Inloggen or Plus), `quiz` (Vraag 2 answered), `test` (the starttest done), `day` (today's lesson done, with the ribbon), `ai` (an AI conversation started),
+Inloggen or Plus), `quiz` (Vraag 4 answered), `test` (the starttest done), `day` (today's lesson done, with the ribbon), `ai` (an AI conversation started),
 `exam_<part>` (a proefexamen started) and `done_<part>` (handed in: `keepRes()`). A new event goes in `EVENTS` too
 (`tests/events.test.mjs` checks every `track("…")` in the pages against it). privacy.html describes this in "De website en
 bezoekers tellen", "Cookies" and "Hoe lang", in all eight languages: change them with it. Vercel Web Analytics is not used

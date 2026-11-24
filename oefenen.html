@@ -4988,7 +4988,7 @@ $("plang").innerHTML=Object.keys(LANGS).map(k=>`<option value="${k}">${LANGS[k].
 $("site-footer").innerHTML=siteFooter();
 if(LI>=0){applyLang();loadUI().then(applyLang).catch(()=>{})} else fitTabs(); // the direction at once, the words when they are here
 function openEntry(){
-  if(!["today","a2","b1","sample","login","plus"].includes(entry)||$("move").hidden===false)return;
+  if(!["today","a2","b1","sample","login","plus","books","history","media","talk"].includes(entry)||$("move").hidden===false)return;
   const q=new URLSearchParams(location.search);
   if(q.has("code")||q.has("error")||q.has("plus")||location.hash.startsWith("#verhuis="))return;
   q.delete("open");history.replaceState(null,"",location.pathname+(q.size?"?"+q:"")+location.hash);
@@ -4998,6 +4998,9 @@ function openEntry(){
   if(entry==="today")return;
   if(entry==="a2"||entry==="b1"){setLvl(entry.toUpperCase());setTab("oefenen");home()}
   if(entry==="sample")tryOne();
+  // the homepage's blocks "Meer dan examenvragen": their screen, with Oefenen behind the back button
+  const screen={books:library,history:hist,media,talk:()=>aiList("people")}[entry];
+  if(screen){setTab("oefenen");home();screen()}
   if(entry==="login"||entry==="plus"){
     setTab("profiel");home();
     if(entry==="plus"&&acc.cfg?.plus)plusScreen();

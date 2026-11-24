@@ -105,7 +105,7 @@
         if (revealed.has(el)) continue;
         revealed.add(el);
         if (el.contains(document.activeElement) || location.hash === '#' + el.id || el.matches('#oefenvormen:hover')) continue;
-        const cards = [...el.querySelectorAll('.ways > li, .pricing > .card')].filter(node => !node.hidden);
+        const cards = [...el.querySelectorAll('.ways > li, .extras > li, .pricing > .card')].filter(node => !node.hidden);
         const tween = gsap.from(cards.length ? cards : [el], {
           y: 24, opacity: 0, duration: 0.85, stagger: 0.075, ease: 'power3.out',
           clearProps: 'transform,opacity', onComplete: () => pending.delete(el)
