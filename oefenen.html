@@ -41,7 +41,7 @@ if(navigator.serviceWorker){navigator.serviceWorker.addEventListener("message",f
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=bittie1">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=bittie1">
 <link rel="manifest" href="/manifest.json?v=bittie1">
-<link rel="preload" as="image" type="image/svg+xml" href="/art/bittie-wave-v1.svg" media="(prefers-reduced-motion:no-preference)" fetchpriority="high">
+<link rel="preload" as="image" type="image/svg+xml" href="/art/bittie-wave-v2.svg" media="(prefers-reduced-motion:no-preference)" fetchpriority="high">
 <link rel="preload" as="image" type="image/webp" href="/art/bittie-loading-v1.webp" media="(prefers-reduced-motion:reduce)" fetchpriority="high">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Bittertalen — Nederlands A2 en B1 voor het inburgeringsexamen en het Staatsexamen</title>
@@ -111,14 +111,17 @@ if(navigator.serviceWorker){navigator.serviceWorker.addEventListener("message",f
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--surface);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,sans-serif;font-size:var(--fs-b);line-height:1.47;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 /* Bittie greets learners while the scripts and local progress load, before account/network work finishes. */
-#app-loading{display:none;position:fixed;inset:0;z-index:80;place-content:center;justify-items:center;gap:12px;
-  padding:calc(24px + env(safe-area-inset-top,0px)) 24px calc(24px + env(safe-area-inset-bottom,0px));
+/* Bittie is exactly as large and in the same place as on the store app's launch image (700 of 2732 px of the screen's
+   height, in its middle; ios-startup-v1.js draws the same), so it doesn't jump when the page takes over: the text hangs
+   below and the safe areas don't move it. */
+#app-loading{display:none;position:fixed;inset:0;z-index:80;grid-template:minmax(0,1fr) auto minmax(0,1fr)/100%;justify-items:center;
   background:var(--bg);color:var(--ink);text-align:center;opacity:1;transition:opacity 220ms cubic-bezier(.4,0,.2,1)}
 :root[data-boot] #app-loading{display:grid}
 :root[data-boot="loading"]{overflow:hidden}
 :root[data-boot="loading"] body>main,:root[data-boot="loading"] #tabs{visibility:hidden}
 :root[data-boot="leaving"] #app-loading{opacity:0;pointer-events:none}
-.boot-bittie{width:min(62vw,240px)}
+.boot-bittie{grid-row:2;width:min(62vw,clamp(170px,25.62vh,245px))}
+.boot-text{grid-row:3;display:grid;justify-items:center;align-content:start;gap:12px;padding:12px 24px 0}
 .boot-bittie picture,#app-loading img{display:block;width:100%;height:auto}
 #app-loading b{font-size:28px;font-weight:700;letter-spacing:-.035em;line-height:1.15}
 #app-loading p{margin:0;color:var(--soft);font-size:15px;line-height:1.5}
@@ -948,11 +951,11 @@ h2,h3,.verb,.step b,.it b{text-wrap:balance} p,.d,.sub,.note{text-wrap:pretty}
 <div id="app-loading" role="status" aria-live="polite">
   <div class="boot-bittie"><picture>
     <source srcset="/art/bittie-loading-v1.webp" type="image/webp" media="(prefers-reduced-motion:reduce)">
-    <img src="/art/bittie-wave-v1.svg" width="320" height="320" alt="" fetchpriority="high" decoding="async">
+    <img src="/art/bittie-wave-v2.svg" width="512" height="512" alt="" fetchpriority="high" decoding="async">
   </picture></div>
-  <b translate="no">Bittertalen</b>
+  <div class="boot-text"><b translate="no">Bittertalen</b>
   <p id="boot-label">Laden…</p>
-  <span class="boot-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+  <span class="boot-dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
 </div>
 <script>
 // The loading label is available before the exercise data and the full menu translations arrive.
@@ -960,7 +963,7 @@ h2,h3,.verb,.step b,.it b{text-wrap:balance} p,.d,.sub,.note{text-wrap:pretty}
 // The store app holds its native Bittie launch image (with a six-second limit) until this Bittie is on screen
 const NS=window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.SplashScreen;
 if(NS){const img=document.querySelector("#app-loading img");let done=0;const go=()=>{if(!done++)NS.hide({fadeOutDuration:250}).catch(()=>{})};
-  if(img&&!img.complete){img.addEventListener("load",go,{once:true});img.addEventListener("error",go,{once:true});setTimeout(go,1500)}else go()}
+  if(img){img.decode().catch(()=>{}).then(()=>requestAnimationFrame(go));setTimeout(go,1500)}else go()}
 let lang="nl";try{lang=localStorage.getItem("ww-ui")||"nl"}catch{}
 const labels={nl:"Laden…",en:"Loading…",ar:"جارٍ التحميل…",tr:"Yükleniyor…",hi:"लोड हो रहा है…",zh:"加载中…",es:"Cargando…",ru:"Загрузка…"};
 const label=document.getElementById("boot-label");label.textContent=labels[lang]||labels.nl;label.lang=lang;

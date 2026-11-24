@@ -3,11 +3,10 @@
 // https://web.dev/learn/pwa/enhancements#splash_screens
 (() => {
   if (typeof navigator.standalone === 'undefined') return;
-  const motion = matchMedia('(prefers-reduced-motion:reduce)');
   const dark = matchMedia('(prefers-color-scheme:dark)');
   const image = document.createElement('img');
   image.alt = '';
-  image.src = motion.matches ? '/art/bittie-loading-v1.webp' : '/art/bittie-wave-v1.svg';
+  image.src = '/art/bittie-loading-v1.webp'; // the wave's first frame
   let scheduled = false;
   function paint() {
     scheduled = false;
@@ -22,7 +21,7 @@
     const bg = dark.matches ? '#1D2436' : '#FBFCFE';
     const ink = dark.matches ? '#EEF1F7' : '#14213D';
     const soft = dark.matches ? '#9EA7BA' : '#56617C';
-    const size = Math.min(width * .62, 240), top = (height - size - 108) / 2;
+    const size = Math.min(width * .62, Math.max(170, Math.min(height * .2562, 245))), top = (height - size) / 2; // as .boot-bittie
     context.fillStyle = bg; context.fillRect(0, 0, width, height);
     context.drawImage(image, (width - size) / 2, top, size, size);
     context.textAlign = 'center'; context.fillStyle = ink;
