@@ -73,9 +73,16 @@ start one by hand, a production deployment of `main` at that commit) (Vercel pro
 `nedelands`; the domain is registered at TransIP with Vercel's nameservers, so its DNS records are in Vercel, including
 Resend's). The old addresses https://bittertalen.vercel.app and https://nedelands.vercel.app serve the same deployment
 as migration-only entry points (see Progress). Practice is available only on bittertalen.nl.
-Search: `robots.txt`, `sitemap.xml` (only https://bittertalen.nl/), a canonical link to bittertalen.nl, Open Graph tags
+Search: `robots.txt`, `sitemap.xml` (the homepages and the public pages), a canonical link to bittertalen.nl, Open Graph tags
 with `art/og-delft.jpg`, JSON-LD (`WebApplication`) and a `<noscript>` line, and search engines don't get the welcome
-screen. Until the public launch every address sends `X-Robots-Tag: noindex` (`vercel.json`, one rule for all hosts). At
+screen. The homepage has its own address per menu language (24 November 2026, for search): `/en`, `/ar`, `/tr`,
+`/hi`, `/zh`, `/es`, `/ru` are `en.html` … `ru.html`, made by `node tools/build-lang.mjs` from `index.html` and
+`landing.js`'s `copy` (texts already translated, the Dutch kept in `data-t="…"`; their own title, description, Open
+Graph, canonical, html lang and JSON-LD from `META` in the tool). Never edit those files by hand: after changing
+`index.html` or `copy`, run the tool (`tests/lang-pages.test.mjs` fails otherwise). Every homepage lists all eight with
+`hreflang` (`zh-Hans` for Chinese, `x-default` = `/`), as does `sitemap.xml`. On those pages their language wins and
+is saved in `ww-ui` (so the app opens in it); `/` still shows the saved language in place; the language selector goes
+to that language's address. Until the public launch every address sends `X-Robots-Tag: noindex` (`vercel.json`, one rule for all hosts). At
 launch, limit that rule to the old addresses (`"has": [{"type": "host", "value": "bittertalen.vercel.app"}]`, and the
 same for nedelands.vercel.app) and add bittertalen.nl to Google Search Console.
 Privacy: `privacy.html` (served as /privacy, `cleanUrls` in `vercel.json`) is the privacy statement in Dutch, in the same

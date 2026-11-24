@@ -157,12 +157,21 @@ const tryCopy = {
   es: (n, w) => `Pruébalo: ${n} textos o respuestas revisados gratis, sin cuenta. Después, ${w} más gratis con una cuenta gratuita.`,
   ru: (n, w) => `Попробуйте сами: ${n} текста или ответа проверяются бесплатно, без аккаунта. Потом ещё ${w} бесплатно с бесплатным аккаунтом.`,
 };
-const nodes = [...document.querySelectorAll("[data-t]")].map(node => [node, node.textContent]);
+// a translated page keeps the Dutch original in data-t="…"
+const nodes = [...document.querySelectorAll("[data-t]")].map(node => [node, node.dataset.t || node.textContent]);
 const alts = [...document.querySelectorAll("[data-alt]")].map(node => [node, node.dataset.alt]);
 const $ = id => document.getElementById(id);
 let config; // undefined while loading, null when the request failed
+// /en, /ru, … (tools/build-lang.mjs) are the homepage already translated, for search engines: their language wins
+// and is kept for the app; "/" still shows the language chosen before.
+const page = document.documentElement.dataset.page;
 let lang = "nl";
-try { lang = localStorage.getItem("ww-ui") || "nl"; } catch {}
+if (page && Object.hasOwn(pricing, page)) {
+  lang = page;
+  try { localStorage.setItem("ww-ui", lang); } catch {}
+} else {
+  try { lang = localStorage.getItem("ww-ui") || "nl"; } catch {}
+}
 if (!Object.hasOwn(pricing, lang)) lang = "nl";
 function render() {
   const i = languages.indexOf(lang);
@@ -205,6 +214,9 @@ function render() {
 select.addEventListener("change", () => {
   lang = select.value;
   try { lang === "nl" ? localStorage.removeItem("ww-ui") : localStorage.setItem("ww-ui", lang); } catch {}
+  // every language has its own address (/, /en, /ru, …), so a shared or found link opens in that language
+  const to = lang === "nl" ? "/" : "/" + lang;
+  if (location.pathname !== to) { location.assign(to + location.search + location.hash); return; }
   render();
 });
 render();

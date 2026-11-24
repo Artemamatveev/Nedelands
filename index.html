@@ -8,7 +8,17 @@
 <title>Bittertalen — Nederlands oefenen voor A2 en B1</title>
 <meta name="description" content="Oefen gratis voor het inburgeringsexamen A2 en het Staatsexamen NT2 B1. Daglessen, proefexamens en feedback op schrijven en spreken.">
 <link rel="canonical" href="https://bittertalen.nl/">
+<link rel="alternate" hreflang="nl" href="https://bittertalen.nl/">
+<link rel="alternate" hreflang="en" href="https://bittertalen.nl/en">
+<link rel="alternate" hreflang="ar" href="https://bittertalen.nl/ar">
+<link rel="alternate" hreflang="tr" href="https://bittertalen.nl/tr">
+<link rel="alternate" hreflang="hi" href="https://bittertalen.nl/hi">
+<link rel="alternate" hreflang="zh-Hans" href="https://bittertalen.nl/zh">
+<link rel="alternate" hreflang="es" href="https://bittertalen.nl/es">
+<link rel="alternate" hreflang="ru" href="https://bittertalen.nl/ru">
+<link rel="alternate" hreflang="x-default" href="https://bittertalen.nl/">
 <meta property="og:type" content="website">
+<meta property="og:locale" content="nl_NL">
 <meta property="og:site_name" content="Bittertalen">
 <meta property="og:title" content="Bittertalen — Nederlands oefenen voor A2 en B1">
 <meta property="og:description" content="Gratis oefeningen en proefexamens voor inburgering A2 en Staatsexamen NT2 B1.">
@@ -35,13 +45,13 @@
   if (alias || q.has("code") || q.has("error") || q.has("plus") || location.hash.startsWith("#verhuis=") ||
       (installed && !q.has("home"))) {
     location.replace("/oefenen" + location.search + location.hash);
-  } else if (!installed && q.has("home") && q.size === 1) history.replaceState(null, "", "/" + location.hash);
+  } else if (!installed && q.has("home") && q.size === 1) history.replaceState(null, "", location.pathname + location.hash);
 })();
 </script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Bittertalen","url":"https://bittertalen.nl/","applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":"nl","educationalLevel":["A2","B1"],"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}
 </script>
-<script defer src="/landing.js?v=install1"></script>
+<script defer src="/landing.js?v=lang1"></script>
 <script defer src="/lib/gsap-3.15.1.min.js"></script>
 <script defer src="/lib/ScrollTrigger-3.15.1.min.js"></script>
 <script defer src="/landing-motion-v3.js?v=features10"></script>
