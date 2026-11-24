@@ -14,7 +14,15 @@ async function load(options={}){
   class RateLimitError extends APIError{}
   class Anthropic {
     static APIError=APIError;static AuthenticationError=AuthenticationError;static RateLimitError=RateLimitError;
-    beta={messages:{create:async(body)=>{bodies.push(body);
+    beta={messages:{stream:(body)=>{bodies.push(body);const on={};
+      return {on(e,f){on[e]=f},async finalMessage(){
+        if(options.fail)throw new APIError('down');
+        const full=options.raw||JSON.stringify(options.out||{reply:'Leuk! "Ja" zei ik.',done:false,fix:{wrong:'ik heb gegaan',right:'ik ben gegaan',why:'Gaan krijgt zijn.'}});
+        if(options.fallback)on.streamEvent?.({type:'content_block_start',content_block:{type:'fallback'}});
+        for(let i=1;i<=full.length;i++)on.text?.(full[i-1],full.slice(0,i));
+        if(options.hold)await options.hold;
+        return {stop_reason:options.stop||'end_turn',model:'test-model',usage:{input_tokens:50,output_tokens:20},content:[{type:'text',text:full}]};
+      }}},create:async(body)=>{bodies.push(body);
       if(options.fail)throw new APIError('down');
       const out=options.out||(body.system.includes('teacher')?{verdict:'Goed gedaan.',good:['Je stelde vragen.'],tips:[{wrong:'ik heb gegaan',right:'ik ben gegaan',why:'Gaan krijgt zijn.'},{wrong:'x',right:'x',why:'same'}]}
         :{reply:'Leuk! Wat heb je gegeten?',fix:{wrong:'ik heb gegaan',right:'ik ben gegaan',why:'Gaan krijgt zijn.'},done:false});
@@ -38,7 +46,7 @@ async function load(options={}){
   const mod=new vm.SourceTextModule(fs.readFileSync(new URL('api/_talk.js',root),'utf8'),{context});
   const scenes=new vm.SourceTextModule(fs.readFileSync(new URL('api/_scenes.js',root),'utf8'),{context});
   await mod.link(n=>n==='@anthropic-ai/sdk'?sdk:n==='node:crypto'?cr:n==='./_scenes.js'?scenes:supa);await mod.evaluate();
-  const call=async body=>{const res={statusCode:200,status(n){this.statusCode=n;return this},json(b){this.body=b;return this},setHeader(){}};
+  const call=async body=>{const res={statusCode:200,status(n){this.statusCode=n;return this},json(b){this.body=b;return this},headers:{},headersSent:false,setHeader(k,v){this.headers[k]=v},lines:[],write(x){this.headersSent=true;this.lines.push(...x.trim().split('\n').map(l=>JSON.parse(l)));options.onLine?.(this.lines)},end(){this.ended=true;return this}};
     await mod.namespace.talk({method:'POST',headers:{},body},res);return res};
   return {call,usage,quotas,bodies,fetches,logs,ns:mod.namespace};
 }
@@ -544,4 +552,50 @@ test('Saskia menu and conversation identify the museum host without claiming a l
   assert.ok(t.ns.TOPICS.saskia.open.includes(reply));
   await t.call({go:'say',token,history:[{t:reply},{me:true,t:'Ik hou van schilderijen.'}]});
   assert.match(t.bodies[0].system,/museum cafe/);assert.doesNotMatch(t.bodies[0].system,/works as a nurse/);
+});
+
+const turn=token=>({go:'say',stream:true,token,history:[{t:'Hoi'},{me:true,t:'ik heb gegaan'}]});
+test('The voice is sent while the correction is still being written',async()=>{
+  let release,got;const hold=new Promise(ok=>{release=ok}),first=new Promise(ok=>{got=ok});
+  const t=await load({env:{GOOGLE_TTS_KEY:'k'},hold,onLine:l=>{if(l.length===1)got(l[0])}});
+  const {body:{token}}=await t.call({go:'start',topic:'saskia'});
+  const pending=t.call(turn(token));
+  const line=await first;release();
+  assert.deepEqual({...line},{reply:'Leuk! "Ja" zei ik.',done:false,audio:'QUJD'});
+  const r=await pending;assert.equal(r.statusCode,200);assert.match(r.headers['Content-Type'],/ndjson/);
+  assert.equal(r.lines[1].fix.right,'ik ben gegaan');assert.equal(r.ended,true);
+  assert.equal(t.fetches.length,2,'the greeting and one reply: spoken once');assert.deepEqual(t.usage,[1]);
+  assert.ok(t.logs.some(x=>/talk_time/.test(x)));assert.ok(t.logs.every(x=>!/gegaan|Leuk/.test(x)),'timings only');
+});
+test('A streamed turn falls back to one plain answer after a model switch, and reports refusals and failures',async()=>{
+  const run=async o=>{const t=await load(o);const {body:{token}}=await t.call({go:'start',topic:'saskia'});return t.call(turn(token))};
+  const sw=await run({fallback:true});assert.equal(sw.lines.length,0);assert.equal(sw.body.reply,'Leuk! "Ja" zei ik.');assert.ok(sw.body.fix);
+  const no=await run({stop:'refusal',raw:'{"reply":"Dat kan'});assert.equal(no.statusCode,422);assert.equal(no.lines.length,0);
+  assert.equal((await run({fail:true})).statusCode,502);
+  const cut=await run({raw:'{"reply":"Hoi daar.","done":true,"fix":{"wro',stop:'max_tokens'});
+  assert.deepEqual(cut.lines.map(x=>x.reply||null),['Hoi daar.',null]);assert.equal(cut.lines[0].done,true);assert.equal(cut.lines[1].fix,null);
+});
+test('The page speaks on the first line and adds the correction when it comes',async()=>{
+  let push;const enc=new TextEncoder();
+  const fetch=async(url,init)=>{
+    if(url!=='/api/talk')return new Response(JSON.stringify(url==='/api/config'?{}:[]));
+    const b=JSON.parse(init.body);
+    if(b.go==='start')return new Response(JSON.stringify({token:'tok',reply:'Hoi!',audio:null}));
+    assert.equal(b.stream,true);
+    return new Response(new ReadableStream({start(c){push=x=>x?c.enqueue(enc.encode(x)):c.close()}}),{headers:{'content-type':'application/x-ndjson'}});
+  };
+  const a=await app({fetch});a.run('aiTalk("saskia")');await a.run('aiStart()');await a.flush();
+  a.run('aiSend("ik heb gegaan")');await a.flush();
+  push('{"reply":"Wat le');await a.flush();assert.doesNotMatch(a.document.getElementById('tlog').textContent,/Wat leuk/);
+  push('uk!","done":false,"audio":null}\n');await a.flush();
+  assert.match(a.document.getElementById('tlog').textContent,/Wat leuk!/);assert.equal(a.run('AK.busy'),false);assert.equal(a.run('AK.pending'),null);
+  assert.doesNotMatch(a.document.getElementById('tlog').textContent,/Beter:/);
+  push('{"fix":{"wrong":"ik heb gegaan","right":"ik ben gegaan","why":"Gaan krijgt zijn."}}\n');push('');await a.flush();
+  assert.match(a.document.getElementById('tlog').textContent,/Beter: ik ben gegaan/);
+  assert.equal(a.run('AK.log.filter(l=>!l.me).length'),2,'the reply is not added twice');assert.deepEqual(a.errors,[]);
+});
+test('Klaar after the words stood still waits less',async()=>{
+  const {a,instances}=await voiceConversation();instances[0].stop=()=>{};instances[0].result('Ik ben moe',false);
+  const r=a.run('rec');r.textAt=Date.now()-900;a.document.getElementById('recb').click();
+  assert.equal(a.timers.get(r.finishTimer).delay,700);
 });
