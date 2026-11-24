@@ -879,9 +879,12 @@ conversation. Two menu buttons (aiMenu remembers the choice when returning from 
   In AI conversations each completed take aborts and retires its recogniser before voice playback, so iOS gets a fresh
   recogniser for each answer; exams retain their existing shared recogniser. Restart exceptions and terminal errors
   are handled. Thinking never ends a take: the check every 8 s only fails a recogniser that never started, and quietly
-  replaces one (`r.renew()`, same take, text kept) that hears a voice without words or stays silent for two checks; after
+  replaces one (`r.renew()`, same take, text kept) that heard a voice five seconds ago without words or stays silent for
+  three checks, never just after a voice began (that swallowed first words: "van Gogh" became "Gogh"); after
   three replacements it offers a retry. audio-capture and network errors without text are retried twice. A failure shows
-  its code in brackets, so a learner's report says what went wrong.
+  its code in brackets, so a learner's report says what went wrong. The button says "Wacht even…" until the phone really
+  records (`audiostart`, `r.go()`), recognition restarts 20 ms after it ends, and leading words the phone drops from its
+  own hypothesis are kept.
   Permission checks are scoped to the specific take, so old timers cannot cancel a later answer. Test doubles cover
   five consecutive spoken replies, a deaf third take, late timers, cancellation and late audio decoding. A real iPhone
   microphone check is still needed; automated tests cannot certify the WebKit workaround on every iOS version.
