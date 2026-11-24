@@ -426,7 +426,8 @@ launch image stays until the page's own Bittie has loaded (`@capacitor/splash-sc
 `#app-loading`, at most 3 s), so no white screen between them. Profiel shows "Dagelijkse herinnering" (`remindRow()`, local notifications, `ww-remind`). Keep these when changing
 login, Plus or Profiel. `native/` is not deployed as part of the site (`.vercelignore`). The iOS project
 (`native/ios`, committed) is signed with the user's Individual team `GW742K94US`, bundle ID `nl.bittertalen.app`; the app
-"Bittertalen" exists in App Store Connect and build 1.0 (1) went to TestFlight on 23 November 2026, 1.0 (2) (Apple sheet, launch image) the same evening.
+"Bittertalen" exists in App Store Connect and build 1.0 (1) went to TestFlight on 23 November 2026, 1.0 (2) (Apple sheet, launch image) the same evening, 1.0 (3) (native haptics:
+`BittertalenHapticsPlugin` in `SceneDelegate.swift`, which `buzz()` uses in the app) on 24 November.
 
 ## Functions and the Vercel plan
 

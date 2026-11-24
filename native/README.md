@@ -54,4 +54,4 @@ Android icons and splash: make them from `../icon-1024.png` with `npx @capacitor
 ## Updating
 
 Content and code come from the website. A new store build is only needed for a new Capacitor version, a new
-plugin, icons, or a change in `capacitor.config.json`.
+plugin, a change in the Swift code, icons, or a change in `capacitor.config.json`.
