@@ -557,45 +557,90 @@ test('Saskia menu and conversation identify the museum host without claiming a l
   assert.match(t.bodies[0].system,/museum cafe/);assert.doesNotMatch(t.bodies[0].system,/works as a nurse/);
 });
 
-const turn=token=>({go:'say',stream:true,token,history:[{t:'Hoi'},{me:true,t:'ik heb gegaan'}]});
-test('The voice is sent while the correction is still being written',async()=>{
-  let release,got;const hold=new Promise(ok=>{release=ok}),first=new Promise(ok=>{got=ok});
-  const t=await load({env:{GOOGLE_TTS_KEY:'k'},hold,onLine:l=>{if(l.length===1)got(l[0])}});
-  const {body:{token}}=await t.call({go:'start',topic:'saskia'});
-  const pending=t.call(turn(token));
-  const line=await first;release();
-  assert.deepEqual({...line},{reply:'Leuk! "Ja" zei ik.',done:false,audio:'QUJD'});
-  const r=await pending;assert.equal(r.statusCode,200);assert.match(r.headers['Content-Type'],/ndjson/);
-  assert.equal(r.lines[1].fix.right,'ik ben gegaan');assert.equal(r.ended,true);
-  assert.equal(t.fetches.length,2,'the greeting and one reply: spoken once');assert.deepEqual(t.usage,[1]);
-  assert.ok(t.logs.some(x=>/talk_time/.test(x)));assert.ok(t.logs.every(x=>!/gegaan|Leuk/.test(x)),'timings only');
+const turn=token=>({go:'say',stream:2,token,history:[{t:'Hoi'},{me:true,t:'ik heb gegaan'}]});
+test('Sentences are cut as the reply is written: short ones join, abbreviations and decimals do not split',async()=>{
+  const {ns}=await load();
+  const cut=reply=>{const got=[];let end=null;const f=ns.sentences(x=>got.push(x),(t,d)=>{end=[t,d]});
+    const full=JSON.stringify({reply,done:true,fix:{wrong:'a. b',right:'',why:''}});for(let i=1;i<=full.length;i++)f(full.slice(0,i));
+    assert.deepEqual([...end],[reply,true]);assert.equal(got.join(' '),reply);return got};
+  assert.deepEqual(cut('Hoi! Wat leuk dat je er bent. Wil je koffie?'),['Hoi! Wat leuk dat je er bent.','Wil je koffie?']);
+  assert.deepEqual(cut('Ga maar naar dr. Visser in Utrecht. Het kost € 3,50 per keer.'),['Ga maar naar dr. Visser in Utrecht.','Het kost € 3,50 per keer.']);
+  assert.deepEqual(cut('Ze zei: "Kom je morgen ook?" En toen\nging ze weg.'),['Ze zei: "Kom je morgen ook?"','En toen\nging ze weg.']);
+  assert.deepEqual(cut('Ja.'),['Ja.']);
 });
-test('A streamed turn falls back to one plain answer after a model switch, and reports refusals and failures',async()=>{
-  const run=async o=>{const t=await load(o);const {body:{token}}=await t.call({go:'start',topic:'saskia'});return t.call(turn(token))};
+test('Each sentence is voiced as it is written and sent in order, before the correction',async()=>{
+  let release,got;const hold=new Promise(ok=>{release=ok}),first=new Promise(ok=>{got=ok});
+  const out={reply:'Wat leuk dat je er bent. Wil je koffie?',done:false,fix:{wrong:'ik heb gegaan',right:'ik ben gegaan',why:'Zijn.'}};
+  const t=await load({env:{GOOGLE_TTS_KEY:'k'},out,hold,onLine:l=>{if(l.length===3)got()}});
+  const {body:{token}}=await t.call({go:'start',topic:'saskia'});
+  const pending=t.call(turn(token));await first;
+  assert.deepEqual(t.fetches.slice(1).map(f=>JSON.parse(f[1].body).input.text),['Wat leuk dat je er bent.','Wil je koffie?']);
+  release();const r=await pending;
+  assert.deepEqual(r.lines.map(x=>({...x})).slice(0,3),[{say:'Wat leuk dat je er bent.',audio:'QUJD'},{say:'Wil je koffie?',audio:'QUJD'},{reply:out.reply,done:false,parts:2}]);
+  assert.equal(r.lines[3].fix.right,'ik ben gegaan');assert.equal(r.ended,true);assert.match(r.headers['Content-Type'],/ndjson/);
+  assert.deepEqual(t.usage,[1]);assert.ok(t.logs.some(x=>/talk_time/.test(x)));assert.ok(t.logs.every(x=>!/gegaan|koffie/.test(x)),'timings only');
+});
+test('A streamed turn survives a model switch, a refusal, a failure, an answer cut short and an older page',async()=>{
+  const run=async(o,body)=>{const t=await load(o);const {body:{token}}=await t.call({go:'start',topic:'saskia'});return t.call({...turn(token),...body})};
   const sw=await run({fallback:true});assert.equal(sw.lines.length,0);assert.equal(sw.body.reply,'Leuk! "Ja" zei ik.');assert.ok(sw.body.fix);
   const no=await run({stop:'refusal',raw:'{"reply":"Dat kan'});assert.equal(no.statusCode,422);assert.equal(no.lines.length,0);
   assert.equal((await run({fail:true})).statusCode,502);
-  const cut=await run({raw:'{"reply":"Hoi daar.","done":true,"fix":{"wro',stop:'max_tokens'});
-  assert.deepEqual(cut.lines.map(x=>x.reply||null),['Hoi daar.',null]);assert.equal(cut.lines[0].done,true);assert.equal(cut.lines[1].fix,null);
+  const cut=await run({raw:'{"reply":"Wat leuk dat je er bent. Wil je kof',stop:'max_tokens'});
+  assert.deepEqual(cut.lines.map(x=>({...x})),[{say:'Wat leuk dat je er bent.',audio:null},{reply:'Wat leuk dat je er bent.',done:false,parts:1},{fix:null}]);
+  const old=await run({},{stream:true});assert.equal(old.lines.length,0);assert.ok(old.body.reply);
 });
-test('The page speaks on the first line and adds the correction when it comes',async()=>{
+async function streamed(globals={}){
   let push;const enc=new TextEncoder();
   const fetch=async(url,init)=>{
     if(url!=='/api/talk')return new Response(JSON.stringify(url==='/api/config'?{}:[]));
     const b=JSON.parse(init.body);
-    if(b.go==='start')return new Response(JSON.stringify({token:'tok',reply:'Hoi!',audio:null}));
-    assert.equal(b.stream,true);
-    return new Response(new ReadableStream({start(c){push=x=>x?c.enqueue(enc.encode(x)):c.close()}}),{headers:{'content-type':'application/x-ndjson'}});
+    if(b.go==='start')return new Response(JSON.stringify({token:'tok',reply:'Hoi!',audio:'QUJD'}));
+    if(b.go==='end')return new Response(JSON.stringify({verdict:'Goed.',good:[],tips:[]}));
+    assert.equal(b.stream,2);
+    return new Response(new ReadableStream({start(c){push=x=>x?c.enqueue(enc.encode(typeof x==='string'?x:JSON.stringify(x)+'\n')):c.close()}}),{headers:{'content-type':'application/x-ndjson'}});
   };
-  const a=await app({fetch});a.run('aiTalk("saskia")');await a.run('aiStart()');await a.flush();
+  const instances=[];class Rec{constructor(){instances.push(this)}start(){}stop(){this.onend?.()}abort(){}}
+  const voice=bufferVoice(),a=await app({fetch,globals:{...voice.globals,SpeechRecognition:Rec,...globals}});
+  a.run('aiTalk("saskia")');await a.run('aiStart()');await a.flush();voice.sources.at(-1).onended();await a.flush();
   a.run('aiSend("ik heb gegaan")');await a.flush();
-  push('{"reply":"Wat le');await a.flush();assert.doesNotMatch(a.document.getElementById('tlog').textContent,/Wat leuk/);
-  push('uk!","done":false,"audio":null}\n');await a.flush();
-  assert.match(a.document.getElementById('tlog').textContent,/Wat leuk!/);assert.equal(a.run('AK.busy'),false);assert.equal(a.run('AK.pending'),null);
-  assert.doesNotMatch(a.document.getElementById('tlog').textContent,/Beter:/);
-  push('{"fix":{"wrong":"ik heb gegaan","right":"ik ben gegaan","why":"Gaan krijgt zijn."}}\n');push('');await a.flush();
-  assert.match(a.document.getElementById('tlog').textContent,/Beter: ik ben gegaan/);
-  assert.equal(a.run('AK.log.filter(l=>!l.me).length'),2,'the reply is not added twice');assert.deepEqual(a.errors,[]);
+  return {a,voice,log:()=>a.document.getElementById('tlog').textContent,push:async x=>{push(x);await a.flush()}};
+}
+test('The page plays sentence after sentence, listens only after the last, and adds the correction when it comes',async()=>{
+  const {a,voice,log,push}=await streamed(),n=voice.sources.length;
+  await push('{"say":"Wat leuk');assert.doesNotMatch(log(),/Wat leuk/);
+  await push(' dat je er bent.","audio":"QUJD"}\n');assert.match(log(),/Wat leuk dat je er bent\./);
+  assert.equal(voice.sources.length,n+1,'the first sentence is heard at once');
+  voice.sources.at(-1).onended();await a.flush();assert.equal(a.run('rec'),null,'more is coming: do not listen yet');
+  await push({say:'Wil je koffie?',audio:'QUJD'});assert.equal(voice.sources.length,n+2);
+  await push({reply:'Wat leuk dat je er bent. Wil je koffie?',done:false,parts:2});
+  assert.ok(a.document.getElementById('recb'),'the buttons are there');assert.equal(a.run('rec'),null,'still speaking');
+  voice.sources.at(-1).onended();await a.flush();assert.ok(a.run('rec'),'now it listens');
+  assert.doesNotMatch(log(),/Beter:/);
+  await push({fix:{wrong:'ik heb gegaan',right:'ik ben gegaan',why:'Zijn.'}});await push(null);
+  assert.match(log(),/Beter: ik ben gegaan/);assert.ok(a.run('rec'),'the correction does not stop the microphone');
+  assert.equal(a.run('AK.log.filter(l=>!l.me).length'),2);assert.equal(a.run('AK.log.at(-1).t'),'Wat leuk dat je er bent. Wil je koffie?');
+  assert.equal(a.run('AK.busy'),false);assert.deepEqual(a.errors,[]);
+});
+test('Interrupting stops the remaining sentences, and replay plays all of them',async()=>{
+  const {a,voice,push}=await streamed();
+  await push({say:'Wat leuk dat je er bent.',audio:'QUJD'});await push({say:'Wil je koffie?',audio:'QUJD'});
+  await push({reply:'x',done:false,parts:2});await push({fix:null});await push(null);
+  const n=voice.sources.length;a.document.getElementById('recb').click();await a.flush();
+  assert.ok(a.run('rec'));assert.equal(voice.sources.length,n,'no second sentence over the learner');
+  [...a.document.querySelectorAll('#tlog .say')].at(-1).click();await a.flush();assert.equal(voice.sources.length,n+1);
+  voice.sources.at(-1).onended();await a.flush();assert.equal(voice.sources.length,n+2);
+  voice.sources.at(-1).onended();await a.flush();assert.equal(a.run('rec'),null,'a replay does not open the microphone');
+  assert.deepEqual(a.errors,[]);
+});
+test('A streamed goodbye ends the conversation, a broken line keeps what was said, and leaving the screen stops it',async()=>{
+  const bye=await streamed();await bye.push({say:'Dag, tot de volgende keer!',audio:'QUJD'});
+  await bye.push({reply:'x',done:true,parts:1});await bye.push({fix:null});await bye.push(null);
+  assert.equal(bye.a.run('AK.done'),true);assert.ok(bye.a.document.getElementById('ainx')||/Te kort|Gesprek/.test(bye.a.document.getElementById('tctl').textContent));
+  const cut=await streamed();await cut.push({say:'Wat leuk dat je er bent.',audio:'QUJD'});await cut.push(null);
+  assert.equal(cut.a.run('AK.busy'),false);assert.ok(cut.a.document.getElementById('tsend'),'the learner can go on');
+  const away=await streamed();away.a.run('home()');const n=away.voice.sources.length;
+  await away.push({say:'Hallo daar, ben je er nog?',audio:'QUJD'});assert.equal(away.voice.sources.length,n);
+  for(const x of [bye,cut,away])assert.deepEqual(x.a.errors,[]);
 });
 test('Klaar after the words stood still waits less',async()=>{
   const {a,instances}=await voiceConversation();instances[0].stop=()=>{};instances[0].result('Ik ben moe',false);
@@ -613,4 +658,13 @@ test('The first words stay when the phone drops them from its own hypothesis, an
   a.timers.get(r.restart).fn();n.result('en van kleuren',true);
   a.document.getElementById('recb').click();await a.flush();
   assert.equal(requests[1].history.at(-1).t,'Ik hou van Gogh en van kleuren');
+});
+
+test('The phone voice gets a streamed reply in one piece: iOS drops speech that follows a cancel',async()=>{
+  const spoken=[];class Utterance{constructor(t){this.text=t}}
+  const speechSynthesis={speaking:false,pending:false,cancel(){},speak(u){spoken.push(u)}};
+  const {a,push}=await streamed({speechSynthesis,SpeechSynthesisUtterance:Utterance});a.run('AK.voice="device"');const n=spoken.length;
+  await push({say:'Wat leuk dat je er bent.',audio:null});await push({say:'Wil je koffie?',audio:null});assert.equal(spoken.length,n);
+  await push({reply:'x',done:false,parts:2});assert.deepEqual(spoken.slice(n).map(u=>u.text),['Wat leuk dat je er bent. Wil je koffie?']);
+  spoken.at(-1).onend();await a.flush();assert.ok(a.run('rec'));assert.deepEqual(a.errors,[]);
 });

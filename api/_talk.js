@@ -4,7 +4,8 @@
 // uses the phone's own voice).
 // POST {go:"start", topic, level} -> {token, reply, audio, left, limit, period}: takes one check (like one writing task)
 // POST {go:"say", token, history:[{me, t}]} -> {reply, fix:{wrong, right, why}|null, done, audio}
-//   With stream:true the same comes as two JSON lines: {reply, done, audio} as soon as it can be spoken, then {fix}
+//   With stream:2 it comes as JSON lines: {say, audio} per sentence, as soon as it can be spoken, then {reply, done, parts}
+//   (parts: how many sentences), then {fix}
 // POST {go:"end", token, history} -> {verdict, good:[…], tips:[{wrong, right, why}]}
 // A conversation is paid once, at its start; the signed token lets the next turns through for TTL. The prompt is built
 // here from TOPICS, so the page can't send its own instructions. Nothing of the conversation is stored.
@@ -148,15 +149,35 @@ async function speech(text, g) {
   } catch (e) { console.error("tts", e?.name || "error"); return null }
 }
 
-// The reply and done as soon as they are complete in the answer that is still being written, else null
-const REPLY_HEAD = /^\s*\{\s*"reply"\s*:\s*"((?:[^"\\]|\\.)*)"\s*,\s*"done"\s*:\s*(true|false)/;
-function head(text) {
-  const m = REPLY_HEAD.exec(text);
-  if (!m) return null;
-  try { return { reply: JSON.parse(`"${m[1]}"`), done: m[2] === "true" } } catch { return null }
+// The answer is still being written: what is there of "reply", cut into sentences. A sentence counts once the next one
+// begins, or the reply is closed; a very short one ("Hoi!") joins the next, or the voice would pause after it.
+const REPLY_OPEN = /^\s*\{\s*"reply"\s*:\s*"((?:[^"\\]|\\.)*)/, DONE = /^\s*,\s*"done"\s*:\s*(true|false)/;
+const ABBR = /(?:^|\s)(?:dr|mevr|dhr|bijv|enz|o\.a|d\.w\.z|nr|ca|blz|[A-Z])\.$/i;
+export function sentences(emit, close) {
+  let at = 0, closed = false;
+  return (text) => {
+    const m = !closed && REPLY_OPEN.exec(text);
+    if (!m) return;
+    let t;
+    try { t = JSON.parse(`"${m[1]}"`) } catch { return } // the middle of an escape
+    const ends = /[.!?…]+["'”’)]*\s+/g;
+    ends.lastIndex = at;
+    for (let e; (e = ends.exec(t));) {
+      const part = t.slice(at, ends.lastIndex).trim();
+      if (part.length < 20 || ABBR.test(part)) continue;
+      emit(part); at = ends.lastIndex;
+    }
+    const rest = text.slice(m[0].length);
+    if (rest[0] !== '"') return;
+    const d = DONE.exec(rest.slice(1));
+    if (!d) return;
+    closed = true;
+    if (t.slice(at).trim()) emit(t.slice(at).trim());
+    close(t, d[1] === "true");
+  };
 }
-// onHead is called once with {reply, done} before the whole answer is there (never after a fallback to another model)
-async function ask(model, sys, content, schema, onHead) {
+// onText gets the answer so far while it is written (never after a fallback to another model)
+async function ask(model, sys, content, schema, onText) {
   const params = {
     model, max_tokens: schema === REPLY ? 700 : 1600, system: sys,
     output_config: { effort: "low", format: { type: "json_schema", schema } },
@@ -165,11 +186,11 @@ async function ask(model, sys, content, schema, onHead) {
   // Haiku has no server-side fallback; the larger models fall back on a refusal
   if (!/haiku/.test(model)) Object.assign(params, { betas: ["server-side-fallback-2026-07-01"], fallbacks: "default" });
   let response;
-  if (onHead) {
+  if (onText) {
     const stream = client.beta.messages.stream(params);
     let seen = false;
     stream.on("streamEvent", (e) => { if (e.type === "content_block_start" && e.content_block?.type === "fallback") seen = true });
-    stream.on("text", (_d, text) => { if (seen) return; const h = head(text); if (h) { seen = true; onHead(h) } });
+    stream.on("text", (_d, text) => { if (!seen) onText(text) });
     response = await stream.finalMessage();
   } else response = await client.beta.messages.create(params);
   console.info(JSON.stringify({ event: "talk_usage", model: response.model, usage: response.usage }));
@@ -234,7 +255,7 @@ export async function talk(req, res) {
   const T = TOPICS[o.t], L = lines(req.body?.history), n = L.filter((x) => x.me).length;
   if (!n || (go === "say" && (!L[L.length - 1].me || n > TURNS))) return res.status(400).json({ error: "history" });
   const model = o.p ? MODEL_PLUS : MODEL_FREE, time = { auth: ms() };
-  let early = null, stopped = false;
+  let stopped = false;
   try {
     if (go === "end") {
       const { result: r, spent } = await ask(model, REVIEW_SYSTEM(o.l), `HET GESPREK (${T.who} en de cursist):\n${transcript(L, T)}`, REVIEW);
@@ -245,28 +266,37 @@ export async function talk(req, res) {
       });
     }
     const say = async (text) => { const a = req.body?.voice === "device" ? null : await speech(text, T.g); time.voice = ms(); return a };
-    const line = (x) => res.write(JSON.stringify(x) + "\n");
-    const onHead = req.body?.stream === true && typeof res.write === "function" ? (h) => {
-      const reply = str(h.reply, 700);
-      if (!reply) return;
-      time.reply = ms();
-      early = say(reply).then((audio) => {
-        if (stopped) return;
+    const last = n >= TURNS, parts = [];
+    let queue = Promise.resolve(), ended = false;
+    const line = (x) => {
+      if (!res.headersSent) {
         res.setHeader("Content-Type", "application/x-ndjson; charset=utf-8");
         res.setHeader("Cache-Control", "no-store, no-transform");
         res.status(200);
-        line({ reply, done: h.done || n >= TURNS, audio });
         time.sent = ms();
-      });
-    } : null;
-    const { result: r, spent } = await ask(model, system(T, o.l, n), `HET GESPREK TOT NU:\n${transcript(L, T)}\n\nAntwoord nu als ${T.who} op de laatste zin van de cursist.`, REPLY, onHead)
-      // the reply is already on its way: only the correction is lost
-      .catch((e) => { if (early && e?.code !== "refusal") return { result: {}, spent: null }; throw e });
+      }
+      res.write(JSON.stringify(x) + "\n");
+    };
+    // Each sentence is synthesised at once; the lines go out in order
+    const part = (t) => {
+      const text = str(t, 700);
+      if (!text || stopped) return;
+      if (!parts.length) time.reply = ms();
+      parts.push(text);
+      const voice = say(text);
+      queue = queue.then(async () => { const audio = await voice; if (!stopped) line({ say: text, audio }) });
+    };
+    const finish = (done) => { if (ended) return; ended = true; queue = queue.then(() => { if (!stopped) line({ reply: parts.join(" "), done: done || last, parts: parts.length }) }) };
+    const onText = req.body?.stream === 2 && typeof res.write === "function" ? sentences(part, (_t, done) => finish(done)) : null;
+    const { result: r, spent } = await ask(model, system(T, o.l, n), `HET GESPREK TOT NU:\n${transcript(L, T)}\n\nAntwoord nu als ${T.who} op de laatste zin van de cursist.`, REPLY, onText)
+      // sentences are already on their way: what was said stays, only the correction is lost
+      .catch((e) => { if (parts.length) return { result: {}, spent: null }; throw e });
     time.model = ms();
     const reply = str(r.reply, 700) || "Sorry, kunt u dat nog een keer zeggen?";
     const f = r.fix || {}, fix = f.wrong && f.right && str(f.wrong, 160) !== str(f.right, 160) ? { wrong: str(f.wrong, 160), right: str(f.right, 160), why: str(f.why, 240) } : null;
-    if (early) {
-      await early;
+    if (parts.length) {
+      finish(false); // an answer that broke off after a sentence
+      await queue;
       line({ fix });
       await spent;
       console.info(JSON.stringify({ event: "talk_time", ...time }));
