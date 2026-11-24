@@ -896,6 +896,14 @@ conversation. Two menu buttons (aiMenu remembers the choice when returning from 
   Close domain words with a shared ending (e.g. kering → haring in the fish conversation) and native alternatives are
   suggestions in the draft a stopped microphone leaves, never silent substitutions.
   A final result replaces its interim hypothesis, and the ready message waits for the recogniser's start event. No additional model calls or providers are used for these checks.
+- Saskia's memory (the user's wish, 24 November 2026, kept in the account): `S.sm` `{on, onAt, f: {id: {t, at}}}`, at most 20
+  short facts, with the progress (guests: on the device). Only after a yes: `memAsk()` asks once, before the first review,
+  in the menu language (outside the Dutch conversation); `on:false` is never asked again and nothing is sent. Only Saskia:
+  the page sends dated facts with `say` and `end`, the server puts them in the message as data and ignores them for other
+  topics; with facts the greeting is one of `again` (no model call). `end` with `remember:true` returns `facts` and `old`
+  (what to forget) in the review call, so no extra call. The prompt forbids sensitive facts and `PRIVATE` drops them
+  again on the way in and out. Profiel, "Wat Saskia over je weet" (`memScreen()`): see, erase, switch off. Deleting the account
+  drops them from the device too. privacy.html describes it in eight languages: change both together.
 - `/api/talk` is a rewrite to `/api/check?kind=talk` (the 12-function limit); `check.js` imports `_talk.js` only then.
   `S.ai` `{id: {n, at}}` (merged like `S.gp`); the event `ai` counts started conversations. privacy.html says, in all
   eight languages under the checking section, what goes to Anthropic and Google.

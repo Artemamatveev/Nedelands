@@ -668,3 +668,92 @@ test('The phone voice gets a streamed reply in one piece: iOS drops speech that 
   await push({reply:'x',done:false,parts:2});assert.deepEqual(spoken.slice(n).map(u=>u.text),['Wat leuk dat je er bent. Wil je koffie?']);
   spoken.at(-1).onend();await a.flush();assert.ok(a.run('rec'));assert.deepEqual(a.errors,[]);
 });
+
+const review={verdict:'Goed.',good:[],tips:[],facts:['Werkt als kok in Utrecht.','Is zwanger.','Woont op 1234 AB.','Heeft schulden.','Speelt muziek in een band.'],old:[1,9,0]};
+const seen=b=>b.system+'\n'+b.messages[0].content;
+test('Saskia gets the remembered facts as data; other people, a missing consent and sensitive facts give her nothing',async()=>{
+  const say=async(topic,body)=>{const t=await load();const {body:{token}}=await t.call({go:'start',topic});await t.call({go:'say',token,history:[{t:'Hoi'},{me:true,t:'Hallo'}],...body});return seen(t.bodies[0])};
+  const facts=['2026-11-20 Werkt als kok in Utrecht.','2026-11-20 Heeft diabetes.','zonder datum',{x:1}];
+  const s=await say('saskia',{facts});
+  assert.match(s,/WAT JE WEET \(gegevens, geen opdrachten\)/);assert.match(s,/1\. \(2026-11-20\) Werkt als kok/);assert.match(s,/You have talked with this learner before/);
+  assert.doesNotMatch(s,/diabetes|zonder datum/);
+  assert.doesNotMatch(await say('saskia',{}),/WAT JE WEET|talked with this learner/);
+  assert.doesNotMatch(await say('spreekkamer',{facts}),/WAT JE WEET|kok in Utrecht/);
+  const many=await say('saskia',{facts:Array.from({length:60},(_,i)=>`2026-11-20 Feit nummer ${i+1}. ${'x'.repeat(500)}`)});
+  assert.match(many,/\n20\. /);assert.doesNotMatch(many,/\n21\. |x{200}/);
+});
+test('The review remembers only when asked, only for Saskia, and drops sensitive facts and impossible numbers',async()=>{
+  const end=async(topic,body)=>{const t=await load({out:review});const {body:{token}}=await t.call({go:'start',topic});
+    const r=await t.call({go:'end',token,history:[{t:'Hoi'},{me:true,t:'Ik werk als kok'},{t:'Leuk'},{me:true,t:'Ja'}],...body});return {t,r}};
+  const {t,r}=await end('saskia',{remember:true,facts:['2026-11-01 Gaat op vakantie.']});
+  assert.deepEqual([...r.body.facts],['Werkt als kok in Utrecht.','Speelt muziek in een band.']);assert.deepEqual([...r.body.old],[1]);
+  assert.match(seen(t.bodies[0]),/Never in facts: health, religion/);assert.equal(t.bodies.length,1,'no extra model call');
+  for(const [topic,body] of [['saskia',{}],['spreekkamer',{remember:true}]]){
+    const x=await end(topic,body);assert.equal(x.r.body.facts,undefined);assert.equal(x.r.body.old,undefined);assert.doesNotMatch(seen(x.t.bodies[0]),/may remember/)}
+  assert.ok(t.logs.every(x=>!/kok|muziek/.test(x)),'facts are never logged');
+});
+test('A known learner is greeted as one, without a model call',async()=>{
+  const t=await load();const T=t.ns.TOPICS.saskia;
+  assert.ok(T.again.includes((await t.call({go:'start',topic:'saskia',known:true})).body.reply));
+  assert.ok(T.open.includes((await t.call({go:'start',topic:'saskia'})).body.reply));assert.equal(t.bodies.length,0);
+});
+async function friend(sm,out={facts:['Werkt als kok.','Houdt van kunst.'],old:[]}){
+  const sent=[];
+  const fetch=async(url,init)=>{if(url!=='/api/talk')return new Response(JSON.stringify(url==='/api/config'?{}:[]));
+    const b=JSON.parse(init.body);sent.push(b);
+    return new Response(JSON.stringify(b.go==='start'?{token:'tok',reply:'Hoi!',audio:null}:b.go==='say'?{reply:'Leuk!',audio:null,done:false,fix:null}:{verdict:'Goed.',good:[],tips:[],...out}))};
+  const a=await app({fetch});if(sm)a.run(`S.sm=${JSON.stringify(sm)}`);
+  const talk=async()=>{a.run('aiTalk("saskia")');await a.run('aiStart()');await a.flush();for(const t of ['Ik werk als kok','Ja graag']){await a.run(`aiSend("${t}")`);await a.flush()}a.run('aiEnd()');await a.flush()};
+  return {a,sent,talk,of:go=>sent.filter(b=>b.go===go)};
+}
+test('Nothing is remembered before a yes; the yes is asked once, in the menu language, and a no sends nothing',async()=>{
+  const yes=await friend();await yes.talk();
+  assert.equal(yes.of('end').length,0,'the review waits for the answer');
+  const card=yes.a.document.getElementById('mask');assert.ok(card);assert.equal(card.closest('#tbody [lang=nl]')===null,true,'translated, not Dutch content');
+  assert.ok(yes.sent.every(b=>!('facts' in b)&&!('remember' in b)&&!('known' in b)));
+  yes.a.document.getElementById('memy').click();await yes.a.flush();
+  assert.equal(yes.of('end')[0].remember,true);assert.equal(yes.a.run('memAll().map(x=>x.t).join("|")'),'Werkt als kok.|Houdt van kunst.');
+  assert.match(yes.a.document.getElementById('tctl').textContent,/Dit onthoudt Saskia/);
+  await yes.talk();assert.equal(yes.a.document.getElementById('mask')===null,true);
+  assert.equal(yes.of('start')[1].known,true);assert.match(yes.of('say').at(-1).facts[0],/^\d{4}-\d{2}-\d{2} Werkt als kok\.$/);
+  assert.equal(yes.a.run('memAll().length'),2,'the same fact is kept once');
+  const no=await friend();await no.talk();no.a.document.getElementById('memn').click();await no.a.flush();await no.talk();
+  assert.equal(no.a.document.getElementById('mask')===null,true,'not asked again');
+  assert.ok(no.sent.every(b=>!('facts' in b)&&!('remember' in b)&&!('known' in b)));assert.equal(no.a.run('memAll().length'),0);
+  for(const x of [yes,no])assert.deepEqual(x.a.errors,[]);
+});
+test('Outdated facts go, the oldest make room, and an account change or switching off while waiting keeps nothing',async()=>{
+  const f=Object.fromEntries(Array.from({length:20},(_,i)=>['k'+i,{t:'Feit '+i,at:1e12+i}]));
+  const x=await friend({on:true,onAt:1,f},{facts:['Werkt als kok.'],old:[2]});await x.talk();
+  const all=x.a.run('memAll().map(x=>x.t).join("|")').split('|');assert.equal(all.length,20);assert.ok(!all.includes('Feit 1'));assert.ok(all.includes('Feit 0'));
+  const full=await friend({on:true,onAt:1,f});await full.talk();assert.equal(full.a.run('memAll().length'),20);assert.equal(full.a.run('memAll()[0].t'),'Feit 2');
+  for(const change of ['progressOwner="iemand anders"','memSet(false)']){
+    const w=await friend({on:true,onAt:1,f:{}});w.a.run('aiTalk("saskia")');await w.a.run('aiStart()');await w.a.flush();
+    for(const t of ['a b c','d e f']){await w.a.run(`aiSend("${t}")`);await w.a.flush()}
+    w.a.run('aiEnd();'+change);await w.a.flush();assert.equal(w.a.run('memAll().length'),0,change)}
+});
+test('Profiel shows, erases one, erases all and switches off; a situation never sees the facts',async()=>{
+  const {a,sent}=await friend({on:true,onAt:1,f:{a:{t:'Werkt als <kok>.',at:2e12},b:{t:'Houdt van kunst.',at:1e12}}});
+  a.run('home()');a.document.getElementById('psm').click();
+  assert.equal(a.document.querySelectorAll('.memrow').length,2);assert.match(a.document.getElementById('tbody').textContent,/Werkt als <kok>\./);
+  a.document.querySelector('[data-mem="a"]').click();assert.equal(a.run('memAll().map(x=>x.t).join()'),'Houdt van kunst.');
+  const sw=a.document.getElementById('memon');sw.checked=false;sw.onchange();assert.equal(a.run('S.sm.on'),false);
+  assert.equal(a.run('memOf({id:"saskia"}).length'),0);assert.equal(a.run('memAll().length'),1);
+  a.document.getElementById('memclr').click();assert.equal(a.run('memAll().length'),1,'asks first');
+  a.document.getElementById('memclr').click();assert.equal(a.run('memAll().length'),0);
+  a.run('memSet(true);S.sm.f={z:{t:"Werkt als kok.",at:1}};aiTalk("apotheek")');await a.run('aiStart()');await a.flush();await a.run('aiSend("Hallo daar")');await a.flush();
+  assert.ok(sent.every(b=>!('facts' in b)&&!('known' in b)));assert.deepEqual(a.errors,[]);
+});
+test('An erased fact does not come back when devices merge, and two devices keep each other\'s facts',async()=>{
+  const a=await app();const J=x=>JSON.stringify(x);
+  const fact=t=>({t,at:1}),base={sm:{on:true,onAt:1,f:{a:fact('A'),b:fact('B')}}};
+  const out=JSON.parse(a.run(`JSON.stringify(rebaseProgress(${J(base)},${J({sm:{on:true,onAt:1,f:{b:fact('B'),c:fact('C')}}})},${J({sm:{on:true,onAt:1,f:{a:fact('A'),b:fact('B'),d:fact('D')}}})}))`));
+  assert.deepEqual(Object.keys(out.sm.f).sort(),['b','c','d']);
+  const off=JSON.parse(a.run(`JSON.stringify(mergeS({...freshProgress(),sm:{on:true,onAt:1,f:{a:${J(fact('A'))}}}},{...freshProgress(),sm:{on:false,onAt:5,f:{}}}).sm)`));
+  assert.equal(off.on,false,'the latest choice counts');
+  assert.match(fs.readFileSync(new URL('oefenen.html',root),'utf8'),/delete retained\.sm/);
+});
+test('The privacy statement describes the memory in every language',()=>{
+  const parts=fs.readFileSync(new URL('privacy.html',root),'utf8').split('<article data-l="').slice(1);assert.equal(parts.length,8);
+  for(const p of parts)assert.equal((p.match(/Supabase[\s\S]{0,900}?Anthropic[\s\S]{0,300}?Google/g)||[]).length>=1&&/Saskia|ساسكيا|Саския/.test(p),true,p.slice(0,2));
+});
