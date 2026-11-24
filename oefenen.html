@@ -593,6 +593,19 @@ body.vfull{overflow:hidden}
 .aiportrait{width:min(100%,300px);aspect-ratio:3/4;margin:0 auto;border-radius:var(--r);overflow:hidden;background:var(--wash);outline:2px solid transparent;outline-offset:3px;transition:outline-color .2s}
 .aiportrait img{display:block;width:100%;height:100%;object-fit:cover}
 .aiportrait.on{outline-color:var(--oranje)}
+@media (prefers-reduced-motion:no-preference){
+  .aiportrait.saskia img{transform-origin:50% 38%;animation:saskia-idle 7s ease-in-out infinite}
+  .aiportrait.saskia.on img{animation:saskia-speaking 2.4s ease-in-out infinite}
+}
+@keyframes saskia-idle{
+  0%,100%{transform:scale(1.035)}
+  50%{transform:translateY(-.35%) scale(1.047)}
+}
+@keyframes saskia-speaking{
+  0%,100%{transform:scale(1.035)}
+  30%{transform:translate(.25%,-.55%) rotate(.35deg) scale(1.055)}
+  65%{transform:translate(-.2%,-.15%) rotate(-.25deg) scale(1.044)}
+}
 .aiany{margin:16px 0 4px}
 .aifix{margin-top:4px!important;font-size:var(--fs-m)}
 .aifix span{display:block;color:var(--soft)}
@@ -1852,11 +1865,11 @@ function aiLevel(buffer){
   const rms=Math.sqrt(sum/count);if(rms<.004)return 1;
   return Math.min(3,.9/peak,Math.max(.25,.12/rms));
 }
-function stopSpeak(){sayN++;sayOn=false;aiVoiceStop();if(!sayA.paused&&!sayA.ended)sayA.pause();try{if(canSpeak&&(speechSynthesis.speaking||speechSynthesis.pending))speechSynthesis.cancel()}catch(e){}}
+function stopSpeak(){sayN++;sayOn=false;aiVoiceStop();if($("aiav")?.classList.contains("saskia"))aiSpk(false);if(!sayA.paused&&!sayA.ended)sayA.pause();try{if(canSpeak&&(speechSynthesis.speaking||speechSynthesis.pending))speechSynthesis.cancel()}catch(e){}}
 // The phone's voice: left unset, so the phone uses the Dutch (nl-NL) voice picked in its settings;
 // in a dialogue ("A: …" / "B: …" lines) speaker B gets a higher pitch, so the two people sound different
-function utter(l,done){const m=l.match(/^([A-C]): (.*)$/),u=new SpeechSynthesisUtterance(m?m[2]:l);u.lang="nl-NL";u.rate=.95;u.volume=1;if(m)u.pitch={A:.9,B:1.35,C:1.1}[m[1]];
-  if(done)u.onend=u.onerror=done;speechSynthesis.speak(u)}
+function utter(l,done,start){const m=l.match(/^([A-C]): (.*)$/),u=new SpeechSynthesisUtterance(m?m[2]:l);u.lang="nl-NL";u.rate=.95;u.volume=1;if(m)u.pitch={A:.9,B:1.35,C:1.1}[m[1]];
+  if(start)u.onstart=start;if(done)u.onend=u.onerror=done;speechSynthesis.speak(u)}
 function speak(t){stopSpeak();const n=sayN,L=String(t).split("\n").map(l=>l.trim()).filter(Boolean),K=sayKeys(L),has=i=>!!VOICE&&VOICE.has(K[i]);
   try{if(!L.some((l,i)=>has(i))){if(canSpeak)L.forEach(l=>utter(l));return}}catch(e){return}
   sayOn=true;
@@ -4003,7 +4016,7 @@ function aiTalk(id,go){ // go: start at once (a person picked by the learner's t
   $("tbody").innerHTML=`<div lang="nl">`+(c.task
     ?`<p class="ask">${c.g}</p><h2>${esc(c.t)}</h2>`+(c.p?picsHTML([c.p]):"")+`<p class="ask">Jouw opdracht</p><div class="sample">${esc(c.task)}</div>
     <div class="aic"><span class="aiav" id="aiav" aria-hidden="true">${init}</span><span><b>${esc(c.who)}</b><span class="aist" id="aist"></span></span></div>`
-    :`<div class="aip${c.portrait?" human":""}">${c.portrait?`<div class="aiportrait" id="aiav" aria-hidden="true"><img src="${esc(c.portrait)}" alt="" width="768" height="1024"></div>`:`<span class="aiav big${c.av?" pic":""}" id="aiav" aria-hidden="true">${c.av?`<img src="/art/avatars/${c.av}.jpg" alt="">`:init}</span>`}
+    :`<div class="aip${c.portrait?" human":""}">${c.portrait?`<div class="aiportrait${c.id==="saskia"?" saskia":""}" id="aiav" aria-hidden="true"><img src="${esc(c.portrait)}" alt="" width="768" height="1024"></div>`:`<span class="aiav big${c.av?" pic":""}" id="aiav" aria-hidden="true">${c.av?`<img src="/art/avatars/${c.av}.jpg" alt="">`:init}</span>`}
     <h2>${esc(c.who)}</h2><p class="sub">${esc(c.wie)}</p><span class="aist" id="aist"></span></div>`)
     +`    <div class="talk" id="tlog" aria-live="polite"></div><div id="tctl"></div></div>`;
   document.querySelectorAll("#tbody [data-pic]").forEach(b=>b.onclick=()=>zoomPic(b.dataset.pic));
@@ -4065,9 +4078,11 @@ function aiHear(t,audio,done){
 }
 function aiPlay(l,done,slow){
   stopSpeak();aiAudioMode("playback"); const n=sayN;let finished=false,fallback=false;
-  const end=()=>{if(n!==sayN||finished)return;finished=true;sayOn=false;aiSpk(false);done&&done()},
-    alt=()=>{if(n!==sayN||finished||fallback)return;fallback=true;if(AK)AK.voice="device";try{canSpeak?utter(l.t,end):end()}catch(e){end()}};
-  aiSpk(true);
+  const portrait=AK?.c.id==="saskia";
+  const start=()=>{if(n===sayN&&!finished)aiSpk(true)},
+    end=()=>{if(n!==sayN||finished)return;finished=true;sayOn=false;aiSpk(false);done&&done()},
+    alt=()=>{if(n!==sayN||finished||fallback)return;fallback=true;if(AK)AK.voice="device";try{canSpeak?utter(l.t,end,start):end()}catch(e){end()}};
+  if(!portrait)start();
   if(AK?.voice==="device"||!l.url)return alt();
   sayOn=true;
   if(aiCtx&&l.bytes){
@@ -4079,11 +4094,11 @@ function aiPlay(l,done,slow){
       const source=aiCtx.createBufferSource();source.buffer=l.buffer;source.playbackRate.value=slow?.85:1;
       const gain=aiCtx.createGain();gain.gain.value=aiLevel(l.buffer);
       source.connect(gain);gain.connect(aiCtx.destination);aiSource=source;aiGain=gain;
-      source.onended=()=>{source.disconnect();gain.disconnect();if(aiSource===source){aiSource=null;aiGain=null}end()};source.start();
+      source.onended=()=>{source.disconnect();gain.disconnect();if(aiSource===source){aiSource=null;aiGain=null}end()};source.start();start();
     }).catch(alt);
     return;
   }
-  sayA.onended=end;sayA.onerror=alt;sayA.src=l.url;sayA.volume=1;sayA.playbackRate=slow?.85:1;sayA.play().catch(alt);
+  sayA.onended=end;sayA.onerror=alt;sayA.src=l.url;sayA.volume=1;sayA.playbackRate=slow?.85:1;sayA.play().then(()=>{if(!fallback)start()}).catch(alt);
 }
 function aiSpk(on){const a=$("aiav"),s=$("aist");if(a)a.classList.toggle("on",on);if(s&&AK)s.textContent=on?"spreekt":""}
 function aiDraw(){
