@@ -8,12 +8,12 @@
 // Paintings, photos and icons: from the cache, refreshed in the background.
 // Recorded voices (audio/): cached on first play. api/ (grading, new texts) always goes to the network.
 // CACHE stays the same when sw.js changes: a new name would throw away every painting, photo and voice people have.
-const APP = "/oefenen", CACHE = "nl-a2-v12", CORE = [APP, "/", "/voorwaarden", "/motion-v1.css", "/ios-startup-v1.js", "/contact", "/landing.css?v=apple1", "/landing.js?v=install1", "/lib/gsap-3.15.1.min.js", "/landing-motion-v3.js?v=features10", "/lib/ScrollTrigger-3.15.1.min.js", "/shots/app-day-v2.webp", "/shots/app-practice-v2.webp", "/shots/app-exam-v2.webp", "/art/delft.jpg", "/art/bitterbal-nl-v2.jpg", "/art/bitterbal-wave-nl-v1.jpg", "/art/bittie-loading-v1.webp", "/art/bittie-dance-v6.svg", "/manifest.json?v=bittie1", "/apple-touch-icon.png?v=bittie1"];
+const APP = "/oefenen", CACHE = "nl-a2-v12", CORE = [APP, "/", "/voorwaarden", "/motion-v1.css", "/ios-startup-v1.js", "/contact", "/landing.css?v=apple1", "/landing.js?v=install1", "/lib/gsap-3.15.1.min.js", "/landing-motion-v3.js?v=features10", "/lib/ScrollTrigger-3.15.1.min.js", "/shots/app-day-v2.webp", "/shots/app-practice-v2.webp", "/shots/app-exam-v2.webp", "/art/delft.jpg", "/art/bitterbal-nl-v2.jpg", "/art/bitterbal-wave-nl-v1.jpg", "/art/bittie-loading-v1.webp", "/art/bittie-wave-v1.svg", "/manifest.json?v=bittie1", "/apple-touch-icon.png?v=bittie1"];
 
 // Legacy installations must fetch the migration gate, never reopen cached practice. Keep their data/cache intact.
 const LEGACY_ORIGIN = /^(bittertalen|nedelands)\.vercel\.app$/.test(new URL(location.origin).hostname);
 const assetsOf = html => [...html.matchAll(/src="(\/(?:data|study)\/[^"?]+\.js\?v=[0-9a-f]+)"/g)].map(m => m[1]);
-const bootAssetsOf = html => [...new Set([...html.matchAll(/(?:src|srcset|href)="(\/art\/bittie-(?:dance|loading)-v\d+\.(?:webp|svg))"/g)].map(m => m[1]))];
+const bootAssetsOf = html => [...new Set([...html.matchAll(/(?:src|srcset|href)="(\/art\/bittie-(?:dance|wave|loading)-v\d+\.(?:webp|svg))"/g)].map(m => m[1]))];
 const dictOf = html => (/const DICTV="([0-9a-f]+)"/.exec(html) || [])[1] || "";
 // the menus' translations (data/ui.js) are loaded only for other languages than Dutch: kept with the page only for
 // someone who already uses them (a version of it is in the cache)
@@ -68,7 +68,7 @@ self.addEventListener("install", e => {
   self.skipWaiting();
   if (LEGACY_ORIGIN) return;
   e.waitUntil(caches.open(CACHE).then(async c => {
-    // Save the app and the actual dance before unrelated homepage pictures compete for the connection.
+    // Save the app and the wave before unrelated homepage pictures compete for the connection.
     const old = await c.match(APP);
     const res = await fetch(new Request(APP, { cache: "no-store" })).catch(() => null);
     if (res && res.ok && await storeApp(c, res.clone()).catch(() => false) && old &&
