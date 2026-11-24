@@ -4096,7 +4096,7 @@ function aiList(menu){
   if($("aiany"))$("aiany").onclick=aiAny;
 }
 // Blob URLs of the replies' voices are released when the conversation closes
-function aiDrop(){aiAudioMode("auto");if(AK)AK.log.forEach(l=>{if(l.url)URL.revokeObjectURL(l.url)});AK=null}
+function aiDrop(){aiAudioMode("auto");if(AK)AK.log.flatMap(l=>l.parts||l).forEach(l=>{if(l.url)URL.revokeObjectURL(l.url)});AK=null}
 function aiTalk(id,go){ // go: start at once (a person picked by the learner's tap), so the greeting is heard right away
   const c=aiTopic(id); if(!c)return aiList();
   bgOpen("Gesprekken",aiList); aiDrop();
@@ -4140,23 +4140,23 @@ function aiUnlock(){
     if(canSpeak){const u=new SpeechSynthesisUtterance(" ");u.lang="nl-NL";u.volume=0;speechSynthesis.speak(u)}
   }catch(e){}
 }
-// onFirst: the spoken part of a reply, as soon as the server has it; the correction follows in a second line
-async function aiPost(body,onFirst){
-  let first=null;
+// onLine: each line of a streamed reply as it comes (a sentence with its voice, the end of the reply, the correction)
+async function aiPost(body,onLine){
+  const all={};let some=false;
   try{
     const h=await authHead(),r=await fetch("/api/talk",{method:"POST",headers:{"Content-Type":"application/json",...h},body:JSON.stringify(body)});
-    if(onFirst&&r.ok&&r.body&&/ndjson/.test(r.headers.get("content-type")||"")){
-      const reader=r.body.getReader(),dec=new TextDecoder();let buf="",rest={};
+    if(onLine&&r.ok&&r.body&&/ndjson/.test(r.headers.get("content-type")||"")){
+      const reader=r.body.getReader(),dec=new TextDecoder();let buf="";
       for(;;){
         const{value,done}=await reader.read();buf+=done?dec.decode():dec.decode(value,{stream:true});
-        for(let i;(i=buf.indexOf("\n"))>=0;){const x=JSON.parse(buf.slice(0,i));buf=buf.slice(i+1);if(first)rest=x;else{first=x;onFirst(x)}}
+        for(let i;(i=buf.indexOf("\n"))>=0;){const x=JSON.parse(buf.slice(0,i));buf=buf.slice(i+1);some=true;Object.assign(all,x);onLine(x)}
         if(done)break;
       }
-      return first?{...first,...rest,ok:true,streamed:true}:{code:"failed"};
+      return some?{...all,ok:true,streamed:true}:{code:"failed"};
     }
     const j=await r.json().catch(()=>({}));
     return r.ok?{...j,ok:true}:{...j,code:j.error||"failed"};
-  }catch(e){return first?{...first,ok:true,streamed:true}:{code:e&&e.code||"offline"}}
+  }catch(e){return some?{...all,ok:true,streamed:true}:{code:e&&e.code||"offline"}}
 }
 const aiWhy=c=>noCheck(c)?noCheck(c)+offerHTML(c):c==="offline"?"Geen verbinding. Probeer het opnieuw.":c==="not_configured"?"Praten met AI is nog niet ingesteld.":c==="rate_limited"?"Te veel verzoeken achter elkaar. Wacht een minuut en probeer het opnieuw.":"Dat lukte niet. Probeer het opnieuw.";
 async function aiStart(){
@@ -4168,13 +4168,29 @@ async function aiStart(){
   k.tok=j.token;k.voice=j.audio?"cloud":"device"; track("ai"); aiHear(j.reply,j.audio,false);
 }
 // The other person's line: shown, then spoken; then it is the learner's turn (or the end)
-function aiHear(t,audio,done){
+function aiClip(t,audio){
   let url="",bytes=null;
   if(audio)try{bytes=Uint8Array.from(atob(audio),ch=>ch.charCodeAt(0));url=URL.createObjectURL(new Blob([bytes],{type:"audio/mpeg"}))}catch(e){}
-  const l={t,url,bytes}; AK.log.push(l); aiDraw();
+  return{t,url,bytes};
+}
+// A reply that comes sentence by sentence: l.parts are its clips, l.i the next one to play, l.total how many there will be.
+// When the learner interrupts, aiPlay() never calls back, so the rest stays silent.
+function aiNext(k,l,slow){
+  if(AK!==k||l.playing)return;
+  if(k.voice==="device"&&l.i<l.parts.length){ // the phone's voice: the rest in one piece
+    if(l.total==null)return;
+    const t=l.parts.slice(l.i).map(p=>p.t).join(" ");l.i=l.parts.length;l.playing=true;
+    return aiPlay({t},()=>{l.playing=false;aiNext(k,l,slow)},slow)}
+  if(l.i<l.parts.length){l.playing=true;return aiPlay(l.parts[l.i++],()=>{l.playing=false;aiNext(k,l,slow)},slow)}
+  if(l.total!=null&&l.i>=l.total&&l.after){const f=l.after;l.after=null;f()}
+}
+function aiReplay(l){if(!l.parts)return aiPlay(l,null,true);l.i=0;l.playing=false;l.after=null;aiNext(AK,l,true)}
+const aiListen=k=>()=>{if(AK===k&&!k.busy&&!rec&&k.mic&&SR&&$("rec"))aiRec()};
+function aiHear(t,audio,done){
+  const l=aiClip(t,audio); AK.log.push(l); aiDraw();
   if(done){AK.done=true;$("tctl").innerHTML="";aiPlay(l,()=>{});return aiEnd()}
   aiTurn(); const k=AK;
-  aiPlay(l,()=>{if(AK===k&&!k.busy&&!rec&&k.mic&&SR&&$("rec"))aiRec()});
+  aiPlay(l,aiListen(k));
 }
 function aiPlay(l,done,slow){
   stopSpeak();aiAudioMode("playback"); const n=sayN;let finished=false,fallback=false;
@@ -4206,7 +4222,7 @@ function aiDraw(){
   $("tlog").innerHTML=k.log.map((l,j)=>l.me
     ?`<div class="tl me"><p class="ask">Jij</p><p>${esc(l.t)}</p>${l.fix?`<p class="aifix"><b>Beter:</b> ${esc(l.fix.right)}${l.fix.why?`<span>${esc(l.fix.why)}</span>`:""}</p>`:""}</div>`
     :`<div class="tl"><p class="ask">${esc(k.c.who)} <button class="say" data-j="${j}" aria-label="Nog een keer luisteren">▶</button></p><p>${esc(l.t)}</p></div>`).join("");
-  document.querySelectorAll("#tlog .say").forEach(b=>b.onclick=()=>{if(rec)recEnd(false);aiPlay(k.log[b.dataset.j],null,true)});
+  document.querySelectorAll("#tlog .say").forEach(b=>b.onclick=()=>{if(rec)recEnd(false);aiReplay(k.log[b.dataset.j])});
 }
 function aiTurn(note,keep){
   $("tctl").innerHTML=(SR?`<div class="rec" id="rec"><div class="clk"><span class="t" id="rect">0:00</span><div class="m"><i id="recm"></i></div></div><div id="recp"></div>
@@ -4282,15 +4298,32 @@ async function aiSend(t){
   else {k.pending={me:1,t};k.log.push(k.pending);k.n++}
   aiDraw();
   $("tctl").innerHTML=`<p class="note aiwait">${esc(k.c.who)} denkt na…</p>`;
-  const mine=k.pending, hear=j=>{k.busy=false;if(!aiOn(k))return;k.pending=null;aiHear(String(j.reply||""),j.audio,!!j.done)};
-  const j=await aiPost({go:"say",stream:true,token:k.tok,voice:k.voice,history:k.log.map(l=>({me:!!l.me,t:l.t}))},hear);
-  if(j.streamed){if(j.fix){mine.fix=j.fix;if(aiOn(k))aiDraw()}return} // spoken already; the correction came after it
+  const mine=k.pending; let l=null;
+  const line=x=>{
+    if(!aiOn(k)||k.ending)return;
+    if(x.say){
+      if(!l){l={t:"",parts:[],i:0,total:null};k.pending=null;k.log.push(l);$("tctl").innerHTML=""}
+      l.t=(l.t+" "+x.say).trim();l.parts.push(aiClip(x.say,x.audio));aiDraw();aiNext(k,l);
+    }else if(l&&x.parts!=null){
+      l.total=x.parts;k.busy=false;
+      if(x.done){k.done=true;return aiEnd()}
+      l.after=aiListen(k);aiTurn();aiNext(k,l);
+    }
+  };
+  const j=await aiPost({go:"say",stream:2,token:k.tok,voice:k.voice,history:k.log.map(l=>({me:!!l.me,t:l.t}))},line);
+  if(j.streamed&&l){
+    if(j.fix)mine.fix=j.fix;
+    if(aiOn(k)){if(j.fix)aiDraw();
+      if(l.total==null&&!k.ending)line({parts:l.parts.length,done:false})} // the line broke off after a sentence
+    k.busy=false;return;
+  }
   k.busy=false; if(!aiOn(k))return;
   if(!j.ok){
     if(j.code==="expired")return aiEnd();
     return aiTurn(aiWhy(j.code),t)}
   if(j.fix)mine.fix=j.fix;
-  hear(j);
+  k.pending=null;
+  aiHear(String(j.reply||""),j.audio,!!j.done);
 }
 // Hanging up or the natural end: what went well and the tips (no extra check)
 async function aiEnd(){
