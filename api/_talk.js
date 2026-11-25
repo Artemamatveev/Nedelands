@@ -2,7 +2,8 @@
 // /api/check?kind=talk, because the Hobby plan allows 12 functions). The learner speaks (the phone writes it down) or
 // types; Claude answers as the character, and Google's Chirp 3 HD voice says it (GOOGLE_TTS_KEY; without it the page
 // uses the phone's own voice).
-// POST {go:"start", topic, level} -> {token, reply, audio, left, limit, period}: takes one check (like one writing task)
+// POST {go:"start", topic, level} -> {token, reply, audio, left, limit, period}: takes one check (like one writing task),
+// with Plus TALK_PLUS (default 3), as Plus talks with the better model
 // POST {go:"say", token, history:[{me, t}]} -> {reply, fix:{wrong, right, why}|null, done, audio}
 //   With stream:2 it comes as JSON lines: {say, audio} per sentence, as soon as it can be spoken, then {reply, done, parts}
 //   (parts: how many sentences), then {fix}
@@ -14,7 +15,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { randomBytes, timingSafeEqual } from "node:crypto";
 import { SCENES } from "./_scenes.js";
-import { accounts, caller, useChecks, LIMIT, PLUS, plusOn, plusFor, coversLevel, FREE, visitor, useFree, useTotal, addSpend, bonusFor, talkSign, useGuard, PLUS_MONTH, monthOf, amsterdamDay } from "./_supa.js";
+import { accounts, caller, useChecks, LIMIT, PLUS, plusOn, plusFor, coversLevel, FREE, visitor, useFree, useTotal, addSpend, bonusFor, talkSign, useGuard, PLUS_MONTH, TALK_PLUS, monthOf, amsterdamDay } from "./_supa.js";
 
 const KEY = (process.env.ANTHROPIC_API_KEY || "").trim();
 // A turn must end well before Vercel's limit: one retry, and SAY_MS for the whole call
@@ -242,7 +243,7 @@ export async function talk(req, res) {
     const T = TOPICS[req.body?.topic], level = LEVELS.has(req.body?.level) ? req.body.level : "A2";
     if (!T) return res.status(400).json({ error: "topic" });
     const user = await caller(req).catch(() => null), at = new Date().toISOString();
-    let s, left, lim = LIMIT, period = "once", plus = false, who = "", free;
+    let s, left, lim = LIMIT, period = "once", plus = false, who = "", free, cost = 1;
     if (!user) {
       who = FREE ? visitor(req, res) : "";
       if (!who) return res.status(401).json({ error: "login" });
@@ -253,8 +254,8 @@ export async function talk(req, res) {
       s = "v:" + who;
     } else {
       plus = plusOn && coversLevel(await plusFor(user.id, true).catch(() => null), level);
-      if (plus) { lim = PLUS; period = "day" } else lim = LIMIT + (await bonusFor(user.id).catch(() => 0));
-      left = await useChecks(user.id, 1, lim, period, at).catch(() => null);
+      if (plus) { lim = PLUS; period = "day"; cost = TALK_PLUS } else lim = LIMIT + (await bonusFor(user.id).catch(() => 0));
+      left = await useChecks(user.id, cost, lim, period, at).catch(() => null);
       if (left == null) return res.status(502).json({ error: "failed" });
       if (left < 0) return res.status(429).json({ error: "limit", limit: lim, period, checkedAt: at, plus });
       s = "u:" + user.id;
@@ -262,13 +263,13 @@ export async function talk(req, res) {
     // Plus: the same monthly allowance as grading (PLUS_MONTH)
     let month = false;
     if (plus) {
-      const m = await useGuard("m:" + user.id, monthOf(), 1, PLUS_MONTH).catch((e) => { console.error("guard", e.message); return null });
-      if (m === -1) { await useChecks(user.id, -1, lim, period, at).catch(() => {}); return res.status(429).json({ error: "month", limit: PLUS_MONTH, checkedAt: at, plus }) }
+      const m = await useGuard("m:" + user.id, monthOf(), cost, PLUS_MONTH).catch((e) => { console.error("guard", e.message); return null });
+      if (m === -1) { await useChecks(user.id, -cost, lim, period, at).catch(() => {}); return res.status(429).json({ error: "month", limit: PLUS_MONTH, checkedAt: at, plus }) }
       month = m != null;
     }
     const mine = () => Promise.all([
-      (user ? useChecks(user.id, -1, lim, period, at) : useFree(who, -1, at)).catch(() => {}),
-      month ? useGuard("m:" + user.id, monthOf(new Date(at)), -1, PLUS_MONTH).catch(() => {}) : null,
+      (user ? useChecks(user.id, -cost, lim, period, at) : useFree(who, -1, at)).catch(() => {}),
+      month ? useGuard("m:" + user.id, monthOf(new Date(at)), -cost, PLUS_MONTH).catch(() => {}) : null,
     ]);
     const total = plus ? 0 : await useTotal(1).catch(() => null);
     if (!Number.isSafeInteger(total)) { await mine(); return res.status(503).json({ error: "quota_unavailable" }) }

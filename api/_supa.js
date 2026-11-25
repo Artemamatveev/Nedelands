@@ -16,6 +16,9 @@ export const anonKey = ANON;
 // What one paying learner may cost on top of PLUS_LIMIT a day: PLUS_MONTH checks a month (default 200) and OPUS_DAY
 // proefexamens a day graded by the exam model (default 2; after that the practice model grades them).
 export const PLUS_MONTH = Math.max(1, parseInt(process.env.PLUS_MONTH, 10) || 200);
+// A conversation with Plus (the better model, up to 16 calls) takes TALK_PLUS checks of the day and of the month; a free
+// conversation (the cheap model) takes one. The user's choice, 25 November 2026: a Plus conversation cost about EUR 0.25.
+export const TALK_PLUS = Math.max(1, parseInt(process.env.TALK_PLUS_CHECKS, 10) || 3);
 export const OPUS_DAY = Math.max(0, parseInt(process.env.OPUS_DAY ?? "2", 10) || 0);
 // A counter of table ai_guard (use_guard() in schema.sql): what is left, -1 when over; throws when unavailable
 export async function useGuard(k, day, cost, lim) {

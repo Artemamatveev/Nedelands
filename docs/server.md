@@ -11,7 +11,9 @@ fail at "Deploying outputs" on 19 November 2026. `/api/thumb`, `/api/compare` an
 ## Limits on AI spend (25 November 2026)
 
 On top of `PLUS_LIMIT` a day, a paying learner (Plus, Examenpas or group) has `PLUS_MONTH` (default 200) checks per
-Amsterdam month, shared by grading and conversations, and at most `OPUS_DAY` (default 2) proefexamens a day graded by
+Amsterdam month, shared by grading and conversations (a Plus conversation takes `TALK_PLUS`, default 3, of the day and
+the month, as it runs on the better model; a free one takes 1; the page shows it with `talkCost()`, `acc.cfg.plus.talk`;
+"Elk gesprek kost 3 nakijkbeurten." is translated in `data/ui.js` for the default 3), and at most `OPUS_DAY` (default 2) proefexamens a day graded by
 `GRADING_MODEL_EXAM`; after that `GRADING_MODEL` grades them. A conversation ticket allows `TURNS + 2` calls (say and end),
 counted on the server, because the history comes from the page. All three are counters in table `ai_guard`
 (`use_guard()`, migration `20261125090000_ai_guard.sql`, also in `schema.sql`, applied 25 November 2026); an unreachable

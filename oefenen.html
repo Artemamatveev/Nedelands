@@ -4284,7 +4284,7 @@ function aiList(menu){
       <button type="button" data-aimenu="people" aria-pressed="${aiMenu==="people"}">Praat met iemand</button>
       <button type="button" data-aimenu="scenes" aria-pressed="${aiMenu==="scenes"}">Dagelijkse situaties</button>
     </div>
-    <p class="note"><span>Elk gesprek kost 1 nakijkbeurt.</span>${SR?"":` <span>Meeschrijven lukt hier niet: je typt je antwoorden.</span>`}</p>${freeNote()}`;
+    <p class="note"><span>${talkCost()>1?`Elk gesprek kost ${talkCost()} nakijkbeurten.`:"Elk gesprek kost 1 nakijkbeurt."}</span>${SR?"":` <span>Meeschrijven lukt hier niet: je typt je antwoorden.</span>`}</p>${freeNote()}`;
   if(aiMenu==="people"){
     h+=`<div class="aihost"><img src="/art/characters/saskia-museum-v1.jpg" alt="" width="768" height="1024">
       <h3>Saskia</h3><p class="note">Je ontmoet Saskia in het museumcafé. Praat over je dag, Nederland en kunst.</p>
@@ -4326,9 +4326,11 @@ function aiTalk(id,go){ // go: start at once (a person picked by the learner's t
   if(go&&!c.task)aiStart(); // a situation waits: the learner reads the task first
   window.scrollTo(0,0);
 }
+// A conversation takes one check; with Plus (the better model) acc.cfg.plus.talk (api/_talk.js TALK_PLUS)
+const talkCost=()=>isPlus(lvl())?Math.max(1,+(acc.cfg&&acc.cfg.plus&&acc.cfg.plus.talk)||3):1;
 function aiReady(msg){
   $("tctl").innerHTML=(msg?`<p class="note">${msg}</p>`:"")+`<button class="btn wide" id="aigo">Begin het gesprek</button>
-    <p class="note">Dit kost 1 nakijkbeurt. Zet het geluid aan.</p>${freeNote()}`;
+    <p class="note">${talkCost()>1?`Dit kost ${talkCost()} nakijkbeurten.`:"Dit kost 1 nakijkbeurt."} Zet het geluid aan.</p>${freeNote()}`;
   $("aigo").onclick=aiStart;
 }
 // Unlock Web Audio in the tap. HTMLAudioElement playback between recognition sessions can make iOS go deaf
@@ -5009,7 +5011,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="9490f4294a";
+const UIV="d25c47c7b3";
 let uiP=null;
 function uiLoaded(){ // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});
