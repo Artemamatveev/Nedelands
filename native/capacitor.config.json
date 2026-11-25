@@ -12,7 +12,7 @@
   },
   "ios": {
     "contentInset": "never",
-    "limitsNavigationsToAppBoundDomains": false
+    "limitsNavigationsToAppBoundDomains": true
   },
   "android": {
     "allowMixedContent": false

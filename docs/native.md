@@ -4,7 +4,13 @@ Part of the project notes; CLAUDE.md is the short index. Keep these true when th
 ## App Store and Google Play (native/)
 
 `native/` is a Capacitor 8 shell that loads https://bittertalen.nl/oefenen (`capacitor.config.json` `server.url`), so the
-website deploy updates the apps; `native/README.md` has the build and review steps (the user builds on a Mac). The page
+website deploy updates the apps. Offline: a web view only runs the site's service worker (`sw.js`) for App-Bound Domains,
+so `WKAppBoundDomains` in `Info.plist` lists bittertalen.nl, www.bittertalen.nl, localhost (Capacitor's own pages, such
+as `offline.html`) and www.youtube-nocookie.com (the video player), and `ios.limitsNavigationsToAppBoundDomains` is true
+(since build 1.0 (4), 25 November 2026; before that the app needed the internet at every start). The web view then
+can't open other sites itself (Capacitor sends them to Safari); a new host the page shows inside the app must be added
+there too (at most 10). After the first start online the app opens offline, and Profiel's "Alles downloaden voor
+offline" is shown in the app as well; `native/README.md` has the build and review steps (the user builds on a Mac). The page
 knows it runs there by `NATIVE` (`Capacitor.isNativePlatform()`), which counts as an installed app (`inApp()`): OAuth
 opens in the system browser (`skipBrowserRedirect`, `Capacitor.Plugins.Browser`) and comes back through the existing
 `/api/handoff` flow; no purchases, prices or offers inside the apps (Plus, passes and groups from the website still

@@ -53,5 +53,9 @@ Android icons and splash: make them from `../icon-1024.png` with `npx @capacitor
 
 ## Updating
 
+Offline works through the site's service worker, which iOS only allows for the App-Bound Domains in `Info.plist`
+(`WKAppBoundDomains`, with `limitsNavigationsToAppBoundDomains` in `capacitor.config.json`): a site the app must show
+inside itself goes on that list. The first start needs the internet; after that the app opens without it.
+
 Content and code come from the website. A new store build is only needed for a new Capacitor version, a new
 plugin, a change in the Swift code, icons, or a change in `capacitor.config.json`.

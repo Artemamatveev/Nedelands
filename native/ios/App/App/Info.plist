@@ -68,6 +68,13 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>WKAppBoundDomains</key>
+	<array>
+		<string>bittertalen.nl</string>
+		<string>www.bittertalen.nl</string>
+		<string>localhost</string>
+		<string>www.youtube-nocookie.com</string>
+	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
 </dict>

@@ -22,3 +22,12 @@ test('Inside the store apps there are no purchases or prices', () => {
   assert.match(page, /\$\{NATIVE\?"":row\("prices","Prijzen"\)/);
   assert.match(page, /if\(NATIVE\)\{\$\("tbody"\)\.innerHTML=`<h2 id="plusS">/);
 });
+
+test('The iPhone app opens offline: the site and its service worker are an App-Bound Domain', () => {
+  const cfg = JSON.parse(fs.readFileSync(new URL('../native/capacitor.config.json', import.meta.url), 'utf8'));
+  assert.equal(cfg.ios.limitsNavigationsToAppBoundDomains, true);
+  const plist = fs.readFileSync(new URL('../native/ios/App/App/Info.plist', import.meta.url), 'utf8');
+  const domains = (plist.match(/<key>WKAppBoundDomains<\/key>\s*<array>([\s\S]*?)<\/array>/) || [])[1] || '';
+  for (const d of ['bittertalen.nl', 'localhost', 'www.youtube-nocookie.com']) assert.ok(domains.includes(`<string>${d}</string>`), d);
+  assert.ok((domains.match(/<string>/g) || []).length <= 10, 'iOS allows at most 10');
+});
