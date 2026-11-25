@@ -240,19 +240,23 @@ export default async function handler(req, res) {
   // Plus: PLUS_MONTH checks a month on top of the daily limit, and at most OPUS_DAY proefexamens a day on the exam
   // model. A counter that can't be reached never blocks a paying learner (it is logged).
   const exam = input.length >= 4;
-  let month = false, opus = false;
+  let month = false, opus = false, guardO = false;
   if (plus) {
     const m = await useGuard("m:" + uid, monthOf(), cost, PLUS_MONTH).catch((e) => { console.error("guard", e.message); return null; });
     if (m === -1) { await mine(); return res.status(429).json({ error: "month", limit: PLUS_MONTH, checkedAt, plus }); }
     month = m != null;
-    if (exam && OPUS_DAY > 0) opus = (await useGuard("o:" + uid, amsterdamDay(), 1, OPUS_DAY).catch(() => -1)) >= 0;
+    if (exam && OPUS_DAY > 0) {
+      const o = await useGuard("o:" + uid, amsterdamDay(), 1, OPUS_DAY).catch((e) => { console.error("guard", e.message); return null; });
+      opus = o !== -1; // an unreachable counter keeps the exam model (fail open, like the monthly limit)
+      guardO = o != null && o >= 0;
+    }
   }
   const model = !plus ? MODEL_FREE : exam && opus ? MODEL_EXAM : MODEL;
   let providerStarted = false;
   const giveBack = () => Promise.all([
     mine(), providerStarted || plus ? null : useTotal(-cost).catch(() => null),
     month ? useGuard("m:" + uid, monthOf(new Date(checkedAt)), -cost, PLUS_MONTH).catch(() => null) : null,
-    opus ? useGuard("o:" + uid, amsterdamDay(new Date(checkedAt)), -1, OPUS_DAY).catch(() => null) : null,
+    guardO ? useGuard("o:" + uid, amsterdamDay(new Date(checkedAt)), -1, OPUS_DAY).catch(() => null) : null,
   ]);
   const tasks = input.map((t) => ({
     kind: wb ? (SCORES_WB[t?.kind] ? t.kind : "m") : sb ? (SCORES_SB[t?.kind] ? t.kind : "m") : "",
