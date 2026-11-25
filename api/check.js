@@ -228,7 +228,7 @@ export default async function handler(req, res) {
       if (free < 0) return res.status(401).json({ error: "login", free: 0 });
     } else {
       uid = user.id;
-      plus = plusOn && coversLevel(await plusFor(uid).catch(() => null), wb || sb ? "B1" : "A2");
+      plus = plusOn && coversLevel(await plusFor(uid, true).catch(() => null), wb || sb ? "B1" : "A2");
       if (plus) { lim = PLUS; period = "day"; }
       else lim = LIMIT + (await bonusFor(uid).catch(() => 0)); // invited friends: extra free checks (api/referral.js)
       left = await useChecks(uid, cost, lim, period, checkedAt).catch(() => null);
@@ -256,7 +256,7 @@ export default async function handler(req, res) {
     month = m != null;
     if (exam && OPUS_DAY > 0) {
       const o = await useGuard("o:" + uid, amsterdamDay(), 1, OPUS_DAY).catch((e) => { console.error("guard", e.message); return null; });
-      opus = o !== -1; // an unreachable counter keeps the exam model (fail open, like the monthly limit)
+      opus = o != null && o >= 0; // an unreachable counter: the practice model grades (the learner is still graded)
       guardO = o != null && o >= 0;
     }
   }
