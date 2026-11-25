@@ -1054,7 +1054,7 @@ test('Monthly A2 and B1 offers fit the homepage and the app sends the selected l
     assert.match(await s.p.locator('[data-plus-plan="B1"]').textContent(),/14,99/);
     await s.p.locator('[data-plus-buy="B1"]').click();
     assert.equal(chosen,undefined,'no Checkout before the learner agrees that access starts at once');
-    await s.p.locator('#pstart').check();
+    await s.p.locator('label:has(#pstart)').click();assert.equal(await s.p.locator('#pstart').isChecked(),true);
     await s.p.locator('[data-plus-buy="B1"]').click();await s.p.waitForURL('about:blank');
     assert.deepEqual(chosen,{go:'buy',level:'B1',start:true});assert.deepEqual(s.errors,[]);await s.ctx.close();
   }finally{await browser.close();await new Promise(ok=>server.close(ok))}
