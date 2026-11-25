@@ -1352,17 +1352,22 @@ const amsDay=(at=new Date())=>new Intl.DateTimeFormat("en-CA",{timeZone:"Europe/
 // The learner's exam dates from Profiel: one per exam part of the level (S.me.exams {lz:"YYYY-MM-DD",…}, synced with the
 // progress). An older single date (S.me.exam) still counts until a part gets its own date. Days on Amsterdam's calendar.
 const DRE=/^\d{4}-\d{2}-\d{2}$/;
+// the dated parts: the exam parts of the level; for B1 also the ONA-eindgesprek and the participatieverklaring, which the
+// Staatsexamen does not include (both optional: an empty field is simply left out)
+const EXTRA={ona:"ONA-eindgesprek",pv:"Participatieverklaring"};
+const examParts=()=>lvl()==="B1"?[...parts(),"ona","pv"]:parts();
+const exName=k=>PART[k]||EXTRA[k]||"";
 const dayN=d=>{const n=Math.round((Date.parse(d+"T12:00:00Z")-Date.parse(amsDay()+"T12:00:00Z"))/864e5);return n>=0&&n<=730?n:null};
 // the coming exams of this level: [{k, n}] (k "" for the old single date), soonest first
 const examsAhead=()=>{const me=S.me||{},ex=me.exams||{};
-  let o=parts().filter(k=>DRE.test(ex[k]||"")).map(k=>({k,n:dayN(ex[k])}));
+  let o=examParts().filter(k=>DRE.test(ex[k]||"")).map(k=>({k,n:dayN(ex[k])}));
   if(!Object.values(ex).some(v=>DRE.test(v||""))&&DRE.test(me.exam||""))o=[{k:"",n:dayN(me.exam)}];
   return o.filter(x=>x.n!=null).sort((a,b)=>a.n-b.n)};
 const examDays=()=>{const a=examsAhead();return a.length?a[0].n:null};
 const examLastDays=()=>{const a=examsAhead();return a.length?a[a.length-1].n:null};
 const examMany=()=>new Set(examsAhead().map(x=>x.n)).size>1;
 // the next exam: its part (or parts on the same day) and the days left, under the Proefexamens heading
-const examLine=()=>{const a=examsAhead();if(!a.length)return"";const n=a[0].n,ks=a.filter(x=>x.n===n&&x.k).map(x=>`<b>${PART[x.k]}</b>`);
+const examLine=()=>{const a=examsAhead();if(!a.length)return"";const n=a[0].n,ks=a.filter(x=>x.n===n&&x.k).map(x=>`<b>${exName(x.k)}</b>`);
   return`<p class="note">${ks.length?ks.join(", ")+'<span aria-hidden="true"> · </span>':""}${n===0?"Vandaag is je examen. Succes!":n===1?"Morgen is je examen. Succes!":`Nog ${n} dagen tot je examen.`}</p>`};
 async function trialUsage(){
   if(!acc.cfg?.free||acc.user)return;
@@ -2813,7 +2818,7 @@ function drawProfile(){
   // an empty field clears that part. The first own date retires the older single date (S.me.exam).
   const pe=$("pexams");
   if(pe){const ex=(S.me||{}).exams||{},old=DRE.test((S.me||{}).exam||"")&&!Object.values(ex).some(v=>DRE.test(v||""))?S.me.exam:"";
-    if(!pe.contains(document.activeElement))pe.innerHTML=parts().map(k=>`<label class="prow"><span>${PART[k]}</span><input type="date" data-ex="${k}" min="${amsDay()}" value="${DRE.test(ex[k]||"")?ex[k]:old}"></label>`).join("");
+    if(!pe.contains(document.activeElement))pe.innerHTML=examParts().map(k=>`<label class="prow"><span>${exName(k)}</span><input type="date" data-ex="${k}" min="${amsDay()}" value="${DRE.test(ex[k]||"")?ex[k]:old}"></label>`).join("");
     pe.querySelectorAll("[data-ex]").forEach(i=>i.onchange=()=>{const me=S.me||{},all={...(me.exams||{})};
       if(old)parts().forEach(k=>{if(!DRE.test(all[k]||""))all[k]=old}); // keep the old date on the parts it stood for
       all[i.dataset.ex]=DRE.test(i.value)?i.value:"";S.me={...me,exams:all,exam:""};save();home()})}

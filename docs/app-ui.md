@@ -91,7 +91,8 @@ same visible box at the end of the row), Trillen; the account with its status an
 then `siteFooter()`: "Hulp" (Veelgestelde vragen, Uitleg over de examens, Prijzen, Abonnement opzeggen, Contact) and
 "Bittertalen" (Over, Privacyverklaring, Naar de website, and Statistiek for the owner) as rows like the iPhone's Settings). Content: first and last name, the level (A2 or B1, a list, see B1) (`S.me` `{name, last}`, so they sync, and they also go to the account's
 `user_metadata` by `syncMeta()`; since 25 November 2026, at the user's wish, "Data van mijn examens": one native date field per exam part of
-the level (`parts()`: five for A2, four Staatsexamen parts plus KNM for B1) in `#pexams`, stored as `S.me.exams`
+the level (`parts()`: five for A2, four Staatsexamen parts plus KNM for B1, and for B1 also the optional ONA-eindgesprek and
+participatieverklaring: `examParts()`) in `#pexams`, stored as `S.me.exams`
 `{part: "YYYY-MM-DD"}` and merged per part; the older single `S.me.exam` still counts until a part gets its own date, then
 it is copied to the empty parts and cleared. `examLine()` shows the next exam's part(s) and "Nog N dagen tot je examen" under
 the Proefexamens heading on Examen, and the Plus screen says whether the Examenpas lasts until the last exam
