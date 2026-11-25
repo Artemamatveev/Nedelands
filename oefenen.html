@@ -2154,7 +2154,7 @@ async function spGrade(q,r){
       <button class="btn wide" id="next">Verder</button>`;
     const target=!ok&&nextPracticeQuestion(q);
     if(target){
-      $("next").insertAdjacentHTML("beforebegin",'<button class="btn wide" id="speakingfollow">Probeer een nieuwe spreekopdracht</button>');
+      $("next").insertAdjacentHTML("beforebegin",'<button class="ghost wide" id="speakingfollow">Probeer een nieuwe spreekopdracht</button>');
       $("speakingfollow").onclick=()=>insertPracticeQuestion(q,target);
     }
     $("next").onclick=()=>{pos++;show()}; echoBind(res.corrected);
@@ -2193,7 +2193,7 @@ function spNext(q,r){
     if(previous?.url&&previous.url!==r.url)URL.revokeObjectURL(previous.url);
   }else $("recp").innerHTML=`<p class="ask">Je vorige antwoord</p>${previous.url?`<audio controls src="${previous.url}"></audio>`:`<div class="sample">${esc(previous.text)}</div>`}`;
   $("rect").textContent="Klaar";$("recm").style.width="0%";
-  $("recn").innerHTML=`<b>${has?"✓ Antwoord klaar":"Geen spraak herkend"}</b><br>${kept?"Je vorige antwoord is bewaard. Probeer opnieuw of ga verder.":has?"Je antwoord is bewaard voor dit proefexamen.":"Er is geen tekst voor de beoordeling. Neem opnieuw op of ga verder."}`;
+  $("recn").innerHTML=`<b>${has?"✓ Antwoord klaar":"Geen spraak herkend"}</b><br>${esc(r.note||"")}${kept?"Je vorige antwoord is bewaard. Probeer opnieuw of ga verder.":has?"Je antwoord is bewaard voor dit proefexamen.":"Er is geen tekst voor de beoordeling. Neem opnieuw op of ga verder."}`;
   $("spredo").hidden=false;
   const b=$("recb"); b.textContent=pos<queue.length-1?"Volgende vraag →":"Antwoorden inleveren";b.className="btn wide";b.disabled=false;b.onclick=()=>{b.disabled=true;pos++;show()};
 }
@@ -2758,7 +2758,7 @@ function nextPracticeQuestion(q){
 function insertPracticeQuestion(q,target){
   queue.splice(pos+1,0,{...target,retry:false,followSource:q.k});total++;pos++;show();
 }
-function examFocusHTML(source,pick,target){
+function examFocusHTML(source,pick,target,inline){
   const transcript=source.say?sayLines(source.say).join("\n"):source.text||"";
   const answer=source.right.trim().replace(/[.!?]$/,"").toLowerCase();
   const lines=transcript.split(/\n|(?<=[.!?])\s+/).filter(line=>line.trim());
@@ -2767,12 +2767,12 @@ function examFocusHTML(source,pick,target){
   return `<section class="list exam-focus" aria-labelledby="exam-focus-title">
     <p class="eft" id="exam-focus-title"><span data-ui>Oefen verder</span> · ${esc(examSkill(source))}</p>
     <p>${esc(source.big)}</p>
-    <p><b data-ui>Jouw antwoord</b> · ${esc(capA(source,pick))}<br><b data-ui>Goed is</b> · ${esc(capA(source,source.right))}</p>
+    ${inline?"":`<p><b data-ui>Jouw antwoord</b> · ${esc(capA(source,pick))}<br><b data-ui>Goed is</b> · ${esc(capA(source,source.right))}</p>`}
     ${source.sec==="knm"&&source.note?noteHTML(source.note):""}
     ${clue?`<p class="note"><b data-ui>Zo staat het in de tekst</b> · ${esc(clue)}</p>`:""}
     ${transcript?`<details><summary data-ui>${source.say?"Lees het luisterfragment":"Lees de tekst terug"}</summary>${source.say?`<div class="sample">${esc(transcript).replaceAll("\n","<br>")}</div>`:docHTML(transcript)}</details>`:""}
     ${source.say&&canSpeak?`<button type="button" class="hint" id="focuslisten" data-ui>▶ Luister opnieuw</button>`:""}
-    ${target?`<button type="button" class="btn wide" id="focuspractice" data-ui>Oefen met een nieuwe vraag</button>`:""}
+    ${target?`<button type="button" class="${inline?"ghost":"btn"} wide" id="focuspractice" data-ui>Oefen met een nieuwe vraag</button>`:""}
   </section>`;
 }
 function openFocusDay(){setTab("vandaag");home()}
@@ -3105,10 +3105,12 @@ function feedback(ok,q,pick){
   if(!ok&&!cur.exam&&pick!=null&&FOCUS_PARTS.includes(q.sec)){
     const target=nextPracticeQuestion(q);
     $("fb").className="fb";
-    $("fb").innerHTML=examFocusHTML(q,pick,target)+'<button class="ghost wide" id="next">Verder</button>';
+    // the usual feedback first ("Niet goed", "Goed is:"), then where it was in the text; Verder stays the main action
+    $("fb").innerHTML=`<p class="fbh"><i aria-hidden="true">✕</i><b class="bad" data-ui>Niet goed</b></p><p class="fbr"><span data-ui>Goed is:</span> <strong>${capA(q,q.right)}</strong></p>`
+      +examFocusHTML(q,pick,target,true)+'<button class="btn wide" id="next" data-ui>Verder</button>';
     if($("focuslisten"))$("focuslisten").onclick=()=>speak(q.say);
     if($("focuspractice"))$("focuspractice").onclick=()=>insertPracticeQuestion(q,target);
-    $("next").onclick=()=>{pos++;show()};
+    $("next").onclick=()=>{pos++;show()}; $("next").focus();
     $("fb").scrollIntoView({block:"nearest"});return;
   }
   // wrong: a short heading, then the right answer in ink (a long red heading was loud)
@@ -3401,6 +3403,31 @@ function redoItems(q,form,text,right,errs){
   if(q.kind==="z"){const own=zWhole({q,text});return redoable(own,right)?[{own,right,errs,l:q.big,ctx:/___/.test(q.ctx||"")?q.ctx:""}]:[]}
   return redoable(text,right)?[{own:text,right,errs}]:[];
 }
+// After a proefexamen: rewrite one task's text yourself and compare it with the corrected text on the phone (no check is
+// used). items: {own, right, errs, l (the task), ctx (a text with an open place), f (a form's answer)}; back returns to the
+// result, which is not marked again. Practice uses practiseCorrections() instead.
+function redo(items,back){
+  const what=items[0].f?items.length>1?"antwoorden":"antwoord":items.length>1?"zinnen":items[0].l?"zin":"tekst";
+  $("card").innerHTML=`<p class="ask">Schrijf het nog een keer</p><p class="note">Verbeter je eigen ${what}, zonder naar de verbeterde ${what} te kijken.</p>`
+    +items.map((x,i)=>`${x.l?`<p class="note">${x.l}</p>`:""}${x.ctx?`<div class="sample">${esc(x.ctx).replace("___",'<b class="gapw">______</b>')}</div>`:""}
+      <textarea id="rw${i}" rows="${x.l?3:Math.max(7,x.own.split("\n").length+2)}" aria-label="Je ${x.f?"antwoord":x.l?"zin":"tekst"}" spellcheck="false" autocorrect="off" autocapitalize="off"></textarea>
+      ${x.errs.length?`<details><summary>Kijk nog even naar de fouten</summary>${errsHTML(x.errs)}</details>`:""}<div id="rwd${i}"></div>`).join("")
+    +`<p class="note" id="rwn" hidden>Doorgestreept moet weg, groen moet erbij. De telefoon vergelijkt alleen: een ander woord kan ook goed zijn.</p>
+      <div class="two"><button class="ghost" id="rwgo">${back?"Naar de uitslag":"Verder"}</button><button class="btn" id="rwchk">Vergelijk</button></div>`;
+  items.forEach((x,i)=>$("rw"+i).value=x.own);
+  window.scrollTo(0,0);
+  $("rwgo").onclick=back||(()=>{pos++;show()});
+  $("rwchk").onclick=()=>{
+    const R=items.map((x,i)=>{const t=$("rw"+i).value.trim(),d=diffHTML(t,x.right);
+      $("rwd"+i).innerHTML=d.n?`<p class="ask">Nog ${d.n} ${d.n===1?"verschil":"verschillen"}</p><div class="sample diff">${d.h}</div>`:`<p class="note"><b class="good">✓ Precies goed!</b></p>`;
+      return d.n});
+    const all=R.every(n=>!n);
+    $("rwn").hidden=all; $("rwchk").textContent="Vergelijk opnieuw";
+    $("rwgo").className=all?"btn":"ghost"; $("rwchk").className=all?"ghost":"btn";
+    if(all)buzz("good");
+    $("rwd"+R.findIndex((n,i)=>n||i===R.length-1)).scrollIntoView({block:"nearest",behavior:"smooth"});
+  };
+}
 // a sentence to finish: the corrected text is the whole sentence, so the learner gets the whole sentence to correct
 const zWhole=z=>{const c=z.q.ctx,b=c&&!/___/.test(c)?c.replace(/[….\s]+$/,""):"";return b&&!z.text.startsWith(b)?b+" "+z.text:z.text};
 async function check(q){
@@ -3532,7 +3559,7 @@ async function examWrite(){
   card.innerHTML=`<p class="note">Ik kijk je ${answers.length} ${answers.length===1?"tekst":"teksten"} na… Dit duurt ongeveer een minuut.</p>`;
   try{
     const grades=answers.length?await nakijken(answers.map(answer=>({kind:answer.q.kind,task:wrTask(answer.q),form:answer.form,text:answer.text})),exam.part==="wb"?"wb":undefined):[];
-    const review=reviewWriting(tasks,answers,grades);
+    const review=reviewWriting(tasks,answers,grades), redoByTask=[];
     const byKey=new Map(answers.map((answer,i)=>[answer.q.k,{answer,grade:grades[i]}]));
     const good=grades.filter(grade=>grade?.passed).length;
     const body=tasks.map((task,i)=>{
@@ -3540,13 +3567,14 @@ async function examWrite(){
       if(row.status==="empty")return `<h2>Opdracht ${i+1} · Niet gemaakt</h2><p class="note">${task.big}</p><p>Geen antwoord. Deze opdracht telt voor 0 van ${row.maxPoints} punten.</p>`;
       const {answer,grade={}}=entry, errors=Array.isArray(grade.errors)?grade.errors:[];
       keepErrs(errors);
+      redoByTask[i]=redoItems(task,answer.form,answer.text,grade.corrected,errors);
       const label=typeof grade.passed==="boolean"?(grade.passed?"voldoende":"nog niet voldoende"):"nog niet beoordeeld";
       return `<h2>Opdracht ${i+1} · <span class="${typeof grade.passed==="boolean"?(grade.passed?"good":"bad"):""}">${label}</span></h2>
         <p class="note">${task.big}</p><p class="note">${esc(grade.verdict)}</p>${row.status==="scored"?scoreHTML(grade.scores,task.mx):""}
         ${own(answer,errors)}${errors.length?errsHTML(errors):""}
         ${grade.corrected?`<p class="ask">Verbeterde tekst</p><div class="sample">${esc(grade.corrected)}</div>`:""}
         <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(task.right)}</div></details>
-        `;
+        ${redoByTask[i].length?`<button class="ghost wide rdo" data-i="${i}">Schrijf het nog een keer</button>`:""}`;
     }).join("");
     if(review.complete){lsSet(completedDraft,null);keepRes(exam.part,review.percent,writingSnapshot(review))}
     else save();
@@ -3569,6 +3597,10 @@ async function examWrite(){
       bind();
       card.querySelectorAll("[data-write-focus]").forEach(button=>button.onclick=()=>
         practiseWritingFocus(review.priorities[Number(button.dataset.writeFocus)].action,exam.part,restoreResult));
+      card.querySelectorAll(".rdo").forEach(button=>button.onclick=()=>{
+        const i=Number(button.dataset.i);
+        redo(redoByTask[i],()=>{restoreResult();const details=card.querySelector(".writing-details");if(details)details.open=true;card.querySelector(`.rdo[data-i="${i}"]`)?.scrollIntoView({block:"center"})});
+      });
 
     };
     wire();
