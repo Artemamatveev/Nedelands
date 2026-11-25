@@ -14,9 +14,10 @@ On top of `PLUS_LIMIT` a day, a paying learner (Plus, Examenpas or group) has `P
 Amsterdam month, shared by grading and conversations, and at most `OPUS_DAY` (default 2) proefexamens a day graded by
 `GRADING_MODEL_EXAM`; after that `GRADING_MODEL` grades them. A conversation ticket allows `TURNS + 2` calls (say and end),
 counted on the server, because the history comes from the page. All three are counters in table `ai_guard`
-(`use_guard()`, migration `20261125090000_ai_guard.sql`, also in `schema.sql`); a counter that can't be reached lets a
-paying learner through and is logged. The monthly limit answers 429 `month`, the ticket limit 429 `turns`.
-Timeouts: grading gives up after 105 s (one retry), conversation turns after 60 s, every Supabase and Stripe fetch in
+(`use_guard()`, migration `20261125090000_ai_guard.sql`, also in `schema.sql`, applied 25 November 2026); an unreachable
+monthly or exam-model counter lets a paying learner through (logged), an unreachable ticket counter refuses the turn (503).
+Once the model was called, a failure gives back only the daily check: the monthly and exam-model counters keep it. The monthly limit answers 429 `month`, the ticket limit 429 `turns`.
+Timeouts: grading ends 110 s after the request arrived (no retry for a proefexamen, one otherwise; under 30 s left: 503 `timeout` before calling the model), conversation turns after 60 s, every Supabase and Stripe fetch in
 `_supa.js` after 8 s, so a check is always given back instead of being lost with a killed function (504 `timeout`).
 `max_tokens` is 8000 for one to three tasks and 12000 for a proefexamen. voorwaarden.html ("Redelijk gebruik") names
 20 a day, 200 a month and two proefexamens on the strongest model: change it in all eight languages with these defaults.

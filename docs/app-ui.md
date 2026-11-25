@@ -134,6 +134,12 @@ Every section appears once; don't add a second entry point to the same exercise.
   versions generated-looking: solid green and red fills, then separate tinted boxes with coloured borders, ✓ / ✕ in
   front and a tinted sheet, then a grouped grey list; don't go back to any of them.
 
+Feedback in exercises (25 November 2026): the menu words of the feedback (`[data-ui]`: "Goed zo!", "Niet goed",
+"Goed is:", "Verder", the labels of the exam-focus block) are translated like menus, although `#play` is Dutch
+(`uiSkip()`); the question, the answers and the explanation stay Dutch. A plain-text explanation (`noteHTML()`) has
+tappable words for the dictionary popup (`tapWord()`, now also in `#play`) and "Vertaal ↗" to Google Translate in the
+menu language (`gtURL()`, English for Dutch menus); the reader's "Vertaal de zin" uses the same language.
+
 ## Words, motion, touch
 
 - **Short words**: no explaining paragraph under every heading; a description says what is in it in a few words

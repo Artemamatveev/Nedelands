@@ -537,7 +537,7 @@ body.vfull{overflow:hidden}
 .msum{margin-top:14px;font-size:var(--fs-b);line-height:1.55}
 .msum p{margin:0 0 10px}
 /* geschiedenis */
-#hist{position:relative}
+#hist,#play{position:relative}
 #hist>.back{margin-top:14px}
 #hist h2{margin-top:18px} #hbody .ask:first-child{margin-top:20px} #hbody .ask:first-child+h2{margin-top:4px}
 #hall{margin-top:24px}
@@ -612,7 +612,7 @@ body.vfull{overflow:hidden}
 }
 .aiany{margin:16px 0 4px}
 .exam-focus{padding:14px;margin:12px 0}
-.exam-focus h3{font-size:var(--fs-l);margin:0 0 8px}
+.exam-focus .eft{font-size:var(--fs-l);font-weight:600;margin:0 0 8px} /* not a heading: the screen keeps one heading order */
 .exam-focus p,.exam-focus details{margin:8px 0}
 .exam-focus .btn{margin-top:8px}
 .aifix{margin-top:4px!important;font-size:var(--fs-m)}
@@ -1023,6 +1023,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
         <div class="prow pickrow langrow"><span id="plangt">Taal</span><b data-langn></b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg><select id="plang" data-lang aria-labelledby="plangt"></select></div>
         <label class="prow tog" id="ptrilw" hidden><span>Trillen bij een antwoord</span><input type="checkbox" switch id="ptril"></label>
         <button type="button" class="it" id="psm"><span><span class="th"><b>Wat Saskia over je weet</b></span></span></button>
+        <button type="button" class="it" id="poff" hidden><span><span class="th"><b>Alles downloaden voor offline</b></span><span class="d" id="poffd">Schilderijen, foto's en het woordenboek: ongeveer 37 MB. Liefst via wifi.</span></span></button>
         <div class="prow pickrow" id="premw" hidden><span id="premt">Dagelijkse herinnering</span><b id="premv"></b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg><select id="prem" aria-labelledby="premt"></select></div>
       </div>
       <div id="acct"></div>
@@ -2764,14 +2765,14 @@ function examFocusHTML(source,pick,target){
   const matches=answer.length>=5?lines.filter(line=>line.toLowerCase().includes(answer)):[];
   const clue=matches.length===1?matches[0]:"";
   return `<section class="list exam-focus" aria-labelledby="exam-focus-title">
-    <h3 id="exam-focus-title">Oefen verder · ${esc(examSkill(source))}</h3>
+    <p class="eft" id="exam-focus-title"><span data-ui>Oefen verder</span> · ${esc(examSkill(source))}</p>
     <p>${esc(source.big)}</p>
-    <p><b>Jouw antwoord</b> · ${esc(capA(source,pick))}<br><b>Goed is</b> · ${esc(capA(source,source.right))}</p>
-    ${source.sec==="knm"&&source.note?`<p class="note">${esc(source.note)}</p>`:""}
-    ${clue?`<p class="note"><b>Zo staat het in de tekst</b> · ${esc(clue)}</p>`:""}
-    ${transcript?`<details><summary>${source.say?"Lees het luisterfragment":"Lees de tekst terug"}</summary>${source.say?`<div class="sample">${esc(transcript).replaceAll("\n","<br>")}</div>`:docHTML(transcript)}</details>`:""}
-    ${source.say&&canSpeak?`<button type="button" class="hint" id="focuslisten">▶ Luister opnieuw</button>`:""}
-    ${target?`<button type="button" class="btn wide" id="focuspractice">Oefen met een nieuwe vraag</button>`:""}
+    <p><b data-ui>Jouw antwoord</b> · ${esc(capA(source,pick))}<br><b data-ui>Goed is</b> · ${esc(capA(source,source.right))}</p>
+    ${source.sec==="knm"&&source.note?noteHTML(source.note):""}
+    ${clue?`<p class="note"><b data-ui>Zo staat het in de tekst</b> · ${esc(clue)}</p>`:""}
+    ${transcript?`<details><summary data-ui>${source.say?"Lees het luisterfragment":"Lees de tekst terug"}</summary>${source.say?`<div class="sample">${esc(transcript).replaceAll("\n","<br>")}</div>`:docHTML(transcript)}</details>`:""}
+    ${source.say&&canSpeak?`<button type="button" class="hint" id="focuslisten" data-ui>▶ Luister opnieuw</button>`:""}
+    ${target?`<button type="button" class="btn wide" id="focuspractice" data-ui>Oefen met een nieuwe vraag</button>`:""}
   </section>`;
 }
 function openFocusDay(){setTab("vandaag");home()}
@@ -2814,6 +2815,10 @@ function drawProfile(){
   const me=S.me||{},n=$("pname"),l=$("plast");
   if(document.activeElement!==n)n.value=me.name||""; if(document.activeElement!==l)l.value=me.last||"";
   n.onchange=l.onchange=()=>{S.me={...(S.me||{}),name:n.value.trim().slice(0,40),last:l.value.trim().slice(0,60)};save();syncMeta();drawProfile()};
+  // Offline: the pictures and the dictionary at once, when the learner asks for it (no background download on mobile data)
+  const off=$("poff");
+  if(off){off.hidden=!("serviceWorker" in navigator&&navigator.serviceWorker.controller)||NATIVE;off.onclick=warmAll;
+    $("poffd").textContent=offAsked?"Bezig met downloaden. Je kunt gewoon verder oefenen.":"Schilderijen, foto's en het woordenboek: ongeveer 37 MB. Liefst via wifi."}
   // the exam dates, one row per exam part of this level (S.me.exams): a countdown on Examen and in the Plus screen;
   // an empty field clears that part. The first own date retires the older single date (S.me.exam).
   const pe=$("pexams");
@@ -2978,6 +2983,7 @@ function build(id,custom){
 // Practising is a focus screen: no painting, only ✕ (back to where you came from), the progress, the count and the clock
 const XSVG='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
 function show(){
+  closePop();
   quickPraise.hide();
   head(); $("playh").textContent=cur.t||"Oefenen"; // the screen's heading for screen readers (the painting's h1 is hidden here)
   if(pos>=queue.length)return finish();
@@ -3106,9 +3112,9 @@ function feedback(ok,q,pick){
     $("fb").scrollIntoView({block:"nearest"});return;
   }
   // wrong: a short heading, then the right answer in ink (a long red heading was loud)
-  $("fb").innerHTML=`<p class="fbh"><i aria-hidden="true">${ok?"✓":"✕"}</i><b class="${ok?"good":"bad"}">${ok?"Goed zo!":"Niet goed"}</b></p>${ok?"":`<p class="fbr"><span>Goed is:</span> <strong>${capA(q,q.right)}</strong></p>`}
-    ${q.note?(q.sec==="verb"?q.note:`<div class="note">${q.note}</div>`):""}
-    <button class="btn wide" id="next">Verder</button>`;
+  $("fb").innerHTML=`<p class="fbh"><i aria-hidden="true">${ok?"✓":"✕"}</i><b class="${ok?"good":"bad"}" data-ui>${ok?"Goed zo!":"Niet goed"}</b></p>${ok?"":`<p class="fbr"><span data-ui>Goed is:</span> <strong>${capA(q,q.right)}</strong></p>`}
+    ${q.note?(q.sec==="verb"?q.note:noteHTML(q.note)):""}
+    <button class="btn wide" id="next" data-ui>Verder</button>`;
   $("next").onclick=()=>{pos++;show()}; $("next").focus();
   if(q.tts&&q.big!==q.tts&&canSpeak)speak(q.tts); // description → word: hear the Dutch word
 }
@@ -4690,7 +4696,14 @@ function dictPart(s){
 // The parts these words need
 function loadDict(words){return Promise.all([...new Set((words||[]).map(dshard))].map(dictPart)).then(()=>DICT)}
 // Every part into the cache in the background (the reader or the history opened), so tapping a word works offline later
-function warmDict(){try{navigator.serviceWorker.controller.postMessage({warm:DSH.map(dictURL)})}catch(e){}}
+function warmDict(force){if(!force&&!bulkOK())return;try{navigator.serviceWorker.controller.postMessage({warm:DSH.map(dictURL)})}catch(e){}}
+// Every painting and photo (~30 MB) and the dictionary (~7 MB) are fetched in the background only on a fast connection
+// that is not mobile data and without Save-Data; elsewhere (iPhone has no navigator.connection) a picture is cached
+// when it is first shown, and Profiel offers "Alles downloaden voor offline".
+function bulkOK(){const c=navigator.connection;return !!c&&!c.saveData&&c.type!=="cellular"&&(!c.effectiveType||c.effectiveType==="4g")}
+const warmList=()=>ART.map(p=>"/art/"+p.f+".jpg").concat(Object.keys(FOTO).map(f=>"/foto/"+f+".jpg"),GS.flatMap(c=>(c.p?[c.p]:[]).concat((c.f||[]).map(f=>f[0]))).map(f=>"/"+f));
+let offAsked=false;
+function warmAll(){offAsked=true;try{const w=navigator.serviceWorker.controller;w.postMessage({warm:warmList()});warmDict(true)}catch(e){}drawProfile()}
 // A word in a loaded part, or nothing; while define() runs inside lookUp(), the parts it missed are noted
 const dget=(m,k)=>{const s=dshard(k);if(!dictHave.has(s)){if(dictMiss)dictMiss.add(s);return}return DICT[m].get(k)};
 // define() with the parts it needs: it notes the parts it missed, they are loaded, and it runs again
@@ -4769,15 +4782,21 @@ function place(){
   const m=document.querySelector("main").getBoundingClientRect(),lo=Math.max(8,m.left+8),hi=Math.min(innerWidth,m.right)-w-8;
   pp.style.left=Math.max(lo,Math.min(hi,r.left+r.width/2-w/2))-o.left+"px";
 }
+// The explanation under a marked answer: tap a word for the dictionary (like in the reader), and translate it whole
+// into the menu language. Plain-text notes only; a note with markup (verb tables) stays as it is.
+const GTL={en:"en",ar:"ar",tr:"tr",hi:"hi",zh:"zh-CN",es:"es",ru:"ru"},tlang=()=>GTL[lsGet("ww-ui")]||"en";
+const gtURL=t=>`https://translate.google.com/?sl=nl&tl=${tlang()}&op=translate&text=${encodeURIComponent(t)}`;
+const noteHTML=n=>/</.test(n)?`<div class="note">${n}</div>`
+  :`<div class="note"><span class="s">${wordsHTML(n,knownSet())}</span> <a class="hint" href="${gtURL(n)}" target="_blank" rel="noopener" data-ui>Vertaal ↗</a></div>`;
 async function tapWord(el){
   if(popW===el)return closePop();
   closePop(); popW=el; el.classList.add("sel"); const tok=popTok;
   const word=el.textContent, sent=el.closest(".s").textContent.trim(), pp=$("pop");
-  const gt=t=>`https://translate.google.com/?sl=nl&tl=en&op=translate&text=${encodeURIComponent(t)}`;
+  const gt=gtURL;
   pp.innerHTML=`<div class="ph"><b>${esc(word)}</b>${canSpeak?`<button class="say" id="psay" aria-label="Uitspreken">▶</button>`:""}</div>
     <div id="pdef"><p class="pm">${dictHave.has(dshard(word))?"":"Woordenboek laden…"}</p></div>
     <div class="pa"><a class="hint" href="${gt(sent)}" target="_blank" rel="noopener">Vertaal de zin ↗</a></div>`;
-  const host=el.closest("#read,#hist"); if(pp.parentNode!==host)host.appendChild(pp);
+  const host=el.closest("#read,#hist,#play"); if(pp.parentNode!==host)host.appendChild(pp);
   pp.hidden=false; place();
   if($("psay"))$("psay").onclick=()=>speak(word);
   let E;try{E=await lookUp(word,sent)}catch(e){if(tok===popTok){$("pdef").innerHTML=`<p class="pm">Het woordenboek laadt niet. Ben je online?</p>`;place()}return}
@@ -4799,6 +4818,7 @@ async function tapWord(el){
   place();
 }
 $("page").onclick=e=>{const w=e.target.closest(".w");if(w)tapWord(w)};
+$("play").addEventListener("click",e=>{const w=e.target.closest("#fb .note .w");if(w)tapWord(w)});
 document.addEventListener("click",e=>{if(!$("pop").hidden&&!e.target.closest("#pop,.w"))closePop()});
 addEventListener("resize",place);
 $("rback").onclick=library;
@@ -4957,7 +4977,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="b574e404f8";
+const UIV="9490f4294a";
 let uiP=null;
 function uiLoaded(){ // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});
@@ -5120,12 +5140,14 @@ const trS=s=>{const t=s.trim();if(!t)return null;const v=uiT(t)||uiR(t);if(v)ret
   if(t.includes(" · ")){const p=t.split(" · "),q=p.map(x=>uiT(x)||uiR(x)||x);if(q.some((x,i)=>x!==p[i]))return s.replace(t,rtlMark(q.join(" · ")))}
   return null};
 const DUTCH="#play,:not(html)[lang=nl],script,style,.doc,.sample,.msum,.bgl"; // never translated, and left to right: lang="nl" marks Dutch content
-const uiSkip=el=>!el||el.closest(DUTCH+",select,[data-langn]"); // a language's name stays in that language
+// a language's name stays in that language. [data-ui] marks the menu words of the feedback inside an exercise
+// ("Niet goed", "Goed is:", "Verder"…): translated, while the Dutch around them and any [lang=nl] inside them stay Dutch
+const uiSkip=el=>{if(!el)return true;const d=el.closest(DUTCH+",select,[data-langn]");if(!d)return false;const u=el.closest("[data-ui]");return !(u&&d.contains(u)&&d!==u)};
 function trNode(root){
   if(root.nodeType===3){const el=root.parentElement;if(uiSkip(el))return;const o=UIO.get(root)??root.nodeValue,v=LI<0?null:trS(o);
     if(v!=null){if(!UIO.has(root))UIO.set(root,o);if(root.nodeValue!==v)root.nodeValue=v}else if(UIO.has(root)){root.nodeValue=UIO.get(root);UIO.delete(root)}return}
   if(root.nodeType!==1||uiSkip(root))return;
-  [root,...root.querySelectorAll("[aria-label],[placeholder]")].forEach(e=>{if(!e.getAttribute||e.closest(DUTCH))return;["aria-label","placeholder"].forEach(a=>{
+  [root,...root.querySelectorAll("[aria-label],[placeholder]")].forEach(e=>{if(!e.getAttribute||uiSkip(e))return;["aria-label","placeholder"].forEach(a=>{
     const cur=e.getAttribute(a);if(cur==null)return;const m=UIA.get(e)||{};const o=m[a]??cur,v=LI<0?null:trS(o);
     if(v!=null){m[a]=o;UIA.set(e,m);if(cur!==v)e.setAttribute(a,v)}else if(m[a]!=null){e.setAttribute(a,m[a]);delete m[a]}})});
   const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;while(n=w.nextNode())trNode(n);
@@ -5198,7 +5220,7 @@ if("serviceWorker" in navigator&&window.isSecureContext&&!window.claude){
   navigator.serviceWorker.register("/sw.js").then(r=>{r.update().catch(()=>{});
     document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")r.update().catch(()=>{})});
     return navigator.serviceWorker.ready}).then(r=>new Promise(ok=>setTimeout(()=>ok(r),10000)))
-    .then(r=>{if(r.active)r.active.postMessage({warm:ART.map(p=>"/art/"+p.f+".jpg").concat(Object.keys(FOTO).map(f=>"/foto/"+f+".jpg"),GS.flatMap(c=>(c.p?[c.p]:[]).concat((c.f||[]).map(f=>f[0]))).map(f=>"/"+f))})}).catch(()=>{});
+    .then(r=>{if(r.active&&bulkOK())r.active.postMessage({warm:warmList()})}).catch(()=>{});
 }
 </script>
 </body>

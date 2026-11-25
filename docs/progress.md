@@ -42,7 +42,8 @@ tab bar says "Er is een nieuwe versie van Bittertalen" with "Vernieuwen" (`showF
 start, or at once after Vernieuwen. Paintings, photos and the dictionary from the cache and never fetched again once
 there (on a slow line every start used to fetch them all again); the rest (manifest, icons, lib, audio/index.json)
 cache first and refreshed in the background. The page sends the list of paintings and photos to keep 10 s after the
-start, asks for a new sw.js at every start and return (`r.update()`), (Profiel's line with how long the start took was removed at the user's wish). `api/` never cached. Don't change the stored shape without migrating old data.
+start, only on a fast connection that is not mobile data and without Save-Data (`bulkOK()`; iPhone has no
+`navigator.connection`, so there pictures are cached when first shown, and Profiel has "Alles downloaden voor offline", `warmAll()`; the dictionary's `warmDict()` follows the same rule), asks for a new sw.js at every start and return (`r.update()`), (Profiel's line with how long the start took was removed at the user's wish). `api/` never cached. Don't change the stored shape without migrating old data.
 Saving progress to a file was removed on purpose. On an iPhone in Safari a tile on Vandaag (`drawA2hs()`)
 asks to put the app on the home screen, because Safari can wipe a site's storage after a week without a visit; the
 home-screen app has its own storage, so the progress goes along by the clipboard (Kopieer / Plak mijn voortgang).

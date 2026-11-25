@@ -21,7 +21,7 @@ const KEY = (process.env.ANTHROPIC_API_KEY || "").trim();
 // One retry at most, and every grading call ends before Vercel's 120 s limit (DEADLINE), so a check that fails is
 // always given back instead of being lost with a killed function.
 const client = KEY ? new Anthropic({ apiKey: KEY, timeout: 100_000, maxRetries: 1 }) : null;
-const DEADLINE = 105_000;
+const DEADLINE = 110_000; // from the start of the request; Vercel stops the function at 120 s
 // Which Claude model grades. Practice (1 to 3 tasks at once) uses GRADING_MODEL, a whole proefexamen (4 or more tasks)
 // GRADING_MODEL_EXAM. Set them in the Vercel project's environment variables to switch without a code change.
 const MODEL = (process.env.GRADING_MODEL || "claude-sonnet-5-5").trim();
@@ -189,6 +189,7 @@ export async function gradeWriting(task, model) {
 }
 
 export default async function handler(req, res) {
+  const t0 = Date.now(); // the deadline counts from the request, not from the model call (maxDuration 120 s)
   if (req.method !== "POST") return res.status(405).json({ error: "method_not_allowed" });
   // Only accept calls from this site's own pages
   if (!sameOrigin(req)) return res.status(403).json({ error: "forbidden" });
@@ -253,11 +254,16 @@ export default async function handler(req, res) {
   }
   const model = !plus ? MODEL_FREE : exam && opus ? MODEL_EXAM : MODEL;
   let providerStarted = false;
+  // A failure gives the learner's daily check back. Once the model was called its tokens are paid, so the monthly and
+  // exam-model counters keep that call: failed calls can't run up the bill without limit.
   const giveBack = () => Promise.all([
     mine(), providerStarted || plus ? null : useTotal(-cost).catch(() => null),
-    month ? useGuard("m:" + uid, monthOf(new Date(checkedAt)), -cost, PLUS_MONTH).catch(() => null) : null,
-    guardO ? useGuard("o:" + uid, amsterdamDay(new Date(checkedAt)), -1, OPUS_DAY).catch(() => null) : null,
+    month && !providerStarted ? useGuard("m:" + uid, monthOf(new Date(checkedAt)), -cost, PLUS_MONTH).catch(() => null) : null,
+    guardO && !providerStarted ? useGuard("o:" + uid, amsterdamDay(new Date(checkedAt)), -1, OPUS_DAY).catch(() => null) : null,
   ]);
+  // What is left of the function's time for the model: refuse now (and give everything back) rather than be killed
+  const left_ms = DEADLINE - (Date.now() - t0);
+  if (left_ms < 30_000) { await giveBack(); console.error("grading_no_time", Date.now() - t0); return res.status(503).json({ error: "timeout" }); }
   const tasks = input.map((t) => ({
     kind: wb ? (SCORES_WB[t?.kind] ? t.kind : "m") : sb ? (SCORES_SB[t?.kind] ? t.kind : "m") : "",
     task: str(t?.task, wb ? 2000 : 1200), form: sp ? "" : str(t?.form, 1500), text: str(t?.text, 2500),
@@ -293,7 +299,7 @@ export default async function handler(req, res) {
       output_config: { effort: "medium", format: { type: "json_schema", schema: sp ? SCHEMA_SP : SCHEMA_WR } },
       system: sb ? SYSTEM_SB : sp ? SYSTEM_SP : wb ? SYSTEM_WB : SYSTEM,
       messages: [{ role: "user", content: prompt }],
-    }, { signal: AbortSignal.timeout(DEADLINE) });
+    }, { signal: AbortSignal.timeout(left_ms), maxRetries: exam ? 0 : 1 });
     console.info(JSON.stringify({ event: "grading_usage", model: response.model, usage: response.usage, units: cost }));
     // Tokens per day and model (table ai_spend), so the owner sees what grading costs; never blocks the answer
     await addSpend(response.model, response.usage).catch(() => {});
