@@ -611,6 +611,10 @@ body.vfull{overflow:hidden}
   65%{transform:translate(-.2%,-.15%) rotate(-.25deg) scale(1.044)}
 }
 .aiany{margin:16px 0 4px}
+.exam-focus{padding:14px;margin:12px 0}
+.exam-focus h3{font-size:var(--fs-l);margin:0 0 8px}
+.exam-focus p,.exam-focus details{margin:8px 0}
+.exam-focus .btn{margin-top:8px}
 .aifix{margin-top:4px!important;font-size:var(--fs-m)}
 .aifix span{display:block;color:var(--soft)}
 .aiwait{margin:14px 0}
@@ -2602,7 +2606,15 @@ const PASS=.7;
 const PASSP={lz:19/25,ls:19/25,knm:28/40,wb:25/47}, passOf=k=>PASSP[k]||PASS, passPc=k=>Math.round(passOf(k)*100);
 // All completed proefexamen results per part (S.res): {at, pc, nw}, nw = % of the questions that were new (missing in older results).
 // The displayed percentage averages all saved attempts; readiness still uses the last three fresh attempts.
-function keepRes(k,pc,writing){if(k){track("done_"+k);S.res=S.res||{};S.res[k]=(S.res[k]||[]).concat({id:crypto.randomUUID(),at:Date.now(),pc,nw:cur.nw,...(writing?{writing}:{})})}save()}
+function keepRes(k,pc,writing,focus){
+  let result;
+  if(k){
+    track("done_"+k);S.res=S.res||{};
+    result={id:crypto.randomUUID(),at:Date.now(),pc,nw:cur.nw,...(writing?{writing}:{}),...(focus?{focus}:{})};
+    S.res[k]=(S.res[k]||[]).concat(result);
+  }
+  save();return result;
+}
 function ready(k){
   const R=(S.res||{})[k]||[],P=passPc(k);
   if(!R.length){let r=0,w=0;ITEMS.forEach(x=>{const it=x.sec===k&&S.items[x.k];if(it){r+=it.r||0;w+=it.w||0}});
@@ -2663,6 +2675,66 @@ function planTasks(){
   S.lessonPlan={key,value};localSave();
   return value;
 }
+const FOCUS_PARTS=["lz","ls","knm"];
+function examSkill(q){
+  if(q.sec==="knm")return q.label.replace(/^KNM: /,"");
+  if(/waar gaat .* over|belangrijkste|hoofdgedachte/i.test(q.big))return "Hoofdgedachte";
+  if(/bedoel|kun je .* opmaken|wat weet je nu/i.test(q.big))return "Conclusie";
+  if(/^(wanneer|hoe laat|hoeveel|welke dag|op welke dag)\b/i.test(q.big))return "Tijd en aantallen";
+  if(/^waar\b/i.test(q.big))return "Plaats";
+  if(/^waarom\b/i.test(q.big))return "Reden";
+  return PART[q.sec];
+}
+function freshFocus(source,excluded=new Set()){
+  const group=source.text||source.say,skill=examSkill(source);
+  const candidates=ITEMS.filter(q=>q.sec===source.sec&&q.k!==source.k&&!excluded.has(q.k)&&!seenN(q)
+    &&q.big!==source.big&&(!group||(q.text||q.say)!==group)&&examSkill(q)===skill);
+  return (source.sec==="knm"&&candidates.find(q=>q.right===source.right))||candidates[0];
+}
+function examFocus(){
+  if(lvl()!=="A2"||!FOCUS_PARTS.includes(cur.part))return null;
+  const misses=queue.map((q,i)=>({q,pick:cur.pick[i]})).filter(({q,pick})=>pick!=null&&pick!==q.right);
+  const counts={};
+  for(const {q} of misses){const skill=examSkill(q);counts[skill]=(counts[skill]||0)+1}
+  misses.sort((a,b)=>counts[examSkill(b.q)]-counts[examSkill(a.q)]);
+  const excluded=new Set(queue.map(q=>q.k));
+  return misses.find(({q})=>freshFocus(q,excluded))||misses[0]||null;
+}
+function dayExamFocus(){
+  if(lvl()!=="A2")return null;
+  const latest=FOCUS_PARTS.filter(k=>!S.uit?.[k]?.ok).map(k=>S.res?.[k]?.at(-1))
+    .filter(r=>r?.focus&&(!r.focus.last?.ok||r.focus.last.day===today())&&Date.now()-r.at<14*864e5).sort((a,b)=>b.at-a.at)[0];
+  if(!latest)return null;
+  const source=ITEMS.find(q=>q.k===latest.focus.source);
+  if(!source)return null;
+  const last=latest.focus.last;
+  return {source,target:last?.day===today()?null:freshFocus(source),result:latest};
+}
+function examFocusHTML(source,pick,target){
+  const transcript=source.say?sayLines(source.say).join("\n"):source.text||"";
+  const answer=source.right.trim().replace(/[.!?]$/,"").toLowerCase();
+  const lines=transcript.split(/\n|(?<=[.!?])\s+/).filter(line=>line.trim());
+  const matches=answer.length>=5?lines.filter(line=>line.toLowerCase().includes(answer)):[];
+  const clue=matches.length===1?matches[0]:"";
+  return `<section class="list exam-focus" aria-labelledby="exam-focus-title">
+    <h3 id="exam-focus-title">Oefen verder · ${esc(examSkill(source))}</h3>
+    <p>${esc(source.big)}</p>
+    <p><b>Jouw antwoord</b> · ${esc(capA(source,pick))}<br><b>Goed is</b> · ${esc(capA(source,source.right))}</p>
+    ${source.sec==="knm"&&source.note?`<p class="note">${esc(source.note)}</p>`:""}
+    ${clue?`<p class="note"><b>Zo staat het in de tekst</b> · ${esc(clue)}</p>`:""}
+    ${transcript?`<details><summary>${source.say?"Lees het luisterfragment":"Lees de tekst terug"}</summary>${source.say?`<div class="sample">${esc(transcript).replaceAll("\n","<br>")}</div>`:docHTML(transcript)}</details>`:""}
+    ${source.say&&canSpeak?`<button type="button" class="hint" id="focuslisten">▶ Luister opnieuw</button>`:""}
+    ${target?`<button type="button" class="btn wide" id="focuspractice">Oefen met een nieuwe vraag</button>`:""}
+  </section>`;
+}
+function openFocusDay(){setTab("vandaag");home()}
+function startExamFocus(source,result){
+  const target=freshFocus(source);
+  if(!target)return;
+  planId=null;
+  build(source.sec,{...SEC.find(x=>x.id===source.sec),t:"Gerichte oefening",n:1,keep:1,pool:()=>[target],
+    examFollowup:{section:source.sec,id:result.id},back:{t:"Mijn dag",f:openFocusDay}});
+}
 function planHTML(){
   const d=today(),done=S.day&&S.day.d===d?S.day.done:[],P=planTasks(),steps=P.T,nx=steps.findIndex(t=>!done.includes(t.id));
   const nd=steps.filter(t=>done.includes(t.id)).length;
@@ -2670,6 +2742,13 @@ function planHTML(){
   // new here at A2: where to begin, right under the heading, so it is seen above the tab bar on a phone. Gone after the
   // test, or once someone has clearly been practising
   const first=lvl()==="A2"&&!S.start&&Object.keys(S.items).length<30?`<div class="list">${itHTML(`data-p="t:start"`,"Waar begin ik?","Twaalf vragen: zo weet je waar je begint.",{ic:"bg"})}</div>`:"";
+  const focus=dayExamFocus(),last=focus?.result.focus.last;
+  const review=focus&&(focus.target||last?.day===d)?`<section class="list exam-focus" aria-label="Gerichte oefening">
+    <h3>Verder na je proefexamen</h3>
+    <p>${esc(PART[focus.source.sec])} · ${esc(examSkill(focus.source))}</p>
+    ${focus.target?`<button type="button" class="btn wide" id="dayfocus">Oefen met een nieuwe vraag</button>`:
+      `<p class="note">${last.ok?"De nieuwe vraag ging goed.":"Deze oefening komt morgen terug."}</p>`}
+  </section>`:"";
   const date=new Date().toLocaleDateString("nl-NL",{weekday:"long",day:"numeric",month:"long"});
   return`<p class="ask"><span>${date}</span> · <span>${LVL[lvl()]}</span></p><h2>Je les van vandaag</h2>
     ${first}${writingDrafts().map(x=>`<button class="ghost wide" data-draft="${x.section}" data-exam="${Number(x.exam)}" data-draft-slot="${esc(x.slot)}"><span>Verder met je concept</span> · ${x.exam?EX[x.section].t:PART[x.section]}${x.slot?" · <span>Gerichte oefening</span>":""}</button>`).join("")}
@@ -2677,7 +2756,7 @@ function planHTML(){
     <p class="note"><span>Geschatte duur</span> · ${P.minutes||steps.length*5} min</p>
     <div class="dayp"><span aria-hidden="true">${steps.map(t=>`<i${done.includes(t.id)?' class="on"':""}></i>`).join("")}</span><small>${nd} van ${steps.length} klaar</small></div>
     <p class="sub">${intro}</p>
-    <ol class="steps">${steps.map((t,i)=>{const ok=done.includes(t.id),nxt=i===nx&&!ok,k=t.id.split(":")[1];
+    ${review}<ol class="steps">${steps.map((t,i)=>{const ok=done.includes(t.id),nxt=i===nx&&!ok,k=t.id.split(":")[1];
       return`<li><button class="step${ok?" ok":""}" data-p="${t.id}"${nxt?' aria-current="step"':""}><i class="sic">${ok?'<svg viewBox="0 0 24 24" aria-hidden="true"><path class="s" d="M5.5 12.5l4.2 4.2 8.8-9"/></svg>':IC[k]?`<svg viewBox="0 0 24 24" aria-hidden="true">${IC[k]}</svg>`:i+1}</i><b>${t.t}</b><span>${t.s}</span><em class="c">›</em></button></li>`}).join("")}</ol>
     ${P.bg?"":`<button class="ghost wide" data-p="s:mix">Meer tijd? Mix van de dag</button>`}`;
 }
@@ -2740,6 +2819,8 @@ function drawPlan(){
   // the whole lesson done: the streak stamp is put down once, with a tap of the phone
   const d=today();if(!$("plan").querySelector(".step:not(.ok)")&&lsGet("ww-stamp")!=String(d)){lsSet("ww-stamp",String(d));track("day");
     const st=$("streak");st.classList.remove("stamp");void st.offsetWidth;st.classList.add("stamp");buzz("good")}
+  const focus=dayExamFocus(),review=$("dayfocus");
+  if(review&&focus?.target)review.onclick=()=>startExamFocus(focus.source,focus.result);
   document.querySelectorAll("#plan [data-p]").forEach(b=>b.onclick=()=>{const id=b.dataset.p,[k,v]=id.split(":");planId=id;
     if(k==="t")return startTest();
     if(k==="mini")build(v,{...SEC.find(x=>x.id===v),n:1,keep:1,pool:()=>wbTasks(1,0)});
@@ -2923,7 +3004,12 @@ function record(ok,q=queue[pos]){
     // answers per day (S.qd answered, S.qr right; day number → count), for the owner's overview; S.items keeps the totals
     const dk=String(d); S.qd=S.qd||{}; S.qd[dk]=(S.qd[dk]||0)+1; if(ok){S.qr=S.qr||{}; S.qr[dk]=(S.qr[dk]||0)+1}
   }
-  if(!ok&&!cur.exam&&q.type!=="reveal"&&q.type!=="write")queue.push({...q,retry:true});
+  if(cur.examFollowup&&!q.retry){
+    const {section,id}=cur.examFollowup;
+    const result=S.res?.[section]?.find(r=>r.id===id);
+    if(result?.focus)result.focus.last={ok,day:d};
+  }
+  if(!ok&&!cur.exam&&!cur.examFollowup&&q.type!=="reveal"&&q.type!=="write")queue.push({...q,retry:true});
   if(pos>=queue.length-1)complete(); else save();
 }
 function complete(){
@@ -3449,7 +3535,9 @@ function finish(){
   if(cur.exam&&cur.write)return examWrite();
   if(cur.exam&&cur.speak)return examSpeak();
   if(cur.exam){
-    const pc=total?Math.round(right/total*100):0, need=Math.ceil(total*passOf(cur.part)-1e-9), pass=right>=need, by={}; keepRes(cur.part,pc);
+    const pc=total?Math.round(right/total*100):0, need=Math.ceil(total*passOf(cur.part)-1e-9), pass=right>=need, by={};
+    const focus=examFocus(),target=focus&&freshFocus(focus.q,new Set(queue.map(q=>q.k)));
+    const result=keepRes(cur.part,pc,undefined,target?{source:focus.q.k}:undefined);
     // KNM: score per theme, weakest first
     cur.log.forEach(x=>{const t=x.l.replace(/^KNM: /,""),o=by[t]||(by[t]={r:0,n:0});o.n++;if(x.ok)o.r++});
     const themes=cur.part==="knm"&&Object.keys(by).length>1?Object.keys(by).sort((a,b)=>by[a].r/by[a].n-by[b].r/by[b].n)
@@ -3458,9 +3546,18 @@ function finish(){
       <p><b class="${pass?"good":"bad"}">${pass?"Oefendoel bereikt":"Meer oefenen"}</b></p>
       <p class="note">${cur.part==="l1"||cur.part==="lb"?"Bij het Staatsexamen heb je een score van 500 nodig. Hoeveel vragen dat zijn, maakt DUO niet bekend: mik op 7 van de 10.":cur.part==="lz"||cur.part==="ls"?"Op het examen heb je waarschijnlijk 19 van de 25 vragen goed nodig. DUO zet de grens op je uitslag.":cur.part==="knm"?"Op het examen heb je 28 van de 40 vragen goed nodig.":"Op het examen heb je ongeveer 7 van de 10 vragen goed nodig."} Hier is dat ${need} van ${total}.</p>
       ${themes?`<p class="ask">Per thema</p><ul class="errs">${themes}</ul>`:""}
+      ${focus?examFocusHTML(focus.q,focus.pick,target):""}
       ${cur.miss.length?`<p class="ask">Fout beantwoord</p><ul class="errs">${cur.miss.slice(0,20).map(m=>`<li>${m.q}<span>Goed is: ${m.r}</span></li>`).join("")}</ul>`:""}
       <div class="two"><button class="ghost" id="tohome">Alle onderdelen</button><button class="btn" id="more">Nog een keer</button></div>`;
+    if($("focuslisten"))$("focuslisten").onclick=()=>speak(focus.q.say);
+    if($("focuspractice"))$("focuspractice").onclick=()=>startExamFocus(focus.q,result);
     $("more").onclick=()=>build(cur.id,cur); $("tohome").onclick=home; return;
+  }
+  if(cur.examFollowup){
+    $("card").innerHTML=`<div class="done"><p class="ask">Gerichte oefening</p>
+      <p>${right?"De nieuwe vraag ging goed.":"Je oefent dit morgen opnieuw met een andere vraag."}</p></div>
+      <button type="button" class="btn wide" id="focusdone">Naar Mijn dag</button>`;
+    $("focusdone").onclick=openFocusDay;return;
   }
   $("card").innerHTML=`<div class="done"><p class="ask">${cur.t}: ronde klaar</p>
     <div class="big">${right}/${total}</div>
