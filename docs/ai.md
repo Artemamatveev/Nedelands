@@ -31,7 +31,12 @@ two years); a failure there never fails the grading. The page posts
 the prompt is built on the server, so the page can't send arbitrary prompts. Schrijven is scored on DUO's
 beoordelingsmodel: inhoud 0–3, woorden 0–2, grammatica 0–2, spelling 0–2, samenhang 0–1 (inhoud 0 makes everything 0;
 the prompt counts errors: 0–2 = 2, 3–5 = 1, 6+ = 0). `passed` is set by the server from the points (inhoud 2+ and 7 of 10),
-not by Claude, and the Schrijven proefexamen score is points of all 4 tasks against the 70% line. It only
+not by Claude, and the Schrijven proefexamen score is points of all 4 tasks against the 70% line. A form (A2 items with
+fields get `kind:"f"` and `mx: WFMAX`) is scored as DUO's beoordelingsmodel Formulier: inhoud 0–3, woorden 0–2, spelling
+0–2, 7 points, voldoende with inhoud 2+ and 5 (`SCORES_WF`, `wfPassed`). As in DUO's models, woorden is 0 when the text
+or answer is almost only words from the task. A writing text sent again unchanged gets its earlier result without a new
+check (`nakijken()`, `ww-graded` in localStorage, the last 60, Plus or not in the key), so sending the same text until it
+says voldoende doesn't work; spoken answers are not kept (privacy.html). It only
 accepts requests whose Origin is the site itself, and with accounts on only from a logged-in user (see Accounts). It needs `ANTHROPIC_API_KEY` in the
 Vercel project's environment variables (the user adds it in the dashboard; never handle
 the key in chat). Without it the page falls back to showing the example answer.
@@ -39,7 +44,9 @@ the key in chat). Without it the page falls back to showing the example answer.
 Spreken uses the same function with `{part:"sp", tasks:[{task, text}]}` (up to 16, for the
 proefexamen); `task` also says what the photos show (`spTask()`, from `FOTO`). Each result also has `scores`
 (inhoud 0–3, woorden 0–2, grammatica 0–2, samenhang 0–1: DUO's criteria as far as a transcript shows them; pronunciation
-and fluency can't be judged), clamped on the server; the Spreken proefexamen score is points of all 16 questions.
+and fluency can't be judged), clamped on the server; `passed` is set by the server from the points (inhoud 2+ and 5 of
+the 8, `spPassed`), not by Claude, as for B1; the Spreken proefexamen score is points of all 16 questions. Speaking never
+gets "Stabiel oefenresultaat" in Mijn examen (`ready()`), because pronunciation and fluency are not judged.
 The Spreken proefexamen has DUO's four parts of four (since March 2025): a question, one photo (describe and answer),
 two photos (choose and explain), three photos (a story in order, or three separate things to say something about: learners
 remembered both kinds from the real exam, so the part's label leaves the order to the question); the proefexamen reads each question aloud, like the
