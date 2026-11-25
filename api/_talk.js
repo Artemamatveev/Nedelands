@@ -291,9 +291,10 @@ export async function talk(req, res) {
   const T = TOPICS[o.t], L = lines(req.body?.history), n = L.filter((x) => x.me).length;
   if (!n || (go === "say" && (!L[L.length - 1].me || n > TURNS))) return res.status(400).json({ error: "history" });
   // The history comes from the page, so the server counts the calls per ticket itself: TURNS turns and the review.
-  // A counter that can't be reached lets the turn through (it is logged); a ticket from before this has no id.
+  // A counter that can't be reached refuses the turn; a ticket from before this has no id (it expires within 40 minutes).
   if (o.i) {
-    const c = await useGuard("t:" + o.i, amsterdamDay(new Date(o.x - TTL)), 1, TURNS + 2).catch((e) => { console.error("guard", e.message); return 0 });
+    const c = await useGuard("t:" + o.i, amsterdamDay(new Date(o.x - TTL)), 1, TURNS + 2).catch((e) => { console.error("guard", e.message); return null });
+    if (c == null) return res.status(503).json({ error: "quota_unavailable" }); // without the count a ticket could be replayed
     if (c < 0) return res.status(429).json({ error: "turns" });
   }
   const model = o.p ? MODEL_PLUS : MODEL_FREE, time = { auth: ms() };
