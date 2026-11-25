@@ -57,6 +57,8 @@ answer. Superseded audio URLs are released. The retry control is hidden while re
 Navigation/late native events cannot complete a different task or append an answer twice. Natural MediaRecorder stop also completes the active take. Recordings and transcripts stay in memory only. "Zeg het na" (free, no Claude call):
 the learner reads the example or corrected answer aloud and the words speech recognition missed are marked.
 
+When checking fails temporarily, single-task writing practice keeps the text editable and speaking practice retries the same transcript. Writing and speaking exam results offer a retry with the submitted answers, without registering another exam attempt. Speaking answers remain available in the open exercise only.
+
 Making new Lezen and Luisteren material with Claude was removed (it cost a call per tap and its
 result was invisible). Items made earlier stay in `S.gen` and are still added by `addGenerated()`.
 

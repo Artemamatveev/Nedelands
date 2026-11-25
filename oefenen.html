@@ -2135,7 +2135,7 @@ function spTake(r){
 }
 // Practice: the phone writes the answer down and Claude grades it, like Schrijven
 async function spGrade(q,r){
-  const b=$("recb"),c=$("spchk"); b.textContent="● Opnemen";b.className="ghost wide";b.onclick=()=>listen("rec",spTake,r.lim);
+  const attempt=cur,b=$("recb"),c=$("spchk"); b.textContent="● Opnemen";b.className="ghost wide";b.onclick=()=>listen("rec",spTake,r.lim);
   if(r.text.split(" ").filter(Boolean).length<3){
     if(r.fail)c.hidden=true; else c.disabled=false;
     $("recn").textContent=r.note+(r.fail?"Meeschrijven lukt hier niet. Neem je antwoord op en vergelijk het met het voorbeeld.":"Ik heb bijna niets verstaan. Spreek wat langzamer en probeer het nog een keer.");return}
@@ -2143,7 +2143,7 @@ async function spGrade(q,r){
   $("fb").innerHTML=`<p class="note">Ik kijk je antwoord na… Dit duurt meestal minder dan een minuut.</p>`;
   try{
     const res=(await nakijken([{kind:q.kind,task:spTask(q),text:r.text}],q.sec==="sb"?"sb":"sp"))[0];
-    if(q!==queue[pos])return;
+    if(cur!==attempt||q!==queue[pos]||c!==$("spchk")||$("play").hidden)return;
     const errs=Array.isArray(res.errors)?res.errors:[], ok=!!res.passed;
     b.disabled=false; $("rev").hidden=true; keepErrs(errs); record(ok); if(!cur.exam)quickPraise.show(ok);
     $("fb").innerHTML=`<b class="${ok?"good":"bad"}">${ok?"Goed zo! Voldoende":"Nog niet voldoende"}</b>
@@ -2159,9 +2159,10 @@ async function spGrade(q,r){
     }
     $("next").onclick=()=>{pos++;show()}; echoBind(res.corrected);
   }catch(e){
-    if(q!==queue[pos])return;
+    if(cur!==attempt||q!==queue[pos]||c!==$("spchk")||$("play").hidden)return;
     const k=e&&e.code; b.disabled=false;
-    if(k==="rate_limited"){c.hidden=false;c.disabled=false;$("fb").innerHTML=`<p class="note">Te veel verzoeken achter elkaar. Wacht een minuut en probeer het opnieuw.</p>`;return}
+    const retry=checkRetry(k);
+    if(retry){b.disabled=true;$("fb").innerHTML=retryCheckHTML(retry);$("retrycheck").onclick=()=>spGrade(q,r);return}
     $("rev").hidden=true;
     selfGrade(q,noCheck(k)?noCheck(k)+" Vergelijk je antwoord nu met het voorbeeld."+offerHTML(k):k==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je antwoord met het voorbeeld.":"Het nakijken is niet gelukt. Vergelijk je antwoord met het voorbeeld.");
   }
@@ -3305,12 +3306,22 @@ function keepErrs(errs){
 }
 async function nakijken(tasks,part){
   const h=await authHead();
-  const r=await fetch("/api/check",{method:"POST",headers:{"Content-Type":"application/json",...h},body:JSON.stringify(part?{part,tasks}:{tasks})});
+  let r;
+  try{r=await fetch("/api/check",{method:"POST",headers:{"Content-Type":"application/json",...h},body:JSON.stringify(part?{part,tasks}:{tasks})})}
+  catch{throw{code:"check_connection"}};
   const j=await r.json().catch(()=>({}));
   chkCount(j,part?["wb","sb"].includes(part)?"B1":"A2":lvl());
   if(!r.ok||!Array.isArray(j.tasks))throw{code:j.error||"failed"};
   return j.tasks;
 }
+function checkRetry(code){
+  if(code==="rate_limited")return "Te veel verzoeken achter elkaar. Wacht een minuut en probeer het opnieuw.";
+  if(code==="check_connection")return "Geen verbinding met Bittertalen. Je antwoord staat er nog.";
+  if(code==="timeout")return noCheck(code);
+  if(code==="failed"||code==="quota_unavailable")return "Nakijken lukt tijdelijk niet. Je antwoord staat er nog.";
+  return "";
+}
+const retryCheckHTML=message=>`<p class="note" role="status">${message}</p><button class="btn wide" id="retrycheck">Probeer opnieuw na te kijken</button>`;
 // The checks left, from an answer of /api/check or /api/talk (both take checks)
 function chkCount(j,lv){
   acc.checkPeriod=j.period||null;
@@ -3434,10 +3445,11 @@ async function check(q){
   const text=$("txt").value.trim();
   if(text.split(/\s+/).length<(q.kind==="z"?3:5)){$("fb").innerHTML=`<p class="note">${q.kind==="z"?"Schrijf een hele zin.":"Schrijf minimaal een paar zinnen."}</p>`;return}
   const form=q.fields?q.fields.map((f,i)=>f+": "+$("f"+i).value.trim()).join("\n"):"";
-  const task=wrTask(q), btn=$("chk"); btn.disabled=true; $("txt").readOnly=true;
+  const attempt=cur,task=wrTask(q),btn=$("chk"),input=$("txt"); btn.disabled=true; input.readOnly=true;
   $("fb").innerHTML=`<p class="note">Ik kijk je tekst na… Dit duurt meestal minder dan een minuut.</p>`;
   try{
     const res=(await nakijken([{kind:q.kind,task,form,text}],q.sec==="wb"?"wb":undefined))[0];
+    if(cur!==attempt||btn!==$("chk")||$("play").hidden)return;
     const errs=Array.isArray(res.errors)?res.errors:[];
     btn.hidden=true; const ok=!!res.passed;
     const RD=correctionPrompts(q,form,text,res);
@@ -3453,7 +3465,9 @@ async function check(q){
     $("docx").onclick=()=>saveDocx([{task,form,text}]);
   }catch(e){
     const c=e&&e.code;
-    if(c==="rate_limited"){btn.disabled=false;$("txt").readOnly=false;$("fb").innerHTML=`<p class="note">Te veel verzoeken achter elkaar. Wacht een minuut en probeer het opnieuw.</p>`;return}
+    if(cur!==attempt||btn!==$("chk")||$("play").hidden)return;
+    const retry=checkRetry(c);
+    if(retry){btn.disabled=false;input.readOnly=false;$("fb").innerHTML=`<p class="note" role="status">${retry}</p>`;return}
     btn.hidden=true;
     selfGrade(q,noCheck(c)?noCheck(c)+" Vergelijk je tekst nu met het voorbeeld."+offerHTML(c):c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je tekst met het voorbeeld.":"Het nakijken is niet gelukt. Vergelijk je tekst met het voorbeeld.",{task,form,text});
   }
@@ -3551,14 +3565,18 @@ async function examWrite(){
   const own=(answer,errors)=>answer.text||answer.form
     ?ownHTML((answer.form?answer.form+"\n\n":"")+answer.text,errors)
     :'<p class="ask">Jouw tekst</p><div class="sample">(niets geschreven)</div>';
-  const fallback=message=>{
-    card.innerHTML=`<p class="note">${message}</p>`+answers.map(answer=>
+  const fallback=(message,retry=false)=>{
+    card.innerHTML=(retry?retryCheckHTML(message):`<p class="note">${message}</p>`)+answers.map(answer=>
       `<h2>Opdracht ${tasks.findIndex(task=>task.k===answer.q.k)+1}</h2><p class="note">${answer.q.big}</p>${own(answer)}<p class="ask">Voorbeeld</p><div class="sample">${esc(answer.q.right)}</div>`).join("")+foot;
     bind();
+    if(retry)$("retrycheck").onclick=examWrite;
   };
   card.innerHTML=`<p class="note">Ik kijk je ${answers.length} ${answers.length===1?"tekst":"teksten"} na… Dit duurt ongeveer een minuut.</p>`;
+  const pending=card.firstElementChild;
+  const active=()=>cur===exam&&!$("play").hidden&&card.firstElementChild===pending;
   try{
     const grades=answers.length?await nakijken(answers.map(answer=>({kind:answer.q.kind,task:wrTask(answer.q),form:answer.form,text:answer.text})),exam.part==="wb"?"wb":undefined):[];
+    if(!active())return;
     const review=reviewWriting(tasks,answers,grades), redoByTask=[];
     const byKey=new Map(answers.map((answer,i)=>[answer.q.k,{answer,grade:grades[i]}]));
     const good=grades.filter(grade=>grade?.passed).length;
@@ -3605,21 +3623,26 @@ async function examWrite(){
     };
     wire();
   }catch(error){
-    const code=error?.code;
+    if(!active())return;
+    const code=error?.code,retry=checkRetry(code);
+    if(retry)return fallback(retry,true);
     fallback(noCheck(code)?noCheck(code)+" Vergelijk je teksten nu met de voorbeelden."+offerHTML(code):code==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je teksten met de voorbeelden.":code==="rate_limited"?"Te veel verzoeken achter elkaar. Probeer het over een minuut opnieuw.":"Het nakijken is niet gelukt. Vergelijk je teksten met de voorbeelden.");
   }
 }
 async function examSpeak(){
-  const A=cur.ans, card=$("card");
+  const exam=cur,A=exam.ans,card=$("card");
   const foot=`<div class="two"><button class="ghost" id="tohome">Alle onderdelen</button><button class="btn" id="more">Nog een keer</button></div>`;
   const bind=()=>{$("more").onclick=()=>build(cur.id,cur);$("tohome").onclick=home};
   const own=(a,errs)=>`<p class="ask">Jouw antwoord</p>${a.url?`<audio controls src="${a.url}"></audio>`:""}${a.text||!a.url?`<div class="sample own">${markErrs(a.text,errs)||"(niets verstaan)"}</div>`:""}`;
-  const plain=msg=>{card.innerHTML=`<p class="note">${msg}</p>`+A.map((a,i)=>`<h2>Vraag ${i+1}</h2><p class="note">${a.q.big}</p>${own(a)}<p class="ask">Voorbeeld</p><div class="sample">${esc(a.q.right)}</div>`).join("")+foot;bind()};
+  const plain=(msg,retry=false)=>{card.innerHTML=(retry?retryCheckHTML(msg):`<p class="note">${msg}</p>`)+A.map((a,i)=>`<h2>Vraag ${i+1}</h2><p class="note">${a.q.big}</p>${own(a)}<p class="ask">Voorbeeld</p><div class="sample">${esc(a.q.right)}</div>`).join("")+foot;bind();if(retry)$("retrycheck").onclick=examSpeak};
   if(!A.length){card.innerHTML=`<p class="note">Je hebt geen vraag beantwoord.</p>`+foot;return bind()}
   if(!A.some(a=>a.text))return plain("Luister naar je antwoorden en vergelijk ze met de voorbeelden.");
   card.innerHTML=`<p class="note">Ik kijk je ${A.length} antwoorden na… Dit duurt een of twee minuten.</p>`;
+  const pending=card.firstElementChild;
+  const active=()=>cur===exam&&!$("play").hidden&&card.firstElementChild===pending;
   try{
     const T=await nakijken(A.map(a=>({kind:a.q.kind,task:spTask(a.q),text:a.text})),cur.part==="sb"?"sb":"sp");
+    if(!active())return;
     let good=0,pts=0,scored=0;
     const body=A.map((a,i)=>{const t=T[i]||{},errs=Array.isArray(t.errors)?t.errors:[],pt=spPts(t);if(t.passed)good++;if(pt!=null){pts+=pt;scored++}keepErrs(errs);
       return`<h2>Vraag ${i+1}: <span class="${t.passed?"good":"bad"}">${t.passed?"voldoende":"nog niet voldoende"}</span></h2><p class="note">${esc(a.q.label)}</p><p class="note">${a.q.big}</p><p class="note">${esc(t.verdict)}</p>${scoreHTML(t.scores,a.q.mx)}
@@ -3632,7 +3655,9 @@ async function examSpeak(){
       <p><b class="${pass?"good":"bad"}">${pass?"Oefendoel bereikt":"Meer oefenen"}</b></p>
       <p class="note">Het oefendoel is ${passPc(cur.part)}%. Dit beoordeelt alleen je uitgeschreven antwoord. Uitspraak en tempo tellen op het examen ook mee.</p>`+(pass?"":examOffer())+body+foot; bind();
   }catch(e){
-    const c=e&&e.code;
+    if(!active())return;
+    const c=e&&e.code,retry=checkRetry(c);
+    if(retry)return plain(retry,true);
     plain(noCheck(c)?noCheck(c)+" Vergelijk je antwoorden nu met de voorbeelden."+offerHTML(c):c==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je antwoorden met de voorbeelden.":c==="rate_limited"?"Te veel verzoeken achter elkaar. Probeer het over een minuut opnieuw.":"Het nakijken is niet gelukt. Vergelijk je antwoorden met de voorbeelden.");
   }
 }

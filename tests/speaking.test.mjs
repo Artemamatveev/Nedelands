@@ -114,3 +114,45 @@ test('Speaking replaced audio is released and the final question can also be ret
   assert.deepEqual(revoked,['blob:old-take']);assert.equal(a.run('cur.ans.filter(Boolean).length'),1);
   assert.equal(a.document.getElementById('recb').textContent,'Antwoorden inleveren');assert.equal(a.document.getElementById('spredo').hidden,false);
 });
+
+test('A2 speaking exam retries the same transcript after connection loss and saves one result',async()=>{
+  const requests=[];
+  const a=await app({fetch:async (url,options)=>{
+    if(url!=='/api/check')return new Response('{}');
+    const request=JSON.parse(options.body);
+    requests.push(request);
+    if(requests.length===1)throw new TypeError('connection lost');
+    const result={passed:true,scores:{inhoud:3,woorden:2,grammatica:2,samenhang:1},errors:[]};
+    return new Response(JSON.stringify({tasks:request.tasks.map(()=>result)}));
+  }});
+  a.run('startExam("sp",true);cur.ans=[{q:queue[0],text:"Ik woon in Nederland"}];pos=queue.length;finish()');
+  await a.flush();
+  assert.match(a.document.querySelector('#card').textContent,/Ik woon in Nederland/);
+  assert.equal(a.run('S.res?.sp?.length || 0'),0);
+  a.document.querySelector('#retrycheck').click();
+  await a.flush();
+  assert.deepEqual(requests,[requests[0],requests[0]]);
+  assert.equal(a.run('S.res.sp.length'),1);
+  assert.equal(a.run('Object.values(S.xs).every(n=>n===1)'),true);
+});
+
+test('A2 speaking practice retries grading without restarting recognition',async()=>{
+  const requests=[];
+  const native=speech();
+  const a=await app({globals:{SpeechRecognition:native.Recognition},fetch:async (url,options)=>{
+    if(url!=='/api/check')return new Response('{}');
+    requests.push(JSON.parse(options.body));
+    if(requests.length===1)return new Response('{"error":"timeout"}',{status:504});
+    return new Response('{"tasks":[{"passed":true,"corrected":"Ik woon in Nederland.","errors":[]}]}');
+  }});
+  a.run('build("sp")');
+  a.document.querySelector("#spchk").click();
+  native.instances[0].result("Ik woon in Nederland");
+  a.document.querySelector("#recb").click();
+  native.instances[0].end();
+  await a.flush();
+  a.document.querySelector('#retrycheck').click();
+  await a.flush();
+  assert.deepEqual(requests,[requests[0],requests[0]]);
+  assert.match(a.document.querySelector('#fb').textContent,/Voldoende/);
+});
