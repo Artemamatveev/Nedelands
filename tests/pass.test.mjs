@@ -39,7 +39,7 @@ const last=s=>calls.filter(c=>c.includes(s)).pop();
 
 test('Config offers the Examenpas with its fixed prices and length',async()=>{
   const r=res();await config({method:'GET',headers:H},r);
-  assert.deepEqual(r.body.pass,{days:42,plans:{A2:{price:'19,99'},B1:{price:'24,99'}}});
+  assert.deepEqual(r.body.pass,{days:91,plans:{A2:{price:'19,99'},B1:{price:'24,99'}}});
 });
 test('Buying a pass opens a one-time Checkout with the consent text and the user in its metadata',async()=>{
   const r=res();await plus({method:'POST',headers:H,body:{go:'pass',level:'B1'}},r);
@@ -51,14 +51,14 @@ test('Buying a pass opens a one-time Checkout with the consent text and the user
   const bad=res();await plus({method:'POST',headers:H,body:{go:'pass',level:'C1'}},bad);assert.equal(bad.statusCode,400);
   const other=res();await plus({method:'POST',headers:{...H,origin:'https://evil.test'},body:{go:'pass',level:'A2'}},other);assert.equal(other.statusCode,403);
 });
-test('A paid session gives 42 days at its level, once, and a second pass extends a running one',async()=>{
+test('A paid session gives 91 days at its level, once, and a second pass extends a running one',async()=>{
   assert.equal((await send(paid('cs_1','A2'))).statusCode,200);
   assert.equal(db.passes.length,1);const first=Date.parse(db.passes[0].until);
-  assert.ok(Math.abs(first-(Date.now()+42*DAY))<60e3);
+  assert.ok(Math.abs(first-(Date.now()+91*DAY))<60e3);
   await send(paid('cs_1','A2'));assert.equal(db.passes.length,1); // the same event again adds nothing
   const p=await plusFor('u1');assert.equal(p.level,'A2');assert.equal(p.pass,true);assert.ok(coversLevel(p,'A2'));assert.ok(!coversLevel(p,'B1'));
   await send(paid('cs_2','A2'));assert.equal(db.passes.length,2);
-  assert.ok(Math.abs(Date.parse(db.passes[1].until)-(first+42*DAY))<60e3);
+  assert.ok(Math.abs(Date.parse(db.passes[1].until)-(first+91*DAY))<60e3);
   const r=res();await plus({method:'GET',headers:H},r);assert.equal(r.body.plus.pass,true);assert.equal(r.body.plus.level,'A2');
 });
 test('Unpaid, foreign, wrongly priced or tampered sessions give nothing',async()=>{

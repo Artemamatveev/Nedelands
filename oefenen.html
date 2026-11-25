@@ -1017,6 +1017,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
         <label class="prow"><span>Achternaam</span><input id="plast" autocomplete="family-name" maxlength="60"></label>
       </div>
       <div class="pg">
+        <label class="prow"><span>Datum van mijn examen</span><input type="date" id="pexam"></label>
         <div class="prow pickrow"><span id="plvlt">Ik oefen voor</span><b id="plvlv"></b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg><select id="plvl" aria-labelledby="plvlt"></select></div>
         <div class="prow pickrow langrow"><span id="plangt">Taal</span><b data-langn></b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg><select id="plang" data-lang aria-labelledby="plangt"></select></div>
         <label class="prow tog" id="ptrilw" hidden><span>Trillen bij een antwoord</span><input type="checkbox" switch id="ptril"></label>
@@ -1103,7 +1104,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
 <script src="/study/progress-v1.js?v=d7e5e64206"></script>
 <script src="/study/writing-v1.js?v=e5690fd786"></script>
 <script src="/data/knm.js?v=6429e46155"></script>
-<script src="/data/a2.js?v=35efca6a73"></script>
+<script src="/data/a2.js?v=6df87c8978"></script>
 <script src="/data/b1.js?v=e9701bd331"></script>
 <script src="/data/extra.js?v=3af5b55d46"></script>
 <script>
@@ -1347,6 +1348,10 @@ const lsSet=(k,v)=>{try{v==null?localStorage.removeItem(k):localStorage.setItem(
 const REFRE=/^[A-HJ-NP-Z2-9]{8}$/i;
 {const r=new URLSearchParams(location.search).get("ref");if(r&&REFRE.test(r))lsSet("ww-ref",r.toUpperCase())}
 const amsDay=(at=new Date())=>new Intl.DateTimeFormat("en-CA",{timeZone:"Europe/Amsterdam"}).format(at);
+// The learner's exam date from Profiel (S.me.exam, synced with the progress): whole days left on Amsterdam's calendar, or null
+const examDays=()=>{const d=String((S.me||{}).exam||"");if(!/^\d{4}-\d{2}-\d{2}$/.test(d))return null;
+  const n=Math.round((Date.parse(d+"T12:00:00Z")-Date.parse(amsDay()+"T12:00:00Z"))/864e5);return n>=0&&n<=730?n:null};
+const examLine=()=>{const n=examDays();return n==null?"":`<p class="note">${n===0?"Vandaag is je examen. Succes!":n===1?"Morgen is je examen. Succes!":`Nog ${n} dagen tot je examen.`}</p>`};
 async function trialUsage(){
   if(!acc.cfg?.free||acc.user)return;
   try{const r=await fetch("/api/allowance",{cache:"no-store"});if(r.ok){const j=await r.json();if(!acc.user&&typeof j.free==="number")acc.free=j.free}}catch{}
@@ -1357,6 +1362,15 @@ const trackOn=()=>!legacyOrigin()&&!!(acc.cfg&&acc.cfg.events)&&!navigator.globa
 function track(ev){ if(!trackOn())return Promise.resolve(false);
   try{return fetch("/api/event",{method:"POST",keepalive:true,headers:{"Content-Type":"application/json"},
     body:JSON.stringify({ev,lvl:lvl(),ui:lsGet("ww-ui")||"nl"})}).then(r=>r.ok,()=>false)}catch(e){return Promise.resolve(false)} }
+// An error on the page: counted as the anonymous event "err", with only its technical message, file and line for the
+// server's log (api/event.js), at most five per page load, so the maker sees what breaks. Never the learner's text.
+let errN=0;
+function reportErr(m,f,l){ if(!trackOn()||++errN>5)return;
+  const msg=String(m||"").replace(/[\w.+-]+@[\w-]+\.[\w.]+/g,"@").replace(/\d{6,}/g,"#").slice(0,160),file=String(f||"").split("/").pop().split("?")[0].slice(0,40);
+  try{fetch("/api/event",{method:"POST",keepalive:true,headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({ev:"err",lvl:lvl(),ui:lsGet("ww-ui")||"nl",m:msg,f:file,l:Number(l)|0})}).catch(()=>{})}catch(e){} }
+addEventListener("error",e=>{if(e.message)reportErr(e.message,e.filename,e.lineno)});
+addEventListener("unhandledrejection",e=>{const r=e.reason;if(r&&r.name!=="AbortError")reportErr("promise: "+(r&&r.message||r))});
 // A device that opens the app counts once a day (ww-day keeps only the date), "new" the first time with no progress yet.
 // The day is marked only once the server kept the count: a lost one (offline, the table not there yet) is sent again at
 // the next start. Asked again when a fresh config comes (a cached one may not offer the counts yet).
@@ -1494,12 +1508,14 @@ async function usage(){
 // Stripe tells the server a few seconds after paying (api/stripe.js): look again a few times
 const plusWait=(n,level)=>usage().then(()=>{if(isPlus(level)){plusMsg="Bedankt! Je hebt nu Bittertalen Plus.";if($("plusS"))plusScreen()}else if(n<8)setTimeout(()=>plusWait(n+1,level),2000)},()=>{});
 // Back from Stripe (?plus=ok, stop or back; api/plus.js): show the Plus screen
+let plusSeen=false; // the Plus screen counts once per page load ("plus")
 function plusBack(){
   const q=new URLSearchParams(location.search),v=q.get("plus"); if(!v)return;
   const level=["A2","B1"].includes(q.get("plan"))?q.get("plan"):null;
   q.delete("plus");q.delete("plan");history.replaceState(null,"",location.pathname+(q.toString()?"?"+q:"")+location.hash);
   if(!acc.cfg||!acc.cfg.plus)return;
   setTab("profiel");
+  track(v==="ok"?"paid":"stop");
   plusMsg=v==="ok"?"Je betaling wordt verwerkt…":v==="stop"?"Betalen is gestopt. Er is niets afgeschreven.":"";
   plusScreen();if(v==="ok")plusWait(0,level);
 }
@@ -1718,9 +1734,9 @@ async function authHead(){
 const canOffer=()=>!NATIVE&&!!(acc.user&&acc.cfg&&(acc.cfg.pass||acc.cfg.plus)&&!isPlus(lvl()));
 const offerBtn=()=>`<button type="button" class="ghost wide" data-offer>${acc.cfg.pass?"Bekijk de Examenpas":"Bekijk Bittertalen Plus"}</button>`;
 const offerHTML=c=>c==="limit"&&canOffer()?"<br>"+offerBtn():"";
-const examOffer=()=>canOffer()?`<div class="offer"><p class="note">${acc.cfg.pass?`Wil je tot je examen elke dag laten nakijken? Met de Examenpas kan dat ${Math.round((acc.cfg.pass.days||42)/7)} weken lang, voor één betaling.`:"Wil je tot je examen elke dag laten nakijken? Met Bittertalen Plus kan dat."}</p>${offerBtn()}</div>`:"";
+const examOffer=()=>canOffer()?`<div class="offer"><p class="note">${acc.cfg.pass?`Wil je tot je examen elke dag laten nakijken? Met de Examenpas kan dat ${Math.round((acc.cfg.pass.days||91)/7)} weken lang, voor één betaling.`:"Wil je tot je examen elke dag laten nakijken? Met Bittertalen Plus kan dat."}</p>${offerBtn()}</div>`:"";
 document.addEventListener("click",e=>{if(e.target.closest("[data-offer]")){stopSpeak();plusScreen()}});
-const noCheck=c=>c==="quota_unavailable"?"Nakijken is tijdelijk niet beschikbaar. Je kunt verder oefenen.":c==="login"?(acc.free===0?"Je gratis proefbeurten zijn op. Maak een gratis account voor nog 7 gratis nakijkbeurten.":"Log in bij Profiel om dit door Bittertalen te laten nakijken."):c==="limit"?((acc.checkPeriod||myPeriod())!=="day"?(acc.cfg?.plus&&!NATIVE&&!isPlus(lvl())?"Je gratis nakijkbeurten zijn op. Met Plus of de Examenpas kun je verder laten nakijken.":"Je gratis nakijkbeurten zijn op."):"Je dagtegoed is op. Morgen kun je weer laten nakijken."):c==="busy"?"Bittertalen heeft vandaag al heel veel teksten nagekeken. Morgen kan het weer.":null;
+const noCheck=c=>c==="quota_unavailable"?"Nakijken is tijdelijk niet beschikbaar. Je kunt verder oefenen.":c==="login"?(acc.free===0?"Je gratis proefbeurten zijn op. Maak een gratis account voor nog 7 gratis nakijkbeurten.":"Log in bij Profiel om dit door Bittertalen te laten nakijken."):c==="limit"?((acc.checkPeriod||myPeriod())!=="day"?(acc.cfg?.plus&&!NATIVE&&!isPlus(lvl())?"Je gratis nakijkbeurten zijn op. Met Plus of de Examenpas kun je verder laten nakijken.":"Je gratis nakijkbeurten zijn op."):"Je dagtegoed is op. Morgen kun je weer laten nakijken."):c==="month"?"Je maandtegoed is op. Volgende maand kun je weer laten nakijken.":c==="timeout"?"Het nakijken duurde te lang. Je beurt is teruggegeven. Probeer het nog een keer.":c==="busy"?"Bittertalen heeft vandaag al heel veel teksten nagekeken. Morgen kan het weer.":null;
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const answer=(v,t)=>t==="past"?v[2]:t==="pastpl"?v[3]:t==="pp"?v[4]:v[5];
 
@@ -2291,7 +2307,7 @@ function home(){
   const officialExam=v==="B1"
     ?`<div class="list"><a class="it ext" href="https://oefenexamensnt2.nl" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens Staatsexamen NT2 ↗</b></span><span class="d">Officieel, voor programma I. Liefst op een computer.</span></span></a></div>`
     :`<div class="list"><a class="it ext" href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" target="_blank" rel="noopener"><i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC.duo}</svg></i><span><span class="th"><b>Oefenexamens van DUO ↗</b><small>15</small></span><span class="d">De echte, met echte stemmen. Liefst op een computer.</span></span></a></div>`;
-  $("exam").innerHTML=`${levelLabel}<h2>Proefexamens</h2>
+  $("exam").innerHTML=`${levelLabel}<h2>Proefexamens</h2>${examLine()}
     <p class="sub">Oefen met een timer. Je krijgt je resultaat na afloop. Het streepje is je oefendoel.</p>
     <div class="list">${parts().map(part).join("")}</div>`+officialExam+onaRow+uitRow;
   $("parts").innerHTML=`${levelLabel}<h2>Oefenen zonder timer</h2>
@@ -2779,6 +2795,10 @@ function drawProfile(){
   const me=S.me||{},n=$("pname"),l=$("plast");
   if(document.activeElement!==n)n.value=me.name||""; if(document.activeElement!==l)l.value=me.last||"";
   n.onchange=l.onchange=()=>{S.me={...(S.me||{}),name:n.value.trim().slice(0,40),last:l.value.trim().slice(0,60)};save();syncMeta();drawProfile()};
+  // the exam date (S.me.exam, "YYYY-MM-DD"): a countdown on Examen and in the Plus screen; empty clears it
+  const ex=$("pexam");
+  if(ex){ex.min=amsDay();if(document.activeElement!==ex)ex.value=/^\d{4}-\d{2}-\d{2}$/.test(me.exam||"")?me.exam:"";
+    ex.onchange=()=>{const v=/^\d{4}-\d{2}-\d{2}$/.test(ex.value)?ex.value:"";S.me={...(S.me||{}),exam:v};save();home()}}
   // the portrait: a Dutch woman or man in Golden Age dress (S.me.av, so it goes along); tap to switch
   // the avatar the learner picked (an earlier portrait, "v" or "m", falls back to the bitterbal)
   $("pavi").innerHTML=avSVG(me.av); $("pav").onclick=avScreen;
@@ -4040,11 +4060,12 @@ function plusScreen(){
   if(NATIVE){$("tbody").innerHTML=`<h2 id="plusS">Bittertalen Plus</h2>`+(on?`<p class="sub"><b>${p.group?`<span lang="nl">${esc(p.group)}</span>`:p.pass?"Examenpas":"Bittertalen Plus"} ${p.level||""}</b> · ${plusLine()}</p>`:`<p class="sub">Bittertalen Plus is niet beschikbaar in deze app.</p>`)+`<p class="sub">Al het andere in Bittertalen blijft gratis.</p>`;return}
   $("tbody").innerHTML=`<h2 id="plusS">Bittertalen Plus</h2>`
     +(on?`<p class="sub"><b>${p.group?`<span lang="nl">${esc(p.group)}</span>`:p.pass?"Examenpas":"Bittertalen Plus"} ${p.level||""}</b> · ${plusLine()}</p>`:"")
-    +`<p class="sub">Met Plus: ${c.limit} nakijkbeurten per dag. Met een gratis account: ${acc.cfg.limit} gratis.</p><p class="sub">Al het andere in Bittertalen blijft gratis.</p>`
+    +`<p class="sub">Met Plus: tot ${c.month||200} nakijkbeurten per maand. Met een gratis account: ${acc.cfg.limit} gratis.</p><p class="sub">Al het andere in Bittertalen blijft gratis.</p>`
+    +(acc.cfg.pass&&!on&&examDays()!=null?`<p class="note">${examDays()<=(acc.cfg.pass.days||91)?`Je examen is over ${examDays()} dagen. De Examenpas loopt tot na je examen.`:`Je examen is over ${examDays()} dagen.`}</p>`:"")
     +(on&&p.status==="past_due"?`<p class="note">Je laatste betaling is niet gelukt. Stripe probeert het nog een paar keer.</p>`:"")
     +(plusMsg?`<p class="note" role="status">${esc(plusMsg)}</p>`:"")
     +["A2","B1"].filter(level=>plans[level]).map(level=>`<section class="list" data-plus-plan="${level}"><div style="padding:16px"><h3>Bittertalen Plus ${level}</h3>
-      <p>${level==="A2"?"Meer nakijkbeurten op A2.":"Meer nakijkbeurten op B1, inclusief A2."}</p>
+      <p>${level==="A2"?"Uitgebreide feedback van een sterker AI-model, ook op je proefexamens.":"Ook Schrijven en Spreken B1, met A2 erbij."}</p>
       <p><b dir="ltr">€ ${esc(plans[level].price)}</b> <span>per maand</span></p>
       <p class="note">Je kunt elke maand opzeggen.</p>
       ${!acc.user?`<button class="btn wide" data-plus-login>${level==="A2"?"Kies Plus A2":"Kies Plus B1"}</button>`
@@ -4053,13 +4074,15 @@ function plusScreen(){
       </div></section>`).join("")
     +(acc.cfg.pass&&!(on&&!p.pass&&p.level==="B1")?`<h3 class="lh">Examenpas</h3><p class="sub">Eén keer betalen, geen abonnement.</p>`
       +["A2","B1"].filter(level=>acc.cfg.pass.plans?.[level]&&!(on&&!p.pass&&isPlus(level))).map(level=>`<section class="list" data-pass-plan="${level}"><div style="padding:16px"><h3>Examenpas ${level}</h3>
-      <p>${Math.round((acc.cfg.pass.days||42)/7)} weken dezelfde nakijkbeurten als Plus ${level}.</p>
+      <p>${Math.round((acc.cfg.pass.days||91)/7)} weken dezelfde nakijkbeurten als Plus ${level}.</p>
       <p><b dir="ltr">€ ${esc(acc.cfg.pass.plans[level].price)}</b> <span>eenmalig</span></p>
       <button class="${on?"ghost":"btn"} wide" ${acc.user?`data-plus-pass="${level}"`:"data-plus-login"}>${level==="A2"?"Kies Examenpas A2":"Kies Examenpas B1"}</button>
       </div></section>`).join("")+`<p class="note">Je krijgt meteen toegang. Daarom vervalt je herroepingsrecht als je betaalt.</p>`:"")
+    +`<p class="note">Niet tevreden? Binnen 14 dagen na je eerste betaling krijg je je geld terug.</p>`
     +(acc.user&&(on&&!p.pass||p&&!p.pass&&p.status!=="canceled")?`<button class="ghost wide" id="pman">Abonnement beheren</button><p class="note">Opzeggen, je betaalmethode veranderen en je facturen: bij Abonnement beheren.</p>`:"")
     +`<p class="note">Je betaalt bij Stripe. Bittertalen ziet je kaart- of bankgegevens niet.</p><p class="note"><a href="/privacy">Privacyverklaring</a></p>`;
-  const go=async(w,b,level)=>{b.disabled=true;document.querySelectorAll("[data-plus-buy],[data-plus-pass],#pman").forEach(x=>x.disabled=true);plusMsg="";
+  if(!plusSeen){plusSeen=true;track("plus")}
+  const go=async(w,b,level)=>{if(w!=="manage")track(w);b.disabled=true;document.querySelectorAll("[data-plus-buy],[data-plus-pass],#pman").forEach(x=>x.disabled=true);plusMsg="";
     try{const r=await fetch("/api/plus",{method:"POST",headers:{"Content-Type":"application/json",...await authHead()},body:JSON.stringify({go:w,...(level?{level}:{})})});
       const j=await r.json().catch(()=>({}));if(!r.ok||!j.url)throw 0;
       if(pushT)push(); location.href=j.url}
@@ -4448,7 +4471,7 @@ async function aiSend(t){
   }
   k.busy=false; if(!aiOn(k))return;
   if(!j.ok){
-    if(j.code==="expired")return aiEnd();
+    if(j.code==="expired"||j.code==="turns")return aiEnd();
     return aiTurn(aiWhy(j.code),t)}
   if(j.fix)mine.fix=j.fix;
   k.pending=null;
@@ -4911,7 +4934,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="b949c94b0c";
+const UIV="2f006e846d";
 let uiP=null;
 function uiLoaded(){ // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});

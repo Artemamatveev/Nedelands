@@ -13,12 +13,15 @@
 // With accounts set up (Supabase, see _supa.js) only a signed-in user may grade, CHECK_LIMIT checks a day;
 // the answer then also has `left`, the checks left today. With Bittertalen Plus (api/plus.js) PLUS_LIMIT a day.
 import Anthropic from "@anthropic-ai/sdk";
-import { accounts, caller, checkCost, useChecks, LIMIT, PLUS, plusOn, plusFor, coversLevel, sameOrigin, FREE, visitor, useFree, useTotal, addSpend, bonusFor } from "./_supa.js";
+import { accounts, caller, checkCost, useChecks, LIMIT, PLUS, plusOn, plusFor, coversLevel, sameOrigin, FREE, visitor, useFree, useTotal, addSpend, bonusFor, useGuard, PLUS_MONTH, OPUS_DAY, monthOf, amsterdamDay } from "./_supa.js";
 
 // Created only when the key is set, so a missing key gives a clear error instead of a crash
 // (trimmed: a key pasted into the dashboard with a trailing newline breaks the request header)
 const KEY = (process.env.ANTHROPIC_API_KEY || "").trim();
-const client = KEY ? new Anthropic({ apiKey: KEY }) : null;
+// One retry at most, and every grading call ends before Vercel's 120 s limit (DEADLINE), so a check that fails is
+// always given back instead of being lost with a killed function.
+const client = KEY ? new Anthropic({ apiKey: KEY, timeout: 100_000, maxRetries: 1 }) : null;
+const DEADLINE = 105_000;
 // Which Claude model grades. Practice (1 to 3 tasks at once) uses GRADING_MODEL, a whole proefexamen (4 or more tasks)
 // GRADING_MODEL_EXAM. Set them in the Vercel project's environment variables to switch without a code change.
 const MODEL = (process.env.GRADING_MODEL || "claude-sonnet-5-5").trim();
@@ -171,13 +174,13 @@ export async function gradeWriting(task, model) {
   if (!client) throw new Error("not_configured");
   const response = await client.beta.messages.create({
     model,
-    max_tokens: 16000,
+    max_tokens: 8000,
     betas: ["server-side-fallback-2026-07-01"],
     fallbacks: "default",
     output_config: { effort: "medium", format: { type: "json_schema", schema: SCHEMA_WR } },
     system: SYSTEM,
     messages: [{ role: "user", content: promptWR([{ task: str(task.task, 1200), form: str(task.form, 1500), text: str(task.text, 2500) }], 8) }],
-  });
+  }, { signal: AbortSignal.timeout(DEADLINE) });
   await addSpend(response.model, response.usage).catch(() => {});
   if (response.stop_reason === "refusal" || response.stop_reason === "max_tokens") throw new Error(response.stop_reason);
   const t = JSON.parse(response.content.find((b) => b.type === "text")?.text || "{}").tasks?.[0] || {};
@@ -234,8 +237,27 @@ export default async function handler(req, res) {
     return res.status(503).json({error: "quota_unavailable"});
   }
   if (total != null && total < 0) { await mine(); return res.status(429).json({ error: "busy" }); }
+  // Plus: PLUS_MONTH checks a month on top of the daily limit, and at most OPUS_DAY proefexamens a day on the exam
+  // model. A counter that can't be reached never blocks a paying learner (it is logged).
+  const exam = input.length >= 4;
+  let month = false, opus = false, guardO = false;
+  if (plus) {
+    const m = await useGuard("m:" + uid, monthOf(), cost, PLUS_MONTH).catch((e) => { console.error("guard", e.message); return null; });
+    if (m === -1) { await mine(); return res.status(429).json({ error: "month", limit: PLUS_MONTH, checkedAt, plus }); }
+    month = m != null;
+    if (exam && OPUS_DAY > 0) {
+      const o = await useGuard("o:" + uid, amsterdamDay(), 1, OPUS_DAY).catch((e) => { console.error("guard", e.message); return null; });
+      opus = o !== -1; // an unreachable counter keeps the exam model (fail open, like the monthly limit)
+      guardO = o != null && o >= 0;
+    }
+  }
+  const model = !plus ? MODEL_FREE : exam && opus ? MODEL_EXAM : MODEL;
   let providerStarted = false;
-  const giveBack = () => Promise.all([mine(), providerStarted || plus ? null : useTotal(-cost).catch(() => null)]);
+  const giveBack = () => Promise.all([
+    mine(), providerStarted || plus ? null : useTotal(-cost).catch(() => null),
+    month ? useGuard("m:" + uid, monthOf(new Date(checkedAt)), -cost, PLUS_MONTH).catch(() => null) : null,
+    guardO ? useGuard("o:" + uid, amsterdamDay(new Date(checkedAt)), -1, OPUS_DAY).catch(() => null) : null,
+  ]);
   const tasks = input.map((t) => ({
     kind: wb ? (SCORES_WB[t?.kind] ? t.kind : "m") : sb ? (SCORES_SB[t?.kind] ? t.kind : "m") : "",
     task: str(t?.task, wb ? 2000 : 1200), form: sp ? "" : str(t?.form, 1500), text: str(t?.text, 2500),
@@ -263,14 +285,15 @@ export default async function handler(req, res) {
   try {
     providerStarted = true;
     const response = await client.beta.messages.create({
-      model: !plus ? MODEL_FREE : tasks.length >= 4 ? MODEL_EXAM : MODEL,
-      max_tokens: 16000,
+      model,
+      // A whole proefexamen needs room for 16 corrections; one to three tasks need far less
+      max_tokens: exam ? 12000 : 8000,
       betas: ["server-side-fallback-2026-07-01"],
       fallbacks: "default",
       output_config: { effort: "medium", format: { type: "json_schema", schema: sp ? SCHEMA_SP : SCHEMA_WR } },
       system: sb ? SYSTEM_SB : sp ? SYSTEM_SP : wb ? SYSTEM_WB : SYSTEM,
       messages: [{ role: "user", content: prompt }],
-    });
+    }, { signal: AbortSignal.timeout(DEADLINE) });
     console.info(JSON.stringify({ event: "grading_usage", model: response.model, usage: response.usage, units: cost }));
     // Tokens per day and model (table ai_spend), so the owner sees what grading costs; never blocks the answer
     await addSpend(response.model, response.usage).catch(() => {});
@@ -295,6 +318,11 @@ export default async function handler(req, res) {
     await giveBack();
     if (error instanceof Anthropic.AuthenticationError) return res.status(503).json({ error: "not_configured" });
     if (error instanceof Anthropic.RateLimitError) return res.status(429).json({ error: "rate_limited" });
+    const is = (C) => typeof C === "function" && error instanceof C;
+    if (is(Anthropic.APIConnectionTimeoutError) || is(Anthropic.APIUserAbortError) || error?.name === "AbortError" || error?.name === "TimeoutError") {
+      console.error("grading_timeout");
+      return res.status(504).json({ error: "timeout" });
+    }
     if (error instanceof Anthropic.APIError) {
       console.error("Anthropic API error", error.status, error.message);
       // The status and Anthropic's message (never the key) make a failure diagnosable without the Vercel logs

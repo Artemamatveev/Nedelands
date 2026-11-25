@@ -56,7 +56,6 @@ const copy = {
   "Oefenen zonder account": ["Practise without an account", "تدرّب دون حساب", "Hesap açmadan çalış", "बिना खाते के अभ्यास करें", "无需账号即可练习","Práctica sin cuenta","Практика без аккаунта"],
   "Met een gratis account: voortgang op al je apparaten": ["With a free account: keep your progress across devices", "بحساب مجاني: احفظ تقدمك على جميع أجهزتك", "Ücretsiz hesapla ilerlemeni tüm cihazlarında kaydet", "मुफ़्त खाते से सभी डिवाइस पर अपनी प्रगति सहेजें", "用免费账号在所有设备上保存进度","Con una cuenta gratuita, tu progreso se guarda en todos tus dispositivos","С бесплатным аккаунтом прогресс доступен на всех ваших устройствах"],
   "Open Bittertalen": ["Open Bittertalen", "افتح Bittertalen", "Bittertalen’i aç", "Bittertalen खोलें", "打开 Bittertalen","Abrir Bittertalen","Открыть Bittertalen"],
-  "Laat je teksten en gesproken antwoorden vaker nakijken door Bittertalen": ["Have Bittertalen check your writing and spoken answers more often", "اطلب من Bittertalen تصحيح كتاباتك وإجاباتك الشفهية مرات أكثر", "Yazılarını ve sözlü yanıtlarını Bittertalen’a daha sık kontrol ettir", "Bittertalen से अपने लिखित और बोले गए जवाबों की ज़्यादा बार जाँच करवाएँ", "让 Bittertalen 更频繁地批改你的写作和口语回答","Bittertalen puede revisar tus textos y respuestas orales más veces","Bittertalen сможет проверять больше ваших текстов и устных ответов"],
   "Voor beide niveaus, met een account": ["For both levels, with an account", "للمستويين، مع حساب", "Bir hesapla her iki seviye için", "खाते के साथ दोनों स्तरों के लिए", "注册账号后可用于两个级别","Para ambos niveles, con una cuenta","Для обоих уровней при наличии аккаунта"],
   "Elke maand opzegbaar": ["Cancel any month", "يمكن الإلغاء كل شهر", "Her ay iptal edilebilir", "हर महीने रद्द कर सकते हैं", "每月都可取消","Puedes cancelar cada mes","Можно отменить в любой месяц"],
   "Bekijk Plus": ["See Plus", "اطّلع على Plus", "Plus’ı incele", "Plus देखें", "查看 Plus","Ver Plus","Посмотреть Plus"],
@@ -115,8 +114,12 @@ const copy = {
   "Een echte KNM-vraag, zoals in de app. Kies een antwoord.": ["A real KNM question, as in the app. Choose an answer.", "سؤال KNM حقيقي كما في التطبيق. اختر إجابة.", "Uygulamadaki gibi gerçek bir KNM sorusu. Bir cevap seç.", "ऐप जैसा एक असली KNM प्रश्न। एक उत्तर चुनें।", "一道真实的 KNM 题，和应用里一样。选一个答案。", "Una pregunta real de KNM, como en la app. Elige una respuesta.", "Настоящий вопрос KNM, как в приложении. Выберите ответ."],
   "Zo wordt je tekst nagekeken": ["How your writing is checked", "هكذا يصحّح Bittertalen نصك", "Bittertalen metnini böyle kontrol eder", "Bittertalen आपके लेखन को ऐसे जाँचता है", "Bittertalen 这样批改你的文章", "Así revisa Bittertalen tu texto", "Так Bittertalen проверяет ваш текст"],
   "Contact": ["Contact", "التواصل", "İletişim", "संपर्क", "联系我们","Contacto","Контакты"],
-  "Meer nakijkbeurten op A2.": ["More checks at A2.", "تصحيحات إضافية لمستوى A2.", "A2 düzeyinde daha fazla kontrol.", "A2 स्तर पर ज़्यादा जाँचें।", "更多 A2 批改次数。", "Más revisiones de nivel A2.", "Больше проверок на уровне A2."],
-  "Meer nakijkbeurten op B1, inclusief A2.": ["More checks at B1, including A2.", "تصحيحات إضافية لمستوى B1، وتشمل A2.", "A2 dahil B1 düzeyinde daha fazla kontrol.", "B1 स्तर पर ज़्यादा जाँचें, A2 भी शामिल।", "更多 B1 批改次数，包含 A2。", "Más revisiones de nivel B1, con A2 incluido.", "Больше проверок на уровне B1, включая A2."],
+  "Uitgebreide feedback van een sterker AI-model, ook op je proefexamens.": ["Detailed feedback from a stronger AI model, also on your practice exams.", "ملاحظات مفصّلة من نموذج ذكاء اصطناعي أقوى، وأيضًا على امتحاناتك التجريبية.", "Daha güçlü bir yapay zekâ modelinden ayrıntılı geri bildirim, deneme sınavlarında da.", "ज़्यादा सशक्त AI मॉडल से विस्तृत फ़ीडबैक, अभ्यास परीक्षाओं पर भी।", "由更强的 AI 模型给出详细反馈，模拟考试也一样。", "Comentarios detallados de un modelo de IA más potente, también en tus exámenes de práctica.", "Подробный разбор от более сильной модели ИИ, в том числе пробных экзаменов."],
+  "Ook Schrijven en Spreken B1, met A2 erbij.": ["Also Writing and Speaking B1, with A2 included.", "يشمل أيضًا الكتابة والتحدث لمستوى B1، مع A2.", "B1 Yazma ve Konuşma da dahil, A2 ile birlikte.", "B1 लेखन और बोलना भी, A2 के साथ।", "还包括 B1 写作和口语，并含 A2。", "También Escritura y Expresión oral B1, con A2 incluido.", "Также письмо и устная речь B1, A2 включён."],
+  "Tot 200 nakijkbeurten per maand voor je teksten en gesproken antwoorden": ["Up to 200 checks a month for your writing and spoken answers", "حتى 200 تصحيح شهريًا لنصوصك وإجاباتك الشفهية", "Yazıların ve sözlü yanıtların için ayda 200'e kadar kontrol", "आपके लेखन और बोले गए जवाबों के लिए महीने में 200 तक जाँचें", "每月最多 200 次批改，用于你的写作和口语回答", "Hasta 200 revisiones al mes para tus textos y respuestas orales", "До 200 проверок в месяц для ваших текстов и устных ответов"],
+  "per maand": ["per month", "شهريًا", "aylık", "प्रति माह", "每月", "al mes", "в месяц"],
+  "13 weken geldig vanaf je betaling": ["Valid for 13 weeks from payment", "صالح لمدة 13 أسبوعًا من الدفع", "Ödemeden itibaren 13 hafta geçerli", "भुगतान से 13 हफ़्ते तक मान्य", "自付款起 13 周内有效", "Válido 13 semanas desde el pago", "Действует 13 недель с момента оплаты"],
+  "Niet tevreden? Binnen 14 dagen na je eerste betaling krijg je je geld terug.": ["Not satisfied? Get your money back within 14 days of your first payment.", "غير راضٍ؟ استرد مالك خلال 14 يومًا من أول دفعة.", "Memnun değil misin? İlk ödemenden sonraki 14 gün içinde paranı geri al.", "संतुष्ट नहीं? पहले भुगतान के 14 दिनों के भीतर पैसे वापस पाएँ।", "不满意？首次付款后 14 天内可退款。", "¿No estás satisfecho? Te devolvemos el dinero en los 14 días siguientes a tu primer pago.", "Не понравилось? Вернём деньги в течение 14 дней после первой оплаты."],
   "Kies Plus A2": ["Choose Plus A2", "اختر Plus A2", "Plus A2 seç", "Plus A2 चुनें", "选择 Plus A2", "Elegir Plus A2", "Выбрать Plus A2"],
   "Examenpas": ["Exam pass", "تصريح الامتحان", "Sınav kartı", "परीक्षा पास", "考试通行证", "Pase de examen", "Экзаменационный пропуск"],
   "Eén keer betalen, geen abonnement.": ["Pay once, no subscription.", "ادفع مرة واحدة، دون اشتراك.", "Bir kez öde, abonelik yok.", "एक बार भुगतान करें, कोई सदस्यता नहीं।", "一次付款，无需订阅。", "Pagas una vez, sin suscripción.", "Одна оплата, без подписки."],
@@ -127,14 +130,14 @@ const copy = {
 };
 
 const pricing = {
-  nl: ["per maand", n => `Met een gratis account: ${n} gratis nakijkbeurten`, n => `Bittertalen kijkt je teksten en gesproken antwoorden na: ${n} nakijkbeurten per dag`],
-  en: ["per month", n => `With a free account: ${n} free checks`, n => `Bittertalen reviews your writing and spoken answers: ${n} checks a day`],
-  ar: ["شهريًا", n => `بحساب مجاني: ${n} تصحيحات مجانية`, n => `يصحّح Bittertalen كتاباتك وإجاباتك الشفهية: ${n} مرات يوميًا`],
-  tr: ["aylık", n => `Ücretsiz hesapla ${n} ücretsiz kontrol`, n => `Bittertalen yazılarını ve sözlü yanıtlarını günde ${n} kez kontrol eder`],
-  hi: ["प्रति माह", n => `मुफ़्त खाते से ${n} मुफ़्त जाँचें`, n => `Bittertalen आपके लिखित और बोले गए जवाबों की रोज़ ${n} बार जाँच करता है`],
-  zh: ["每月", n => `免费账号：${n} 次免费批改`, n => `Bittertalen 批改你的写作和口语回答：每天 ${n} 次`],
-  es: ["al mes", n => `Revisiones gratis con una cuenta gratuita: ${n}`, n => `Bittertalen revisa tus textos y respuestas orales: ${n} revisiones al día`],
-  ru: ["в месяц", n => `Бесплатных проверок с бесплатным аккаунтом: ${n}`, n => `Bittertalen проверяет ваши тексты и устные ответы. Проверок в день: ${n}`],
+  nl: ["per maand", n => `Met een gratis account: ${n} gratis nakijkbeurten`, n => `Tot ${n} nakijkbeurten per maand voor je teksten en gesproken antwoorden`],
+  en: ["per month", n => `With a free account: ${n} free checks`, n => `Up to ${n} checks a month for your writing and spoken answers`],
+  ar: ["شهريًا", n => `بحساب مجاني: ${n} تصحيحات مجانية`, n => `حتى ${n} تصحيح شهريًا لنصوصك وإجاباتك الشفهية`],
+  tr: ["aylık", n => `Ücretsiz hesapla ${n} ücretsiz kontrol`, n => `Yazıların ve sözlü yanıtların için ayda ${n}'e kadar kontrol`],
+  hi: ["प्रति माह", n => `मुफ़्त खाते से ${n} मुफ़्त जाँचें`, n => `आपके लेखन और बोले गए जवाबों के लिए महीने में ${n} तक जाँचें`],
+  zh: ["每月", n => `免费账号：${n} 次免费批改`, n => `每月最多 ${n} 次批改，用于你的写作和口语回答`],
+  es: ["al mes", n => `Revisiones gratis con una cuenta gratuita: ${n}`, n => `Hasta ${n} revisiones al mes para tus textos y respuestas orales`],
+  ru: ["в месяц", n => `Бесплатных проверок с бесплатным аккаунтом: ${n}`, n => `До ${n} проверок в месяц для ваших текстов и устных ответов`],
 };
 // The Examenpas card: how long one payment lasts
 const passWeeks = {
@@ -192,7 +195,9 @@ function render() {
   for (const [node, nl] of alts) node.alt = copy[nl]?.[i] ?? nl;
   const [month, free, checks] = pricing[lang];
   const plus = config?.plus;
-  const active = Boolean(plus?.price && plus?.limit);
+  // The cards are in the HTML with the current prices (so search engines and a slow connection see them); they are hidden
+// only when the server says Plus is off, never just because /api/config failed
+  const active = config ? Boolean(plus?.price && plus?.limit) : true;
   $("free-checks").hidden = !config?.limit;
   if (config?.limit) $("free-checks").textContent = free(config.limit);
   $("trial-checks").hidden = !config?.free;
@@ -200,15 +205,16 @@ function render() {
   $("try-free").hidden = !(config?.free && config?.limit);
   if (config?.free && config?.limit) $("try-free").textContent = tryCopy[lang](config.free, config.limit);
   const pass = config?.pass;
-  $("pass-card").hidden = !(active && pass?.plans?.A2 && pass?.plans?.B1);
-  if (!$("pass-card").hidden) {
+  $("pass-card").hidden = config ? !(active && pass?.plans?.A2 && pass?.plans?.B1) : false;
+  if (pass?.plans?.A2 && pass?.plans?.B1) {
     const eur = p => `€ ${lang === "en" ? String(p).replace(",", ".") : p}`;
     const row = level => { const b = document.createElement("bdi"), sm = document.createElement("small"); b.textContent = eur(pass.plans[level].price); sm.textContent = level; return [b, " ", sm]; };
     $("pass-price").replaceChildren(...row("A2"), document.createElement("br"), ...row("B1"));
-    $("pass-weeks").textContent = passWeeks[lang](Math.round((pass.days || 42) / 7));
+    $("pass-weeks").textContent = passWeeks[lang](Math.round((pass.days || 91) / 7));
   }
   for (const [level, card, price, check] of [["A2", "plus-card", "plus-price", "plus-checks"], ["B1", "plus-b1-card", "plus-b1-price", "plus-b1-checks"]]) {
     const offer = plus?.plans?.[level] || (level === "A2" ? plus : null);
+    if (!config) continue; // keep the prices from the HTML
     $(card).hidden = !active || !offer?.price;
     if (!active || !offer?.price) continue;
     const amount = document.createElement("bdi");
@@ -216,7 +222,7 @@ function render() {
     const period = document.createElement("small");
     period.textContent = month;
     $(price).replaceChildren(amount, " ", period);
-    $(check).textContent = checks(plus.limit);
+    $(check).textContent = checks(plus.month || 200);
   }
 }
 select.addEventListener("change", () => {

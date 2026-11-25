@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import {root} from './app-harness.mjs';
 
 async function handler(options={}){
-  const usage=[],quotas=[],logs=[],lims=[],periods=[],stamps=[],models=[],spends=[];let modelCalls=0;
+  const guards=[],usage=[],quotas=[],logs=[],lims=[],periods=[],stamps=[],models=[],spends=[];let modelCalls=0;
   class APIError extends Error{}
   class AuthenticationError extends APIError{}
   class RateLimitError extends APIError{}
@@ -26,10 +26,13 @@ async function handler(options={}){
     addSpend:async(model,u)=>{spends.push([model,u.input_tokens,u.output_tokens]);if(options.spendFails)throw Error('down');return true},
     bonusFor:async()=>{if(options.bonusFails)throw Error('down');return options.bonus??0},
     PLUS:60,plusOn:!!options.pay,
+    PLUS_MONTH:200,OPUS_DAY:2,monthOf:()=>'2026-11-01',amsterdamDay:()=>'2026-11-25',
+    useGuard:async(k,_d,cost,lim)=>{guards.push([k,cost]);if(options.guardFails)throw Error('down');const g=options.guard?.[k[0]];return g??lim-cost},
+
     plusFor:async()=>{if(options.plusFails)throw Error('down');return options.plan??null},
     coversLevel:(p,level)=>!!p&&['active','trialing','past_due'].includes(p.status)&&(p.level==='B1'||(p.level||'A2')==='A2'&&level==='A2')
   };
-  const context=vm.createContext({process:{env:{ANTHROPIC_API_KEY:'test-only',...(options.env||{})}},console:{info:x=>logs.push(x),error:x=>logs.push(x)}});
+  const context=vm.createContext({process:{env:{ANTHROPIC_API_KEY:'test-only',...(options.env||{})}},AbortSignal,console:{info:x=>logs.push(x),error:x=>logs.push(x)}});
   const sdk=new vm.SyntheticModule(['default'],function(){this.setExport('default',Anthropic)},{context});
   const supa=new vm.SyntheticModule(Object.keys(values),function(){for(const [key,value]of Object.entries(values))this.setExport(key,value)},{context});
   const module=new vm.SourceTextModule(fs.readFileSync(new URL('api/check.js',root),'utf8'),{context});

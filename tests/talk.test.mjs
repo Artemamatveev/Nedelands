@@ -8,7 +8,7 @@ import crypto from 'node:crypto';
 import {root,app} from './app-harness.mjs';
 
 async function load(options={}){
-  const usage=[],quotas=[],bodies=[],fetches=[],logs=[];
+  const guards=[],usage=[],quotas=[],bodies=[],fetches=[],logs=[];
   class APIError extends Error{}
   class AuthenticationError extends APIError{}
   class RateLimitError extends APIError{}
@@ -34,6 +34,8 @@ async function load(options={}){
     visitor:()=>'visitor-hash',sameOrigin:()=>true,
     useChecks:async(_id,cost)=>{usage.push(cost);return options.left??5},useFree:async(_id,cost)=>{usage.push(cost);return options.free??1},
     useTotal:async cost=>{quotas.push(cost);return 'total' in options?options.total:300},addSpend:options.addSpend|| (async()=>true),bonusFor:async()=>0,
+    PLUS_MONTH:200,monthOf:()=>'2026-11-01',amsterdamDay:()=>'2026-11-25',
+    useGuard:async(k,_d,cost,lim)=>{guards.push([k,cost]);const g=options.guard?.[k[0]];return g??lim-cost},
     plusFor:async()=>options.plan||null,coversLevel:(p,l)=>!!p&&(p.level==='B1'||l==='A2'),
     talkSign:x=>crypto.createHmac('sha256','test-secret').update('bittertalen-talk|'+x).digest('base64url'),
   };
@@ -42,7 +44,7 @@ async function load(options={}){
     fetch:async(url,init)=>{fetches.push([url,init]);return {ok:true,json:async()=>({audioContent:'QUJD'})}}});
   const sdk=new vm.SyntheticModule(['default'],function(){this.setExport('default',Anthropic)},{context});
   const supa=new vm.SyntheticModule(Object.keys(values),function(){for(const [k,v]of Object.entries(values))this.setExport(k,v)},{context});
-  const cr=new vm.SyntheticModule(['timingSafeEqual'],function(){this.setExport('timingSafeEqual',crypto.timingSafeEqual)},{context});
+  const cr=new vm.SyntheticModule(['timingSafeEqual','randomBytes'],function(){this.setExport('timingSafeEqual',crypto.timingSafeEqual);this.setExport('randomBytes',crypto.randomBytes)},{context});
   const mod=new vm.SourceTextModule(fs.readFileSync(new URL('api/_talk.js',root),'utf8'),{context});
   const scenes=new vm.SourceTextModule(fs.readFileSync(new URL('api/_scenes.js',root),'utf8'),{context});
   await mod.link(n=>n==='@anthropic-ai/sdk'?sdk:n==='node:crypto'?cr:n==='./_scenes.js'?scenes:supa);await mod.evaluate();

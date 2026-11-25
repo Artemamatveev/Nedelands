@@ -52,7 +52,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Bittertalen","url":"https://bittertalen.nl/es","applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":"es","educationalLevel":["A2","B1"],"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}
 </script>
-<script defer src="/landing.js?v=extra2"></script>
+<script defer src="/landing.js?v=price3"></script>
 <script defer src="/lib/gsap-3.15.1.min.js"></script>
 <script defer src="/lib/ScrollTrigger-3.15.1.min.js"></script>
 <script defer src="/landing-motion-v3.js?v=extra2"></script>
@@ -244,37 +244,38 @@
         </ul>
         <a class="button outline" href="/oefenen?open=today" data-t="Open Bittertalen">Abrir Bittertalen</a>
       </article>
-      <article class="card plus" id="plus-card" hidden>
+      <article class="card plus" id="plus-card">
         <h3>Bittertalen Plus A2</h3>
-        <p class="price" id="plus-price"></p>
+        <p class="price" id="plus-price"><bdi>€ 9,99</bdi> <small data-t="per maand">al mes</small></p>
         <ul>
-          <li id="plus-checks" data-t="Laat je teksten en gesproken antwoorden vaker nakijken door Bittertalen">Bittertalen puede revisar tus textos y respuestas orales más veces</li>
-          <li data-t="Meer nakijkbeurten op A2.">Más revisiones de nivel A2.</li>
+          <li id="plus-checks" data-t="Tot 200 nakijkbeurten per maand voor je teksten en gesproken antwoorden">Hasta 200 revisiones al mes para tus textos y respuestas orales</li>
+          <li data-t="Uitgebreide feedback van een sterker AI-model, ook op je proefexamens.">Comentarios detallados de un modelo de IA más potente, también en tus exámenes de práctica.</li>
           <li data-t="Elke maand opzegbaar">Puedes cancelar cada mes</li>
         </ul>
         <a class="button outline" href="/oefenen?open=plus" id="plus-link" data-t="Kies Plus A2">Elegir Plus A2</a>
       </article>
-      <article class="card plus" id="plus-b1-card" hidden>
+      <article class="card plus" id="plus-b1-card">
         <h3>Bittertalen Plus B1</h3>
-        <p class="price" id="plus-b1-price"></p>
+        <p class="price" id="plus-b1-price"><bdi>€ 14,99</bdi> <small data-t="per maand">al mes</small></p>
         <ul>
-          <li id="plus-b1-checks" data-t="Laat je teksten en gesproken antwoorden vaker nakijken door Bittertalen">Bittertalen puede revisar tus textos y respuestas orales más veces</li>
-          <li data-t="Meer nakijkbeurten op B1, inclusief A2.">Más revisiones de nivel B1, con A2 incluido.</li>
+          <li id="plus-b1-checks" data-t="Tot 200 nakijkbeurten per maand voor je teksten en gesproken antwoorden">Hasta 200 revisiones al mes para tus textos y respuestas orales</li>
+          <li data-t="Ook Schrijven en Spreken B1, met A2 erbij.">También Escritura y Expresión oral B1, con A2 incluido.</li>
           <li data-t="Elke maand opzegbaar">Puedes cancelar cada mes</li>
         </ul>
         <a class="button outline" href="/oefenen?open=plus" data-t="Kies Plus B1">Elegir Plus B1</a>
       </article>
-      <article class="card plus" id="pass-card" hidden>
+      <article class="card plus" id="pass-card">
         <h3 data-t="Examenpas">Pase de examen</h3>
-        <p class="price" id="pass-price"></p>
+        <p class="price" id="pass-price"><bdi>€ 19,99</bdi> <small>A2</small><br><bdi>€ 24,99</bdi> <small>B1</small></p>
         <ul>
           <li data-t="Eén keer betalen, geen abonnement.">Pagas una vez, sin suscripción.</li>
-          <li id="pass-weeks"></li>
+          <li id="pass-weeks" data-t="13 weken geldig vanaf je betaling">Válido 13 semanas desde el pago</li>
           <li data-t="A2 of B1, met dezelfde nakijkbeurten als Plus.">A2 o B1, con las mismas revisiones que Plus.</li>
         </ul>
         <a class="button outline" href="/oefenen?open=plus" data-t="Kies de Examenpas">Elegir el pase de examen</a>
       </article>
     </div>
+    <p class="note" data-t="Niet tevreden? Binnen 14 dagen na je eerste betaling krijg je je geld terug.">¿No estás satisfecho? Te devolvemos el dinero en los 14 días siguientes a tu primer pago.</p>
   </section>
 
   <section id="install-app" class="block faq" aria-labelledby="install-title">
