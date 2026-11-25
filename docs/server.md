@@ -13,8 +13,13 @@ fail at "Deploying outputs" on 19 November 2026. `/api/thumb`, `/api/compare` an
 On top of `PLUS_LIMIT` a day, a paying learner (Plus, Examenpas or group) has `PLUS_MONTH` (default 200) checks per
 Amsterdam month, shared by grading and conversations (a Plus conversation takes `TALK_PLUS`, default 3, of the day and
 the month, as it runs on the better model; a free one takes 1; the page shows it with `talkCost()`, `acc.cfg.plus.talk`;
-"Elk gesprek kost 3 nakijkbeurten." is translated in `data/ui.js` for the default 3), and at most `OPUS_DAY` (default 2) proefexamens a day graded by
-`GRADING_MODEL_EXAM`; after that `GRADING_MODEL` grades them. A conversation ticket allows `TURNS + 2` calls (say and end),
+"Elk gesprek kost 3 nakijkbeurten." is translated in `data/ui.js` for the default 3), and at most `OPUS_MONTH` (default 8) proefexamens a month graded by
+`GRADING_MODEL_EXAM`; after that `GRADING_MODEL` grades them (until 25 November 2026 this was 2 a day, up to 60 a month:
+more than the plan earns). An Examenpas counts over its whole term instead of per month: `PASS_TOTAL` (default 250)
+checks and `PASS_OPUS` (default 15) exams on the exam model, keyed `p:`/`q:` + user with the pass's end date; when they are
+used up the answer is 429 `pass`. A single practice task is graded with effort low and `max_tokens` 4000; two or more
+and proefexamens with effort medium. Guests (trial checks) don't count towards `CHECK_CAP`: they have their own
+`FREE_CAP` a day, so a flood of trial checks can't block accounts. A conversation ticket allows `TURNS + 2` calls (say and end),
 counted on the server, because the history comes from the page. All three are counters in table `ai_guard`
 (`use_guard()`, migration `20261125090000_ai_guard.sql`, also in `schema.sql`, applied 25 November 2026); an unreachable
 monthly counter lets a paying learner through (logged), an unreachable exam-model counter lets the practice model grade
@@ -211,3 +216,21 @@ owner: `adminCheck()` asks `/api/admin?me=1` once per login (200 only for an `AD
 ## Audit follow-up validation
 
 `supabase/calibration.sql` is a read-only owner report of self-reported real exam outcomes by practice-score band, with sample sizes and Wilson intervals. It does not expose a public view or change the schema. Do not claim the training targets have been empirically calibrated until this report and a qualified NT2 review have been completed against the correct project. Keep historical label changes in mind when analysing outcomes.
+
+## Withdrawal button (herroeping, 25 November 2026)
+
+Art. 11a of the consumer rights directive (since 19 June 2026) asks for a withdrawal function. Profiel → Plus shows
+**Herroepen** when `GET /api/plus` says `withdraw: true` (a subscription started in the last 14 days, or an Examenpas
+bought in the last 14 days that still runs). `POST /api/plus {go:"withdraw"}` cancels that subscription at Stripe at once
+(metadata `withdrawn_at`), ends the pass (`exam_pass.until` = now), stores the statement in table `withdrawals`
+(migration `20261125200000_withdrawals.sql`: apply it in Supabase before launch) and the page shows the confirmation with
+date and time. **The owner refunds by hand** in Stripe's dashboard within 14 days and sets `refunded_at`. In Stripe turn on
+the customer e-mails for refunds and cancelled subscriptions, so the learner also gets a confirmation by e-mail.
+Buying (`go:"buy"`, `go:"pass"`) needs `start: true`: the learner switched on that access may start at once (the switch on
+the Plus screen); the time goes into the Checkout metadata `start_now`. Checkout's text above the pay button says how to withdraw.
+
+## Owner and teacher identity
+
+`ADMIN_EMAILS` plus, optionally, `ADMIN_IDS` (Supabase user ids, comma-separated): when set, the owner must be both.
+Owner and teacher e-mails count only when confirmed and from a sign-in whose e-mail the provider verifies (e-mail,
+Google, Apple: `verifiedMail()` in `api/admin.js`).

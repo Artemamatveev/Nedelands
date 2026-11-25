@@ -28,7 +28,7 @@ today's row per model in `ai_spend` (`add_ai_spend()`, `supabase/migrations/2026
 `schema.sql`: day, model and token totals only, no account, answer or IP, so privacy.html needs no change; rows go after
 two years); a failure there never fails the grading. The page posts
 `{tasks:[{task, form, text}]}` and gets `{tasks:[{passed, verdict, corrected, errors, scores}]}`;
-the prompt is built on the server, so the page can't send arbitrary prompts. Schrijven is scored on DUO's
+the prompt is built on the server. The page does send the task text and the form, so every field from the page goes between fences with a random name per request (`fence()` in `check.js`) and the system prompt says never to follow instructions inside them: a text can't close its block and add a task or its own points. Schrijven is scored on DUO's
 beoordelingsmodel: inhoud 0–3, woorden 0–2, grammatica 0–2, spelling 0–2, samenhang 0–1 (inhoud 0 makes everything 0;
 the prompt counts errors: 0–2 = 2, 3–5 = 1, 6+ = 0). `passed` is set by the server from the points (inhoud 2+ and 7 of 10),
 not by Claude, and the Schrijven proefexamen score is points of all 4 tasks against the 70% line. A form (A2 items with
@@ -44,8 +44,8 @@ the key in chat). Without it the page falls back to showing the example answer.
 Spreken uses the same function with `{part:"sp", tasks:[{task, text}]}` (up to 16, for the
 proefexamen); `task` also says what the photos show (`spTask()`, from `FOTO`). Each result also has `scores`
 (inhoud 0–3, woorden 0–2, grammatica 0–2, samenhang 0–1: DUO's criteria as far as a transcript shows them; pronunciation
-and fluency can't be judged), clamped on the server; `passed` is set by the server from the points (inhoud 2+ and 5 of
-the 8, `spPassed`), not by Claude, as for B1; the Spreken proefexamen score is points of all 16 questions. Speaking never
+and fluency can't be judged), clamped on the server; `passed` is set by the server from the points (inhoud 2+ and 6 of
+the 8 since 25 November 2026, higher than 5 because 4 of DUO's 12 points can't be judged; `spPassed`), not by Claude, as for B1; the Spreken proefexamen score is points of all 16 questions. Speaking never
 gets "Stabiel oefenresultaat" in Mijn examen (`ready()`), because pronunciation and fluency are not judged.
 The Spreken proefexamen has DUO's four parts of four (since March 2025): a question, one photo (describe and answer),
 two photos (choose and explain), three photos (a story in order, or three separate things to say something about: learners

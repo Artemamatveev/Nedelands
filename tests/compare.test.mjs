@@ -11,7 +11,9 @@ async function ask({user = null, method = 'POST', same = true, fails = ''} = {})
   const calls = [];
   const deps = {
     './_supa.js': {accounts: true, caller: async () => user, sameOrigin: () => same},
-    './admin.js': {admins: () => ['eigenaar@example.nl']},
+    './admin.js': {admins: () => ['eigenaar@example.nl'],
+      verifiedMail: u => (u && u.email_confirmed_at ? String(u.email || '').toLowerCase() : ''),
+      isOwner: u => !!(u && u.email_confirmed_at && String(u.email || '').toLowerCase() === 'eigenaar@example.nl')},
     './check.js': {MODELS: {free: 'claude-haiku-5-5', paid: 'claude-sonnet-5-5'}, gradeWriting: async (s, model) => {
       calls.push([s.id, model]);
       if (s.id === fails && model.includes('haiku')) throw Error('refusal');

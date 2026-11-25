@@ -15,7 +15,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { randomBytes, timingSafeEqual } from "node:crypto";
 import { SCENES } from "./_scenes.js";
-import { accounts, caller, useChecks, LIMIT, PLUS, plusOn, plusFor, coversLevel, FREE, visitor, useFree, useTotal, addSpend, bonusFor, talkSign, useGuard, PLUS_MONTH, TALK_PLUS, monthOf, amsterdamDay } from "./_supa.js";
+import { accounts, caller, useChecks, LIMIT, PLUS, plusOn, plusFor, coversLevel, FREE, visitor, useFree, useTotal, addSpend, bonusFor, talkSign, useGuard, PLUS_MONTH, PASS_TOTAL, TALK_PLUS, monthOf, amsterdamDay } from "./_supa.js";
 
 const KEY = (process.env.ANTHROPIC_API_KEY || "").trim();
 // A turn must end well before Vercel's limit: one retry, and SAY_MS for the whole call
@@ -243,7 +243,7 @@ export async function talk(req, res) {
     const T = TOPICS[req.body?.topic], level = LEVELS.has(req.body?.level) ? req.body.level : "A2";
     if (!T) return res.status(400).json({ error: "topic" });
     const user = await caller(req).catch(() => null), at = new Date().toISOString();
-    let s, left, lim = LIMIT, period = "once", plus = false, who = "", free, cost = 1;
+    let s, left, lim = LIMIT, period = "once", plus = false, who = "", free, cost = 1, plan = null;
     if (!user) {
       who = FREE ? visitor(req, res) : "";
       if (!who) return res.status(401).json({ error: "login" });
@@ -253,25 +253,30 @@ export async function talk(req, res) {
       if (free < 0) return res.status(401).json({ error: "login", free: 0 });
       s = "v:" + who;
     } else {
-      plus = plusOn && coversLevel(await plusFor(user.id, true).catch(() => null), level);
+      plan = plusOn ? await plusFor(user.id, true).catch(() => null) : null;
+      plus = plusOn && coversLevel(plan, level);
       if (plus) { lim = PLUS; period = "day"; cost = TALK_PLUS } else lim = LIMIT + (await bonusFor(user.id).catch(() => 0));
       left = await useChecks(user.id, cost, lim, period, at).catch(() => null);
       if (left == null) return res.status(502).json({ error: "failed" });
       if (left < 0) return res.status(429).json({ error: "limit", limit: lim, period, checkedAt: at, plus });
       s = "u:" + user.id;
     }
-    // Plus: the same monthly allowance as grading (PLUS_MONTH)
+    // Plus: the same allowance as grading (PLUS_MONTH a month; an Examenpas: PASS_TOTAL over its whole term)
     let month = false;
+    const pass = !!(plan?.pass && !plan?.group && !plan?.year && plan?.until); // a Jaarpas counts per month, like Plus
+    const gk = user && (pass ? "p:" : "m:") + user.id, gday = pass ? String(plan.until).slice(0, 10) : monthOf(new Date(at));
+    const glim = pass ? PASS_TOTAL : PLUS_MONTH;
     if (plus) {
-      const m = await useGuard("m:" + user.id, monthOf(), cost, PLUS_MONTH).catch((e) => { console.error("guard", e.message); return null });
-      if (m === -1) { await useChecks(user.id, -cost, lim, period, at).catch(() => {}); return res.status(429).json({ error: "month", limit: PLUS_MONTH, checkedAt: at, plus }) }
+      const m = await useGuard(gk, gday, cost, glim).catch((e) => { console.error("guard", e.message); return null });
+      if (m === -1) { await useChecks(user.id, -cost, lim, period, at).catch(() => {}); return res.status(429).json({ error: pass ? "pass" : "month", limit: glim, checkedAt: at, plus, pass }) }
       month = m != null;
     }
     const mine = () => Promise.all([
       (user ? useChecks(user.id, -cost, lim, period, at) : useFree(who, -1, at)).catch(() => {}),
-      month ? useGuard("m:" + user.id, monthOf(new Date(at)), -cost, PLUS_MONTH).catch(() => {}) : null,
+      month ? useGuard(gk, gday, -cost, glim).catch(() => {}) : null,
     ]);
-    const total = plus ? 0 : await useTotal(1).catch(() => null);
+    // Guests have their own ceiling (FREE_CAP), so they don't use up the day of everyone with an account
+    const total = plus || who ? 0 : await useTotal(1).catch(() => null);
     if (!Number.isSafeInteger(total)) { await mine(); return res.status(503).json({ error: "quota_unavailable" }) }
     if (total < 0) { await mine(); return res.status(429).json({ error: "busy" }) }
     const list = req.body?.known === true && T.again ? T.again : T.open;

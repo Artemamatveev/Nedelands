@@ -3,7 +3,7 @@
 // by default), in parallel, and returns both results per answer. About 20 calls (~$0.25); the tokens go into ai_spend
 // like any grading. Only for a confirmed e-mail in ADMIN_EMAILS; same origin only; never cached.
 import { accounts, caller, sameOrigin } from "./_supa.js";
-import { admins } from "./admin.js";
+import { isOwner } from "./admin.js";
 import { gradeWriting, MODELS } from "./check.js";
 import { SAMPLES } from "./_samples.js";
 
@@ -16,8 +16,7 @@ export default async function handler(req, res) {
   if (!accounts) return res.status(503).json({ error: "not_configured" });
   const u = await caller(req).catch(() => null);
   if (!u) return res.status(401).json({ error: "login" });
-  const mail = String(u.email || "").toLowerCase();
-  if (!mail || !u.email_confirmed_at || !admins().includes(mail)) return res.status(403).json({ error: "forbidden" });
+  if (!isOwner(u)) return res.status(403).json({ error: "forbidden" });
   const one = (sample, model) => gradeWriting(sample, model).catch((e) => ({ error: String(e?.message || "failed").slice(0, 120) }));
   const rows = await Promise.all(SAMPLES.map(async (s) => {
     const [free, paid] = await Promise.all([one(s, MODELS.free), one(s, MODELS.paid)]);

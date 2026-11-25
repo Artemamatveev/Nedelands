@@ -13,13 +13,17 @@ const FETCH_MS = 8000;
 const fetch = (url, init = {}) => globalThis.fetch(url, { signal: AbortSignal.timeout(FETCH_MS), ...init });
 export const supaUrl = URL_;
 export const anonKey = ANON;
-// What one paying learner may cost on top of PLUS_LIMIT a day: PLUS_MONTH checks a month (default 200) and OPUS_DAY
-// proefexamens a day graded by the exam model (default 2; after that the practice model grades them).
+// What one paying learner may cost on top of PLUS_LIMIT a day: PLUS_MONTH checks a month (default 200) and OPUS_MONTH
+// proefexamens a month graded by the exam model (default 8; after that the practice model grades them). An Examenpas
+// counts over its whole term instead: PASS_TOTAL checks (default 250) and PASS_OPUS exams on the exam model (default 15).
+// 25 November 2026: a daily exam-model limit (2) let one learner run 60 exams a month, more than the plan earns.
 export const PLUS_MONTH = Math.max(1, parseInt(process.env.PLUS_MONTH, 10) || 200);
 // A conversation with Plus (the better model, up to 16 calls) takes TALK_PLUS checks of the day and of the month; a free
 // conversation (the cheap model) takes one. The user's choice, 25 November 2026: a Plus conversation cost about EUR 0.25.
 export const TALK_PLUS = Math.max(1, parseInt(process.env.TALK_PLUS_CHECKS, 10) || 3);
-export const OPUS_DAY = Math.max(0, parseInt(process.env.OPUS_DAY ?? "2", 10) || 0);
+export const OPUS_MONTH = Math.max(0, parseInt(process.env.OPUS_MONTH ?? "8", 10) || 0);
+export const PASS_TOTAL = Math.max(1, parseInt(process.env.PASS_TOTAL, 10) || 250);
+export const PASS_OPUS = Math.max(0, parseInt(process.env.PASS_OPUS ?? "15", 10) || 0);
 // A counter of table ai_guard (use_guard() in schema.sql): what is left, -1 when over; throws when unavailable
 export async function useGuard(k, day, cost, lim) {
   const r = await fetch(`${URL_}/rest/v1/rpc/use_guard`, {
@@ -260,6 +264,24 @@ export async function stripe(path, params, method = params ? "POST" : "GET") {
   // Only the path's first part and Stripe's error code: never the key or the request
   if (!r.ok) throw new Error(`stripe ${path.split("/")[0]} ${r.status} ${(j.error && j.error.code) || ""}`);
   return j;
+}
+// Withdrawal (herroeping, EU consumer law art. 11a since 19 June 2026): what the learner bought in the last 14 days that
+// can still be withdrawn; recordWithdrawal() keeps the statement (table withdrawals, migration 20261125200000) and ends a
+// pass at once. The owner refunds from Stripe's dashboard within 14 days (docs/server.md).
+export const WITHDRAW_DAYS = 14;
+export async function recentPasses(uid) {
+  const since = new Date(Date.now() - WITHDRAW_DAYS * 864e5).toISOString();
+  const r = await rest(`exam_pass?user_id=eq.${encodeURIComponent(uid)}&created_at=gt.${encodeURIComponent(since)}&until=gt.${encodeURIComponent(new Date().toISOString())}&select=session,level,created_at`);
+  if (!r.ok) throw new Error(`exam_pass ${r.status}`);
+  return r.json();
+}
+export async function recordWithdrawal(row) {
+  const r = await rest("withdrawals", { method: "POST", headers: { prefer: "return=minimal" }, body: JSON.stringify(row) });
+  if (!r.ok) throw new Error(`withdrawals ${r.status}`);
+}
+export async function endPass(session) {
+  const r = await rest(`exam_pass?session=eq.${encodeURIComponent(session)}`, { method: "PATCH", headers: { prefer: "return=minimal" }, body: JSON.stringify({ until: new Date().toISOString() }) });
+  if (!r.ok) throw new Error(`exam_pass ${r.status}`);
 }
 // The user's row of `plus` (schema.sql), or null
 export async function plusOf(uid) {

@@ -48,7 +48,7 @@ are in `docs/`, one file per area. Read the one for the area you change, and kee
   them in Vercel. A new outside host needs its place in the CSP in `vercel.json`.
 - **Functions**: at most 12 deployed files in `api/` (Hobby plan); add endpoints as rewrites (`docs/server.md`).
 - **AI cost**: every model call goes through the allowances in `docs/server.md` (free total, `PLUS_LIMIT` a day,
-  `PLUS_MONTH` a month, `OPUS_DAY`, `CHECK_CAP`) and has a timeout. Prompts are built on the server only.
+  `PLUS_MONTH` a month, `OPUS_MONTH`, `PASS_TOTAL`/`PASS_OPUS` per Examenpas, `CHECK_CAP`) and has a timeout. Prompts are built on the server only.
 - **Store apps**: no prices, offers or links to buying inside the native apps (Apple 3.1.1).
 - **Design**: Delfts blauw tokens only; never cream backgrounds, handwriting fonts, wobbly borders, dashed lines,
   squiggles or emoji as decoration (`docs/design.md`). One `h2` per screen; one filled `.btn` per screen.

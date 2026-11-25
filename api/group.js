@@ -4,9 +4,7 @@
 // GET ?teach=1 -> {groups}: the groups whose teacher is this confirmed e-mail, with each member's practice (docent.html).
 // GET ?list=1 -> {groups} and POST {go:"make", name, level, seats, until, teacher} -> {code}: only the owner (ADMIN_EMAILS).
 import { accounts, caller, sameOrigin, joinGroup, makeGroup, groupList, teacherOverview } from "./_supa.js";
-import { admins } from "./admin.js";
-
-const confirmed = (u) => (u && u.email_confirmed_at ? String(u.email || "").toLowerCase() : "");
+import { isOwner, verifiedMail } from "./admin.js";
 
 import referral from "./_referral.js";
 
@@ -20,7 +18,7 @@ export default async function handler(req, res) {
   if (!accounts) return res.status(503).json({ error: "not_configured" });
   const user = await caller(req).catch(() => null);
   if (!user) return res.status(401).json({ error: "login" });
-  const mail = confirmed(user), owner = !!mail && admins().includes(mail);
+  const mail = verifiedMail(user), owner = isOwner(user);
   try {
     if (req.method === "GET") {
       if (req.query?.list) return owner ? res.status(200).json({ groups: await groupList() }) : res.status(403).json({ error: "forbidden" });

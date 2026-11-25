@@ -1516,7 +1516,7 @@ function mergeS(a,b){
 async function usage(){
   if(!acc.user||!acc.cfg)return;
   const uid=acc.user.id;
-  if(acc.cfg.plus){try{const r=await fetch("/api/plus",{headers:await authHead()});if(r.ok){const j=await r.json();if(acc.user?.id===uid)acc.plus=j.plus||null}}catch{}}
+  if(acc.cfg.plus){try{const r=await fetch("/api/plus",{headers:await authHead()});if(r.ok){const j=await r.json();if(acc.user?.id===uid){acc.plus=j.plus||null;acc.withdraw=!!j.withdraw}}}catch{}}
   try{const r=await fetch("/api/allowance",{headers:await authHead(),cache:"no-store"});if(!r.ok)return;
     const j=await r.json();if(acc.user?.id!==uid)return;
     if(Number.isSafeInteger(j.dailyUsed)&&Number.isSafeInteger(j.totalUsed)){
@@ -1756,7 +1756,7 @@ const offerBtn=()=>`<button type="button" class="ghost wide" data-offer>${acc.cf
 const offerHTML=c=>c==="limit"&&canOffer()?"<br>"+offerBtn():"";
 const examOffer=()=>canOffer()?`<div class="offer"><p class="note">${acc.cfg.pass?`Wil je tot je examen elke dag laten nakijken? Met de Examenpas kan dat ${Math.round((acc.cfg.pass.days||91)/7)} weken lang, voor één betaling.`:"Wil je tot je examen elke dag laten nakijken? Met Bittertalen Plus kan dat."}</p>${offerBtn()}</div>`:"";
 document.addEventListener("click",e=>{if(e.target.closest("[data-offer]")){stopSpeak();plusScreen()}});
-const noCheck=c=>c==="quota_unavailable"?"Nakijken is tijdelijk niet beschikbaar. Je kunt verder oefenen.":c==="login"?(acc.free===0?"Je gratis proefbeurten zijn op. Maak een gratis account voor nog 7 gratis nakijkbeurten.":"Log in bij Profiel om dit door Bittertalen te laten nakijken."):c==="limit"?((acc.checkPeriod||myPeriod())!=="day"?(acc.cfg?.plus&&!NATIVE&&!isPlus(lvl())?"Je gratis nakijkbeurten zijn op. Met Plus of de Examenpas kun je verder laten nakijken.":"Je gratis nakijkbeurten zijn op."):"Je dagtegoed is op. Morgen kun je weer laten nakijken."):c==="month"?"Je maandtegoed is op. Volgende maand kun je weer laten nakijken.":c==="timeout"?"Het nakijken duurde te lang. Je beurt is teruggegeven. Probeer het nog een keer.":c==="busy"?"Bittertalen heeft vandaag al heel veel teksten nagekeken. Morgen kan het weer.":null;
+const noCheck=c=>c==="ai_consent"?"Zonder je akkoord sturen we niets naar de AI. Je kunt gewoon verder oefenen.":c==="quota_unavailable"?"Nakijken is tijdelijk niet beschikbaar. Je kunt verder oefenen.":c==="login"?(acc.free===0?"Je gratis proefbeurten zijn op. Maak een gratis account voor nog 7 gratis nakijkbeurten.":"Log in bij Profiel om dit door Bittertalen te laten nakijken."):c==="limit"?((acc.checkPeriod||myPeriod())!=="day"?(acc.cfg?.plus&&!NATIVE&&!isPlus(lvl())?"Je gratis nakijkbeurten zijn op. Met Plus of de Examenpas kun je verder laten nakijken.":"Je gratis nakijkbeurten zijn op."):"Je dagtegoed is op. Morgen kun je weer laten nakijken."):c==="month"?"Je maandtegoed is op. Volgende maand kun je weer laten nakijken.":c==="pass"?"De nakijkbeurten van je Examenpas zijn op. Je kunt verder oefenen.":c==="timeout"?"Het nakijken duurde te lang. Je beurt is teruggegeven. Probeer het nog een keer.":c==="busy"?"Bittertalen heeft vandaag al heel veel teksten nagekeken. Morgen kan het weer.":null;
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const answer=(v,t)=>t==="past"?v[2]:t==="pastpl"?v[3]:t==="pp"?v[4]:v[5];
 
@@ -3318,7 +3318,17 @@ async function nakijken(tasks,part){
   if(written)try{const at=Date.now();keys.forEach((k,i)=>{if(out[i]&&typeof out[i].passed==="boolean")G[k]={at,r:out[i]}});
     const keep=Object.entries(G).sort((a,b)=>b[1].at-a[1].at).slice(0,60);localStorage.setItem(GRADED,JSON.stringify(Object.fromEntries(keep)))}catch(e){}
   return out}
+// Apple 5.1.2(i): in the store app, ask once before a text or a spoken answer goes to an AI company (Anthropic). On the
+// website privacy.html says it; the app asks out loud, with a yes that is remembered on this device.
+const AIOK="bt-ai-ok",AIASK="Om na te kijken en te praten stuurt Bittertalen je tekst of je uitgeschreven antwoord naar Anthropic (Claude, in de Verenigde Staten). Je naam en e-mailadres gaan niet mee en Anthropic traint er geen modellen mee. Ga je akkoord?";
+function aiAsk(){
+  if(!NATIVE||typeof confirm!=="function")return true;
+  try{if(localStorage.getItem(AIOK))return true}catch(e){}
+  const ok=confirm(trS(AIASK)||AIASK);
+  if(ok)try{localStorage.setItem(AIOK,new Date().toISOString())}catch(e){}
+  return ok}
 async function nakijkenNet(tasks,part){
+  if(!aiAsk())throw{code:"ai_consent"};
   const h=await authHead();
   const r=await fetch("/api/check",{method:"POST",headers:{"Content-Type":"application/json",...h},body:JSON.stringify(part?{part,tasks}:{tasks})});
   const j=await r.json().catch(()=>({}));
@@ -4140,6 +4150,7 @@ function plusScreen(){
     +(acc.cfg.pass&&!on&&examLastDays()!=null?`<p class="note">${((n,m)=>n<=(acc.cfg.pass.days||91)?(m?`Je laatste examen is over ${n} dagen. De Examenpas loopt tot na je laatste examen.`:`Je examen is over ${n} dagen. De Examenpas loopt tot na je examen.`):(m?`Je laatste examen is over ${n} dagen.`:`Je examen is over ${n} dagen.`))(examLastDays(),examMany())}</p>`:"")
     +(on&&p.status==="past_due"?`<p class="note">Je laatste betaling is niet gelukt. Stripe probeert het nog een paar keer.</p>`:"")
     +(plusMsg?`<p class="note" role="status">${esc(plusMsg)}</p>`:"")
+    +(acc.user?`<section class="list"><label class="prow tog"><span>Laat Plus of de Examenpas meteen beginnen. Binnen 14 dagen kan ik herroepen en krijg ik mijn geld terug.</span><input type="checkbox" switch id="pstart"></label></section>`:"")
     +["A2","B1"].filter(level=>plans[level]).map(level=>`<section class="list" data-plus-plan="${level}"><div style="padding:16px"><h3>Bittertalen Plus ${level}</h3>
       <p>${level==="A2"?"Uitgebreide feedback van een sterker AI-model, ook op je proefexamens.":"Ook Schrijven en Spreken B1, met A2 erbij."}</p>
       <p><b dir="ltr">€ ${esc(plans[level].price)}</b> <span>per maand</span></p>
@@ -4153,20 +4164,23 @@ function plusScreen(){
       <p>${Math.round((acc.cfg.pass.days||91)/7)} weken dezelfde nakijkbeurten als Plus ${level}.</p>
       <p><b dir="ltr">€ ${esc(acc.cfg.pass.plans[level].price)}</b> <span>eenmalig</span></p>
       <button class="${on?"ghost":"btn"} wide" ${acc.user?`data-plus-pass="${level}"`:"data-plus-login"}>${level==="A2"?"Kies Examenpas A2":"Kies Examenpas B1"}</button>
-      </div></section>`).join("")+`<p class="note">Je krijgt meteen toegang. Daarom vervalt je herroepingsrecht als je betaalt.</p>`:"")
+      </div></section>`).join(""):"")
     // the Jaarpas: a year of Plus for one payment, never renewed (api/_supa.js YEARS)
     +(acc.cfg.year&&!(on&&!p.pass&&p.level==="B1")?`<h3 class="lh">Jaarpas</h3><p class="sub">Een jaar Plus voor één betaling. Wordt niet automatisch verlengd.</p>`
       +["A2","B1"].filter(level=>acc.cfg.year.plans?.[level]&&!(on&&!p.pass&&isPlus(level))).map(level=>`<section class="list" data-year-plan="${level}"><div style="padding:16px"><h3>Jaarpas ${level}</h3>
       <p>Een jaar dezelfde nakijkbeurten als Plus ${level}.</p>
       <p><b dir="ltr">€ ${esc(acc.cfg.year.plans[level].price)}</b> <span>eenmalig</span></p>
       <button class="${on?"ghost":"btn"} wide" ${acc.user?`data-plus-year="${level}"`:"data-plus-login"}>${level==="A2"?"Kies Jaarpas A2":"Kies Jaarpas B1"}</button>
-      </div></section>`).join("")+`<p class="note">Je krijgt meteen toegang. Daarom vervalt je herroepingsrecht als je betaalt.</p>`:"")
+      </div></section>`).join(""):"")
     +`<p class="note">Niet tevreden? Binnen 14 dagen na je eerste betaling krijg je je geld terug.</p>`
+    +(acc.user&&acc.withdraw?`<button class="ghost wide" id="pwd">Herroepen</button><p class="note">Herroep je aankoop van de laatste 14 dagen. Plus of je Examenpas stopt meteen en je krijgt je geld binnen 14 dagen terug.</p>`:"")
     +(acc.user&&(on&&!p.pass||p&&!p.pass&&p.status!=="canceled")?`<button class="ghost wide" id="pman">Abonnement beheren</button><p class="note">Opzeggen, je betaalmethode veranderen en je facturen: bij Abonnement beheren.</p>`:"")
     +`<p class="note">Je betaalt bij Stripe. Bittertalen ziet je kaart- of bankgegevens niet.</p><p class="note"><a href="/privacy">Privacyverklaring</a></p>`;
   if(!plusSeen){plusSeen=true;track("plus")}
-  const go=async(w,b,level,kind)=>{if(w!=="manage")track(w);b.disabled=true;document.querySelectorAll("[data-plus-buy],[data-plus-pass],[data-plus-year],#pman").forEach(x=>x.disabled=true);plusMsg="";
-    try{const r=await fetch("/api/plus",{method:"POST",headers:{"Content-Type":"application/json",...await authHead()},body:JSON.stringify({go:w,...(level?{level}:{}),...(kind?{kind}:{})})});
+  const go=async(w,b,level,kind)=>{
+    if(w!=="manage"&&!$("pstart")?.checked){plusMsg="Zet eerst aan dat Plus of de Examenpas meteen mag beginnen.";plusScreen();$("pstart")?.focus();return}
+    if(w!=="manage")track(w);b.disabled=true;document.querySelectorAll("[data-plus-buy],[data-plus-pass],[data-plus-year],#pman").forEach(x=>x.disabled=true);plusMsg="";
+    try{const r=await fetch("/api/plus",{method:"POST",headers:{"Content-Type":"application/json",...await authHead()},body:JSON.stringify({go:w,...(level?{level}:{}),...(kind?{kind}:{}),...(w!=="manage"?{start:true}:{})})});
       const j=await r.json().catch(()=>({}));if(!r.ok||!j.url)throw 0;
       if(pushT)push(); location.href=j.url}
     catch(e){plusMsg="Dat lukt nu niet. Probeer het later opnieuw.";plusScreen()}};
@@ -4174,6 +4188,15 @@ function plusScreen(){
   document.querySelectorAll("[data-plus-pass]").forEach(b=>b.onclick=()=>go("pass",b,b.dataset.plusPass));
   document.querySelectorAll("[data-plus-year]").forEach(b=>b.onclick=()=>go("pass",b,b.dataset.plusYear,"year"));
   if($("pman"))$("pman").onclick=()=>go("manage",$("pman"));
+  if($("pwd"))$("pwd").onclick=async()=>{
+    if(!confirm("Weet je zeker dat je wilt herroepen? Plus of je Examenpas stopt dan meteen."))return;
+    $("pwd").disabled=true;
+    try{const r=await fetch("/api/plus",{method:"POST",headers:{"Content-Type":"application/json",...await authHead()},body:JSON.stringify({go:"withdraw"})});
+      const j=await r.json().catch(()=>({}));if(!r.ok)throw 0;
+      const when=new Date(j.at).toLocaleString("nl-NL",{dateStyle:"long",timeStyle:"short"});
+      plusMsg=j.withdrawn?.length?`Je herroeping is ontvangen op ${when}. Je krijgt je geld binnen 14 dagen terug. Bewaar dit bericht als bevestiging.`:"Er is geen aankoop van de laatste 14 dagen om te herroepen.";
+      acc.withdraw=false;await usage().catch(()=>{});plusScreen()}
+    catch(e){plusMsg="Herroepen lukt nu niet. Mail ons via de contactpagina, dan regelen we het.";plusScreen()}};
   document.querySelectorAll("[data-plus-login]").forEach(b=>b.onclick=()=>{acc.msg="";welcome()});
 }
 function onaScreen(){
@@ -4380,6 +4403,7 @@ function aiUnlock(){
 }
 // onLine: each line of a streamed reply as it comes (a sentence with its voice, the end of the reply, the correction)
 async function aiPost(body,onLine){
+  if(body&&body.go==="start"&&!aiAsk())return{code:"ai_consent"};
   const all={};let some=false;
   try{
     const h=await authHead(),r=await fetch("/api/talk",{method:"POST",headers:{"Content-Type":"application/json",...h},body:JSON.stringify(body)});
@@ -5034,7 +5058,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="8647f33a26";
+const UIV="b6f61f4690";
 let uiP=null;
 function uiLoaded(){ // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});

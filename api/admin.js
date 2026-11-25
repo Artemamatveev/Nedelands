@@ -6,6 +6,21 @@
 import { accounts, caller, adminData } from "./_supa.js";
 
 export const admins = () => String(process.env.ADMIN_EMAILS || "").split(",").map(s => s.trim().toLowerCase()).filter(Boolean);
+// ADMIN_IDS (optional, comma-separated Supabase user ids): when set, the owner must also be one of these accounts, so a
+// sign-in method that reports someone else's e-mail as confirmed can never open the overview.
+const adminIds = () => String(process.env.ADMIN_IDS || "").split(",").map(s => s.trim()).filter(Boolean);
+// Sign-in methods whose e-mail is verified by the provider itself (the app offers only these)
+const VERIFIED = new Set(["email", "google", "apple"]);
+export const verifiedMail = (u) => {
+  if (!u || !u.email_confirmed_at) return "";
+  const p = u.app_metadata?.provider;
+  if (p && !VERIFIED.has(p)) return "";
+  return String(u.email || "").toLowerCase();
+};
+export const isOwner = (u) => {
+  const mail = verifiedMail(u), ids = adminIds();
+  return !!mail && admins().includes(mail) && (!ids.length || ids.includes(u.id));
+};
 
 import compare from "./_compare.js";
 
@@ -18,8 +33,7 @@ export default async function handler(req, res) {
   if (!accounts) return res.status(503).json({ error: "not_configured" });
   const u = await caller(req).catch(() => null);
   if (!u) return res.status(401).json({ error: "login" });
-  const mail = String(u.email || "").toLowerCase();
-  if (!mail || !u.email_confirmed_at || !admins().includes(mail)) return res.status(403).json({ error: "forbidden" });
+  if (!isOwner(u)) return res.status(403).json({ error: "forbidden" });
   // ?me=1: only whether this account may open the overview (the app shows its row in Profiel), without reading the data
   if (req.query && req.query.me) return res.status(200).json({ admin: true });
   try {
