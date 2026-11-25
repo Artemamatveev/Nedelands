@@ -252,7 +252,7 @@ export async function talk(req, res) {
       if (free < 0) return res.status(401).json({ error: "login", free: 0 });
       s = "v:" + who;
     } else {
-      plus = plusOn && coversLevel(await plusFor(user.id).catch(() => null), level);
+      plus = plusOn && coversLevel(await plusFor(user.id, true).catch(() => null), level);
       if (plus) { lim = PLUS; period = "day" } else lim = LIMIT + (await bonusFor(user.id).catch(() => 0));
       left = await useChecks(user.id, 1, lim, period, at).catch(() => null);
       if (left == null) return res.status(502).json({ error: "failed" });

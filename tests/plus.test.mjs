@@ -17,6 +17,7 @@ globalThis.fetch=async(url,init={})=>{
   if(url.includes('/v1/billing_portal/configurations/'))return J({id:'bpc_tiers',active:true,features:{subscription_update:{enabled:true,default_allowed_updates:['price'],products:[{product:'prod_1',prices:['price_1']},{product:'prod_b1',prices:['price_b1']}]}}});
   if(url.includes('/v1/checkout/sessions'))return J({url:'https://checkout.stripe.test/1'});
   if(url.includes('/v1/billing_portal/sessions'))return J({url:'https://billing.stripe.test/1'});
+  if(url.includes('/v1/subscriptions/sub_1')&&db.stripeDown)return J({error:{message:'down'}},503);
   if(url.includes('/v1/subscriptions/sub_1'))return m==='DELETE'?J({id:'sub_1',status:'canceled'})
     :J({id:'sub_1',customer:'cus_1',status:db.subStatus,metadata:{uid:'u1'},cancel_at_period_end:false,items:{data:[{id:'si_1',quantity:1,current_period_end:FUTURE,price:{id:db.level==='B1'?'price_b1':'price_1',product:db.level==='B1'?'prod_b1':'prod_1',currency:'eur',unit_amount:db.level==='B1'?1499:999,recurring:{interval:'month',interval_count:1}}}]}});
   if(url.includes('/auth/v1/settings'))return J({external:{}});
@@ -165,4 +166,16 @@ test('The Examenpas is offered when the free checks are used up and after a writ
   assert.match(a.run('examOffer()'),/Bittertalen Plus kan dat/);
   a.run(`document.body.insertAdjacentHTML('beforeend',offerBtn());document.querySelector('[data-offer]').click()`);
   assert.ok(a.document.querySelectorAll('[data-plus-plan]').length>0,'the button opens the Plus screen');
+});
+
+test('A Stripe outage never drops a paying learner to the free model; checks may reuse Stripe\'s answer for a few minutes',async()=>{
+  const {plusFor,coversLevel}=await import('../api/_supa.js');
+  db.plus={customer:'cus_1',sub:'sub_1',status:'active',until:new Date(FUTURE*1000).toISOString(),ends:false};db.level='B1';
+  assert.equal((await plusFor('u1',true)).level,'B1');
+  const n=calls.filter(c=>c.includes('/v1/subscriptions/sub_1')).length;
+  assert.equal((await plusFor('u1',true)).level,'B1');
+  assert.equal(calls.filter(c=>c.includes('/v1/subscriptions/sub_1')).length,n,'a check reuses the recent answer');
+  db.stripeDown=true;
+  const p=await plusFor('u1');assert.ok(coversLevel(p,'A2'),'the stored running subscription still counts');assert.equal(p.level,'A2');
+  db.stripeDown=false;db.level='A2';db.plus=null;
 });

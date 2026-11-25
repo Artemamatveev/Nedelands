@@ -15,7 +15,10 @@ Amsterdam month, shared by grading and conversations, and at most `OPUS_DAY` (de
 `GRADING_MODEL_EXAM`; after that `GRADING_MODEL` grades them. A conversation ticket allows `TURNS + 2` calls (say and end),
 counted on the server, because the history comes from the page. All three are counters in table `ai_guard`
 (`use_guard()`, migration `20261125090000_ai_guard.sql`, also in `schema.sql`, applied 25 November 2026); an unreachable
-monthly or exam-model counter lets a paying learner through (logged), an unreachable ticket counter refuses the turn (503).
+monthly counter lets a paying learner through (logged), an unreachable exam-model counter lets the practice model grade
+the proefexamen, an unreachable ticket counter refuses the turn (503). Plus status: for checks and conversations Stripe's answer is
+kept 5 minutes per warm function (`plusFor(uid, true)`, `subSeen` in `_supa.js`; the Plus screen always asks Stripe); if Stripe can't be reached, a running subscription stored by the webhook still
+counts, at A2 (logged `stripe_unreachable`), so a paying learner never drops to the free model because of Stripe.
 Once the model was called, a failure gives back only the daily check: the monthly and exam-model counters keep it. The monthly limit answers 429 `month`, the ticket limit 429 `turns`.
 Timeouts: grading ends 110 s after the request arrived (no retry for a proefexamen, one otherwise; under 30 s left: 503 `timeout` before calling the model), conversation turns after 60 s, every Supabase and Stripe fetch in
 `_supa.js` after 8 s, so a check is always given back instead of being lost with a killed function (504 `timeout`).

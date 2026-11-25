@@ -335,8 +335,9 @@ export async function putPass(row) {
   return j.code === "23503" ? "gone" : false;
 }
 // What the user may use now: the subscription, or a running Examenpas when it covers more
-export async function plusFor(uid) {
-  const sub = await subscriptionFor(uid);
+// cached: a check or a conversation may use Stripe's answer of the last few minutes (SUB_MS); the Plus screen never does
+export async function plusFor(uid, cached = false) {
+  const sub = await subscriptionFor(uid, cached);
   const pass = passOn ? await passOf(uid).catch(() => null) : null;
   const subLevel = isPlus(sub) ? sub.level : null;
   let best = !pass || subLevel === "B1" || subLevel === pass.level ? sub
@@ -348,15 +349,30 @@ export async function plusFor(uid) {
     best = { ...(best || {}), status: "active", until: `${group.until}T23:59:59+01:00`, ends: true, level: group.level, pass: true, group: group.name };
   return best;
 }
-async function subscriptionFor(uid) {
+// Stripe's answer is kept a few minutes per warm function (SUB_MS), so a check doesn't wait for Stripe every time. If Stripe
+// can't be reached, a subscription the webhook stored as running still counts, at A2 (the stored row has no level), so a
+// paying learner is never downgraded to the free model by Stripe's outage; logged.
+const SUB_MS = 5 * 60e3, subSeen = new Map();
+async function subscriptionFor(uid, cached) {
   const p = await plusOf(uid);
   if (!isPlus(p)) return p && { ...p, level: null };
-  const sub = await stripe(`subscriptions/${encodeURIComponent(p.sub)}`);
+  const seen = cached && subSeen.get(uid);
+  if (seen && seen.sub === p.sub && Date.now() - seen.at < SUB_MS) return { ...p, ...seen.v };
+  let sub;
+  try { sub = await stripe(`subscriptions/${encodeURIComponent(p.sub)}`) }
+  catch (e) {
+    if (/owner_mismatch/.test(e?.message)) throw e;
+    console.error("stripe_unreachable", e?.message);
+    return { ...p, level: "A2", stored: true };
+  }
   if (sub.metadata?.uid !== uid || (typeof sub.customer === "string" ? sub.customer : sub.customer?.id) !== p.customer)
     throw new Error("stripe subscription_owner_mismatch");
   const end = sub.current_period_end || sub.items?.data?.[0]?.current_period_end;
-  return { ...p, status: sub.status, until: end ? new Date(end * 1000).toISOString() : p.until,
+  const v = { status: sub.status, until: end ? new Date(end * 1000).toISOString() : p.until,
     ends: !!(sub.cancel_at_period_end || sub.cancel_at), level: await subscriptionLevel(sub) };
+  if (subSeen.size > 500) subSeen.clear();
+  subSeen.set(uid, { at: Date.now(), sub: p.sub, v });
+  return { ...p, ...v };
 }
 // Only the preconfigured portal may confirm plan changes. Opening a session never changes a subscription itself.
 export async function tierPortal() {
