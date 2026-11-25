@@ -4,7 +4,7 @@
 // Keeps the user's row of `plus` (schema.sql) up to date. The subscription is read again from Stripe every time, so an
 // event that comes late or twice can't leave an old state behind.
 import { createHmac, timingSafeEqual } from "node:crypto";
-import { plusOn, HOOK, stripe, plusOf, putPlus, isPlus, LIVE, passOn, passOf, putPass, matchesPass, PASS_DAYS } from "./_supa.js";
+import { plusOn, HOOK, stripe, plusOf, putPlus, isPlus, LIVE, passOn, yearOn, passOf, putPass, matchesPass, PASS_KINDS } from "./_supa.js";
 
 // The signature is over the exact bytes Stripe sent, so Vercel must not parse the body
 export const config = { api: { bodyParser: false } };
@@ -74,27 +74,28 @@ export default async function handler(req, res) {
   }
 }
 
-// The Examenpas is paid: read the session again from Stripe (never trust the event's copy), check that it is our
+// The Examenpas or the Jaarpas (metadata kind "pass" or "year", PASS_KINDS) is paid: read the session again from Stripe (never trust the event's copy), check that it is our
 // one-time price for that level, paid, and for whom, then add PASS_DAYS from today or from the end of a running pass of
 // that level. Keyed by the session, so a repeated event adds nothing.
 async function passPaid(ev, res) {
-  if (!passOn) return res.status(200).json({ ok: true });
+  if (!passOn && !yearOn) return res.status(200).json({ ok: true });
   try {
     const id = ev.data && ev.data.object && ev.data.object.id;
     if (!id) return res.status(200).json({ ok: true });
     const s = await stripe(`checkout/sessions/${encodeURIComponent(id)}?expand[]=line_items`);
     const uid = s.metadata && s.metadata.uid, level = s.metadata && s.metadata.level;
-    if (s.mode !== "payment" || !s.metadata || s.metadata.kind !== "pass" || !uid || s.client_reference_id !== uid)
-      return res.status(200).json({ ok: true }); // not an Examenpas made by api/plus.js
+    const kind = s.metadata && s.metadata.kind, K = Object.hasOwn(PASS_KINDS, kind) ? PASS_KINDS[kind] : null;
+    if (s.mode !== "payment" || !K || !K.on() || !uid || s.client_reference_id !== uid)
+      return res.status(200).json({ ok: true }); // not an Examenpas or Jaarpas made by api/plus.js
     if (s.payment_status !== "paid") return res.status(200).json({ ok: true }); // async payments come back paid later
     const items = (s.line_items && s.line_items.data) || [];
-    if (items.length !== 1 || items[0].quantity !== 1 || !matchesPass(items[0].price, level)) {
+    if (items.length !== 1 || items[0].quantity !== 1 || !matchesPass(items[0].price, level, kind)) {
       console.error("stripe pass_price_mismatch");
       return res.status(200).json({ ok: true });
     }
     const running = await passOf(uid);
     const from = running && running.level === level ? Math.max(Date.now(), Date.parse(running.until)) : Date.now();
-    const kept = await putPass({ session: s.id, user_id: uid, level, until: new Date(from + PASS_DAYS * 864e5).toISOString() });
+    const kept = await putPass({ session: K.key + s.id, user_id: uid, level, until: new Date(from + K.days * 864e5).toISOString() });
     if (kept === "gone") return res.status(200).json({ ok: true }); // the account was deleted; Stripe keeps the payment record
     if (!kept) return res.status(500).json({ error: "failed" }); // Stripe tries again later
     return res.status(200).json({ ok: true });
