@@ -2633,7 +2633,20 @@ function startExam(e,go){
     if(["lz","l1","ls","lb"].includes(e)){const g={};a.forEach(q=>{const t=q.text||q.say;(g[t]=g[t]||[]).push(q)}); // whole texts and fragments, as on the exam; the least-seen first
       let T=shuffle(Object.values(g)).map(x=>[x.sort((p,q)=>p.k<q.k?-1:1),x.reduce((s,q)=>s+seenN(q),0)/x.length]).sort((x,y)=>x[1]-y[1]).map(x=>x[0]);
       if(e==="ls"){const M=T.filter(x=>x.length>1).slice(0,8);T=M.concat(T.filter(x=>!M.includes(x)))} // mostly longer fragments with two or three questions, as on the exam
-      const sel=[];let n=0;T.forEach(x=>{if(n+x.length<=EX[e].n){sel.push(x);n+=x.length}});return shuffle(sel).flat()}
+      const limit=EX[e].n,sel=[];let n=0;
+      T.forEach(group=>{if(n+group.length<=limit){sel.push(group);n+=group.length}});
+      if(n===limit)return shuffle(sel).flat();
+      // Greedy selection can leave one slot empty when all remaining texts have several questions.
+      // Find an exact combination of whole texts, preferring groups in the existing priority order.
+      const byCount=[[]];
+      for(const group of T){
+        for(let count=limit;count>=group.length;count--){
+          const before=byCount[count-group.length];
+          if(!byCount[count]&&before)byCount[count]=[...before,group];
+        }
+        if(byCount[limit])return shuffle(byCount[limit]).flat();
+      }
+      return shuffle(sel).flat()}
     if(e==="sp"){const n=q=>(q.pics||[]).length; // four parts of four, as on the exam since March 2025
       return SPDEEL.flatMap((t,i)=>a.filter(q=>n(q)===i).slice(0,4).map(q=>({...q,label:`Deel ${i+1} van 4: ${t}`})))}
     if(e==="knm"){const g={};a.forEach(q=>(g[q.label]=g[q.label]||[]).push(q));const o=[], // spread over the 8 themes; per theme three situations first
