@@ -1102,10 +1102,10 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
 <script src="/study/language-v1.js?v=e94426af48"></script>
 <script src="/study/progress-v1.js?v=d7e5e64206"></script>
 <script src="/study/writing-v1.js?v=e5690fd786"></script>
-<script src="/data/knm.js?v=d209144089"></script>
+<script src="/data/knm.js?v=6429e46155"></script>
 <script src="/data/a2.js?v=35efca6a73"></script>
 <script src="/data/b1.js?v=e9701bd331"></script>
-<script src="/data/extra.js?v=b209595ae3"></script>
+<script src="/data/extra.js?v=3af5b55d46"></script>
 <script>
 
 const TYPES={past:"Imperfectum: gisteren … ik / hij",pastpl:"Imperfectum: gisteren … wij / zij",pp:"Perfectum: voltooid deelwoord",aux:"Perfectum: hebben of zijn?"};
@@ -3184,7 +3184,7 @@ function echoDone(target,r){
 }
 function photoCreditHTML(key){
   const credit=FOTO_CREDITS[key];
-  return credit?`<small class="photo-credit" lang="nl"><a href="${esc(credit.source)}" target="_blank" rel="noopener">${esc(credit.author)}</a> · <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener">CC BY 2.0</a> · verkleind</small>`:"";
+  return credit?`<small class="photo-credit" lang="nl"><a href="${esc(credit.source)}" target="_blank" rel="noopener">${esc(credit.author)}</a> · <a href="${esc(credit.url||'https://creativecommons.org/licenses/by/2.0/')}" target="_blank" rel="noopener">${esc(credit.license||'CC BY 2.0')}</a> · verkleind</small>`:"";
 }
 function picsHTML(P){
   return`<div class="pics n${P.length}">${P.map((f,i)=>`<figure${FOTO_CREDITS[f]?' class="credited"':""}><button data-pic="foto/${f}.jpg" aria-label="Plaatje ${i+1} groot bekijken"><img src="foto/${f}.jpg" alt="${FOTO[f]||""}" loading="lazy"></button>${P.length===3?`<span>${i+1}</span>`:""}${FOTO_CREDITS[f]?`<figcaption>${photoCreditHTML(f)}</figcaption>`:""}</figure>`).join("")}</div>`;
