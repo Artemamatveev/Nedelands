@@ -112,8 +112,9 @@ test('A2 exam renders the summary, saves it once and returns from practice and r
   const mock=checker(),a=await app({fetch:mock.fetch});
   await submit(a);
   assert.equal(mock.calls.length,1);
-  assert.match(a.document.querySelector('#card .big').textContent,/90%/);
-  assert.equal(a.run('S.res.wr[0].writing.types.reduce((n,r)=>n+r.max,0)'),40);
+  // the form is scored as DUO scores forms (7 points, no grammatica), the three texts 9 of 10: 34 of 37
+  assert.match(a.document.querySelector('#card .big').textContent,/92%/);
+  assert.equal(a.run('S.res.wr[0].writing.types.reduce((n,r)=>n+r.max,0)'),37);
   assert.ok(a.document.querySelector('#writingReview'));
   const html=a.document.querySelector('#card').innerHTML;
   const xs=a.run('JSON.stringify(S.xs)');

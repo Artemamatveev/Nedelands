@@ -1980,7 +1980,7 @@ const scoreHTML=(sc,M)=>{if(!sc)return""; const wr="spelling" in sc,X=M||SCMAX,n
     woorden:"Kies je de goede woorden?",grammatica:"Zijn je zinnen goed gebouwd?",spelling:"Is je spelling goed?",samenhang:"Is het één duidelijk geheel?"};
   return`<ul class="dpts">${Object.keys(X).filter(k=>k in sc).map(k=>{const v=Math.max(0,Math.min(X[k],+sc[k]||0)),m=X[k],c=v>=m?"g":v>0?"m":"n";
       return`<li class="${c}"><i aria-hidden="true">${c==="g"?"✓":c==="m"?"!":"✕"}</i><span><b>${Q[k]||k}</b><span>${c==="g"?"Ja":c==="m"?"Bijna":"Nee"} · ${v} van ${m} ${m===1?"punt":"punten"}</span></span></li>`}).join("")}</ul>
-    <p class="ptt">Samen <b>${spPts({scores:sc})} van ${n} punten</b></p><p class="note">${M?M.spelling?`Voldoende is ${Math.ceil(n*.7)} punten, met inhoud minstens 2.`:M===WBMAX.z?"Eén punt voor de inhoud, één voor de grammatica. Past de inhoud niet, dan telt de grammatica ook niet.":`Voldoende is ${Math.ceil(n*.6)} punten, met inhoud minstens 2. Uitspraak en spreektempo kan ik niet horen: oefen die met Zeg het na.`:wr?"Voldoende is 7 punten, met inhoud minstens 2.":"Uitspraak en vloeiendheid kan ik niet horen: oefen die met Zeg het na."}</p>`};
+    <p class="ptt">Samen <b>${spPts({scores:sc})} van ${n} punten</b></p><p class="note">${M?M.spelling?`Voldoende is ${Math.ceil(n*.7)} punten, met inhoud minstens 2.`:M===WBMAX.z?"Eén punt voor de inhoud, één voor de grammatica. Past de inhoud niet, dan telt de grammatica ook niet.":`Voldoende is ${Math.ceil(n*.6)} punten, met inhoud minstens 2. Uitspraak en spreektempo kan ik niet horen: oefen die met Zeg het na.`:wr?"Voldoende is 7 punten, met inhoud minstens 2.":"Voldoende is 5 punten, met inhoud minstens 2. Uitspraak en vloeiendheid kan ik niet horen: oefen die met Zeg het na."}</p>`};
 // The learner's own text with each error marked where it is (numbered like the list under it). Claude returns the
 // wrong words as they stand in the text; one that can't be found (a missing word) is only in the list.
 function markErrs(text,errs){
@@ -2200,7 +2200,9 @@ function spNext(q,r){
 let tmr=null,tEnd=0;
 function tick(){const s=Math.max(0,Math.round((tEnd-Date.now())/1000));$("timer").textContent=tEnd?Math.floor(s/60)+":"+String(s%60).padStart(2,"0"):"";if(tEnd&&s<=0&&cur&&cur.exam){if(cur.nav)return submitExam();const q=queue[pos];if(q&&q.type==="write"&&cur.ans.length===pos)cur.ans.push(grab(q));pos=queue.length;finish()}}
 function clock(min){clearInterval(tmr);tmr=null;tEnd=min?Date.now()+min*6e4:0;tick();if(min)tmr=setInterval(tick,1000)}
-WR.forEach((p,i)=>ITEMS.push({sec:"wr",k:"wr|"+i,ord:i,type:"write",label:p[2]?"Schrijfopdracht: formulier":"Schrijfopdracht",big:p[0],sub:"",right:p[1],fields:p[2],open:p[3]}));
+// A2 forms are scored as DUO scores forms: inhoud, woorden and spelling, 7 points (api/check.js SCORES_WF)
+const WFMAX={inhoud:3,woorden:2,spelling:2};
+WR.forEach((p,i)=>ITEMS.push({sec:"wr",k:"wr|"+i,ord:i,type:"write",label:p[2]?"Schrijfopdracht: formulier":"Schrijfopdracht",big:p[0],sub:"",right:p[1],fields:p[2],open:p[3],...(p[2]?{kind:"f",mx:WFMAX}:{})}));
 // Schrijven B1: mx = the points per criterion of this kind of task (as api/check.js scores them), 47 in a proefexamen of 8 + 1 + 3
 const WBMAX={z:{inhoud:1,grammatica:1},f:{inhoud:3,woorden:1,grammatica:2,spelling:1},m:{inhoud:3,woorden:1,grammatica:2,spelling:1,samenhang:1}},WBL={z:"Zinsopdracht",f:"Formulier",m:"E-mail"};
 WRB.forEach((p,i)=>ITEMS.push({sec:"wb",k:"wb|"+i,ord:p.k==="z"?0:1,type:"write",kind:p.k,label:WBL[p.k]+" (B1)",intro:p.i,text:p.d,pics:p.f,big:p.t,ctx:p.c,pts:p.p,fields:p.fl,open:p.o,sub:"",right:p.m,mx:WBMAX[p.k]}));
@@ -2663,7 +2665,7 @@ function ready(k){
     return{pc,st:"Nog geen proefexamen",cls:"",t:pc==null?"Nog weinig geoefend":`Bij het oefenen ${pc}% goed`}}
   const L=R.slice(-3),avg=Math.round(L.reduce((a,x)=>a+x.pc,0)/L.length),pc=Math.round(R.reduce((a,x)=>a+x.pc,0)/R.length);
   // known: the last proefexamens were mostly questions you had seen before, so a high score may be memory
-  const known=L.every(x=>x.nw!=null&&x.nw<50), sure=L.length===3 && avg>=80 && L.every(x=>x.pc>=P) && L.filter(x=>x.nw>=50).length>=2 && Date.now()-L[L.length-1].at<14*864e5;
+  const known=L.every(x=>x.nw!=null&&x.nw<50), sure=!["sp","sb"].includes(k) && L.length===3 && avg>=80 && L.every(x=>x.pc>=P) && L.filter(x=>x.nw>=50).length>=2 && Date.now()-L[L.length-1].at<14*864e5;
   return{pc,st:sure?"Stabiel oefenresultaat":avg>=P?"Oefendoel bereikt":"Meer oefenen",cls:sure?"good":avg>=P?"":"bad",
     t:`Gemiddeld ${pc}% over ${R.length} ${R.length===1?"proefexamen":"proefexamens"}`
       +(known&&avg>=P?". Je kende de meeste vragen al: doe ook een oefenexamen van DUO":"")}
@@ -3303,7 +3305,20 @@ function keepErrs(errs){
   errs.forEach(e=>{if(e&&e.wrong&&e.right&&e.wrong!==e.right&&String(e.wrong).length<90&&String(e.right).length<90&&!S.errs.some(x=>x.r===e.right))S.errs.unshift({w:String(e.wrong),r:String(e.right),y:String(e.why||"")})});
   S.errs=S.errs.slice(0,40);
 }
+// A writing text sent again unchanged gets its earlier result, without a new check: sending the same text until the
+// model says voldoende would make the score mean nothing. Kept only on this device (ww-graded, the last 60), and only for
+// writing: spoken transcripts stay in memory (privacy.html). Plus or not is part of the key, as Plus grades with a stronger model.
+const GRADED="ww-graded",gradedKey=(t,part)=>{const s=JSON.stringify([part||"wr",isPlus(lvl())?1:0,t.kind||"",t.task,t.form||"",String(t.text||"").trim()]);
+  let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return(h>>>0).toString(36)+s.length};
+const gradedGet=()=>{try{return JSON.parse(localStorage.getItem(GRADED)||"{}")||{}}catch(e){return{}}};
 async function nakijken(tasks,part){
+  const written=!["sp","sb"].includes(part),keys=written?tasks.map(t=>gradedKey(t,part)):[],G=written?gradedGet():{};
+  if(written&&keys.every(k=>G[k]&&G[k].r))return keys.map(k=>({...G[k].r,same:true,verdict:"Deze tekst is al nagekeken: dit is dezelfde uitslag. Verander je tekst om hem opnieuw te laten nakijken. "+(G[k].r.verdict||"")}));
+  const out=await nakijkenNet(tasks,part);
+  if(written)try{const at=Date.now();keys.forEach((k,i)=>{if(out[i]&&typeof out[i].passed==="boolean")G[k]={at,r:out[i]}});
+    const keep=Object.entries(G).sort((a,b)=>b[1].at-a[1].at).slice(0,60);localStorage.setItem(GRADED,JSON.stringify(Object.fromEntries(keep)))}catch(e){}
+  return out}
+async function nakijkenNet(tasks,part){
   const h=await authHead();
   const r=await fetch("/api/check",{method:"POST",headers:{"Content-Type":"application/json",...h},body:JSON.stringify(part?{part,tasks}:{tasks})});
   const j=await r.json().catch(()=>({}));

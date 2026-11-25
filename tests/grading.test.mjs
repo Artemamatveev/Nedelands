@@ -37,7 +37,7 @@ async function handler(options={}){
   const supa=new vm.SyntheticModule(Object.keys(values),function(){for(const [key,value]of Object.entries(values))this.setExport(key,value)},{context});
   const module=new vm.SourceTextModule(fs.readFileSync(new URL('api/check.js',root),'utf8'),{context});
   await module.link(name=>name==='@anthropic-ai/sdk'?sdk:supa);await module.evaluate();
-  const req={method:'POST',headers:{host:'example.test',origin:'https://example.test'},body:{...(options.part?{part:options.part}:{}),tasks:Array.from({length:options.tasksCount||1},()=>({...(options.part?{kind:options.kind||'z'}:{}),task:'Stuur een bericht',text:'Ik kom later. Personal test content.'}))}};
+  const req={method:'POST',headers:{host:'example.test',origin:'https://example.test'},body:{...(options.part?{part:options.part}:{}),tasks:Array.from({length:options.tasksCount||1},()=>({...(options.part||options.kind?{kind:options.kind||'z'}:{}),task:'Stuur een bericht',text:'Ik kom later. Personal test content.'}))}};
   const res={statusCode:200,status(n){this.statusCode=n;return this},json(body){this.body=body;return this}};
   await module.namespace.default(req,res);
   return {res,usage,quotas,logs,lims,periods,stamps,modelCalls,models,spends};
@@ -172,4 +172,22 @@ test('Invited friends add their extra checks to the free allowance; a failed loo
   assert.deepEqual((await handler({bonus:6})).lims,[13]);
   assert.deepEqual((await handler({bonusFails:true})).lims,[7]);
   assert.deepEqual((await handler({bonus:6,pay:true,plan:{status:'active'}})).lims,[60]);
+});
+
+test('A2 forms are scored as DUO scores forms: inhoud, woorden and spelling, 7 points, voldoende at 5',async()=>{
+  const ok=await handler({kind:'f',claimPassed:false,scores:{inhoud:2,woorden:1,grammatica:2,spelling:2,samenhang:1}});
+  assert.deepEqual({...ok.res.body.tasks[0].scores},{inhoud:2,woorden:1,spelling:2});
+  assert.equal(ok.res.body.tasks[0].passed,true);
+  const low=await handler({kind:'f',claimPassed:true,scores:{inhoud:2,woorden:1,grammatica:2,spelling:1,samenhang:1}});
+  assert.equal(low.res.body.tasks[0].passed,false); // 4 of 7
+  const text=await handler({claimPassed:true,scores:{inhoud:2,woorden:1,grammatica:1,spelling:1,samenhang:1}});
+  assert.equal(text.res.body.tasks[0].passed,false); // a text keeps 10 points: 6 is not enough
+});
+test('Spreken A2: voldoende follows from the points, not from what the model says',async()=>{
+  const said=await handler({part:'sp',claimPassed:true,scores:{inhoud:1,woorden:2,grammatica:2,samenhang:1}});
+  assert.equal(said.res.body.tasks[0].passed,false); // inhoud below 2
+  const few=await handler({part:'sp',claimPassed:true,scores:{inhoud:2,woorden:1,grammatica:1,samenhang:0}});
+  assert.equal(few.res.body.tasks[0].passed,false); // 4 of 8
+  const good=await handler({part:'sp',claimPassed:false,scores:{inhoud:2,woorden:1,grammatica:1,samenhang:1}});
+  assert.equal(good.res.body.tasks[0].passed,true); // 5 of 8
 });
