@@ -19,7 +19,7 @@ paying learner through and is logged. The monthly limit answers 429 `month`, the
 Timeouts: grading gives up after 105 s (one retry), conversation turns after 60 s, every Supabase and Stripe fetch in
 `_supa.js` after 8 s, so a check is always given back instead of being lost with a killed function (504 `timeout`).
 `max_tokens` is 8000 for one to three tasks and 12000 for a proefexamen. voorwaarden.html ("Redelijk gebruik") names
-60 a day, 200 a month and two proefexamens on the strongest model: change it in all eight languages with these defaults.
+20 a day, 200 a month and two proefexamens on the strongest model: change it in all eight languages with these defaults.
 Functions run in Frankfurt (`"regions": ["fra1"]` in `vercel.json`, next to the Supabase database); privacy.html says so.
 
 ## Accounts (optional)
@@ -54,7 +54,7 @@ vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one comin
   2026: the weekly seven replaced buying). The total is one `check_week_usage` row per user under the fixed bucket
   date 2000-01-03 (`window_kind 'once'`, migration `20261119140000_free_total_checks.sql`, also in `schema.sql`; run it
   in the SQL editor before deploying); old weekly rows stay as history. Writing and speaking share this allowance at levels not covered by Plus. Paid checks use a separate `PLUS_LIMIT`
-  (default 60) daily ledger. `check_week_usage` and `check_day_usage` are server-written, with read-own RLS; daily
+  (default 20 since 25 November 2026, 60 before) daily ledger. `check_week_usage` and `check_day_usage` are server-written, with read-own RLS; daily
   `check_usage` still records all account usage for owner analytics. The server-only invoker RPC `use_plan_checks()`
   atomically reserves/refunds the budget. A captured timestamp keeps refunds in the original day/week.
 - Without an account there are `FREE_CHECKS` (default 2) one-time trial checks in that browser, not a daily gift.
@@ -102,7 +102,7 @@ vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one comin
 ## Bittertalen Plus (payments)
 
 The current pricing (12 November 2026): Plus A2 is €9,99/month and raises the daily AI allowance to `PLUS_LIMIT`
-(default 60) on A2 only. Plus B1 is €14,99/month and includes A2. All practice and timed proefexamens remain free;
+(default 20 since 25 November 2026, 60 before) on A2 only. Plus B1 is €14,99/month and includes A2. All practice and timed proefexamens remain free;
 Seven checks in all remain available with a free account (`FREE_ACCOUNT_CHECKS`).
 There is no trial or yearly price. Videos and podcasts remain free.
 - `STRIPE_SECRET_KEY`, `STRIPE_PRICE` (the existing A2 monthly price), `STRIPE_PRICE_B1` and `STRIPE_WEBHOOK_SECRET`

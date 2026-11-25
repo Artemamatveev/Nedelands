@@ -35,7 +35,7 @@ export const LIMIT = Math.max(1, parseInt(process.env.FREE_ACCOUNT_CHECKS, 10) |
 // The lifetime bucket of check_week_usage (see the free_total_checks migration)
 export const ONCE_BUCKET = "2000-01-03";
 // With Bittertalen Plus (a Stripe subscription, see below) PLUS_LIMIT a day instead
-export const PLUS = Math.max(1, parseInt(process.env.PLUS_LIMIT, 10) || 60);
+export const PLUS = Math.max(1, parseInt(process.env.PLUS_LIMIT, 10) || 20); // 20 a day spreads PLUS_MONTH over at least ten days
 // One task is 1; a proefexamen Schrijven (4 tasks) 2, Schrijven B1 (12) 4, Spreken A2 or B1 (16 answers) 6: roughly what they cost in tokens
 export const checkCost = (tasks) => Math.max(1, Math.ceil(tasks / 3));
 
