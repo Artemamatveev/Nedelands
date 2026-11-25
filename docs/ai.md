@@ -87,7 +87,7 @@ conversation. Two menu buttons (aiMenu remembers the choice when returning from 
 `TOPICS` in `api/_talk.js` (`PEOPLE` plus `SCENES`) and the page hold the same ids, `who` and `task`
 (`tests/talk.test.mjs`); the server alone has the openers and prompts, so the page can't send its own prompt.
 - One conversation costs one check (the user's choice), taken at `go:"start"` like one writing task: a guest's trial,
-  a free account's seven, Plus's daily 60 (then no `CHECK_CAP`). Start returns the fixed opener (no model call) and a
+  a free account's seven, Plus's daily 20 (and 200 a month) (then no `CHECK_CAP`). Start returns the fixed opener (no model call) and a
   signed ticket (`talkSign()` in `_supa.js`, HMAC with the service key; account or trial cookie, topic, level, Plus,
   40 minutes); `go:"say"` and `go:"end"` need it and take no further check. At most `TURNS` (14) learner turns; the
   character rounds off from turn 8 (A2) or 10 (B1) and says goodbye (`done`).
