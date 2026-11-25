@@ -52,7 +52,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Bittertalen","url":"https://bittertalen.nl/zh","applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":"zh-Hans","educationalLevel":["A2","B1"],"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}
 </script>
-<script defer src="/landing.js?v=extra2"></script>
+<script defer src="/landing.js?v=price3"></script>
 <script defer src="/lib/gsap-3.15.1.min.js"></script>
 <script defer src="/lib/ScrollTrigger-3.15.1.min.js"></script>
 <script defer src="/landing-motion-v3.js?v=extra2"></script>
@@ -244,37 +244,38 @@
         </ul>
         <a class="button outline" href="/oefenen?open=today" data-t="Open Bittertalen">打开 Bittertalen</a>
       </article>
-      <article class="card plus" id="plus-card" hidden>
+      <article class="card plus" id="plus-card">
         <h3>Bittertalen Plus A2</h3>
-        <p class="price" id="plus-price"></p>
+        <p class="price" id="plus-price"><bdi>€ 9,99</bdi> <small data-t="per maand">每月</small></p>
         <ul>
-          <li id="plus-checks" data-t="Laat je teksten en gesproken antwoorden vaker nakijken door Bittertalen">让 Bittertalen 更频繁地批改你的写作和口语回答</li>
-          <li data-t="Meer nakijkbeurten op A2.">更多 A2 批改次数。</li>
+          <li id="plus-checks" data-t="Tot 200 nakijkbeurten per maand voor je teksten en gesproken antwoorden">每月最多 200 次批改，用于你的写作和口语回答</li>
+          <li data-t="Uitgebreide feedback van een sterker AI-model, ook op je proefexamens.">由更强的 AI 模型给出详细反馈，模拟考试也一样。</li>
           <li data-t="Elke maand opzegbaar">每月都可取消</li>
         </ul>
         <a class="button outline" href="/oefenen?open=plus" id="plus-link" data-t="Kies Plus A2">选择 Plus A2</a>
       </article>
-      <article class="card plus" id="plus-b1-card" hidden>
+      <article class="card plus" id="plus-b1-card">
         <h3>Bittertalen Plus B1</h3>
-        <p class="price" id="plus-b1-price"></p>
+        <p class="price" id="plus-b1-price"><bdi>€ 14,99</bdi> <small data-t="per maand">每月</small></p>
         <ul>
-          <li id="plus-b1-checks" data-t="Laat je teksten en gesproken antwoorden vaker nakijken door Bittertalen">让 Bittertalen 更频繁地批改你的写作和口语回答</li>
-          <li data-t="Meer nakijkbeurten op B1, inclusief A2.">更多 B1 批改次数，包含 A2。</li>
+          <li id="plus-b1-checks" data-t="Tot 200 nakijkbeurten per maand voor je teksten en gesproken antwoorden">每月最多 200 次批改，用于你的写作和口语回答</li>
+          <li data-t="Ook Schrijven en Spreken B1, met A2 erbij.">还包括 B1 写作和口语，并含 A2。</li>
           <li data-t="Elke maand opzegbaar">每月都可取消</li>
         </ul>
         <a class="button outline" href="/oefenen?open=plus" data-t="Kies Plus B1">选择 Plus B1</a>
       </article>
-      <article class="card plus" id="pass-card" hidden>
+      <article class="card plus" id="pass-card">
         <h3 data-t="Examenpas">考试通行证</h3>
-        <p class="price" id="pass-price"></p>
+        <p class="price" id="pass-price"><bdi>€ 19,99</bdi> <small>A2</small><br><bdi>€ 24,99</bdi> <small>B1</small></p>
         <ul>
           <li data-t="Eén keer betalen, geen abonnement.">一次付款，无需订阅。</li>
-          <li id="pass-weeks"></li>
+          <li id="pass-weeks" data-t="13 weken geldig vanaf je betaling">自付款起 13 周内有效</li>
           <li data-t="A2 of B1, met dezelfde nakijkbeurten als Plus.">A2 或 B1，批改次数与 Plus 相同。</li>
         </ul>
         <a class="button outline" href="/oefenen?open=plus" data-t="Kies de Examenpas">选择考试通行证</a>
       </article>
     </div>
+    <p class="note" data-t="Niet tevreden? Binnen 14 dagen na je eerste betaling krijg je je geld terug.">不满意？首次付款后 14 天内可退款。</p>
   </section>
 
   <section id="install-app" class="block faq" aria-labelledby="install-title">

@@ -7,8 +7,29 @@ const ANON = (process.env.SUPABASE_ANON_KEY || "").trim();
 const SERVICE = (process.env.SUPABASE_SERVICE_ROLE_KEY || "").trim();
 
 export const accounts = !!(URL_ && ANON && SERVICE);
+// Every call to Supabase and Stripe gives up after FETCH_MS: a hanging database must not keep the function running
+// until Vercel kills it, because then a check already taken is never given back.
+const FETCH_MS = 8000;
+const fetch = (url, init = {}) => globalThis.fetch(url, { signal: AbortSignal.timeout(FETCH_MS), ...init });
 export const supaUrl = URL_;
 export const anonKey = ANON;
+// What one paying learner may cost on top of PLUS_LIMIT a day: PLUS_MONTH checks a month (default 200) and OPUS_DAY
+// proefexamens a day graded by the exam model (default 2; after that the practice model grades them).
+export const PLUS_MONTH = Math.max(1, parseInt(process.env.PLUS_MONTH, 10) || 200);
+export const OPUS_DAY = Math.max(0, parseInt(process.env.OPUS_DAY ?? "2", 10) || 0);
+// A counter of table ai_guard (use_guard() in schema.sql): what is left, -1 when over; throws when unavailable
+export async function useGuard(k, day, cost, lim) {
+  const r = await fetch(`${URL_}/rest/v1/rpc/use_guard`, {
+    method: "POST",
+    headers: { apikey: SERVICE, authorization: `Bearer ${SERVICE}`, "content-type": "application/json" },
+    body: JSON.stringify({ g_k: String(k).slice(0, 80), g_day: day, cost, lim }),
+  });
+  if (!r.ok) throw new Error(`use_guard ${r.status}`);
+  const value = await r.json();
+  if (!Number.isSafeInteger(value)) throw new Error("Invalid guard counter");
+  return value;
+}
+export const monthOf = (at = new Date()) => amsterdamDay(at).slice(0, 8) + "01";
 // Free account checks in all (once, not per week), shared by the levels not covered by Plus.
 export const LIMIT = Math.max(1, parseInt(process.env.FREE_ACCOUNT_CHECKS, 10) || 7);
 // The lifetime bucket of check_week_usage (see the free_total_checks migration)
@@ -282,7 +303,8 @@ export const coversLevel = (p, level) => isPlus(p) && (p.level === "B1" || p.lev
 // The Examenpas: one payment (no subscription) for PASS_DAYS of the same checks as Plus at its level. Off unless both
 // one-time prices are set (STRIPE_PRICE_PASS_A2, STRIPE_PRICE_PASS_B1). A purchase is a row of `exam_pass`, keyed by
 // the Checkout session, so the same webhook twice can't add days twice.
-export const PASS_DAYS = 42;
+// 91 days (13 weeks), so one pass costs clearly less than three months of Plus and lasts until most learners' exam
+export const PASS_DAYS = 91;
 export const PASSES = Object.freeze({ A2: { price: "19,99", amount: 1999 }, B1: { price: "24,99", amount: 2499 } });
 export const PASS_PRICE = Object.freeze({ A2: (process.env.STRIPE_PRICE_PASS_A2 || "").trim(), B1: (process.env.STRIPE_PRICE_PASS_B1 || "").trim() });
 export const passOn = plusOn && !!(PASS_PRICE.A2 && PASS_PRICE.B1);

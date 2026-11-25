@@ -34,7 +34,7 @@ const last=s=>calls.filter(c=>c.includes(s)).pop();
 
 test('Config offers seven free account checks in all, a one-time trial, and the paid daily allowance',async()=>{
   const r=res();await config({method:'GET',headers:H},r);
-  assert.deepEqual(r.body.plus,{limit:60,price:'9,99',plans:{A2:{price:'9,99'},B1:{price:'14,99'}}});assert.equal(r.body.limit,7);assert.equal(r.body.period,'once');assert.equal(r.body.freePeriod,'once');
+  assert.deepEqual(r.body.plus,{limit:60,month:200,price:'9,99',plans:{A2:{price:'9,99'},B1:{price:'14,99'}}});assert.equal(r.body.limit,7);assert.equal(r.body.period,'once');assert.equal(r.body.freePeriod,'once');
 });
 test('Buying opens Checkout for the monthly price with the user in the subscription',async()=>{
   const r=res();await plus({method:'POST',headers:H,body:{go:'buy'}},r);
