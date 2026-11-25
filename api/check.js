@@ -318,7 +318,8 @@ export default async function handler(req, res) {
     await giveBack();
     if (error instanceof Anthropic.AuthenticationError) return res.status(503).json({ error: "not_configured" });
     if (error instanceof Anthropic.RateLimitError) return res.status(429).json({ error: "rate_limited" });
-    if (error instanceof Anthropic.APIConnectionTimeoutError || error instanceof Anthropic.APIUserAbortError || error?.name === "AbortError" || error?.name === "TimeoutError") {
+    const is = (C) => typeof C === "function" && error instanceof C;
+    if (is(Anthropic.APIConnectionTimeoutError) || is(Anthropic.APIUserAbortError) || error?.name === "AbortError" || error?.name === "TimeoutError") {
       console.error("grading_timeout");
       return res.status(504).json({ error: "timeout" });
     }

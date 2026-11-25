@@ -1027,7 +1027,7 @@ test('One-time free allowance, browser trial and daily Plus counters remain dist
     await s.p.waitForFunction(()=>document.querySelector('#prof').textContent.includes('Free checks: 0 of 7 left'));
     assert.equal(await s.p.evaluate(()=>checksLeft('wr')),48,'B1 free checks leave A2 paid checks intact');
     await s.p.evaluate(()=>{S.lvl='A2';plusScreen()});
-    await s.p.waitForFunction(()=>document.querySelector('#tbody').textContent.includes('60 checks a day. With a free account: 7 free'));
+    await s.p.waitForFunction(()=>document.querySelector('#tbody').textContent.includes('up to 200 checks a month. With a free account: 7 free'));
     assert.equal(await overflow(s.p),0);assert.deepEqual(s.errors,[]);await s.ctx.close();
   }finally{await browser.close();await new Promise(ok=>server.close(ok))}
 });
