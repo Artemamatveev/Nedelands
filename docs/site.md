@@ -3,6 +3,11 @@ Part of the project notes; CLAUDE.md is the short index. Keep these true when th
 
 ## Homepage and public pages
 Bittertalen (a pun on bitterballen: "bitter languages", self-irony about learning Dutch) is a single-page study app for the Dutch A2 integration exam (inburgeringsexamen).
+Positioning (the user's choice, 25 November 2026): exams on the way to naturalisation, with history, culture and
+conversations to feel at home and dare to speak. The hero says "Word thuis in Nederland"; Vraag 1 is "Oefen voor je
+examen", Vraag 2 "Leer het land kennen en durf te spreken" (books, history and art, media, Saskia and the other
+characters), and the FAQ answers "Helpt Bittertalen ook bij naturalisatie?" from ind.nl (an inburgeringsdiploma,
+usually at least A2; the IND decides). Never promise a passport, a pass or that B1 is required for naturalisation.
 The public homepage is `index.html` (`landing.js` translates it: every `data-t` text and `data-alt` alt text needs all
 seven translations in `copy`, which `tests/site.test.mjs` checks) and reads Plus pricing from `/api/config`. Its main
 button, "Begin met oefenen" in the bar (`#enter`), opens `/oefenen?open=today`; the hero has the heading (no
@@ -18,7 +23,7 @@ Descriptions expand and collapse over 360/280 ms with height and opacity, revers
 interaction. Reduced motion skips the animation; resize settles it. Phone cards have no border; keyboard focus stays visible.
 Scroll anchoring is paused during disclosure motion, and feature-section entrance motion settles on hover so the heading
 cannot move away from a stationary pointer.
-"Meer dan examenvragen" (`#ontdek`, "Vraag 2"; the user's wish, 24 November 2026) follows it: four blocks (`.extra`), each with a
+"Leer het land kennen en durf te spreken" (`#ontdek`, "Vraag 2"; before 25 November 2026 "Meer dan examenvragen"; the user's wish, 24 November 2026) follows it: four blocks (`.extra`), each with a
 piece of the app itself in HTML or pictures instead of an icon (a sentence from a story with the word popup, paintings, a video
 frame with subtitles above a podcast player, so it is clear that you can watch and listen: our own photo, never a channel's still; Saskia with a correction): books, history and art, videos, podcasts and news, Saskia. The whole block is one link,
 to `/oefenen?open=books`, `history`, `media` or `talk` (`openEntry()`; Oefenen is behind the back button). Keep the texts true:
