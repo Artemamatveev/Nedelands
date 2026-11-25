@@ -612,7 +612,7 @@ body.vfull{overflow:hidden}
 }
 .aiany{margin:16px 0 4px}
 .exam-focus{padding:14px;margin:12px 0}
-.exam-focus h3{font-size:var(--fs-l);margin:0 0 8px}
+.exam-focus h2{font-size:var(--fs-l);margin:0 0 8px}
 .exam-focus p,.exam-focus details{margin:8px 0}
 .exam-focus .btn{margin-top:8px}
 .aifix{margin-top:4px!important;font-size:var(--fs-m)}
@@ -2765,7 +2765,7 @@ function examFocusHTML(source,pick,target){
   const matches=answer.length>=5?lines.filter(line=>line.toLowerCase().includes(answer)):[];
   const clue=matches.length===1?matches[0]:"";
   return `<section class="list exam-focus" aria-labelledby="exam-focus-title">
-    <h3 id="exam-focus-title"><span data-ui>Oefen verder</span> · ${esc(examSkill(source))}</h3>
+    <h2 id="exam-focus-title"><span data-ui>Oefen verder</span> · ${esc(examSkill(source))}</h2>
     <p>${esc(source.big)}</p>
     <p><b data-ui>Jouw antwoord</b> · ${esc(capA(source,pick))}<br><b data-ui>Goed is</b> · ${esc(capA(source,source.right))}</p>
     ${source.sec==="knm"&&source.note?noteHTML(source.note):""}
