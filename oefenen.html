@@ -2116,6 +2116,11 @@ async function spGrade(q,r){
       <p class="ask">Zo zeg je het goed</p><div class="sample">${esc(res.corrected)}</div>${echoHTML("de verbeterde zinnen")}
       <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(q.right)}</div></details>
       <button class="btn wide" id="next">Verder</button>`;
+    const target=!ok&&nextPracticeQuestion(q);
+    if(target){
+      $("next").insertAdjacentHTML("beforebegin",'<button class="btn wide" id="speakingfollow">Probeer een nieuwe spreekopdracht</button>');
+      $("speakingfollow").onclick=()=>insertPracticeQuestion(q,target);
+    }
     $("next").onclick=()=>{pos++;show()}; echoBind(res.corrected);
   }catch(e){
     if(q!==queue[pos])return;
@@ -2152,7 +2157,7 @@ function spNext(q,r){
     if(previous?.url&&previous.url!==r.url)URL.revokeObjectURL(previous.url);
   }else $("recp").innerHTML=`<p class="ask">Je vorige antwoord</p>${previous.url?`<audio controls src="${previous.url}"></audio>`:`<div class="sample">${esc(previous.text)}</div>`}`;
   $("rect").textContent="Klaar";$("recm").style.width="0%";
-  $("recn").innerHTML=`<b>${has?"✓ Antwoord klaar":"Geen spraak herkend"}</b><br>${esc(r.note)}${kept?"Je vorige antwoord is bewaard. Probeer opnieuw of ga verder.":has?"Je antwoord is bewaard voor dit proefexamen.":"Er is geen tekst voor de beoordeling. Neem opnieuw op of ga verder."}`;
+  $("recn").innerHTML=`<b>${has?"✓ Antwoord klaar":"Geen spraak herkend"}</b><br>${kept?"Je vorige antwoord is bewaard. Probeer opnieuw of ga verder.":has?"Je antwoord is bewaard voor dit proefexamen.":"Er is geen tekst voor de beoordeling. Neem opnieuw op of ga verder."}`;
   $("spredo").hidden=false;
   const b=$("recb"); b.textContent=pos<queue.length-1?"Volgende vraag →":"Antwoorden inleveren";b.className="btn wide";b.disabled=false;b.onclick=()=>{b.disabled=true;pos++;show()};
 }
@@ -2606,11 +2611,11 @@ const PASS=.7;
 const PASSP={lz:19/25,ls:19/25,knm:28/40,wb:25/47}, passOf=k=>PASSP[k]||PASS, passPc=k=>Math.round(passOf(k)*100);
 // All completed proefexamen results per part (S.res): {at, pc, nw}, nw = % of the questions that were new (missing in older results).
 // The displayed percentage averages all saved attempts; readiness still uses the last three fresh attempts.
-function keepRes(k,pc,writing,focus){
+function keepRes(k,pc,writing){
   let result;
   if(k){
     track("done_"+k);S.res=S.res||{};
-    result={id:crypto.randomUUID(),at:Date.now(),pc,nw:cur.nw,...(writing?{writing}:{}),...(focus?{focus}:{})};
+    result={id:crypto.randomUUID(),at:Date.now(),pc,nw:cur.nw,...(writing?{writing}:{})};
     S.res[k]=(S.res[k]||[]).concat(result);
   }
   save();return result;
@@ -2675,8 +2680,10 @@ function planTasks(){
   S.lessonPlan={key,value};localSave();
   return value;
 }
-const FOCUS_PARTS=["lz","ls","knm"];
+const FOCUS_PARTS=["lz","l1","ls","lb","knm","sp","sb"];
 function examSkill(q){
+  if(q.sec==="sb")return q.kind==="k"?"Korte spreekopdracht":"Middellange spreekopdracht";
+  if(q.sec==="sp")return "Antwoord geven";
   if(q.sec==="knm")return q.label.replace(/^KNM: /,"");
   if(/waar gaat .* over|belangrijkste|hoofdgedachte/i.test(q.big))return "Hoofdgedachte";
   if(/bedoel|kun je .* opmaken|wat weet je nu/i.test(q.big))return "Conclusie";
@@ -2688,27 +2695,32 @@ function examSkill(q){
 function freshFocus(source,excluded=new Set()){
   const group=source.text||source.say,skill=examSkill(source);
   const candidates=ITEMS.filter(q=>q.sec===source.sec&&q.k!==source.k&&!excluded.has(q.k)&&!seenN(q)
-    &&q.big!==source.big&&(!group||(q.text||q.say)!==group)&&examSkill(q)===skill);
+    &&(group?(q.text||q.say)!==group:q.big!==source.big)&&examSkill(q)===skill);
   return (source.sec==="knm"&&candidates.find(q=>q.right===source.right))||candidates[0];
 }
-function examFocus(){
-  if(lvl()!=="A2"||!FOCUS_PARTS.includes(cur.part))return null;
-  const misses=queue.map((q,i)=>({q,pick:cur.pick[i]})).filter(({q,pick})=>pick!=null&&pick!==q.right);
-  const counts={};
-  for(const {q} of misses){const skill=examSkill(q);counts[skill]=(counts[skill]||0)+1}
-  misses.sort((a,b)=>counts[examSkill(b.q)]-counts[examSkill(a.q)]);
-  const excluded=new Set(queue.map(q=>q.k));
-  return misses.find(({q})=>freshFocus(q,excluded))||misses[0]||null;
+function rememberPractice(q,ok){
+  if(cur.exam||q.retry||!FOCUS_PARTS.includes(q.sec))return;
+  const level=lvl();
+  S.practiceFocus ||= {};
+  const previous=S.practiceFocus[level];
+  const source=q.followSource||cur.practiceSource;
+  if(source){
+    if(previous?.source===source)previous.last={ok,day:today()};
+  }else if(!ok)S.practiceFocus[level]={source:q.k,at:Date.now()};
 }
 function dayExamFocus(){
-  if(lvl()!=="A2")return null;
-  const latest=FOCUS_PARTS.filter(k=>!S.uit?.[k]?.ok).map(k=>S.res?.[k]?.at(-1))
-    .filter(r=>r?.focus&&(!r.focus.last?.ok||r.focus.last.day===today())&&Date.now()-r.at<14*864e5).sort((a,b)=>b.at-a.at)[0];
-  if(!latest)return null;
-  const source=ITEMS.find(q=>q.k===latest.focus.source);
-  if(!source)return null;
-  const last=latest.focus.last;
-  return {source,target:last?.day===today()?null:freshFocus(source),result:latest};
+  const focus=S.practiceFocus?.[lvl()];
+  if(!focus||Date.now()-focus.at>=14*864e5||focus.last?.ok&&focus.last.day!==today())return null;
+  const source=ITEMS.find(q=>q.k===focus.source);
+  if(!source||!parts().includes(source.sec)||S.uit?.[source.sec]?.ok)return null;
+  return {source,target:focus.last?.day===today()?null:freshFocus(source),focus};
+}
+function nextPracticeQuestion(q){
+  if(cur.exam||q.retry||q.followSource||cur.practiceSource)return null;
+  return freshFocus(q,new Set(queue.map(item=>item.k)));
+}
+function insertPracticeQuestion(q,target){
+  queue.splice(pos+1,0,{...target,retry:false,followSource:q.k});total++;pos++;show();
 }
 function examFocusHTML(source,pick,target){
   const transcript=source.say?sayLines(source.say).join("\n"):source.text||"";
@@ -2728,12 +2740,12 @@ function examFocusHTML(source,pick,target){
   </section>`;
 }
 function openFocusDay(){setTab("vandaag");home()}
-function startExamFocus(source,result){
+function startExamFocus(source){
   const target=freshFocus(source);
   if(!target)return;
   planId=null;
   build(source.sec,{...SEC.find(x=>x.id===source.sec),t:"Gerichte oefening",n:1,keep:1,pool:()=>[target],
-    examFollowup:{section:source.sec,id:result.id},back:{t:"Mijn dag",f:openFocusDay}});
+    practiceSource:source.k,back:{t:"Mijn dag",f:openFocusDay}});
 }
 function planHTML(){
   const d=today(),done=S.day&&S.day.d===d?S.day.done:[],P=planTasks(),steps=P.T,nx=steps.findIndex(t=>!done.includes(t.id));
@@ -2742,9 +2754,9 @@ function planHTML(){
   // new here at A2: where to begin, right under the heading, so it is seen above the tab bar on a phone. Gone after the
   // test, or once someone has clearly been practising
   const first=lvl()==="A2"&&!S.start&&Object.keys(S.items).length<30?`<div class="list">${itHTML(`data-p="t:start"`,"Waar begin ik?","Twaalf vragen: zo weet je waar je begint.",{ic:"bg"})}</div>`:"";
-  const focus=dayExamFocus(),last=focus?.result.focus.last;
+  const focus=dayExamFocus(),last=focus?.focus.last;
   const review=focus&&(focus.target||last?.day===d)?`<section class="list exam-focus" aria-label="Gerichte oefening">
-    <h3>Verder na je proefexamen</h3>
+    <h3>Verder met je oefening</h3>
     <p>${esc(PART[focus.source.sec])} · ${esc(examSkill(focus.source))}</p>
     ${focus.target?`<button type="button" class="btn wide" id="dayfocus">Oefen met een nieuwe vraag</button>`:
       `<p class="note">${last.ok?"De nieuwe vraag ging goed.":"Deze oefening komt morgen terug."}</p>`}
@@ -2820,7 +2832,7 @@ function drawPlan(){
   const d=today();if(!$("plan").querySelector(".step:not(.ok)")&&lsGet("ww-stamp")!=String(d)){lsSet("ww-stamp",String(d));track("day");
     const st=$("streak");st.classList.remove("stamp");void st.offsetWidth;st.classList.add("stamp");buzz("good")}
   const focus=dayExamFocus(),review=$("dayfocus");
-  if(review&&focus?.target)review.onclick=()=>startExamFocus(focus.source,focus.result);
+  if(review&&focus?.target)review.onclick=()=>startExamFocus(focus.source);
   document.querySelectorAll("#plan [data-p]").forEach(b=>b.onclick=()=>{const id=b.dataset.p,[k,v]=id.split(":");planId=id;
     if(k==="t")return startTest();
     if(k==="mini")build(v,{...SEC.find(x=>x.id===v),n:1,keep:1,pool:()=>wbTasks(1,0)});
@@ -2932,7 +2944,7 @@ function show(){
   if(q.text)h+=docHTML(q.text);
   if(q.pics)h+=picsHTML(q.pics);
   if(q.qs&&cur.exam)h+=`<p class="note">Lees eerst de vragen bij dit fragment:</p><ol class="qs">${q.qs.map(x=>`<li${x===q.big?' class="on"':""}>${x}</li>`).join("")}</ol>`;
-  if(q.say)h+=canSpeak?`<button class="btn wide" id="say">▶ Luister</button><p class="note">${q.sec==="lb"?cur.exam?"Je hoort het fragment één keer, zoals op het Staatsexamen.":"Op het Staatsexamen hoor je het fragment maar één keer.":cur.exam?"Je mag twee keer luisteren.":"Luister twee keer, zoals op het examen."}</p>`:`<p class="note">Audio werkt hier niet. Lees de tekst.</p><div class="sample">${esc(sayLines(q.say).map(l=>/^[AB]: /.test(q.say)?"– "+l:l).join("\n"))}</div>`;
+  if(q.say)h+=canSpeak?`<button class="btn wide" id="say">▶ Luister</button><p class="note">${q.sec==="lb"?cur.exam?"Je hoort het fragment één keer, zoals op het Staatsexamen.":"Op het Staatsexamen hoor je het fragment maar één keer.":cur.exam?"Je mag twee keer luisteren.":"Luister twee keer, zoals op het examen."}</p>` :cur.exam?`<p class="note" role="alert">Audio is hier niet beschikbaar. Open dit proefexamen op een apparaat met geluid.</p>`:`<p class="note">Audio werkt hier niet. Lees de tekst.</p><div class="sample">${esc(sayLines(q.say).map(l=>/^[AB]: /.test(q.say)?"– "+l:l).join("\n"))}</div>`;
   if(q.hear)h+=canSpeak?`<button class="btn wide" id="hear">▶ Luister</button>`:`<div class="verb">${q.hear}</div>`;
   if(q.big)h+=`<div class="verb${q.big.length>22?" long":""}">${q.big}</div>`;
   h+=`<p class="ru">${q.sub||""}</p>`;
@@ -3004,12 +3016,8 @@ function record(ok,q=queue[pos]){
     // answers per day (S.qd answered, S.qr right; day number → count), for the owner's overview; S.items keeps the totals
     const dk=String(d); S.qd=S.qd||{}; S.qd[dk]=(S.qd[dk]||0)+1; if(ok){S.qr=S.qr||{}; S.qr[dk]=(S.qr[dk]||0)+1}
   }
-  if(cur.examFollowup&&!q.retry){
-    const {section,id}=cur.examFollowup;
-    const result=S.res?.[section]?.find(r=>r.id===id);
-    if(result?.focus)result.focus.last={ok,day:d};
-  }
-  if(!ok&&!cur.exam&&!cur.examFollowup&&q.type!=="reveal"&&q.type!=="write")queue.push({...q,retry:true});
+  rememberPractice(q,ok);
+  if(!ok&&!cur.exam&&!cur.practiceSource&&!q.followSource&&q.type!=="reveal"&&q.type!=="write")queue.push({...q,retry:true});
   if(pos>=queue.length-1)complete(); else save();
 }
 function complete(){
@@ -3041,10 +3049,19 @@ function buzz(k){
 const optLt=(i,x)=>`<span class="lt" aria-hidden="true">${"ABCDEF"[i]}</span><span class="tx">${x}</span>`;
 const CAPSEC=new Set(["knm","lz","l1","ls","lb","gs"]);
 const capA=(q,s)=>CAPSEC.has(q.sec)?String(s).replace(/^((?:\s|<[^>]+>)*)(\p{Ll})/u,(m,a,c)=>a+c.toUpperCase()):s;
-function feedback(ok,q){
+function feedback(ok,q,pick){
   if(!cur.exam)quickPraise.show(ok);else quickPraise.hide();
   buzz(ok?"good":"bad");
   $("fb").className="fb sheet "+(ok?"ok":"no");
+  if(!ok&&!cur.exam&&pick!=null&&FOCUS_PARTS.includes(q.sec)){
+    const target=nextPracticeQuestion(q);
+    $("fb").className="fb";
+    $("fb").innerHTML=examFocusHTML(q,pick,target)+'<button class="ghost wide" id="next">Verder</button>';
+    if($("focuslisten"))$("focuslisten").onclick=()=>speak(q.say);
+    if($("focuspractice"))$("focuspractice").onclick=()=>insertPracticeQuestion(q,target);
+    $("next").onclick=()=>{pos++;show()};
+    $("fb").scrollIntoView({block:"nearest"});return;
+  }
   // wrong: a short heading, then the right answer in ink (a long red heading was loud)
   $("fb").innerHTML=`<p class="fbh"><i aria-hidden="true">${ok?"✓":"✕"}</i><b class="${ok?"good":"bad"}">${ok?"Goed zo!":"Niet goed"}</b></p>${ok?"":`<p class="fbr"><span>Goed is:</span> <strong>${capA(q,q.right)}</strong></p>`}
     ${q.note?(q.sec==="verb"?q.note:`<div class="note">${q.note}</div>`):""}
@@ -3105,7 +3122,7 @@ function grade(ans,btn,o){
   document.querySelectorAll(".opt").forEach(b=>{b.disabled=true;if(o&&o[b.dataset.n]===q.right)b.classList.add("ok")});
   if(btn&&!ok)btn.classList.add("no");
   if($("inp"))$("inp").disabled=true; if($("chk"))$("chk").disabled=true;
-  record(ok); feedback(ok,q);
+  record(ok); feedback(ok,q,btn&&o?o[btn.dataset.n]:ans);
 }
 function order(q){
   const words=q.right.replace(/[.?]$/,"").split(" ");
@@ -3136,7 +3153,7 @@ function order(q){
 function reveal(q){
   recEnd(!!rec&&rec.mode==="rec"); $("rev").hidden=true; if($("spchk"))$("spchk").hidden=true;
   $("fb").innerHTML=`<div class="sample">${q.right}</div>${echoHTML("het voorbeeld")}<div class="two"><button class="ghost" id="again">Later herhalen</button><button class="btn" id="got">Gelukt</button></div>`;
-  const go=ok=>{record(ok);pos++;show()};
+  const go=ok=>{const target=q.type==="reveal"&&!ok&&nextPracticeQuestion(q);record(ok);if(target)return insertPracticeQuestion(q,target);pos++;show()};
   $("again").onclick=()=>go(false); $("got").onclick=()=>go(true); echoBind(q.right);
 }
 // Zeg het na: free pronunciation practice. The learner reads a model answer aloud, speech recognition writes it down,
@@ -3259,7 +3276,7 @@ const freeNote=()=>acc.cfg&&acc.cfg.free&&!acc.user?`<p class="note"><span>${acc
 function selfGrade(q,msg,doc){
   $("fb").innerHTML=`<p class="note">${msg}</p><p class="ask">Voorbeeld</p><div class="sample">${esc(q.right)}</div>
     ${q.type==="reveal"?echoHTML("het voorbeeld"):""}${doc?docBtn:""}<div class="two"><button class="ghost" id="again">Later herhalen</button><button class="btn" id="got">Gelukt</button></div>`;
-  const go=ok=>{record(ok);pos++;show()};
+  const go=ok=>{const target=q.type==="reveal"&&!ok&&nextPracticeQuestion(q);record(ok);if(target)return insertPracticeQuestion(q,target);pos++;show()};
   $("again").onclick=()=>go(false); $("got").onclick=()=>go(true);
   if(doc)$("docx").onclick=()=>saveDocx([doc]);
   if(q.type==="reveal")echoBind(q.right);
@@ -3268,7 +3285,7 @@ function selfGrade(q,msg,doc){
 // corrected text (no call, so no check is used, and it works offline). Spelling counts: capitals and punctuation are compared too.
 const RTOK=/([\p{L}\d]+(?:['’-][\p{L}\d]+)*|[.,!?;:])/u, rtok=x=>x.replace(/’/g,"'"), rtoks=t=>String(t).split(RTOK).filter((x,i)=>i%2).map(rtok);
 const redoable=(own,right)=>!!right&&rtoks(own).join(" ")!==rtoks(right).join(" ");
-const redoBtn=`<button class="ghost wide" id="redo">Schrijf het nog een keer</button><p class="note">Dit kost geen nakijkbeurt.</p>`;
+
 // what is wrong with own against right: words to take out struck through, words to add in green; n = the places that differ
 function diffHTML(own,right){
   const P=String(right).split(RTOK),A=P.filter((x,i)=>i%2).map(rtok),G=P.filter((x,i)=>!(i%2)),B=rtoks(own),D=lcs(A,B);
@@ -3286,6 +3303,44 @@ function diffHTML(own,right){
 }
 // What can be written again of one task: [] when nothing differs. A B1 form has one box per answer that differs: its corrected
 // text is one line per form answer, the open answer last (SYSTEM_WB in api/check.js); another shape gives no boxes.
+function correctionPrompts(task,form,text,grade){
+  const errors=Array.isArray(grade.errors)?grade.errors:[];
+  const items=errors.filter(e=>typeof e?.right==="string"&&rtoks(e.right).length)
+    .map(e=>({wrong:String(e.wrong||""),right:e.right,why:String(e.why||"")}));
+  if(!items.length||items.length<errors.length){
+    const fallback=redoItems(task,form,text,grade.corrected,errors);
+    for(const item of fallback){
+      if(!items.some(x=>x.right===item.right))items.push({wrong:item.own,right:item.right,why:""});
+    }
+  }
+  return items;
+}
+function practiseCorrections(items){
+  if(cur.exam||!items.length)return;
+  let index=0;
+  const draw=()=>{
+    const item=items[index];
+    $("card").innerHTML=`<p class="ask">Schrijven · Verbetering ${index+1} van ${items.length}</p>
+      <h2>Schrijf het goed uit je hoofd</h2>
+      ${item.wrong?`<p class="ask">Jouw tekst</p><div class="sample">${esc(item.wrong)}</div>`:""}
+      ${item.why?`<p class="note">${esc(item.why)}</p>`:""}
+      <label class="fld"><span>Schrijf de verbetering</span><textarea id="fixinput" rows="3" spellcheck="false" autocorrect="off" autocapitalize="off"></textarea></label>
+      <details><summary>Toon de verbetering</summary><p class="sample">${esc(item.right)}</p></details>
+      <p id="fixstatus" role="status"></p><button type="button" class="btn wide" id="fixcheck">Controleer</button>`;
+    const input=$("fixinput"),button=$("fixcheck");
+    input.focus();
+    button.onclick=()=>{
+      const answer=input.value.trim();
+      if(!answer){input.focus();return}
+      const d=diffHTML(answer,item.right);
+      if(d.n){$("fixstatus").innerHTML=`Vergelijk met de verbetering en probeer opnieuw.<br>${d.h}`;input.focus();return}
+      input.readOnly=true;$("fixstatus").textContent="Precies goed!";buzz("good");
+      button.textContent=index+1<items.length?"Volgende verbetering":"Verder";
+      button.onclick=()=>{if(++index<items.length)draw();else{pos++;show()}};
+    };
+  };
+  draw();window.scrollTo(0,0);
+}
 function redoItems(q,form,text,right,errs){
   if(q.sec==="wb"&&q.fields){
     const n=q.fields.length,L=String(right||"").split("\n").map(x=>x.trim()).filter(Boolean),F=form.split("\n");
@@ -3296,30 +3351,6 @@ function redoItems(q,form,text,right,errs){
     return I}
   if(q.kind==="z"){const own=zWhole({q,text});return redoable(own,right)?[{own,right,errs,l:q.big,ctx:/___/.test(q.ctx||"")?q.ctx:""}]:[]}
   return redoable(text,right)?[{own:text,right,errs}]:[];
-}
-// items: {own, right, errs, l (the task or question), ctx (a text with an open place), f (a form's answer)};
-// back: after a proefexamen, back to its result, which is not marked again
-function redo(items,back){
-  const what=items[0].f?items.length>1?"antwoorden":"antwoord":items.length>1?"zinnen":items[0].l?"zin":"tekst";
-  $("card").innerHTML=`<p class="ask">Schrijf het nog een keer</p><p class="note">Verbeter je eigen ${what}, zonder naar de verbeterde ${what} te kijken.</p>`
-    +items.map((x,i)=>`${x.l?`<p class="note">${x.l}</p>`:""}${x.ctx?`<div class="sample">${esc(x.ctx).replace("___",'<b class="gapw">______</b>')}</div>`:""}
-      <textarea id="rw${i}" rows="${x.l?3:Math.max(7,x.own.split("\n").length+2)}" aria-label="Je ${x.f?"antwoord":x.l?"zin":"tekst"}" spellcheck="false" autocorrect="off" autocapitalize="off"></textarea>
-      ${x.errs.length?`<details><summary>Kijk nog even naar de fouten</summary>${errsHTML(x.errs)}</details>`:""}<div id="rwd${i}"></div>`).join("")
-    +`<p class="note" id="rwn" hidden>Doorgestreept moet weg, groen moet erbij. De telefoon vergelijkt alleen: een ander woord kan ook goed zijn.</p>
-      <div class="two"><button class="ghost" id="rwgo">${back?"Naar de uitslag":"Verder"}</button><button class="btn" id="rwchk">Vergelijk</button></div>`;
-  items.forEach((x,i)=>$("rw"+i).value=x.own);
-  window.scrollTo(0,0);
-  $("rwgo").onclick=back||(()=>{pos++;show()});
-  $("rwchk").onclick=()=>{
-    const R=items.map((x,i)=>{const t=$("rw"+i).value.trim(),d=diffHTML(t,x.right);
-      $("rwd"+i).innerHTML=d.n?`<p class="ask">Nog ${d.n} ${d.n===1?"verschil":"verschillen"}</p><div class="sample diff">${d.h}</div>`:`<p class="note"><b class="good">✓ Precies goed!</b></p>`;
-      return d.n});
-    const all=R.every(n=>!n);
-    $("rwn").hidden=all; $("rwchk").textContent="Vergelijk opnieuw";
-    $("rwgo").className=all?"btn":"ghost"; $("rwchk").className=all?"ghost":"btn";
-    if(all)buzz("good");
-    $("rwd"+R.findIndex((n,i)=>n||i===R.length-1)).scrollIntoView({block:"nearest",behavior:"smooth"});
-  };
 }
 // a sentence to finish: the corrected text is the whole sentence, so the learner gets the whole sentence to correct
 const zWhole=z=>{const c=z.q.ctx,b=c&&!/___/.test(c)?c.replace(/[….\s]+$/,""):"";return b&&!z.text.startsWith(b)?b+" "+z.text:z.text};
@@ -3333,16 +3364,16 @@ async function check(q){
     const res=(await nakijken([{kind:q.kind,task,form,text}],q.sec==="wb"?"wb":undefined))[0];
     const errs=Array.isArray(res.errors)?res.errors:[];
     btn.hidden=true; const ok=!!res.passed;
-    const RD=redoItems(q,form,text,res.corrected,errs);
+    const RD=correctionPrompts(q,form,text,res);
     keepErrs(errs); record(ok); if(!cur.exam)quickPraise.show(ok);
     $("fb").innerHTML=`<b class="${ok?"good":"bad"}">${ok?"Goed zo! Voldoende":"Nog niet voldoende"}</b>
       <p class="note">${esc(res.verdict)}</p>${scoreHTML(res.scores,q.mx)}
       ${ownHTML(text,errs)}${errsHTML(errs)}${freeNote()}
       <p class="ask">Verbeterde tekst</p><div class="sample">${esc(res.corrected)}</div>
       <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(q.right)}</div></details>
-      ${RD.length?redoBtn:""}${docBtn}<button class="btn wide" id="next">Verder</button>`;
+      ${docBtn}<button class="btn wide" id="next">${RD.length?"Schrijf de verbeteringen":"Verder"}</button>`;
     $("next").onclick=()=>{pos++;show()};
-    if(RD.length)$("redo").onclick=()=>redo(RD);
+    if(RD.length)$("next").onclick=()=>practiseCorrections(RD);
     $("docx").onclick=()=>saveDocx([{task,form,text}]);
   }catch(e){
     const c=e&&e.code;
@@ -3364,16 +3395,16 @@ async function checkZ(q){
   try{
     const T=await nakijken(Z.map(z=>({kind:"z",task:z.task,form:"",text:z.text})),"wb");
     btn.hidden=true;
-    const RD=Z.flatMap((z,i)=>{const t=T[i]||{};return redoItems(z.q,"",z.text,t.corrected,Array.isArray(t.errors)?t.errors:[])});
+    const RD=Z.flatMap((z,i)=>correctionPrompts(z.q,"",z.text,T[i]||{}));
     $("fb").innerHTML=Z.map((z,i)=>{const t=T[i]||{},errs=Array.isArray(t.errors)?t.errors:[],ok=!!t.passed; keepErrs(errs); record(ok,z.q);
       return`<p class="ask">${Z.length>1?`Zin ${i+1}: `:""}<span class="${ok?"good":"bad"}">${ok?"voldoende":"nog niet voldoende"}</span></p>${Z.length>1?`<p class="note">${z.q.big}</p>`:""}
         <p class="note">${esc(t.verdict)}</p>${scoreHTML(t.scores,z.q.mx)}
         ${ownHTML(z.text,errs,"Jouw zin")}${errs.length?errsHTML(errs):""}
         <p class="ask">Verbeterd</p><div class="sample">${esc(t.corrected||z.text)}</div><details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(z.q.right)}</div></details>`}).join("")
-      +`${freeNote()}${RD.length?redoBtn:""}${docBtn}<button class="btn wide" id="next">Verder</button>`;
+      +`${freeNote()}${docBtn}<button class="btn wide" id="next">${RD.length?"Schrijf de verbeteringen":"Verder"}</button>`;
     if(!cur.exam&&T.length===Z.length&&T.every(t=>typeof t?.passed==="boolean"))quickPraise.show(T.every(t=>t.passed));
     $("next").onclick=()=>{pos++;show()}; $("docx").onclick=()=>saveDocx(doc);
-    if(RD.length)$("redo").onclick=()=>redo(RD);
+    if(RD.length)$("next").onclick=()=>practiseCorrections(RD);
   }catch(e){
     const c=e&&e.code;
     if(c==="rate_limited"){cur.zs=Z.slice(0,-1);btn.disabled=false;$("txt").readOnly=false;$("fb").innerHTML=`<p class="note">Te veel verzoeken achter elkaar. Wacht een minuut en probeer het opnieuw.</p>`;return}
@@ -3452,7 +3483,7 @@ async function examWrite(){
   card.innerHTML=`<p class="note">Ik kijk je ${answers.length} ${answers.length===1?"tekst":"teksten"} na… Dit duurt ongeveer een minuut.</p>`;
   try{
     const grades=answers.length?await nakijken(answers.map(answer=>({kind:answer.q.kind,task:wrTask(answer.q),form:answer.form,text:answer.text})),exam.part==="wb"?"wb":undefined):[];
-    const review=reviewWriting(tasks,answers,grades), redoByTask=[];
+    const review=reviewWriting(tasks,answers,grades);
     const byKey=new Map(answers.map((answer,i)=>[answer.q.k,{answer,grade:grades[i]}]));
     const good=grades.filter(grade=>grade?.passed).length;
     const body=tasks.map((task,i)=>{
@@ -3460,14 +3491,13 @@ async function examWrite(){
       if(row.status==="empty")return `<h2>Opdracht ${i+1} · Niet gemaakt</h2><p class="note">${task.big}</p><p>Geen antwoord. Deze opdracht telt voor 0 van ${row.maxPoints} punten.</p>`;
       const {answer,grade={}}=entry, errors=Array.isArray(grade.errors)?grade.errors:[];
       keepErrs(errors);
-      redoByTask[i]=redoItems(task,answer.form,answer.text,grade.corrected,errors);
       const label=typeof grade.passed==="boolean"?(grade.passed?"voldoende":"nog niet voldoende"):"nog niet beoordeeld";
       return `<h2>Opdracht ${i+1} · <span class="${typeof grade.passed==="boolean"?(grade.passed?"good":"bad"):""}">${label}</span></h2>
         <p class="note">${task.big}</p><p class="note">${esc(grade.verdict)}</p>${row.status==="scored"?scoreHTML(grade.scores,task.mx):""}
         ${own(answer,errors)}${errors.length?errsHTML(errors):""}
         ${grade.corrected?`<p class="ask">Verbeterde tekst</p><div class="sample">${esc(grade.corrected)}</div>`:""}
         <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(task.right)}</div></details>
-        ${redoByTask[i].length?`<button class="ghost wide rdo" data-i="${i}">Schrijf het nog een keer</button>`:""}`;
+        `;
     }).join("");
     if(review.complete){lsSet(completedDraft,null);keepRes(exam.part,review.percent,writingSnapshot(review))}
     else save();
@@ -3490,10 +3520,7 @@ async function examWrite(){
       bind();
       card.querySelectorAll("[data-write-focus]").forEach(button=>button.onclick=()=>
         practiseWritingFocus(review.priorities[Number(button.dataset.writeFocus)].action,exam.part,restoreResult));
-      card.querySelectorAll(".rdo").forEach(button=>button.onclick=()=>{
-        const i=Number(button.dataset.i);
-        redo(redoByTask[i],()=>{restoreResult();const details=card.querySelector(".writing-details");details.open=true;card.querySelector(`.rdo[data-i="${i}"]`).scrollIntoView({block:"center"})});
-      });
+
     };
     wire();
   }catch(error){
@@ -3536,8 +3563,7 @@ function finish(){
   if(cur.exam&&cur.speak)return examSpeak();
   if(cur.exam){
     const pc=total?Math.round(right/total*100):0, need=Math.ceil(total*passOf(cur.part)-1e-9), pass=right>=need, by={};
-    const focus=examFocus(),target=focus&&freshFocus(focus.q,new Set(queue.map(q=>q.k)));
-    const result=keepRes(cur.part,pc,undefined,target?{source:focus.q.k}:undefined);
+    keepRes(cur.part,pc);
     // KNM: score per theme, weakest first
     cur.log.forEach(x=>{const t=x.l.replace(/^KNM: /,""),o=by[t]||(by[t]={r:0,n:0});o.n++;if(x.ok)o.r++});
     const themes=cur.part==="knm"&&Object.keys(by).length>1?Object.keys(by).sort((a,b)=>by[a].r/by[a].n-by[b].r/by[b].n)
@@ -3546,14 +3572,11 @@ function finish(){
       <p><b class="${pass?"good":"bad"}">${pass?"Oefendoel bereikt":"Meer oefenen"}</b></p>
       <p class="note">${cur.part==="l1"||cur.part==="lb"?"Bij het Staatsexamen heb je een score van 500 nodig. Hoeveel vragen dat zijn, maakt DUO niet bekend: mik op 7 van de 10.":cur.part==="lz"||cur.part==="ls"?"Op het examen heb je waarschijnlijk 19 van de 25 vragen goed nodig. DUO zet de grens op je uitslag.":cur.part==="knm"?"Op het examen heb je 28 van de 40 vragen goed nodig.":"Op het examen heb je ongeveer 7 van de 10 vragen goed nodig."} Hier is dat ${need} van ${total}.</p>
       ${themes?`<p class="ask">Per thema</p><ul class="errs">${themes}</ul>`:""}
-      ${focus?examFocusHTML(focus.q,focus.pick,target):""}
       ${cur.miss.length?`<p class="ask">Fout beantwoord</p><ul class="errs">${cur.miss.slice(0,20).map(m=>`<li>${m.q}<span>Goed is: ${m.r}</span></li>`).join("")}</ul>`:""}
       <div class="two"><button class="ghost" id="tohome">Alle onderdelen</button><button class="btn" id="more">Nog een keer</button></div>`;
-    if($("focuslisten"))$("focuslisten").onclick=()=>speak(focus.q.say);
-    if($("focuspractice"))$("focuspractice").onclick=()=>startExamFocus(focus.q,result);
     $("more").onclick=()=>build(cur.id,cur); $("tohome").onclick=home; return;
   }
-  if(cur.examFollowup){
+  if(cur.practiceSource){
     $("card").innerHTML=`<div class="done"><p class="ask">Gerichte oefening</p>
       <p>${right?"De nieuwe vraag ging goed.":"Je oefent dit morgen opnieuw met een andere vraag."}</p></div>
       <button type="button" class="btn wide" id="focusdone">Naar Mijn dag</button>`;
