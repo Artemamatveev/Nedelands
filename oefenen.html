@@ -2817,7 +2817,7 @@ function drawProfile(){
   n.onchange=l.onchange=()=>{S.me={...(S.me||{}),name:n.value.trim().slice(0,40),last:l.value.trim().slice(0,60)};save();syncMeta();drawProfile()};
   // Offline: the pictures and the dictionary at once, when the learner asks for it (no background download on mobile data)
   const off=$("poff");
-  if(off){off.hidden=!("serviceWorker" in navigator&&navigator.serviceWorker.controller)||NATIVE;off.onclick=warmAll;
+  if(off){off.hidden=!("serviceWorker" in navigator&&navigator.serviceWorker.controller);off.onclick=warmAll;
     $("poffd").textContent=offAsked?"Bezig met downloaden. Je kunt gewoon verder oefenen.":"Schilderijen, foto's en het woordenboek: ongeveer 37 MB. Liefst via wifi."}
   // the exam dates, one row per exam part of this level (S.me.exams): a countdown on Examen and in the Plus screen;
   // an empty field clears that part. The first own date retires the older single date (S.me.exam).
