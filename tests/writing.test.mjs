@@ -188,3 +188,21 @@ test('Profiel has no results tile any more (removed at the user\'s wish); the sc
   assert.equal(a.document.querySelector('#myres'),null);
   assert.equal(a.run('typeof drawResults'),'undefined');
 });
+
+test('A2 writing exam can retry the same draft after a timeout and record the result once',async()=>{
+  const mock=checker();
+  let attempts=0;
+  const a=await app({fetch:(url,options)=>{
+    if(url==='/api/check'&&++attempts===1)return new Response('{"error":"timeout"}',{status:504});
+    return mock.fetch(url,options);
+  }});
+  await submit(a);
+  assert.equal(a.run('!!getDraft("wr",true)'),true);
+  assert.equal(a.run('S.res?.wr?.length || 0'),0);
+  a.document.querySelector('#retrycheck').click();
+  await a.flush();
+  assert.equal(attempts,2);
+  assert.equal(a.run('!!getDraft("wr",true)'),false);
+  assert.equal(a.run('S.res.wr.length'),1);
+  assert.equal(a.run('Object.values(S.xs).every(n=>n===1)'),true);
+});

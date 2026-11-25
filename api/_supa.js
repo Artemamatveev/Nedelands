@@ -417,3 +417,24 @@ export async function joinGroup(uid, code) {
 export const makeGroup = (g) => rpcCall("make_group", { g_name: g.name, g_level: g.level, g_seats: g.seats, g_until: g.until, g_teacher: g.teacher });
 export const groupList = () => rpcCall("group_list", {});
 export const teacherOverview = (mail) => rpcCall("teacher_overview", { mail });
+
+// Only the service can access these receipts. The request answers themselves are represented by an HMAC.
+export const gradingDigest = body => createHmac("sha256", SERVICE).update(JSON.stringify(body)).digest("hex");
+export async function gradingReceipt(owner, id, digest, action, result) {
+  const headers = { apikey: SERVICE, authorization: `Bearer ${SERVICE}`, "content-type": "application/json" };
+  const key = new URLSearchParams({ owner: "eq." + owner, request_id: "eq." + id, digest: "eq." + digest });
+  const claim = action === "claim";
+  if (action === "discard") key.set("result", "is.null");
+  if (action === "save") headers.Prefer = "return=representation";
+  if (action === "read") key.set("select", "result");
+  const r = await fetch(`${URL_}/rest/v1/${claim ? "rpc/claim_grading_receipt" : "grading_receipts?" + key}`, {
+    method: claim ? "POST" : action === "save" ? "PATCH" : action === "read" ? "GET" : "DELETE",
+    headers,
+    body: claim ? JSON.stringify({ p_owner: owner, p_id: id, p_digest: digest }) :
+      action === "save" ? JSON.stringify({ result }) : undefined,
+  });
+  if (!r.ok) throw new Error("Grading receipt unavailable");
+  if (claim) return r.json();
+  if (action === "read") return (await r.json())[0]?.result;
+  if (action === "save" && (await r.json()).length !== 1) throw new Error("Grading receipt not saved");
+}

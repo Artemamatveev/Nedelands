@@ -54,8 +54,10 @@ the last task shows “Antwoorden inleveren”. Before advancing, “Opnieuw opn
 answer-time limit, without restarting thinking time or the overall exam clock. The previous answer remains until a new
 nonempty transcript/recording replaces it at the same question index; an empty failed retake explicitly retains the old
 answer. Superseded audio URLs are released. The retry control is hidden while recording and on each new question.
-Navigation/late native events cannot complete a different task or append an answer twice. Natural MediaRecorder stop also completes the active take. Recordings and transcripts stay in memory only. "Zeg het na" (free, no Claude call):
+Navigation/late native events cannot complete a different task or append an answer twice. Natural MediaRecorder stop also completes the active take. Recordings stay in memory only. A2 speaking exam transcripts are saved in a local draft until grading succeeds or the learner discards the draft. "Zeg het na" (free, no Claude call):
 the learner reads the example or corrected answer aloud and the words speech recognition missed are marked.
+
+When checking fails temporarily, single-task writing practice keeps the text editable and speaking practice retries the same transcript. Writing and speaking exam results offer a retry with the submitted answers, without registering another exam attempt. Speaking practice transcripts remain available in the open exercise only. The local A2 exam draft also restores the original deadline and question order after reopening.
 
 Making new Lezen and Luisteren material with Claude was removed (it cost a call per tap and its
 result was invisible). Items made earlier stay in `S.gen` and are still added by `addGenerated()`.
