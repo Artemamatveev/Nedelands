@@ -11,7 +11,7 @@ back to either. After it comes then the learner's own text with every error mark
 `ownHTML()`: Claude's `wrong` is looked up in the text; one it can't find is only in the list), the numbered list of
 errors (`errsHTML()`: wrong → right, why) and the corrected text.
 
-"Schrijf het nog een keer" (`redo()`, `redoItems()`: Schrijven and Schrijven B1, in practice and per task after a proefexamen,
+In practice, a checked text with corrections goes on with "Schrijf de verbeteringen" (`practiseCorrections()`: each correction written from memory, compared on the phone). After a proefexamen each task keeps "Schrijf het nog een keer" (`redo()`, `redoItems()`: Schrijven and Schrijven B1, in practice and per task after a proefexamen,
 not in Spreken, and only when the corrected text differs): the learner gets their own text back to correct, without the
 corrected text on screen (the errors are in a fold), and "Vergelijk" marks it against Claude's corrected text on the phone
 (`diffHTML()`: struck through = take out, green = add; capitals and punctuation count; a word in the wrong place counts as
