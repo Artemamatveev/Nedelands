@@ -27,6 +27,7 @@ async function handler(options={}){
     bonusFor:async()=>{if(options.bonusFails)throw Error('down');return options.bonus??0},
     PLUS:60,plusOn:!!options.pay,
     PLUS_MONTH:200,OPUS_DAY:2,monthOf:()=>'2026-11-01',amsterdamDay:()=>'2026-11-25',
+    gradingDigest:JSON.stringify,gradingReceipt:options.receipt||(()=>{throw Error("unexpected receipt")}),
     useGuard:async(k,_d,cost,lim)=>{guards.push([k,cost]);if(options.guardFails)throw Error('down');const g=options.guard?.[k[0]];return g??lim-cost},
 
     plusFor:async()=>{if(options.plusFails)throw Error('down');return options.plan??null},
@@ -37,10 +38,12 @@ async function handler(options={}){
   const supa=new vm.SyntheticModule(Object.keys(values),function(){for(const [key,value]of Object.entries(values))this.setExport(key,value)},{context});
   const module=new vm.SourceTextModule(fs.readFileSync(new URL('api/check.js',root),'utf8'),{context});
   await module.link(name=>name==='@anthropic-ai/sdk'?sdk:supa);await module.evaluate();
-  const req={method:'POST',headers:{host:'example.test',origin:'https://example.test'},body:{...(options.part?{part:options.part}:{}),tasks:Array.from({length:options.tasksCount||1},()=>({...(options.part?{kind:options.kind||'z'}:{}),task:'Stuur een bericht',text:'Ik kom later. Personal test content.'}))}};
-  const res={statusCode:200,status(n){this.statusCode=n;return this},json(body){this.body=body;return this}};
+  const req={method:'POST',headers:{host:'example.test',origin:'https://example.test'},body:{...(options.requestId?{requestId:options.requestId}:{}),...(options.part?{part:options.part}:{}),tasks:Array.from({length:options.tasksCount||1},()=>({...(options.part?{kind:options.kind||'z'}:{}),task:'Stuur een bericht',text:'Ik kom later. Personal test content.'}))}};
+  const response=()=>({statusCode:200,setHeader(){},status(n){this.statusCode=n;return this},json(body){this.body=body;return this}});
+  const res=response();
   await module.namespace.default(req,res);
-  return {res,usage,quotas,logs,lims,periods,stamps,modelCalls,models,spends};
+  const retry=options.repeat?await module.namespace.default(req,response()):null;
+  return {res,retry,usage,quotas,logs,lims,periods,stamps,modelCalls,models,spends};
 }
 
 test('Missing account configuration blocks the paid provider',async()=>{
@@ -172,4 +175,29 @@ test('Invited friends add their extra checks to the free allowance; a failed loo
   assert.deepEqual((await handler({bonus:6})).lims,[13]);
   assert.deepEqual((await handler({bonusFails:true})).lims,[7]);
   assert.deepEqual((await handler({bonus:6,pay:true,plan:{status:'active'}})).lims,[60]);
+});
+
+test('An authenticated exam retry returns its original grade without another debit or provider call',async()=>{
+  let cached;
+  const actions=[];
+  const r=await handler({part:'sp',requestId:'56143131-9e52-435c-a52a-2697864bf313',repeat:true,receipt:async(owner,id,digest,action,result)=>{
+    assert.equal(owner,'test-user');
+    assert.equal(id,'56143131-9e52-435c-a52a-2697864bf313');
+    actions.push(action);
+    if(action==='save')cached=result;
+    if(action==='claim')return cached?{state:'done',result:cached}:{state:'new'};
+  }});
+  assert.deepEqual(actions,['claim','save','claim']);
+  assert.deepEqual(JSON.parse(JSON.stringify(r.retry.body)),JSON.parse(JSON.stringify({...r.res.body,replayed:true})));
+  assert.equal(r.modelCalls,1);
+  assert.deepEqual(r.usage,[1]);
+});
+
+test('A concurrent grading retry and a failed receipt store cannot claim a second check',async()=>{
+  const requestId='56143131-9e52-435c-a52a-2697864bf313';
+  const pending=await handler({requestId,receipt:async()=>({state:'pending'})});
+  assert.equal(pending.res.statusCode,409);assert.equal(pending.res.body.error,'check_pending');
+  assert.deepEqual(pending.usage,[]);assert.equal(pending.modelCalls,0);
+  const failed=await handler({requestId,receipt:async()=>{throw Error('unavailable')}});
+  assert.equal(failed.res.statusCode,503);assert.deepEqual(failed.usage,[]);assert.equal(failed.modelCalls,0);
 });

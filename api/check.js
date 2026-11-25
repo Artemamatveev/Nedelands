@@ -13,7 +13,7 @@
 // With accounts set up (Supabase, see _supa.js) only a signed-in user may grade, CHECK_LIMIT checks a day;
 // the answer then also has `left`, the checks left today. With Bittertalen Plus (api/plus.js) PLUS_LIMIT a day.
 import Anthropic from "@anthropic-ai/sdk";
-import { accounts, caller, checkCost, useChecks, LIMIT, PLUS, plusOn, plusFor, coversLevel, sameOrigin, FREE, visitor, useFree, useTotal, addSpend, bonusFor, useGuard, PLUS_MONTH, OPUS_DAY, monthOf, amsterdamDay } from "./_supa.js";
+import { accounts, caller, checkCost, useChecks, LIMIT, PLUS, plusOn, plusFor, coversLevel, sameOrigin, FREE, visitor, useFree, useTotal, addSpend, bonusFor, useGuard, PLUS_MONTH, OPUS_DAY, monthOf, amsterdamDay, gradingDigest, gradingReceipt } from "./_supa.js";
 
 // Created only when the key is set, so a missing key gives a clear error instead of a crash
 // (trimmed: a key pasted into the dashboard with a trailing newline breaks the request header)
@@ -203,13 +203,41 @@ export default async function handler(req, res) {
   const input = Array.isArray(req.body?.tasks) ? req.body.tasks.slice(0, sp ? 16 : wb ? 12 : 4) : [];
   if (!input.length) return res.status(400).json({ error: "no_tasks" });
 
+  const user = await caller(req).catch(() => null);
+  const id = req.body?.requestId;
+  const validId = typeof id === "string" && /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(id);
+  if (!user || !validId) return gradeRequest(req, res, { user, input, sb, sp, wb, t0 });
+
+  const digest = gradingDigest([req.body?.part || "", input]);
+  res.setHeader("Cache-Control", "private, no-store");
+  let receipt;
+  try { receipt = await gradingReceipt(user.id, id, digest, "claim"); }
+  catch { return res.status(503).json({ error: "quota_unavailable" }); }
+  if (receipt?.state === "done") return res.status(200).json({ ...receipt.result, replayed: true });
+  if (receipt?.state === "pending") return res.status(409).json({ error: "check_pending" });
+  if (receipt?.state !== "new") return res.status(503).json({ error: "quota_unavailable" });
+  let completed = false;
+  try {
+    return await gradeRequest(req, res, { user, input, sb, sp, wb, t0, save: async result => {
+      try { await gradingReceipt(user.id, id, digest, "save", result); }
+      catch (error) {
+        const saved = await gradingReceipt(user.id, id, digest, "read").catch(() => null);
+        if (!saved) throw error;
+      }
+      completed = true;
+    } });
+  } finally {
+    if (!completed) await gradingReceipt(user.id, id, digest, "discard").catch(() => {});
+  }
+}
+
+async function gradeRequest(req, res, { user, input, sb, sp, wb, t0, save }) {
   // Accounts: who is asking, and take the checks before calling Claude (given back if grading fails)
   let uid = null, left, lim = LIMIT, plus = false, period = "once";
   const checkedAt = new Date().toISOString();
   const cost = checkCost(input.length);
   let who = null, free;
   {
-    const user = await caller(req).catch(() => null);
     if (!user) {
       // Without a login: a few single tasks a day for free (no proefexamens), counted per visitor
       who = FREE && cost === 1 ? visitor(req, res) : "";
@@ -308,7 +336,7 @@ export default async function handler(req, res) {
     const text = response.content.find((b) => b.type === "text")?.text;
     const result = JSON.parse(text);
     const out = result.tasks.slice(0, tasks.length);
-    return res.status(200).json({
+    const payload = {
       left: who ? free : left,
       limit: who ? FREE : lim,
       period: who ? "once" : period,
@@ -319,7 +347,9 @@ export default async function handler(req, res) {
         const scores = clampScores(t.scores, SC);
         return { ...t, scores, passed: sb ? sbPassed(scores, SC) : sp ? t.passed : wb ? wbPassed(scores, SC) : wrPassed(scores) };
       }),
-    });
+    };
+    if (save) await save(payload);
+    return res.status(200).json(payload);
   } catch (error) {
     await giveBack();
     if (error instanceof Anthropic.AuthenticationError) return res.status(503).json({ error: "not_configured" });

@@ -1105,7 +1105,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
 <script src="/study/language-v1.js?v=e94426af48"></script>
 <script src="/study/progress-v1.js?v=d7e5e64206"></script>
 <script src="/study/writing-v1.js?v=e5690fd786"></script>
-<script src="/data/knm.js?v=50777b478a"></script>
+<script src="/data/knm.js?v=4afdff26a4"></script>
 <script src="/data/a2.js?v=56c32c3473"></script>
 <script src="/data/b1.js?v=e9701bd331"></script>
 <script src="/data/extra.js?v=3af5b55d46"></script>
@@ -1927,9 +1927,20 @@ function utter(l,done,start){const m=l.match(/^([A-C]): (.*)$/),u=new SpeechSynt
 function speak(t){stopSpeak();const n=sayN,L=String(t).split("\n").map(l=>l.trim()).filter(Boolean),K=sayKeys(L),has=i=>!!VOICE&&VOICE.has(K[i]);
   try{if(!L.some((l,i)=>has(i))){if(canSpeak)L.forEach(l=>utter(l));return}}catch(e){return}
   sayOn=true;
-  const next=i=>{if(n!==sayN)return;if(i>=L.length){sayOn=false;return}const l=L[i],go=()=>next(i+1),miss=()=>{if(n!==sayN)return;try{canSpeak?utter(l,go):go()}catch(e){go()}};
+  const next=i=>{
+    if(n!==sayN)return;
+    if(i>=L.length){sayOn=false;return}
+    let fellBack=false,advanced=false;
+    const go=()=>{if(n!==sayN||advanced)return;advanced=true;next(i+1)};
+    const miss=()=>{
+      if(n!==sayN||advanced||fellBack)return;
+      fellBack=true;
+      try{canSpeak?utter(L[i],go):go()}catch(e){go()}
+    };
     if(!has(i))return miss();
-    sayA.onended=()=>setTimeout(go,250);sayA.onerror=miss;sayA.src="/audio/"+K[i]+".mp3";sayA.play().catch(miss)};
+    sayA.onended=()=>{if(!fellBack)setTimeout(go,250)};
+    sayA.onerror=miss;sayA.src="/audio/"+K[i]+".mp3";sayA.play().catch(miss)
+  };
   next(0)}
 // Every text speak() gets from the app's own material, for audio/build.mjs: {t, k} with k the kind of speech,
 // which picks the voice: ls a fragment to listen to, q a question or option read aloud, sp a Spreken question,
@@ -2193,13 +2204,14 @@ function spNext(q,r){
     cur.ans[pos]={q,text:r.text,url:r.url};
     if(previous?.url&&previous.url!==r.url)URL.revokeObjectURL(previous.url);
   }else $("recp").innerHTML=`<p class="ask">Je vorige antwoord</p>${previous.url?`<audio controls src="${previous.url}"></audio>`:`<div class="sample">${esc(previous.text)}</div>`}`;
+  persistSpeaking();
   $("rect").textContent="Klaar";$("recm").style.width="0%";
   $("recn").innerHTML=`<b>${has?"✓ Antwoord klaar":"Geen spraak herkend"}</b><br>${esc(r.note||"")}${kept?"Je vorige antwoord is bewaard. Probeer opnieuw of ga verder.":has?"Je antwoord is bewaard voor dit proefexamen.":"Er is geen tekst voor de beoordeling. Neem opnieuw op of ga verder."}`;
   $("spredo").hidden=false;
-  const b=$("recb"); b.textContent=pos<queue.length-1?"Volgende vraag →":"Antwoorden inleveren";b.className="btn wide";b.disabled=false;b.onclick=()=>{b.disabled=true;pos++;show()};
+  const b=$("recb"); b.textContent=pos<queue.length-1?"Volgende vraag →":"Antwoorden inleveren";b.className="btn wide";b.disabled=false;b.onclick=()=>{b.disabled=true;pos++;persistSpeaking();show()};
 }
 let tmr=null,tEnd=0;
-function tick(){const s=Math.max(0,Math.round((tEnd-Date.now())/1000));$("timer").textContent=tEnd?Math.floor(s/60)+":"+String(s%60).padStart(2,"0"):"";if(tEnd&&s<=0&&cur&&cur.exam){if(cur.nav)return submitExam();const q=queue[pos];if(q&&q.type==="write"&&cur.ans.length===pos)cur.ans.push(grab(q));pos=queue.length;finish()}}
+function tick(){const s=Math.max(0,Math.round((tEnd-Date.now())/1000));$("timer").textContent=tEnd?Math.floor(s/60)+":"+String(s%60).padStart(2,"0"):"";if(tEnd&&s<=0&&cur&&cur.exam){if(cur.part==="sp")return speakingReview();if(cur.nav)return submitExam();const q=queue[pos];if(q&&q.type==="write"&&cur.ans.length===pos)cur.ans.push(grab(q));pos=queue.length;finish()}}
 function clock(min){clearInterval(tmr);tmr=null;tEnd=min?Date.now()+min*6e4:0;tick();if(min)tmr=setInterval(tick,1000)}
 WR.forEach((p,i)=>ITEMS.push({sec:"wr",k:"wr|"+i,ord:i,type:"write",label:p[2]?"Schrijfopdracht: formulier":"Schrijfopdracht",big:p[0],sub:"",right:p[1],fields:p[2],open:p[3]}));
 // Schrijven B1: mx = the points per criterion of this kind of task (as api/check.js scores them), 47 in a proefexamen of 8 + 1 + 3
@@ -2661,11 +2673,11 @@ const PASS=.7;
 const PASSP={lz:19/25,ls:19/25,knm:28/40,wb:25/47}, passOf=k=>PASSP[k]||PASS, passPc=k=>Math.round(passOf(k)*100);
 // All completed proefexamen results per part (S.res): {at, pc, nw}, nw = % of the questions that were new (missing in older results).
 // The displayed percentage averages all saved attempts; readiness still uses the last three fresh attempts.
-function keepRes(k,pc,writing){
+function keepRes(k,pc,writing,id){
   let result;
   if(k){
     track("done_"+k);S.res=S.res||{};
-    result={id:crypto.randomUUID(),at:Date.now(),pc,nw:cur.nw,...(writing?{writing}:{})};
+    result={id:id||crypto.randomUUID(),at:Date.now(),pc,nw:cur.nw,...(writing?{writing}:{})};
     S.res[k]=(S.res[k]||[]).concat(result);
   }
   save();return result;
@@ -2916,6 +2928,30 @@ function stats(){
   document.querySelectorAll("#statlist button").forEach(b=>b.onclick=()=>{const o=gs[b.dataset.i];
     build("custom",{id:"custom",t:o.name,n:10,pool:()=>o.items.slice().sort((a,b)=>weak(b)-weak(a))})});
 }
+const speakingDraftKey=(owner=progressOwner)=>"ww-speaking:"+owner+":exam:sp";
+function speakingDraft(){
+  const entry=readLocal(speakingDraftKey());
+  if(!entry||typeof entry.id!=="string"||!Array.isArray(entry.keys)||entry.keys.length!==EX.sp.n||
+     new Set(entry.keys).size!==entry.keys.length||!entry.keys.every(key=>ITEMS.some(q=>q.k===key&&q.sec==="sp"))||
+     !Number.isInteger(entry.pos)||entry.pos<0||entry.pos>entry.keys.length||
+     !Number.isFinite(entry.end)||entry.end<=0||!Array.isArray(entry.texts)||
+     entry.texts.length>entry.keys.length||entry.texts.some(text=>text!==null&&typeof text!=="string"))return null;
+  if(S.res?.sp?.some(result=>result.id===entry.id)){lsSet(speakingDraftKey(),null);return null}
+  return entry;
+}
+function persistSpeaking(){
+  if(cur?.part!=="sp"||!cur.spDraft||cur.spDraft.owner!==progressOwner)return;
+  const {owner,id,end,submitted}=cur.spDraft;
+  lsSet(speakingDraftKey(owner),JSON.stringify({
+    id,end,submitted,pos,nw:cur.nw,keys:queue.map(q=>q.k),
+    texts:cur.ans.map(answer=>answer?.text||null)
+  }));
+}
+function speakingReview(){
+  clock(0);hush();pos=queue.length;persistSpeaking();head();
+  $("card").innerHTML=`<p class="note">${cur.spDraft.end<=Date.now()?"De tijd is voorbij. ":""}Je kunt je bewaarde antwoorden inleveren.</p><button class="btn wide" id="spdeliver">Antwoorden inleveren</button>`;
+  $("spdeliver").onclick=finish;
+}
 const draftKey=(section,exam,slot="")=>"ww-writing:"+progressOwner+":"+(exam?"exam:":"practice:")+section+(slot?":"+slot:"");
 function getDraft(section,exam,slot=""){
   const draft=readLocal(draftKey(section,exam,slot));
@@ -2938,7 +2974,7 @@ function writingDrafts(){
 function persistWriting(){
   const q=queue[pos];if(q?.type!=="write" || cur.sent)return;
   const key=draftKey(q.sec,!!cur.exam,cur.draftSlot),entry={
-    at:Date.now(), keys:queue.map(q=>q.k), pos, right, end:tEnd, nw:cur.nw, plan:planId,
+    at:Date.now(), keys:queue.map(q=>q.k), pos, right, end:tEnd, nw:cur.nw, plan:planId, gradeId:cur.gradeId,
     pick:cur.nav?cur.pick:cur.written||[], sentences:(cur.zs||[]).map(z=>({key:z.q.k,text:z.text}))
   };
   try{localStorage.setItem(key,JSON.stringify(entry))}
@@ -2972,18 +3008,26 @@ function build(id,custom){
   if(!queue.length)queue=shuffle(pool.slice()).slice(0,cur.n);
   if(!cur.keep)shuffle(queue);
   queue=queue.map(q=>({...q,retry:false}));
+  const spokenDraft=cur.part==="sp"?speakingDraft():null;
+  if(cur.part==="sp")cur.spDraft={owner:progressOwner,id:spokenDraft?.id||crypto.randomUUID(),end:spokenDraft?.end||Date.now()+cur.min*60000,submitted:!!spokenDraft?.submitted};
   const first=queue[0], draft=first?.type==="write" && getDraft(first.sec,!!cur.exam,cur.draftSlot);
   pos=0;right=0;
   if(draft){
     queue=draft.keys.map(key=>({...ITEMS.find(q=>q.k===key),retry:false}));
     pos=Math.min(draft.pos,queue.length-1);right=draft.right||0;planId=draft.plan||null;
-    cur.nw=draft.nw;cur.written=draft.pick||[];
+    cur.nw=draft.nw;cur.gradeId=draft.gradeId;cur.written=draft.pick||[];
     if(cur.nav)cur.pick=draft.pick||[];
     cur.zs=(draft.sentences||[]).map(z=>({q:queue.find(q=>q.k===z.key),text:z.text})).filter(z=>z.q)
       .map(z=>({...z,task:wrTask(z.q)}));
   }
+  if(spokenDraft){
+    queue=spokenDraft.keys.map((key,i)=>({...ITEMS.find(q=>q.k===key),retry:false,label:`Deel ${Math.floor(i/4)+1} van 4: ${SPDEEL[Math.floor(i/4)]}`}));
+    cur.ans=spokenDraft.texts.map((text,i)=>({q:queue[i],text:text||"",url:""}));
+    cur.nw=spokenDraft.nw;pos=spokenDraft.pos;
+  }
+  if(cur.exam&&cur.write)cur.gradeId||=crypto.randomUUID();
   total=queue.length;
-  const remaining=draft?.end?Math.max(0,(draft.end-Date.now())/60000):cur.min;
+  const remaining=cur.spDraft?Math.max(0,(cur.spDraft.end-Date.now())/60000):draft?.end?Math.max(0,(draft.end-Date.now())/60000):cur.min;
   cur.expired=!!(draft && cur.exam && remaining===0);
   clock(cur.exam?remaining:0);
   ["home","stats","lib","read","media","story","hist","talk"].forEach(x=>$(x).hidden=true);closePop();stopMedia();$("play").hidden=false;window.scrollTo(0,0);
@@ -2992,6 +3036,10 @@ function build(id,custom){
   b.onclick=()=>{if(cur.exam&&pos<queue.length&&!b.classList.contains("arm")){b.classList.add("arm");b.textContent="Stoppen?";b.t=setTimeout(x,3000);return}
     x();leave()};
   if(draft && cur.exam && remaining===0)return overview();
+  if(cur.spDraft){
+    if(!remaining||pos>=queue.length)return speakingReview();
+    persistSpeaking();
+  }
   show();
 }
 // Practising is a focus screen: no painting, only ✕ (back to where you came from), the progress, the count and the clock
@@ -3055,6 +3103,11 @@ function show(){
     if($("sayq"))$("sayq").onclick=()=>speak(spoken(q.big));
     if(cur.exam){const go=()=>{$("spredo").hidden=true;return listen(SR?"say":"rec",r=>spNext(q,r),q.spk)};
       const begin=()=>{stopPrep();return go()};$("recb").onclick=begin;$("spredo").onclick=begin;
+      if(cur.part==="sp"&&cur.ans[pos]?.text){
+        const text=cur.ans[pos].text;
+        $("recp").innerHTML=`<p class="ask">Je bewaarde antwoord</p><div class="sample">${esc(text)}</div>`;
+        spNext(q,{text,url:""});return;
+      }
       if(canSpeak)speak(spoken(q.big)); // the exam asks the question aloud
       if(q.sec==="sb")prepThen(q,go);return}
     $("recb").onclick=()=>listen("rec",spTake,q.spk); $("rev").onclick=()=>reveal(q);
@@ -3140,7 +3193,7 @@ function examGate(e,preview=false){
     x.previousElementSibling.setAttribute("aria-expanded","false");x.remove()
   });
   const row=document.querySelector(`#exam [data-e="${e}"]`),d=document.createElement("div"); d.className="gate";
-  const cost=examCheckLimit(e), exam=EX[e], draft=isWr(e)&&getDraft(e,true);
+  const cost=examCheckLimit(e), exam=EX[e], draft=e==="sp"?speakingDraft():isWr(e)&&getDraft(e,true);
   const countLabel=isWr(e)||e==="sp"||e==="sb"?"opdrachten":"vragen";
   const countPrefix=["lz","l1","ls","lb"].includes(e)?"<span>Maximaal</span> ":"";
   const details=preview?`<h3 class="sr-only" id="exam-preview-title"><span>Proefexamen</span> · <span>${PART[e]}</span></h3>
@@ -3150,13 +3203,19 @@ function examGate(e,preview=false){
     :"Je bent niet ingelogd. Dan kijkt Bittertalen je antwoorden niet na, en zie je aan het eind alleen de voorbeeldantwoorden."}</p>`:"";
   d.innerHTML=`${details}${warning}<div class="two"><button class="ghost" id="gback">Terug</button>
     ${cost&&!acc.user?`<button class="ghost" id="glog">Inloggen</button>`:""}
-    <button class="btn" id="ggo">${draft?"Verder met je concept":cost?"Toch beginnen":"Start proefexamen"}</button></div>`;
+    <button class="btn" id="ggo">${draft?"Verder met je concept":cost?"Toch beginnen":"Start proefexamen"}</button></div>
+    ${draft&&e==="sp"?'<button class="ghost wide" id="discardsp">Concept wissen</button>':""}`;
   d.id="exam-preview";
   row.after(d);row.setAttribute("aria-expanded","true");d.scrollIntoView({block:"nearest"});
   $("ggo").focus({preventScroll:true});
   $("gback").onclick=()=>{d.remove();row.setAttribute("aria-expanded","false");row.focus()};
   if($("glog"))$("glog").onclick=()=>setTab("profiel");
   $("ggo").onclick=()=>startExam(e,1);
+  const discard=$("discardsp");
+  if(discard)discard.onclick=()=>{
+    if(!discard.dataset.confirm){discard.dataset.confirm="1";discard.textContent="Concept definitief wissen";return}
+    lsSet(speakingDraftKey(),null);examGate(e,preview);
+  };
 }
 // Proefexamen Lezen, Luisteren, KNM and Schrijven: go back to any question or task, as on the exam; marked when handed in
 const picked=i=>{const p=cur.pick[i];return p!=null&&(typeof p!=="object"||!!(p.t.trim()||p.f.some(x=>x.trim())))};
@@ -3317,17 +3376,18 @@ function keepErrs(errs){
   errs.forEach(e=>{if(e&&e.wrong&&e.right&&e.wrong!==e.right&&String(e.wrong).length<90&&String(e.right).length<90&&!S.errs.some(x=>x.r===e.right))S.errs.unshift({w:String(e.wrong),r:String(e.right),y:String(e.why||"")})});
   S.errs=S.errs.slice(0,40);
 }
-async function nakijken(tasks,part){
+async function nakijken(tasks,part,requestId){
   const h=await authHead();
   let r;
-  try{r=await fetch("/api/check",{method:"POST",headers:{"Content-Type":"application/json",...h},body:JSON.stringify(part?{part,tasks}:{tasks})})}
+  try{r=await fetch("/api/check",{method:"POST",headers:{"Content-Type":"application/json",...h},body:JSON.stringify({tasks,...(part?{part}:{}),...(requestId?{requestId}:{})})})}
   catch{throw{code:"check_connection"}};
   const j=await r.json().catch(()=>({}));
-  chkCount(j,part?["wb","sb"].includes(part)?"B1":"A2":lvl());
+  if(!j.replayed)chkCount(j,part?["wb","sb"].includes(part)?"B1":"A2":lvl());
   if(!r.ok||!Array.isArray(j.tasks))throw{code:j.error||"failed"};
   return j.tasks;
 }
 function checkRetry(code){
+  if(code==="check_pending")return "Je vorige controle loopt nog. Wacht even en probeer het opnieuw.";
   if(code==="rate_limited")return "Te veel verzoeken achter elkaar. Wacht een minuut en probeer het opnieuw.";
   if(code==="check_connection")return "Geen verbinding met Bittertalen. Je antwoord staat er nog.";
   if(code==="timeout")return noCheck(code);
@@ -3588,7 +3648,7 @@ async function examWrite(){
   const pending=card.firstElementChild;
   const active=()=>cur===exam&&!$("play").hidden&&card.firstElementChild===pending;
   try{
-    const grades=answers.length?await nakijken(answers.map(answer=>({kind:answer.q.kind,task:wrTask(answer.q),form:answer.form,text:answer.text})),exam.part==="wb"?"wb":undefined):[];
+    const grades=answers.length?await nakijken(answers.map(answer=>({kind:answer.q.kind,task:wrTask(answer.q),form:answer.form,text:answer.text})),exam.part==="wb"?"wb":undefined,exam.gradeId||=crypto.randomUUID()):[];
     if(!active())return;
     const review=reviewWriting(tasks,answers,grades), redoByTask=[];
     const byKey=new Map(answers.map((answer,i)=>[answer.q.k,{answer,grade:grades[i]}]));
@@ -3645,16 +3705,21 @@ async function examWrite(){
 async function examSpeak(){
   const exam=cur,A=exam.ans,card=$("card");
   const foot=`<div class="two"><button class="ghost" id="tohome">Alle onderdelen</button><button class="btn" id="more">Nog een keer</button></div>`;
-  const bind=()=>{$("more").onclick=()=>build(cur.id,cur);$("tohome").onclick=home};
+  const clear=()=>{
+    if(!exam.spDraft)return;
+    const key=speakingDraftKey(exam.spDraft.owner);
+    if(readLocal(key)?.id===exam.spDraft.id)lsSet(key,null);
+  };
+  const bind=()=>{$("more").onclick=()=>{clear();build(exam.id,exam)};$("tohome").onclick=home};
   const own=(a,errs)=>`<p class="ask">Jouw antwoord</p>${a.url?`<audio controls src="${a.url}"></audio>`:""}${a.text||!a.url?`<div class="sample own">${markErrs(a.text,errs)||"(niets verstaan)"}</div>`:""}`;
   const plain=(msg,retry=false)=>{card.innerHTML=(retry?retryCheckHTML(msg):`<p class="note">${msg}</p>`)+A.map((a,i)=>`<h2>Vraag ${i+1}</h2><p class="note">${a.q.big}</p>${own(a)}<p class="ask">Voorbeeld</p><div class="sample">${esc(a.q.right)}</div>`).join("")+foot;bind();if(retry)$("retrycheck").onclick=examSpeak};
-  if(!A.length){card.innerHTML=`<p class="note">Je hebt geen vraag beantwoord.</p>`+foot;return bind()}
-  if(!A.some(a=>a.text))return plain("Luister naar je antwoorden en vergelijk ze met de voorbeelden.");
+  if(!A.length){clear();card.innerHTML=`<p class="note">Je hebt geen vraag beantwoord.</p>`+foot;return bind()}
+  if(!A.some(a=>a.text)){clear();return plain("Luister naar je antwoorden en vergelijk ze met de voorbeelden.")}
   card.innerHTML=`<p class="note">Ik kijk je ${A.length} antwoorden na… Dit duurt een of twee minuten.</p>`;
   const pending=card.firstElementChild;
-  const active=()=>cur===exam&&!$("play").hidden&&card.firstElementChild===pending;
+  const active=()=>cur===exam&&(!exam.spDraft||exam.spDraft.owner===progressOwner)&&!$("play").hidden&&card.firstElementChild===pending;
   try{
-    const T=await nakijken(A.map(a=>({kind:a.q.kind,task:spTask(a.q),text:a.text})),cur.part==="sb"?"sb":"sp");
+    const T=await nakijken(A.map(a=>({kind:a.q.kind,task:spTask(a.q),text:a.text})),cur.part==="sb"?"sb":"sp",exam.spDraft?.id||(exam.gradeId||=crypto.randomUUID()));
     if(!active())return;
     let good=0,pts=0,scored=0;
     const body=A.map((a,i)=>{const t=T[i]||{},errs=Array.isArray(t.errors)?t.errors:[],pt=spPts(t);if(t.passed)good++;if(pt!=null){pts+=pt;scored++}keepErrs(errs);
@@ -3663,10 +3728,10 @@ async function examSpeak(){
         <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(a.q.right)}</div></details>`}).join("");
     // score: points of all 16 questions (an unanswered one counts 0); without points (older server) the share of good answers
     const max=queue.reduce((s,q)=>s+(q.mx?mxPts(q.mx):SPMAX),0), pc=scored?Math.round(pts/max*100):Math.round(good/queue.length*100), pass=pc>=passPc(cur.part);
-    keepRes(cur.part,pc);
+    keepRes(cur.part,pc,undefined,exam.spDraft?.id);clear();
     card.innerHTML=`<div class="done"><p class="ask">${cur.t}: uitslag</p><div class="big">${pc}%</div><p class="ru">${scored?`${pts} van ${max} punten, `:""}${good} van ${queue.length} antwoorden voldoende${A.length<queue.length?`; ${queue.length-A.length} ${queue.length-A.length===1?"vraag":"vragen"} niet beantwoord`:""}</p></div>
       <p><b class="${pass?"good":"bad"}">${pass?"Oefendoel bereikt":"Meer oefenen"}</b></p>
-      <p class="note">Het oefendoel is ${passPc(cur.part)}%. Dit beoordeelt alleen je uitgeschreven antwoord. Uitspraak en tempo tellen op het examen ook mee.</p>`+(pass?"":examOffer())+body+foot; bind();
+      <p class="note">Het oefendoel is ${passPc(cur.part)}%. Deze score gaat over je uitgeschreven antwoorden. Uitspraak en vloeiendheid zijn niet beoordeeld.</p>`+(pass?"":examOffer())+body+foot; bind();
   }catch(e){
     if(!active())return;
     const c=e&&e.code,retry=checkRetry(c);
@@ -3675,7 +3740,8 @@ async function examSpeak(){
   }
 }
 function finish(){
-  if(cur.exam){S.xs=S.xs||{};queue.forEach(q=>S.xs[q.k]=(S.xs[q.k]||0)+1)}
+  if(cur.exam&&!cur.spDraft?.submitted){S.xs=S.xs||{};queue.forEach(q=>S.xs[q.k]=(S.xs[q.k]||0)+1)}
+  if(cur.spDraft){cur.spDraft.submitted=true;persistSpeaking()}
   complete();
   head(); $("bar").style.width="100%"; $("mode").hidden=true; clock(0); hush();
   if(cur.exam&&cur.write)return examWrite();

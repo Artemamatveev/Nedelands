@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {app} from './app-harness.mjs';
+import {app,storage} from './app-harness.mjs';
 
 function speech(){
   const instances=[];
@@ -82,7 +82,7 @@ test('Speaking MediaRecorder natural stop completes the answer and releases the 
   assert.match(a.document.getElementById('recb').textContent,/Volgende vraag/);assert.equal(a.run('cur.ans.length'),1);
   assert.match(a.run('cur.ans[0].url'),/^blob:/);assert.equal(tracks[0].stopped,true);
   recorder.onstop();assert.equal(a.run('cur.ans.length'),1);
-  a.run('startExam("sp",true)');a.document.getElementById('recb').click();await a.flush();
+  a.run('lsSet(speakingDraftKey(),null);startExam("sp",true)');a.document.getElementById('recb').click();await a.flush();
   assert.equal(recorder.state,'recording');a.run('home()');
   assert.equal(recorder.state,'inactive');assert.equal(a.run('cur.ans.length'),0);
 });
@@ -155,4 +155,28 @@ test('A2 speaking practice retries grading without restarting recognition',async
   await a.flush();
   assert.deepEqual(requests,[requests[0],requests[0]]);
   assert.match(a.document.querySelector('#fb').textContent,/Voldoende/);
+});
+
+test('A2 speaking restores the current completed answer and the original deadline after reopening',async()=>{
+  const store=storage(),native=speech();
+  const a=await app({storage:store,globals:{SpeechRecognition:native.Recognition}});
+  a.run('startExam("sp",true)');
+  const initial=a.run('JSON.stringify({id:cur.spDraft.id,end:cur.spDraft.end,keys:queue.map(q=>q.k)})');
+  a.document.querySelector('#recb').click();
+  native.instances[0].result('Ik woon in Amsterdam');
+  a.document.querySelector('#recb').click();
+  native.instances[0].end();
+  const reopened=await app({storage:store});
+  reopened.run('startExam("sp",true)');
+  assert.equal(reopened.run('JSON.stringify({id:cur.spDraft.id,end:cur.spDraft.end,keys:queue.map(q=>q.k)})'),initial);
+  assert.equal(reopened.run('cur.ans[0].text'),'Ik woon in Amsterdam');
+  assert.match(reopened.document.querySelector('#recb').textContent,/Volgende vraag/);
+  reopened.document.querySelector('#recb').click();
+  assert.equal(reopened.run('pos'),1);
+  reopened.run('const expired=speakingDraft();expired.end=Date.now()-1000;lsSet(speakingDraftKey(),JSON.stringify(expired));startExam("sp",true)');
+  assert.equal(reopened.run('tEnd'),0);
+  assert.ok(reopened.document.querySelector('#spdeliver'));
+  assert.equal(reopened.run('cur.ans[0].text'),'Ik woon in Amsterdam');
+  reopened.run('openProgress("another-owner")');
+  assert.equal(reopened.run('speakingDraft()'),null);
 });
