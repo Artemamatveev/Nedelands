@@ -48,7 +48,7 @@ na", the writing check set in HTML like in the app, with the same checklist (a m
 rules); under it `#try-free` says the check can be tried for free, with `free` and `limit` from `/api/config` (`tryCopy` in `landing.js`, eight languages; hidden without them). "Veelgestelde vragen" uses native `<details>`; keep the answers true (not DUO, offline, no pass guarantee). The
 Plus and Examenpas cards carry the current prices in the HTML (for search engines and slow connections; 25 November
 2026) and are hidden only when `/api/config` answers without Plus, never when it fails. Keep those prices, `PLANS`,
-`PASSES` and the `13 weken` line in step. Under them: the 14-day money-back promise (voorwaarden.html, "Niet tevreden, geld terug";
+`PASSES`, `YEARS` (the Jaarpas card `#year-card`) and the `13 weken` line in step. Under them: the 14-day money-back promise (voorwaarden.html, "Niet tevreden, geld terug";
 refunds are made by hand in Stripe). `landing.js` is loaded as `?v=<name>`: change the name when it changes. The page looks like the app (dark only on phones and tablets, light on a computer, like the app): the
 blurred windmill behind frosted glass, white tiles with the app's shadow, a glass bar on top. The hero shows the app
 itself in a phone (`shots/app.webp`, the top of Mijn dag, taken with Playwright) in front of Vermeer's Gezicht op Delft

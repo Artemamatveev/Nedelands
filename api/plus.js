@@ -4,7 +4,7 @@
 // POST {go:"manage"} -> {url}: Stripe's customer portal (cancel, payment method, invoices)
 // Both pages are Stripe's own; the page only goes there and back (/?plus=ok, stop or back). Stripe tells api/stripe.js
 // when the subscription starts, renews or ends, and the page reads its own row of `plus`.
-import { caller, sameOrigin, plusOn, plusOf, plusFor, isPlus, stripe, priceFor, tierPortal, PORTAL, PLANS, passOn, passPrice, coversLevel } from "./_supa.js";
+import { caller, sameOrigin, plusOn, plusOf, plusFor, isPlus, stripe, priceFor, tierPortal, PORTAL, PLANS, PASS_KINDS, passPrice, coversLevel } from "./_supa.js";
 
 // Shown on Stripe's page above the pay button: access starts at once, so the right of withdrawal ends (EU rules for
 // digital content need this consent before payment). Dutch and English, as Stripe shows one text for every language.
@@ -20,7 +20,7 @@ export default async function handler(req, res) {
   if (req.method === "GET") {
     try {
       const p = await plusFor(user.id);
-      return res.status(200).json({ plus: p ? { status: p.status, until: p.until, ends: p.ends, level: p.level, ...(p.pass ? { pass: true } : {}) } : null });
+      return res.status(200).json({ plus: p ? { status: p.status, until: p.until, ends: p.ends, level: p.level, ...(p.pass ? { pass: true } : {}), ...(p.year ? { year: true } : {}) } : null });
     } catch { return res.status(502).json({ error: "failed" }); }
   }
   const go = req.body && req.body.go;
@@ -70,25 +70,26 @@ export default async function handler(req, res) {
   }
 }
 
-// POST {go:"pass", level} -> {url}: Checkout for the one-time Examenpas. Not while a subscription already covers that
+// POST {go:"pass", level, kind?} -> {url}: Checkout for the one-time Examenpas (kind "pass", the default) or Jaarpas (kind "year"). Not while a subscription already covers that
 // level (it would pay twice for the same checks). The webhook (api/stripe.js) records it once Stripe says it is paid.
 async function pass(req, res, user) {
-  if (!passOn) return res.status(503).json({ error: "not_configured" });
+  const kind = req.body.kind === "year" ? "year" : "pass";
+  if (!PASS_KINDS[kind].on()) return res.status(503).json({ error: "not_configured" });
   const level = req.body.level;
   if (level !== "A2" && level !== "B1") return res.status(400).json({ error: "invalid_plan" });
   try {
     const now = await plusFor(user.id);
     if (now && !now.pass && coversLevel(now, level)) return res.status(409).json({ error: "already" });
     const p = await plusOf(user.id);
-    const price = await passPrice(level);
+    const price = await passPrice(level, kind);
     const site = `https://${req.headers.host}`;
     const s = await stripe("checkout/sessions", {
       mode: "payment",
       line_items: [{ price: price.id, quantity: 1 }],
       ...(p && p.customer ? { customer: p.customer } : user.email ? { customer_email: user.email } : {}),
       client_reference_id: user.id,
-      metadata: { uid: user.id, level, kind: "pass" },
-      payment_intent_data: { metadata: { uid: user.id, level, kind: "pass" } },
+      metadata: { uid: user.id, level, kind },
+      payment_intent_data: { metadata: { uid: user.id, level, kind } },
       locale: "auto",
       success_url: `${site}/?plus=ok&plan=${level}`,
       cancel_url: `${site}/?plus=stop`,

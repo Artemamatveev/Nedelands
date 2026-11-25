@@ -3,6 +3,10 @@ try{const r=new URLSearchParams(location.search).get("ref");if(r&&/^[A-HJ-NP-Z2-
 const languages = ["en", "ar", "tr", "hi", "zh", "es", "ru"];
 // Dutch copy is also in the HTML so the page is readable without scripts.
 const copy = {
+  "Jaarpas": ["Year pass", "تصريح السنة", "Yıllık kart", "सालाना पास", "年度通行证", "Pase anual", "Годовой пропуск"],
+  "Een jaar Plus voor één betaling.": ["A year of Plus for one payment.", "سنة من Plus مقابل دفعة واحدة.", "Tek ödemeyle bir yıl Plus.", "एक भुगतान में एक साल का Plus।", "一次付款享一年 Plus。", "Un año de Plus con un solo pago.", "Год Plus за один платёж."],
+  "Wordt niet automatisch verlengd.": ["Does not renew automatically.", "لا يتجدد تلقائيًا.", "Otomatik olarak yenilenmez.", "अपने-आप नवीनीकृत नहीं होता।", "不会自动续订。", "No se renueva automáticamente.", "Не продлевается автоматически."],
+  "Kies de Jaarpas": ["Choose the year pass", "اختر تصريح السنة", "Yıllık kartı seç", "सालाना पास चुनें", "选择年度通行证", "Elegir el pase anual", "Выбрать годовой пропуск"],
   "Word thuis in Nederland": ["Feel at home in the Netherlands", "اشعر بأنك في بيتك في هولندا", "Hollanda'da kendini evinde hisset", "नीदरलैंड में घर जैसा महसूस करें", "在荷兰安家落户", "Siéntete en casa en los Países Bajos", "Почувствуйте себя дома в Нидерландах"],
   "Oefen voor je inburgering of het Staatsexamen NT2, leer het land kennen en durf Nederlands te spreken.": ["Practise for your civic integration exam or the NT2 state exam, get to know the country and dare to speak Dutch.", "تدرّب لامتحان الاندماج أو امتحان الدولة NT2، وتعرّف على البلد، وتشجّع على التحدث بالهولندية.", "Uyum sınavına veya NT2 devlet sınavına çalış, ülkeyi tanı ve Flemenkçe konuşmaya cesaret et.", "इंटीग्रेशन परीक्षा या NT2 राज्य परीक्षा की तैयारी करें, देश को जानें और डच बोलने की हिम्मत करें।", "备考公民融入考试或 NT2 国家考试，了解这个国家，敢于开口说荷兰语。", "Prepárate para el examen de integración o el examen estatal NT2, conoce el país y atrévete a hablar neerlandés.", "Готовьтесь к интеграционному экзамену или государственному экзамену NT2, узнавайте страну и не бойтесь говорить по-нидерландски."],
   "Oefen voor je examen": ["Practise for your exam", "تدرّب لامتحانك", "Sınavına çalış", "अपनी परीक्षा की तैयारी करें", "为考试做准备", "Prepara tu examen", "Готовьтесь к экзамену"],
@@ -213,6 +217,14 @@ function render() {
     const row = level => { const b = document.createElement("bdi"), sm = document.createElement("small"); b.textContent = eur(pass.plans[level].price); sm.textContent = level; return [b, " ", sm]; };
     $("pass-price").replaceChildren(...row("A2"), document.createElement("br"), ...row("B1"));
     $("pass-weeks").textContent = passWeeks[lang](Math.round((pass.days || 91) / 7));
+  }
+  // the Jaarpas, the same way (a year of Plus, one payment)
+  const year = config?.year;
+  $("year-card").hidden = config ? !(active && year?.plans?.A2 && year?.plans?.B1) : false;
+  if (year?.plans?.A2 && year?.plans?.B1) {
+    const eur = p => `€ ${lang === "en" ? String(p).replace(",", ".") : p}`;
+    const row = level => { const b = document.createElement("bdi"), sm = document.createElement("small"); b.textContent = eur(year.plans[level].price); sm.textContent = level; return [b, " ", sm]; };
+    $("year-price").replaceChildren(...row("A2"), document.createElement("br"), ...row("B1"));
   }
   for (const [level, card, price, check] of [["A2", "plus-card", "plus-price", "plus-checks"], ["B1", "plus-b1-card", "plus-b1-price", "plus-b1-checks"]]) {
     const offer = plus?.plans?.[level] || (level === "A2" ? plus : null);

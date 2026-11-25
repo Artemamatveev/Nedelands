@@ -308,27 +308,43 @@ export const coversLevel = (p, level) => isPlus(p) && (p.level === "B1" || p.lev
 // the Checkout session, so the same webhook twice can't add days twice.
 // 91 days (13 weeks), so one pass costs clearly less than three months of Plus and lasts until most learners' exam
 export const PASS_DAYS = 91;
-export const PASSES = Object.freeze({ A2: { price: "19,99", amount: 1999 }, B1: { price: "24,99", amount: 2499 } });
+// EUR 29,99 / 39,99 since 25 November 2026 (19,99 / 24,99 before: 600 checks for EUR 16 net could cost more than it earned)
+export const PASSES = Object.freeze({ A2: { price: "29,99", amount: 2999 }, B1: { price: "39,99", amount: 3999 } });
 export const PASS_PRICE = Object.freeze({ A2: (process.env.STRIPE_PRICE_PASS_A2 || "").trim(), B1: (process.env.STRIPE_PRICE_PASS_B1 || "").trim() });
 export const passOn = plusOn && !!(PASS_PRICE.A2 && PASS_PRICE.B1);
-// A configured one-time EUR price with exactly the advertised amount, for that level only
-export const matchesPass = (p, level) => !!p && Object.hasOwn(PASSES, level) && p.id === PASS_PRICE[level] &&
-  p.active !== false && p.currency === "eur" && p.unit_amount === PASSES[level].amount && !p.recurring;
-export async function passPrice(level) {
-  if (!passOn || !Object.hasOwn(PASSES, level)) throw new Error("invalid_plan");
-  const price = await stripe(`prices/${encodeURIComponent(PASS_PRICE[level])}`);
-  if (!matchesPass(price, level)) throw new Error("stripe pass_price_mismatch");
+// The Jaarpas: the same as the Examenpas for YEAR_DAYS, one payment, never renewed (a yearly subscription that renews
+// itself for another year can't be sold to consumers in the Netherlands; the user's choice of prices, 25 November 2026).
+// Off unless STRIPE_PRICE_YEAR_A2 and STRIPE_PRICE_YEAR_B1 are set. Its rows in `exam_pass` have a session key "y:cs_…".
+export const YEAR_DAYS = 365;
+export const YEARS = Object.freeze({ A2: { price: "79,99", amount: 7999 }, B1: { price: "119,99", amount: 11999 } });
+export const YEAR_PRICE = Object.freeze({ A2: (process.env.STRIPE_PRICE_YEAR_A2 || "").trim(), B1: (process.env.STRIPE_PRICE_YEAR_B1 || "").trim() });
+export const yearOn = plusOn && !!(YEAR_PRICE.A2 && YEAR_PRICE.B1);
+// kind "pass" (Examenpas) or "year" (Jaarpas): its days, amounts, Stripe prices, whether it is on, and its key prefix
+export const PASS_KINDS = Object.freeze({
+  pass: { days: PASS_DAYS, plans: PASSES, ids: PASS_PRICE, on: () => passOn, key: "" },
+  year: { days: YEAR_DAYS, plans: YEARS, ids: YEAR_PRICE, on: () => yearOn, key: "y:" },
+});
+// A configured one-time EUR price with exactly the advertised amount, for that level and kind only
+export const matchesPass = (p, level, kind = "pass") => { const K = PASS_KINDS[kind];
+  return !!p && !!K && Object.hasOwn(K.plans, level) && p.id === K.ids[level] &&
+    p.active !== false && p.currency === "eur" && p.unit_amount === K.plans[level].amount && !p.recurring };
+export async function passPrice(level, kind = "pass") {
+  const K = PASS_KINDS[kind];
+  if (!K || !K.on() || !Object.hasOwn(K.plans, level)) throw new Error("invalid_plan");
+  const price = await stripe(`prices/${encodeURIComponent(K.ids[level])}`);
+  if (!matchesPass(price, level, kind)) throw new Error("stripe pass_price_mismatch");
   return price;
 }
 // The user's running pass: the highest level still valid, and until when; or null
 export async function passOf(uid) {
   const now = new Date().toISOString();
-  const r = await rest(`exam_pass?user_id=eq.${encodeURIComponent(uid)}&until=gt.${encodeURIComponent(now)}&select=level,until&order=until.desc`);
+  const r = await rest(`exam_pass?user_id=eq.${encodeURIComponent(uid)}&until=gt.${encodeURIComponent(now)}&select=session,level,until&order=until.desc`);
   if (!r.ok) throw new Error(`exam_pass ${r.status}`);
   const rows = await r.json();
   const level = rows.some((x) => x.level === "B1") ? "B1" : rows.length ? "A2" : null;
   if (!level) return null;
-  return { level, until: rows.filter((x) => x.level === level)[0].until };
+  const row = rows.filter((x) => x.level === level)[0];
+  return { level, until: row.until, kind: String(row.session || "").startsWith("y:") ? "year" : "pass" };
 }
 // One purchase; true when kept (or already kept), "gone" when the account no longer exists
 export async function putPass(row) {
@@ -344,7 +360,7 @@ export async function plusFor(uid, cached = false) {
   const pass = passOn ? await passOf(uid).catch(() => null) : null;
   const subLevel = isPlus(sub) ? sub.level : null;
   let best = !pass || subLevel === "B1" || subLevel === pass.level ? sub
-    : { ...(sub || {}), status: "active", until: pass.until, ends: true, level: pass.level, pass: true };
+    : { ...(sub || {}), status: "active", until: pass.until, ends: true, level: pass.level, pass: true, ...(pass.kind === "year" ? { year: true } : {}) };
   // A school's or employer's group (api/group.js) gives the same checks until its end date, when it covers more
   const group = await groupOf(uid).catch(() => null);
   const bestLevel = isPlus(best) ? best.level : null;

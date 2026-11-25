@@ -135,8 +135,17 @@ There is no trial or yearly price. Videos and podcasts remain free.
   checks counter (`plusLine()`) and `plusScreen()` in `#talk` (the one entry point). `plusBack()` handles the return from
   Stripe and `plusWait()` looks again a few times, because the webhook may be later than the learner. Stripe's pages are
   navigations, so the CSP needs nothing new.
+- The Jaarpas (25 November 2026, the user's choice): the same as the Examenpas for `YEAR_DAYS` (365), A2 €79,99, B1
+  €119,99 (`YEARS`), one payment, never renewed (a yearly subscription that renews itself for another year can't be
+  sold to consumers in the Netherlands). On only with `STRIPE_PRICE_YEAR_A2` and `STRIPE_PRICE_YEAR_B1`. `PASS_KINDS`
+  in `_supa.js` holds both kinds; `{go:"pass",level,kind:"year"}` opens its Checkout (metadata `kind:"year"`); the
+  webhook stores it in `exam_pass` with the session key `y:cs_…` (no new column), and `passOf()` reads the kind back
+  from that prefix, so `plusFor()` and GET /api/plus say `year: true` and the app calls it "Jaarpas". /api/config
+  sends `year:{days, plans}`; the homepage card `#year-card` and the app's Plus screen show it. The Stripe sandbox
+  products: "Bittertalen Examenpas" and "Bittertalen Jaarpas"; the webhook endpoint listens to
+  `checkout.session.completed` and `checkout.session.async_payment_succeeded` too (since 25 November 2026).
 - The Examenpas (November 2026): one payment, no subscription, for `PASS_DAYS` (91) of the Plus checks at its level
-  (A2 €19,99, B1 €24,99 incl. A2; `PASSES` in `api/_supa.js`; 91 days since 25 November 2026, 42 before, so a pass is clearly cheaper than three months of Plus). On only with `STRIPE_PRICE_PASS_A2` and
+  (A2 €29,99, B1 €39,99 incl. A2 since 25 November 2026, €19,99 / €24,99 before; `PASSES` in `api/_supa.js`; 91 days since 25 November 2026, 42 before, so a pass is clearly cheaper than three months of Plus). On only with `STRIPE_PRICE_PASS_A2` and
   `STRIPE_PRICE_PASS_B1` (one-time EUR prices of exactly those amounts, verified by `matchesPass()`). `api/plus.js`
   `{go:"pass",level}` opens a `mode:"payment"` Checkout (409 `already` when a subscription covers that level) with the
   withdrawal-consent text above the pay button. The webhook also takes `checkout.session.completed` and

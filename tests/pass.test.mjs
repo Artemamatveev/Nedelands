@@ -6,21 +6,22 @@ import crypto from 'node:crypto';
 // and Stripe. A one-time payment gives the Plus checks of its level for PASS_DAYS; no subscription.
 Object.assign(process.env,{SUPABASE_URL:'https://x.supabase.test',SUPABASE_ANON_KEY:'anon',SUPABASE_SERVICE_ROLE_KEY:'svc',
   STRIPE_SECRET_KEY:'sk_test_x',STRIPE_PRICE:'price_1',STRIPE_PRICE_B1:'price_b1',STRIPE_WEBHOOK_SECRET:'whsec_test',
-  STRIPE_PRICE_PASS_A2:'price_pa2',STRIPE_PRICE_PASS_B1:'price_pb1'});
+  STRIPE_PRICE_PASS_A2:'price_pa2',STRIPE_PRICE_PASS_B1:'price_pb1',STRIPE_PRICE_YEAR_A2:'price_ya2',STRIPE_PRICE_YEAR_B1:'price_yb1'});
 const DAY=864e5;
 const db={plus:null,passes:[],session:null,gone:false,groups:[]},calls=[];
-const passPrice=id=>({id,active:true,currency:'eur',unit_amount:id==='price_pb1'?2499:1999,recurring:null,type:'one_time'});
+const AMOUNT={price_pa2:2999,price_pb1:3999,price_ya2:7999,price_yb1:11999};
+const passPrice=id=>({id,active:true,currency:'eur',unit_amount:AMOUNT[id],recurring:null,type:'one_time'});
 globalThis.fetch=async(url,init={})=>{
   url=String(url);const m=init.method||'GET';calls.push(`${m} ${url} ${init.body||''}`);
   const J=(o,s=200)=>new Response(JSON.stringify(o),{status:s,headers:{'content-type':'application/json'}});
   if(url.endsWith('/auth/v1/user'))return J({id:'u1',email:'a@b.nl'});
   if(url.includes('/rest/v1/plus?user_id'))return J(db.plus?[db.plus]:[]);
   if(url.includes('/rest/v1/exam_pass?user_id')){const since=decodeURIComponent(url.match(/until=gt\.([^&]+)/)[1]);
-    return J(db.passes.filter(p=>p.until>since).sort((a,b)=>b.until.localeCompare(a.until)).map(({level,until})=>({level,until})))}
+    return J(db.passes.filter(p=>p.until>since).sort((a,b)=>b.until.localeCompare(a.until)).map(({session,level,until})=>({session,level,until})))}
   if(url.endsWith('/rest/v1/exam_pass')&&m==='POST'){if(db.gone)return J({code:'23503'},409);const row=JSON.parse(init.body);
     if(!db.passes.some(p=>p.session===row.session))db.passes.push(row);return new Response(null,{status:201})}
   if(url.endsWith('/rest/v1/rpc/group_access'))return J(db.groups);
-  if(url.includes('/v1/prices/price_p'))return J(passPrice(url.split('/').pop()));
+  if(url.includes('/v1/prices/price_p')||url.includes('/v1/prices/price_y'))return J(passPrice(url.split('/').pop()));
   if(url.includes('/v1/checkout/sessions/'))return J(db.session);
   if(url.includes('/v1/checkout/sessions'))return J({url:'https://checkout.stripe.test/pass'});
   if(url.includes('/auth/v1/settings'))return J({external:{}});
@@ -39,7 +40,8 @@ const last=s=>calls.filter(c=>c.includes(s)).pop();
 
 test('Config offers the Examenpas with its fixed prices and length',async()=>{
   const r=res();await config({method:'GET',headers:H},r);
-  assert.deepEqual(r.body.pass,{days:91,plans:{A2:{price:'19,99'},B1:{price:'24,99'}}});
+  assert.deepEqual(r.body.pass,{days:91,plans:{A2:{price:'29,99'},B1:{price:'39,99'}}});
+  assert.deepEqual(r.body.year,{days:365,plans:{A2:{price:'79,99'},B1:{price:'119,99'}}});
 });
 test('Buying a pass opens a one-time Checkout with the consent text and the user in its metadata',async()=>{
   const r=res();await plus({method:'POST',headers:H,body:{go:'pass',level:'B1'}},r);
@@ -96,4 +98,24 @@ test('A school group gives the Plus checks of its level until its end date, unle
   const q=await plusFor('u1');assert.equal(q.level,'B1');assert.equal(q.group,undefined,'a B1 pass covers more than an A2 group');
   db.groups=[];db.passes=[];
   assert.equal(await plusFor('u1'),null);
+});
+
+test('The Jaarpas: one-time Checkout with kind year, 365 days once paid, shown as a Jaarpas, never confused with an Examenpas',async()=>{
+  db.passes=[];
+  const r=res();await plus({method:'POST',headers:H,body:{go:'pass',level:'A2',kind:'year'}},r);
+  const q=new URLSearchParams(last('checkout/sessions').split(' ').pop());
+  assert.equal(q.get('mode'),'payment');assert.equal(q.get('line_items[0][price]'),'price_ya2');assert.equal(q.get('metadata[kind]'),'year');
+  const year=(id,level,o={})=>paid(id,level,{metadata:{uid:'u1',level,kind:'year'},line_items:{data:[{quantity:1,price:passPrice(level==='B1'?'price_yb1':'price_ya2')}]},...o});
+  assert.equal((await send(year('cs_y1','A2'))).statusCode,200);
+  assert.equal(db.passes.length,1);assert.equal(db.passes[0].session,'y:cs_y1');
+  assert.ok(Math.abs(Date.parse(db.passes[0].until)-(Date.now()+365*DAY))<60e3);
+  await send(year('cs_y1','A2'));assert.equal(db.passes.length,1); // the same event again adds nothing
+  const p=await plusFor('u1');assert.equal(p.pass,true);assert.equal(p.year,true);assert.ok(coversLevel(p,'A2'));
+  const g=res();await plus({method:'GET',headers:H},g);assert.equal(g.body.plus.year,true);
+  // a year's metadata with an Examenpas price, or an Examenpas claimed with a year's price, gives nothing
+  db.passes=[];
+  await send(year('cs_y2','A2',{line_items:{data:[{quantity:1,price:passPrice('price_pa2')}]}}));
+  await send(paid('cs_y3','A2',{line_items:{data:[{quantity:1,price:passPrice('price_ya2')}]}}));
+  assert.equal(db.passes.length,0);
+  db.passes=[];
 });
