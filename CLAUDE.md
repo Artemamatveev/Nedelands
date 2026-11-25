@@ -14,10 +14,12 @@ are in `docs/`, one file per area. Read the one for the area you change, and kee
 | `docs/server.md` | the 12 functions, accounts, free checks, AI spend limits, Plus and the Examenpas, groups, counts, admin |
 | `docs/ai.md` | grading of writing and speaking, conversations with Claude (Saskia and situations) |
 | `docs/native.md` | the Capacitor apps for the App Store and Google Play |
+| `docs/store-listing.md` | store name, keywords, screenshots, review notes and what is open before submitting |
 
 ## Map
 
 - `index.html` + `landing.js` + `landing.css`: the homepage. `en.html` … `ru.html` are generated from it.
+- `*-oefenen.html` (`/knm-oefenen`, `/a2-lezen-oefenen`, …): public practice pages for search, made by `node tools/build-seo.mjs` from the data; never edit by hand.
 - `oefenen.html`: the study app (code, styles, small tables), served at `/oefenen`.
 - `data/*.js`: the large content (`knm.js`, `a2.js`, `b1.js`, `extra.js`) and `ui.js`, the menu translations.
 - `study/*.js`: stable language data and logic loaded by the app. `lib/`: the vendored Supabase client.

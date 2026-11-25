@@ -212,3 +212,11 @@ version. Correct answers use six cobalt encouragements; incorrect answers use si
 Helaas!, Oeps!, Geeft niks!, Nog een keer!, Volgende keer beter!). Normal corrections and explanations remain visible.
 Ungraded self-assessment and exam/diagnostic selections do not get a pulse. Objective feedback and completed AI verdicts
 for writing/speaking/B1 sentence groups select the matching outcome. Existing scoring/timing is unaffected.
+
+## KNM photos and absolute words (25 November 2026)
+
+A KNM question's photo is shown only after the answer (and never in a proefexamen): signs in the photos (IND-Loket,
+CJIB, Juridisch Loket) gave the answer away in about a fifth of the questions. `node tools/answer-length.mjs` also reports
+absolute words (altijd, nooit, alleen, moet …) in wrong and right options; in KNM situaties they are in 22% of the wrong
+options and 8% of the right ones, so "skip the absolute option" still helps. Rewrite those options together with their
+recordings (`audio/build.mjs`), set by set.

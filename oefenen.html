@@ -1108,7 +1108,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
 <script src="/data/knm.js?v=50777b478a"></script>
 <script src="/data/a2.js?v=56c32c3473"></script>
 <script src="/data/b1.js?v=e9701bd331"></script>
-<script src="/data/extra.js?v=3af5b55d46"></script>
+<script src="/data/extra.js?v=e80c7f18b2"></script>
 <script>
 
 const TYPES={past:"Imperfectum: gisteren … ik / hij",pastpl:"Imperfectum: gisteren … wij / zij",pp:"Perfectum: voltooid deelwoord",aux:"Perfectum: hebben of zijn?"};
@@ -1952,6 +1952,32 @@ function voiceTexts(){
   BG.forEach(l=>{pairs(l.v).forEach(x=>add(x[0],"r"));pairs(l.w).forEach(x=>add(x[0],"w"))});
   GP.filter(c=>c.ona).forEach(c=>{c.d.forEach(s=>{add(s.a,"gp",c.w);add(s.r||GPNO,"gp",c.w);add(s.m.replace(/\[|\]/g,""),"gpm",c.w)});add(c.e,"gp",c.w)});
   return out}
+// Store app: the phone's own speech recognition (plugin @capacitor-community/speech-recognition), behind the same small
+// part of the Web Speech API the app uses (lang, start, stop, abort, onstart, onaudiostart, onresult, onerror, onend).
+// Android's web view has no webkitSpeechRecognition at all, and in the iOS web view it is unreliable; without the
+// plugin the web API is used as before. Results arrive as partial results; the last one is sent again as final at the end.
+const NSR=NATIVE&&window.Capacitor?.Plugins?.SpeechRecognition;
+class NativeSR{
+  constructor(){this.lang="nl-NL";this.continuous=true;this.interimResults=true;this.maxAlternatives=1;this._on=false;this._last=""}
+  _ev(t,fin){return{resultIndex:0,results:[Object.assign([{transcript:t,confidence:1}],{isFinal:fin})]}}
+  async start(){
+    try{
+      const ok=s=>s&&(s.speechRecognition==="granted"||s.permission===true);
+      let perm=await NSR.checkPermissions().catch(()=>null);
+      if(!ok(perm))perm=await NSR.requestPermissions().catch(()=>null);
+      if(!ok(perm)){this.onerror?.({error:"not-allowed"});this.onend?.();return}
+      this._last="";this._on=true;
+      this._h1=await NSR.addListener("partialResults",d=>{const t=String((d&&d.matches||[])[0]||"").trim();if(t&&this._on){this._last=t;this.onresult?.(this._ev(t,false))}});
+      this._h2=await NSR.addListener("listeningState",d=>{if(d&&d.status==="stopped")this._done()});
+      this.onstart?.();this.onaudiostart?.();
+      await NSR.start({language:this.lang||"nl-NL",maxResults:1,partialResults:true,popup:false});
+    }catch(e){this.onerror?.({error:"audio-capture"});this._done()}
+  }
+  _done(){if(!this._on)return;this._on=false;if(this._last)this.onresult?.(this._ev(this._last,true));
+    try{this._h1?.remove?.();this._h2?.remove?.()}catch(e){}this.onend?.()}
+  stop(){Promise.resolve(NSR.stop()).catch(()=>{}).finally(()=>this._done())}
+  abort(){this._last="";this.stop()}
+}
 let rec=null,recUrl=null;
 const hush=()=>{recEnd(false);if(recUrl){URL.revokeObjectURL(recUrl);recUrl=null}stopSpeak()};
 // Spreken: listen() puts one minute on the clock and either records the answer (mode "rec", to play it back)
@@ -1959,7 +1985,7 @@ const hush=()=>{recEnd(false);if(recUrl){URL.revokeObjectURL(recUrl);recUrl=null
 // Never both at once: on iPhone the recorder and speech recognition compete for the microphone.
 // Recordings and transcripts only live in memory; nothing is saved.
 const SPK=60, canRec=!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.MediaRecorder),
-  SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  SR=NSR?NativeSR:window.SpeechRecognition||window.webkitSpeechRecognition;
 let sr=null; // one recogniser, reused: iOS asks for permission again for every new one
 const REC_FINISH_MS=800; // drain final speech results briefly; a missing native end event must not trap the learner
 // In a conversation the phone may still be turning speech into text when the learner taps Klaar (iOS does it on a server):
@@ -3004,7 +3030,9 @@ function show(){
   let h=`<p class="ask">${q.label}</p>`;
   if(q.intro)h+=`<p class="intro">${q.intro}</p>`; // as on the exam: who reads or hears what
   if(q.text)h+=docHTML(q.text);
-  if(q.pics)h+=picsHTML(q.pics);
+  // KNM: the photo comes after the answer. Before it, a sign in the photo (IND-Loket, CJIB, Juridisch Loket) often gave
+  // the answer away, and the exam has no such photos; its text alternative named the answer too.
+  if(q.pics)h+=q.sec==="knm"?(cur.exam?"":`<div id="knmpic" hidden>${picsHTML(q.pics)}</div>`):picsHTML(q.pics);
   if(q.qs&&cur.exam)h+=`<p class="note">Lees eerst de vragen bij dit fragment:</p><ol class="qs">${q.qs.map(x=>`<li${x===q.big?' class="on"':""}>${x}</li>`).join("")}</ol>`;
   if(q.say)h+=canSpeak?`<button class="btn wide" id="say">▶ Luister</button><p class="note">${q.sec==="lb"?cur.exam?"Je hoort het fragment één keer, zoals op het Staatsexamen.":"Op het Staatsexamen hoor je het fragment maar één keer.":cur.exam?"Je mag twee keer luisteren.":"Luister twee keer, zoals op het examen."}</p>` :cur.exam?`<p class="note" role="alert">Audio is hier niet beschikbaar. Open dit proefexamen op een apparaat met geluid.</p>`:`<p class="note">Audio werkt hier niet. Lees de tekst.</p><div class="sample">${esc(sayLines(q.say).map(l=>/^[AB]: /.test(q.say)?"– "+l:l).join("\n"))}</div>`;
   if(q.hear)h+=canSpeak?`<button class="btn wide" id="hear">▶ Luister</button>`:`<div class="verb">${q.hear}</div>`;
@@ -3187,6 +3215,7 @@ function grade(ans,btn,o){
   if(btn&&!ok)btn.classList.add("no");
   if($("inp"))$("inp").disabled=true; if($("chk"))$("chk").disabled=true;
   record(ok); feedback(ok,q,btn&&o?o[btn.dataset.n]:ans);
+  if($("knmpic"))$("knmpic").hidden=false;
 }
 function order(q){
   const words=q.right.replace(/[.?]$/,"").split(" ");
@@ -5117,7 +5146,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="b6f61f4690";
+const UIV="0b925ba459";
 let uiP=null;
 function uiLoaded(){ // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});

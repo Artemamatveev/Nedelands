@@ -384,3 +384,5 @@ html:has(.feature-grid .is-animating) {overflow-anchor:none}
  .ex-talk .fix {padding:0 0 0 8px}
 }
 @media(prefers-reduced-motion:reduce) {.extra {transition:none}}
+.footer-practice {font-size:14px;line-height:1.9;margin:12px 0}
+.footer-practice a {color:inherit}
