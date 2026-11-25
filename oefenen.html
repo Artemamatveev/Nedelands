@@ -1230,6 +1230,9 @@ const SEC=[
 const GAP=[1,2,4,7,14,30,60], KEY="ww-v1";
 const $=id=>document.getElementById(id);
 const today=()=>{const d=new Date();return Math.floor((d.getTime()-d.getTimezoneOffset()*6e4)/864e5)};
+// One missed day a week keeps the streak (a free freeze): S.frz is the day it was last used. One bad day should not
+// throw away weeks of work, least of all for someone who works shifts.
+const freezeOk=d=>!S.frz||d-S.frz>=7;
 const freshProgress=()=>({items:{},streak:0,last:0,typing:false,errs:[],gen:{lz:[],ls:[]},t:0,day:{d:0,done:[]},words:[],bk:{}});
 let progressOwner="guest", syncFrame={}, S=freshProgress();
 const progressKey=owner=>"ww-progress-v2:"+owner;
@@ -1505,7 +1508,7 @@ function mergeS(a,b){
   o.start=a.start&&b.start?(a.start.at>=b.start.at?a.start:b.start):a.start||b.start;
   o.errs=uni(a.errs,b.errs,e=>e.r); o.words=uni(a.words,b.words,w=>w.w);
   const ga=a.gen||{},gb=b.gen||{}; o.gen={lz:uni(ga.lz,gb.lz,JSON.stringify),ls:uni(ga.ls,gb.ls,JSON.stringify)};
-  const[p,q]=(a.last||0)>=(b.last||0)?[a,b]:[b,a]; o.last=p.last||0; o.streak=p.last===q.last?Math.max(p.streak||0,q.streak||0):p.streak||0;
+  const[p,q]=(a.last||0)>=(b.last||0)?[a,b]:[b,a]; o.last=p.last||0; o.streak=p.last===q.last?Math.max(p.streak||0,q.streak||0):p.streak||0; if(a.frz||b.frz)o.frz=Math.max(a.frz||0,b.frz||0);
   o.day=a.day&&b.day&&a.day.d===b.day.d?{d:a.day.d,done:uni(a.day.done,b.day.done,x=>x)}:a.day&&b.day?(a.day.d>b.day.d?a.day:b.day):a.day||b.day;
   const ma=a.me||{},mb=b.me||{}; const ea=ma.exams||{},eb=mb.exams||{};
   o.me={name:ma.name||mb.name||"",last:ma.last||mb.last||"",exam:ma.exam||mb.exam||"",av:ma.av||mb.av||"",
@@ -1994,7 +1997,7 @@ function markErrs(text,errs){
   return out+esc(text.slice(p));
 }
 const ownHTML=(text,errs,label="Jouw tekst")=>`<p class="ask">${label}</p><div class="sample own">${markErrs(text,errs)||"(niets)"}</div>`;
-const errsHTML=errs=>errs.length?`<p class="ask">Fouten: ${errs.length}</p><ol class="errs fixes">${errs.map(e=>`<li><s>${esc(e.wrong)}</s> <strong>${esc(e.right)}</strong><span>${esc(e.why)}</span></li>`).join("")}</ol>`:`<p class="note">Geen fouten gevonden.</p>`;
+const errsHTML=errs=>errs.length?`<p class="ask">Fouten: ${errs.length}</p><ol class="errs fixes">${errs.map(e=>`<li><s>${esc(e.wrong)}</s> <strong>${esc(e.right)}</strong><span dir="auto">${esc(e.why)}</span></li>`).join("")}</ol>`:`<p class="note">Geen fouten gevonden.</p>`;
 const spoken=t=>String(t).replace(/[\p{Extended_Pictographic}←-⇿️‍]/gu,"").replace(/\s+/g," ").trim();
 const saidText=r=>r.said.concat(r.part).join(" ").replace(/\s+/g," ").trim();
 async function listen(mode,done,lim=SPK,options={}){ // AI conversations finish only through Klaar; exams keep their timer
@@ -2217,7 +2220,7 @@ SP.forEach((p,i)=>ITEMS.push({sec:"sp",k:"sp|"+i,ord:i/5|0,type:"reveal",label:"
 
 let cur,queue=[],pos=0,total=0,right=0,answered=false;
 function head(){
-  const d=today(), alive=S.last>=d-1?S.streak:0;
+  const d=today(), alive=S.last>=d-1||S.last===d-2&&freezeOk(d)?S.streak:0;
   $("streak").innerHTML=alive?`<span class="lint"><b>${alive}</b></span><small>${alive===1?"dag":"dagen"} op rij</small>`:"";
   const done=cur&&cur.nav&&!cur.sent?queue.filter((q,i)=>picked(i)).length:pos;
   $("bar").style.width=(queue.length?Math.min(100,done/queue.length*100):0)+"%";
@@ -2697,10 +2700,14 @@ function planTasks(){
   const dn=S.day&&S.day.d===d?S.day.done:[],was=dn.find(x=>x.startsWith("b:bg:")),les=was?BG.find(l=>l.id===was.split(":")[2]):bgTodo()[0],
     lesStep=les&&{id:"b:bg:"+les.id,t:`Les ${BG.indexOf(les)+1}: ${les.t}`,s:les.s};
   if(les&&S.start&&!S.start.lv){T.push(lesStep);if(dn.includes("q:bg")||bgDue().length)T.push({id:"q:bg",t:"Herhalen",s:SHORT.bg.s});return{T,k:"bg",pc:null,bg:1}}
+  // a part the learner passed (Mijn examen → Geslaagd) leaves the plan; parts with an exam in the next 14 days come first
+  const won=ks.filter(k=>S.uit?.[k]?.ok);if(won.length&&won.length<ks.length)won.forEach(k=>ks.splice(ks.indexOf(k),1));
+  const soon=Object.fromEntries(examsAhead().filter(x=>x.k&&x.n<=14).map(x=>[x.k,x.n])),all=examsAhead().some(x=>!x.k&&x.n<=14);
+  const near=k=>k in soon||all?0:1;
   const sc=ks.map(k=>({k,r:ready(k)}));
-  sc.sort((a,b)=>(a.r.pc==null?50:a.r.pc)-(b.r.pc==null?50:b.r.pc)||((ks.indexOf(a.k)+d)%ks.length)-((ks.indexOf(b.k)+d)%ks.length));
+  sc.sort((a,b)=>near(a.k)-near(b.k)||(a.r.pc==null?50:a.r.pc)-(b.r.pc==null?50:b.r.pc)||((ks.indexOf(a.k)+d)%ks.length)-((ks.indexOf(b.k)+d)%ks.length));
   const budget=[10,20,40].includes(S.minutes)?S.minutes:20;
-  const key=[d,lvl(),budget,S.start?.at||0].join("/");
+  const key=[d,lvl(),budget,S.start?.at||0,won.join(""),Object.entries(soon).join(";"),all?1:0].join("/");
   if(S.lessonPlan?.key===key)return S.lessonPlan.value;
   const k=sc[0].k, estimates={wr:10,wb:15,l1:8,lb:6,lz:5,ls:4,sp:4,sb:5,knm:4};
   let used=0;
@@ -2789,10 +2796,11 @@ function planHTML(){
   const d=today(),done=S.day&&S.day.d===d?S.day.done:[],P=planTasks(),steps=P.T,nx=steps.findIndex(t=>!done.includes(t.id));
   const nd=steps.filter(t=>done.includes(t.id)).length;
   const intro=nx<0?"Alles is klaar. Tot morgen!":P.bg?"Eerst de basis: elke dag één les.":P.pc!=null?`Vooral ${PART[P.k]}: daar scoor je nu het laagst.`:"Van elk onderdeel een beetje.";
+  const focus=dayExamFocus(),last=focus?.focus.last;
   // new here at A2: where to begin, right under the heading, so it is seen above the tab bar on a phone. Gone after the
   // test, or once someone has clearly been practising
-  const first=lvl()==="A2"&&!S.start&&Object.keys(S.items).length<30?`<div class="list">${itHTML(`data-p="t:start"`,"Waar begin ik?","Twaalf vragen: zo weet je waar je begint.",{ic:"bg"})}</div>`:"";
-  const focus=dayExamFocus(),last=focus?.focus.last;
+  const first=lvl()==="A2"&&!S.start&&!Object.keys(S.items).length&&!focus?`<p class="sub">Nieuw hier? Begin met twaalf korte vragen. Dan weet Bittertalen waar je begint, ook als je nog bijna geen Nederlands kent.</p><button class="btn wide" data-p="t:start">Begin met de korte test</button>`
+    :lvl()==="A2"&&!S.start&&Object.keys(S.items).length<30?`<div class="list">${itHTML(`data-p="t:start"`,"Waar begin ik?","Twaalf vragen: zo weet je waar je begint.",{ic:"bg"})}</div>`:"";
   const review=focus&&(focus.target||last?.day===d)?`<section class="list exam-focus" aria-label="Gerichte oefening">
     <h3>Verder met je oefening</h3>
     <p>${esc(PART[focus.source.sec])} · ${esc(examSkill(focus.source))}</p>
@@ -2800,8 +2808,10 @@ function planHTML(){
       `<p class="note">${last.ok?"De nieuwe vraag ging goed.":"Deze oefening komt morgen terug."}</p>`}
   </section>`:"";
   const date=new Date().toLocaleDateString("nl-NL",{weekday:"long",day:"numeric",month:"long"});
+  // the countdown to the exam on Mijn dag too (it gives the day its point); without a date, one line asks for it
+  const when=examsAhead().length?examLine():`<button class="hint" type="button" id="dayexam">Wanneer is je examen? Zet de datum in Profiel.</button>`;
   return`<p class="ask"><span>${date}</span> · <span>${LVL[lvl()]}</span></p><h2>Je les van vandaag</h2>
-    ${first}${writingDrafts().map(x=>`<button class="ghost wide" data-draft="${x.section}" data-exam="${Number(x.exam)}" data-draft-slot="${esc(x.slot)}"><span>Verder met je concept</span> · ${x.exam?EX[x.section].t:PART[x.section]}${x.slot?" · <span>Gerichte oefening</span>":""}</button>`).join("")}
+    ${when}${first}${writingDrafts().map(x=>`<button class="ghost wide" data-draft="${x.section}" data-exam="${Number(x.exam)}" data-draft-slot="${esc(x.slot)}"><span>Verder met je concept</span> · ${x.exam?EX[x.section].t:PART[x.section]}${x.slot?" · <span>Gerichte oefening</span>":""}</button>`).join("")}
     <span>Hoeveel tijd heb je?</span><div class="seg minutes" role="group" aria-label="Hoeveel tijd heb je?">${[10,20,40].map(n=>`<button data-budget="${n}" aria-pressed="${n===(S.minutes||20)}">${n} min</button>`).join("")}</div>
     <p class="note"><span>Geschatte duur</span> · ${P.minutes||steps.length*5} min</p>
     <div class="dayp"><span aria-hidden="true">${steps.map(t=>`<i${done.includes(t.id)?' class="on"':""}></i>`).join("")}</span><small>${nd} van ${steps.length} klaar</small></div>
@@ -2880,7 +2890,8 @@ function drawPlan(){
   document.querySelectorAll("#plan [data-budget]").forEach(b=>b.onclick=()=>{S.minutes=Number(b.dataset.budget);save();drawPlan()});
   // the whole lesson done: the streak stamp is put down once, with a tap of the phone
   const d=today();if(!$("plan").querySelector(".step:not(.ok)")&&lsGet("ww-stamp")!=String(d)){lsSet("ww-stamp",String(d));track("day");
-    const st=$("streak");st.classList.remove("stamp");void st.offsetWidth;st.classList.add("stamp");buzz("good")}
+    const st=$("streak");st.classList.remove("stamp");void st.offsetWidth;st.classList.add("stamp");buzz("good");remindPlan()}
+  if($("dayexam"))$("dayexam").onclick=()=>{setTab("profiel");setTimeout(()=>{const f=$("pexams");if(f){f.scrollIntoView({block:"center"});f.querySelector("input")?.focus()}},120)};
   const focus=dayExamFocus(),review=$("dayfocus");
   if(review&&focus?.target)review.onclick=()=>startExamFocus(focus.source);
   document.querySelectorAll("#plan [data-p]").forEach(b=>b.onclick=()=>{const id=b.dataset.p,[k,v]=id.split(":");planId=id;
@@ -3073,7 +3084,7 @@ function record(ok,q=queue[pos]){
 }
 function complete(){
   const d=today();
-  if(S.last!==d){S.streak=S.last===d-1?S.streak+1:1;S.last=d}
+  if(S.last!==d){const gap=S.last===d-2&&freezeOk(d);S.streak=S.last===d-1||gap?S.streak+1:1;if(gap)S.frz=d-1;S.last=d}
   if(planId){if(!S.day||S.day.d!==d)S.day={d,done:[]};if(!S.day.done.includes(planId))S.day.done.push(planId);planId=null}
   save();
 }
@@ -3330,7 +3341,7 @@ function aiAsk(){
 async function nakijkenNet(tasks,part){
   if(!aiAsk())throw{code:"ai_consent"};
   const h=await authHead();
-  const r=await fetch("/api/check",{method:"POST",headers:{"Content-Type":"application/json",...h},body:JSON.stringify(part?{part,tasks}:{tasks})});
+  const r=await fetch("/api/check",{method:"POST",headers:{"Content-Type":"application/json",...h},body:JSON.stringify({...(part?{part}:{}),tasks,...(LANG!=="nl"?{ui:LANG}:{})})});
   const j=await r.json().catch(()=>({}));
   chkCount(j,part?["wb","sb"].includes(part)?"B1":"A2":lvl());
   if(!r.ok||!Array.isArray(j.tasks))throw{code:j.error||"failed"};
@@ -3457,7 +3468,7 @@ function redo(items,back){
 const zWhole=z=>{const c=z.q.ctx,b=c&&!/___/.test(c)?c.replace(/[….\s]+$/,""):"";return b&&!z.text.startsWith(b)?b+" "+z.text:z.text};
 async function check(q){
   const text=$("txt").value.trim();
-  if(text.split(/\s+/).length<(q.kind==="z"?3:5)){$("fb").innerHTML=`<p class="note">${q.kind==="z"?"Schrijf een hele zin.":"Schrijf minimaal een paar zinnen."}</p>`;return}
+  if(text.split(/\s+/).length<(q.kind==="z"||q.sec!=="wb"?3:5)){$("fb").innerHTML=`<p class="note">${q.kind==="z"?"Schrijf een hele zin.":"Schrijf minimaal een paar zinnen."}</p>`;return}
   const form=q.fields?q.fields.map((f,i)=>f+": "+$("f"+i).value.trim()).join("\n"):"";
   const task=wrTask(q), btn=$("chk"); btn.disabled=true; $("txt").readOnly=true;
   $("fb").innerHTML=`<p class="note">Ik kijk je tekst na… Dit duurt meestal minder dan een minuut.</p>`;
@@ -4008,6 +4019,8 @@ async function uitSend(){
     }catch(err){}}
 }
 setTimeout(()=>{if(Object.values(uitQ()).some(e=>!e.sent))uitSend()},5000);
+// store app: plan the coming days' reminders after start and whenever the app comes back
+if(NATIVE){setTimeout(()=>remindPlan(),4000);document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")setTimeout(()=>remindPlan(),1500)})}
 function setUit(k,ok){
   const U=S.uit=S.uit||{},Q=uitQ(),old=U[k],e=Q[k];
   if(old&&old.ok===ok){delete U[k];if(e){e.ok=null;e.sent=0}} // the same answer again takes it back
@@ -4018,7 +4031,34 @@ function setUit(k,ok){
     U[k]={ok,at:Date.now()};
     if(ok)buzz("good");
   }
-  lsSet("ww-uit",JSON.stringify(Q)); save(); uitSend(); uitScreen(scrollY);
+  lsSet("ww-uit",JSON.stringify(Q)); save(); uitSend();
+  if(ok&&S.uit[k]?.ok)return wonScreen(k);
+  uitScreen(scrollY);
+}
+// Geslaagd for a part: a moment to celebrate, what is left (or the next step: B1, naturalisation), and a message to
+// share. Passed parts leave Mijn dag (planTasks). The shared text has the learner's invite link when there is one.
+const WONSHARE={nl:p=>`Ik ben geslaagd voor ${p}! Ik heb geoefend met Bittertalen.`,en:p=>`I passed ${p}! I practised with Bittertalen.`,
+  ar:p=>`نجحت في ${p}! تدرّبت مع Bittertalen.`,tr:p=>`${p} sınavını geçtim! Bittertalen ile çalıştım.`,hi:p=>`मैं ${p} में पास हो गया/गई! मैंने Bittertalen से अभ्यास किया।`,
+  zh:p=>`我通过了 ${p}！我是用 Bittertalen 练习的。`,es:p=>`¡He aprobado ${p}! Practiqué con Bittertalen.`,ru:p=>`Я сдал(а) ${p}! Готовился(-ась) с Bittertalen.`};
+function wonScreen(k){
+  closePop();hush();TK=null;$("card").innerHTML="";
+  $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;window.scrollTo(0,0);
+  tBack(TABN[tab],home);
+  const ks=lvl()==="B1"?["l1","lb","wb","sb","knm"]:["lz","ls","wr","sp","knm"],left=ks.filter(x=>!S.uit?.[x]?.ok);
+  const next=left.length?`<p>Nog te doen: ${left.map(x=>`<b>${exName(x)}</b>`).join(", ")}. Die staan nu vooraan in Mijn dag.</p>`
+    :lvl()==="A2"?`<p>Je hebt alle onderdelen van A2. Wil je later naturaliseren? Daar is straks waarschijnlijk B1 voor nodig. Je kunt hier verder met B1.</p>`
+    :`<p>Je hebt alle onderdelen van B1. Daarmee kun je naturalisatie aanvragen bij de gemeente.</p>`;
+  $("tbody").innerHTML=`<h2>Gefeliciteerd!</h2><p class="sub">Je bent geslaagd voor <b>${exName(k)}</b>.</p>${next}
+    <div class="two">${navigator.share?`<button type="button" class="btn" id="wshare">Deel het met vrienden</button>`:""}<button type="button" class="${navigator.share?"ghost":"btn"}" id="wback">Terug naar Mijn examen</button></div>
+    ${!left.length&&lvl()==="A2"?`<button type="button" class="ghost wide" id="wb1">Verder met B1</button>`:""}`;
+  $("wback").onclick=()=>uitScreen(0);
+  if($("wb1"))$("wb1").onclick=()=>{S.lvl="B1";save();setTab("vandaag");home()};
+  if($("wshare"))$("wshare").onclick=async()=>{
+    const L=lsGet("ww-ui")||"nl",text=(WONSHARE[L]||WONSHARE.nl)(exName(k)+" "+lvl());
+    let url=location.origin+"/";
+    try{if(acc.user){if(!acc.ref){const r=await fetch("/api/referral",{headers:await authHead(),cache:"no-store"});if(r.ok){const j=await r.json();if(REFRE.test(j.code||""))acc.ref=j}}
+      if(acc.ref)url=location.origin+"/?ref="+acc.ref.code}}catch{}
+    track("won");navigator.share({title:"Bittertalen",text,url}).catch(()=>{})};
 }
 function uitScreen(y=0){
   closePop();hush();TK=null;$("card").innerHTML="";
@@ -4075,16 +4115,35 @@ function remindRow(){
   sel.onchange=async()=>{
     const h=sel.value;
     try{
-      await N.cancel({notifications:[{id:1}]});
       if(h){
         const perm=await N.requestPermissions();
-        if(perm.display!=="granted"){lsSet("ww-remind",null);acc.msg="Meldingen staan uit voor Bittertalen. Zet ze aan in Instellingen.";return drawProfile()}
-        await N.schedule({notifications:[{id:1,title:"Bittertalen",body:"Tijd voor je les van vandaag.",schedule:{on:{hour:+h,minute:0},repeats:true,allowWhileIdle:true}}]});
+        if(perm.display!=="granted"){lsSet("ww-remind",null);await remindPlan();acc.msg="Meldingen staan uit voor Bittertalen. Zet ze aan in Instellingen.";return drawProfile()}
       }
       lsSet("ww-remind",h||null);
+      await remindPlan();
     }catch{lsSet("ww-remind",null)}
     drawProfile();
   };
+}
+// The reminders of the next 7 days, each its own notification with what that day is about: the days left until the
+// exam and the part to start with. Planned again whenever the app opens and when the lesson is done (then not today).
+// A fixed "Tijd voor je les" every day, also on days the lesson was already done, taught people to swipe it away.
+async function remindPlan(){
+  const N=NATIVE&&window.Capacitor?.Plugins?.LocalNotifications,h=lsGet("ww-remind");if(!N)return;
+  try{
+    await N.cancel({notifications:[1,2,3,4,5,6,7,8].map(id=>({id}))});
+    if(!h)return;
+    const P=planTasks(),done=S.day&&S.day.d===today()?S.day.done:[],fin=P.T.length>0&&P.T.every(t=>done.includes(t.id));
+    const part=P.bg?"":PART[P.k]||"",ex=examDays(),L=[];
+    for(let i=0;i<7;i++){
+      const at=new Date();at.setDate(at.getDate()+i);at.setHours(+h,0,0,0);
+      if(i===0&&(fin||at<=new Date()))continue;
+      const n=ex!=null?ex-i:null;
+      const body=n===1?`Morgen is je examen. Vandaag: ${part||"je les"}.`:n!=null&&n>1?`Nog ${n} dagen tot je examen. Vandaag: ${part||"je les"}.`:part?`Je les van vandaag staat klaar. Eerst ${part}.`:"Tijd voor je les van vandaag.";
+      L.push({id:i+1,title:"Bittertalen",body:trS(body)||body,schedule:{at,allowWhileIdle:true}});
+    }
+    if(L.length)await N.schedule({notifications:L});
+  }catch(e){}
 }
 async function claimRef(){
   const code=lsGet("ww-ref"),uid=acc.user?.id; if(!code||!uid)return;

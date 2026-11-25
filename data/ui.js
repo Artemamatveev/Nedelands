@@ -776,3 +776,40 @@ Object.assign(UI,{
 "Om na te kijken en te praten stuurt Bittertalen je tekst of je uitgeschreven antwoord naar Anthropic (Claude, in de Verenigde Staten). Je naam en e-mailadres gaan niet mee en Anthropic traint er geen modellen mee. Ga je akkoord?":["To check your work and talk with you, Bittertalen sends your text or your transcribed answer to Anthropic (Claude, in the United States). Your name and email address are not sent, and Anthropic does not train models on it. Do you agree?", "لتصحيح عملك والتحدث معك، يرسل Bittertalen نصك أو إجابتك المكتوبة إلى Anthropic (Claude، في الولايات المتحدة). لا يُرسل اسمك ولا بريدك الإلكتروني، ولا تدرّب Anthropic نماذجها عليها. هل توافق؟", "Kontrol etmek ve seninle konuşmak için Bittertalen metnini veya yazıya dökülmüş cevabını Anthropic'e (Claude, ABD) gönderir. Adın ve e-posta adresin gönderilmez, Anthropic bunlarla model eğitmez. Kabul ediyor musun?", "जाँचने और आपसे बात करने के लिए Bittertalen आपका पाठ या लिखा हुआ जवाब Anthropic (Claude, अमेरिका) को भेजता है। आपका नाम और ईमेल नहीं भेजे जाते, और Anthropic इनसे मॉडल प्रशिक्षित नहीं करता। क्या आप सहमत हैं?", "为了批改和与你对话，Bittertalen 会把你的文字或转写的回答发送给 Anthropic（Claude，位于美国）。你的姓名和邮箱不会被发送，Anthropic 也不会用它训练模型。你同意吗？", "Para corregir y conversar contigo, Bittertalen envía tu texto o tu respuesta transcrita a Anthropic (Claude, en Estados Unidos). No se envían tu nombre ni tu correo, y Anthropic no entrena modelos con ello. ¿Estás de acuerdo?", "Чтобы проверять ответы и разговаривать с вами, Bittertalen отправляет ваш текст или расшифровку ответа в Anthropic (Claude, США). Имя и e-mail не передаются, Anthropic не обучает на этом модели. Вы согласны?"],
 "Zonder je akkoord sturen we niets naar de AI. Je kunt gewoon verder oefenen.":["Without your consent we send nothing to the AI. You can keep practising.", "بدون موافقتك لا نرسل شيئًا إلى الذكاء الاصطناعي. يمكنك مواصلة التدرّب.", "Onayın olmadan yapay zekâya hiçbir şey göndermeyiz. Alıştırmaya devam edebilirsin.", "आपकी सहमति के बिना हम AI को कुछ नहीं भेजते। आप अभ्यास जारी रख सकते हैं।", "未经你同意，我们不会向 AI 发送任何内容。你可以继续练习。", "Sin tu consentimiento no enviamos nada a la IA. Puedes seguir practicando.", "Без вашего согласия мы ничего не отправляем ИИ. Можно продолжать заниматься."],
 });
+
+// Reminders with the days until the exam, 25 November 2026
+UIR.push(
+  [/^Morgen is je examen\. Vandaag: (.+)\.$/,["Your exam is tomorrow. Today: $1.", "امتحانك غدًا. اليوم: $1.", "Sınavın yarın. Bugün: $1.", "आपकी परीक्षा कल है। आज: $1।", "明天就是你的考试。今天：$1。", "Tu examen es mañana. Hoy: $1.", "Экзамен завтра. Сегодня: $1."]],
+  [/^Nog (\d+) dagen tot je examen\. Vandaag: (.+)\.$/,["$1 days until your exam. Today: $2.", "بقي $1 يومًا على امتحانك. اليوم: $2.", "Sınavına $1 gün kaldı. Bugün: $2.", "परीक्षा में $1 दिन बाकी। आज: $2।", "离考试还有 $1 天。今天：$2。", "Faltan $1 días para tu examen. Hoy: $2.", "До экзамена $1 дн. Сегодня: $2."]],
+  [/^Je les van vandaag staat klaar\. Eerst (.+)\.$/,["Today's lesson is ready. First: $1.", "درس اليوم جاهز. أولًا: $1.", "Bugünkü dersin hazır. Önce: $1.", "आज का पाठ तैयार है। पहले: $1।", "今天的课程已准备好。先练：$1。", "Tu lección de hoy está lista. Primero: $1.", "Урок на сегодня готов. Сначала: $1."]],
+);
+
+// Reminder fallback
+Object.assign(UI,{
+"Tijd voor je les van vandaag.":["Time for today's lesson.", "حان وقت درس اليوم.", "Bugünkü dersinin zamanı.", "आज के पाठ का समय।", "该上今天的课了。", "Es hora de tu lección de hoy.", "Пора заниматься — урок на сегодня."],
+});
+
+// Exam date on Mijn dag
+Object.assign(UI,{
+"Wanneer is je examen? Zet de datum in Profiel.":["When is your exam? Add the date in Profile.", "متى امتحانك؟ أضف التاريخ في الملف الشخصي.", "Sınavın ne zaman? Tarihi Profil'e ekle.", "आपकी परीक्षा कब है? प्रोफ़ाइल में तारीख डालें।", "你的考试是哪天？请在个人资料中填写日期。", "¿Cuándo es tu examen? Añade la fecha en Perfil.", "Когда у вас экзамен? Укажите дату в профиле."],
+});
+
+// First visit: the start test
+Object.assign(UI,{
+"Nieuw hier? Begin met twaalf korte vragen. Dan weet Bittertalen waar je begint, ook als je nog bijna geen Nederlands kent.":["New here? Start with twelve short questions. Then Bittertalen knows where you begin, even if you hardly know any Dutch yet.", "جديد هنا؟ ابدأ باثني عشر سؤالًا قصيرًا. هكذا يعرف Bittertalen من أين تبدأ، حتى لو كنت لا تعرف الهولندية تقريبًا.", "Yeni misin? On iki kısa soruyla başla. Böylece Bittertalen, neredeyse hiç Hollandaca bilmesen bile nereden başlayacağını bilir.", "नए हैं? बारह छोटे सवालों से शुरू करें। तब Bittertalen जान जाएगा कि आप कहाँ से शुरू करें, भले ही आप अभी लगभग डच न जानते हों।", "第一次来？先做十二道小题。这样 Bittertalen 就知道你从哪里开始，即使你几乎还不会荷兰语。", "¿Eres nuevo? Empieza con doce preguntas cortas. Así Bittertalen sabe por dónde empiezas, aunque casi no sepas neerlandés.", "Впервые здесь? Начните с двенадцати коротких вопросов. Так Bittertalen поймёт, с чего вам начать, даже если вы почти не знаете нидерландского."],
+"Begin met de korte test":["Start the short test", "ابدأ الاختبار القصير", "Kısa testle başla", "छोटे टेस्ट से शुरू करें", "开始小测试", "Empieza la prueba corta", "Начать короткий тест"],
+});
+
+// Passed a part: congratulations and share
+Object.assign(UI,{
+"Gefeliciteerd!":["Congratulations!", "تهانينا!", "Tebrikler!", "बधाई हो!", "恭喜！", "¡Enhorabuena!", "Поздравляем!"],
+"Deel het met vrienden":["Share it with friends", "شاركه مع أصدقائك", "Arkadaşlarınla paylaş", "दोस्तों के साथ साझा करें", "分享给朋友", "Compártelo con amigos", "Поделиться с друзьями"],
+"Terug naar Mijn examen":["Back to My exam", "العودة إلى امتحاني", "Sınavım'a dön", "मेरी परीक्षा पर वापस", "返回我的考试", "Volver a Mi examen", "Назад к «Моему экзамену»"],
+"Verder met B1":["Continue with B1", "تابع مع B1", "B1 ile devam et", "B1 के साथ आगे बढ़ें", "继续学习 B1", "Seguir con B1", "Перейти к B1"],
+"Je hebt alle onderdelen van A2. Wil je later naturaliseren? Daar is straks waarschijnlijk B1 voor nodig. Je kunt hier verder met B1.":["You have passed every part of A2. Want to naturalise later? That will probably soon need B1. You can carry on with B1 here.", "اجتزت كل أجزاء A2. هل تريد التجنّس لاحقًا؟ على الأرجح سيُطلب B1 قريبًا. يمكنك المتابعة مع B1 هنا.", "A2'nin tüm bölümlerini geçtin. İleride vatandaş olmak mı istiyorsun? Yakında muhtemelen B1 gerekecek. Burada B1 ile devam edebilirsin.", "आपने A2 के सभी भाग पास कर लिए। बाद में नागरिकता चाहिए? जल्द ही शायद B1 ज़रूरी होगा। आप यहाँ B1 के साथ आगे बढ़ सकते हैं।", "你已通过 A2 的所有部分。以后想入籍？很可能很快就需要 B1。你可以在这里继续学习 B1。", "Has aprobado todas las partes de A2. ¿Quieres naturalizarte más adelante? Probablemente pronto hará falta B1. Puedes seguir con B1 aquí.", "Вы сдали все части A2. Хотите позже получить гражданство? Скорее всего, скоро понадобится B1. Здесь можно продолжить с B1."],
+"Je hebt alle onderdelen van B1. Daarmee kun je naturalisatie aanvragen bij de gemeente.":["You have passed every part of B1. With that you can apply for naturalisation at your municipality.", "اجتزت كل أجزاء B1. بذلك يمكنك طلب التجنّس لدى البلدية.", "B1'in tüm bölümlerini geçtin. Bununla belediyeye vatandaşlık başvurusu yapabilirsin.", "आपने B1 के सभी भाग पास कर लिए। अब आप नगरपालिका में नागरिकता के लिए आवेदन कर सकते हैं।", "你已通过 B1 的所有部分。现在可以向市政府申请入籍。", "Has aprobado todas las partes de B1. Con eso puedes solicitar la naturalización en tu ayuntamiento.", "Вы сдали все части B1. С этим можно подавать на натурализацию в муниципалитете."],
+});
+UIR.push(
+  [/^Je bent geslaagd voor (.+)\.$/,["You passed $1.", "لقد نجحت في $1.", "$1 sınavını geçtin.", "आप $1 में पास हो गए।", "你通过了 $1。", "Has aprobado $1.", "Вы сдали: $1."]],
+  [/^Nog te doen: (.+)\. Die staan nu vooraan in Mijn dag\.$/,["Still to do: $1. They are now first in My day.", "ما زال عليك: $1. أصبحت الآن في مقدمة يومي.", "Kalanlar: $1. Artık Günüm'de en başta.", "अभी बाकी: $1। ये अब मेरा दिन में सबसे ऊपर हैं।", "还剩：$1。它们现在排在“我的一天”最前面。", "Te queda: $1. Ahora aparecen primero en Mi día.", "Осталось: $1. Теперь они первыми в «Моём дне»."]],
+);

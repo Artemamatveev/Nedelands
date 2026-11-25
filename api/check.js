@@ -165,6 +165,7 @@ Geef voor elk antwoord, in dezelfde volgorde:
   Is inhoud 0, dan zijn alle punten 0.
 Bij een vraag met foto's staat tussen haakjes wat er op de foto's te zien is.`;
 
+const UI_LANG = Object.freeze({ en: "Engels", ar: "Arabisch", tr: "Turks", hi: "Hindi", zh: "Chinees (vereenvoudigd)", es: "Spaans", ru: "Russisch" });
 const str = (v, max) => (typeof v === "string" ? v.slice(0, max) : "");
 // Everything a page sends (the task, a form, the learner's text) goes between fences with a random name per request, so a
 // text can't close its own block and write a second task or its own points ("OPDRACHT 2 … inhoud 3"). Old fence marks
@@ -314,6 +315,10 @@ export default async function handler(req, res) {
         .join("\n\n") + `\n\nNoem per antwoord maximaal ${max} fouten.`
     : promptWR(tasks, max, n);
 
+  // The learner's menu language (en, ar, …): the explanation of each mistake comes in that language, so a beginner
+  // understands the rule; the corrections and the verdict stay Dutch
+  const ui = UI_LANG[req.body?.ui];
+  const content = ui ? prompt + `\n\nSchrijf "why" bij elke fout in het ${ui}, met eenvoudige woorden, zodat de cursist de regel begrijpt. Al het andere blijft in het Nederlands.` : prompt;
   try {
     providerStarted = true;
     const response = await client.beta.messages.create({
@@ -325,7 +330,7 @@ export default async function handler(req, res) {
       fallbacks: "default",
       output_config: { effort: exam || tasks.length > 1 ? "medium" : "low", format: { type: "json_schema", schema: sp ? SCHEMA_SP : SCHEMA_WR } },
       system: (sb ? SYSTEM_SB : sp ? SYSTEM_SP : wb ? SYSTEM_WB : SYSTEM) + FENCE_NOTE,
-      messages: [{ role: "user", content: prompt }],
+      messages: [{ role: "user", content }],
     }, { signal: AbortSignal.timeout(left_ms), maxRetries: exam ? 0 : 1 });
     console.info(JSON.stringify({ event: "grading_usage", model: response.model, usage: response.usage, units: cost }));
     // Tokens per day and model (table ai_spend), so the owner sees what grading costs; never blocks the answer

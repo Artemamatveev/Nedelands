@@ -7,6 +7,11 @@ const copy = {
   "Een jaar Plus voor één betaling.": ["A year of Plus for one payment.", "سنة من Plus مقابل دفعة واحدة.", "Tek ödemeyle bir yıl Plus.", "एक भुगतान में एक साल का Plus।", "一次付款享一年 Plus。", "Un año de Plus con un solo pago.", "Год Plus за один платёж."],
   "Wordt niet automatisch verlengd.": ["Does not renew automatically.", "لا يتجدد تلقائيًا.", "Otomatik olarak yenilenmez.", "अपने-आप नवीनीकृत नहीं होता।", "不会自动续订。", "No se renueva automáticamente.", "Не продлевается автоматически."],
   "Kies de Jaarpas": ["Choose the year pass", "اختر تصريح السنة", "Yıllık kartı seç", "सालाना पास चुनें", "选择年度通行证", "Elegir el pase anual", "Выбрать годовой пропуск"],
+  "Oefen gratis voor je inburgeringsexamen": ["Practise for your civic integration exam for free", "تدرّب مجانًا لامتحان الاندماج", "Uyum sınavına ücretsiz çalış", "अपनी इंटीग्रेशन परीक्षा की मुफ़्त तैयारी करें", "免费备考你的融入考试", "Prepara gratis tu examen de integración", "Готовьтесь к экзамену inburgering бесплатно"],
+  "A2 en Staatsexamen NT2 B1, op weg naar je Nederlandse paspoort. AI kijkt je schrijven en spreken na met de criteria van DUO, en je leert het land kennen.": ["A2 and the Staatsexamen NT2 B1, on your way to a Dutch passport. AI checks your writing and speaking against DUO's criteria, and you get to know the country.", "A2 وامتحان Staatsexamen NT2 B1، في طريقك إلى جواز السفر الهولندي. يصحّح الذكاء الاصطناعي كتابتك وكلامك وفق معايير DUO، وتتعرّف على البلد.", "A2 ve Staatsexamen NT2 B1, Hollanda pasaportu yolunda. Yapay zekâ yazma ve konuşmanı DUO'nun ölçütleriyle kontrol eder, sen de ülkeyi tanırsın.", "A2 और Staatsexamen NT2 B1, डच पासपोर्ट की राह पर। AI आपके लेखन और बोलने को DUO के मानदंडों से जाँचता है, और आप देश को जानते हैं।", "A2 和 Staatsexamen NT2 B1，迈向荷兰护照。AI 按 DUO 的标准批改你的写作和口语，你也能更了解这个国家。", "A2 y el Staatsexamen NT2 B1, camino de tu pasaporte neerlandés. La IA corrige tu escritura y tu expresión oral con los criterios de DUO, y conoces el país.", "A2 и Staatsexamen NT2 B1 — на пути к нидерландскому паспорту. ИИ проверяет письмо и устную речь по критериям DUO, а вы узнаёте страну."],
+  "Begin gratis": ["Start for free", "ابدأ مجانًا", "Ücretsiz başla", "मुफ़्त शुरू करें", "免费开始", "Empieza gratis", "Начать бесплатно"],
+  "Installeer de app": ["Install the app", "ثبّت التطبيق", "Uygulamayı yükle", "ऐप इंस्टॉल करें", "安装应用", "Instala la aplicación", "Установить приложение"],
+  "Gratis en zonder account te proberen, ook met AI-nakijken.": ["Free to try without an account, AI checking included.", "جرّبه مجانًا وبدون حساب، مع التصحيح بالذكاء الاصطناعي أيضًا.", "Hesapsız ve ücretsiz dene, yapay zekâ kontrolü dahil.", "बिना खाते के मुफ़्त आज़माएँ, AI जाँच के साथ।", "无需账户即可免费试用，包括 AI 批改。", "Pruébalo gratis y sin cuenta, también con corrección por IA.", "Попробуйте бесплатно и без аккаунта, в том числе проверку ИИ."],
   "Word thuis in Nederland": ["Feel at home in the Netherlands", "اشعر بأنك في بيتك في هولندا", "Hollanda'da kendini evinde hisset", "नीदरलैंड में घर जैसा महसूस करें", "在荷兰安家落户", "Siéntete en casa en los Países Bajos", "Почувствуйте себя дома в Нидерландах"],
   "Oefen voor je inburgering of het Staatsexamen NT2, leer het land kennen en durf Nederlands te spreken.": ["Practise for your civic integration exam or the NT2 state exam, get to know the country and dare to speak Dutch.", "تدرّب لامتحان الاندماج أو امتحان الدولة NT2، وتعرّف على البلد، وتشجّع على التحدث بالهولندية.", "Uyum sınavına veya NT2 devlet sınavına çalış, ülkeyi tanı ve Flemenkçe konuşmaya cesaret et.", "इंटीग्रेशन परीक्षा या NT2 राज्य परीक्षा की तैयारी करें, देश को जानें और डच बोलने की हिम्मत करें।", "备考公民融入考试或 NT2 国家考试，了解这个国家，敢于开口说荷兰语。", "Prepárate para el examen de integración o el examen estatal NT2, conoce el país y atrévete a hablar neerlandés.", "Готовьтесь к интеграционному экзамену или государственному экзамену NT2, узнавайте страну и не бойтесь говорить по-нидерландски."],
   "Oefen voor je examen": ["Practise for your exam", "تدرّب لامتحانك", "Sınavına çalış", "अपनी परीक्षा की तैयारी करें", "为考试做准备", "Prepara tu examen", "Готовьтесь к экзамену"],
@@ -248,6 +253,25 @@ select.addEventListener("change", () => {
   render();
 });
 render();
+
+// On "/" with no language chosen yet, a phone set to Arabic, Turkish, … gets one line in its own language that leads to
+// that page. English is left out on purpose: many Dutch phones are set to English. Never switches by itself (search
+// engines and Dutch readers keep the Dutch page); "×" remembers Dutch.
+{
+  const HINT = { ar: ["اقرأ هذه الصفحة بالعربية", "عربي"], tr: ["Bu sayfayı Türkçe oku", "Türkçe"], hi: ["यह पेज हिंदी में पढ़ें", "हिंदी"], zh: ["用中文阅读本页", "中文"], es: ["Lee esta página en español", "Español"], ru: ["Читать эту страницу по-русски", "Русский"] };
+  let chosen = null;
+  try { chosen = localStorage.getItem("ww-ui") || localStorage.getItem("ww-ui-nl"); } catch {}
+  const want = !page && !chosen && [...(navigator.languages || [navigator.language || ""])].map(l => String(l).slice(0, 2).toLowerCase()).find(l => l === "nl" || Object.hasOwn(HINT, l));
+  if (want && want !== "nl") {
+    const bar = document.createElement("div"), a = document.createElement("a"), x = document.createElement("button");
+    bar.className = "lang-hint"; bar.lang = want === "zh" ? "zh-Hans" : want; bar.dir = want === "ar" ? "rtl" : "ltr";
+    a.href = "/" + want + location.search; a.textContent = HINT[want][0];
+    x.type = "button"; x.textContent = "×"; x.setAttribute("aria-label", "Nederlands");
+    x.onclick = () => { try { localStorage.setItem("ww-ui-nl", "1"); } catch {} bar.remove(); };
+    bar.append(a, x);
+    document.body.prepend(bar);
+  }
+}
 
 // Touch and keyboard use the summary; a mouse can reveal the same information on hover.
 // Native details keep the headings usable even if this script is unavailable.
