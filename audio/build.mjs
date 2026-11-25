@@ -3,6 +3,8 @@
 //
 //   node audio/build.mjs            record what is new or changed, delete files no line uses any more
 //   node audio/build.mjs --dry      only count what would be recorded (--dry --who: and show who says what)
+//   node audio/build.mjs --dry --script   print every Luisteren line as CSV (key, voice, text): the script for people
+//                                    who record lines themselves (see LIVE below)
 //
 // The texts come from the page itself: voiceTexts() and sayKeys() in oefenen.html, run in headless Chrome, so a key here is
 // exactly the key speak() looks up. The Google key is read from ~/.config/bittertalen/tts.env (GOOGLE_TTS_KEY=…),
@@ -21,6 +23,14 @@ const CHROME = process.env.CHROME_PATH || "/Applications/Google Chrome.app/Conte
 // The voices (chosen by ear in November 2026). F and M speak; F2 and M2 only when two women or two men talk together.
 const V = { F: "Vindemiatrix", M: "Charon", F2: "Aoede", M2: "Orus" };
 const NARRATOR = "M"; // reads the KNM, Luisteren and Spreken questions aloud, as the voice on the exam does
+// The people in the Luisteren fragments: each fragment draws its speakers from these, always the same for the same
+// fragment, so the learner hears many different people and not two voices all the time (the exam has real people).
+// Narrator, words and the Gesprekken keep V. Remove a voice here if it sounds wrong, then run the script again.
+const POOL = { F: ["Vindemiatrix", "Aoede", "Kore", "Leda", "Gacrux", "Sulafat"],
+  M: ["Charon", "Orus", "Fenrir", "Puck", "Iapetus", "Schedar"] };
+// Lines recorded by people (audio/live.json: key → who recorded it): never recorded over or deleted by this script.
+// Record the line as in --script, save it as audio/<key>.mp3 and add the key to live.json.
+const LIVE = await readFile(join(OUT, "live.json"), "utf8").then(JSON.parse).catch(() => ({}));
 
 // Who is speaking: the names and titles people introduce themselves with in the texts, and the people in the Gesprekken (GP .w)
 const FEMALE = new Set(`Anouk Samira Lisa Fatima Fatma Sandra Els Marieke Ayşe Aisha Amina Amira Anna Anne Annemiek Astrid Carla
@@ -43,7 +53,10 @@ const unknown = new Set();
 const selfGender = lines => { for (const l of lines) for (const m of l.matchAll(SELF)) {
   const g = genderOf(m[1]) || genderOf(m[2]); if (g) return g; if (m[2] && !/^(De|Het|Een)$/.test(m[2])) unknown.add(m[2]) } return null };
 const roleGender = (role, lines) => { for (const w of String(role).split(/\s+/)) { const g = genderOf(w); if (g) return g } return selfGender(lines) };
-const coin = s => [...s].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7) % 2 ? "F" : "M"; // unknown: half and half, always the same
+const hash = s => [...s].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7);
+const coin = s => hash(s) % 2 ? "F" : "M"; // unknown: half and half, always the same
+// The n-th woman (F) or man (M) of a fragment: a voice from POOL picked by the fragment's text, different for each person
+const poolVoice = (t, g, n) => { const P = POOL[g]; return P[(hash(t) + n) % P.length] };
 
 function env() {
   return readFile(join(homedir(), ".config/bittertalen/tts.env"), "utf8").then(t => Object.fromEntries(
@@ -88,7 +101,7 @@ async function pageTexts() {
 
 // Which voice says each line: key → [voice, text without "A: "]
 function assign(entries) {
-  const out = new Map(), put = (k, g, l) => { if (!out.has(k)) out.set(k, [V[g], l.replace(/^[A-C]: /, "")]) };
+  const out = new Map(), put = (k, g, l, name) => { if (!out.has(k)) out.set(k, [name || V[g], l.replace(/^[A-C]: /, "")]) };
   const roles = {};
   for (const e of entries) if (e.k === "gp") (roles[e.g] = roles[e.g] || []).push(e.t);
   const roleG = {}; for (const r in roles) roleG[r] = roleGender(r, roles[r]) || coin(r);
@@ -100,9 +113,9 @@ function assign(entries) {
         const g = {}, n = { F: 0, M: 0 }, voice = {};
         for (const p of who) g[p] = selfGender(ls.filter(l => l.startsWith(p + ": ")));
         for (const p of who) { if (!g[p]) { const c = { F: 0, M: 0 }; for (const q of who) if (g[q]) c[g[q]]++; g[p] = c.M > c.F ? "F" : c.F > c.M ? "M" : p === "B" ? "F" : "M" }
-          voice[p] = g[p] + (n[g[p]]++ % 2 ? "2" : "") }
-        for (const [k, l] of e.L) put(k, voice[(l.match(/^([A-C]): /) || [])[1]] || voice[who[0]], l);
-      } else { const g = selfGender(ls) || coin(e.t); for (const [k, l] of e.L) put(k, g, l) }
+          voice[p] = poolVoice(e.t, g[p], n[g[p]]++) }
+        for (const [k, l] of e.L) put(k, null, l, voice[(l.match(/^([A-C]): /) || [])[1]] || voice[who[0]]);
+      } else { const g = selfGender(ls) || coin(e.t); for (const [k, l] of e.L) put(k, g, l, poolVoice(e.t, g, 0)) }
     } else if (e.k === "q" || e.k === "sp") for (const [k, l] of e.L) put(k, NARRATOR, l);
     else if (e.k === "gp") for (const [k, l] of e.L) put(k, roleG[e.g], l);
     else if (e.k === "gpm") for (const [k, l] of e.L) put(k, roleG[e.g] === "F" ? "M" : "F", l);
@@ -126,7 +139,11 @@ async function say(key, voice, text) {
 const entries = await pageTexts(), lines = assign(entries);
 const old = await readFile(join(OUT, "lines.json"), "utf8").then(JSON.parse).catch(() => ({}));
 const files = new Set((await readdir(OUT)).filter(f => f.endsWith(".mp3")).map(f => f.slice(0, -4)));
-const todo = [...lines].filter(([k, [v, l]]) => !files.has(k) || !old[k] || old[k][0] !== v || old[k][1] !== l);
+const todo = [...lines].filter(([k, [v, l]]) => !LIVE[k] && (!files.has(k) || !old[k] || old[k][0] !== v || old[k][1] !== l));
+for (const k in LIVE) { // a person's recording: keep it; say so when its text has changed or nothing uses it any more
+  if (!files.has(k)) console.log(`live.json: ${k} has no file audio/${k}.mp3`);
+  else if (!lines.has(k)) console.log(`live.json: nothing says ${k} any more (kept; remove it from live.json to delete it)`);
+  else if (old[k] && old[k][1] !== lines.get(k)[1]) console.log(`live.json: the text of ${k} changed, record it again: ${lines.get(k)[1]}`) }
 const chars = todo.reduce((n, [, [, l]]) => n + l.length, 0), all = [...lines.values()].reduce((n, [, l]) => n + l.length, 0);
 const kinds = {}; for (const e of entries) kinds[e.k] = (kinds[e.k] || 0) + e.t.length;
 console.log(`${lines.size} lines, ${all} characters (${Object.entries(kinds).map(([k, n]) => k + " " + n).join(", ")}); to record: ${todo.length} lines, ${chars} characters`);
@@ -134,12 +151,17 @@ if (process.argv.includes("--who")) { // who says what, to check the voices
   console.log("names not known as a man or a woman:", [...unknown].join(" ") || "none");
   for (const e of entries) if (e.k === "ls" || e.k === "gp") console.log(e.k, e.g || "", "|", e.L.map(([k, l]) => lines.get(k)[0][0] + lines.get(k)[0].slice(-1) + ": " + l.slice(0, 50)).join(" / ").slice(0, 260));
 }
+if (process.argv.includes("--script")) { // the Luisteren lines to record, in the order of the app
+  const q = s => '"' + s.replace(/"/g, '""') + '"';
+  console.log("key,voice,text"); for (const e of entries) if (e.k === "ls") for (const [k] of e.L) console.log([k, lines.get(k)[0], q(lines.get(k)[1])].join(","));
+}
 if (DRY) process.exit(0);
 
 // GOOGLE_TTS_KEY in the environment wins (a cloud session, where a proxy puts the real key in the header); else the file
 const key = process.env.GOOGLE_TTS_KEY || (await env().catch(() => ({}))).GOOGLE_TTS_KEY;
 if (!key) throw new Error("GOOGLE_TTS_KEY missing in ~/.config/bittertalen/tts.env");
-const keep = {}; for (const [k, [v, l]] of lines) if (files.has(k) && old[k] && old[k][0] === v && old[k][1] === l) keep[k] = old[k];
+const keep = {}; for (const [k, [v, l]] of lines) if (files.has(k) && (LIVE[k] || (old[k] && old[k][0] === v && old[k][1] === l))) keep[k] = LIVE[k] ? ["live", l] : old[k];
+for (const k in LIVE) if (files.has(k) && !keep[k]) keep[k] = ["live", (old[k] || [])[1] || ""];
 let done = 0, failed = 0;
 const save = () => writeFile(join(OUT, "lines.json"), JSON.stringify(keep, null, 0).replace(/\],"/g, '],\n"'));
 const queue = [...todo];
@@ -152,7 +174,7 @@ await Promise.all(Array.from({ length: 8 }, async () => {
   }
 }));
 // Files no line uses any more
-for (const f of files) if (!lines.has(f)) { await unlink(join(OUT, f + ".mp3")).catch(() => {}) }
+for (const f of files) if (!lines.has(f) && !LIVE[f]) { await unlink(join(OUT, f + ".mp3")).catch(() => {}) }
 await save();
 await writeFile(join(OUT, "index.json"), JSON.stringify(Object.keys(keep).sort()));
 console.log(`recorded ${done - failed}, failed ${failed}; ${Object.keys(keep).length} files in audio/`);
