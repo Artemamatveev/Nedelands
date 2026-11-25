@@ -159,7 +159,11 @@ consultatiebureau question and its existing listening fragment. Neutral birth sc
 
 Everything the app says from its own material is recorded: `audio/<key>.mp3`, one file per line, made once with Google
 Cloud Text-to-Speech, Chirp 3 HD voices (chosen by ear: Vindemiatrix for women, Charon for men; Aoede and Orus only
-when two women or two men talk together). `speak(t)` keeps its old interface (lines split by `\n`, `A: …` / `B: …` /
+when two women or two men talk together). The people in the Luisteren fragments (`ls`) are drawn from `POOL` in
+`audio/build.mjs` (six women's and six men's voices, picked by the fragment's text, each person in a fragment their own),
+so the learner hears many people, as on the exam (25 November 2026, after the critique that two voices sound synthetic).
+Lines recorded by real people are listed in `audio/live.json` (key → who recorded it): the script never records over
+or deletes them, and says when such a line's text has changed. `--dry --script` prints the Luisteren lines to record. `speak(t)` keeps its old interface (lines split by `\n`, `A: …` / `B: …` /
 `C: …` for a dialogue) and plays each line's file if `audio/index.json` lists its key (`sayKeys()`: a dialogue's lines
 are keyed by the whole dialogue, other lines on their own), else the phone's Dutch voice (`utter()`), as for own books,
 Claude's corrections and dictionary words. The first line starts inside the tap, the rest follow on the same audio

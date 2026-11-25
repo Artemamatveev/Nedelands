@@ -7,7 +7,8 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 
 const root = new URL('../', import.meta.url);
-export const LIMIT = 0.45; // the share no set may go over; lower it as the sets are cleaned
+export const LIMIT = 0.36; // the share no set may go over (chance is a third); lower it as the sets are cleaned
+export const KNMS = 235; // from this index on KNM rows are situations (KNMS in oefenen.html): counted as their own set, so the short questions don't hide them
 const MARGIN = 1.25; // "clearly longest": at least a quarter longer than the longest wrong option
 
 export function load() {
@@ -19,7 +20,7 @@ export function load() {
 // Every question as {set, key, q, right, wrong:[…]}
 export function questions(D = load()) {
   const out = [];
-  D.KNM.forEach((r, i) => out.push({ set: 'KNM', key: `knm|${i}`, q: r[1], right: r[2], wrong: [r[3], r[4]] }));
+  D.KNM.forEach((r, i) => out.push({ set: i >= KNMS ? 'KNM situaties' : 'KNM', key: `knm|${i}`, q: r[1], right: r[2], wrong: [r[3], r[4]] }));
   D.LS.forEach((r, i) => out.push({ set: 'Luisteren A2', key: `ls|${i}`, q: r[1], right: r[2], wrong: [r[3], r[4]] }));
   for (const [set, A] of [['Luisteren A2 lang', D.LSM], ['Luisteren B1', D.LSB]])
     A.forEach((r, i) => r[2].forEach((x, j) => out.push({ set, key: `${i}.${j}`, q: x[0], right: x[1], wrong: [x[2], x[3]] })));

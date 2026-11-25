@@ -60,7 +60,7 @@ are in `docs/`, one file per area. Read the one for the area you change, and kee
 ## Open items (25 November 2026)
 
 - KVK and BTW numbers are placeholders in voorwaarden.html and the footer until the KvK registration.
-- KNM situations and long Luisteren fragments still have the right answer as the longest option in 42–45% of
-  questions; fixing them needs new recordings (`audio/build.mjs` with the Google key).
+- Luisteren is all Google voices. Real people can record lines: `node audio/build.mjs --dry --script` gives the
+  script, the file goes to `audio/<key>.mp3` and the key into `audio/live.json` (never recorded over). None yet.
 - The model prices in `admin.html` (`PRICE`) must be checked against Anthropic's price list when they change.
 - Grading has not yet been compared with an NT2 examiner (`supabase/calibration.sql`, `docs/ai.md`).
