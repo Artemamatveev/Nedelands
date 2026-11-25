@@ -1016,8 +1016,9 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
         <label class="prow"><span>Voornaam</span><input id="pname" autocomplete="given-name" maxlength="40"></label>
         <label class="prow"><span>Achternaam</span><input id="plast" autocomplete="family-name" maxlength="60"></label>
       </div>
+      <h3 class="lh">Data van mijn examens</h3>
+      <div class="pg" id="pexams"></div>
       <div class="pg">
-        <label class="prow"><span>Datum van mijn examen</span><input type="date" id="pexam"></label>
         <div class="prow pickrow"><span id="plvlt">Ik oefen voor</span><b id="plvlv"></b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg><select id="plvl" aria-labelledby="plvlt"></select></div>
         <div class="prow pickrow langrow"><span id="plangt">Taal</span><b data-langn></b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg><select id="plang" data-lang aria-labelledby="plangt"></select></div>
         <label class="prow tog" id="ptrilw" hidden><span>Trillen bij een antwoord</span><input type="checkbox" switch id="ptril"></label>
@@ -1348,10 +1349,26 @@ const lsSet=(k,v)=>{try{v==null?localStorage.removeItem(k):localStorage.setItem(
 const REFRE=/^[A-HJ-NP-Z2-9]{8}$/i;
 {const r=new URLSearchParams(location.search).get("ref");if(r&&REFRE.test(r))lsSet("ww-ref",r.toUpperCase())}
 const amsDay=(at=new Date())=>new Intl.DateTimeFormat("en-CA",{timeZone:"Europe/Amsterdam"}).format(at);
-// The learner's exam date from Profiel (S.me.exam, synced with the progress): whole days left on Amsterdam's calendar, or null
-const examDays=()=>{const d=String((S.me||{}).exam||"");if(!/^\d{4}-\d{2}-\d{2}$/.test(d))return null;
-  const n=Math.round((Date.parse(d+"T12:00:00Z")-Date.parse(amsDay()+"T12:00:00Z"))/864e5);return n>=0&&n<=730?n:null};
-const examLine=()=>{const n=examDays();return n==null?"":`<p class="note">${n===0?"Vandaag is je examen. Succes!":n===1?"Morgen is je examen. Succes!":`Nog ${n} dagen tot je examen.`}</p>`};
+// The learner's exam dates from Profiel: one per exam part of the level (S.me.exams {lz:"YYYY-MM-DD",…}, synced with the
+// progress). An older single date (S.me.exam) still counts until a part gets its own date. Days on Amsterdam's calendar.
+const DRE=/^\d{4}-\d{2}-\d{2}$/;
+// the dated parts: the exam parts of the level; for B1 also the ONA-eindgesprek and the participatieverklaring, which the
+// Staatsexamen does not include (both optional: an empty field is simply left out)
+const EXTRA={ona:"ONA-eindgesprek",pv:"Participatieverklaring"};
+const examParts=()=>lvl()==="B1"?[...parts(),"ona","pv"]:parts();
+const exName=k=>PART[k]||EXTRA[k]||"";
+const dayN=d=>{const n=Math.round((Date.parse(d+"T12:00:00Z")-Date.parse(amsDay()+"T12:00:00Z"))/864e5);return n>=0&&n<=730?n:null};
+// the coming exams of this level: [{k, n}] (k "" for the old single date), soonest first
+const examsAhead=()=>{const me=S.me||{},ex=me.exams||{};
+  let o=examParts().filter(k=>DRE.test(ex[k]||"")).map(k=>({k,n:dayN(ex[k])}));
+  if(!Object.values(ex).some(v=>DRE.test(v||""))&&DRE.test(me.exam||""))o=[{k:"",n:dayN(me.exam)}];
+  return o.filter(x=>x.n!=null).sort((a,b)=>a.n-b.n)};
+const examDays=()=>{const a=examsAhead();return a.length?a[0].n:null};
+const examLastDays=()=>{const a=examsAhead();return a.length?a[a.length-1].n:null};
+const examMany=()=>new Set(examsAhead().map(x=>x.n)).size>1;
+// the next exam: its part (or parts on the same day) and the days left, under the Proefexamens heading
+const examLine=()=>{const a=examsAhead();if(!a.length)return"";const n=a[0].n,ks=a.filter(x=>x.n===n&&x.k).map(x=>`<b>${exName(x.k)}</b>`);
+  return`<p class="note">${ks.length?ks.join(", ")+'<span aria-hidden="true"> · </span>':""}${n===0?"Vandaag is je examen. Succes!":n===1?"Morgen is je examen. Succes!":`Nog ${n} dagen tot je examen.`}</p>`};
 async function trialUsage(){
   if(!acc.cfg?.free||acc.user)return;
   try{const r=await fetch("/api/allowance",{cache:"no-store"});if(r.ok){const j=await r.json();if(!acc.user&&typeof j.free==="number")acc.free=j.free}}catch{}
@@ -1489,7 +1506,9 @@ function mergeS(a,b){
   const ga=a.gen||{},gb=b.gen||{}; o.gen={lz:uni(ga.lz,gb.lz,JSON.stringify),ls:uni(ga.ls,gb.ls,JSON.stringify)};
   const[p,q]=(a.last||0)>=(b.last||0)?[a,b]:[b,a]; o.last=p.last||0; o.streak=p.last===q.last?Math.max(p.streak||0,q.streak||0):p.streak||0;
   o.day=a.day&&b.day&&a.day.d===b.day.d?{d:a.day.d,done:uni(a.day.done,b.day.done,x=>x)}:a.day&&b.day?(a.day.d>b.day.d?a.day:b.day):a.day||b.day;
-  const ma=a.me||{},mb=b.me||{}; o.me={name:ma.name||mb.name||"",last:ma.last||mb.last||"",exam:ma.exam||mb.exam||""};
+  const ma=a.me||{},mb=b.me||{}; const ea=ma.exams||{},eb=mb.exams||{};
+  o.me={name:ma.name||mb.name||"",last:ma.last||mb.last||"",exam:ma.exam||mb.exam||"",av:ma.av||mb.av||"",
+    exams:Object.fromEntries([...new Set([...Object.keys(ea),...Object.keys(eb)])].map(k=>[k,ea[k]||eb[k]||""]))};
   o.t=Math.max(a.t||0,b.t||0);
   return o;
 }
@@ -2795,10 +2814,14 @@ function drawProfile(){
   const me=S.me||{},n=$("pname"),l=$("plast");
   if(document.activeElement!==n)n.value=me.name||""; if(document.activeElement!==l)l.value=me.last||"";
   n.onchange=l.onchange=()=>{S.me={...(S.me||{}),name:n.value.trim().slice(0,40),last:l.value.trim().slice(0,60)};save();syncMeta();drawProfile()};
-  // the exam date (S.me.exam, "YYYY-MM-DD"): a countdown on Examen and in the Plus screen; empty clears it
-  const ex=$("pexam");
-  if(ex){ex.min=amsDay();if(document.activeElement!==ex)ex.value=/^\d{4}-\d{2}-\d{2}$/.test(me.exam||"")?me.exam:"";
-    ex.onchange=()=>{const v=/^\d{4}-\d{2}-\d{2}$/.test(ex.value)?ex.value:"";S.me={...(S.me||{}),exam:v};save();home()}}
+  // the exam dates, one row per exam part of this level (S.me.exams): a countdown on Examen and in the Plus screen;
+  // an empty field clears that part. The first own date retires the older single date (S.me.exam).
+  const pe=$("pexams");
+  if(pe){const ex=(S.me||{}).exams||{},old=DRE.test((S.me||{}).exam||"")&&!Object.values(ex).some(v=>DRE.test(v||""))?S.me.exam:"";
+    if(!pe.contains(document.activeElement))pe.innerHTML=examParts().map(k=>`<label class="prow"><span>${exName(k)}</span><input type="date" data-ex="${k}" min="${amsDay()}" value="${DRE.test(ex[k]||"")?ex[k]:old}"></label>`).join("");
+    pe.querySelectorAll("[data-ex]").forEach(i=>i.onchange=()=>{const me=S.me||{},all={...(me.exams||{})};
+      if(old)parts().forEach(k=>{if(!DRE.test(all[k]||""))all[k]=old}); // keep the old date on the parts it stood for
+      all[i.dataset.ex]=DRE.test(i.value)?i.value:"";S.me={...me,exams:all,exam:""};save();home()})}
   // the portrait: a Dutch woman or man in Golden Age dress (S.me.av, so it goes along); tap to switch
   // the avatar the learner picked (an earlier portrait, "v" or "m", falls back to the bitterbal)
   $("pavi").innerHTML=avSVG(me.av); $("pav").onclick=avScreen;
@@ -4061,7 +4084,7 @@ function plusScreen(){
   $("tbody").innerHTML=`<h2 id="plusS">Bittertalen Plus</h2>`
     +(on?`<p class="sub"><b>${p.group?`<span lang="nl">${esc(p.group)}</span>`:p.pass?"Examenpas":"Bittertalen Plus"} ${p.level||""}</b> · ${plusLine()}</p>`:"")
     +`<p class="sub">Met Plus: tot ${c.month||200} nakijkbeurten per maand. Met een gratis account: ${acc.cfg.limit} gratis.</p><p class="sub">Al het andere in Bittertalen blijft gratis.</p>`
-    +(acc.cfg.pass&&!on&&examDays()!=null?`<p class="note">${examDays()<=(acc.cfg.pass.days||91)?`Je examen is over ${examDays()} dagen. De Examenpas loopt tot na je examen.`:`Je examen is over ${examDays()} dagen.`}</p>`:"")
+    +(acc.cfg.pass&&!on&&examLastDays()!=null?`<p class="note">${((n,m)=>n<=(acc.cfg.pass.days||91)?(m?`Je laatste examen is over ${n} dagen. De Examenpas loopt tot na je laatste examen.`:`Je examen is over ${n} dagen. De Examenpas loopt tot na je examen.`):(m?`Je laatste examen is over ${n} dagen.`:`Je examen is over ${n} dagen.`))(examLastDays(),examMany())}</p>`:"")
     +(on&&p.status==="past_due"?`<p class="note">Je laatste betaling is niet gelukt. Stripe probeert het nog een paar keer.</p>`:"")
     +(plusMsg?`<p class="note" role="status">${esc(plusMsg)}</p>`:"")
     +["A2","B1"].filter(level=>plans[level]).map(level=>`<section class="list" data-plus-plan="${level}"><div style="padding:16px"><h3>Bittertalen Plus ${level}</h3>
@@ -4934,7 +4957,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="2f006e846d";
+const UIV="b574e404f8";
 let uiP=null;
 function uiLoaded(){ // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});
