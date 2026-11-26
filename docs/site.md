@@ -21,13 +21,10 @@ Descriptions expand and collapse over 360/280 ms with height and opacity, revers
 interaction. Reduced motion skips the animation; resize settles it. Phone cards have no border; keyboard focus stays visible.
 Scroll anchoring is paused during disclosure motion, and feature-section entrance motion settles on hover so the heading
 cannot move away from a stationary pointer.
-"Leer het land kennen en durf te spreken" (`#ontdek`, "Vraag 2"; before 25 November 2026 "Meer dan examenvragen"; the user's wish, 24 November 2026) follows it: four blocks (`.extra`), each with a
-piece of the app itself in HTML or pictures instead of an icon (a sentence from a story with the word popup, paintings, a video
-frame with subtitles above a podcast player, so it is clear that you can watch and listen: our own photo, never a channel's still; Saskia with a correction): books, history and art, videos, podcasts and news, Saskia. The whole block is one link,
-to `/oefenen?open=books`, `history`, `media` or `talk` (`openEntry()`; Oefenen is behind the back button). Keep the texts true:
-words are translated into English only, and Saskia is called an AI character. Those three features left the `#oefenvormen` list
-(four headings now), so nothing appears twice. The Dutch in the pictures stays Dutch (`lang="nl"`, hidden from screen readers).
-The later questions moved one up: 3 the level, 4 the KNM question, 5 the writing check.
+“Ontdek Bittertalen” (`#ontdek`) sits below the hero. Its five cards cover history and culture, books, AI
+conversations, media and A2/B1 exam practice. Swiping, choosing a topic or using the arrows changes the description
+below the cards. With JavaScript disabled all cards and descriptions stay visible. The description links to
+the corresponding app screen or homepage example. The book demo shows the English definition of a Dutch word.
 How the two pages hand over (`tests/browser.test.mjs` checks it):
 the site always opens with the homepage in a browser, on phones, tablets and computers, including returning learners
 with saved progress or an account (the user's wish, 12 November 2026). The bar's button leads into the app. On a computer,

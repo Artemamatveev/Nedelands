@@ -551,14 +551,54 @@ test('The homepage and the app work in a real browser', async t => {
       assert.equal(await native.p.locator('.feature-grid p').first().isVisible(), true);
       await native.ctx.close();
     });
-    await t.test('the four blocks beyond the exam open their screen in the app', async () => {
+    await t.test('homepage product cards switch their descriptions and open the app', {timeout:20000}, async () => {
+      const s = await page(browser, base, {lang:'ru', viewport:{width:390,height:844}}); await s.go('/ru');
+      const cards = s.p.locator('.product-card');
+      const panels = s.p.locator('.module-detail');
+      assert.equal(await cards.count(), 5);
+      await s.p.locator('#module-history').waitFor();
+      assert.equal(await panels.filter({visible:true}).count(), 1);
+      const stage = s.p.locator('.product-stage');
+      await stage.scrollIntoViewIfNeeded();
+      const box = await stage.boundingBox();
+      await s.p.mouse.move(box.x + box.width * .72, box.y + 60);
+      await s.p.mouse.down();
+      await s.p.mouse.move(box.x + box.width * .3, box.y + 62, {steps:5});
+      await s.p.mouse.up();
+      await s.p.locator('#module-books').waitFor({timeout:3000});
+      const word = s.p.locator('[data-book-word]');
+      await word.tap();
+      assert.equal(await s.p.locator('#book-word').isVisible(), true);
+      await s.p.locator('[data-product-step="1"]').tap();
+      await s.p.locator('#module-conversation').waitFor();
+      const media = s.p.locator('[aria-controls="product-media"]');
+      await media.focus();
+      await s.p.keyboard.press('ArrowRight');
+      await s.p.locator('#module-media').waitFor();
+      await s.p.keyboard.press('ArrowRight');
+      await s.p.locator('#module-exam').waitFor();
+      await stage.scrollIntoViewIfNeeded();
+      const touchBox = await stage.boundingBox();
+      const cdp = await s.ctx.newCDPSession(s.p);
+      const touch = (type, x) => cdp.send('Input.dispatchTouchEvent', {
+        type, touchPoints:type==='touchEnd' ? [] : [{x, y:touchBox.y+55}]
+      });
+      await touch('touchStart',touchBox.x+touchBox.width*.7);
+      for(let i=1;i<=6;i++) await touch('touchMove',touchBox.x+touchBox.width*(.7-.065*i));
+      await touch('touchEnd');
+      await s.p.locator('#module-history').waitFor({timeout:3000});
+      assert.equal(await panels.filter({visible:true}).count(), 1);
+      assert.equal(await overflow(s.p), 0);
+      assert.deepEqual(s.errors, []);
+      await s.ctx.close();
+
       for (const [open, seen] of [['books', '#lib'], ['history', '#hist'], ['media', '#media'], ['talk', '#talk']]) {
-        const s = await page(browser, base, {lang: 'ru'}); await s.go('/ru');
-        const block = s.p.locator('.extra', {has: s.p.locator(`a[href="/oefenen?open=${open}"]`)});
-        await block.scrollIntoViewIfNeeded(); await s.p.waitForTimeout(1200);
-        await Promise.all([s.p.waitForURL(/oefenen/), block.tap({position: {x: 120, y: 80}})]); // the whole block is the link
-        await s.p.locator(seen).waitFor({state: 'visible'});
-        assert.equal(await s.p.evaluate(() => tab), 'oefenen'); // the back button leads to Oefenen
+        const s = await page(browser, base, {lang:'ru'}); await s.go('/ru');
+        const section = {books:'books',history:'history',media:'media',talk:'conversation'}[open];
+        await s.p.locator(`[aria-controls="product-${section}"]`).tap();
+        await s.p.locator(`#module-${section} a[href="/oefenen?open=${open}"]`).tap();
+        await s.p.locator(seen).waitFor({state:'visible'});
+        assert.equal(await s.p.evaluate(() => tab), 'oefenen');
         assert.equal(await overflow(s.p), 0);
         assert.deepEqual(s.errors, []); await s.ctx.close();
       }
