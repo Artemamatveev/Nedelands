@@ -30,7 +30,8 @@ Once the model was called, a failure gives back only the daily check: the monthl
 Timeouts: grading ends 110 s after the request arrived (no retry for a proefexamen, one otherwise; under 30 s left: 503 `timeout` before calling the model), conversation turns after 60 s, every Supabase and Stripe fetch in
 `_supa.js` after 8 s, so a check is always given back instead of being lost with a killed function (504 `timeout`).
 `max_tokens` is 8000 for one to three tasks and 12000 for a proefexamen. voorwaarden.html ("Redelijk gebruik") names
-20 a day, 200 a month and two proefexamens on the strongest model: change it in all eight languages with these defaults.
+20 a day, 200 a month (Plus), 250 a term (Examenpas), 600 a year (Jaarpas), and 8 / 15 / 30 proefexamens on the strongest
+model (OPUS_MONTH / PASS_OPUS / YEAR_OPUS): change it in all nine languages with these defaults.
 Functions run in Frankfurt (`"regions": ["fra1"]` in `vercel.json`, next to the Supabase database); privacy.html says so.
 
 ## Accounts (optional)
@@ -159,7 +160,7 @@ There is no trial or yearly price. Videos and podcasts remain free.
   migration `supabase/migrations/20261119003000_exam_pass.sql`). `plusFor()` returns the pass (`pass:true`, `ends:true`)
   when it covers more than the subscription, so `api/check.js` needs nothing new. Refunds are not handled automatically:
   delete the row by hand. The homepage has an Examenpas card (`#pass-card`), the app's Plus screen its two cards
-  (`data-pass-plan`), and voorwaarden.html an Examenpas section in all eight languages.
+  (`data-pass-plan`), and voorwaarden.html an Examenpas section in all nine languages.
 - privacy.html has a Stripe section (Stripe Payments Europe, seven years for payment records). Before taking real
   money: KVK (within a week of the start), Stripe's account verification, live keys, algemene voorwaarden and the right
   of withdrawal for digital services.
