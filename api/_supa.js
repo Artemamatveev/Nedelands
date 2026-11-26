@@ -24,6 +24,9 @@ export const TALK_PLUS = Math.max(1, parseInt(process.env.TALK_PLUS_CHECKS, 10) 
 export const OPUS_MONTH = Math.max(0, parseInt(process.env.OPUS_MONTH ?? "8", 10) || 0);
 export const PASS_TOTAL = Math.max(1, parseInt(process.env.PASS_TOTAL, 10) || 250);
 export const PASS_OPUS = Math.max(0, parseInt(process.env.PASS_OPUS ?? "15", 10) || 0);
+// The Jaarpas over its whole year (26 November 2026): counted per month like Plus it could cost far more than it earns
+export const YEAR_TOTAL = Math.max(1, parseInt(process.env.YEAR_TOTAL, 10) || 600);
+export const YEAR_OPUS = Math.max(0, parseInt(process.env.YEAR_OPUS ?? "30", 10) || 0);
 // A counter of table ai_guard (use_guard() in schema.sql): what is left, -1 when over; throws when unavailable
 export async function useGuard(k, day, cost, lim) {
   const r = await fetch(`${URL_}/rest/v1/rpc/use_guard`, {
@@ -330,7 +333,9 @@ export const coversLevel = (p, level) => isPlus(p) && (p.level === "B1" || p.lev
 // one-time prices are set (STRIPE_PRICE_PASS_A2, STRIPE_PRICE_PASS_B1). A purchase is a row of `exam_pass`, keyed by
 // the Checkout session, so the same webhook twice can't add days twice.
 // 91 days (13 weeks), so one pass costs clearly less than three months of Plus and lasts until most learners' exam
-export const PASS_DAYS = 91;
+// 119 days (17 weeks) since 26 November 2026, so the pass is clearly cheaper than the same months of Plus (A2 €29,99
+// against 4 × €9,99); 91 before
+export const PASS_DAYS = 119;
 // EUR 29,99 / 39,99 since 25 November 2026 (19,99 / 24,99 before: 600 checks for EUR 16 net could cost more than it earned)
 export const PASSES = Object.freeze({ A2: { price: "29,99", amount: 2999 }, B1: { price: "39,99", amount: 3999 } });
 export const PASS_PRICE = Object.freeze({ A2: (process.env.STRIPE_PRICE_PASS_A2 || "").trim(), B1: (process.env.STRIPE_PRICE_PASS_B1 || "").trim() });

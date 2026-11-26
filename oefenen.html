@@ -573,6 +573,7 @@ body.vfull{overflow:hidden}
 .tl small{display:block;color:var(--bad);font-size:var(--fs-s)}
 #tctl{margin-top:16px}
 #tctl .rec{margin-bottom:10px}
+.recpick{outline:2px solid var(--oranje);outline-offset:-2px}
 #tctl .type{margin-bottom:6px}
 #tctl .type input{font-size:var(--fs-b);font-weight:400}
 #tctl .hint{margin:4px 0 8px}
@@ -4283,6 +4284,24 @@ function avScreen(){
   $("tbody").innerHTML=`<h2>Kies je avatar</h2><div class="avg">${avatarOrder.map(k=>`<button type="button" data-av="${k}" aria-pressed="${k===cur}"><i>${avSVG(k)}</i><span lang="nl">${AVS[k].n}</span></button>`).join("")}</div>`;
   document.querySelectorAll("#tbody [data-av]").forEach(b=>b.onclick=()=>{S.me={...(S.me||{}),av:b.dataset.av};save();home()});
 }
+// One recommendation first (26 November 2026: six cards with six filled buttons made nobody choose): the Examenpas of the
+// learner's level, until after the exam date when there is one, with what the same months of Plus would cost. The other
+// plans stay below under "Andere opties", with plain buttons.
+let REC=false;
+function recHTML(on,plans){
+  const lv=lvl(),P=acc.cfg.pass;REC=false;
+  if(on||!P||!P.plans?.[lv])return"";
+  REC=true;
+  const days=P.days||119,weeks=Math.round(days/7),months=Math.ceil(days/30.5),n=examLastDays();
+  const eur=v=>Number(String(v).replace(",",".")),fmt=v=>v.toFixed(2).replace(".",",");
+  const monthly=plans[lv]?.price?eur(plans[lv].price):null,save=monthly?monthly*months-eur(P.plans[lv].price):0;
+  return`<section class="list recpick" data-rec="${lv}"><div style="padding:16px"><p class="ask">Aanbevolen voor jou</p><h3>Examenpas ${lv}</h3>
+    <p>${n!=null&&n<=days?`Elke dag feedback op Schrijven en Spreken tot na je examen.`:`${weeks} weken elke dag feedback op Schrijven en Spreken.`}</p>
+    <p><b dir="ltr">€ ${esc(P.plans[lv].price)}</b> <span>eenmalig, geen abonnement</span></p>
+    ${save>1?`<p class="note">Goedkoper dan ${months} maanden Plus (€ ${fmt(monthly*months)}).</p>`:""}
+    <button class="btn wide" id="precbuy" data-level="${lv}">Kies de Examenpas ${lv}</button></div></section>
+    <h3 class="lh">Andere opties</h3>`;
+}
 function plusScreen(){
   if(!acc.cfg||!acc.cfg.plus)return home();
   closePop();hush();TK=null;$("card").innerHTML="";
@@ -4297,26 +4316,27 @@ function plusScreen(){
     +(on&&p.status==="past_due"?`<p class="note">Je laatste betaling is niet gelukt. Stripe probeert het nog een paar keer.</p>`:"")
     +(plusMsg?`<p class="note" role="status">${esc(plusMsg)}</p>`:"")
     +(acc.user?`<section class="list"><label class="prow tog"><span>Laat Plus of de Examenpas meteen beginnen. Binnen 14 dagen kan ik herroepen en krijg ik mijn geld terug.</span><input type="checkbox" switch id="pstart"></label></section>`:"")
+    +recHTML(on,plans)
     +["A2","B1"].filter(level=>plans[level]).map(level=>`<section class="list" data-plus-plan="${level}"><div style="padding:16px"><h3>Bittertalen Plus ${level}</h3>
       <p>${level==="A2"?"Uitgebreide feedback van een sterker AI-model, ook op je proefexamens.":"Ook Schrijven en Spreken B1, met A2 erbij."}</p>
       <p><b dir="ltr">€ ${esc(plans[level].price)}</b> <span>per maand</span></p>
       <p class="note">Je kunt elke maand opzeggen.</p>
-      ${!acc.user?`<button class="btn wide" data-plus-login>${level==="A2"?"Kies Plus A2":"Kies Plus B1"}</button>`
+      ${!acc.user?`<button class="${REC?"ghost":"btn"} wide" data-plus-login>${level==="A2"?"Kies Plus A2":"Kies Plus B1"}</button>`
         :on&&!p.pass?level==="B1"&&p.level==="A2"?`<button class="btn wide" data-plus-buy="B1">Overstappen naar Plus B1</button>`:""
-        :p&&p.status!=="canceled"?"":`<button class="btn wide" data-plus-buy="${level}">${level==="A2"?"Kies Plus A2":"Kies Plus B1"}</button>`}
+        :p&&p.status!=="canceled"?"":`<button class="${REC?"ghost":"btn"} wide" data-plus-buy="${level}">${level==="A2"?"Kies Plus A2":"Kies Plus B1"}</button>`}
       </div></section>`).join("")
     +(acc.cfg.pass&&!(on&&!p.pass&&p.level==="B1")?`<h3 class="lh">Examenpas</h3><p class="sub">Eén keer betalen, geen abonnement.</p>`
       +["A2","B1"].filter(level=>acc.cfg.pass.plans?.[level]&&!(on&&!p.pass&&isPlus(level))).map(level=>`<section class="list" data-pass-plan="${level}"><div style="padding:16px"><h3>Examenpas ${level}</h3>
       <p>${Math.round((acc.cfg.pass.days||91)/7)} weken dezelfde nakijkbeurten als Plus ${level}.</p>
       <p><b dir="ltr">€ ${esc(acc.cfg.pass.plans[level].price)}</b> <span>eenmalig</span></p>
-      <button class="${on?"ghost":"btn"} wide" ${acc.user?`data-plus-pass="${level}"`:"data-plus-login"}>${level==="A2"?"Kies Examenpas A2":"Kies Examenpas B1"}</button>
+      <button class="${on||REC?"ghost":"btn"} wide" ${acc.user?`data-plus-pass="${level}"`:"data-plus-login"}>${level==="A2"?"Kies Examenpas A2":"Kies Examenpas B1"}</button>
       </div></section>`).join(""):"")
     // the Jaarpas: a year of Plus for one payment, never renewed (api/_supa.js YEARS)
     +(acc.cfg.year&&!(on&&!p.pass&&p.level==="B1")?`<h3 class="lh">Jaarpas</h3><p class="sub">Een jaar Plus voor één betaling. Wordt niet automatisch verlengd.</p>`
       +["A2","B1"].filter(level=>acc.cfg.year.plans?.[level]&&!(on&&!p.pass&&isPlus(level))).map(level=>`<section class="list" data-year-plan="${level}"><div style="padding:16px"><h3>Jaarpas ${level}</h3>
       <p>Een jaar dezelfde nakijkbeurten als Plus ${level}.</p>
       <p><b dir="ltr">€ ${esc(acc.cfg.year.plans[level].price)}</b> <span>eenmalig</span></p>
-      <button class="${on?"ghost":"btn"} wide" ${acc.user?`data-plus-year="${level}"`:"data-plus-login"}>${level==="A2"?"Kies Jaarpas A2":"Kies Jaarpas B1"}</button>
+      <button class="${on||REC?"ghost":"btn"} wide" ${acc.user?`data-plus-year="${level}"`:"data-plus-login"}>${level==="A2"?"Kies Jaarpas A2":"Kies Jaarpas B1"}</button>
       </div></section>`).join(""):"")
     +`<p class="note">Niet tevreden? Binnen 14 dagen na je eerste betaling krijg je je geld terug.</p>`
     +(acc.user&&acc.withdraw?`<button class="ghost wide" id="pwd">Herroepen</button><p class="note">Herroep je aankoop van de laatste 14 dagen. Plus of je Examenpas stopt meteen en je krijgt je geld binnen 14 dagen terug.</p>`:"")
@@ -4325,7 +4345,7 @@ function plusScreen(){
   if(!plusSeen){plusSeen=true;track("plus")}
   const go=async(w,b,level,kind)=>{
     if(w!=="manage"&&!$("pstart")?.checked){plusMsg="Zet eerst aan dat Plus of de Examenpas meteen mag beginnen.";plusScreen();$("pstart")?.focus();return}
-    if(w!=="manage")track(w);b.disabled=true;document.querySelectorAll("[data-plus-buy],[data-plus-pass],[data-plus-year],#pman").forEach(x=>x.disabled=true);plusMsg="";
+    if(w!=="manage")track(w);b.disabled=true;document.querySelectorAll("[data-plus-buy],[data-plus-pass],[data-plus-year],#precbuy,#pman").forEach(x=>x.disabled=true);plusMsg="";
     try{const r=await fetch("/api/plus",{method:"POST",headers:{"Content-Type":"application/json",...await authHead()},body:JSON.stringify({go:w,...(level?{level}:{}),...(kind?{kind}:{}),...(w!=="manage"?{start:true}:{})})});
       const j=await r.json().catch(()=>({}));if(!r.ok||!j.url)throw 0;
       if(pushT)push(); location.href=j.url}
@@ -4333,6 +4353,7 @@ function plusScreen(){
   document.querySelectorAll("[data-plus-buy]").forEach(b=>b.onclick=()=>go("buy",b,b.dataset.plusBuy));
   document.querySelectorAll("[data-plus-pass]").forEach(b=>b.onclick=()=>go("pass",b,b.dataset.plusPass));
   document.querySelectorAll("[data-plus-year]").forEach(b=>b.onclick=()=>go("pass",b,b.dataset.plusYear,"year"));
+  if($("precbuy"))$("precbuy").onclick=()=>acc.user?go("pass",$("precbuy"),$("precbuy").dataset.level):(acc.msg="",welcome());
   if($("pman"))$("pman").onclick=()=>go("manage",$("pman"));
   if($("pwd"))$("pwd").onclick=async()=>{
     if(!confirm("Weet je zeker dat je wilt herroepen? Plus of je Examenpas stopt dan meteen."))return;

@@ -26,7 +26,7 @@ async function handler(options={}){
     addSpend:async(model,u)=>{spends.push([model,u.input_tokens,u.output_tokens]);if(options.spendFails)throw Error('down');return true},
     bonusFor:async()=>{if(options.bonusFails)throw Error('down');return options.bonus??0},
     PLUS:60,plusOn:!!options.pay,
-    PLUS_MONTH:200,OPUS_MONTH:8,PASS_TOTAL:250,PASS_OPUS:15,monthOf:()=>'2026-11-01',amsterdamDay:()=>'2026-11-25',
+    PLUS_MONTH:200,OPUS_MONTH:8,PASS_TOTAL:250,PASS_OPUS:15,YEAR_TOTAL:600,YEAR_OPUS:30,monthOf:()=>'2026-11-01',amsterdamDay:()=>'2026-11-25',
     useGuard:async(k,_d,cost,lim)=>{guards.push([k,cost]);if(options.guardFails)throw Error('down');const g=options.guard?.[k[0]];return g??lim-cost},
 
     plusFor:async()=>{if(options.plusFails)throw Error('down');return options.plan??null},

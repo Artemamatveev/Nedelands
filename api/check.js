@@ -14,7 +14,7 @@
 // With accounts set up (Supabase, see _supa.js) only a signed-in user may grade, CHECK_LIMIT checks a day;
 // the answer then also has `left`, the checks left today. With Bittertalen Plus (api/plus.js) PLUS_LIMIT a day.
 import Anthropic from "@anthropic-ai/sdk";
-import { accounts, caller, checkCost, useChecks, LIMIT, PLUS, plusOn, plusFor, coversLevel, sameOrigin, FREE, visitor, useFree, useTotal, addSpend, bonusFor, useGuard, PLUS_MONTH, OPUS_MONTH, PASS_TOTAL, PASS_OPUS, monthOf, amsterdamDay } from "./_supa.js";
+import { accounts, caller, checkCost, useChecks, LIMIT, PLUS, plusOn, plusFor, coversLevel, sameOrigin, FREE, visitor, useFree, useTotal, addSpend, bonusFor, useGuard, PLUS_MONTH, OPUS_MONTH, PASS_TOTAL, PASS_OPUS, YEAR_TOTAL, YEAR_OPUS, monthOf, amsterdamDay } from "./_supa.js";
 
 // Created only when the key is set, so a missing key gives a clear error instead of a crash
 // (trimmed: a key pasted into the dashboard with a trailing newline breaks the request header)
@@ -263,9 +263,9 @@ export default async function handler(req, res) {
   // 13-week pass can't cost three months of the monthly ceiling. A counter that can't be reached never blocks a paying
   // learner (it is logged).
   const exam = input.length >= 4;
-  const pass = !!(plan?.pass && !plan?.group && !plan?.year && plan?.until); // a Jaarpas counts per month, like Plus
+  const pass = !!(plan?.pass && !plan?.group && plan?.until); // an Examenpas or a Jaarpas counts over its whole term
   const gk = pass ? "p:" + uid : "m:" + uid, gday = pass ? String(plan.until).slice(0, 10) : monthOf(new Date(checkedAt));
-  const glim = pass ? PASS_TOTAL : PLUS_MONTH, olim = pass ? PASS_OPUS : OPUS_MONTH;
+  const glim = pass ? (plan.year ? YEAR_TOTAL : PASS_TOTAL) : PLUS_MONTH, olim = pass ? (plan.year ? YEAR_OPUS : PASS_OPUS) : OPUS_MONTH;
   const ok = pass ? "q:" + uid : "o:" + uid;
   let month = false, opus = false, guardO = false;
   if (plus) {
