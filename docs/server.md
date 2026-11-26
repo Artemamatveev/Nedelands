@@ -183,6 +183,16 @@ bezoekers tellen", "Cookies" and "Hoe lang", in all eight languages: change them
 (the statement once said so; it was never on the pages). Read the counts in the SQL editor, for example
 `select day, ev, sum(n) from public.usage_counts where day > current_date - 30 group by 1, 2 order by 1, 2;`.
 
+Plausible Analytics (since 26 November 2026, the owner's choice): `pa-v1.js` on the homepage and its language pages,
+the public pages, the search pages and `/oefenen` (so also in the store apps, which load the site). EU company, data
+in Germany, no cookies and nothing stored on the device, so no banner. `PA` in `pa-v1.js` is the site's script id from
+Plausible's Site Installation (`pa-<id>.js`); empty means off; rename the file (`pa-v2.js`) when it changes, as the service
+worker keeps old copies a while. Off with Global Privacy Control or Do Not Track and on other hosts than bittertalen.nl.
+`track()` (oefenen.html, landing.js) sends every event above except `err` to Plausible too, with the properties `level`,
+`lang` and `app` (web or app); add the events you want to follow as goals in Plausible. Never send names, e-mail, texts or
+ids. Marketing pixels (Meta, Google Ads, TikTok) are not on the site: they need a consent banner first (privacy.html,
+the CSP and the store labels change with them).
+
 ## The owner's overview (admin)
 
 `admin.html` (served as /admin, noindex, not linked anywhere, in Russian because only the owner reads it, light only)

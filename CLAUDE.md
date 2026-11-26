@@ -47,7 +47,8 @@ are in `docs/`, one file per area. Read the one for the area you change, and kee
   options must be plausible, never also correct, and about as long as the right one (`node tools/answer-length.mjs`,
   `tests/answer-length.test.mjs`). KNM and Luisteren options are recorded: after changing them run `audio/build.mjs`.
 - **Privacy stays true**: when data goes somewhere new (a service, a field, an event), update privacy.html in all nine
-  languages and its date. No analytics beyond the anonymous counts in `docs/server.md`.
+  languages and its date. No analytics beyond the anonymous counts and Plausible (no cookies) in `docs/server.md`;
+  marketing pixels only behind a consent banner.
 - **Secrets**: never handle, print or commit API keys (Anthropic, Stripe, Google, Supabase service role); the user sets
   them in Vercel. A new outside host needs its place in the CSP in `vercel.json`.
 - **Functions**: at most 12 deployed files in `api/` (Hobby plan); add endpoints as rewrites (`docs/server.md`).

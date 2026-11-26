@@ -98,6 +98,7 @@ export function html(p, all) {
 <meta name="theme-color" content="#1F3C96">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=bittie1">
 <style>${STYLE}</style>
+<script defer src="/pa-v1.js"></script>
 </head>
 <body>
 <header><a class="brand" href="/">Bittertalen</a></header>

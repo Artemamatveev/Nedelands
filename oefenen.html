@@ -1019,6 +1019,7 @@ h2,h3,.verb,.step b,.it b{text-wrap:balance} p,.d,.sub,.note{text-wrap:pretty}
 @keyframes quick-praise-flash{0%{opacity:0;transform:translateY(5px) rotate(-4deg) scale(.94)}8%,88%{opacity:1;transform:translateY(0) rotate(-4deg) scale(1)}100%{opacity:0;transform:translateY(-4px) rotate(-4deg) scale(1)}}
 @media(prefers-reduced-motion:reduce){.quick-praise-mark{transform:none;animation:none!important}}
 </style>
+<script defer src="/pa-v1.js"></script>
 </head>
 <body>
 <div id="app-loading" role="status" aria-live="polite">
@@ -1442,7 +1443,10 @@ async function trialUsage(){
 // Anonymous usage counts (api/event.js): only "one more today" per event, level and menu language; no id, cookie, account
 // or IP address. Only when the server offers it (cfg.events), never with Global Privacy Control or Do Not Track.
 const trackOn=()=>!legacyOrigin()&&!!(acc.cfg&&acc.cfg.events)&&!navigator.globalPrivacyControl&&navigator.doNotTrack!=="1";
-function track(ev){ if(!trackOn())return Promise.resolve(false);
+// the same event to Plausible (pa-v1.js; it is there only when switched on, and never with GPC or Do Not Track): level, menu
+// language and web or app as properties, nothing about the learner
+function paEvent(ev){try{if(window.plausible&&ev!=="err")plausible(ev,{props:{level:lvl(),lang:lsGet("ww-ui")||"nl",app:NATIVE?"app":"web"}})}catch(e){}}
+function track(ev){ paEvent(ev); if(!trackOn())return Promise.resolve(false);
   try{return fetch("/api/event",{method:"POST",keepalive:true,headers:{"Content-Type":"application/json"},
     body:JSON.stringify({ev,lvl:lvl(),ui:lsGet("ww-ui")||"nl"})}).then(r=>r.ok,()=>false)}catch(e){return Promise.resolve(false)} }
 // Fixed source labels and aggregate events only. This tab retains the label during Checkout and the return.
