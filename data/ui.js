@@ -967,3 +967,138 @@ window.UIRK=[
   [/^Goedkoper dan (\d+) maanden Plus \(€ ([\d,]+)\)\.$/,"Дешевше, ніж $1 міс. Plus (€ $2)."],
   [/^Kies de Examenpas (A2|B1)$/,"Вибрати перепустку $1"],
 ];
+
+Object.assign(UI, {
+  "Praat met Bittie": [
+    "Talk with Bittie",
+    "تحدّث مع بيتي",
+    "Bittie ile konuş",
+    "बिट्टी से बात करें",
+    "和 Bittie 聊天",
+    "Habla con Bittie",
+    "Поговорить с Битти"
+  ],
+  "Kies zelf een onderwerp en oefen hardop Nederlands met Bittie.": [
+    "Choose a topic and practise speaking Dutch with Bittie.",
+    "اختر موضوعًا وتدرّب على التحدث بالهولندية مع بيتي.",
+    "Bir konu seç ve Bittie ile Hollandaca konuşma pratiği yap.",
+    "कोई विषय चुनें और बिट्टी के साथ डच बोलने का अभ्यास करें।",
+    "选择一个主题，和 Bittie 练习荷兰语口语。",
+    "Elige un tema y practica neerlandés en voz alta con Bittie.",
+    "Выберите тему и потренируйте разговорный нидерландский с Битти."
+  ],
+  "Praat met Bittie over een onderwerp dat jij kiest.": [
+    "Talk with Bittie about a topic of your choice.",
+    "تحدّث مع بيتي عن موضوع من اختيارك.",
+    "Seçtiğin bir konuda Bittie ile konuş.",
+    "अपनी पसंद के विषय पर बिट्टी से बात करें।",
+    "和 Bittie 聊聊你选择的话题。",
+    "Habla con Bittie sobre un tema que tú elijas.",
+    "Поговорите с Битти на любую тему."
+  ],
+  "Wat Bittie over je weet": [
+    "What Bittie knows about you",
+    "ما تعرفه بيتي عنك",
+    "Bittie'nın senin hakkında bildikleri",
+    "Bittie आपके बारे में क्या जानती है",
+    "Bittie 知道你的哪些事",
+    "Lo que Bittie sabe de ti",
+    "Что Битти о вас знает"
+  ],
+  "Mag Bittie dingen over je onthouden?": [
+    "May Bittie remember things about you?",
+    "هل تسمح لبيتي بأن تتذكر أشياء عنك؟",
+    "Bittie senin hakkında bir şeyler hatırlayabilir mi?",
+    "क्या Bittie आपके बारे में बातें याद रख सकती है?",
+    "Bittie 可以记住关于你的事吗？",
+    "¿Puede Bittie recordar cosas sobre ti?",
+    "Можно ли Битти запоминать что-то о вас?"
+  ],
+  "Dan kan Bittie er een volgende keer over beginnen, bijvoorbeeld over je werk of je plannen. Bittie onthoudt korte feiten uit jullie gesprekken. Die staan in je voortgang en gaan bij elk gesprek met Bittie mee naar Anthropic. Je ziet en wist ze in Profiel.": [
+    "Then she can bring them up next time, for example your work or your plans. She remembers short facts from your conversations. They are kept in your progress and go to Anthropic with every conversation with Bittie. You can see and erase them in Profile.",
+    "عندها يمكنها أن تتحدث عنها في المرة القادمة، مثل عملك أو خططك. تتذكر حقائق قصيرة من محادثاتكما. تُحفظ هذه الحقائق ضمن تقدّمك وتُرسل إلى Anthropic مع كل محادثة مع بيتي. يمكنك رؤيتها ومسحها في الملف الشخصي.",
+    "Böylece bir dahaki sefere bunlardan söz edebilir, örneğin işinden ya da planlarından. Sohbetlerinizden kısa bilgiler hatırlar. Bunlar ilerlemende durur ve Bittie ile her sohbette Anthropic'e gider. Profil bölümünde görebilir ve silebilirsin.",
+    "तब वह अगली बार उनकी बात कर सकती है, जैसे आपके काम या योजनाओं की। वह आपकी बातचीत से छोटी-छोटी बातें याद रखती है। ये आपकी प्रगति में रहती हैं और Bittie के साथ हर बातचीत में Anthropic को जाती हैं। आप इन्हें प्रोफ़ाइल में देख और मिटा सकते हैं।",
+    "这样她下次就能聊起这些事，比如你的工作或计划。她会记住你们对话中的简短信息。这些信息保存在你的进度里，每次和 Bittie 对话时都会发送给 Anthropic。你可以在个人资料中查看和删除。",
+    "Así podrá hablar de ellas la próxima vez, por ejemplo de tu trabajo o tus planes. Recuerda datos breves de vuestras conversaciones. Se guardan en tu progreso y se envían a Anthropic en cada conversación con Bittie. Puedes verlos y borrarlos en Perfil.",
+    "Тогда в следующий раз она сможет о них заговорить, например о вашей работе или планах. Она запоминает короткие факты из ваших разговоров. Они хранятся в вашем прогрессе и передаются в Anthropic при каждом разговоре с Битти. Посмотреть и стереть их можно в профиле."
+  ],
+  "Korte feiten uit jullie gesprekken. Ze gaan bij elk gesprek met Bittie mee naar Anthropic.": [
+    "Short facts from your conversations. They go to Anthropic with every conversation with Bittie.",
+    "حقائق قصيرة من محادثاتكما. تُرسل إلى Anthropic مع كل محادثة مع بيتي.",
+    "Sohbetlerinizden kısa bilgiler. Bittie ile her sohbette Anthropic'e gider.",
+    "आपकी बातचीत से छोटी बातें। Bittie के साथ हर बातचीत में ये Anthropic को जाती हैं।",
+    "你们对话中的简短信息。每次和 Bittie 对话时都会发送给 Anthropic。",
+    "Datos breves de vuestras conversaciones. Se envían a Anthropic en cada conversación con Bittie.",
+    "Короткие факты из ваших разговоров. Они передаются в Anthropic при каждом разговоре с Битти."
+  ],
+  "Bittie mag dingen onthouden": [
+    "Bittie may remember things",
+    "يُسمح لبيتي بالتذكر",
+    "Bittie hatırlayabilir",
+    "Bittie बातें याद रख सकती है",
+    "允许 Bittie 记住",
+    "Bittie puede recordar cosas",
+    "Битти может запоминать"
+  ],
+  "Bittie onthoudt niets nieuws en gebruikt deze feiten niet.": [
+    "Bittie remembers nothing new and does not use these facts.",
+    "لا تتذكر بيتي شيئًا جديدًا ولا تستخدم هذه الحقائق.",
+    "Bittie yeni bir şey hatırlamaz ve bu bilgileri kullanmaz.",
+    "Bittie कुछ नया याद नहीं रखती और इन बातों का उपयोग नहीं करती।",
+    "Bittie 不会记住新内容，也不会使用这些信息。",
+    "Bittie no recuerda nada nuevo ni usa estos datos.",
+    "Битти не запоминает новое и не использует эти факты."
+  ],
+  "Nog niets. Praat met Bittie en hang op: dan kan Bittie iets onthouden.": [
+    "Nothing yet. Talk with Bittie and hang up: then she can remember something.",
+    "لا شيء بعد. تحدّث مع بيتي ثم أنهِ المكالمة: عندها يمكنها أن تتذكر شيئًا.",
+    "Henüz bir şey yok. Bittie ile konuş ve görüşmeyi bitir: o zaman bir şey hatırlayabilir.",
+    "अभी कुछ नहीं। Bittie से बात करें और बातचीत समाप्त करें: तब वह कुछ याद रख सकती है।",
+    "还没有内容。和 Bittie 聊天并挂断后，她就能记住一些事。",
+    "Todavía nada. Habla con Bittie y cuelga: entonces podrá recordar algo.",
+    "Пока ничего. Поговорите с Битти и завершите разговор: тогда она сможет что-то запомнить."
+  ],
+  "Nieuw gesprek met Bittie": [
+    "New conversation with Bittie",
+    "محادثة جديدة مع بيتي",
+    "Bittie ile yeni sohbet",
+    "बिट्टी के साथ नई बातचीत",
+    "与 Bittie 开启新对话",
+    "Nueva conversación con Bittie",
+    "Новый разговор с Битти"
+  ],
+  "Dit onthoudt Bittie": [
+    "What Bittie remembers",
+    "ما تتذكره بيتي",
+    "Bittie bunları hatırlıyor",
+    "बिट्टी को ये बातें याद हैं",
+    "Bittie 记住的内容",
+    "Lo que recuerda Bittie",
+    "Что запомнила Битти"
+  ],
+  "Bittie denkt na…": [
+    "Bittie is thinking…",
+    "بيتي تفكر…",
+    "Bittie düşünüyor…",
+    "बिट्टी सोच रही है…",
+    "Bittie 正在思考…",
+    "Bittie está pensando…",
+    "Битти думает…"
+  ]
+});
+Object.assign(window.UK, {
+  "Praat met Bittie": "Поговоріть із Бітті",
+  "Kies zelf een onderwerp en oefen hardop Nederlands met Bittie.": "Оберіть тему й практикуйте нідерландську вголос із Бітті.",
+  "Praat met Bittie over een onderwerp dat jij kiest.": "Поговоріть із Бітті на обрану тему.",
+  "Wat Bittie over je weet": "Що Бітті знає про вас",
+  "Mag Bittie dingen over je onthouden?": "Дозволити Бітті запам’ятовувати інформацію про вас?",
+  "Dan kan Bittie er een volgende keer over beginnen, bijvoorbeeld over je werk of je plannen. Bittie onthoudt korte feiten uit jullie gesprekken. Die staan in je voortgang en gaan bij elk gesprek met Bittie mee naar Anthropic. Je ziet en wist ze in Profiel.": "Наступного разу Бітті зможе згадати про вашу роботу чи плани. Короткі факти з розмов зберігаються разом із прогресом і надсилаються до Anthropic під час розмов із Бітті. Переглянути й видалити їх можна в профілі.",
+  "Korte feiten uit jullie gesprekken. Ze gaan bij elk gesprek met Bittie mee naar Anthropic.": "Короткі факти з ваших розмов. Під час розмов із Бітті їх надсилають до Anthropic.",
+  "Bittie mag dingen onthouden": "Дозволити Бітті запам’ятовувати",
+  "Bittie onthoudt niets nieuws en gebruikt deze feiten niet.": "Бітті не запам’ятовує нового й не використовує ці факти.",
+  "Nog niets. Praat met Bittie en hang op: dan kan Bittie iets onthouden.": "Тут поки порожньо. Поговоріть із Бітті й завершіть розмову, щоб Бітті могла щось запам’ятати.",
+  "Nieuw gesprek met Bittie": "Нова розмова з Бітті",
+  "Dit onthoudt Bittie": "Що запам’ятала Бітті",
+  "Bittie denkt na…": "Бітті думає…"
+});
