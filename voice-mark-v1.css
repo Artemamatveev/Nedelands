@@ -1,0 +1,48 @@
+.voice-mark {
+  position:relative;isolation:isolate;display:grid;place-items:center;overflow:hidden;
+  --dial-size:clamp(136px,75%,222px);
+  background-color:#071424;
+  background-image:radial-gradient(circle at center,#075978b8,transparent 65%),
+    linear-gradient(#61c6e514 1px,transparent 1px),linear-gradient(90deg,#61c6e514 1px,transparent 1px);
+  background-size:auto,22px 22px,22px 22px;background-position:center;
+}
+.voice-mark::before {
+  content:"";position:absolute;inset:0;z-index:-1;
+  background:repeating-radial-gradient(circle at center,transparent 0 24px,#7ce4f72c 25px 26px,transparent 27px 33px);
+  mask-image:radial-gradient(ellipse at center,black 35%,transparent 76%);
+}
+.voice-mark-dial {
+  position:absolute;width:var(--dial-size);max-height:92%;aspect-ratio:1;
+  filter:drop-shadow(0 0 6px #39dffe85);
+}
+.voice-mark-dial::before,.voice-mark-dial::after {
+  content:"";position:absolute;border-radius:50%;mask-image:radial-gradient(closest-side,transparent 91%,black 92% 99%,transparent 100%);
+}
+.voice-mark-dial::before {
+  inset:0;background:repeating-conic-gradient(from 4deg,#68edff 0deg 1deg,transparent 1deg 5deg);
+  opacity:.64;
+}
+.voice-mark-dial::after {
+  inset:12%;background:conic-gradient(from -38deg,#baf8ff 0deg 52deg,transparent 53deg 69deg,#29b9e6 70deg 110deg,transparent 111deg 160deg,#81f6ff 161deg 205deg,transparent 206deg 224deg,#20a1e1 225deg 270deg,transparent 271deg);
+}
+@keyframes voice-mark-sweep {to {transform:rotate(1turn)}}
+.voice-mark-orb {
+  position:relative;display:grid;place-items:center;width:70px;aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle at 38% 25%,#2683a1,#123954 68%);
+  border:1px solid #9cf0fa;color:#d5fbff;
+  box-shadow:0 0 0 9px #79e9ff20,0 0 36px #43dbff9c,inset 0 0 17px #7be9ff75;
+}
+.voice-mark-orb::before {
+  content:"";position:absolute;inset:-23px;border:1px solid #7de8ff82;border-radius:50%;
+  border-inline-start-color:transparent;border-inline-end-color:transparent;transform:rotate(-25deg);
+}
+.voice-mark-mic {
+  position:relative;width:12px;height:21px;margin-block-end:8px;border:2px solid currentColor;border-radius:8px;
+}
+.voice-mark-mic::before {
+  content:"";position:absolute;inset:7px -7px -7px;border:2px solid currentColor;
+  border-top:0;border-radius:0 0 14px 14px;
+}
+.voice-mark-mic::after {
+  content:"";position:absolute;width:2px;height:5px;left:3px;bottom:-12px;background:currentColor;
+}

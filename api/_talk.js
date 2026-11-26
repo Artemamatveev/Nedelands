@@ -8,7 +8,7 @@
 //   With stream:2 it comes as JSON lines: {say, audio} per sentence, as soon as it can be spoken, then {reply, done, parts}
 //   (parts: how many sentences), then {fix}
 // POST {go:"end", token, history} -> {verdict, good:[…], tips:[{wrong, right, why}]}
-// Saskia's memory (only with the learner's consent, only Saskia): the page keeps the facts and sends them with say and end
+// Bittie's memory (only with the learner's consent, only Bittie): the page keeps the facts and sends them with say and end
 // (facts:["2026-11-20 Werkt als kok."]); end with remember:true also returns facts (new ones) and old (numbers to forget).
 // A conversation is paid once, at its start; the signed token lets the next turns through for TTL. The prompt is built
 // here from TOPICS, so the page can't send its own instructions. Nothing of the conversation is stored.
@@ -37,8 +37,8 @@ const WRAP = { A2: 8, B1: 10 }; // from this turn on the character rounds the co
 // Historical facts in a persona are checked; the model is told to stay vague rather than invent more.
 // The page lists the same ids and names in PEOPLE (oefenen.html), with the avatar.
 const PEOPLE = {
-  saskia: { who: "Saskia", g: "F", open: ["Hoi! Welkom in het museumcafé. Hoe gaat het met je?", "Hoi! Fijn dat je er bent. Wat heb jij vandaag gedaan?", "Welkom! Ik ben Saskia. Hou jij van kunst?"], again: ["Hoi! Leuk je weer te zien. Hoe gaat het met je?", "Hé, daar ben je weer! Wat heb je de laatste tijd gedaan?", "Welkom terug in het museumcafé! Hoe is het met je?"],
-    persona: "Saskia (38), the warm, approachable host of a small art museum cafe in Utrecht and the learner's recurring Dutch conversation partner. She lives in Utrecht, cycles to work, loves Dutch paintings, cooking and the Saturday market. She wears a cobalt blue shirt and navy apron with a little orange bitterbal pin. The light museum cafe has a Dutch landscape painting, Delft blue ceramics and a window onto a canal street. She serves coffee and bitterballen, tells short everyday stories, has a gentle sense of humour and is curious about the learner's life. Chats naturally about the day, work, food, neighbours, plans, the Netherlands and art. This is a cafe conversation, not a phone call or a classroom. Do not claim past visits, memories, a specific painting of the day or knowledge about the learner that was not supplied in this conversation. Be cautious about historical facts rather than inventing them. She may offer to role-play an everyday situation, clearly introducing that change of role." },
+  saskia: { who: "Bittie", g: "F", open: ["Hoi! Ik ben Bittie. Waar wil je over praten?", "Hoi, ik ben Bittie! Wat heb je vandaag gedaan?", "Hallo! Ik ben Bittie. Waar zullen we het vandaag over hebben?"], again: ["Hoi! Leuk dat je er weer bent. Waar wil je vandaag over praten?", "Hé, daar ben je weer! Wat heb je de laatste tijd gedaan?"],
+    persona: "Bittie, Bittertalen’s friendly AI conversation partner for practising Dutch. Follow the learner’s chosen topic, respond naturally, and ask one accessible follow-up question at a time. Topics can include everyday life, the Netherlands and art. You can offer to role-play a situation such as a shop visit, clearly saying that you are starting a role-play. Introduce yourself only as Bittie. Never claim to be a human, to have a cafe or to know personal facts beyond any supplied context." },
   jansen: { who: "Mevrouw Jansen", g: "F", open: ["Goedemorgen! Mooi weer vandaag, hè? Woont u hier al lang?", "Hallo buur! Ik ben net mijn tuin aan het doen. Hoe gaat het met u?"],
     persona: "Mevrouw Ria Jansen (72), the friendly, slightly nosy neighbour. Widow, lives in the street for forty years, has a garden with roses, two grandchildren, walks with her dog Bello. Talks about the weather, the neighbourhood, the bins (groene bak on Monday), her grandchildren, and wants to know everything about the learner. Uses u, old-fashioned and kind." },
   slager: { who: "Slager Henk", g: "M", formal: 1, open: ["Goedemiddag! Zegt u het maar, wat mag het zijn?", "Hé, goedemorgen! Wat kan ik voor u snijden vandaag?"],
@@ -138,7 +138,7 @@ Give, in very simple Dutch (A2):
 - tips: at most four of the most useful corrections of the learner's own words: "wrong" exactly as they said it, "right" corrected, "why" one short sentence. Only real mistakes; an empty list when there are none.`;
 
 const REMEMBER = () => `
-Also choose what Saskia, who speaks with this learner as a friend, may remember. Today is ${day()}.
+Also choose what Bittie, who speaks with this learner as a friend, may remember. Today is ${day()}.
 - facts: at most three short sentences in simple Dutch, in the third person without a name (for example "Werkt als kok in Utrecht.", "Heeft op 28 november KNM-examen.", "Dochter Lina zit in groep 3."), at most 100 characters each. Only what the learner clearly said about themselves and what a friend would come back to: work, study, hobbies, taste, family by first name and relation, plans with their date. Nothing that may be misheard, nothing from Saskia's own lines, nothing already in WAT JE WEET. An empty list is fine.
 - Never in facts: health, religion, ethnicity, politics, sexuality, residence or legal status, money or debts, documents or numbers, addresses, phone or e-mail, passwords, or anything about other people beyond first name and relation.
 - old: the numbers from WAT JE WEET that the learner contradicted, or whose moment has passed and was talked about. Otherwise empty.`;

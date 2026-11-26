@@ -155,6 +155,51 @@ test('Speaking exam Stop confirms completion and advances without waiting for th
   }finally{await s.ctx.close();await browser.close();server.close()}
 });
 
+test('Bittie opens a full-screen voice call and sends a spoken answer from the orb', async t => {
+  let browser;
+  try { browser=chromium&&await chromium.launch(); } catch(e) { if(process.env.BROWSER_TESTS)throw e; }
+  if(!browser){if(process.env.BROWSER_TESTS)assert.fail('Playwright is not installed');return t.skip('no browser here')}
+  const server=await serve(),base=`http://127.0.0.1:${server.address().port}`,s=await page(browser,base,{});
+  const sent=[];
+  try {
+    await s.p.addInitScript(()=>{
+      localStorage.setItem('bt-ai-ok','1');
+      class Recognition {
+        start(){window.__conversationMic=this;this.onstart?.();this.onaudiostart?.()}
+        stop(){this.onend?.()}
+        abort(){}
+      }
+      window.SpeechRecognition=Recognition;
+      speechSynthesis.speak=u=>setTimeout(()=>{u.onstart?.();u.onend?.()},0);
+    });
+    await s.ctx.route('**/api/talk',async route=>{
+      const body=route.request().postDataJSON();sent.push(body);
+      await route.fulfill({json:body.go==='start' ? {token:'test',reply:'Hoi! Ik ben Bittie.'} : {reply:'Wat leuk!',done:false}});
+    });
+    await s.go('/oefenen?open=talk');
+    await s.p.getByRole('button',{name:'Praat met Bittie'}).tap();
+    const call=s.p.locator('.bittie-call'),orb=call.locator('.voice-mark-orb');
+    await s.p.getByRole('heading',{name:'Bittie',exact:true}).waitFor();
+    await s.p.waitForFunction(()=>document.querySelector('#recb')?.textContent.includes('Klaar'));
+    assert.equal(await orb.evaluate(e=>e.parentElement.classList.contains('recording')),true);
+    const box=await s.p.locator('#talk').boundingBox();
+    assert.ok(box.height>=820 && box.width===390);
+    assert.equal(await s.p.locator('#tin').isVisible(),true);
+    await s.p.evaluate(()=>{
+      const result=Object.assign([{transcript:'Ik woon in Nederland',confidence:1}],{isFinal:true});
+      window.__conversationMic.onresult({resultIndex:0,results:[result]});
+    });
+    await orb.tap();
+    await s.p.getByText('Wat leuk!',{exact:true}).waitFor();
+    assert.equal(sent.find(x=>x.go==='say').history.at(-1).t,'Ik woon in Nederland');
+    assert.equal(await s.p.locator('.rep').count(),2);
+    await s.p.locator('#aiend').tap();
+    await s.p.getByText('Gesprek gestopt',{exact:true}).waitFor();
+    assert.equal(await call.count(),0);
+    assert.deepEqual(s.errors,[]);
+  } finally {await s.ctx.close();await browser.close();server.close()}
+});
+
 test('Quick Dutch praise never delays practice', async t => {
   let browser;
   try { browser=chromium&&await chromium.launch(); } catch(e) { if(process.env.BROWSER_TESTS)throw e; }
