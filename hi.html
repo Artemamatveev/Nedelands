@@ -32,7 +32,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=bittie1">
 <link rel="manifest" href="/manifest.json?v=bittie1">
 <script src="/ios-startup-v1.js" defer></script>
-<link rel="stylesheet" href="/landing.css?v=launch5">
+<link rel="stylesheet" href="/landing.css?v=product-cards">
 <script>
 // Browser visits start with the homepage, including returning learners on phones and tablets.
 // Installed launches enter practice; an explicit Website home link stays on the public homepage.
@@ -53,7 +53,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Bittertalen","url":"https://bittertalen.nl/hi","applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":"hi","educationalLevel":["A2","B1"],"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}
 </script>
-<script defer src="/landing.js?v=launch-a2-pa"></script>
+<script defer src="/landing.js?v=product-cards-pa"></script>
 <script defer src="/lib/gsap-3.15.1.min.js"></script>
 <script defer src="/lib/ScrollTrigger-3.15.1.min.js"></script>
 <script defer src="/landing-motion-v3.js?v=hero-still"></script>
@@ -65,7 +65,7 @@
     <a class="brand" href="/hi" aria-label="Bittertalen">B<span class="brand-i">ı</span>ttertalen</a>
     <nav class="nav" aria-label="Bittertalen">
       <a href="#niveaus" data-t="Niveaus">स्तर</a>
-      <a href="#oefenvormen" data-t="Zo werkt het">यह कैसे काम करता है</a>
+      <a href="#ontdek" data-t="Zo werkt het">यह कैसे काम करता है</a>
       <a href="#prijzen" data-t="Prijzen">कीमतें</a>
     </nav>
     <div class="actions header-actions">
@@ -108,6 +108,127 @@
       <!-- Bittie welcomes visitors beside the app. -->
       <div class="greeter"><p class="bubble"><b data-t="Hoi! Ik ben Bittie.">नमस्ते! मैं बिट्टी हूँ।</b> <span data-t="Zullen we samen Nederlands oefenen?">क्या हम साथ में डच का अभ्यास करें?</span></p><img src="/art/bitterbal-wave-nl-v1.jpg" width="360" height="360" alt=""></div>
     </figure>
+  </section>
+
+  <section id="ontdek" class="block paper products" aria-labelledby="products-title">
+    <h2 id="products-title" data-t="Ontdek Bittertalen">Bittertalen को जानें</h2>
+    <div class="product-stage">
+      <article class="product-card product-card--delft" id="product-history" aria-labelledby="product-title-history">
+        <img class="product-art" src="/art/delft.jpg" alt="" loading="lazy" draggable="false">
+        <div class="product-copy">
+          <h3 id="product-title-history"><a href="#module-history" data-t="Geschiedenis, cultuur en geografie">इतिहास, संस्कृति और भूगोल</a></h3>
+          <p data-t="Maak kennis met de Nederlandse geschiedenis en cultuur via verhalen en schilderijen.">कहानियों और चित्रों के ज़रिए नीदरलैंड के इतिहास और संस्कृति को जानें।</p>
+        </div>
+      </article>
+      <article class="product-card product-card--books" id="product-books" aria-labelledby="product-title-books">
+        <img class="product-art" src="/foto/boek.jpg" alt="" loading="lazy" draggable="false">
+        <div class="product-copy">
+          <h3 id="product-title-books"><a href="#module-books" data-t="Boeken lezen met vertaling">अनुवाद की मदद से किताबें पढ़ें</a></h3>
+          <p data-t="Lees in het Nederlands en bekijk de vertaling van woorden die je nog niet kent.">डच में पढ़ें और अनजान शब्दों का अनुवाद देखें।</p>
+        </div>
+      </article>
+      <article class="product-card product-card--conversation" id="product-conversation" aria-labelledby="product-title-conversation">
+        <div class="product-art voice-mark" aria-hidden="true">
+          <span class="voice-mark-dial"></span>
+          <span class="voice-mark-orb"><span class="voice-mark-mic"></span></span>
+        </div>
+        <div class="product-copy">
+          <h3 id="product-title-conversation"><a href="#module-conversation" data-t="Praten met AI">एआई से बात करें</a></h3>
+          <p data-t="Oefen hardop Nederlands in een gesprek met AI. Jij spreekt, AI antwoordt.">एआई के साथ बोलकर डच का अभ्यास करें। आप बोलें, एआई जवाब दे।</p>
+        </div>
+      </article>
+      <article class="product-card product-card--media" id="product-media" aria-labelledby="product-title-media">
+        <div class="product-art product-art--video" aria-hidden="true">
+          <img src="/foto/markt.jpg" alt="" loading="lazy" draggable="false">
+          <span class="product-video-play"></span>
+          <span class="product-video-caption" lang="nl" dir="ltr">Vandaag zijn we op de markt.</span>
+          <span class="product-video-progress"></span>
+        </div>
+        <div class="product-copy">
+          <h3 id="product-title-media"><a href="#module-media" data-t="Video’s en podcasts">वीडियो और पॉडकास्ट</a></h3>
+          <p data-t="Kijk Nederlandse video’s en luister naar podcasts om je luistervaardigheid te oefenen.">सुनने का अभ्यास करने के लिए डच वीडियो देखें और पॉडकास्ट सुनें।</p>
+        </div>
+      </article>
+      <article class="product-card product-card--exam" id="product-exam" aria-labelledby="product-title-exam">
+        <div class="product-art product-art--exam"><img src="/shots/app-exam-v2.webp" width="390" height="780" alt="" loading="lazy" draggable="false"></div>
+        <div class="product-copy">
+          <h3 id="product-title-exam"><a href="#module-exam" data-t="Voorbereiden op je examen">परीक्षा की तैयारी करें</a></h3>
+          <p data-t="Een proefexamen maken">अभ्यास परीक्षा दें</p>
+        </div>
+      </article>
+    </div>
+    <div class="product-controls" role="group" aria-labelledby="products-title" hidden>
+      <button class="product-arrow" type="button" data-product-step="-1"><span aria-hidden="true">←</span><span class="product-sr" data-t="Vorige kaart">पिछला कार्ड</span></button>
+      <div class="product-picker">
+        <button type="button" data-product-pick aria-controls="product-history" aria-pressed="true" data-t="Geschiedenis, cultuur en geografie">इतिहास, संस्कृति और भूगोल</button>
+        <button type="button" data-product-pick aria-controls="product-books" aria-pressed="false" data-t="Boeken lezen met vertaling">अनुवाद की मदद से किताबें पढ़ें</button>
+        <button type="button" data-product-pick aria-controls="product-conversation" aria-pressed="false" data-t="Praten met AI">एआई से बात करें</button>
+        <button type="button" data-product-pick aria-controls="product-media" aria-pressed="false" data-t="Video’s en podcasts">वीडियो और पॉडकास्ट</button>
+        <button type="button" data-product-pick aria-controls="product-exam" aria-pressed="false" data-t="Voorbereiden op je examen">परीक्षा की तैयारी करें</button>
+      </div>
+      <button class="product-arrow" type="button" data-product-step="1"><span aria-hidden="true">→</span><span class="product-sr" data-t="Volgende kaart">अगला कार्ड</span></button>
+    </div>
+    <p class="product-sr" role="status"></p>
+    <div class="product-details">
+      <section id="module-history" class="module-detail" aria-labelledby="module-heading-history">
+        <h3 id="module-heading-history" data-t="Geschiedenis, cultuur en geografie">इतिहास, संस्कृति और भूगोल</h3>
+        <div class="history-topics">
+          <article>
+            <img src="/foto/hunebed.jpg" alt="" loading="lazy">
+            <div>
+              <h4><a href="/oefenen?open=history" data-t="Geschiedenis">इतिहास</a></h4>
+              <p data-t="Lees over de hunebedden, de Tweede Wereldoorlog en de wederopbouw. Beantwoord na elk hoofdstuk vragen.">महापाषाण कब्रों, दूसरे विश्व युद्ध और उसके बाद के पुनर्निर्माण के बारे में पढ़ें। हर अध्याय के बाद सवालों के जवाब दें।</p>
+            </div>
+          </article>
+          <article>
+            <img src="/art/delft.jpg" alt="" loading="lazy">
+            <div>
+              <h4><span data-t="Kunst en cultuur">कला और संस्कृति</span></h4>
+              <p data-t="Bekijk Gezicht op Delft van Vermeer en ontdek het verhaal achter het schilderij.">वर्मीर की डेल्फ़्ट की झलक देखें और चित्र के पीछे की कहानी जानें।</p>
+            </div>
+          </article>
+          <article>
+            <img src="/foto/afsluitdijk.jpg" alt="" loading="lazy">
+            <div>
+              <h4><span data-t="Geografie en water">भूगोल और जल</span></h4>
+              <p data-t="Ontdek waar Drenthe, Zeeland en het IJsselmeer liggen en hoe dijken Nederland beschermen.">जानें कि ड्रेंथे, ज़ीलैंड और आइसेल झील कहाँ हैं और तटबंध नीदरलैंड की रक्षा कैसे करते हैं।</p>
+            </div>
+          </article>
+        </div>
+      </section>
+      <section id="module-books" class="module-detail" aria-labelledby="module-heading-books">
+        <h3 id="module-heading-books" data-t="Boeken lezen met vertaling">अनुवाद की मदद से किताबें पढ़ें</h3>
+        <p data-t="Tik op een woord en je ziet wat het betekent in het Engels. Lees onze verhalen of je eigen e-book.">किसी शब्द पर टैप करें और उसका अंग्रेज़ी अर्थ देखें। हमारी कहानियाँ या अपनी ई-बुक पढ़ें।</p>
+        <div class="book-demo" lang="nl" dir="ltr">
+          <p class="book-demo-title">Een nieuw begin <span>A2 · 1</span></p>
+          <h4>De verhuizing</h4>
+          <p>Lena is tweeëndertig jaar. Ze komt uit een grote stad ver weg, maar nu woont ze in Utrecht.</p>
+          <p>Maar Lena wil Nederlands leren. Ze koopt een schrift en een <button type="button" aria-controls="book-word" aria-expanded="false" data-book-word hidden>woordenboek</button><mark data-book-word-fallback>woordenboek</mark>. Elke avond schrijft ze tien nieuwe woorden op.</p>
+          <div class="book-definition" id="book-word"><strong>het woordenboek</strong><span>meervoud: woordenboeken</span><span lang="en">dictionary</span></div>
+        </div>
+        <a class="module-link" href="/oefenen?open=books" data-t="Naar de boeken">किताबें देखें</a>
+      </section>
+      <section id="module-conversation" class="module-detail" aria-labelledby="module-heading-conversation">
+        <h3 id="module-heading-conversation" data-t="Praten met AI">एआई से बात करें</h3>
+        <p data-t="Praat over een onderwerp dat je zelf kiest, of oefen een situatie zoals een bezoek aan de dokter, een gesprek op het werk of iets kopen in de winkel.">अपनी पसंद के विषय पर बात करें या डॉक्टर के पास जाने, काम पर बातचीत करने या दुकान में खरीदारी करने जैसी स्थिति का अभ्यास करें।</p>
+        <a class="module-link" href="/oefenen?open=talk" data-t="Begin een gesprek">बातचीत शुरू करें</a>
+      </section>
+      <section id="module-media" class="module-detail" aria-labelledby="module-heading-media">
+        <h3 id="module-heading-media" data-t="Video’s en podcasts">वीडियो और पॉडकास्ट</h3>
+        <p data-t="Kijk video’s met Nederlandse ondertitels, volg het nieuws (NOS, Jeugdjournaal) en luister naar podcasts. Van makkelijk tot moeilijk.">डच सबटाइटल वाले वीडियो देखें, समाचार (NOS, Jeugdjournaal) देखें और पॉडकास्ट सुनें। आसान से कठिन तक।</p>
+        <a class="module-link" href="/oefenen?open=media" data-t="Kijk en luister">देखें और सुनें</a>
+      </section>
+      <section id="module-exam" class="module-detail" aria-labelledby="module-heading-exam">
+        <h3 id="module-heading-exam" data-t="Voorbereiden op je examen">परीक्षा की तैयारी करें</h3>
+        <p data-t="Oefen lezen, luisteren, schrijven en spreken op A2 of B1. Op A2 oefen je ook KNM. Maak een proefexamen met een timer en bekijk daarna wat je nog kunt oefenen.">A2 या B1 स्तर पर पढ़ने, सुनने, लिखने और बोलने का अभ्यास करें। A2 पर KNM भी करें। समय-सीमा वाली अभ्यास परीक्षा दें और देखें कि आगे क्या अभ्यास करना है।</p>
+        <div class="product-exam-links">
+          <a class="module-link" href="#niveaus" data-t="Waar oefen je voor?">आप किस परीक्षा की तैयारी कर रहे हैं?</a>
+          <a class="module-link" href="#probeer" data-t="Probeer een KNM-vraag">KNM का एक सवाल आज़माएँ</a>
+          <a class="module-link" href="#voorbeeld" data-t="Zo wordt je tekst nagekeken">Bittertalen आपके लेखन को ऐसे जाँचता है</a>
+        </div>
+        <a class="module-link" href="/oefenen?open=today" data-t="Begin met oefenen">अभ्यास शुरू करें</a>
+      </section>
+    </div>
   </section>
 
   <ul class="stats" aria-label="Bittertalen">
@@ -187,50 +308,6 @@
       <li><details name="learning-feature"><summary><span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span><h3 data-t="Zelf kiezen">अपना अभ्यास चुनें</h3></summary><p data-t="Oefen één vaardigheid, herhaal woorden, doe grammatica of lees en luister naar verhalen in het Nederlands.">किसी एक कौशल पर काम करें, शब्द दोहराएँ, व्याकरण का अभ्यास करें या डच कहानियाँ पढ़ें और सुनें।</p></details></li>
       <li><details name="learning-feature"><summary><span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 9h6m-6 4h3m-3 4h6"/></svg></span><h3 data-t="Een proefexamen maken">अभ्यास परीक्षा दें</h3></summary><p data-t="Oefen een examenonderdeel met een timer en bekijk je resultaten om te zien wat je nog kunt oefenen.">समय सीमा में परीक्षा का एक भाग हल करें और नतीजे देखकर तय करें कि किसका और अभ्यास करना है।</p></details></li>
       <li><details name="learning-feature"><summary><span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7v5h-5M4 17v-5h5M6 7a7 7 0 0 1 12-2l2 2M4 17l2 2a7 7 0 0 0 12-2"/></svg></span><h3 data-t="Leren van je fouten">अपनी गलतियों से सीखें</h3></summary><p data-t="Herhaal vragen die je eerder fout had en oefen extra met wat nog lastig is.">जिन सवालों में पहले गलती हुई थी उन्हें दोहराएँ और मुश्किल विषयों का और अभ्यास करें।</p></details></li>
-    </ul>
-  </section>
-
-  <!-- Dutch beyond the exam: four blocks, each with a piece of the app itself (the Dutch stays Dutch), opening that screen -->
-  <section id="ontdek" class="block paper">
-    <h2 data-t="Leer het land kennen en durf te spreken">देश को जानें और बोलने की हिम्मत करें</h2>
-    <ul class="extras" role="list">
-      <li class="extra">
-        <div class="ex-art ex-book" lang="nl" dir="ltr" aria-hidden="true">
-          <p>Maar Lena wil Nederlands leren. Ze koopt een schrift en een <mark>woordenboek</mark>.</p>
-          <div class="ex-pop"><b>het woordenboek</b><span>mv. woordenboeken</span><i lang="en">dictionary</i></div>
-        </div>
-        <h3><a href="/oefenen?open=books" data-t="Boeken lezen met vertaling">अनुवाद की मदद से किताबें पढ़ें</a></h3>
-        <p data-t="Tik op een woord en je ziet wat het betekent in het Engels. Lees onze verhalen of je eigen e-book.">किसी शब्द पर टैप करें और उसका अंग्रेज़ी अर्थ देखें। हमारी कहानियाँ या अपनी ई-बुक पढ़ें।</p>
-        <span class="go" aria-hidden="true" data-t="Naar de boeken">किताबें देखें</span>
-      </li>
-      <li class="extra">
-        <div class="ex-art ex-wall" aria-hidden="true">
-          <img src="/art/melkmeisje.jpg" width="892" height="1000" loading="lazy" alt="">
-          <img src="/foto/amsterdam1538.jpg" width="640" height="465" loading="lazy" alt="">
-          <img src="/foto/voc.jpg" width="640" height="331" loading="lazy" alt="">
-        </div>
-        <h3><a href="/oefenen?open=history" data-t="Geschiedenis en kunst">इतिहास और कला</a></h3>
-        <p data-t="Van de hunebedden tot nu, in korte hoofdstukken. En elke dag een schilderij met het verhaal erachter.">प्रागैतिहासिक हुनेबेड समाधियों से आज तक, छोटे अध्यायों में। और हर दिन एक चित्र और उसकी कहानी।</p>
-        <span class="go" aria-hidden="true" data-t="Naar de geschiedenis">इतिहास देखें</span>
-      </li>
-      <li class="extra">
-        <div class="ex-art ex-play" lang="nl" dir="ltr" aria-hidden="true">
-          <div class="ex-video"><img src="/foto/markt.jpg" width="640" height="480" loading="lazy" alt=""><b>Video</b><i></i><p>Wat koop je vandaag op de markt?</p></div>
-          <div class="ex-pod"><i></i><div><p><b>Podcast</b> <span>De Dag</span></p><u></u></div><small>0,75×</small></div>
-        </div>
-        <h3><a href="/oefenen?open=media" data-t="Video’s, podcasts en nieuws">वीडियो, पॉडकास्ट और समाचार</a></h3>
-        <p data-t="Kijk video’s met Nederlandse ondertitels, volg het nieuws (NOS, Jeugdjournaal) en luister naar podcasts. Van makkelijk tot moeilijk.">डच सबटाइटल वाले वीडियो देखें, समाचार (NOS, Jeugdjournaal) देखें और पॉडकास्ट सुनें। आसान से कठिन तक।</p>
-        <span class="go" aria-hidden="true" data-t="Kijk en luister">देखें और सुनें</span>
-      </li>
-      <li class="extra">
-        <div class="ex-art ex-talk" lang="nl" dir="ltr" aria-hidden="true">
-          <img src="/art/characters/saskia-card-v1.jpg" width="640" height="584" loading="lazy" alt="">
-          <div><p>Hoi! Wat heb jij vandaag gedaan?</p><p class="me">Ik heb naar de markt gegaan.</p><p class="fix"><b>Beter:</b> Ik ben naar de markt gegaan.</p></div>
-        </div>
-        <h3><a href="/oefenen?open=talk" data-t="Praat met Saskia en anderen">सास्किया और दूसरों से बात करें</a></h3>
-        <p data-t="Saskia en de andere personages zijn AI. Praat met Saskia in het museumcafé, met Rembrandt of Van Gogh, of oefen bij de dokter, op je werk of in de winkel. Ze verbeteren je zinnen.">सास्किया और बाकी पात्र AI हैं। म्यूज़ियम कैफ़े में सास्किया से, रेम्ब्रांट या वान गॉग से बात करें, या डॉक्टर के यहाँ, काम पर या दुकान की बातचीत का अभ्यास करें। वे आपके वाक्य सुधारते हैं।</p>
-        <span class="go" aria-hidden="true" data-t="Begin een gesprek">बातचीत शुरू करें</span>
-      </li>
     </ul>
   </section>
 
