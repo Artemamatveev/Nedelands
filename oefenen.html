@@ -566,7 +566,7 @@ body.vfull{overflow:hidden}
 .tl p{margin:0}
 .tl .ask{display:flex;align-items:center;gap:6px;font-size:var(--fs-xs)}
 .tl .say{background:none;border:0;color:var(--blue);font-size:var(--fs-s);padding:2px 6px;margin:-2px 0}
-.tl .rep{margin-inline-start:auto;color:var(--soft);font-size:var(--fs-xs)}
+.tl .rep{margin-inline-start:auto;background:none;border:0;color:var(--soft);font-size:var(--fs-xs);padding:2px 6px}
 .tl.me{padding-left:28px}
 .tl.me .ask{color:var(--soft)}
 .tl.no p:last-child{color:var(--soft)}
@@ -4659,12 +4659,12 @@ function aiDraw(){
   const k=AK; if(!k||!$("tlog"))return;
   $("tlog").innerHTML=k.log.map((l,j)=>l.me
     ?`<div class="tl me"><p class="ask">Jij</p><p>${esc(l.t)}</p>${l.fix?`<p class="aifix"><b>Beter:</b> ${esc(l.fix.right)}${l.fix.why?`<span>${esc(l.fix.why)}</span>`:""}</p>`:""}</div>`
-    :`<div class="tl"><p class="ask">${esc(k.c.who)} <button class="say" data-j="${j}" aria-label="Nog een keer luisteren">▶</button><button class="say rep" data-r="${j}"${l.rep?" disabled":""}>${l.rep?"Gemeld":"Meld"}</button></p><p>${esc(l.t)}</p></div>`).join("");
-  document.querySelectorAll("#tlog .say:not(.rep)").forEach(b=>b.onclick=()=>{if(rec)recEnd(false);aiReplay(k.log[b.dataset.j])});
+    :`<div class="tl"><p class="ask">${esc(k.c.who)} <button class="say" data-j="${j}" aria-label="Nog een keer luisteren">▶</button><button class="rep" data-r="${j}"${l.rep?" disabled":""}>${l.rep?"Gemeld":"Meld"}</button></p><p>${esc(l.t)}</p></div>`).join("");
+  document.querySelectorAll("#tlog .say").forEach(b=>b.onclick=()=>{if(rec)recEnd(false);aiReplay(k.log[b.dataset.j])});
   // Report an AI answer (Google Play's AI-generated content policy): the answer and who said it go to the server's log for
   // the owner to read; nothing of the learner. Works also when the anonymous counts are off.
   document.querySelectorAll("#tlog .rep").forEach(b=>b.onclick=()=>{
-    if(!confirm("Is dit antwoord verkeerd, kwetsend of ongepast? Dan sturen we het naar Bittertalen om te bekijken."))return;
+    if(typeof confirm==="function"&&!confirm("Is dit antwoord verkeerd, kwetsend of ongepast? Dan sturen we het naar Bittertalen om te bekijken."))return;
     const l=k.log[b.dataset.r];l.rep=true;aiDraw();
     try{fetch("/api/event",{method:"POST",keepalive:true,headers:{"Content-Type":"application/json"},
       body:JSON.stringify({ev:"report",lvl:lvl(),ui:lsGet("ww-ui")||"nl",who:String(k.c.id||k.c.who||"").slice(0,40),m:String(l.t||"").slice(0,600)})}).catch(()=>{})}catch(e){}});
