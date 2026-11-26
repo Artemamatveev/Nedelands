@@ -167,3 +167,7 @@ menu language (`gtURL()`, English for Dutch menus); the reader's "Vertaal de zin
 finished day and not on an exam day. `examDayPlan()` adds, for every exam date in Profiel, a message at 07:00 that morning
 (ids 20–29): "Succes vandaag!" / "Vandaag is je examen …. Je hebt goed geoefend. Je kunt dit! Succes!". It needs only
 the notification permission, not the daily reminder, and is planned again when a date changes or the app opens.
+
+After the first start test the store app shows Bittie's question "Zal Bittie je elke dag herinneren?" with a time
+(08, 12, 19 default, 21). Only after "Ja, herinner me" does iOS/Android show its own permission prompt, so a "no" never
+spends that one-time prompt. Asked once per device (`ww-notif-asked`); Profiel → Herinnering changes it later.

@@ -3999,8 +3999,8 @@ function startTest(){
       ${untested.length?`<p><span>Nog niet getest</span> · ${untested.length}</p><button class="ghost wide" id="bgcontinue">Ga verder met de test</button>`:""}
       <p>${lv===2?"Je kent de basis. Je kunt meteen met de onderdelen van het examen beginnen.":lv===1?"Je kent al veel. Elke dag krijg je een les over wat je nog niet goed weet.":"Je begint bij het begin. Elke dag krijg je één korte les. Daarna ga je verder met de onderdelen van het examen."}</p>
       ${lv<2?`<button class="btn wide" id="bgf" style="margin-bottom:10px">Naar les ${BG.indexOf(f)+1}: ${f.t}</button>`:`<button class="btn wide" id="bgh" style="margin-bottom:10px">Naar je les van vandaag</button>`}
-      <button class="ghost wide" id="bga">Alle lessen</button>`;
-    window.scrollTo(0,0);
+      <button class="ghost wide" id="bga">Alle lessen</button>${remindAskHTML()}`;
+    window.scrollTo(0,0);remindAskBind();
     if($("bgcontinue"))$("bgcontinue").onclick=()=>{inRow=0;draw()};
     if($("bgf"))$("bgf").onclick=()=>bgLes(BG.indexOf(f)); if($("bgh"))$("bgh").onclick=()=>{setTab("vandaag");home()};
     $("bga").onclick=bgList};
@@ -4175,6 +4175,33 @@ async function remindPlan(){
     }
     if(L.length)await N.schedule({notifications:L});
   }catch(e){}
+}
+// Store app, after the first start test: Bittie asks once whether to remind the learner every day (and, with the same
+// permission, wish good luck on the morning of the exam). The system's own question comes only after "Ja", so a "no"
+// here never uses up iOS's single permission prompt. Asked once per device (ww-notif-asked); Profiel can change it later.
+const remindCan=()=>NATIVE&&!!window.Capacitor?.Plugins?.LocalNotifications&&!lsGet("ww-remind")&&!lsGet("ww-notif-asked");
+function remindAskHTML(){
+  if(!remindCan())return"";
+  return`<section class="list remind-ask" id="rask"><div style="padding:16px;display:flex;gap:14px;align-items:flex-start">
+    <img src="/art/bittie-wave-v2.svg" width="64" height="64" alt="" style="flex:none">
+    <div><h3>Zal Bittie je elke dag herinneren?</h3><p>Een kort berichtje op jouw tijd, en op de ochtend van je examen wenst Bittie je succes.</p>
+    <div class="seg" role="group" aria-label="Hoe laat?" style="grid-template-columns:repeat(4,minmax(0,1fr))">${REMH.map(h=>`<button type="button" data-rh="${h}" aria-pressed="${h==="19"}">${h.padStart(2,"0")}:00</button>`).join("")}</div>
+    <div class="two"><button type="button" class="ghost" id="rno">Nee, bedankt</button><button type="button" class="ghost" id="ryes">Ja, herinner me</button></div></div></div></section>`}
+function remindAskBind(){
+  const box=$("rask");if(!box)return;
+  let h="19";
+  box.querySelectorAll("[data-rh]").forEach(b=>b.onclick=()=>{h=b.dataset.rh;box.querySelectorAll("[data-rh]").forEach(x=>x.setAttribute("aria-pressed",String(x===b)))});
+  const say=t=>{box.innerHTML=`<div style="padding:16px"><p role="status">${t}</p></div>`};
+  $("rno").onclick=()=>{lsSet("ww-notif-asked","1");say("Goed. Je kunt herinneringen later aanzetten in Profiel.")};
+  $("ryes").onclick=async()=>{
+    lsSet("ww-notif-asked","1");$("ryes").disabled=true;
+    try{
+      const perm=await Capacitor.Plugins.LocalNotifications.requestPermissions();
+      if(perm.display!=="granted"){say("Meldingen staan uit voor Bittertalen. Zet ze aan in Instellingen.");return}
+      lsSet("ww-remind",h);await remindPlan();track("remind");
+      say(`Top! Bittie herinnert je elke dag om ${h.padStart(2,"0")}:00.`);
+    }catch(e){say("Dat lukt nu niet. Je kunt herinneringen later aanzetten in Profiel.")}
+  };
 }
 // The morning of every exam day (the dates in Profiel), at 07:00: good luck and "je kunt dit". Planned whenever
 // notifications are allowed, also without the daily reminder; one message a day, naming the parts of that day.
@@ -5165,7 +5192,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="1d6817a740";
+const UIV="3a37cec12b";
 let uiP=null;
 function uiLoaded(){ // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});

@@ -822,3 +822,17 @@ Object.assign(UI,{
 UIR.push(
   [/^Vandaag is je examen (.+)\. Je hebt goed geoefend\. Je kunt dit! Succes!$/,["Today is your exam: $1. You have practised well. You can do this! Good luck!", "اليوم امتحانك: $1. لقد تدرّبت جيدًا. أنت قادر على ذلك! بالتوفيق!", "Bugün sınavın var: $1. İyi çalıştın. Sen bunu yapabilirsin! Bol şans!", "आज आपकी परीक्षा है: $1। आपने अच्छा अभ्यास किया है। आप यह कर सकते हैं! शुभकामनाएँ!", "今天是你的考试：$1。你已经认真练习过了。你一定能行！祝你好运！", "Hoy tienes examen: $1. Has practicado bien. ¡Tú puedes! ¡Mucha suerte!", "Сегодня ваш экзамен: $1. Вы хорошо подготовились. Вы всё сможете! Удачи!"]],
 );
+
+// Ask for reminders after the start test, 26 November 2026
+Object.assign(UI,{
+"Zal Bittie je elke dag herinneren?":["Shall Bittie remind you every day?", "هل يذكّرك Bittie كل يوم؟", "Bittie sana her gün hatırlatsın mı?", "क्या Bittie आपको हर दिन याद दिलाए?", "要让 Bittie 每天提醒你吗？", "¿Quieres que Bittie te lo recuerde cada día?", "Пусть Битти напоминает вам каждый день?"],
+"Een kort berichtje op jouw tijd, en op de ochtend van je examen wenst Bittie je succes.":["A short message at your time, and on the morning of your exam Bittie wishes you good luck.", "رسالة قصيرة في الوقت الذي تختاره، وفي صباح امتحانك يتمنى لك Bittie التوفيق.", "Seçtiğin saatte kısa bir mesaj; sınav sabahı da Bittie sana bol şans diler.", "आपके चुने समय पर एक छोटा संदेश, और परीक्षा की सुबह Bittie आपको शुभकामनाएँ देगा।", "在你选的时间发一条短消息；考试那天早上，Bittie 会祝你好运。", "Un mensaje corto a la hora que elijas, y la mañana de tu examen Bittie te desea suerte.", "Короткое сообщение в удобное время, а утром в день экзамена Битти пожелает удачи."],
+"Hoe laat?":["What time?", "في أي ساعة؟", "Saat kaçta?", "किस समय?", "几点？", "¿A qué hora?", "Во сколько?"],
+"Nee, bedankt":["No, thanks", "لا، شكرًا", "Hayır, teşekkürler", "नहीं, धन्यवाद", "不用了，谢谢", "No, gracias", "Нет, спасибо"],
+"Ja, herinner me":["Yes, remind me", "نعم، ذكّرني", "Evet, hatırlat", "हाँ, याद दिलाएँ", "好，提醒我", "Sí, recuérdamelo", "Да, напоминать"],
+"Goed. Je kunt herinneringen later aanzetten in Profiel.":["Fine. You can turn on reminders later in Profile.", "حسنًا. يمكنك تشغيل التذكيرات لاحقًا في الملف الشخصي.", "Tamam. Hatırlatmaları daha sonra Profil'de açabilirsin.", "ठीक है। आप बाद में प्रोफ़ाइल में रिमाइंडर चालू कर सकते हैं।", "好的。之后可以在个人资料中开启提醒。", "De acuerdo. Puedes activar los recordatorios más tarde en Perfil.", "Хорошо. Напоминания можно включить позже в профиле."],
+"Dat lukt nu niet. Je kunt herinneringen later aanzetten in Profiel.":["That isn't possible right now. You can turn on reminders later in Profile.", "تعذّر ذلك الآن. يمكنك تشغيل التذكيرات لاحقًا في الملف الشخصي.", "Şu an olmuyor. Hatırlatmaları daha sonra Profil'de açabilirsin.", "अभी यह संभव नहीं है। आप बाद में प्रोफ़ाइल में रिमाइंडर चालू कर सकते हैं।", "现在无法开启。之后可以在个人资料中开启提醒。", "Ahora no es posible. Puedes activar los recordatorios más tarde en Perfil.", "Сейчас не получается. Напоминания можно включить позже в профиле."],
+});
+UIR.push(
+  [/^Top! Bittie herinnert je elke dag om (\d\d:\d\d)\.$/,["Great! Bittie will remind you every day at $1.", "رائع! سيذكّرك Bittie كل يوم في الساعة $1.", "Harika! Bittie sana her gün saat $1'da hatırlatacak.", "बढ़िया! Bittie आपको हर दिन $1 बजे याद दिलाएगा।", "太好了！Bittie 每天 $1 提醒你。", "¡Genial! Bittie te lo recordará cada día a las $1.", "Отлично! Битти будет напоминать каждый день в $1."]],
+);
