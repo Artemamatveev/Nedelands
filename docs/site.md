@@ -24,7 +24,9 @@ cannot move away from a stationary pointer.
 “Ontdek Bittertalen” (`#ontdek`) sits below the hero. Its five cards cover history and culture, books, AI
 conversations, media and A2/B1 exam practice. Swiping, choosing a topic or using the arrows changes the description
 below the cards. With JavaScript disabled all cards and descriptions stay visible. The description links to
-the corresponding app screen or homepage example. The book demo shows the English definition of a Dutch word.
+the corresponding app screen. The history card links directly to Vermeer’s painting and the geography reader.
+The exam card opens its level selector, KNM example and writing example in place. The book demo shows the English
+definition of a Dutch word.
 How the two pages hand over (`tests/browser.test.mjs` checks it):
 the site always opens with the homepage in a browser, on phones, tablets and computers, including returning learners
 with saved progress or an account (the user's wish, 12 November 2026). The bar's button leads into the app. On a computer,

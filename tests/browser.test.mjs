@@ -200,6 +200,54 @@ test('Bittie opens a full-screen voice call and sends a spoken answer from the o
   } finally {await s.ctx.close();await browser.close();server.close()}
 });
 
+test('The homepage restores history links and inline exam examples, and the profile sorts and clears dates', async t => {
+  let browser;
+  try { browser=chromium&&await chromium.launch(); } catch(e) { if(process.env.BROWSER_TESTS)throw e; }
+  if(!browser){if(process.env.BROWSER_TESTS)assert.fail('Playwright is not installed');return t.skip('no browser here')}
+  const server=await serve(),base=`http://127.0.0.1:${server.address().port}`,s=await page(browser,base,{});
+  try {
+    await s.go('/#niveaus');
+    await s.p.locator('#niveaus[open] .choices').waitFor();
+    assert.equal(await s.p.locator('#module-exam .product-exam-topic').count(),3);
+    await s.p.locator('#probeer > summary').click();
+    await s.p.locator('#probeer button[data-ok="1"]').click();
+    await s.p.locator('#probeer .ok').waitFor();
+    await s.p.locator('#voorbeeld > summary').click();
+    await s.p.locator('#voorbeeld .specimen').waitFor();
+    assert.equal(await overflow(s.p),0);
+    for(const [screen, title] of [['geography','Geografie en water'],['culture','Gezicht op Delft']]){
+      await s.go('/');
+      await s.p.locator(`#module-history a[href="/oefenen?open=${screen}"]`).click();
+      await s.p.getByRole('heading',{name:title,exact:true}).waitFor({timeout:8000});
+      if(screen==='geography'){
+        await s.p.locator('[data-geo]').first().click();
+        await s.p.locator('#hpage').waitFor();
+        await s.p.locator('#hback').click();
+        await s.p.getByRole('heading',{name:title,exact:true}).waitFor();
+      }else{
+        await s.p.locator('#vart').click();
+        assert.match(await s.p.locator('#zimg').getAttribute('src'),/\/art\/delft\.jpg$/);
+        await s.p.keyboard.press('Escape');
+        await s.p.locator('#vback').click();
+        await s.p.getByRole('heading',{name:'Geschiedenis van Nederland',exact:true}).waitFor();
+      }
+    }
+    await s.p.evaluate(()=>{setLvl('A2');S.me={...S.me,exams:{lz:'2027-10-28',sp:'2027-09-10'}};setTab('profiel');home()});
+    const dates=s.p.locator('#pexams [data-ex]');
+    assert.equal(await dates.first().getAttribute('data-ex'),'sp');
+    assert.equal(await s.p.locator('#pexams [data-ex-date]').first().textContent(),'10/09/2027');
+    assert.equal(await s.p.locator('#prof .profile-choice').count(),2);
+    await s.p.locator('#exam-date-sp').fill('2027-11-15');
+    assert.equal(await dates.first().getAttribute('data-ex'),'lz');
+    assert.equal(await s.p.evaluate(()=>S.me.exams.sp),'2027-11-15');
+    await s.p.locator('.exam-date-row').filter({has:s.p.locator('#exam-date-sp')}).getByRole('button',{name:'Datum wissen'}).click();
+    assert.equal(await s.p.evaluate(()=>S.me.exams.sp),'');
+    assert.equal(await s.p.locator('#exam-date-sp').inputValue(),'');
+    assert.equal(await overflow(s.p),0);
+    assert.deepEqual(s.errors,[]);
+  } finally {await s.ctx.close();await browser.close();server.close()}
+});
+
 test('Quick Dutch praise never delays practice', async t => {
   let browser;
   try { browser=chromium&&await chromium.launch(); } catch(e) { if(process.env.BROWSER_TESTS)throw e; }
@@ -533,6 +581,8 @@ test('The homepage and the app work in a real browser', async t => {
       assert.equal(await overflow(s.p), 0);
       assert.equal(await s.p.locator('#plus-card').isHidden(), true); // Plus is off without configuration
       // Vraag 2: the KNM question on the homepage marks the answer like the app does
+      await s.p.locator('[aria-controls="product-exam"]').click();
+      await s.p.locator('#probeer > summary').click();
       await s.p.locator('.quiz .choice').first().click();
       assert.equal(await s.p.locator('.quiz .choice.ok').count(), 1);
       assert.equal(await s.p.locator('#qfb').isVisible(), true);
@@ -1140,6 +1190,7 @@ test('Monthly A2 and B1 offers fit the homepage and the app sends the selected l
     await s.p.locator('[data-plus-plan="B1"].preferred-plan').waitFor();
     assert.equal(await s.p.locator('[data-plus-plan="A2"].preferred-plan').count(),0);
     await s.go('/');
+    await s.go('/#voorbeeld');
     await s.p.locator('#voorbeeld a[href*="open=writing"]').click();
     await s.p.locator('#txt').waitFor();
     assert.match(await s.p.locator('#card').textContent(),/Schrijf een briefje aan je buurvrouw/);

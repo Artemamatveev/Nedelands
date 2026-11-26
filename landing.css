@@ -438,7 +438,12 @@ html[dir=rtl] .product-picker {direction:rtl}
 .module-detail h3 {margin:0;font-size:clamp(20px,2.4vw,26px)}
 .module-detail > p {margin:8px 0 14px;color:var(--muted)}
 .module-link {display:inline-flex;align-items:center;min-height:44px;color:var(--blue);font-weight:650}
-.product-exam-links {display:flex;flex-wrap:wrap;gap:0 20px}
+.product-exam-topic {margin-block:8px;border-radius:10px;background:var(--card)}
+.product-exam-topic summary {padding:12px 14px;font-weight:650;cursor:pointer}
+.product-exam-topic > div {padding:0 14px 14px}
+.product-exam-topic .specimen {overflow-wrap:anywhere}
+.product-exam-topic {scroll-margin-block-start:170px}
+.product-exam-topic .choices {margin-block-start:0}
 .book-demo {
   max-width:610px;margin-block:16px;padding:clamp(16px,4vw,28px);border-radius:12px;
   background:#fcf4e5;color:#382c22;font:1.06rem/1.65 Georgia,serif;
