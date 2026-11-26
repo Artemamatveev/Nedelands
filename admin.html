@@ -262,8 +262,8 @@ function adCounts(rows) {
   const labels = {wr:"Schrijven A2",sp:"Spreken A2"};
   return `<section class="tile"><h2>Поисковая реклама за 30 дней</h2>
     <p class="sub">Анонимные события в одной вкладке. Для выручки используй подтверждённые платежи Stripe.</p>
-    <table><thead><tr><th>Упражнение</th><th>Вход</th><th>Проверка</th><th>Checkout</th><th>Доступ подтверждён</th></tr></thead>
-    <tbody>${Object.entries(labels).map(([part,label])=>`<tr><th scope="row">${label}</th>${stages.map(stage=>`<td>${rows.filter(r=>r.ev===`ads_${part}_${stage}`).reduce((sum,r)=>sum+r.n,0)}</td>`).join("")}</tr>`).join("")}</tbody></table>
+    <div class="scroll" tabindex="0" role="region" aria-label="Статистика поисковой рекламы"><table><thead><tr><th>Упражнение</th><th>Вход</th><th>Проверка</th><th>Checkout</th><th>Доступ подтверждён</th></tr></thead>
+    <tbody>${Object.entries(labels).map(([part,label])=>`<tr><th scope="row">${label}</th>${stages.map(stage=>`<td>${rows.filter(r=>r.ev===`ads_${part}_${stage}`).reduce((sum,r)=>sum+r.n,0)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
     </section>`;
 }
 function counts(rows) {
