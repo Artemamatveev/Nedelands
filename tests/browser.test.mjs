@@ -1036,8 +1036,9 @@ test('Monthly A2 and B1 offers fit the homepage and the app sends the selected l
   let browser;
   try{browser=chromium&&await chromium.launch()}catch(e){if(process.env.BROWSER_TESTS)throw e}
   if(!browser){if(process.env.BROWSER_TESTS)assert.fail('Playwright is not installed');return t.skip('no browser here')}
-  const config={url:'https://example.supabase.co',anon:'fixture',login:[],limit:7,period:'once',free:2,freePeriod:'once',plus:{limit:20,month:200,price:'9,99',plans:{A2:{price:'9,99'},B1:{price:'14,99'}}},pass:{days:91,total:260,plans:{A2:{price:'29,99'},B1:{price:'39,99'}}},year:{days:365,plans:{A2:{price:'79,99'},B1:{price:'119,99'}}}};
-  const server=await serve({config}),base=`http://127.0.0.1:${server.address().port}`;
+  const config={url:'https://example.supabase.co',anon:'fixture',login:[],limit:7,period:'once',free:2,freePeriod:'once',events:1,plus:{limit:20,month:200,price:'9,99',plans:{A2:{price:'9,99'},B1:{price:'14,99'}}},pass:{days:91,total:260,plans:{A2:{price:'29,99'},B1:{price:'39,99'}}},year:{days:365,plans:{A2:{price:'79,99'},B1:{price:'119,99'}}}};
+  const events=[];
+  const server=await serve({config,events}),base=`http://127.0.0.1:${server.address().port}`;
   try{
     for(const [lang,width] of [['nl',1280],['ru',390],['ar',375],['hi',320]]){
       const s=await page(browser,base,{lang,viewport:{width,height:900}});await s.go('/');
@@ -1057,17 +1058,32 @@ test('Monthly A2 and B1 offers fit the homepage and the app sends the selected l
     await s.p.locator('#voorbeeld a[href*="open=writing"]').click();
     await s.p.locator('#txt').waitFor();
     assert.match(await s.p.locator('#card').textContent(),/Schrijf een briefje aan je buurvrouw/);
-    await s.go('/oefenen');await s.p.waitForSelector('#plan .step');
-    let chosen;
-    await s.ctx.route('**/api/plus',async r=>{chosen=r.request().postDataJSON();await r.fulfill({json:{url:'about:blank'}})});
+    await s.go('/oefenen?open=writing&src=a2w');await s.p.locator('#txt').waitFor();
+    let chosen,activated=false;
+    await s.ctx.route('**/__test-checkout',r=>r.fulfill({status:204}));
+    await s.ctx.route('**/api/plus',async r=>{
+      if(r.request().method()==='GET')return r.fulfill({json:{plus:activated?{status:'active',level:'B1'}:null}});
+      chosen=r.request().postDataJSON();
+      await r.fulfill({json:{url:base+'/__test-checkout'}});
+    });
     await s.p.evaluate(cfg=>{acc.cfg=cfg;acc.user={id:'pricing-test'};acc.sb={auth:{getSession:async()=>({data:{session:{access_token:'test'}}})}};plusScreen()},config);
     assert.match(await s.p.locator('[data-plus-plan="A2"]').textContent(),/9,99/);
     assert.match(await s.p.locator('[data-plus-plan="B1"]').textContent(),/14,99/);
     await s.p.locator('[data-plus-buy="B1"]').click();
     assert.equal(chosen,undefined,'no Checkout before the learner agrees that access starts at once');
     await s.p.locator('label:has(#pstart)').click();assert.equal(await s.p.locator('#pstart').isChecked(),true);
-    await s.p.locator('[data-plus-buy="B1"]').click();await s.p.waitForURL('about:blank');
-    assert.deepEqual(chosen,{go:'buy',level:'B1',start:true});assert.deepEqual(s.errors,[]);await s.ctx.close();
+    await s.p.locator('[data-plus-buy="B1"]').click();
+    await s.p.waitForFunction(()=>sessionStorage.getItem('bt-a2-campaign')?.includes('start'));
+    assert.deepEqual(chosen,{go:'buy',level:'B1',start:true});
+    await s.p.evaluate(()=>{history.replaceState(null,'','/oefenen?plus=ok&plan=B1');plusBack()});
+    await s.p.getByText('Je betaling wordt verwerkt…').waitFor();
+    assert.ok(!events.some(row=>row.ev==='ads_wr_paid'));
+    activated=true;
+    await s.p.getByText('Bedankt! Je hebt nu Bittertalen Plus.').waitFor();
+    await s.p.waitForFunction(()=>sessionStorage.getItem('bt-a2-campaign')?.includes('paid'));
+    assert.equal(events.filter(row=>row.ev==='ads_wr_start').length,1);
+    assert.equal(events.filter(row=>row.ev==='ads_wr_paid').length,1);
+    assert.deepEqual(s.errors,[]);await s.ctx.close();
   }finally{await browser.close();await new Promise(ok=>server.close(ok))}
 });
 
