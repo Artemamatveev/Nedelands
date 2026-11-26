@@ -2082,7 +2082,12 @@ function stopSpeak(){sayN++;sayOn=false;aiVoiceStop();if($("aiav"))aiSpk(false);
 // The phone's voice: left unset, so the phone uses the Dutch (nl-NL) voice picked in its settings;
 // in a dialogue ("A: …" / "B: …" lines) speaker B gets a higher pitch, so the two people sound different
 function utter(l,done,start,bittie=false){const m=l.match(/^([A-C]): (.*)$/),u=new SpeechSynthesisUtterance(m?m[2]:l);u.lang="nl-NL";u.rate=.95;u.volume=1;if(m)u.pitch={A:.9,B:1.35,C:1.1}[m[1]];
-  if(bittie){u.pitch=1.3;u.rate=.94}
+  if(bittie){
+    const voices=speechSynthesis.getVoices?.()||[];
+    const maleDutch=voices.find(v=>/^nl[-_]NL$/i.test(v.lang)&&/\b(Xander|Maarten|Frank|Ruben|male|man)\b/i.test(v.name));
+    if(maleDutch)u.voice=maleDutch;
+    u.pitch=maleDutch?1:.92;u.rate=.95
+  }
   if(start)u.onstart=u.onboundary=start;if(done)u.onend=u.onerror=done;speechSynthesis.speak(u)}
 function speak(t){stopSpeak();const n=sayN,L=String(t).split("\n").map(l=>l.trim()).filter(Boolean),K=sayKeys(L),has=i=>!!VOICE&&VOICE.has(K[i]);
   try{if(!L.some((l,i)=>has(i))){if(canSpeak)L.forEach(l=>utter(l));return}}catch(e){return}
