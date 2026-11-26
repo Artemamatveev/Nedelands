@@ -42,7 +42,9 @@ export default async function handler(req, res) {
   if (go !== "buy" && go !== "manage" && go !== "pass" && go !== "withdraw") return res.status(400).json({ error: "bad_request" });
   if (go === "withdraw") return withdraw(res, user);
   // The learner must have asked for access to start at once (a ticked box on the page), else no Checkout
-  if ((go === "pass" || go === "buy") && req.body.start !== true) return res.status(400).json({ error: "start" });
+  // An app page cached before 26 November 2026 doesn't send it yet: let that buy (Stripe's page still shows the start-now
+  // text above the pay button) and log it; remove this exception once every installed app has updated.
+  if ((go === "pass" || go === "buy") && req.body.start !== true) console.info(JSON.stringify({ event: "buy_without_start" }));
   if (go === "pass") return pass(req, res, user);
   const level = req.body.level ?? "A2"; // old pages buy A2, never the more expensive plan implicitly
   if (!Object.hasOwn(PLANS, level)) return res.status(400).json({ error: "invalid_plan" });
@@ -127,18 +129,23 @@ async function pass(req, res, user) {
 async function withdraw(res, user) {
   const at = new Date().toISOString(), done = [];
   try {
+    // First find everything that can be withdrawn and keep the statements (a failed record stops here, before anything
+    // is cancelled: the learner sees an error and the owner's table never misses a withdrawal). Same ref twice: one row.
     const sub = await recentSub(await plusOf(user.id));
+    const passes = await recentPasses(user.id);
+    if (sub) done.push({ kind: "sub", ref: sub.id });
+    for (const p of passes) done.push({ kind: "pass", ref: p.session, level: p.level });
+    for (const d of done) await recordWithdrawal({ user_id: user.id, kind: d.kind, ref: d.ref, at });
+    // Then end them
     if (sub) {
       await stripe(`subscriptions/${encodeURIComponent(sub.id)}`, { metadata: { withdrawn_at: at } });
       await stripe(`subscriptions/${encodeURIComponent(sub.id)}`, undefined, "DELETE");
-      done.push({ kind: "sub", ref: sub.id });
     }
-    for (const p of await recentPasses(user.id)) { await endPass(p.session); done.push({ kind: "pass", ref: p.session, level: p.level }); }
-    for (const d of done) await recordWithdrawal({ user_id: user.id, kind: d.kind, ref: d.ref, at }).catch((e) => console.error("withdrawal_record", e.message));
+    for (const p of passes) await endPass(p.session);
     if (done.length) console.info(JSON.stringify({ event: "withdrawal", n: done.length }));
     return res.status(200).json({ withdrawn: done.map(({ kind, level }) => ({ kind, ...(level ? { level } : {}) })), at });
   } catch (e) {
-    console.error(e.message);
+    console.error("withdrawal", e.message);
     return res.status(502).json({ error: "failed" });
   }
 }

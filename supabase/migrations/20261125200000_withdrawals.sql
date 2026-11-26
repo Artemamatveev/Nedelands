@@ -10,6 +10,7 @@ create table if not exists public.withdrawals (
   refunded_at timestamptz                      -- set by hand when the money is back
 );
 create index if not exists withdrawals_user on public.withdrawals (user_id, at desc);
+create unique index if not exists withdrawals_ref on public.withdrawals (ref);
 alter table public.withdrawals enable row level security;
 revoke all on public.withdrawals from public, anon, authenticated;
 grant select, insert, update on public.withdrawals to service_role;

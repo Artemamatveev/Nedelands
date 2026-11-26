@@ -317,7 +317,7 @@ export default async function handler(req, res) {
 
   // The learner's menu language (en, ar, …): the explanation of each mistake comes in that language, so a beginner
   // understands the rule; the corrections and the verdict stay Dutch
-  const ui = UI_LANG[req.body?.ui];
+  const ui = Object.hasOwn(UI_LANG, String(req.body?.ui)) ? UI_LANG[req.body.ui] : null;
   const content = ui ? prompt + `\n\nSchrijf "why" bij elke fout in het ${ui}, met eenvoudige woorden, zodat de cursist de regel begrijpt. Al het andere blijft in het Nederlands.` : prompt;
   try {
     providerStarted = true;

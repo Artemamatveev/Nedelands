@@ -276,7 +276,8 @@ export async function recentPasses(uid) {
   return r.json();
 }
 export async function recordWithdrawal(row) {
-  const r = await rest("withdrawals", { method: "POST", headers: { prefer: "return=minimal" }, body: JSON.stringify(row) });
+  // on_conflict ref: pressing the button twice keeps the first statement (unique index in the migration)
+  const r = await rest("withdrawals?on_conflict=ref", { method: "POST", headers: { prefer: "resolution=ignore-duplicates,return=minimal" }, body: JSON.stringify(row) });
   if (!r.ok) throw new Error(`withdrawals ${r.status}`);
 }
 export async function endPass(session) {
