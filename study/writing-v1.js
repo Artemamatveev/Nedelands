@@ -124,3 +124,41 @@ function writingHistory(results) {
   }
   return {attempts:attempts.length,types:[...groups.values()]};
 }
+
+
+// Controlled prompts test the grammar of a new sentence. The supplied words keep the check focused on one rule.
+const WRITING_RULES = {
+  inversie: {title:"Woordvolgorde", tasks:[
+    ["Schrijf aan een collega dat je morgen om negen uur begint. Begin met «Morgen».", "Morgen · ik · begin · om negen uur", ["Morgen begin ik om negen uur"]],
+    ["Schrijf aan een buur dat je de sleutel vanavond brengt. Begin met «Vanavond».", "Vanavond · ik · breng · de sleutel", ["Vanavond breng ik de sleutel"]],
+    ["Schrijf aan je docent dat je maandag naar de les gaat. Begin met «Maandag».", "Maandag · ik · ga · naar de les", ["Maandag ga ik naar de les"]],
+    ["Schrijf aan een vriend dat je zaterdag om tien uur komt. Begin met «Zaterdag».", "Zaterdag · ik · kom · om tien uur", ["Zaterdag kom ik om tien uur"]],
+  ]},
+  meervoud: {title:"Meervoud", tasks:[
+    ["Schrijf waar de boeken liggen. Begin met «De boeken».", "De boeken · ligt / liggen · op tafel", ["De boeken liggen op tafel"]],
+    ["Schrijf waar de fietsen staan. Begin met «De fietsen».", "De fietsen · staat / staan · buiten", ["De fietsen staan buiten"]],
+    ["Schrijf waar de kinderen spelen. Begin met «De kinderen».", "De kinderen · speelt / spelen · in de tuin", ["De kinderen spelen in de tuin"]],
+    ["Schrijf waar de buren wonen. Begin met «De buren».", "De buren · woont / wonen · in Utrecht", ["De buren wonen in Utrecht"]],
+  ]},
+};
+const ruleAnswer = text => String(text).normalize("NFC").trim().replace(/[.!?]+$/, "").trim().toLowerCase().replace(/\s+/g, " ");
+function scheduleWritingRules(progress, errors, day, at) {
+  const rules = {...progress};
+  for (const kind of new Set(errors.map(error => error.kind))) {
+    if (!Object.hasOwn(WRITING_RULES, kind)) continue;
+    const previous = rules[kind];
+    rules[kind] = {day:previous?.day > day ? previous.day : day+1, index:previous?.index || 0, ok:false, at};
+  }
+  return rules;
+}
+function dueWritingRule(progress, day) {
+  return Object.keys(WRITING_RULES).filter(kind => progress?.[kind] && !progress[kind].ok && progress[kind].day <= day)
+    .sort((a,b) => progress[a].day-progress[b].day)[0];
+}
+function answerWritingRule(kind, state, answer, day, at) {
+  const rule = Object.hasOwn(WRITING_RULES, kind) && WRITING_RULES[kind];
+  if (!rule || !state || state.ok || state.day > day || !answer.trim()) return null;
+  const task = rule.tasks[state.index % rule.tasks.length];
+  const ok = task[2].some(solution => ruleAnswer(solution) === ruleAnswer(answer));
+  return {ok, day:day+1, index:state.index+1, at};
+}

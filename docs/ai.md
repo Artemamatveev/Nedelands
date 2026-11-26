@@ -156,3 +156,26 @@ conversation. Two menu buttons (aiMenu remembers the choice when returning from 
 - `/api/talk` is a rewrite to `/api/check?kind=talk` (the 12-function limit); `check.js` imports `_talk.js` only then.
   `S.ai` `{id: {n, at}}` (merged like `S.gp`); the event `ai` counts started conversations. privacy.html says, in all
   eight languages under the checking section, what goes to Anthropic and Google.
+
+## Review of A2 writing feedback
+
+The checker labels each correction with a criterion. Inversion in a main clause and singular instead of plural agreement
+are grammar labels with their own follow-up exercises. The server collapses duplicate edits that only differ in how much
+unchanged text surrounds the edit. Full spelling points can still coexist with minor mistakes that leave the text
+understandable. The result explains this next to the score. The versioned writing cache avoids replaying older feedback
+without these labels.
+
+After ordinary A2 writing practice, Mijn dag offers a different sentence on the next day for either of those two grammar
+rules. The words are supplied so the check can focus on the intended rule. A correct sentence records success for that
+exercise. A missed sentence returns the next day with a different prompt. Progress stores only the rule, prompt index,
+date, result and update time along with existing progress. The new sentence is checked on the device.
+
+In speaking practice, learners can correct the recognised text or speak again before explicitly requesting a check.
+Only that confirmed text goes to the existing grading endpoint. The edit field stays in the current exercise and is
+discarded on leaving. Pronunciation and speaking speed still require audio and are outside the transcript score.
+
+For NT2 calibration, ask a qualified reviewer to score the original A2 tasks before seeing the app's result. Include
+the brief asking a neighbour to water the plants and a form. For the brief, compare a complete clear answer, a clear answer
+with small spelling errors, an answer missing the key location, and an off-topic answer. For the form, include a complete
+form and cases missing a required field or giving an unclear open answer. Record criterion-level scores and the reason
+for any disagreement. Check the free and paid models on the same set. Keep these results separate from pass-rate claims.

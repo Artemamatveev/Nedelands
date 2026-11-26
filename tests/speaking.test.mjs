@@ -114,3 +114,24 @@ test('Speaking replaced audio is released and the final question can also be ret
   assert.deepEqual(revoked,['blob:old-take']);assert.equal(a.run('cur.ans.filter(Boolean).length'),1);
   assert.equal(a.document.getElementById('recb').textContent,'Antwoorden inleveren');assert.equal(a.document.getElementById('spredo').hidden,false);
 });
+
+test('Speaking practice checks only the transcript explicitly confirmed by the learner', async()=>{
+  const native=speech(), checks=[];
+  const a=await app({globals:{SpeechRecognition:native.Recognition},fetch:async(url,options)=>{
+    if(url!=='/api/check')return new Response('{}');
+    checks.push(JSON.parse(options.body).tasks[0].text);
+    return new Response(JSON.stringify({tasks:[{passed:true,errors:[],corrected:'Ik ga naar de les.'}]}));
+  }});
+  a.run('build("sp")');
+  a.document.getElementById('spchk').click();
+  await a.flush();
+  native.instances[0].result('Ik ga naar de fles');
+  a.document.getElementById('recb').click();
+  native.instances[0].end();
+  assert.equal(checks.length,0);
+  assert.equal(a.document.getElementById('sptranscript').value,'Ik ga naar de fles');
+  a.document.getElementById('sptranscript').value='Ik ga naar de les';
+  a.document.getElementById('spchk').click();
+  await a.flush();
+  assert.deepEqual(checks,['Ik ga naar de les']);
+});

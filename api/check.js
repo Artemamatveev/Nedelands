@@ -30,6 +30,7 @@ const MODEL_EXAM = (process.env.GRADING_MODEL_EXAM || "claude-opus-5-5").trim();
 // Free checks (a guest's trial and a free account's seven) use the cheaper GRADING_MODEL_FREE, also for a proefexamen.
 const MODEL_FREE = (process.env.GRADING_MODEL_FREE || "claude-haiku-5-5").trim();
 
+const ERROR_KINDS = ["inhoud", "woorden", "grammatica", "spelling", "samenhang", "inversie", "meervoud"];
 const RESULT = {
   type: "object",
   properties: {
@@ -40,8 +41,8 @@ const RESULT = {
       type: "array",
       items: {
         type: "object",
-        properties: { wrong: { type: "string" }, right: { type: "string" }, why: { type: "string" } },
-        required: ["wrong", "right", "why"],
+        properties: { wrong: { type: "string" }, right: { type: "string" }, why: { type: "string" }, kind: { type: "string", enum: ERROR_KINDS } },
+        required: ["wrong", "right", "why", "kind"],
         additionalProperties: false,
       },
     },
@@ -79,6 +80,25 @@ const clampScores = (sc, SC) => {
   const o = Object.fromEntries(Object.entries(SC).map(([k, max]) => [k, Math.max(0, Math.min(max, Math.round(Number(sc?.[k]) || 0)))]));
   return o.inhoud ? o : Object.fromEntries(Object.keys(SC).map((k) => [k, 0])); // no answer to the question: no points at all
 };
+// Models sometimes describe the same edit once as a word and once inside a longer fragment.
+export function uniqueCorrections(errors) {
+  const seen = new Set();
+  const tokens = value => String(value || "").normalize("NFC").replaceAll("’", "'").match(/[\p{L}\p{M}\d]+(?:'[\p{L}\p{M}\d]+)*|[^\s]/gu) || [];
+  return (Array.isArray(errors) ? errors : []).filter(error => {
+    const before = tokens(error?.wrong), after = tokens(error?.right);
+    while (before.length && after.length && before[0] === after[0]) { before.shift(); after.shift(); }
+    while (before.length && after.length && before.at(-1) === after.at(-1)) { before.pop(); after.pop(); }
+    if (!before.length && !after.length) return false;
+    const key = JSON.stringify([before, after]);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+const ERROR_NOTE = `
+- Geef elke correctie één keer. Gebruik het kortste fragment dat de fout duidelijk laat zien, eventueel met een paar woorden context. Geef dezelfde wijziging niet ook in een langere zin.
+- Geef elke fout één kind: inhoud, woorden, grammatica, spelling, samenhang. Gebruik inversie alleen als na een tijd- of plaatsbepaling vooraan het onderwerp en de persoonsvorm verkeerd staan in een hoofdzin. Gebruik meervoud alleen als bij een meervoudig onderwerp de persoonsvorm ten onrechte in het enkelvoud staat. Beide tellen bij grammatica. Een verkeerd gespelde werkwoordsvorm met de juiste persoon en het juiste getal (zoals ligd → ligt) is spelling.
+`;
 // Schrijven: voldoende follows from the points, not from Claude's overall impression
 const sum = (o) => Object.values(o).reduce((a, b) => a + b, 0);
 const wrPassed = (sc) => sc.inhoud >= 2 && sum(sc) >= 7;
@@ -196,14 +216,14 @@ export async function gradeWriting(task, model) {
     betas: ["server-side-fallback-2026-07-01"],
     fallbacks: "default",
     output_config: { effort: "medium", format: { type: "json_schema", schema: SCHEMA_WR } },
-    system: SYSTEM + FENCE_NOTE,
+    system: SYSTEM + ERROR_NOTE + FENCE_NOTE,
     messages: [{ role: "user", content: promptWR([{ task: str(task.task, 1200), form: str(task.form, 1500), text: str(task.text, 2500) }], 8) }],
   }, { signal: AbortSignal.timeout(DEADLINE) });
   await addSpend(response.model, response.usage).catch(() => {});
   if (response.stop_reason === "refusal" || response.stop_reason === "max_tokens") throw new Error(response.stop_reason);
   const t = JSON.parse(response.content.find((b) => b.type === "text")?.text || "{}").tasks?.[0] || {};
   const scores = clampScores(t.scores, SCORES_WR);
-  return { model: response.model, scores, total: sum(scores), passed: wrPassed(scores), errors: Array.isArray(t.errors) ? t.errors.length : 0, verdict: str(t.verdict, 400) };
+  return { model: response.model, scores, total: sum(scores), passed: wrPassed(scores), errors: uniqueCorrections(t.errors).length, verdict: str(t.verdict, 400) };
 }
 
 export default async function handler(req, res) {
@@ -329,7 +349,7 @@ export default async function handler(req, res) {
       betas: ["server-side-fallback-2026-07-01"],
       fallbacks: "default",
       output_config: { effort: exam || tasks.length > 1 ? "medium" : "low", format: { type: "json_schema", schema: sp ? SCHEMA_SP : SCHEMA_WR } },
-      system: (sb ? SYSTEM_SB : sp ? SYSTEM_SP : wb ? SYSTEM_WB : SYSTEM) + FENCE_NOTE,
+      system: (sb ? SYSTEM_SB : sp ? SYSTEM_SP : wb ? SYSTEM_WB : SYSTEM) + ERROR_NOTE + FENCE_NOTE,
       messages: [{ role: "user", content }],
     }, { signal: AbortSignal.timeout(left_ms), maxRetries: exam ? 0 : 1 });
     console.info(JSON.stringify({ event: "grading_usage", model: response.model, usage: response.usage, units: cost }));
@@ -350,7 +370,7 @@ export default async function handler(req, res) {
         const form = !sp && !wb && tasks[i].kind === "f";
         const SC = wb ? SCORES_WB[tasks[i].kind] : sb ? SCORES_SB[tasks[i].kind] : sp ? SCORES_SP : form ? SCORES_WF : SCORES_WR;
         const scores = clampScores(t.scores, SC);
-        return { ...t, scores, passed: sb ? sbPassed(scores, SC) : sp ? spPassed(scores) : wb ? wbPassed(scores, SC) : form ? wfPassed(scores) : wrPassed(scores) };
+        return { ...t, errors: uniqueCorrections(t.errors), scores, passed: sb ? sbPassed(scores, SC) : sp ? spPassed(scores) : wb ? wbPassed(scores, SC) : form ? wfPassed(scores) : wrPassed(scores) };
       }),
     });
   } catch (error) {

@@ -484,6 +484,8 @@ mark.err sup{font-size:11px;font-weight:700;color:var(--bad);margin-left:1px}
 .dpts li{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);line-height:1.35}
 .dpts i{flex:none;display:grid;place-items:center;width:24px;height:24px;margin-top:1px;border-radius:50%;color:#fff;font-style:normal;font-weight:700;font-size:var(--fs-s)}
 .dpts .g i{background:var(--good)} .dpts .m i{background:var(--oranje)} .dpts .n i{background:var(--bad)}
+.preferred-plan{outline:2px solid var(--blue);outline-offset:2px}
+.dpts small{display:block;color:var(--soft);margin-top:4px}
 .dpts b{display:block;font-weight:600;font-size:var(--fs-b)} .dpts li>span>span{color:var(--soft);font-size:var(--fs-m)}
 .ptt{margin:10px 0 0;font-size:var(--fs-m);color:var(--soft)} .ptt b{color:var(--ink)}
 .errs.kv li{display:flex;justify-content:space-between;gap:12px} .errs.kv span{display:inline;color:var(--ink);font-size:inherit;font-weight:600}
@@ -1106,8 +1108,8 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
 <script src="/study/praise-art-v1.js?v=c86fa67273"></script>
 <script src="/study/praise-v1.js?v=cf226a4a76"></script>
 <script src="/study/language-v1.js?v=e94426af48"></script>
-<script src="/study/progress-v1.js?v=d7e5e64206"></script>
-<script src="/study/writing-v1.js?v=e5690fd786"></script>
+<script src="/study/progress-v1.js?v=ef489051a9"></script>
+<script src="/study/writing-v1.js?v=d986d16b42"></script>
 <script src="/data/knm.js?v=50777b478a"></script>
 <script src="/data/a2.js?v=56c32c3473"></script>
 <script src="/data/b1.js?v=e9701bd331"></script>
@@ -1494,6 +1496,7 @@ async function setUser(u){
   drawProfile();await push();if(!active())return;
   addGenerated();refresh();usage();syncMeta();lsSet(WEL,"1");
   if(legacyOrigin()&&legacyReady)moveScreen();
+  else if(!legacyOrigin())resumePlanChoice();
 }
 function pull(){return push()}
 function mergeS(a,b){
@@ -1507,6 +1510,7 @@ function mergeS(a,b){
   o.gp=by(a.gp,b.gp,(x,y)=>({n:Math.max(x.n||0,y.n||0),b:Math.max(x.b||0,y.b||0),at:Math.max(x.at||0,y.at||0)}));
   o.bk=by(a.bk,b.bk,(x,y)=>(y.at||0)>(x.at||0)?y:x);
   o.res=by(a.res,b.res,(x,y)=>{const m=new Map();x.concat(y).forEach(r=>m.set(r.id||r.at,r));return [...m.values()].sort((p,q)=>p.at-q.at)});
+  o.writingRules=by(a.writingRules,b.writingRules,(x,y)=>(y.at||0)>(x.at||0)?y:x);
   o.uit=by(a.uit,b.uit,(x,y)=>(y.at||0)>(x.at||0)?y:x);
   o.start=a.start&&b.start?(a.start.at>=b.start.at?a.start:b.start):a.start||b.start;
   o.errs=uni(a.errs,b.errs,e=>e.r); o.words=uni(a.words,b.words,w=>w.w);
@@ -1744,7 +1748,9 @@ function drawWelcome(){
     <div class="wfoot"><p><a href="/privacy">Privacyverklaring</a></p></div>`;
   if($("wlogin"))$("wlogin").onclick=()=>{welcomeLogin=true;acc.msg="";drawWelcome();if($("wmail"))$("wmail").focus()};
   bindLogin(el,"w",null,mail);
-  $("wlater").onclick=()=>{acc.msg="";acc.step=null;if(first&&!intro){welcomeLogin=false;drawWelcome();return}lsSet(WEL,"1");home()};
+  $("wlater").onclick=()=>{acc.msg="";acc.step=null;if(first&&!intro){welcomeLogin=false;drawWelcome();return}lsSet(WEL,"1");
+    if(preferredPlan){try{sessionStorage.removeItem(PENDING_PLAN)}catch(e){}home();return plusScreen(preferredPlan)}
+    home()};
 }
 // The token for /api/check; with accounts on, grading needs a login
 async function authHead(){
@@ -2003,16 +2009,19 @@ const spTask=q=>spoken(q.big)+(q.text?` (Tekst bij de opdracht: ${q.text.replace
 const SCMAX={inhoud:3,woorden:2,grammatica:2,spelling:2,samenhang:1}, SPMAX=8, WRMAX=10, spPts=t=>t&&t.scores?Object.values(t.scores).reduce((a,b)=>a+(+b||0),0):null;
 const mxPts=M=>Object.values(M).reduce((a,b)=>a+b,0);
 // DUO's points as bars: one per criterion (full green, some oranje, none red), then the total and what is voldoende
-const scoreHTML=(sc,M)=>{if(!sc)return""; const wr="spelling" in sc,X=M||SCMAX,n=M?mxPts(M):wr?WRMAX:SPMAX;
+const scoreHTML=(sc,M,errors=[])=>{if(!sc)return""; const wr="spelling" in sc,X=M||SCMAX,n=M?mxPts(M):wr?WRMAX:SPMAX;
   // a checklist (the user's choice, November 2026): each criterion as a plain question with Ja, Bijna or Nee and its
   // points, so it is clear what is good and what is not (coloured bars and boxes of numbers were unclear or looked
   // generated); the questions follow DUO's criteria
   const written=wr||Object.values(WBMAX).includes(M); // a B1 sentence task has no spelling, but it is written
+  const notes=errors.filter(e=>e.kind==="spelling").length;
+  const spellExplain=written&&sc.spelling===X.spelling&&notes
+    ?"De spelling is begrijpelijk. Kleine spelfouten kunnen bij deze score wel voorkomen.": "";
   const Q={inhoud:written?"Heb je geschreven wat de opdracht vraagt?":"Heb je gezegd wat de opdracht vraagt?",
     woorden:"Kies je de goede woorden?",grammatica:"Zijn je zinnen goed gebouwd?",spelling:"Is je spelling goed?",samenhang:"Is het één duidelijk geheel?"};
   return`<ul class="dpts">${Object.keys(X).filter(k=>k in sc).map(k=>{const v=Math.max(0,Math.min(X[k],+sc[k]||0)),m=X[k],c=v>=m?"g":v>0?"m":"n";
-      return`<li class="${c}"><i aria-hidden="true">${c==="g"?"✓":c==="m"?"!":"✕"}</i><span><b>${Q[k]||k}</b><span>${c==="g"?"Ja":c==="m"?"Bijna":"Nee"} · ${v} van ${m} ${m===1?"punt":"punten"}</span></span></li>`}).join("")}</ul>
-    <p class="ptt">Samen <b>${spPts({scores:sc})} van ${n} punten</b></p><p class="note">${M?M.spelling?`Voldoende is ${Math.ceil(n*.7)} punten, met inhoud minstens 2.`:M===WBMAX.z?"Eén punt voor de inhoud, één voor de grammatica. Past de inhoud niet, dan telt de grammatica ook niet.":`Voldoende is ${Math.ceil(n*.6)} punten, met inhoud minstens 2. Uitspraak en spreektempo kan ik niet horen: oefen die met Zeg het na.`:wr?"Voldoende is 7 punten, met inhoud minstens 2.":"Voldoende is 5 punten, met inhoud minstens 2. Uitspraak en vloeiendheid kan ik niet horen: oefen die met Zeg het na."}</p>`};
+      return`<li class="${c}"><i aria-hidden="true">${c==="g"?"✓":c==="m"?"!":"✕"}</i><span><b>${Q[k]||k}</b><span>${k==="spelling"&&spellExplain?"":(c==="g"?"Ja":c==="m"?"Bijna":"Nee")+" · "}${v} van ${m} ${m===1?"punt":"punten"}</span>${k==="spelling"&&spellExplain?`<small>${spellExplain}</small>`:""}</span></li>`}).join("")}</ul>
+    <p class="ptt">Samen <b>${spPts({scores:sc})} van ${n} punten</b></p><p class="note">${M?M.spelling?`Voldoende is ${Math.ceil(n*.7)} punten, met inhoud minstens 2.`:M===WBMAX.z?"Eén punt voor de inhoud, één voor de grammatica. Past de inhoud niet, dan telt de grammatica ook niet.":`Voldoende is ${Math.ceil(n*.6)} punten, met inhoud minstens 2. Uitspraak en spreektempo kan ik niet horen: oefen die met Zeg het na.`:wr?"Voldoende is 7 punten, met inhoud minstens 2.":"Voldoende is 6 punten, met inhoud minstens 2. Uitspraak en vloeiendheid kan ik niet horen: oefen die met Zeg het na."}</p>`};
 // The learner's own text with each error marked where it is (numbered like the list under it). Claude returns the
 // wrong words as they stand in the text; one that can't be found (a missing word) is only in the list.
 function markErrs(text,errs){
@@ -2026,7 +2035,8 @@ function markErrs(text,errs){
   return out+esc(text.slice(p));
 }
 const ownHTML=(text,errs,label="Jouw tekst")=>`<p class="ask">${label}</p><div class="sample own">${markErrs(text,errs)||"(niets)"}</div>`;
-const errsHTML=errs=>errs.length?`<p class="ask">Fouten: ${errs.length}</p><ol class="errs fixes">${errs.map(e=>`<li><s>${esc(e.wrong)}</s> <strong>${esc(e.right)}</strong><span dir="auto">${esc(e.why)}</span></li>`).join("")}</ol>`:`<p class="note">Geen fouten gevonden.</p>`;
+const ERROR_LABELS={inhoud:"Inhoud",woorden:"Woorden",grammatica:"Grammatica",inversie:"Grammatica · Woordvolgorde",meervoud:"Grammatica · Meervoud",spelling:"Spelling",samenhang:"Samenhang"};
+const errsHTML=errs=>errs.length?`<p class="ask">Fouten: ${errs.length}</p><ol class="errs fixes">${errs.map(e=>`<li><s>${esc(e.wrong)}</s> <strong>${esc(e.right)}</strong><span dir="auto">${Object.hasOwn(ERROR_LABELS,e.kind)?`<b>${ERROR_LABELS[e.kind]}</b> · `:""}${esc(e.why)}</span></li>`).join("")}</ol>`:`<p class="note">Geen fouten gevonden.</p>`;
 const spoken=t=>String(t).replace(/[\p{Extended_Pictographic}←-⇿️‍]/gu,"").replace(/\s+/g," ").trim();
 const saidText=r=>r.said.concat(r.part).join(" ").replace(/\s+/g," ").trim();
 async function listen(mode,done,lim=SPK,options={}){ // AI conversations finish only through Klaar; exams keep their timer
@@ -2159,6 +2169,35 @@ function recDone(r){
   $("recb").disabled=false;r.done(r);
 }
 // Practice: a recording to play back
+function reviewSpokenAnswer(q,r){
+  if(q!==queue[pos])return;
+  const recordButton=$("recb"),checkButton=$("spchk");
+  if(!r.text){
+    $("recn").textContent=r.note+"Geen spraak herkend. Probeer het nog een keer.";
+    recordButton.textContent="● Opnieuw inspreken";
+    recordButton.onclick=()=>listen("say",take=>reviewSpokenAnswer(q,take),r.lim);
+    checkButton.disabled=false;
+    return;
+  }
+  recordButton.textContent="● Opnieuw inspreken";
+  recordButton.className="ghost wide";
+  recordButton.onclick=()=>{checkButton.hidden=true;listen("say",take=>reviewSpokenAnswer(q,take),r.lim)};
+  $("recp").innerHTML='<label class="fld"><span>Wat ik heb verstaan</span><textarea id="sptranscript" rows="3" maxlength="1200" spellcheck="false"></textarea></label><p class="note">Verbeter alleen wat je telefoon verkeerd heeft verstaan.</p>';
+  const input=$("sptranscript");
+  input.value=r.text;
+  $("recn").textContent="Controleer de tekst voordat je je antwoord laat nakijken.";
+  checkButton.textContent="Kijk mijn antwoord na";
+  checkButton.className="btn wide";
+  checkButton.hidden=false;
+  checkButton.disabled=false;
+  checkButton.onclick=()=>{
+    const text=input.value.trim();
+    if(text.split(/\s+/).filter(Boolean).length<3){$("recn").textContent="Schrijf minstens drie woorden of spreek je antwoord opnieuw in.";input.focus();return}
+    input.readOnly=true;
+    checkButton.disabled=true;
+    spGrade(q,{...r,text});
+  };
+}
 function spTake(r){
   recUrl=r.url; if(r.url)$("recp").innerHTML=`<audio controls src="${r.url}"></audio>`;
   $("recn").textContent=r.note+(r.mr?r.url?"Luister naar jezelf en vergelijk met het voorbeeld.":"Er is niets opgenomen. Probeer het nog een keer.":"");
@@ -2179,7 +2218,7 @@ async function spGrade(q,r){
     const errs=Array.isArray(res.errors)?res.errors:[], ok=!!res.passed;
     b.disabled=false; $("rev").hidden=true; keepErrs(errs); record(ok); if(!cur.exam)quickPraise.show(ok);
     $("fb").innerHTML=`<b class="${ok?"good":"bad"}">${ok?"Goed zo! Voldoende":"Nog niet voldoende"}</b>
-      <p class="note">${esc(res.verdict)}</p>${scoreHTML(res.scores,q.mx)}
+      <p class="note">${esc(res.verdict)}</p>${scoreHTML(res.scores,q.mx,errs)}
       ${ownHTML(r.text,errs,"Wat ik heb verstaan")}${errsHTML(errs)}${freeNote()}
       <p class="ask">Zo zeg je het goed</p><div class="sample">${esc(res.corrected)}</div>${echoHTML("de verbeterde zinnen")}
       <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(q.right)}</div></details>
@@ -2193,7 +2232,7 @@ async function spGrade(q,r){
   }catch(e){
     if(q!==queue[pos])return;
     const k=e&&e.code; b.disabled=false;
-    if(k==="rate_limited"){c.hidden=false;c.disabled=false;$("fb").innerHTML=`<p class="note">Te veel verzoeken achter elkaar. Wacht een minuut en probeer het opnieuw.</p>`;return}
+    if(k==="rate_limited"){if($("sptranscript"))$("sptranscript").readOnly=false;c.hidden=false;c.disabled=false;$("fb").innerHTML=`<p class="note">Te veel verzoeken achter elkaar. Wacht een minuut en probeer het opnieuw.</p>`;return}
     $("rev").hidden=true;
     selfGrade(q,noCheck(k)?noCheck(k)+" Vergelijk je antwoord nu met het voorbeeld."+offerHTML(k):k==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je antwoord met het voorbeeld.":"Het nakijken is niet gelukt. Vergelijk je antwoord met het voorbeeld.");
   }
@@ -2736,7 +2775,7 @@ function planTasks(){
   // a part the learner passed (Mijn examen → Geslaagd) leaves the plan; parts with an exam in the next 14 days come first
   const won=ks.filter(k=>S.uit?.[k]?.ok);if(won.length&&won.length<ks.length)won.forEach(k=>ks.splice(ks.indexOf(k),1));
   const soon=Object.fromEntries(examsAhead().filter(x=>x.k&&x.n<=14).map(x=>[x.k,x.n])),all=examsAhead().some(x=>!x.k&&x.n<=14);
-  const near=k=>k in soon||all?0:1;
+  const near=k=>soon[k]??(all?examDays():15);
   const sc=ks.map(k=>({k,r:ready(k)}));
   sc.sort((a,b)=>near(a.k)-near(b.k)||(a.r.pc==null?50:a.r.pc)-(b.r.pc==null?50:b.r.pc)||((ks.indexOf(a.k)+d)%ks.length)-((ks.indexOf(b.k)+d)%ks.length));
   const budget=[10,20,40].includes(S.minutes)?S.minutes:20;
@@ -2828,7 +2867,9 @@ function startExamFocus(source){
 function planHTML(){
   const d=today(),done=S.day&&S.day.d===d?S.day.done:[],P=planTasks(),steps=P.T,nx=steps.findIndex(t=>!done.includes(t.id));
   const nd=steps.filter(t=>done.includes(t.id)).length;
-  const intro=nx<0?"Alles is klaar. Tot morgen!":P.bg?"Eerst de basis: elke dag één les.":P.pc!=null?`Vooral ${PART[P.k]}: daar scoor je nu het laagst.`:"Van elk onderdeel een beetje.";
+  const rule=lvl()==="A2"&&dueWritingRule(S.writingRules,d);
+  const practised=lvl()==="A2"?Object.keys(WRITING_RULES).filter(kind=>S.writingRules?.[kind]?.ok):[];
+  const intro=nx<0?"Alles is klaar. Tot morgen!":P.bg?"Eerst de basis: elke dag één les.":P.pc!=null?`Vooral ${PART[P.k]}: daar scoor je nu het laagst.`:"Je oefent vandaag de onderdelen hieronder.";
   const focus=dayExamFocus(),last=focus?.focus.last;
   // new here at A2: where to begin, right under the heading, so it is seen above the tab bar on a phone. Gone after the
   // test, or once someone has clearly been practising
@@ -2849,7 +2890,11 @@ function planHTML(){
     <p class="note"><span>Geschatte duur</span> · ${P.minutes||steps.length*5} min</p>
     <div class="dayp"><span aria-hidden="true">${steps.map(t=>`<i${done.includes(t.id)?' class="on"':""}></i>`).join("")}</span><small>${nd} van ${steps.length} klaar</small></div>
     <p class="sub">${intro}</p>
-    ${review}<ol class="steps">${steps.map((t,i)=>{const ok=done.includes(t.id),nxt=i===nx&&!ok,k=t.id.split(":")[1];
+    ${review}
+    ${rule?`<section class="list exam-focus"><h3>Pas de regel toe in een nieuwe zin</h3><p>${WRITING_RULES[rule].title}</p>
+      <button type="button" class="ghost wide" id="dayrule">Oefen met een nieuwe situatie</button></section>`:""}
+    ${practised.length?`<p class="note"><span>Gelukt in een nieuwe zin</span> · ${practised.map(kind=>WRITING_RULES[kind].title).join(", ")}</p>`:""}
+    <ol class="steps">${steps.map((t,i)=>{const ok=done.includes(t.id),nxt=i===nx&&!ok,k=t.id.split(":")[1];
       return`<li><button class="step${ok?" ok":""}" data-p="${t.id}"${nxt?' aria-current="step"':""}><i class="sic">${ok?'<svg viewBox="0 0 24 24" aria-hidden="true"><path class="s" d="M5.5 12.5l4.2 4.2 8.8-9"/></svg>':IC[k]?`<svg viewBox="0 0 24 24" aria-hidden="true">${IC[k]}</svg>`:i+1}</i><b>${t.t}</b><span>${t.s}</span><em class="c">›</em></button></li>`}).join("")}</ol>
     ${P.bg?"":`<button class="ghost wide" data-p="s:mix">Meer tijd? Mix van de dag</button>`}`;
 }
@@ -2925,6 +2970,7 @@ function drawPlan(){
   const d=today();if(!$("plan").querySelector(".step:not(.ok)")&&lsGet("ww-stamp")!=String(d)){lsSet("ww-stamp",String(d));track("day");
     const st=$("streak");st.classList.remove("stamp");void st.offsetWidth;st.classList.add("stamp");buzz("good");remindPlan()}
   if($("dayexam"))$("dayexam").onclick=()=>{setTab("profiel");setTimeout(()=>{const f=$("pexams");if(f){f.scrollIntoView({block:"center"});f.querySelector("input")?.focus()}},120)};
+  if($("dayrule"))$("dayrule").onclick=writingRuleScreen;
   const focus=dayExamFocus(),review=$("dayfocus");
   if(review&&focus?.target)review.onclick=()=>startExamFocus(focus.source);
   document.querySelectorAll("#plan [data-p]").forEach(b=>b.onclick=()=>{const id=b.dataset.p,[k,v]=id.split(":");planId=id;
@@ -3092,7 +3138,7 @@ function show(){
       if(canSpeak)speak(spoken(q.big)); // the exam asks the question aloud
       if(q.sec==="sb")prepThen(q,go);return}
     $("recb").onclick=()=>listen("rec",spTake,q.spk); $("rev").onclick=()=>reveal(q);
-    if($("spchk"))$("spchk").onclick=()=>{$("spchk").disabled=true;listen("say",r=>spGrade(q,r),q.spk)};
+    if($("spchk"))$("spchk").onclick=()=>{$("spchk").disabled=true;listen("say",r=>reviewSpokenAnswer(q,r),q.spk)};
     return}
   if(cur.nav&&q.type==="choice"){
     // in a proefexamen an answer is only chosen (marked at the end), so one light tap that says nothing about right or wrong
@@ -3355,7 +3401,7 @@ function keepErrs(errs){
 // A writing text sent again unchanged gets its earlier result, without a new check: sending the same text until the
 // model says voldoende would make the score mean nothing. Kept only on this device (ww-graded, the last 60), and only for
 // writing: spoken transcripts stay in memory (privacy.html). Plus or not is part of the key, as Plus grades with a stronger model.
-const GRADED="ww-graded",gradedKey=(t,part)=>{const s=JSON.stringify([part||"wr",isPlus(lvl())?1:0,t.kind||"",t.task,t.form||"",String(t.text||"").trim()]);
+const GRADED="ww-graded",gradedKey=(t,part)=>{const s=JSON.stringify(["criteria-v2",part||"wr",isPlus(lvl())?1:0,t.kind||"",t.task,t.form||"",String(t.text||"").trim()]);
   let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return(h>>>0).toString(36)+s.length};
 const gradedGet=()=>{try{return JSON.parse(localStorage.getItem(GRADED)||"{}")||{}}catch(e){return{}}};
 async function nakijken(tasks,part){
@@ -3426,6 +3472,34 @@ function diffHTML(own,right){
 }
 // What can be written again of one task: [] when nothing differs. A B1 form has one box per answer that differs: its corrected
 // text is one line per form answer, the open answer last (SYSTEM_WB in api/check.js); another shape gives no boxes.
+function writingRuleScreen(){
+  const kind=dueWritingRule(S.writingRules,today()),rule=WRITING_RULES[kind];
+  if(!rule)return;
+  const state=S.writingRules[kind], [task,words,solutions]=rule.tasks[state.index%rule.tasks.length];
+  closePop();hush();TK=null;
+  $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;window.scrollTo(0,0);
+  tBack(TABN[tab],home);
+  $("tbody").innerHTML=`<h2>Pas de regel toe in een nieuwe zin</h2><p lang="nl">${esc(task)}</p>
+    <p class="note" lang="nl">${esc(words)}</p>
+    <label class="fld" lang="nl"><span>Je zin</span><textarea id="ruleanswer" rows="3" spellcheck="false" autocorrect="off"></textarea></label>
+    <p class="note" id="rulestatus" role="status"></p><button type="button" class="btn wide" id="rulecheck">Controleer</button>`;
+  const input=$("ruleanswer"),button=$("rulecheck");
+  input.focus();
+  button.onclick=()=>{
+    if(!input.value.trim()){input.focus();return}
+    // Do not overwrite newer progress synced while the learner had this prompt open.
+    if(S.writingRules[kind]?.at!==state.at)return home();
+    const result=answerWritingRule(kind,state,input.value,today(),Date.now());
+    if(!result)return home();
+    S.writingRules[kind]=result;save();
+    input.readOnly=true;
+    const status=$("rulestatus");
+    status.textContent=result.ok?"Je hebt de regel goed toegepast in een nieuwe zin.":"Morgen krijg je een nieuwe zin met dezelfde regel.";
+    if(!result.ok)status.insertAdjacentHTML("afterend",`<div class="sample" lang="nl">${esc(solutions[0])}</div>`);
+    if(result.ok)buzz("good");
+    button.textContent="Naar Mijn dag";button.onclick=home;
+  };
+}
 function correctionPrompts(task,form,text,grade){
   const errors=Array.isArray(grade.errors)?grade.errors:[];
   const items=errors.filter(e=>typeof e?.right==="string"&&rtoks(e.right).length)
@@ -3510,13 +3584,15 @@ async function check(q){
   $("fb").innerHTML=`<p class="note">Ik kijk je tekst na… Dit duurt meestal minder dan een minuut.</p>`;
   try{
     const res=(await nakijken([{kind:q.kind,task,form,text}],q.sec==="wb"?"wb":undefined))[0];
+    if(q!==queue[pos]||btn!==$("chk"))return;
     const errs=Array.isArray(res.errors)?res.errors:[];
     btn.hidden=true; const ok=!!res.passed;
     const RD=correctionPrompts(q,form,text,res);
+    if(q.sec==="wr"&&!cur.exam&&!res.same)S.writingRules=scheduleWritingRules(S.writingRules,errs,today(),Date.now());
     keepErrs(errs); record(ok); if(!cur.exam)quickPraise.show(ok);
     $("fb").innerHTML=`<b class="${ok?"good":"bad"}">${ok?"Goed zo! Voldoende":"Nog niet voldoende"}</b>
-      <p class="note">${esc(res.verdict)}</p>${scoreHTML(res.scores,q.mx)}
-      ${ownHTML(text,errs)}${errsHTML(errs)}${freeNote()}
+      <p class="note">${esc(res.verdict)}</p>${scoreHTML(res.scores,q.mx,errs)}
+      ${ownHTML(text,errs)}${errsHTML(errs)}${q.sec==="wr"&&errs.some(e=>Object.hasOwn(WRITING_RULES,e.kind))?`<p class="note">In Mijn dag kun je deze regel morgen oefenen in een nieuwe zin.</p>`:""}${freeNote()}
       <p class="ask">Verbeterde tekst</p><div class="sample">${esc(res.corrected)}</div>
       <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(q.right)}</div></details>
       ${docBtn}<button class="btn wide" id="next">${RD.length?"Schrijf de verbeteringen":"Verder"}</button>`;
@@ -3524,6 +3600,7 @@ async function check(q){
     if(RD.length)$("next").onclick=()=>practiseCorrections(RD);
     $("docx").onclick=()=>saveDocx([{task,form,text}]);
   }catch(e){
+    if(q!==queue[pos]||btn!==$("chk"))return;
     const c=e&&e.code;
     if(c==="rate_limited"){btn.disabled=false;$("txt").readOnly=false;$("fb").innerHTML=`<p class="note">Te veel verzoeken achter elkaar. Wacht een minuut en probeer het opnieuw.</p>`;return}
     btn.hidden=true;
@@ -3546,7 +3623,7 @@ async function checkZ(q){
     const RD=Z.flatMap((z,i)=>correctionPrompts(z.q,"",z.text,T[i]||{}));
     $("fb").innerHTML=Z.map((z,i)=>{const t=T[i]||{},errs=Array.isArray(t.errors)?t.errors:[],ok=!!t.passed; keepErrs(errs); record(ok,z.q);
       return`<p class="ask">${Z.length>1?`Zin ${i+1}: `:""}<span class="${ok?"good":"bad"}">${ok?"voldoende":"nog niet voldoende"}</span></p>${Z.length>1?`<p class="note">${z.q.big}</p>`:""}
-        <p class="note">${esc(t.verdict)}</p>${scoreHTML(t.scores,z.q.mx)}
+        <p class="note">${esc(t.verdict)}</p>${scoreHTML(t.scores,z.q.mx,errs)}
         ${ownHTML(z.text,errs,"Jouw zin")}${errs.length?errsHTML(errs):""}
         <p class="ask">Verbeterd</p><div class="sample">${esc(t.corrected||z.text)}</div><details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(z.q.right)}</div></details>`}).join("")
       +`${freeNote()}${docBtn}<button class="btn wide" id="next">${RD.length?"Schrijf de verbeteringen":"Verder"}</button>`;
@@ -3642,7 +3719,7 @@ async function examWrite(){
       redoByTask[i]=redoItems(task,answer.form,answer.text,grade.corrected,errors);
       const label=typeof grade.passed==="boolean"?(grade.passed?"voldoende":"nog niet voldoende"):"nog niet beoordeeld";
       return `<h2>Opdracht ${i+1} · <span class="${typeof grade.passed==="boolean"?(grade.passed?"good":"bad"):""}">${label}</span></h2>
-        <p class="note">${task.big}</p><p class="note">${esc(grade.verdict)}</p>${row.status==="scored"?scoreHTML(grade.scores,task.mx):""}
+        <p class="note">${task.big}</p><p class="note">${esc(grade.verdict)}</p>${row.status==="scored"?scoreHTML(grade.scores,task.mx,errors):""}
         ${own(answer,errors)}${errors.length?errsHTML(errors):""}
         ${grade.corrected?`<p class="ask">Verbeterde tekst</p><div class="sample">${esc(grade.corrected)}</div>`:""}
         <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(task.right)}</div></details>
@@ -3694,7 +3771,7 @@ async function examSpeak(){
     const T=await nakijken(A.map(a=>({kind:a.q.kind,task:spTask(a.q),text:a.text})),cur.part==="sb"?"sb":"sp");
     let good=0,pts=0,scored=0;
     const body=A.map((a,i)=>{const t=T[i]||{},errs=Array.isArray(t.errors)?t.errors:[],pt=spPts(t);if(t.passed)good++;if(pt!=null){pts+=pt;scored++}keepErrs(errs);
-      return`<h2>Vraag ${i+1}: <span class="${t.passed?"good":"bad"}">${t.passed?"voldoende":"nog niet voldoende"}</span></h2><p class="note">${esc(a.q.label)}</p><p class="note">${a.q.big}</p><p class="note">${esc(t.verdict)}</p>${scoreHTML(t.scores,a.q.mx)}
+      return`<h2>Vraag ${i+1}: <span class="${t.passed?"good":"bad"}">${t.passed?"voldoende":"nog niet voldoende"}</span></h2><p class="note">${esc(a.q.label)}</p><p class="note">${a.q.big}</p><p class="note">${esc(t.verdict)}</p>${scoreHTML(t.scores,a.q.mx,errs)}
         ${own(a,errs)}${errs.length?errsHTML(errs):""}${a.text?`<p class="ask">Zo zeg je het goed</p><div class="sample">${esc(t.corrected)}</div>`:""}
         <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(a.q.right)}</div></details>`}).join("");
     // score: points of all 16 questions (an unanswered one counts 0); without points (older server) the share of good answers
@@ -4275,7 +4352,22 @@ function avScreen(){
   $("tbody").innerHTML=`<h2>Kies je avatar</h2><div class="avg">${avatarOrder.map(k=>`<button type="button" data-av="${k}" aria-pressed="${k===cur}"><i>${avSVG(k)}</i><span lang="nl">${AVS[k].n}</span></button>`).join("")}</div>`;
   document.querySelectorAll("#tbody [data-av]").forEach(b=>b.onclick=()=>{S.me={...(S.me||{}),av:b.dataset.av};save();home()});
 }
-function plusScreen(){
+const PLAN_CHOICES={"plus-a2":'[data-plus-plan="A2"]',"plus-b1":'[data-plus-plan="B1"]',
+  exam:"[data-pass-plan]",year:"[data-year-plan]","exam-a2":'[data-pass-plan="A2"]',"exam-b1":'[data-pass-plan="B1"]',
+  "year-a2":'[data-year-plan="A2"]',"year-b1":'[data-year-plan="B1"]'};
+let preferredPlan="";
+const PENDING_PLAN="bt-pending-plan";
+function resumePlanChoice(){
+  try{
+    const pending=JSON.parse(sessionStorage.getItem(PENDING_PLAN)||"null");
+    sessionStorage.removeItem(PENDING_PLAN);
+    if(pending&&Date.now()-pending.at<20*60e3&&Object.hasOwn(PLAN_CHOICES,pending.choice)){
+      setTab("profiel");
+      plusScreen(pending.choice);
+    }
+  }catch(e){}
+}
+function plusScreen(choice){
   if(!acc.cfg||!acc.cfg.plus)return home();
   closePop();hush();TK=null;$("card").innerHTML="";
   $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;window.scrollTo(0,0);
@@ -4293,7 +4385,7 @@ function plusScreen(){
       <p>${level==="A2"?"Uitgebreide feedback van een sterker AI-model, ook op je proefexamens.":"Ook Schrijven en Spreken B1, met A2 erbij."}</p>
       <p><b dir="ltr">€ ${esc(plans[level].price)}</b> <span>per maand</span></p>
       <p class="note">Je kunt elke maand opzeggen.</p>
-      ${!acc.user?`<button class="btn wide" data-plus-login>${level==="A2"?"Kies Plus A2":"Kies Plus B1"}</button>`
+      ${!acc.user?`<button class="btn wide" data-plus-login="plus-${level.toLowerCase()}">${level==="A2"?"Kies Plus A2":"Kies Plus B1"}</button>`
         :on&&!p.pass?level==="B1"&&p.level==="A2"?`<button class="btn wide" data-plus-buy="B1">Overstappen naar Plus B1</button>`:""
         :p&&p.status!=="canceled"?"":`<button class="btn wide" data-plus-buy="${level}">${level==="A2"?"Kies Plus A2":"Kies Plus B1"}</button>`}
       </div></section>`).join("")
@@ -4301,20 +4393,29 @@ function plusScreen(){
       +["A2","B1"].filter(level=>acc.cfg.pass.plans?.[level]&&!(on&&!p.pass&&isPlus(level))).map(level=>`<section class="list" data-pass-plan="${level}"><div style="padding:16px"><h3>Examenpas ${level}</h3>
       <p>${Math.round((acc.cfg.pass.days||91)/7)} weken dezelfde nakijkbeurten als Plus ${level}.</p>
       <p><b dir="ltr">€ ${esc(acc.cfg.pass.plans[level].price)}</b> <span>eenmalig</span></p>
-      <button class="${on?"ghost":"btn"} wide" ${acc.user?`data-plus-pass="${level}"`:"data-plus-login"}>${level==="A2"?"Kies Examenpas A2":"Kies Examenpas B1"}</button>
+      <button class="${on?"ghost":"btn"} wide" ${acc.user?`data-plus-pass="${level}"`:`data-plus-login="exam-${level.toLowerCase()}"`}>${level==="A2"?"Kies Examenpas A2":"Kies Examenpas B1"}</button>
       </div></section>`).join(""):"")
     // the Jaarpas: a year of Plus for one payment, never renewed (api/_supa.js YEARS)
     +(acc.cfg.year&&!(on&&!p.pass&&p.level==="B1")?`<h3 class="lh">Jaarpas</h3><p class="sub">Een jaar Plus voor één betaling. Wordt niet automatisch verlengd.</p>`
       +["A2","B1"].filter(level=>acc.cfg.year.plans?.[level]&&!(on&&!p.pass&&isPlus(level))).map(level=>`<section class="list" data-year-plan="${level}"><div style="padding:16px"><h3>Jaarpas ${level}</h3>
       <p>Een jaar dezelfde nakijkbeurten als Plus ${level}.</p>
       <p><b dir="ltr">€ ${esc(acc.cfg.year.plans[level].price)}</b> <span>eenmalig</span></p>
-      <button class="${on?"ghost":"btn"} wide" ${acc.user?`data-plus-year="${level}"`:"data-plus-login"}>${level==="A2"?"Kies Jaarpas A2":"Kies Jaarpas B1"}</button>
+      <button class="${on?"ghost":"btn"} wide" ${acc.user?`data-plus-year="${level}"`:`data-plus-login="year-${level.toLowerCase()}"`}>${level==="A2"?"Kies Jaarpas A2":"Kies Jaarpas B1"}</button>
       </div></section>`).join(""):"")
     +`<p class="note">Niet tevreden? Binnen 14 dagen na je eerste betaling krijg je je geld terug.</p>`
     +(acc.user&&acc.withdraw?`<button class="ghost wide" id="pwd">Herroepen</button><p class="note">Herroep je aankoop van de laatste 14 dagen. Plus of je Examenpas stopt meteen en je krijgt je geld binnen 14 dagen terug.</p>`:"")
     +(acc.user&&(on&&!p.pass||p&&!p.pass&&p.status!=="canceled")?`<button class="ghost wide" id="pman">Abonnement beheren</button><p class="note">Opzeggen, je betaalmethode veranderen en je facturen: bij Abonnement beheren.</p>`:"")
     +`<p class="note">Je betaalt bij Stripe. Bittertalen ziet je kaart- of bankgegevens niet.</p><p class="note"><a href="/privacy">Privacyverklaring</a></p>`;
   if(!plusSeen){plusSeen=true;track("plus")}
+  if(choice&&Object.hasOwn(PLAN_CHOICES,choice))preferredPlan=choice;
+  const preferred=Object.hasOwn(PLAN_CHOICES,preferredPlan)?$("tbody").querySelector(PLAN_CHOICES[preferredPlan]):null;
+  if(preferred){
+    preferred.classList.add("preferred-plan");
+    if(choice){
+      const title=preferred.querySelector("h3");
+      title.tabIndex=-1;title.focus({preventScroll:true});preferred.scrollIntoView({block:"center"});
+    }
+  }
   const go=async(w,b,level,kind)=>{
     if(w!=="manage"&&!$("pstart")?.checked){plusMsg="Zet eerst aan dat Plus of de Examenpas meteen mag beginnen.";plusScreen();$("pstart")?.focus();return}
     if(w!=="manage")track(w);b.disabled=true;document.querySelectorAll("[data-plus-buy],[data-plus-pass],[data-plus-year],#pman").forEach(x=>x.disabled=true);plusMsg="";
@@ -4335,7 +4436,11 @@ function plusScreen(){
       plusMsg=j.withdrawn?.length?`Je herroeping is ontvangen op ${when}. Je krijgt je geld binnen 14 dagen terug. Bewaar dit bericht als bevestiging.`:"Er is geen aankoop van de laatste 14 dagen om te herroepen.";
       acc.withdraw=false;await usage().catch(()=>{});plusScreen()}
     catch(e){plusMsg="Herroepen lukt nu niet. Mail ons via de contactpagina, dan regelen we het.";plusScreen()}};
-  document.querySelectorAll("[data-plus-login]").forEach(b=>b.onclick=()=>{acc.msg="";welcome()});
+  document.querySelectorAll("[data-plus-login]").forEach(b=>b.onclick=()=>{
+    preferredPlan=b.dataset.plusLogin;
+    try{sessionStorage.setItem(PENDING_PLAN,JSON.stringify({choice:preferredPlan,at:Date.now()}))}catch(e){}
+    acc.msg="";lsSet(WEL,"1");welcome();
+  });
 }
 function onaScreen(){
   closePop();hush();TK=null;$("card").innerHTML="";
@@ -5153,7 +5258,7 @@ async function moveScreen(){
       const b=$("mvgo");b.disabled=true;b.textContent="Even wachten…";
       try{
         const p=await packProgress(),to=new URL("oefenen",NEWURL),q=new URLSearchParams(location.search);
-        for(const k of ["open","plus"])if(q.has(k))to.searchParams.set(k,q.get(k));
+        for(const k of ["open","plus","choice"])if(q.has(k))to.searchParams.set(k,q.get(k));
         to.hash="verhuis="+p.code+(p.books?"":"&zonderboeken");location.replace(to.href);
       }catch(e){legacyTransfer=false;b.disabled=false;b.textContent="Naar bittertalen.nl";$("mvnote").textContent="Je voortgang blijft hier bewaard. Probeer de verhuizing opnieuw."}
     };
@@ -5196,7 +5301,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="9450786fff";
+const UIV="cc9e26dca8";
 let uiP=null;
 function uiLoaded(){if(typeof trMemo!=="undefined")trMemo.clear(); // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});
@@ -5399,14 +5504,22 @@ $("plang").innerHTML=Object.keys(LANGS).map(k=>`<option value="${k}">${LANGS[k].
 $("site-footer").innerHTML=siteFooter();
 if(LI>=0){applyLang();loadUI().then(applyLang).catch(()=>{})} else fitTabs(); // the direction at once, the words when they are here
 function openEntry(){
-  if(!["today","a2","b1","sample","login","plus","books","history","media","talk"].includes(entry)||$("move").hidden===false)return;
+  if(!["today","a2day","a2","b1","writing","sample","login","plus","books","history","media","talk"].includes(entry)||$("move").hidden===false)return;
   const q=new URLSearchParams(location.search);
   if(q.has("code")||q.has("error")||q.has("plus")||location.hash.startsWith("#verhuis="))return;
-  q.delete("open");history.replaceState(null,"",location.pathname+(q.size?"?"+q:"")+location.hash);
+  const choice=q.get("choice");
+  q.delete("open");q.delete("choice");history.replaceState(null,"",location.pathname+(q.size?"?"+q:"")+location.hash);
   // from the homepage, which already offers Inloggen: someone who started without an account doesn't get the login
   // window by itself later (it stays in Profiel)
   if(entry!=="login"&&entry!=="plus")lsSet(WEL,"1");
   if(entry==="today")return;
+  if(entry==="a2day"){if(lvl()!=="A2")setLvl("A2");setTab("vandaag");home();return}
+  if(entry==="writing"){
+    if(lvl()!=="A2")setLvl("A2");
+    setTab("oefenen");home();
+    build("wr",{...SEC.find(x=>x.id==="wr"),n:1,keep:1,pool:()=>[ITEMS.find(x=>x.k==="wr|0")],draftSlot:"landing"});
+    return;
+  }
   if(entry==="a2"||entry==="b1"){setLvl(entry.toUpperCase());setTab("oefenen");home()}
   if(entry==="sample")tryOne();
   // the homepage's blocks "Meer dan examenvragen": their screen, with Oefenen behind the back button
@@ -5414,7 +5527,7 @@ function openEntry(){
   if(screen){setTab("oefenen");home();screen()}
   if(entry==="login"||entry==="plus"){
     setTab("profiel");home();
-    if(entry==="plus"&&acc.cfg?.plus)plusScreen();
+    if(entry==="plus"&&acc.cfg?.plus)plusScreen(choice);
     else if(entry==="login"&&!acc.user&&acc.cfg?.login?.length){lsSet(WEL,"1");welcome()}
   }
 }

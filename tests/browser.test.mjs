@@ -1036,7 +1036,7 @@ test('Monthly A2 and B1 offers fit the homepage and the app sends the selected l
   let browser;
   try{browser=chromium&&await chromium.launch()}catch(e){if(process.env.BROWSER_TESTS)throw e}
   if(!browser){if(process.env.BROWSER_TESTS)assert.fail('Playwright is not installed');return t.skip('no browser here')}
-  const config={limit:7,period:'once',free:2,freePeriod:'once',plus:{limit:60,price:'9,99',plans:{A2:{price:'9,99'},B1:{price:'14,99'}}}};
+  const config={url:'https://example.supabase.co',anon:'fixture',login:[],limit:7,period:'once',free:2,freePeriod:'once',plus:{limit:60,price:'9,99',plans:{A2:{price:'9,99'},B1:{price:'14,99'}}}};
   const server=await serve({config}),base=`http://127.0.0.1:${server.address().port}`;
   try{
     for(const [lang,width] of [['nl',1280],['ru',390],['ar',375],['hi',320]]){
@@ -1046,7 +1046,15 @@ test('Monthly A2 and B1 offers fit the homepage and the app sends the selected l
       assert.match(await s.p.locator('#plus-b1-price').textContent(),/14,99/);
       assert.equal(await overflow(s.p),0);assert.deepEqual(s.errors,[]);await s.ctx.close();
     }
-    const s=await page(browser,base);await s.go('/oefenen');await s.p.waitForSelector('#plan .step');
+    const s=await page(browser,base);await s.go('/');
+    await s.p.locator('#plus-b1-card a').click();
+    await s.p.locator('[data-plus-plan="B1"].preferred-plan').waitFor();
+    assert.equal(await s.p.locator('[data-plus-plan="A2"].preferred-plan').count(),0);
+    await s.go('/');
+    await s.p.locator('#voorbeeld a[href*="open=writing"]').click();
+    await s.p.locator('#txt').waitFor();
+    assert.match(await s.p.locator('#card').textContent(),/Schrijf een briefje aan je buurvrouw/);
+    await s.go('/oefenen');await s.p.waitForSelector('#plan .step');
     let chosen;
     await s.ctx.route('**/api/plus',async r=>{chosen=r.request().postDataJSON();await r.fulfill({json:{url:'about:blank'}})});
     await s.p.evaluate(cfg=>{acc.cfg=cfg;acc.user={id:'pricing-test'};acc.sb={auth:{getSession:async()=>({data:{session:{access_token:'test'}}})}};plusScreen()},config);

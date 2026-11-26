@@ -14,7 +14,7 @@ async function handler(options={}){
     beta={messages:{create:async(body)=>{
       modelCalls++;models.push(body.model);
       if(options.providerFailure)throw Error('connection interrupted');
-      return {stop_reason:options.stopReason||'end_turn',model:'test-model',usage:{input_tokens:100,output_tokens:30},content:[{type:'text',text:JSON.stringify({tasks:[{passed:options.claimPassed??true,verdict:'Goed',corrected:'Ik kom later.',errors:[],scores:options.scores||{inhoud:3,woorden:2,grammatica:2,spelling:2,samenhang:1}}]})}]};
+      return {stop_reason:options.stopReason||'end_turn',model:'test-model',usage:{input_tokens:100,output_tokens:30},content:[{type:'text',text:JSON.stringify({tasks:[{passed:options.claimPassed??true,verdict:'Goed',corrected:'Ik kom later.',errors:options.errors||[],scores:options.scores||{inhoud:3,woorden:2,grammatica:2,spelling:2,samenhang:1}}]})}]};
     }}};
   }
   const values={
@@ -192,4 +192,16 @@ test('Spreken A2: voldoende follows from the points, not from what the model say
   assert.equal(five.res.body.tasks[0].passed,false); // 5 of 8: without pronunciation and fluency that is not enough
   const good=await handler({part:'sp',claimPassed:false,scores:{inhoud:2,woorden:2,grammatica:1,samenhang:1}});
   assert.equal(good.res.body.tasks[0].passed,true); // 6 of 8
+});
+
+test('One spelling edit is returned once even if the model describes it with different context', async()=>{
+  const result=await handler({errors:[
+    {wrong:'De sleutel ligd onder de mat',right:'De sleutel ligt onder de mat',why:'Schrijf ligt.',kind:'spelling'},
+    {wrong:'ligd',right:'ligt',why:'Schrijf ligt.',kind:'spelling'},
+    {wrong:'water geeven',right:'water geven',why:'Schrijf één e.',kind:'spelling'},
+  ]});
+  const grade=result.res.body.tasks[0];
+  assert.equal(grade.errors.length,2);
+  assert.ok(grade.errors.every(error=>error.kind==='spelling'));
+  assert.equal(grade.scores.spelling,2);
 });

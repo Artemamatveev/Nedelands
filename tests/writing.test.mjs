@@ -189,3 +189,23 @@ test('Profiel has no results tile any more (removed at the user\'s wish); the sc
   assert.equal(a.document.querySelector('#myres'),null);
   assert.equal(a.run('typeof drawResults'),'undefined');
 });
+
+test('A2 writing explains full spelling points and practises an identified rule in a different sentence the next day', async()=>{
+  const a=await app();
+  assert.match(a.run('scoreHTML({inhoud:3,spelling:2},null,[{kind:"spelling"}])'),/Kleine spelfouten kunnen bij deze score/);
+  a.run('S.lvl="A2"; S.writingRules=scheduleWritingRules(null,[{kind:"inversie"}],today(),1);drawPlan()');
+  assert.equal(a.document.querySelector('#dayrule'),null);
+  a.run('S.writingRules.inversie.day=today();drawPlan()');
+  a.document.querySelector('#dayrule').click();
+  assert.match(a.document.querySelector('#tbody').textContent,/Schrijf aan een collega/);
+  a.document.querySelector('#ruleanswer').value='Morgen ik begin om negen uur';
+  a.document.querySelector('#rulecheck').click();
+  assert.match(a.document.querySelector('#rulestatus').textContent,/Morgen krijg je een nieuwe zin/);
+  a.run('S.writingRules.inversie.day=today();home();drawPlan()');
+  a.document.querySelector('#dayrule').click();
+  assert.match(a.document.querySelector('#tbody').textContent,/Schrijf aan een buur/);
+  a.document.querySelector('#ruleanswer').value='Vanavond breng ik de sleutel.';
+  a.document.querySelector('#rulecheck').click();
+  assert.match(a.document.querySelector('#rulestatus').textContent,/goed toegepast/);
+  assert.equal(a.run('S.writingRules.inversie.ok'),true);
+});
