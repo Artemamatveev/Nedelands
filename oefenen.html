@@ -2343,8 +2343,13 @@ function recDone(r){
   $("recb").disabled=false;r.done(r);
 }
 // Practice: a recording to play back
+// A2 speaking: a short answer may be complete ("Te voet"), but a lone letter or a filler ("eh") from speech recognition
+// should not use up a check
+const SP_FILLER=new Set(["eh","ehm","uh","uhm","hm","hmm","mm","ah","oh","ok","oké"]);
 function spokenTextReady(q,text){
-  return q.sec==="sp"?/[\p{L}\p{N}]/u.test(text):text.trim().split(/\s+/).filter(Boolean).length>=3;
+  if(q.sec!=="sp")return text.trim().split(/\s+/).filter(Boolean).length>=3;
+  const words=(text.toLowerCase().match(/[\p{L}\p{N}][\p{L}\p{N}'’-]*/gu)||[]).filter(w=>!SP_FILLER.has(w));
+  return words.some(w=>w.length>=2||/\p{N}/u.test(w));
 }
 function reviewSpokenAnswer(q,r){
   if(q!==queue[pos])return;

@@ -110,6 +110,15 @@ const wfPassed = (sc) => sc.inhoud >= 2 && sum(sc) >= 5;
 // pronunciation, no fluency), so the bar is higher than a share of 12 would be: inhoud 2 and 6 of those 8, else a
 // learner who would lose points on sound sees "voldoende" too easily.
 const spPassed = (sc) => sc.inhoud >= 2 && sum(sc) >= 6;
+// A complete but very short spoken answer ("Met de trein") earns full inhoud, but a few words show little of the language
+// points: below SP_SHORT words woorden and grammatica count at most 1 and samenhang 0, so two words can't reach voldoende.
+const SP_SHORT = 5;
+const spokenWords = (text) => (String(text || "").match(/[\p{L}\p{N}][\p{L}\p{N}'’-]*/gu) || []).length;
+export function capShortSpoken(scores, text) {
+  if (spokenWords(text) >= SP_SHORT) return { scores, short: false };
+  return { scores: { ...scores, woorden: Math.min(scores.woorden, 1), grammatica: Math.min(scores.grammatica, 1), samenhang: 0 }, short: true };
+}
+const SHORT_NOTE = "Je antwoord is kort. Zeg op het examen twee of drie zinnen, dan laat je meer van je Nederlands zien.";
 // Schrijven B1: the points per kind of task, as on the Staatsexamen (8 zinsopdrachten, a form and three e-mails = 47)
 const SCORES_WB = {
   z: { inhoud: 1, grammatica: 1 },
@@ -136,7 +145,7 @@ Geef voor elke opdracht, in dezelfde volgorde:
   grammatica (0–2): 2 = geen of bijna geen grammaticafouten (hoogstens 2 in een korte tekst); 1 = vrij veel fouten (3 tot 5); 0 = veel fouten (6 of meer), of fouten die het begrijpen moeilijk maken. Grammaticafouten zijn woordvolgorde, werkwoordsvormen, de/het, meervoud, lidwoorden en voorzetsels.
   spelling (0–2): 2 = de spelling is redelijk correct (hoogstens 2 spelfouten) en de fouten hinderen het begrijpen niet; 1 = meer spelfouten (3 tot 5), maar gewone woorden zijn goed te herkennen en persoonlijke gegevens zijn goed geschreven; 0 = veel spelfouten (6 of meer) of woorden die je niet herkent. Hoofdletters en leestekens horen bij spelling.
   samenhang (0–1): 1 = de zinnen hangen duidelijk samen (en, maar, want, omdat, daarna, verwijswoorden); 0 = losse zinnen of een lijstje.
-  Beoordeel elk criterium apart. Trek een ontbrekend gevraagd detail alleen af bij inhoud, tenzij er een afzonderlijke aantoonbare taalfout is. Ook zonder voegwoord kan een kort bericht logisch samenhangen. Benoem bij aftrek de concrete reden in verdict of errors. Verzin geen persoonlijke details voor corrected.
+  Beoordeel elk criterium apart. Trek een ontbrekend gevraagd detail alleen af bij inhoud, tenzij er een afzonderlijke aantoonbare taalfout is. Ook zonder voegwoord kan een kort bericht samenhangen, als de zinnen logisch op elkaar volgen of verwijswoorden gebruiken (die, dat, daar, hem, haar); een lijstje losse zinnen krijgt 0. Benoem bij aftrek de concrete reden in verdict of errors. Verzin geen persoonlijke details voor corrected.
   Is inhoud 0, dan zijn alle punten 0.
 Een FORMULIER (zo staat het bij de opdracht) krijgt punten zoals in het beoordelingsmodel Formulier van DUO: alleen inhoud (0–3), woorden (0–2) en spelling (0–2), samen 7 punten. Geef bij een formulier grammatica 0 en samenhang 0; noem grammaticafouten wel bij errors.`;
 
@@ -182,7 +191,7 @@ Geef voor elk antwoord, in dezelfde volgorde:
 - errors: de fouten, de belangrijkste eerst (woordvolgorde, werkwoordsvormen, de/het, verkeerde woorden). wrong = het foute fragment, right = de juiste versie, why = korte uitleg van de regel in eenvoudig Nederlands (A2). Geen fouten: lege lijst.
 - scores: punten zoals bij het examen van DUO, alleen de punten die je uit de tekst kunt halen.
   inhoud (0–3): past het antwoord bij de vraag en is het begrijpelijk? 3 = alle delen van de vraag beantwoord (bij een foto: beschreven én de vraag beantwoord; bij drie foto's: alle drie verteld; bij "waarom": een reden), 2 = bijna alles, 1 = maar een deel, 0 = geen antwoord, onbegrijpelijk of niet over de vraag.
-  Beoordeel inhoud op de gevraagde informatie. Een kort antwoord kan volledig zijn: op "Hoe ga je naar je werk?" is "Met de trein" volledig. Vraagt de opdracht ook waarom, dan moet de reden erbij. Gebruik geen minimumaantal woorden, zinnen of voegwoorden. Accepteer gelijkwaardige formuleringen.
+  Beoordeel inhoud op de gevraagde informatie. Een kort antwoord kan volledig zijn: op "Hoe ga je naar je werk?" is "Met de trein" volledig. Vraagt de opdracht ook waarom, dan moet de reden erbij. Gebruik geen minimumaantal woorden, zinnen of voegwoorden voor inhoud. Accepteer gelijkwaardige formuleringen. Een antwoord van minder dan vijf woorden laat weinig taal zien: geef dan woorden en grammatica hoogstens 1 en samenhang 0.
   woorden (0–2): 2 = gevarieerde en passende woorden; 1 = eenvoudige, eigen woorden, de meeste goed gebruikt; 0 = bijna alleen woorden uit de vraag herhaald, of verkeerd gebruikte woorden. grammatica (0–2): 2 = weinig fouten, 1 = fouten, maar begrijpelijk, 0 = veel fouten. samenhang (0–1): 1 = zinnen hangen samen (en, want, daarna, omdat).
   Is inhoud 0, dan zijn alle punten 0.
 Bij een vraag met foto's staat tussen haakjes wat er op de foto's te zien is.`;
@@ -407,7 +416,10 @@ async function gradeRequest(req, res, { user, input, sb, sp, wb, t0, save }) {
       tasks: out.map((t, i) => {
         const form = !sp && !wb && tasks[i].kind === "f";
         const SC = wb ? SCORES_WB[tasks[i].kind] : sb ? SCORES_SB[tasks[i].kind] : sp ? SCORES_SP : form ? SCORES_WF : SCORES_WR;
-        const scores = clampScores(t.scores, SC);
+        const clamped = clampScores(t.scores, SC);
+        const short = sp && !sb ? capShortSpoken(clamped, tasks[i].text) : { scores: clamped, short: false };
+        const scores = short.scores;
+        if (short.short) t = { ...t, verdict: [str(t.verdict, 400), SHORT_NOTE].filter(Boolean).join(" ") };
         return { ...t, errors: uniqueCorrections(t.errors), scores, passed: sb ? sbPassed(scores, SC) : sp ? spPassed(scores) : wb ? wbPassed(scores, SC) : form ? wfPassed(scores) : wrPassed(scores) };
       }),
     };

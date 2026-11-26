@@ -45,7 +45,7 @@ Spreken uses the same function with `{part:"sp", tasks:[{task, text}]}` (up to 1
 proefexamen); `task` also says what the photos show (`spTask()`, from `FOTO`). Each result also has `scores`
 (inhoud 0–3, woorden 0–2, grammatica 0–2, samenhang 0–1: DUO's criteria as far as a transcript shows them; pronunciation
 and fluency can't be judged), clamped on the server; `passed` is set by the server from the points (inhoud 2+ and 6 of
-the 8 since 25 November 2026, higher than 5 because 4 of DUO's 12 points can't be judged; `spPassed`), not by Claude, as for B1; the Spreken proefexamen score is points of all 16 questions. Speaking never
+the 8 since 25 November 2026, higher than 5 because 4 of DUO's 12 points can't be judged; `spPassed`), not by Claude, as for B1; a complete answer of fewer than 5 words (`SP_SHORT`, "Met de trein") keeps full inhoud, but the server caps woorden and grammatica at 1 and samenhang at 0 and adds a note to say two or three sentences (`capShortSpoken`, 26 November 2026), so two words never reach voldoende; in practice a transcript of only fillers ("eh", "hm") or a single letter is not sent for grading (`spokenTextReady`); the Spreken proefexamen score is points of all 16 questions. Speaking never
 gets "Stabiel oefenresultaat" in Mijn examen (`ready()`), because pronunciation and fluency are not judged.
 The Spreken proefexamen has DUO's four parts of four (since March 2025): a question, one photo (describe and answer),
 two photos (choose and explain), three photos (a story in order, or three separate things to say something about: learners
