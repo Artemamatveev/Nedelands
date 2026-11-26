@@ -1765,8 +1765,11 @@ async function authHead(){
 const canOffer=()=>!NATIVE&&!!(acc.user&&acc.cfg&&(acc.cfg.pass||acc.cfg.plus)&&!isPlus(lvl()));
 const offerBtn=()=>`<button type="button" class="ghost wide" data-offer>${acc.cfg.pass?"Bekijk de Examenpas":"Bekijk Bittertalen Plus"}</button>`;
 const offerHTML=c=>c==="limit"&&canOffer()?"<br>"+offerBtn():"";
-const examOffer=()=>canOffer()?`<div class="offer"><p class="note">${acc.cfg.pass?`Wil je tot je examen elke dag laten nakijken? Met de Examenpas kan dat ${Math.round((acc.cfg.pass.days||91)/7)} weken lang, voor één betaling.`:"Wil je tot je examen elke dag laten nakijken? Met Bittertalen Plus kan dat."}</p>${offerBtn()}</div>`:"";
+const examOffer=()=>canOffer()?`<div class="offer"><p class="note">${acc.cfg.pass?`Wil je tot je examen elke dag laten nakijken? Met de Examenpas kan dat ${Math.round((acc.cfg.pass.days||119)/7)} weken lang, voor één betaling.`:"Wil je tot je examen elke dag laten nakijken? Met Bittertalen Plus kan dat."}</p>${offerBtn()}</div>`:"";
 document.addEventListener("click",e=>{if(e.target.closest("[data-offer]")){stopSpeak();plusScreen()}});
+// Right after a practice text that is not yet voldoende (the moment the feedback is wanted), once a day: the same offer
+// as after a proefexamen, instead of only when the free checks have run out
+const dayOffer=()=>{if(!canOffer())return"";const d=String(today());if(lsGet("ww-offer-day")===d)return"";lsSet("ww-offer-day",d);return examOffer()};
 const noCheck=c=>c==="ai_consent"?"Zonder je akkoord sturen we niets naar de AI. Je kunt gewoon verder oefenen.":c==="quota_unavailable"?"Nakijken is tijdelijk niet beschikbaar. Je kunt verder oefenen.":c==="login"?(acc.free===0?"Je gratis proefbeurten zijn op. Maak een gratis account voor nog 7 gratis nakijkbeurten.":"Log in bij Profiel om dit door Bittertalen te laten nakijken."):c==="limit"?((acc.checkPeriod||myPeriod())!=="day"?(acc.cfg?.plus&&!NATIVE&&!isPlus(lvl())?"Je gratis nakijkbeurten zijn op. Met Plus of de Examenpas kun je verder laten nakijken.":"Je gratis nakijkbeurten zijn op."):"Je dagtegoed is op. Morgen kun je weer laten nakijken."):c==="month"?"Je maandtegoed is op. Volgende maand kun je weer laten nakijken.":c==="pass"?"De nakijkbeurten van je Examenpas zijn op. Je kunt verder oefenen.":c==="timeout"?"Het nakijken duurde te lang. Je beurt is teruggegeven. Probeer het nog een keer.":c==="busy"?"Bittertalen heeft vandaag al heel veel teksten nagekeken. Morgen kan het weer.":null;
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const answer=(v,t)=>t==="past"?v[2]:t==="pastpl"?v[3]:t==="pp"?v[4]:v[5];
@@ -3523,7 +3526,7 @@ async function check(q){
     keepErrs(errs); record(ok); if(!cur.exam)quickPraise.show(ok);
     $("fb").innerHTML=`<b class="${ok?"good":"bad"}">${ok?"Goed zo! Voldoende":"Nog niet voldoende"}</b>
       <p class="note">${esc(res.verdict)}</p>${scoreHTML(res.scores,q.mx)}
-      ${ownHTML(text,errs)}${errsHTML(errs)}${freeNote()}
+      ${ownHTML(text,errs)}${errsHTML(errs)}${freeNote()}${ok?"":dayOffer()}
       <p class="ask">Verbeterde tekst</p><div class="sample">${esc(res.corrected)}</div>
       <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(q.right)}</div></details>
       ${docBtn}<button class="btn wide" id="next">${RD.length?"Schrijf de verbeteringen":"Verder"}</button>`;
@@ -4312,7 +4315,7 @@ function plusScreen(){
   $("tbody").innerHTML=`<h2 id="plusS">Bittertalen Plus</h2>`
     +(on?`<p class="sub"><b>${p.group?`<span lang="nl">${esc(p.group)}</span>`:p.pass?(p.year?"Jaarpas":"Examenpas"):"Bittertalen Plus"} ${p.level||""}</b> · ${plusLine()}</p>`:"")
     +`<p class="sub">Met Plus: tot ${c.month||200} nakijkbeurten per maand. Met een gratis account: ${acc.cfg.limit} gratis.</p><p class="sub">Al het andere in Bittertalen blijft gratis.</p>`
-    +(acc.cfg.pass&&!on&&examLastDays()!=null?`<p class="note">${((n,m)=>n<=(acc.cfg.pass.days||91)?(m?`Je laatste examen is over ${n} dagen. De Examenpas loopt tot na je laatste examen.`:`Je examen is over ${n} dagen. De Examenpas loopt tot na je examen.`):(m?`Je laatste examen is over ${n} dagen.`:`Je examen is over ${n} dagen.`))(examLastDays(),examMany())}</p>`:"")
+    +(acc.cfg.pass&&!on&&examLastDays()!=null?`<p class="note">${((n,m)=>n<=(acc.cfg.pass.days||119)?(m?`Je laatste examen is over ${n} dagen. De Examenpas loopt tot na je laatste examen.`:`Je examen is over ${n} dagen. De Examenpas loopt tot na je examen.`):(m?`Je laatste examen is over ${n} dagen.`:`Je examen is over ${n} dagen.`))(examLastDays(),examMany())}</p>`:"")
     +(on&&p.status==="past_due"?`<p class="note">Je laatste betaling is niet gelukt. Stripe probeert het nog een paar keer.</p>`:"")
     +(plusMsg?`<p class="note" role="status">${esc(plusMsg)}</p>`:"")
     +(acc.user?`<section class="list"><label class="prow tog"><span>Laat Plus of de Examenpas meteen beginnen. Binnen 14 dagen kan ik herroepen en krijg ik mijn geld terug.</span><input type="checkbox" switch id="pstart"></label></section>`:"")
@@ -4327,7 +4330,7 @@ function plusScreen(){
       </div></section>`).join("")
     +(acc.cfg.pass&&!(on&&!p.pass&&p.level==="B1")?`<h3 class="lh">Examenpas</h3><p class="sub">Eén keer betalen, geen abonnement.</p>`
       +["A2","B1"].filter(level=>acc.cfg.pass.plans?.[level]&&!(on&&!p.pass&&isPlus(level))).map(level=>`<section class="list" data-pass-plan="${level}"><div style="padding:16px"><h3>Examenpas ${level}</h3>
-      <p>${Math.round((acc.cfg.pass.days||91)/7)} weken dezelfde nakijkbeurten als Plus ${level}.</p>
+      <p>${Math.round((acc.cfg.pass.days||119)/7)} weken dezelfde nakijkbeurten als Plus ${level}.</p>
       <p><b dir="ltr">€ ${esc(acc.cfg.pass.plans[level].price)}</b> <span>eenmalig</span></p>
       <button class="${on||REC?"ghost":"btn"} wide" ${acc.user?`data-plus-pass="${level}"`:"data-plus-login"}>${level==="A2"?"Kies Examenpas A2":"Kies Examenpas B1"}</button>
       </div></section>`).join(""):"")
@@ -5232,7 +5235,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="284defc589";
+const UIV="cd03b3f9cb";
 let uiP=null;
 function uiLoaded(){try{trMemo.clear()}catch(e){} // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});

@@ -29,6 +29,7 @@ const MODEL = (process.env.GRADING_MODEL || "claude-sonnet-5-5").trim();
 const MODEL_EXAM = (process.env.GRADING_MODEL_EXAM || "claude-opus-5-5").trim();
 // Free checks (a guest's trial and a free account's seven) use the cheaper GRADING_MODEL_FREE, also for a proefexamen.
 const MODEL_FREE = (process.env.GRADING_MODEL_FREE || "claude-haiku-5-5").trim();
+const FREE_STRONG = Math.max(0, parseInt(process.env.FREE_STRONG ?? "2", 10) || 0);
 
 const RESULT = {
   type: "object",
@@ -278,7 +279,11 @@ export default async function handler(req, res) {
       guardO = o != null && o >= 0;
     }
   }
-  const model = !plus ? MODEL_FREE : exam && opus ? MODEL_EXAM : MODEL;
+  // A first impression of the good grading (26 November 2026): a guest's trial checks and the first FREE_STRONG (2)
+  // checks of a free account use the paid model, so a learner has seen what Plus gives before being asked to pay.
+  // Proefexamens and everything after that: the free model.
+  const firstFree = !plus && !exam && (who ? true : Number.isSafeInteger(left) && lim - left <= FREE_STRONG);
+  const model = !plus ? (firstFree ? MODEL : MODEL_FREE) : exam && opus ? MODEL_EXAM : MODEL;
   let providerStarted = false;
   // A failure gives the learner's daily check back. Once the model was called its tokens are paid, so the monthly and
   // exam-model counters keep that call: failed calls can't run up the bill without limit.

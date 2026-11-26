@@ -152,14 +152,15 @@ test('Free checks use GRADING_MODEL_FREE (Haiku); paid practice GRADING_MODEL (S
   assert.deepEqual((await handler({...paid,tasksCount:3})).models,['claude-sonnet-5-5']);
   assert.deepEqual((await handler({...paid,tasksCount:4})).models,['claude-opus-5-5']);
   assert.deepEqual((await handler({...paid,part:'sp',tasksCount:16})).models,['claude-opus-5-5']);
-  assert.deepEqual((await handler()).models,['claude-haiku-5-5']);
-  assert.deepEqual((await handler({tasksCount:4})).models,['claude-haiku-5-5']);
-  assert.deepEqual((await handler({guest:true})).models,['claude-haiku-5-5']);
-  assert.deepEqual((await handler({pay:true,plan:{status:'active',level:'A2'},part:'sb'})).models,['claude-haiku-5-5'],'a level Plus does not cover is free');
+  assert.deepEqual((await handler()).models,['claude-sonnet-5-5'],'the first free checks show the good grading');
+  assert.deepEqual((await handler({userLeft:4})).models,['claude-haiku-5-5'],'after two, the free model');
+  assert.deepEqual((await handler({tasksCount:4})).models,['claude-haiku-5-5'],'never a proefexamen on the paid model for free');
+  assert.deepEqual((await handler({guest:true})).models,['claude-sonnet-5-5'],'a guest trial shows the good grading');
+  assert.deepEqual((await handler({pay:true,plan:{status:'active',level:'A2'},part:'sb',userLeft:4})).models,['claude-haiku-5-5'],'a level Plus does not cover is free');
   const env={GRADING_MODEL:'claude-haiku-5-5',GRADING_MODEL_EXAM:' claude-sonnet-5-5 ',GRADING_MODEL_FREE:'claude-sonnet-5-5'};
   assert.deepEqual((await handler({...paid,env})).models,['claude-haiku-5-5']);
   assert.deepEqual((await handler({...paid,env,tasksCount:4})).models,['claude-sonnet-5-5']);
-  assert.deepEqual((await handler({env})).models,['claude-sonnet-5-5']);
+  assert.deepEqual((await handler({env,userLeft:4})).models,['claude-sonnet-5-5']);
 });
 
 test('Every graded call records its tokens per model, and a failing record never fails the grading',async()=>{
