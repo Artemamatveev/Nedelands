@@ -17,7 +17,10 @@ handed in (`submitExam()`, also when the time runs out). KNM follows the 8 offic
 of them per theme first and keeps each theme together, as DUO's voorbeeldexamens do; every KNM question has
 '▶ Lees voor' (Luisteren too), because the exam reads the questions aloud. A KNM row can have a photo from `foto/`
 as a 7th field, as every exam question has one. DUO's voorbeeldexamens are copyrighted: never copy their questions. Wrong options must be plausible (real instanties, real numbers) and about as long as the right one, so the
-longest answer is not a giveaway. Woordenschat has the definitions in `VO` and the themed A2 word list `WT`
+longest answer is not a giveaway. Woordenschat has the definitions in `VO` and the themed A2 word list `WT` (about 2000 words in 27 themes; the
+meaning of every word in the eight menu languages is in `dict/wt/<lang>.txt`, `word<TAB>meaning`, loaded by `wtLoad()`
+under DICTV and shown only after an answer (`wtNote()`) and in the word popup; a new WT word needs a line in all eight files,
+`tests/wordlist.test.mjs`; a description never contains its own word)
 (Dutch with de/het = a short Dutch description; small words get a gap sentence with ___, numbers the digits), practised three
 ways: word → description, description → word, and by ear (`wl|`: the word is only spoken, `hear`). Description → word can also be
 typed (the 'Typ het antwoord zelf' mode, with de/het). `BET` holds the Dutch meaning of a word (from `WT`, `VO` and a few more), for the Betekenis hint on verbs and de/het. Item keys (`lz|3.1`, `wn|de huis`) are
@@ -45,7 +48,7 @@ A2-niveau", and today's grammar step helps with a B1 round. The page title, desc
   purpose, details, the writer's opinion, a word or phrase in context, what you should do. The proefexamen (`EX.l1`) is
   6 whole texts, 36 questions, 110 minutes, with Overzicht and going back, like Lezen A2. DUO publishes no raw pass mark
   (a scaled 500), so the pass line is the default 70%. Places, organisations and people are made up; facts about the
-  Netherlands in the texts are real. The first eight texts are about 220 words, the later ones about 300; the exam's
+  Netherlands in the texts are real. The first eight texts are about 220 words, the later ones about 300, and texts 37–42 about 400 (Koningsdag, afval, DigiD, phones at school, an energy bill, a newcomer at work); the exam's
   texts are longer still, so new ones may be longer.
 - Luisteren B1: `LSB` (`[text, photo|null, [[q, right, wrong, wrong], …], intro]`, like `LSM`), section `lb`, keys
   `lb|<fragment>.<question>`. Radio, news, podcasts, voicemail, phone calls, talks and conversations of about 140–210
@@ -81,14 +84,17 @@ A2-niveau", and today's grammar step helps with a B1 round. The page title, desc
 
 ## Beginnen (from nothing)
 
-For someone who starts from nothing, at A2 only. `BG` in `oefenen.html` holds twelve short lessons (`t`, `s`; `x` the rule in very
+For someone who starts from nothing, at A2 only. `BG` in `data/a2.js` holds twenty short lessons (`t`, `s`; `x` the rule in very
 simple Dutch, a paragraph per line, `<b>` allowed; `e` the same in English, behind an "English" toggle and open when the menus
-are in English, the one place where an explanation is in English, because a beginner can't read the Dutch yet (there is no
-Arabic, Turkish, Hindi or Chinese version of the explanations); the lessons' own text has class `.bgl`: never translated, always
+are in English, because a beginner can't read the Dutch yet; `window.BGI` in `data/ui.js` has the explanation, the examples and
+the words of every lesson in ar, tr, hi, zh, es, ru and uk (a new lesson needs all seven), and `window.BGW` turns the English
+options of "Wat betekent" into the menu language (a new option word needs all eight); the lessons' own text has class `.bgl`: never translated, always
 left to right; `v` examples
 and `w` words as `Dutch=English` split by `|`, both recorded; `q` questions `[question, right, wrong, wrong, why]`). Keys
 `bg|<id>.<n>`, section `bg`: append, don't rename. A wrong option must never also be correct Dutch. A lesson is Klaar when every
-question was answered right once (`bgDone()`). Twelve lessons are the basics, not A2: don't promise more on screen. Screens in
+question was answered right once (`bgDone()`). The first twelve are the basics the starttest checks (one question each); lessons 13–20 (possessives, separable verbs,
+imperfectum, adjective -e, future with gaan, object pronouns, comparing, er is / er zijn) are the bridge to A2 and are not in
+the test, so only learners who start from nothing (`lv` 0) get them in today's lesson. Twenty lessons are not A2 yet: don't promise more on screen. Screens in
 `#talk`: `bgList()` (a row at the top of Grammatica en woorden, A2), `bgLes()`, `startTest()`.
 
 The starttest first asks the level (see B1), then (`START`: one question per lesson, easy to hard, each with "Ik weet het niet"; no right or wrong shown; three misses

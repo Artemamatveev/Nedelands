@@ -1113,9 +1113,9 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
 <script src="/study/language-v1.js?v=e94426af48"></script>
 <script src="/study/progress-v1.js?v=d7e5e64206"></script>
 <script src="/study/writing-v1.js?v=e5690fd786"></script>
-<script src="/data/knm.js?v=50777b478a"></script>
-<script src="/data/a2.js?v=56c32c3473"></script>
-<script src="/data/b1.js?v=e9701bd331"></script>
+<script src="/data/knm.js?v=c9b283ab33"></script>
+<script src="/data/a2.js?v=167ee7c30c"></script>
+<script src="/data/b1.js?v=1c0276cbe5"></script>
 <script src="/data/extra.js?v=e80c7f18b2"></script>
 <script>
 
@@ -1229,9 +1229,9 @@ const SEC=[
 {id:"g1",t:"Grammatica B1",s:"Die en dat, zou, het passief, er, voegwoorden",n:10},
 {id:"w1",t:"Woordvolgorde B1",s:"Lange zinnen met bijzinnen",n:6},
 {id:"v1",t:"Woordenschat B1",s:"Werk, geld, gezondheid, wonen",n:10},
-{id:"vo",t:"Woordenschat",s:"Ruim 1000 woorden in 23 thema's",n:10},
+{id:"vo",t:"Woordenschat",s:"Bijna 2000 woorden in 27 thema's",n:10},
 {id:"gs",t:"Geschiedenis",s:"Vragen over de geschiedenis van Nederland",n:10},
-{id:"bg",t:"Beginnen",s:"Twaalf korte lessen",n:8}
+{id:"bg",t:"Beginnen",s:"Twintig korte lessen",n:8}
 ];
 // Days until a question comes back after a right answer, per box (S.items .b). The last steps (30, 60) let a known
 // question rest instead of returning every two weeks for ever. Old progress (boxes 0–4) keeps working.
@@ -2379,7 +2379,7 @@ function home(){
     <div class="list">${parts().map(k=>k==="knm"?knmRow():row(k)).join("")}</div>`;
   $("gram").innerHTML=`<h2>Grammatica en woorden</h2><p class="sub">Rondes van 10 vragen.</p>`+(lvl()==="B1"
     ?`<div class="list">${["g1","w1","v1"].map(row).join("")}</div><h3 class="lh">Herhalen op A2-niveau</h3><div class="list">${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`
-    :`<div class="list">${itHTML(`data-x="bg"`,"Beginnen","Twaalf korte lessen, voor als je net begint.",{ic:"bg",n:(n=>n?`${n} van ${BG.length}`:null)(BG.filter(bgDone).length)})}${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`);
+    :`<div class="list">${itHTML(`data-x="bg"`,"Beginnen","Twintig korte lessen, voor als je net begint.",{ic:"bg",n:(n=>n?`${n} van ${BG.length}`:null)(BG.filter(bgDone).length)})}${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`);
   $("books").innerHTML=itHTML(`data-x="books"`,"Boekenkast",lb?`Je leest nu: ${esc(lb.t)}, blz. ${lb.p+1}`:"Verhalen en je eigen e-books.",{ic:"books"})
     +itHTML(`data-x="hist"`,"Geschiedenis van Nederland",lh?`Je was bij: ${lh.t}`:"Van de hunebedden tot nu.",{n:gsDone?`${gsDone} van ${GS.length}`:null,ic:"hist"})
     +itHTML(`data-x="media"`,"Luisteren en kijken","Nieuws, video's en podcasts.",{ic:"media"})
@@ -3176,7 +3176,7 @@ function feedback(ok,q,pick){
   }
   // wrong: a short heading, then the right answer in ink (a long red heading was loud)
   $("fb").innerHTML=`<p class="fbh"><i aria-hidden="true">${ok?"✓":"✕"}</i><b class="${ok?"good":"bad"}" data-ui>${ok?"Goed zo!":"Niet goed"}</b></p>${ok?"":`<p class="fbr"><span data-ui>Goed is:</span> <strong>${capA(q,q.right)}</strong></p>`}
-    ${q.note?(q.sec==="verb"?q.note:noteHTML(q.note)):""}
+    ${q.note?(q.sec==="verb"?q.note:noteHTML(q.note)):""}${wtNote(q)}
     <button class="btn wide" id="next" data-ui>Verder</button>`;
   $("next").onclick=()=>{pos++;show()}; $("next").focus();
   if(q.tts&&q.big!==q.tts&&canSpeak)speak(q.tts); // description → word: hear the Dutch word
@@ -3987,7 +3987,7 @@ function bgOpen(back,f){
 }
 function bgList(){
   bgOpen(TABN[tab],home);
-  $("tbody").innerHTML=`<h2>Beginnen</h2><p class="sub">Twaalf korte lessen met de basis van het Nederlands.</p>
+  $("tbody").innerHTML=`<h2>Beginnen</h2><p class="sub">Twintig korte lessen met de basis van het Nederlands.</p>
     <div class="list">${BG.map((l,i)=>itHTML(`data-i="${i}"`,`Les ${i+1}: ${l.t}`,l.s,{n:bgDone(l)?"Klaar":null})).join("")}</div>
     <button class="ghost wide" id="bgt">${S.start?"Doe de starttest opnieuw":"Doe de starttest"}</button>`;
   document.querySelectorAll("#tbody [data-i]").forEach(b=>b.onclick=()=>bgLes(+b.dataset.i));
@@ -4940,9 +4940,20 @@ function playEp(i){
 // The dictionary is split by the first letter of the word (dict/nl-en/<letter>.txt, "_" for the rest; dict/split.py):
 // a part is loaded the first time a word needs it, so a tap waits for about 100 KB instead of the whole 7 MB.
 // DICTV is the parts' version (set by node tools/stamp.mjs): the service worker keeps each part for good under it.
-const DICTV="84c7072bb3", DSH="abcdefghijklmnopqrstuvwxyz_".split("");
+const DICTV="a084f83c3e", DSH="abcdefghijklmnopqrstuvwxyz_".split("");
 const dshard=k=>{const c=String(k).slice(0,1).toLowerCase().normalize("NFD")[0]||"";return c>="a"&&c<="z"?c:"_"}; // as shard() in dict/split.py
 const dictURL=s=>`/dict/nl-en/${s}.txt?v=${DICTV}`;
+// The themed word list (WT, about 2000 words) in the menu language: dict/wt/<lang>.txt, "word<TAB>meaning" per line, under
+// the same DICTV. Shown after a Woordenschat answer and in the word popup; never before an answer (it would give it away).
+const WTR=new Map();let wtP=null;
+const wtURL=c=>`/dict/wt/${c}.txt?v=${DICTV}`;
+function wtLoad(){const c=LANG;if(c==="nl"||WTR.has(c))return Promise.resolve(WTR.get(c)||null);
+  return wtP||(wtP=fetch(wtURL(c)).then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>{const m=new Map();
+    for(const l of t.split("\n")){const i=l.indexOf("\t");if(i>0)m.set(l.slice(0,i),l.slice(i+1))}WTR.set(c,m);return m})
+    .catch(()=>null).finally(()=>{wtP=null}))}
+function wtTr(w){const m=WTR.get(LANG);if(!m||!w)return"";const b=String(w).replace(/^(de\/het|de|het) /,"");return m.get(w)||m.get("de "+b)||m.get("het "+b)||m.get(b)||""}
+const wtNote=q=>{if(q.sec!=="vo"||!/^w[ntl]\|/.test(q.k||""))return"";const w=q.k.slice(3),t=wtTr(w);
+  return t?`<p class="note wtr"><b lang="nl">${esc(w)}</b> = <span lang="${LANGS[LANG].c}" dir="auto">${esc(t)}</span></p>`:""};
 let DICT=null,dictMiss=null;const dictHave=new Set(),dictP=new Map();
 function dictPart(s){
   if(dictHave.has(s))return Promise.resolve();
@@ -4961,7 +4972,7 @@ function dictPart(s){
 // The parts these words need
 function loadDict(words){return Promise.all([...new Set((words||[]).map(dshard))].map(dictPart)).then(()=>DICT)}
 // Every part into the cache in the background (the reader or the history opened), so tapping a word works offline later
-function warmDict(force){if(!force&&!bulkOK())return;try{navigator.serviceWorker.controller.postMessage({warm:DSH.map(dictURL)})}catch(e){}}
+function warmDict(force){if(!force&&!bulkOK())return;try{navigator.serviceWorker.controller.postMessage({warm:DSH.map(dictURL).concat(LANG!=="nl"?[wtURL(LANG)]:[])})}catch(e){}}
 // Every painting and photo (~30 MB) and the dictionary (~7 MB) are fetched in the background only on a fast connection
 // that is not mobile data and without Save-Data; elsewhere (iPhone has no navigator.connection) a picture is cached
 // when it is first shown, and Profiel offers "Alles downloaden voor offline".
@@ -5064,11 +5075,11 @@ async function tapWord(el){
   const host=el.closest("#read,#hist,#play"); if(pp.parentNode!==host)host.appendChild(pp);
   pp.hidden=false; place();
   if($("psay"))$("psay").onclick=()=>speak(word);
-  let E;try{E=await lookUp(word,sent)}catch(e){if(tok===popTok){$("pdef").innerHTML=`<p class="pm">Het woordenboek laadt niet. Ben je online?</p>`;place()}return}
+  let E;try{[E]=await Promise.all([lookUp(word,sent),wtLoad()])}catch(e){if(tok===popTok){$("pdef").innerHTML=`<p class="pm">Het woordenboek laadt niet. Ben je online?</p>`;place()}return}
   if(tok!==popTok)return;
   if(!E.length){$("pdef").innerHTML=`<p class="pm">Niet in het woordenboek. <a href="${gt(word)}" target="_blank" rel="noopener">Google Translate ↗</a></p>`;return place()}
   $("pdef").innerHTML=E.map((e,n)=>{const x=entryParts(e);
-    return`<div class="pe"><div><p class="pw">${e.sep?"samen: ":""}<b>${esc(x.w)}</b>${e.comp?" <small>(samengesteld)</small>":""}</p><p class="pm">${esc(x.meta)}</p><p class="pt">${esc(e.g)}</p></div><button class="ghost" data-n="${n}">Bewaar</button></div>`}).join("");
+    return`<div class="pe"><div><p class="pw">${e.sep?"samen: ":""}<b>${esc(x.w)}</b>${e.comp?" <small>(samengesteld)</small>":""}</p><p class="pm">${esc(x.meta)}</p><p class="pt">${esc(e.g)}</p>${(t=>t?`<p class="pt" lang="${LANGS[LANG].c}" dir="auto">${esc(t)}</p>`:"")(LANG!=="en"&&wtTr(x.w))}</div><button class="ghost" data-n="${n}">Bewaar</button></div>`}).join("");
   const f=word.toLowerCase();
   $("pdef").querySelectorAll("button").forEach(b=>{
     const e=E[b.dataset.n],x=entryParts(e),has=()=>S.words.find(y=>y.w===x.w);
@@ -5242,7 +5253,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru","uk"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="c2f94dd7ee";
+const UIV="84a6696576";
 let uiP=null;
 function uiLoaded(){try{trMemo.clear()}catch(e){} // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});
@@ -5430,7 +5441,7 @@ const GLOBE=`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12"
 // a native list over the pill, so an iPhone shows its own menu; every language is named in itself
 const langHTML=()=>`<label class="lang">${GLOBE}<span data-langs>${LANGS[LANG].s}</span><svg class="dn" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4"/></svg><select data-lang aria-label="Taal">${Object.keys(LANGS).map(k=>`<option value="${k}"${k===LANG?" selected":""}>${LANGS[k].n}</option>`).join("")}</select></label>`;
 function setLangBtns(){document.querySelectorAll("[data-langs]").forEach(b=>b.textContent=LANGS[LANG].s);document.querySelectorAll("[data-langn]").forEach(b=>b.textContent=LANGS[LANG].n);document.querySelectorAll("[data-lang]").forEach(b=>b.value=LANG)}
-function applyLang(){const h=document.documentElement;h.lang=LANGS[LANG].c;h.dir=LANG==="ar"?"rtl":"ltr";uiBusy=true;try{trNode(document.body)}finally{uiBusy=false}setLangBtns();fitTabs()}
+function applyLang(){wtLoad();const h=document.documentElement;h.lang=LANGS[LANG].c;h.dir=LANG==="ar"?"rtl":"ltr";uiBusy=true;try{trNode(document.body)}finally{uiBusy=false}setLangBtns();fitTabs()}
 // On a phone a tab's name that is wider than its button ("Повторение") is set a little smaller, down to 9.5 px,
 // instead of running past the oranje lens; on a computer the names have room in the menu
 function fitTabs(){

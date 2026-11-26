@@ -1,0 +1,1996 @@
+de huisarts	médico de cabecera
+het ziekenhuis	hospital
+de apotheek	farmacia
+het recept	receta
+het medicijn	medicamento
+de pijn	dolor
+de hoofdpijn	dolor de cabeza
+de buikpijn	dolor de barriga
+de koorts	fiebre
+hoesten	toser
+ziek	enfermo
+beter worden	mejorarse
+de tandarts	dentista
+de verpleegkundige	enfermero, enfermera
+de specialist	especialista
+het bloed	sangre
+de uitslag	resultado
+de zorgverzekering	seguro médico
+het eigen risico	franquicia
+de huisartsenpost	servicio de urgencias de médicos de cabecera
+de ambulance	ambulancia
+het spreekuur	horario de consulta
+de griep	gripe
+het been	pierna
+de arm	brazo
+de rug	espalda
+de keel	garganta
+gezond	sano
+de patiënt	paciente
+de wond	herida
+de pleister	tirita
+het verband	venda
+de allergie	alergia
+de pijnstiller	analgésico
+zwanger	embarazada
+de verloskundige	matrona
+de bril	gafas
+de oogarts	oftalmólogo
+de fysiotherapeut	fisioterapeuta
+de spoedeisende hulp	urgencias
+ongezond	poco saludable
+duizelig	mareado
+misselijk	con náuseas
+moe	cansado
+de hoest	tos
+de wachtkamer	sala de espera
+de behandeling	tratamiento
+de operatie	operación
+onderzoeken	examinar
+de prik	inyección
+de vaccinatie	vacunación
+de dokter	médico
+de afspraak	cita
+de verkoudheid	resfriado
+verkouden	resfriado
+niezen	estornudar
+overgeven	vomitar
+de diarree	diarrea
+het zuur	ardor de estómago
+de bloeddruk	presión arterial
+de suikerziekte	diabetes
+de pil	pastilla
+de druppels	gotas
+de zalf	pomada
+de thermometer	termómetro
+de rolstoel	silla de ruedas
+de kruk	muleta
+gebroken	roto, fracturado
+de gips	escayola
+bloeden	sangrar
+de verwijzing	volante, derivación
+de huisartsenpraktijk	consulta del médico de cabecera
+de assistente	asistente
+de spoed	urgencia
+het ongeluk	accidente
+gewond	herido
+de EHBO	primeros auxilios
+de psycholoog	psicólogo
+de stress	estrés
+somber	abatido
+genezen	curarse
+het gewicht	peso
+afvallen	adelgazar
+de vitamine	vitamina
+de bijwerking	efecto secundario
+de bijsluiter	prospecto
+de huisartsenassistente	asistente del médico de cabecera
+de kraamzorg	cuidados posparto en casa
+ademen	respirar
+de verzekeringspas	tarjeta del seguro
+de baan	trabajo, empleo
+de werkgever	empleador
+de werknemer	empleado
+de collega	compañero de trabajo
+de baas	jefe
+het salaris	sueldo
+het contract	contrato
+de vacature	vacante
+solliciteren	solicitar un empleo
+het sollicitatiegesprek	entrevista de trabajo
+het cv	currículum
+de ervaring	experiencia
+de opleiding	formación
+het diploma	título, diploma
+parttime	a tiempo parcial
+fulltime	a tiempo completo
+de werktijden	horario de trabajo
+de pauze	pausa, descanso
+de vakantiedagen	días de vacaciones
+het uitzendbureau	agencia de trabajo temporal
+werkloos	en paro
+de uitkering	prestación, subsidio
+het kantoor	oficina
+de vergadering	reunión
+het rooster	horario
+de klant	cliente
+verdienen	ganar
+ontslaan	despedir
+de stage	prácticas
+de werkplek	lugar de trabajo
+de afdeling	departamento
+de overuren	horas extra
+het pensioen	pensión
+de vakbond	sindicato
+de proeftijd	periodo de prueba
+de loonstrook	nómina
+het bedrijf	empresa
+de zzp'er	autónomo
+de sollicitatiebrief	carta de presentación
+de ploegendienst	trabajo por turnos
+de nachtdienst	turno de noche
+het uniform	uniforme
+de promotie	ascenso
+het ontslag	despido
+ontslag nemen	dimitir
+de sollicitatie	solicitud de empleo
+de werkervaring	experiencia laboral
+het loon	salario
+het minimumloon	salario mínimo
+bruto	bruto
+netto	neto
+het vakantiegeld	paga de vacaciones
+de cao	convenio colectivo
+het tijdelijk contract	contrato temporal
+het vast contract	contrato indefinido
+zich ziek melden	avisar de que estás enfermo
+de bedrijfsarts	médico de empresa
+de leidinggevende	jefe, responsable
+het team	equipo
+de taak	tarea
+de opdracht	encargo
+de dienst	turno
+de werkweek	semana laboral
+het verlof	permiso, baja
+het zwangerschapsverlof	baja por maternidad
+de werkvergunning	permiso de trabajo
+de arbeidsmarkt	mercado laboral
+de beloning	recompensa
+de reiskosten	gastos de viaje
+de ontslagbrief	carta de despido
+de werkzoekende	demandante de empleo
+de vaardigheid	habilidad
+de cursus	curso
+het certificaat	certificado
+de werktijd	horario laboral
+de lunchpauze	pausa para comer
+de kantine	comedor
+het personeel	personal
+de werkloosheid	desempleo
+de uitzendkracht	trabajador temporal
+het arbeidscontract	contrato laboral
+de vrijwilliger	voluntario
+de ondernemer	empresario
+de KvK	Cámara de Comercio
+de factuur	factura
+de woning	vivienda
+het huis	casa
+het appartement	piso, apartamento
+de huur	alquiler
+de huurder	inquilino
+de verhuurder	casero
+de woningcorporatie	asociación de vivienda social
+huren	alquilar
+verhuizen	mudarse
+de buren	vecinos
+de buurt	barrio
+de verdieping	planta, piso
+de trap	escalera
+de lift	ascensor
+de slaapkamer	dormitorio
+de woonkamer	salón
+de badkamer	baño
+de keuken	cocina
+de wc	váter, aseo
+de tuin	jardín
+het balkon	balcón
+de verwarming	calefacción
+de rekening	factura
+de stroom	electricidad
+de vuilnisbak	cubo de basura
+het afval	basura
+de sleutel	llave
+de monteur	técnico
+kapot	roto
+de reparatie	reparación
+de vloer	suelo
+het plafond	techo
+de muur	pared
+het raam	ventana
+de deur	puerta
+het dak	tejado
+de kelder	sótano
+de zolder	desván
+de gang	pasillo
+de schuur	cobertizo
+de bel	timbre
+de brievenbus	buzón
+de borg	fianza
+het huurcontract	contrato de alquiler
+de schimmel	moho
+de lekkage	fuga, gotera
+schoonmaken	limpiar
+opruimen	ordenar
+het licht	luz
+de huisbaas	casero
+de koopwoning	vivienda en propiedad
+de huurwoning	vivienda de alquiler
+de hypotheek	hipoteca
+de makelaar	agente inmobiliario
+de wachtlijst	lista de espera
+de inschrijving	inscripción
+de bovenwoning	piso superior
+de benedenwoning	bajo
+de begane grond	planta baja
+de voordeur	puerta principal
+de achterdeur	puerta trasera
+de kraan	grifo
+de douche	ducha
+het bad	bañera
+de wastafel	lavabo
+de cv-ketel	caldera
+de radiator	radiador
+het gas	gas
+de meter	contador
+de meterstand	lectura del contador
+de energieleverancier	compañía de energía
+de servicekosten	gastos de comunidad
+de huurverhoging	subida del alquiler
+de opzegging	preaviso, rescisión
+het onderhoud	mantenimiento
+de overlast	molestias
+het lawaai	ruido
+de verhuizing	mudanza
+de verhuisdoos	caja de mudanza
+het meubel	mueble
+gemeubileerd	amueblado
+de woonruimte	espacio habitable
+de vierkante meter	metro cuadrado
+de kamer	habitación
+de studio	estudio
+de portiek	portal
+de flat	bloque de pisos
+het rijtjeshuis	casa adosada
+de vensterbank	alféizar
+de klusjesman	manitas
+de rookmelder	detector de humo
+de container	contenedor
+het grofvuil	residuos voluminosos
+scheiden	separar
+de stekker	enchufe (clavija)
+de zekering	fusible
+het tapijt	moqueta
+de woonwijk	zona residencial
+de buurtbewoner	vecino del barrio
+de trein	tren
+de bus	autobús
+de tram	tranvía
+de metro	metro
+de fiets	bicicleta
+de auto	coche
+het station	estación
+het perron	andén
+de halte	parada
+het kaartje	billete
+de ov-chipkaart	tarjeta de transporte público
+inchecken	validar la entrada
+uitchecken	validar la salida
+overstappen	hacer transbordo
+de vertraging	retraso
+vertrekken	salir, partir
+aankomen	llegar
+de reis	viaje
+het rijbewijs	carné de conducir
+de file	atasco
+parkeren	aparcar
+de weg	carretera, camino
+het verkeer	tráfico
+het stoplicht	semáforo
+rechtsaf	a la derecha
+linksaf	a la izquierda
+rechtdoor	todo recto
+de kruising	cruce
+de fietsenstalling	aparcamiento de bicis
+de snelweg	autopista
+de rotonde	rotonda
+het fietspad	carril bici
+de stoep	acera
+het zebrapad	paso de cebra
+de parkeerplaats	aparcamiento
+de taxi	taxi
+het vliegtuig	avión
+het vliegveld	aeropuerto
+de boot	barco
+de pont	ferri, transbordador
+de conducteur	revisor
+de vertrektijd	hora de salida
+de aankomsttijd	hora de llegada
+enkele reis	solo ida
+retour	ida y vuelta
+de spits	hora punta
+de storing	avería
+de omleiding	desvío
+de benzine	gasolina
+het tankstation	gasolinera
+de helm	casco
+het slot	candado, cerradura
+de band	neumático, rueda
+de voorrang	prioridad
+de bestuurder	conductor
+de passagier	pasajero
+de dienstregeling	horario
+het spoor	vía
+de intercity	tren interurbano
+de sprinter	tren de cercanías
+de NS	Ferrocarriles Neerlandeses
+het abonnement	abono
+het verkeersbord	señal de tráfico
+de snelheid	velocidad
+de flitspaal	radar de velocidad
+de verkeersboete	multa de tráfico
+het rijexamen	examen de conducir
+de rijles	clase de conducir
+de APK	ITV
+het kenteken	matrícula
+het parkeerkaartje	tique de aparcamiento
+de parkeervergunning	permiso de aparcamiento
+de bushalte	parada de autobús
+het knooppunt	nudo de autopistas
+de afslag	salida
+de fietser	ciclista
+de voetganger	peatón
+de scooter	scooter
+de motor	moto; motor
+de vrachtauto	camión
+botsen	chocar
+inhalen	adelantar
+remmen	frenar
+oversteken	cruzar
+de reiziger	viajero
+de bagage	equipaje
+de koffer	maleta
+de vlucht	vuelo
+de instaptijd	hora de embarque
+de grens	frontera
+het visum	visado
+de winkel	tienda
+de supermarkt	supermercado
+de markt	mercado
+de kassa	caja
+de bon	tique
+de prijs	precio
+duur	caro
+goedkoop	barato
+de korting	descuento
+de aanbieding	oferta
+betalen	pagar
+pinnen	pagar con tarjeta
+contant	en efectivo
+de pinpas	tarjeta de débito
+het geld	dinero
+de portemonnee	cartera, monedero
+de maat	talla
+passen	probarse; quedar bien
+ruilen	cambiar
+terugbrengen	devolver
+de klantenservice	atención al cliente
+bestellen	pedir, encargar
+het pakket	paquete
+bezorgen	entregar
+de bank	banco
+het rekeningnummer	número de cuenta
+sparen	ahorrar
+lenen	pedir prestado; prestar
+de belasting	impuesto
+de bakker	panadería
+de slager	carnicería
+de drogist	droguería
+het warenhuis	grandes almacenes
+het winkelcentrum	centro comercial
+de openingstijden	horario de apertura
+open	abierto
+gesloten	cerrado
+de uitverkoop	rebajas
+de garantie	garantía
+de boodschappen	la compra
+het boodschappenlijstje	lista de la compra
+het mandje	cesta
+het winkelwagentje	carrito
+de verkoper	vendedor
+de munt	moneda
+het bankbiljet	billete
+het wisselgeld	cambio, la vuelta
+de schuld	deuda
+de rente	interés
+de overschrijving	transferencia
+het saldo	saldo
+de pincode	PIN
+de geldautomaat	cajero automático
+gratis	gratis
+kosten	costar
+de klantenkaart	tarjeta de cliente
+het statiegeld	depósito de envases
+inleveren	entregar
+de webwinkel	tienda online
+de bezorgkosten	gastos de envío
+retourneren	devolver
+de bedenktijd	periodo de desistimiento
+de aankoop	compra
+het koopje	ganga
+de kwaliteit	calidad
+het merk	marca
+de verpakking	envase
+de houdbaarheidsdatum	fecha de caducidad
+de kilo	kilo
+de gram	gramo
+de liter	litro
+het stuk	trozo
+het blik	lata
+de pot	tarro
+de zak	bolsa
+het tasje	bolsa de la compra
+de zelfscan	autoescaneo
+het filiaal	sucursal
+de etalage	escaparate
+de paskamer	probador
+het bonnetje	tique
+de spaarrekening	cuenta de ahorro
+de betaalrekening	cuenta corriente
+het budget	presupuesto
+uitgeven	gastar
+de inkomsten	ingresos
+de uitgaven	gastos
+het inkomen	ingresos
+de schuldhulp	ayuda con deudas
+de betalingsregeling	plan de pagos
+de incasso	domiciliación
+de aanmaning	requerimiento de pago
+de deurwaarder	agente judicial
+de euro	euro
+de cent	céntimo
+wisselen	cambiar
+de prijslijst	lista de precios
+de basisschool	colegio de primaria
+de middelbare school	instituto
+de groep	grupo; curso
+de leerkracht	maestro
+de juf	maestra, seño
+de leerling	alumno
+het huiswerk	deberes
+het rapport	boletín de notas
+de ouderavond	reunión de padres
+de kinderopvang	guardería
+de oppas	canguro
+het schoolreisje	excursión escolar
+de schoolvakantie	vacaciones escolares
+spijbelen	hacer novillos
+leerplichtig	en edad escolar obligatoria
+de gymles	clase de gimnasia
+het lokaal	aula
+de les	clase, lección
+leren	aprender; enseñar
+uitleggen	explicar
+het cijfer	nota; cifra
+de toets	examen, prueba
+de opvoeding	educación, crianza
+het consultatiebureau	centro de salud infantil
+de schooltas	mochila escolar
+het schoolplein	patio del colegio
+de directeur	director
+het vak	asignatura
+rekenen	hacer cuentas
+de pen	bolígrafo
+het potlood	lápiz
+het schrift	cuaderno
+de gum	goma de borrar
+het woordenboek	diccionario
+de vraag	pregunta
+het antwoord	respuesta
+het examen	examen
+slagen	aprobar
+zakken	suspender
+de universiteit	universidad
+het mbo	formación profesional
+de peuterspeelzaal	grupo de juego para niños pequeños
+de crèche	guardería
+de buitenschoolse opvang	atención extraescolar
+de ouderbijdrage	cuota de padres
+de mentor	tutor
+de klas	clase
+het schooljaar	curso escolar
+de voorschool	preescolar
+de kleuter	niño de infantil
+de peuter	niño pequeño
+de leerplicht	escolaridad obligatoria
+de leerplichtambtenaar	inspector de absentismo escolar
+het schooladvies	consejo escolar de orientación
+de doorstroomtoets	prueba final de primaria
+het vmbo	secundaria preprofesional
+de havo	bachillerato general
+het vwo	bachillerato preuniversitario
+het hbo	formación profesional superior
+de studiefinanciering	beca de estudios
+de student	estudiante
+het lesrooster	horario de clases
+de rekenmachine	calculadora
+de liniaal	regla
+het etui	estuche
+de spreekbeurt	exposición oral
+het werkstuk	trabajo escolar
+de leesles	clase de lectura
+de traktatie	golosinas de cumpleaños
+het schoolfeest	fiesta escolar
+de ouderraad	asociación de padres
+het oudergesprek	tutoría con los padres
+de schoolarts	médico escolar
+pesten	acosar
+het speelgoed	juguetes
+de luier	pañal
+de kinderwagen	cochecito
+het knuffeldier	peluche
+opvoeden	criar, educar
+de straf	castigo
+het voorbeeld	ejemplo
+de bijles	clases particulares
+het lesgeld	matrícula
+de gemeente	ayuntamiento
+het gemeentehuis	ayuntamiento (edificio)
+het loket	ventanilla
+het formulier	formulario
+invullen	rellenar
+aanvragen	solicitar
+de aanvraag	solicitud
+het paspoort	pasaporte
+de identiteitskaart	documento de identidad
+geldig	válido
+verlopen	caducar
+de handtekening	firma
+ondertekenen	firmar
+het adres	dirección
+zich inschrijven	inscribirse, empadronarse
+de Belastingdienst	Agencia Tributaria
+de toeslag	subsidio, ayuda
+het burgerservicenummer	número de servicio al ciudadano
+de politie	policía
+de brandweer	bomberos
+het alarmnummer	número de emergencias
+de wet	ley
+de regel	regla, norma
+de boete	multa
+de verzekering	seguro
+de brief	carta
+de postcode	código postal
+de geboortedatum	fecha de nacimiento
+de nationaliteit	nacionalidad
+de ambtenaar	funcionario
+de burgemeester	alcalde
+de gemeenteraad	concejo municipal
+het uittreksel	certificado, extracto
+de verblijfsvergunning	permiso de residencia
+de IND	servicio de inmigración (IND)
+de inburgering	integración cívica
+de naturalisatie	naturalización
+de huurtoeslag	ayuda al alquiler
+de zorgtoeslag	ayuda para el seguro médico
+de kinderbijslag	prestación por hijos
+het UWV	agencia de seguros de empleo (UWV)
+de bijstand	ayuda social
+de DigiD	DigiD (identidad digital)
+de belastingaangifte	declaración de la renta
+de rechter	juez
+de advocaat	abogado
+het bezwaar	objeción, recurso
+de klacht	queja, reclamación
+de rechten	derechos
+de plichten	deberes, obligaciones
+de basisregistratie	registro de población
+de uitschrijving	baja del padrón
+de geboorteakte	partida de nacimiento
+de huwelijksakte	certificado de matrimonio
+de legalisatie	legalización
+de vertaling	traducción
+beëdigd	jurado
+de leges	tasas
+het wijkteam	equipo de barrio
+de Wmo	ley de apoyo social
+het sociaal loket	ventanilla de servicios sociales
+de klantmanager	gestor de casos
+de SVB	Banco de la Seguridad Social
+de AOW	pensión estatal
+DUO	DUO (agencia educativa)
+de lening	préstamo
+de rechtbank	tribunal
+de aangifte	denuncia
+de getuige	testigo
+het Juridisch Loket	oficina de asistencia jurídica
+de privacy	privacidad
+de gegevens	datos
+de machtiging	autorización
+de termijn	plazo
+de beslissing	decisión
+de toestemming	permiso
+de vergunning	licencia, permiso
+de inburgeringsplicht	obligación de integración
+de taalcoach	tutor de idiomas
+de verlenging	prórroga, renovación
+het bewijs	prueba, justificante
+de kopie	copia
+de ochtend	mañana
+de middag	tarde (después del mediodía)
+de avond	tarde, noche
+de nacht	noche
+vandaag	hoy
+morgen	mañana
+gisteren	ayer
+overmorgen	pasado mañana
+de week	semana
+het weekend	fin de semana
+de maand	mes
+het jaar	año
+het uur	hora
+het kwartier	cuarto de hora
+vroeg	temprano
+laat	tarde
+op tijd	a tiempo
+het weer	tiempo (clima)
+de zon	sol
+de regen	lluvia
+de wind	viento
+de sneeuw	nieve
+de wolk	nube
+warm	caliente, cálido
+koud	frío
+nat	mojado
+droog	seco
+de lente	primavera
+de zomer	verano
+de herfst	otoño
+de winter	invierno
+de seconde	segundo
+de minuut	minuto
+de dag	día
+de datum	fecha
+de kalender	calendario
+het seizoen	estación
+de feestdag	día festivo
+altijd	siempre
+nooit	nunca
+soms	a veces
+vaak	a menudo
+meestal	normalmente
+straks	luego
+meteen	enseguida
+nu	ahora
+het onweer	tormenta
+de mist	niebla
+de temperatuur	temperatura
+de graad	grado
+bewolkt	nublado
+zonnig	soleado
+de hagel	granizo
+glad	resbaladizo
+de weersverwachting	previsión del tiempo
+de storm	tormenta, temporal
+vorige week	la semana pasada
+volgend jaar	el año que viene
+maandag	lunes
+dinsdag	martes
+woensdag	miércoles
+donderdag	jueves
+vrijdag	viernes
+zaterdag	sábado
+zondag	domingo
+januari	enero
+februari	febrero
+maart	marzo
+april	abril
+mei	mayo
+juni	junio
+juli	julio
+augustus	agosto
+september	septiembre
+oktober	octubre
+november	noviembre
+december	diciembre
+de eeuw	siglo
+het verleden	pasado
+de toekomst	futuro
+het moment	momento
+binnenkort	pronto
+onlangs	recientemente
+vroeger	antes
+later	más tarde
+de regenboog	arcoíris
+de bliksem	relámpago
+de donder	trueno
+de bui	chubasco
+de hittegolf	ola de calor
+de ijzel	hielo en la carretera
+vriezen	helar
+regenen	llover
+sneeuwen	nevar
+waaien	hacer viento
+de familie	familia
+het gezin	familia (hogar)
+de ouders	padres
+de vader	padre
+de moeder	madre
+de zoon	hijo
+de dochter	hija
+de broer	hermano
+de zus	hermana
+de opa	abuelo
+de oma	abuela
+de man	hombre; marido
+de vrouw	mujer; esposa
+getrouwd	casado
+gescheiden	divorciado
+de baby	bebé
+het kind	niño
+de vriend	amigo; novio
+de vriendin	amiga; novia
+de buurman	vecino
+de buurvrouw	vecina
+de verjaardag	cumpleaños
+jarig zijn	cumplir años
+feliciteren	felicitar
+trouwen	casarse
+oud	viejo, mayor
+jong	joven
+aardig	amable
+boos	enfadado
+blij	contento
+verdrietig	triste
+de grootouders	abuelos
+de kleinkinderen	nietos
+de oom	tío
+de tante	tía
+de neef	sobrino; primo
+de nicht	sobrina; prima
+de schoonmoeder	suegra
+de zwager	cuñado
+de schoonzus	cuñada
+de weduwe	viuda
+alleenstaand	soltero, que vive solo
+samenwonen	vivir juntos
+de bruiloft	boda
+het huwelijk	matrimonio
+de geboorte	nacimiento
+overlijden	fallecer
+de begrafenis	funeral, entierro
+de tiener	adolescente
+de volwassene	adulto
+de kennis	conocido
+de gast	invitado
+de ex	ex
+de echtgenoot	esposo
+de echtgenote	esposa
+de partner	pareja
+de schoonvader	suegro
+de schoonouders	suegros
+de kleinzoon	nieto
+de kleindochter	nieta
+de tweeling	gemelos
+het familielid	pariente
+de buurtgenoot	vecino
+de vreemde	desconocido
+de jongen	chico
+het meisje	chica
+de meneer	señor
+de mevrouw	señora
+de bejaarde	anciano
+de gepensioneerde	jubilado
+de nieuwkomer	recién llegado
+de vluchteling	refugiado
+de migrant	migrante
+de Nederlander	neerlandés
+de achternaam	apellido
+de voornaam	nombre de pila
+de leeftijd	edad
+de zwangerschap	embarazo
+het ontbijt	desayuno
+de lunch	almuerzo
+het avondeten	cena
+het brood	pan
+de boterham	rebanada de pan
+de kaas	queso
+de melk	leche
+het ei	huevo
+de groente	verdura
+het fruit	fruta
+de appel	manzana
+het vlees	carne
+de vis	pescado
+de kip	pollo
+de rijst	arroz
+de aardappel	patata
+de soep	sopa
+de koffie	café
+de thee	té
+de suiker	azúcar
+het zout	sal
+koken	cocinar; hervir
+bakken	hornear; freír
+snijden	cortar
+de pan	olla, sartén
+het bord	plato
+het glas	vaso
+het mes	cuchillo
+de vork	tenedor
+de lepel	cuchara
+lekker	rico, sabroso
+honger hebben	tener hambre
+dorst hebben	tener sed
+de boter	mantequilla
+de olie	aceite
+de jam	mermelada
+de pindakaas	crema de cacahuete
+de hagelslag	virutas de chocolate
+de yoghurt	yogur
+de pasta	pasta
+de saus	salsa
+de sla	lechuga
+de tomaat	tomate
+de ui	cebolla
+de wortel	zanahoria
+de banaan	plátano
+de sinaasappel	naranja
+de peer	pera
+de aardbei	fresa
+het toetje	postre
+de taart	tarta
+het koekje	galleta
+het snoep	golosinas
+het sap	zumo
+het bier	cerveza
+de wijn	vino
+vegetarisch	vegetariano
+zoet	dulce
+zuur	ácido, agrio
+bitter	amargo
+pittig	picante
+de kom	cuenco
+het kopje	taza
+het menu	menú, carta
+de ober	camarero
+afrekenen	pagar la cuenta
+de fooi	propina
+het broodje	bocadillo, panecillo
+de pannenkoek	tortita, crepe
+de stamppot	puré de patatas con verdura
+de erwtensoep	sopa de guisantes
+de kroket	croqueta
+de bitterbal	croqueta redonda
+de patat	patatas fritas
+de stroopwafel	gofre de sirope
+de drop	regaliz
+het gehakt	carne picada
+het rundvlees	carne de vaca
+het varkensvlees	carne de cerdo
+het lamsvlees	cordero
+halal	halal
+veganistisch	vegano
+de noten	frutos secos
+de bonen	judías
+de erwten	guisantes
+de paprika	pimiento
+de komkommer	pepino
+de champignon	champiñón
+de knoflook	ajo
+de citroen	limón
+de druif	uva
+de meloen	melón
+de kers	cereza
+het meel	harina
+de peper	pimienta
+het kruid	especia, hierba
+de room	nata
+de slagroom	nata montada
+het ijs	hielo; helado
+de chocolade	chocolate
+de frisdrank	refresco
+de borrel	copas, aperitivo
+het hapje	aperitivo, bocado
+de magnetronmaaltijd	plato preparado
+de maaltijd	comida
+het gerecht	plato
+rauw	crudo
+gaar	hecho, cocido
+verbrand	quemado
+opwarmen	calentar
+proeven	probar
+de smaak	sabor
+het bestek	cubiertos
+het servet	servilleta
+de theepot	tetera
+zijn	ser, estar
+hebben	tener
+gaan	ir
+komen	venir
+doen	hacer
+maken	hacer, fabricar
+zeggen	decir
+vertellen	contar
+vragen	preguntar
+antwoorden	responder
+praten	hablar
+spreken	hablar
+weten	saber
+kennen	conocer
+denken	pensar
+begrijpen	entender
+zien	ver
+kijken	mirar
+horen	oír
+luisteren	escuchar
+lezen	leer
+schrijven	escribir
+werken	trabajar
+wonen	vivir (en un sitio)
+leven	vivir
+kopen	comprar
+verkopen	vender
+geven	dar
+krijgen	recibir
+nemen	tomar, coger
+brengen	traer, llevar
+halen	ir a buscar
+zetten	poner
+leggen	colocar, dejar
+staan	estar de pie
+zitten	estar sentado
+liggen	estar tumbado
+lopen	andar
+rennen	correr
+rijden	conducir
+vliegen	volar
+wachten	esperar
+zoeken	buscar
+vinden	encontrar; opinar
+verliezen	perder
+beginnen	empezar
+stoppen	parar
+openmaken	abrir
+dichtdoen	cerrar
+helpen	ayudar
+proberen	intentar
+gebruiken	usar
+betekenen	significar
+herhalen	repetir
+vergeten	olvidar
+onthouden	recordar
+willen	querer
+kunnen	poder
+moeten	tener que
+mogen	poder (tener permiso)
+houden van	querer, gustar
+hopen	esperar (desear)
+geloven	creer
+spelen	jugar
+slapen	dormir
+wakker worden	despertarse
+opstaan	levantarse
+zich aankleden	vestirse
+wassen	lavar
+douchen	ducharse
+eten	comer
+drinken	beber
+bellen	llamar
+sturen	enviar
+tellen	contar
+kiezen	elegir
+beslissen	decidir
+veranderen	cambiar
+blijven	quedarse
+worden	hacerse, llegar a ser
+gebeuren	pasar, ocurrir
+lachen	reír
+huilen	llorar
+aanbieden	ofrecer
+aannemen	aceptar; contratar
+afmaken	terminar
+afzeggen	cancelar
+annuleren	anular
+bedanken	agradecer
+bedoelen	querer decir
+beloven	prometer
+bereiken	alcanzar
+beschrijven	describir
+besteden	dedicar, gastar
+bewegen	moverse
+bezoeken	visitar
+bijhouden	llevar el registro
+controleren	comprobar
+delen	compartir; dividir
+doorgeven	transmitir
+duren	durar
+eindigen	terminar
+groeten	saludar
+herkennen	reconocer
+houden	sostener; quedarse
+inpakken	empaquetar
+invoeren	introducir
+kloppen	llamar a la puerta; ser correcto
+klagen	quejarse
+lenen van	pedir prestado a
+letten op	prestar atención a
+meedoen	participar
+meenemen	llevarse
+melden	informar, avisar
+noemen	llamar, nombrar
+oefenen	practicar
+ontmoeten	conocer, encontrarse con
+ontvangen	recibir
+oplossen	resolver
+opschrijven	apuntar
+opletten	prestar atención
+organiseren	organizar
+plannen	planear
+regelen	arreglar, organizar
+reizen	viajar
+roepen	llamar a gritos
+schrikken	asustarse
+sluiten	cerrar
+steunen	apoyar
+stelen	robar
+storen	molestar
+studeren	estudiar
+toestaan	permitir
+uitgaan van	suponer
+uitkiezen	escoger
+uitproberen	probar
+vallen	caerse
+verbieden	prohibir
+verdwijnen	desaparecer
+vergelijken	comparar
+verhuren	alquilar (a alguien)
+verklaren	explicar
+verlengen	prolongar
+verplaatsen	trasladar
+verstaan	entender (oír)
+vertalen	traducir
+vertrouwen	confiar
+verwachten	esperar (prever)
+voelen	sentir
+voorstellen	proponer; presentar
+waarschuwen	advertir
+wegen	pesar
+wennen	acostumbrarse
+winnen	ganar
+zorgen voor	cuidar de
+zwaaien	saludar con la mano
+aanzetten	encender
+uitzetten	apagar
+ophalen	recoger
+wegbrengen	llevar
+aankondigen	anunciar
+aanmelden	apuntarse
+afhalen	recoger
+bespreken	hablar de, tratar
+herinneren	recordar
+missen	perder; echar de menos
+pakken	coger
+passen op	cuidar de
+rusten	descansar
+trouwen met	casarse con
+zich voelen	sentirse
+zich vergissen	equivocarse
+zich zorgen maken	preocuparse
+zich haasten	darse prisa
+zich schamen	avergonzarse
+zich vervelen	aburrirse
+zich herinneren	acordarse
+zich voorbereiden	prepararse
+zich voorstellen	presentarse; imaginarse
+aanraken	tocar
+bouwen	construir
+breken	romper
+drukken	pulsar, apretar
+duwen	empujar
+trekken	tirar
+gooien	tirar, lanzar
+vangen	atrapar
+springen	saltar
+klimmen	trepar
+vullen	llenar
+legen	vaciar
+repareren	reparar
+verven	pintar
+knippen	cortar (con tijeras)
+plakken	pegar
+vouwen	doblar
+zwijgen	callarse
+fluisteren	susurrar
+schreeuwen	gritar
+glimlachen	sonreír
+knikken	asentir
+wijzen	señalar
+tonen	mostrar
+besparen	ahorrar
+verspillen	desperdiciar
+lukken	salir bien
+mislukken	fracasar
+bestaan	existir
+ontstaan	surgir
+stijgen	subir
+dalen	bajar
+groeien	crecer
+sterven	morir
+geboren worden	nacer
+zich aanpassen	adaptarse
+integreren	integrarse
+groot	grande
+klein	pequeño
+lang	largo; alto
+kort	corto
+hoog	alto
+laag	bajo
+breed	ancho
+smal	estrecho
+dik	grueso; gordo
+dun	delgado
+zwaar	pesado
+licht	ligero; claro
+donker	oscuro
+nieuw	nuevo
+mooi	bonito
+lelijk	feo
+schoon	limpio
+vies	sucio
+snel	rápido
+langzaam	lento
+makkelijk	fácil
+moeilijk	difícil
+druk	ocupado, concurrido
+rustig	tranquilo
+stil	silencioso
+leeg	vacío
+vol	lleno
+belangrijk	importante
+mogelijk	posible
+nodig	necesario
+klaar	listo, terminado
+bezig	ocupado
+bang	asustado, con miedo
+gelukkig	feliz; por suerte
+tevreden	satisfecho
+vriendelijk	amable
+beleefd	educado
+eerlijk	honesto; justo
+lui	perezoso
+slim	listo
+dom	tonto
+rijk	rico
+arm	pobre
+eerste	primero
+laatste	último
+volgende	siguiente
+verschillend	diferente
+hetzelfde	lo mismo
+anders	distinto; si no
+zeker	seguro
+beroemd	famoso
+gevaarlijk	peligroso
+veilig	seguro
+normaal	normal
+speciaal	especial
+leuk	divertido, bonito
+saai	aburrido
+gek	loco, raro
+nerveus	nervioso
+vrij	libre
+handig	práctico, mañoso
+nuttig	útil
+duidelijk	claro
+ingewikkeld	complicado
+eenvoudig	sencillo
+precies	exactamente
+juist	correcto
+fout	incorrecto
+echt	real; de verdad
+nep	falso
+vreemd	raro; extranjero
+bekend	conocido
+onbekend	desconocido
+goed	bueno
+slecht	malo
+prettig	agradable
+vervelend	molesto
+heerlijk	delicioso, estupendo
+fijn	agradable; fino
+sterk	fuerte
+zwak	débil
+zacht	blando; suave
+hard	duro; fuerte; rápido
+luid	alto, ruidoso
+scherp	afilado
+bot	desafilado; brusco
+gezellig	agradable, acogedor
+ontspannen	relajado
+gespannen	tenso
+dichtbij	cerca
+ver	lejos
+diep	profundo
+ondiep	poco profundo
+rond	redondo
+vierkant	cuadrado
+recht	recto
+scheef	torcido
+heet	muy caliente
+lauw	tibio
+fris	fresco
+vers	fresco
+goedgekeurd	aprobado
+verplicht	obligatorio
+verboden	prohibido
+toegestaan	permitido
+beschikbaar	disponible
+bezet	ocupado
+geschikt	adecuado
+ongeveer	aproximadamente
+zelfstandig	independiente
+serieus	serio
+grappig	gracioso
+bijzonder	especial
+gewoon	normal
+typisch	típico
+streng	estricto
+lief	cariñoso
+gemeen	malo, cruel
+jaloers	celoso
+trots	orgulloso
+verlegen	tímido
+geduldig	paciente
+ongeduldig	impaciente
+behulpzaam	servicial
+hardwerkend	trabajador
+en	y
+maar	pero
+of	o; si
+want	porque
+omdat	porque
+dus	así que
+als	si, cuando; como
+wanneer	cuándo
+toen	entonces; cuando
+dan	entonces; que
+eerst	primero
+daarna	después
+ook	también
+niet	no
+geen	ningún
+wel	sí (que)
+al	ya
+nog	todavía; aún
+alleen	solo
+samen	juntos
+heel	muy; entero
+te	demasiado
+veel	mucho
+weinig	poco
+meer	más
+minder	menos
+genoeg	suficiente
+bijna	casi
+misschien	quizás
+natuurlijk	claro; natural
+graag	con gusto
+hier	aquí
+daar	allí
+overal	en todas partes
+binnen	dentro
+buiten	fuera
+boven	arriba
+beneden	abajo
+links	a la izquierda
+rechts	a la derecha
+naast	al lado de
+tussen	entre
+achter	detrás de
+voor	para; delante de
+onder	debajo de
+op	sobre, en
+in	en
+bij	en casa de, junto a
+met	con
+zonder	sin
+naar	a, hacia
+van	de
+uit	de (procedencia)
+over	sobre, acerca de
+tot	hasta
+sinds	desde
+tijdens	durante
+wie	quién
+wat	qué
+waar	dónde; verdad
+waarom	por qué
+hoe	cómo
+hoeveel	cuánto
+welk	cuál
+iemand	alguien
+niemand	nadie
+iets	algo
+niets	nada
+alles	todo
+iedereen	todo el mundo
+elke	cada
+eigenlijk	en realidad
+trouwens	por cierto
+toch	sin embargo
+zelfs	incluso
+helaas	por desgracia
+vooral	sobre todo
+daarom	por eso
+hoewel	aunque
+terwijl	mientras
+zodat	para que
+voordat	antes de que
+nadat	después de que
+totdat	hasta que
+ergens	en algún sitio
+nergens	en ningún sitio
+allebei	los dos
+sommige	algunos
+andere	otros
+zo	así
+erg	muy; terrible
+steeds	cada vez
+opnieuw	de nuevo
+tegen	contra; a
+per	por
+langs	a lo largo de
+door	a través de; por
+om	alrededor de; a las
+tegenover	enfrente de
+elf	once
+twaalf	doce
+dertien	trece
+veertien	catorce
+vijftien	quince
+zestien	dieciséis
+zeventien	diecisiete
+achttien	dieciocho
+negentien	diecinueve
+twintig	veinte
+dertig	treinta
+veertig	cuarenta
+vijftig	cincuenta
+zestig	sesenta
+zeventig	setenta
+tachtig	ochenta
+negentig	noventa
+honderd	cien
+duizend	mil
+een miljoen	un millón
+de helft	la mitad
+een kwart	un cuarto
+het nummer	número
+het bedrag	importe
+nul	cero
+één	uno
+twee	dos
+drie	tres
+vier	cuatro
+vijf	cinco
+zes	seis
+zeven	siete
+acht	ocho
+negen	nueve
+tien	diez
+het procent	por ciento
+het paar	par; unos cuantos
+het dubbele	el doble
+het lichaam	cuerpo
+het hoofd	cabeza
+het haar	pelo
+het gezicht	cara
+het oog	ojo
+het oor	oreja
+de neus	nariz
+de mond	boca
+de tand	diente
+de tong	lengua
+de nek	cuello, nuca
+de schouder	hombro
+de borst	pecho
+de buik	barriga
+de hand	mano
+de vinger	dedo
+de knie	rodilla
+de voet	pie
+de teen	dedo del pie
+de huid	piel
+het hart	corazón
+de longen	pulmones
+de maag	estómago
+de wang	mejilla
+de lip	labio
+de kin	barbilla
+het voorhoofd	frente
+de wenkbrauw	ceja
+de baard	barba
+de elleboog	codo
+de pols	muñeca
+de duim	pulgar
+de nagel	uña
+de heup	cadera
+de enkel	tobillo
+de hiel	talón
+het bot	hueso
+de spier	músculo
+de hersenen	cerebro
+de nier	riñón
+de lever	hígado
+het zweet	sudor
+de kleren	ropa
+de jas	abrigo
+de trui	jersey
+het overhemd	camisa
+het T-shirt	camiseta
+de broek	pantalón
+de spijkerbroek	vaqueros
+de rok	falda
+de jurk	vestido
+de schoenen	zapatos
+de laarzen	botas
+de sokken	calcetines
+het ondergoed	ropa interior
+de muts	gorro
+de sjaal	bufanda
+de handschoenen	guantes
+de pet	gorra
+de riem	cinturón
+de tas	bolso
+de paraplu	paraguas
+aantrekken	ponerse
+uittrekken	quitarse
+dragen	llevar puesto; cargar
+het pak	traje
+de pyjama	pijama
+de sieraden	joyas
+de ring	anillo
+het horloge	reloj de pulsera
+de bh	sujetador
+de hoofddoek	pañuelo
+de regenjas	impermeable
+de sportschoenen	zapatillas de deporte
+de slippers	chanclas
+het vest	chaqueta de punto
+de knoop	botón
+de rits	cremallera
+de mouw	manga
+de broekzak	bolsillo
+de zonnebril	gafas de sol
+de oorbel	pendiente
+de ketting	collar
+de portefeuille	billetera
+de rugzak	mochila
+passend	que queda bien
+wijd	ancho
+strak	ajustado
+de wasmand	cesto de la ropa
+de tafel	mesa
+de stoel	silla
+de fauteuil	sillón
+het bed	cama
+de kast	armario
+de lamp	lámpara
+het kussen	almohada, cojín
+de deken	manta
+de spiegel	espejo
+het gordijn	cortina
+het vloerkleed	alfombra
+de wasmachine	lavadora
+de koelkast	nevera
+het fornuis	cocina (fogones)
+de oven	horno
+de magnetron	microondas
+de stofzuiger	aspiradora
+de vaatwasser	lavavajillas
+de handdoek	toalla
+de zeep	jabón
+de tandenborstel	cepillo de dientes
+het toiletpapier	papel higiénico
+de prullenbak	papelera
+het stopcontact	enchufe
+de schaar	tijeras
+de doos	caja
+de fles	botella
+de zitbank	sofá
+het kussensloop	funda de almohada
+het laken	sábana
+het dekbed	edredón
+de wekker	despertador
+de klok	reloj
+het schilderij	cuadro
+de plank	estante
+de la	cajón
+de vuilniszak	bolsa de basura
+de bezem	escoba
+de emmer	cubo
+de dweil	fregona
+de afwas	los platos
+het afwasmiddel	lavavajillas (líquido)
+het wasmiddel	detergente
+de was	la colada
+strijken	planchar
+het strijkijzer	plancha
+de waterkoker	hervidor
+het koffiezetapparaat	cafetera
+de broodrooster	tostadora
+de vriezer	congelador
+het aanrecht	encimera
+de gootsteen	fregadero
+het snoer	cable
+de verlichting	iluminación
+de gordijnrails	riel de cortina
+het bureau	escritorio
+de kapstok	perchero
+de hanger	percha
+de sleutelbos	manojo de llaves
+de kaars	vela
+de plant	planta
+de vaas	jarrón
+de ladder	escalera de mano
+de hamer	martillo
+de schroevendraaier	destornillador
+de boor	taladro
+het gereedschap	herramientas
+de hobby	afición
+de sport	deporte
+sporten	hacer deporte
+wandelen	pasear
+fietsen	ir en bici
+zwemmen	nadar
+voetballen	jugar al fútbol
+de sportschool	gimnasio
+het museum	museo
+de bioscoop	cine
+de film	película
+het concert	concierto
+het theater	teatro
+het park	parque
+de dierentuin	zoo
+de vereniging	asociación, club
+het lid	socio, miembro
+het feest	fiesta
+uitgaan	salir
+de vakantie	vacaciones
+kamperen	acampar
+het hotel	hotel
+de camping	camping
+de foto	foto
+het spel	juego
+de muziek	música
+zingen	cantar
+tekenen	dibujar
+het vrijwilligerswerk	voluntariado
+uitnodigen	invitar
+afspreken	quedar
+de wedstrijd	partido
+de voetbalclub	club de fútbol
+het zwemdiploma	diploma de natación
+schaatsen	patinar sobre hielo
+de schaatsen	patines de hielo
+hardlopen	correr (deporte)
+de fitness	fitness
+de yoga	yoga
+het tennis	tenis
+het basketbal	baloncesto
+de bibliotheekpas	carné de biblioteca
+het verhaal	historia, cuento
+de roman	novela
+het gedicht	poema
+de tentoonstelling	exposición
+de voorstelling	función, espectáculo
+het festival	festival
+de barbecue	barbacoa
+de picknick	pícnic
+het uitje	excursión
+de dagjesmensen	excursionistas de un día
+de reisgids	guía de viaje
+het souvenir	recuerdo
+de camera	cámara
+het speelveld	zona de juegos
+de puzzel	puzle, rompecabezas
+het kaartspel	juego de cartas
+de muziekles	clase de música
+het instrument	instrumento
+de gitaar	guitarra
+de piano	piano
+het koor	coro
+dansen	bailar
+genieten	disfrutar
+de vrije tijd	tiempo libre
+het lidmaatschap	afiliación
+de contributie	cuota
+de natuur	naturaleza
+het dier	animal
+de hond	perro
+de kat	gato
+de vogel	pájaro
+het paard	caballo
+de koe	vaca
+het schaap	oveja
+het varken	cerdo
+de eend	pato
+de muis	ratón
+het konijn	conejo
+de boom	árbol
+de bloem	flor
+het gras	hierba, césped
+het bos	bosque
+de zee	mar
+het strand	playa
+de rivier	río
+het meer	lago
+de berg	montaña
+het land	país; tierra
+de dijk	dique
+de polder	pólder
+de molen	molino
+de lucht	aire; cielo
+de grond	suelo, tierra
+de steen	piedra
+de paddenstoel	seta
+het blad	hoja
+de tak	rama
+het zaad	semilla
+de tulp	tulipán
+de roos	rosa
+de bij	abeja
+de vlieg	mosca
+de mug	mosquito
+de spin	araña
+de vlinder	mariposa
+het insect	insecto
+de mier	hormiga
+de rat	rata
+de haan	gallo
+de geit	cabra
+de ezel	burro
+de zwaan	cisne
+de meeuw	gaviota
+de reiger	garza
+de boerderij	granja
+het weiland	prado
+het veld	campo
+het duin	duna
+het eiland	isla
+de heuvel	colina
+de sloot	zanja, acequia
+het milieu	medio ambiente
+het klimaat	clima
+de vervuiling	contaminación
+recyclen	reciclar
+de zonnepanelen	placas solares
+de windmolen	aerogenerador
+het huisdier	mascota
+uitlaten	sacar al perro
+de stad	ciudad
+het dorp	pueblo
+het centrum	centro
+de wijk	barrio
+de straat	calle
+het plein	plaza
+de brug	puente
+de gracht	canal
+de hoek	esquina
+het gebouw	edificio
+het stadhuis	ayuntamiento
+de kerk	iglesia
+de moskee	mezquita
+het politiebureau	comisaría
+het café	bar, cafetería
+de school	escuela
+het zwembad	piscina
+de speeltuin	parque infantil
+het buurthuis	centro cívico
+de ingang	entrada
+de uitgang	salida
+de fabriek	fábrica
+de haven	puerto
+de bibliotheek	biblioteca
+het postkantoor	oficina de correos
+het restaurant	restaurante
+de snackbar	bar de comida rápida
+de begraafplaats	cementerio
+het monument	monumento
+het standbeeld	estatua
+de toren	torre
+het kasteel	castillo
+de vuurtoren	faro
+de sporthal	polideportivo
+het sportveld	campo de deporte
+de rondweg	carretera de circunvalación
+het industrieterrein	polígono industrial
+de binnenstad	casco antiguo
+de buitenwijk	barrio periférico
+de hoofdstad	capital
+de inwoner	habitante
+de toerist	turista
+de VVV	oficina de turismo
+de plattegrond	plano
+het verkeerslicht	semáforo
+de lantaarnpaal	farola
+het bankje	banco
+de fontein	fuente
+de steeg	callejón
+de kade	muelle
+de telefoon	teléfono
+het telefoonnummer	número de teléfono
+het bericht	mensaje
+de e-mail	correo electrónico
+de bijlage	archivo adjunto
+versturen	enviar
+het internet	internet
+de website	página web
+de computer	ordenador
+de app	aplicación
+het wachtwoord	contraseña
+inloggen	iniciar sesión
+downloaden	descargar
+printen	imprimir
+de voicemail	buzón de voz
+terugbellen	devolver la llamada
+opnemen	contestar; grabar
+ophangen	colgar
+de krant	periódico
+het nieuws	noticias
+de televisie	televisión
+de radio	radio
+het tijdschrift	revista
+de oplader	cargador
+de batterij	batería, pila
+het scherm	pantalla
+de smartphone	smartphone
+de mobiel	móvil
+het sms'je	SMS
+appen	escribir por WhatsApp
+het gesprek	conversación
+het videogesprek	videollamada
+de onderwerpregel	asunto
+de afzender	remitente
+de ontvanger	destinatario
+beantwoorden	contestar
+doorsturen	reenviar
+het account	cuenta
+uitloggen	cerrar sesión
+de wifi	wifi
+de link	enlace
+klikken	hacer clic
+het bestand	archivo
+opslaan	guardar
+de printer	impresora
+het toetsenbord	teclado
+typen	teclear
+het nieuwsbericht	noticia
+sociale media	redes sociales
+het nepnieuws	noticias falsas
+de oplichting	estafa
+de postzegel	sello
+de envelop	sobre
+de kaart	tarjeta; mapa
+de uitnodiging	invitación
+het antwoordapparaat	contestador
+de verbinding	conexión
+de taal	idioma
+de moedertaal	lengua materna
+het woord	palabra
+de zin	frase; ganas
+de uitspraak	pronunciación
+het accent	acento
+de spelling	ortografía
+spellen	deletrear
+de kleur	color
+rood	rojo
+blauw	azul
+geel	amarillo
+groen	verde
+zwart	negro
+wit	blanco
+grijs	gris
+bruin	marrón
+oranje	naranja
+roze	rosa
+paars	morado
+de koning	rey
+de koningin	reina
+de regering	gobierno
+de minister	ministro
+de minister-president	primer ministro
+de Tweede Kamer	Congreso (cámara baja)
+de verkiezingen	elecciones
+stemmen	votar
+de partij	partido
+de democratie	democracia
+de Grondwet	Constitución
+de provincie	provincia
+het waterschap	junta de aguas
+de vrijheid	libertad
+gelijk	igual; con razón
+de discriminatie	discriminación
+de godsdienst	religión
+de mening	opinión
+de vlag	bandera
+het Wilhelmus	himno nacional neerlandés
+Koningsdag	Día del Rey (27 de abril)
+Bevrijdingsdag	Día de la Liberación (5 de mayo)
+Dodenherdenking	Día de los Caídos (4 de mayo)
+Sinterklaas	San Nicolás (5 de diciembre)
+de kerst	Navidad
+het Koninklijk Huis	Casa Real
+de Eerste Kamer	Senado
+het parlement	parlamento
+de politicus	político
+de politiek	política
+het kabinet	gabinete
+de staat	Estado
+de rechtsstaat	Estado de derecho
+de grondrechten	derechos fundamentales
+de vrijheid van meningsuiting	libertad de expresión
+de gelijkheid	igualdad
+de Tweede Wereldoorlog	Segunda Guerra Mundial
+de bevrijding	liberación
+de Gouden Eeuw	Siglo de Oro
+de Deltawerken	Obras del Delta
+de provinciehoofdstad	capital de provincia
+de koopzondag	domingo de apertura comercial
+de verjaardagskalender	calendario de cumpleaños
+het Nieuwjaar	Año Nuevo
+het vuurwerk	fuegos artificiales
+de oliebol	buñuelo neerlandés
+Pasen	Pascua
+het Suikerfeest	Fiesta del Fin del Ramadán
+de ramadan	ramadán
+de kok	cocinero
+de kapper	peluquero
+de schoonmaker	limpiador
+de chauffeur	conductor
+de vrachtwagen	camión
+de bezorger	repartidor
+de postbode	cartero
+de timmerman	carpintero
+de loodgieter	fontanero
+de elektricien	electricista
+de schilder	pintor
+de bouwvakker	obrero de la construcción
+de boer	agricultor
+de tuinman	jardinero
+de verkoopmedewerker	dependiente
+de caissière	cajera
+de magazijnmedewerker	mozo de almacén
+de automonteur	mecánico
+de garage	taller
+de leraar	profesor
+de docent	profesor
+de verzorgende	cuidador
+de kinderopvangmedewerker	educador infantil
+de apotheker	farmacéutico
+de agent	agente de policía
+de brandweerman	bombero
+de soldaat	soldado
+de journalist	periodista
+de programmeur	programador
+de boekhouder	contable
+de secretaresse	secretaria
+de receptionist	recepcionista
+de tolk	intérprete
+de vertaler	traductor
+de bewaker	vigilante
+de kunstenaar	artista
+de ingenieur	ingeniero
+de architect	arquitecto
+de dierenarts	veterinario
+het gevoel	sentimiento
+de blijdschap	alegría
+het verdriet	tristeza
+de angst	miedo
+de woede	ira
+de liefde	amor
+de hoop	esperanza
+de schaamte	vergüenza
+de eenzaamheid	soledad
+eenzaam	solo
+het heimwee	nostalgia, morriña
+de spijt	arrepentimiento
+spijt hebben	arrepentirse
+opgelucht	aliviado
+teleurgesteld	decepcionado
+verbaasd	sorprendido
+bezorgd	preocupado
+geïrriteerd	irritado
+enthousiast	entusiasmado
+zenuwachtig	nervioso
+dankbaar	agradecido
+verliefd	enamorado
+de ruzie	pelea
+het excuus	disculpa
+troosten	consolar
+het humeur	humor
+chagrijnig	de mal humor
+vrolijk	alegre
+de vriendschap	amistad
+het noodgeval	emergencia
+de brand	incendio
+blussen	apagar (un fuego)
+de rook	humo
+de inbraak	robo con allanamiento
+de dief	ladrón
+de diefstal	robo
+het slachtoffer	víctima
+de verdachte	sospechoso
+de misdaad	delito
+het geweld	violencia
+huiselijk geweld	violencia doméstica
+Veilig Thuis	Hogar Seguro (línea de ayuda)
+de wijkagent	policía de barrio
+het gevaar	peligro
+de veiligheid	seguridad
+de hulp	ayuda
+de hulpverlener	trabajador social
+de maatschappelijk werker	trabajador social
+de huisartsenspoedpost	urgencias de atención primaria
+de reanimatie	reanimación
+de AED	desfibrilador
+de brandblusser	extintor
+de nooduitgang	salida de emergencia
+de sirene	sirena
+de beveiliging	seguridad
+de reden	razón, motivo
+het probleem	problema
+de oplossing	solución
+het idee	idea
+de keuze	elección
+de kans	oportunidad, probabilidad
+het doel	objetivo
+het plan	plan
+de manier	manera
+de informatie	información
+de mogelijkheid	posibilidad
+het verschil	diferencia
+de fout	error
+het begin	principio
+het einde	final
+de rij	fila, cola
+de plek	sitio
+de plaats	lugar
+het deel	parte
+het geluid	sonido
+de stem	voz; voto
+de naam	nombre
+de wereld	mundo
+het leven	vida
+de dood	muerte
+de mens	ser humano
+de oorlog	guerra
+de vrede	paz
+de tijd	tiempo
+de keer	vez
+het ding	cosa
+het gebied	zona
+de soort	tipo
+het voordeel	ventaja
+het nadeel	desventaja
+de toekomstplannen	planes de futuro
+de ontwikkeling	desarrollo
+de situatie	situación
+het gedrag	comportamiento
+de gewoonte	costumbre
+de cultuur	cultura
+de traditie	tradición
+de samenleving	sociedad
+de waarde	valor
+de norm	norma
+het respect	respeto
