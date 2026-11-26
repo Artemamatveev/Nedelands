@@ -3,7 +3,7 @@ Part of the project notes; CLAUDE.md is the short index. Keep these true when th
 
 ## Homepage and public pages
 Bittertalen (a pun on bitterballen: "bitter languages", self-irony about learning Dutch) is a single-page study app for the Dutch A2 integration exam (inburgeringsexamen).
-The homepage leads with free A2 exam preparation and a separate button for Staatsexamen NT2 B1. The level cards, KNM
+The homepage says “Word thuis in Nederland”, with free A2 and B1 exam preparation in the subtitle and separate buttons for each level. The level cards, KNM
 question and writing feedback example come before the sections on features and culture. The example explains the spelling
 score, shows a new sentence on the same rule and opens the corresponding A2 exercise. The FAQ keeps the naturalisation
 information. Never promise a passport, a pass or that B1 is required for naturalisation.
