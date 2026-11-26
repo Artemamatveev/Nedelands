@@ -29,7 +29,7 @@
     context.fillText('Bittertalen', width / 2, top + size + 38);
     context.fillStyle = soft; context.font = '15px -apple-system, system-ui, sans-serif';
     const lang = document.documentElement.lang?.split('-')[0] || 'nl';
-    const labels = {nl:'Laden…',en:'Loading…',ar:'جارٍ التحميل…',tr:'Yükleniyor…',hi:'लोड हो रहा है…',zh:'加载中…',es:'Cargando…',ru:'Загрузка…'};
+    const labels = {nl:'Laden…',en:'Loading…',ar:'جارٍ التحميل…',tr:'Yükleniyor…',hi:'लोड हो रहा है…',zh:'加载中…',es:'Cargando…',ru:'Загрузка…',uk:'Завантаження…'};
     context.fillText(labels[lang] || labels.nl, width / 2, top + size + 72);
     const link = document.getElementById('ios-startup-image') || document.createElement('link');
     link.id = 'ios-startup-image'; link.rel = 'apple-touch-startup-image';

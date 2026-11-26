@@ -9,7 +9,7 @@ examen", Vraag 2 "Leer het land kennen en durf te spreken" (books, history and a
 characters), and the FAQ answers "Helpt Bittertalen ook bij naturalisatie?" from ind.nl (an inburgeringsdiploma,
 usually at least A2; the IND decides). Never promise a passport, a pass or that B1 is required for naturalisation.
 The public homepage is `index.html` (`landing.js` translates it: every `data-t` text and `data-alt` alt text needs all
-seven translations in `copy`, which `tests/site.test.mjs` checks) and reads Plus pricing from `/api/config`. Its main
+eight translations in `copy`, which `tests/site.test.mjs` checks) and reads Plus pricing from `/api/config`. Its main
 button, "Begin met oefenen" in the bar (`#enter`), opens `/oefenen?open=today`; the hero has the heading (no
 full stop), one paragraph, a Download de app button and the app in a phone. The download button uses the browser install
 prompt when available, otherwise links to #install-app with instructions for iOS, Android and desktop (November 2026). The bar: the name (30 px, 28 on a phone), the page's links, the language, Inloggen and the main button;
@@ -18,7 +18,7 @@ rows: a grid tied the second row to the button's width; the type follows the scr
 out the middle link; the browser test measures it in the longest languages). The learning features (`#oefenvormen`)
 start as compact headings in native `details`: tapping or keyboard activation opens one description and colors that
 card blue; a fine mouse pointer also opens it on hover and closes it on leaving. No card starts highlighted. Keep the
-summary's icon and disclosure indicator, all eight languages, and the native fallback without JavaScript.
+summary's icon and disclosure indicator, all nine languages, and the native fallback without JavaScript.
 Descriptions expand and collapse over 360/280 ms with height and opacity, reversing from their current frame on rapid
 interaction. Reduced motion skips the animation; resize settles it. Phone cards have no border; keyboard focus stays visible.
 Scroll anchoring is paused during disclosure motion, and feature-section entrance motion settles on hover so the heading
@@ -45,7 +45,7 @@ form, in the app's Examenblad style (the user found icon cards and phone screens
 · Probeer het zelf", a real KNM question marked on the page like in the app (`landing.js`; the question and its
 feedback stay Dutch); "Vraag 3", the three ways to practise as a numbered list; "Vraag 4 · Zo kijkt Claude je tekst
 na", the writing check set in HTML like in the app, with the same checklist (a made-up example, the page says so; its errors and points must follow the scoring
-rules); under it `#try-free` says the check can be tried for free, with `free` and `limit` from `/api/config` (`tryCopy` in `landing.js`, eight languages; hidden without them). "Veelgestelde vragen" uses native `<details>`; keep the answers true (not DUO, offline, no pass guarantee). The
+rules); under it `#try-free` says the check can be tried for free, with `free` and `limit` from `/api/config` (`tryCopy` in `landing.js`, nine languages; hidden without them). "Veelgestelde vragen" uses native `<details>`; keep the answers true (not DUO, offline, no pass guarantee). The
 Plus and Examenpas cards carry the current prices in the HTML (for search engines and slow connections; 25 November
 2026) and are hidden only when `/api/config` answers without Plus, never when it fails. Keep those prices, `PLANS`,
 `PASSES`, `YEARS` (the Jaarpas card `#year-card`) and the `13 weken` line in step. Under them: the 14-day money-back promise (voorwaarden.html, "Niet tevreden, geld terug";
@@ -102,7 +102,7 @@ screen. The homepage has its own address per menu language (24 November 2026, fo
 `/hi`, `/zh`, `/es`, `/ru` are `en.html` … `ru.html`, made by `node tools/build-lang.mjs` from `index.html` and
 `landing.js`'s `copy` (texts already translated, the Dutch kept in `data-t="…"`; their own title, description, Open
 Graph, canonical, html lang and JSON-LD from `META` in the tool). Never edit those files by hand: after changing
-`index.html` or `copy`, run the tool (`tests/lang-pages.test.mjs` fails otherwise). Every homepage lists all eight with
+`index.html` or `copy`, run the tool (`tests/lang-pages.test.mjs` fails otherwise). Every homepage lists all nine with
 `hreflang` (`zh-Hans` for Chinese, `x-default` = `/`), as does `sitemap.xml`. On those pages their language wins and
 is saved in `ww-ui` (so the app opens in it); `/` still shows the saved language in place; the language selector goes
 to that language's address. Until the public launch every address sends `X-Robots-Tag: noindex` (`vercel.json`, one rule for all hosts). At
@@ -123,7 +123,7 @@ switching back restores it). The user's rule: only the menus, the privacy statem
 So never inside `#play` (exercises), conversations or the text of what you read: books, chapters, painting stories and the museum label stay Dutch, with
 their titles on their own page. Everything around them is translated: list rows (conversation, chapter and book titles and descriptions), back buttons,
 the reader's buttons, and information such as the ONA screen. `lang="nl"` marks Dutch content (`DUTCH`: never translated, always
-left to right): a conversation wraps its content in `<div lang="nl">`, because `#tbody` and `#hbody` also hold menus. A new menu string needs all seven translations in `UI`. The
+left to right): a conversation wraps its content in `<div lang="nl">`, because `#tbody` and `#hbody` also hold menus. A new menu string needs all seven translations in `UI` plus Ukrainian in `UK` (regex rows in `UIRK`, same order as `UIR`). The
 translations were made by Claude and not yet checked by native speakers.
 Arabic runs right to left (`<html dir="rtl">`, set by `applyLang()`): use logical CSS (`padding-inline-start`,
 `inset-inline-start`, `text-align:var(--ta)` and `var(--te)` for left and right), not physical sides, for anything in the menus. Dutch

@@ -37,15 +37,15 @@ are in `docs/`, one file per area. Read the one for the area you change, and kee
 - **Versions**: after editing `data/`, `study/` or the dictionary run `node tools/stamp.mjs`. After editing `index.html`
   or `copy` in `landing.js` run `node tools/build-lang.mjs`; never edit `en.html` … `ru.html` by hand. Change the
   `?v=` name of `landing.js`/`landing.css` in `index.html` when they change: the service worker keeps every version.
-- **Languages**: the menus exist in Dutch plus `[en, ar, tr, hi, zh, es, ru]`. Every new menu string needs all seven
-  translations (`UI`/`UIR` in `data/ui.js`, `copy` in `landing.js`). Exercises, conversations and reading stay Dutch
+- **Languages**: the menus exist in Dutch plus `[en, ar, tr, hi, zh, es, ru, uk]`. Every new menu string needs all eight
+  translations (`UI`/`UIR` in `data/ui.js` for the first seven, Ukrainian in `UK`/`UIRK` there; `copy` in `landing.js`). Exercises, conversations and reading stay Dutch
   (`lang="nl"`). Arabic is right to left: use logical CSS. privacy.html, over.html, voorwaarden.html and nakijken.html
-  have one article per language: change all eight together.
+  have one article per language: change all nine together.
 - **Keys are progress**: item keys (`knm|3`, `lz|3.1`, `gs|<id>.<n>` …) are stored. Append items; never reorder or rename.
 - **Content**: original texts only (DUO's exams are copyrighted); check every fact, they double as KNM material. Wrong
   options must be plausible, never also correct, and about as long as the right one (`node tools/answer-length.mjs`,
   `tests/answer-length.test.mjs`). KNM and Luisteren options are recorded: after changing them run `audio/build.mjs`.
-- **Privacy stays true**: when data goes somewhere new (a service, a field, an event), update privacy.html in all eight
+- **Privacy stays true**: when data goes somewhere new (a service, a field, an event), update privacy.html in all nine
   languages and its date. No analytics beyond the anonymous counts in `docs/server.md`.
 - **Secrets**: never handle, print or commit API keys (Anthropic, Stripe, Google, Supabase service role); the user sets
   them in Vercel. A new outside host needs its place in the CSP in `vercel.json`.
