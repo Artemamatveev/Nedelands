@@ -3069,7 +3069,10 @@ function show(){
     <button class="btn wide" id="recb">${cur.exam?"● Antwoord geven":"● Opnemen"}</button>${cur.exam?`<button class="ghost wide" id="spredo" hidden>↻ Opnieuw opnemen</button>`:""}<p class="note" id="recn" role="status" aria-atomic="true">${q.spk?`${q.prep?`Denk eerst ${q.prep} seconden na. `:""}Je hebt ${q.spk} seconden om te antwoorden, zoals op het Staatsexamen.${cur.exam?" Na de vraag begint de tijd vanzelf.":" Daarna kun je jezelf terugluisteren."}`:cur.exam?"Je hebt één minuut per vraag.":"Je hebt één minuut. Daarna kun je jezelf terugluisteren."}</p></div>
     ${cur.exam?"":`${SR?`<button class="ghost wide" id="spchk" style="margin-bottom:10px">Spreek in en laat nakijken</button>${acc.cfg&&!acc.user?(acc.cfg.free?freeNote():`<p class="note">Nakijken kan als je bent ingelogd (Profiel).</p>`):""}`:""}<button class="ghost wide" id="rev">Toon voorbeeld</button>`}`;
   else if(S.typing&&q.canType)h+=`<div class="type"><input id="inp" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Je antwoord"><button class="btn" id="chk">Controleer</button></div>`;
-  else{const nv=cur.nav&&q.type==="choice";o=nv?cur.op[pos]=cur.op[pos]||q.opts():q.opts();const C=x=>capA(q,x);
+  else{const nv=cur.nav&&q.type==="choice";o=nv?cur.op[pos]=cur.op[pos]||q.opts():q.opts();
+    // a Beginnen "Wat betekent" question shows its English options in the menu language (the answer itself is unchanged)
+    const BW=q.sec==="bg"&&/^Wat betekent/.test(q.big||"")?(window.BGW||{})[LANG]:null;
+    const C=x=>BW&&BW[x]?`<span dir="auto">${esc(BW[x])}</span>`:capA(q,x);
     const one=o.length===3||o.some(x=>x.length>14);
     h+=`<div class="opts${one?" one":""}">${o.map((x,i)=>`<button class="opt${nv&&cur.pick[pos]===x?" sel":""}" data-n="${i}"${nv?` aria-pressed="${cur.pick[pos]===x}"`:""}>${one?optLt(i,C(x)):C(x)}</button>`).join("")}</div>`;
     if(nv)h+=navHTML()}
@@ -3992,11 +3995,14 @@ function bgList(){
 }
 function bgLes(i){
   const l=BG[i],V=pairs(l.v),W=pairs(l.w),has=w=>(S.words||[]).some(y=>y.w===w),para=t=>t.split("\n").map(x=>`<p>${x}</p>`).join("");
+  // in the menu language when there is a translation (data/ui.js BGI), else English; the explanation is open at once then
+  const T=(window.BGI||{})[l.id]?.[LANG],TL=T?LANGS[LANG].c:"en",open=!!T||LANG==="en";
+  if(!T&&LANG!=="nl"&&LANG!=="en"&&typeof loadUI==="function")Promise.resolve(loadUI()).then(()=>{if((window.BGI||{})[l.id]?.[LANG]&&$("bgx"))bgLes(i)}).catch(()=>{});
   bgOpen("Beginnen",bgList);
   $("tbody").innerHTML=`<p class="ask">Les ${i+1} van ${BG.length}</p><h2>${l.t}</h2>
-    <div class="bgl" lang="nl">${para(l.x)}</div><button class="hint bgl" id="bge" style="margin-top:0" aria-expanded="${LANG==="en"}">English</button><div id="bgx" lang="en" class="note bgl"${LANG==="en"?"":" hidden"}>${para(l.e)}</div>
-    <h3 class="lh">Voorbeelden</h3><ul class="sw">${V.map((x,j)=>`<li><span class="bgl" lang="nl"><b>${x[0]}</b><small lang="en">${x[1]}</small></span>${canSpeak?`<button class="say" data-v="${j}" aria-label="Luister">▶</button>`:""}</li>`).join("")}</ul>
-    <h3 class="lh">Woorden</h3><ul class="sw">${W.map((x,j)=>`<li><span class="bgl"><b lang="nl">${x[0]}</b> — <span lang="en">${x[1]}</span></span>${canSpeak?`<button class="say" data-w="${j}" aria-label="Luister">▶</button>`:""}</li>`).join("")}</ul>
+    <div class="bgl" lang="nl">${para(l.x)}</div><button class="hint bgl" id="bge" style="margin-top:0" aria-expanded="${open}">${T?LANGS[LANG].n:"English"}</button><div id="bgx" lang="${TL}" dir="auto" class="note bgl"${open?"":" hidden"}>${para(esc(T?T.e:l.e).replace(/\n/g,"\n"))}</div>
+    <h3 class="lh">Voorbeelden</h3><ul class="sw">${V.map((x,j)=>`<li><span class="bgl" lang="nl"><b>${x[0]}</b><small lang="${TL}" dir="auto">${T?esc(T.v[j]):x[1]}</small></span>${canSpeak?`<button class="say" data-v="${j}" aria-label="Luister">▶</button>`:""}</li>`).join("")}</ul>
+    <h3 class="lh">Woorden</h3><ul class="sw">${W.map((x,j)=>`<li><span class="bgl"><b lang="nl">${x[0]}</b> — <span lang="${TL}" dir="auto">${T?esc(T.w[j]):x[1]}</span></span>${canSpeak?`<button class="say" data-w="${j}" aria-label="Luister">▶</button>`:""}</li>`).join("")}</ul>
     <button class="ghost wide" id="bgk" style="margin:12px 0 10px"${W.every(x=>has(x[0]))?" disabled":""}>${W.every(x=>has(x[0]))?"Bewaard in Mijn woorden":"Bewaar in Mijn woorden"}</button>
     <button class="btn wide" id="bgo">Oefenen</button>`;
   $("bge").onclick=()=>{const x=$("bgx");x.hidden=!x.hidden;$("bge").setAttribute("aria-expanded",!x.hidden)};
@@ -5235,7 +5241,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="cd03b3f9cb";
+const UIV="668bd0439a";
 let uiP=null;
 function uiLoaded(){try{trMemo.clear()}catch(e){} // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});
