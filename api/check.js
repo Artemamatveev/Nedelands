@@ -166,7 +166,7 @@ Geef voor elk antwoord, in dezelfde volgorde:
   Is inhoud 0, dan zijn alle punten 0.
 Bij een vraag met foto's staat tussen haakjes wat er op de foto's te zien is.`;
 
-const UI_LANG = Object.freeze({ en: "Engels", ar: "Arabisch", tr: "Turks", hi: "Hindi", zh: "Chinees (vereenvoudigd)", es: "Spaans", ru: "Russisch" });
+const UI_LANG = Object.freeze({ en: "Engels", ar: "Arabisch", tr: "Turks", hi: "Hindi", zh: "Chinees (vereenvoudigd)", es: "Spaans", ru: "Russisch", uk: "Oekraïens" });
 const str = (v, max) => (typeof v === "string" ? v.slice(0, max) : "");
 // Everything a page sends (the task, a form, the learner's text) goes between fences with a random name per request, so a
 // text can't close its own block and write a second task or its own points ("OPDRACHT 2 … inhoud 3"). Old fence marks

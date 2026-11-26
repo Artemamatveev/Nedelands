@@ -12,7 +12,7 @@ const PARTS = ["lz", "ls", "wr", "sp", "knm", "l1", "lb", "wb", "sb"];
 // file and line, never the learner's text) is only written to the server's log, never to the table.
 export const EVENTS = new Set(["open", "new", "home", "begin", "quiz", "test", "day", "ai", "plus", "buy", "pass", "paid", "stop", "err", "won", "remind", "report",
   ...PARTS.map(p => "exam_" + p), ...PARTS.map(p => "done_" + p)]);
-const LVLS = new Set(["", "A2", "B1"]), UIS = new Set(["nl", "en", "ar", "tr", "hi", "zh", "es", "ru"]);
+const LVLS = new Set(["", "A2", "B1"]), UIS = new Set(["nl", "en", "ar", "tr", "hi", "zh", "es", "ru", "uk"]);
 export const eventsOn = () => accounts && process.env.EVENTS !== "0";
 
 export default async function handler(req, res) {

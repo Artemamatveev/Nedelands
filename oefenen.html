@@ -984,7 +984,7 @@ const NS=window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.SplashScreen;
 if(NS){const img=document.querySelector("#app-loading img");let done=0;const go=()=>{if(!done++)NS.hide({fadeOutDuration:250}).catch(()=>{})};
   if(img){img.decode().catch(()=>{}).then(()=>requestAnimationFrame(go));setTimeout(go,1500)}else go()}
 let lang="nl";try{lang=localStorage.getItem("ww-ui")||"nl"}catch{}
-const labels={nl:"Laden…",en:"Loading…",ar:"جارٍ التحميل…",tr:"Yükleniyor…",hi:"लोड हो रहा है…",zh:"加载中…",es:"Cargando…",ru:"Загрузка…"};
+const labels={nl:"Laden…",en:"Loading…",ar:"جارٍ التحميل…",tr:"Yükleniyor…",hi:"लोड हो रहा है…",zh:"加载中…",es:"Cargando…",ru:"Загрузка…",uk:"Завантаження…"};
 const label=document.getElementById("boot-label");label.textContent=labels[lang]||labels.nl;label.lang=lang;
 document.querySelector("#app-loading img").addEventListener("error",function(){
   if(/\/bittie-wave-v\d+\.svg(?:\?|$)/.test(this.currentSrc)){
@@ -4091,7 +4091,7 @@ function setUit(k,ok){
 // share. Passed parts leave Mijn dag (planTasks). The shared text has the learner's invite link when there is one.
 const WONSHARE={nl:p=>`Ik ben geslaagd voor ${p}! Ik heb geoefend met Bittertalen.`,en:p=>`I passed ${p}! I practised with Bittertalen.`,
   ar:p=>`نجحت في ${p}! تدرّبت مع Bittertalen.`,tr:p=>`${p} sınavını geçtim! Bittertalen ile çalıştım.`,hi:p=>`मैं ${p} में पास हो गया/गई! मैंने Bittertalen से अभ्यास किया।`,
-  zh:p=>`我通过了 ${p}！我是用 Bittertalen 练习的。`,es:p=>`¡He aprobado ${p}! Practiqué con Bittertalen.`,ru:p=>`Я сдал(а) ${p}! Готовился(-ась) с Bittertalen.`};
+  zh:p=>`我通过了 ${p}！我是用 Bittertalen 练习的。`,es:p=>`¡He aprobado ${p}! Practiqué con Bittertalen.`,ru:p=>`Я сдал(а) ${p}! Готовился(-ась) с Bittertalen.`,uk:p=>`Я склав(-ла) ${p}! Готувався(-лася) з Bittertalen.`};
 function wonScreen(k){
   closePop();hush();TK=null;$("card").innerHTML="";
   $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;window.scrollTo(0,0);
@@ -4259,7 +4259,8 @@ const REFSHARE={nl:"Ik oefen voor het inburgeringsexamen met Bittertalen. Met mi
   hi:"मैं Bittertalen से डच एकीकरण परीक्षा का अभ्यास करता/करती हूँ। मेरे लिंक से आपको 3 अतिरिक्त मुफ़्त जाँचें मिलेंगी:",
   zh:"我在用 Bittertalen 准备荷兰融入考试。通过我的链接，你可以多获得 3 次免费批改：",
   es:"Practico para el examen de integración neerlandés con Bittertalen. Con mi enlace recibes 3 revisiones gratis extra:",
-  ru:"Я готовлюсь к экзамену на интеграцию в Нидерландах с Bittertalen. По моей ссылке вы получите 3 дополнительные бесплатные проверки:"};
+  ru:"Я готовлюсь к экзамену на интеграцию в Нидерландах с Bittertalen. По моей ссылке вы получите 3 дополнительные бесплатные проверки:",
+  uk:"Я готуюся до іспиту з інтеграції в Нідерландах із Bittertalen. За моїм посиланням ви отримаєте 3 додаткові безкоштовні перевірки:"};
 async function refScreen(){
   if(!acc.user)return home();
   closePop();hush();TK=null;$("card").innerHTML="";
@@ -5048,7 +5049,7 @@ function place(){
 }
 // The explanation under a marked answer: tap a word for the dictionary (like in the reader), and translate it whole
 // into the menu language. Plain-text notes only; a note with markup (verb tables) stays as it is.
-const GTL={en:"en",ar:"ar",tr:"tr",hi:"hi",zh:"zh-CN",es:"es",ru:"ru"},tlang=()=>GTL[lsGet("ww-ui")]||"en";
+const GTL={en:"en",ar:"ar",tr:"tr",hi:"hi",zh:"zh-CN",es:"es",ru:"ru",uk:"uk"},tlang=()=>GTL[lsGet("ww-ui")]||"en";
 const gtURL=t=>`https://translate.google.com/?sl=nl&tl=${tlang()}&op=translate&text=${encodeURIComponent(t)}`;
 const noteHTML=n=>/</.test(n)?`<div class="note">${n}</div>`
   :`<div class="note"><span class="s">${wordsHTML(n,knownSet())}</span> <a class="hint" href="${gtURL(n)}" target="_blank" rel="noopener" data-ui>Vertaal ↗</a></div>`;
@@ -5239,9 +5240,9 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // (UIO), so switching restores it; a MutationObserver translates what later renders draw.
 // The menus' translations: empty tables here, filled by data/ui.js, which is loaded only when the menus are in another
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
-const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
+const LCODE=["en","ar","tr","hi","zh","es","ru","uk"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="668bd0439a";
+const UIV="c2f94dd7ee";
 let uiP=null;
 function uiLoaded(){try{trMemo.clear()}catch(e){} // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});
@@ -5251,14 +5252,15 @@ function loadUI(){
   return uiP||(uiP=new Promise((ok,no)=>{const s=document.createElement("script");s.src=`/data/ui.js?v=${UIV}`;
     s.onload=()=>{uiLoaded();ok()};s.onerror=()=>{uiP=null;s.remove();no()};document.head.appendChild(s)}));
 }
-const LANGS={nl:{n:"Nederlands",s:"NL",c:"nl"},en:{n:"English",s:"EN",c:"en"},ar:{n:"العربية",s:"عربي",c:"ar"},tr:{n:"Türkçe",s:"TR",c:"tr"},hi:{n:"हिन्दी",s:"हिं",c:"hi"},zh:{n:"中文",s:"中文",c:"zh-Hans"},es:{n:"Español",s:"ES",c:"es"},ru:{n:"Русский",s:"RU",c:"ru"}};
+const LANGS={nl:{n:"Nederlands",s:"NL",c:"nl"},en:{n:"English",s:"EN",c:"en"},ar:{n:"العربية",s:"عربي",c:"ar"},tr:{n:"Türkçe",s:"TR",c:"tr"},hi:{n:"हिन्दी",s:"हिं",c:"hi"},zh:{n:"中文",s:"中文",c:"zh-Hans"},es:{n:"Español",s:"ES",c:"es"},ru:{n:"Русский",s:"RU",c:"ru"},uk:{n:"Українська",s:"UK",c:"uk"}};
 let LANG=LANGS[lsGet("ww-ui")]?lsGet("ww-ui"):"nl", LI=LCODE.indexOf(LANG);
 // Month and day names come from the browser; only the order differs per language
 const NLM=["januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december"];
 const NLD=["maandag","dinsdag","woensdag","donderdag","vrijdag","zaterdag","zondag"];
 const lName=(o,d)=>new Intl.DateTimeFormat(LANGS[LANG].c,o).format(d);
-const dayMon=(n,mo)=>{const i=NLM.indexOf(mo.toLowerCase());if(i<0)return`${n} ${mo}`;if(LANG==="es"||LANG==="ru")return lName({day:"numeric",month:"long"},new Date(2026,i,Number(n)));return LANG==="zh"?`${i+1}月${n}日`:`${n} ${lName({month:"long"},new Date(2026,i,15))}`};
-const uiT=s=>(UI[s]||[])[LI];
+const dayMon=(n,mo)=>{const i=NLM.indexOf(mo.toLowerCase());if(i<0)return`${n} ${mo}`;if(LANG==="es"||LANG==="ru"||LANG==="uk")return lName({day:"numeric",month:"long"},new Date(2026,i,Number(n)));return LANG==="zh"?`${i+1}月${n}日`:`${n} ${lName({month:"long"},new Date(2026,i,15))}`};
+// Ukrainian (LI 7) has its own tables in data/ui.js (UK, UIRK), so the seven-language rows stay as they are
+const uiT=s=>LI===7?(window.UK||{})[s]:(UI[s]||[])[LI];
 Object.assign(UI,{
   "Nederlands, stap voor stap.": [
     "Dutch, step by step.","الهولندية، خطوة بخطوة.","Adım adım Hollandaca.","डच, कदम दर कदम।","荷兰语，一步一步来。","Neerlandés, paso a paso.","Нидерландский, шаг за шагом."
@@ -5397,7 +5399,7 @@ Object.assign(UI,{
   "E-mail":["Email","بريد إلكتروني","E-posta","ईमेल","电子邮件","Correo electrónico","Электронная почта"],
   "Schrijfopdracht":["Writing task","مهمة كتابة","Yazma görevi","लेखन कार्य","写作题","Tarea de escritura","Письменное задание"]
 });
-const uiR=s=>{for(const[r,f]of UIR)if(r.test(s)){const v=s.replace(r,Array.isArray(f)?f[LI]:f);if(v!==s)return v}return null};
+const uiR=s=>{const U=LI===7?(window.UIRK||[]):UIR;for(const[r,f]of U)if(r.test(s)){const v=s.replace(r,Array.isArray(f)?f[LI]:f);if(v!==s)return v}return null};
 const UIO=new WeakMap(), UIA=new WeakMap();
 const rtlMark=v=>LANG==="ar"?"\u200f"+v:v; // an Arabic line that starts with a Latin word (KNM, Face ID) still runs right to left
 // the same strings come back on every redraw: remember each answer (per language), so a redraw doesn't run every

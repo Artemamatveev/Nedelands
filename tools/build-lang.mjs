@@ -1,14 +1,14 @@
-// Builds the homepage in every menu language as its own page (/en, /ar, /tr, /hi, /zh, /es, /ru), so search engines
+// Builds the homepage in every menu language as its own page (/en, /ar, /tr, /hi, /zh, /es, /ru, /uk), so search engines
 // can find each one: the text already translated from `copy` in landing.js, with its own title, description,
 // canonical link and html lang. index.html stays the source: edit it and landing.js, then run
-//   node tools/build-lang.mjs          (writes en.html … ru.html, served without .html by cleanUrls)
+//   node tools/build-lang.mjs          (writes en.html … uk.html, served without .html by cleanUrls)
 //   node tools/build-lang.mjs --check  (fails when a page is out of date; tests/lang-pages.test.mjs runs it)
 import fs from 'node:fs';
 import vm from 'node:vm';
 
 const root = new URL('../', import.meta.url);
 const read = f => fs.readFileSync(new URL(f, root), 'utf8');
-export const LANGS = ['en', 'ar', 'tr', 'hi', 'zh', 'es', 'ru']; // the order of `languages` in landing.js
+export const LANGS = ['en', 'ar', 'tr', 'hi', 'zh', 'es', 'ru', 'uk']; // the order of `languages` in landing.js
 export const SITE = 'https://bittertalen.nl';
 export const hreflang = l => l === 'zh' ? 'zh-Hans' : l;
 export const url = l => l === 'nl' ? SITE + '/' : `${SITE}/${l}`;
@@ -24,6 +24,7 @@ export const META = {
     zh: "免费练习荷兰融入考试（inburgering）A2 和 NT2 B1 | Bittertalen",
     es: "Prepara gratis el examen de integración neerlandés A2 y NT2 B1 | Bittertalen",
     ru: "Экзамен inburgering A2 и NT2 B1: бесплатная подготовка | Bittertalen",
+    uk: "Іспит inburgering A2 і NT2 B1: безкоштовна підготовка | Bittertalen",
   },
   description: {
     nl: 'Oefen gratis voor het inburgeringsexamen A2 en het Staatsexamen NT2 B1, op weg naar naturalisatie. Proefexamens, geschiedenis, boeken en gesprekken met AI-personages.',
@@ -34,6 +35,7 @@ export const META = {
     zh: '免费备考荷兰融入考试（inburgeringsexamen）A2 和 Staatsexamen NT2 B1，迈向入籍。模拟考试、历史、书籍，以及与 AI 角色的对话。',
     es: 'Prepárate gratis para el examen de integración neerlandés (inburgeringsexamen) A2 y el Staatsexamen NT2 B1, camino de la naturalización. Exámenes de prueba, historia, libros y conversaciones con personajes de IA.',
     ru: 'Бесплатная подготовка к экзамену на интеграцию в Нидерландах (inburgeringsexamen) A2 и Staatsexamen NT2 B1 на пути к натурализации. Пробные экзамены, история, книги и разговоры с ИИ-персонажами.',
+    uk: 'Безкоштовна підготовка до іспиту з інтеграції в Нідерландах (inburgeringsexamen) A2 і Staatsexamen NT2 B1 на шляху до натуралізації. Пробні іспити, історія, книжки й розмови з персонажами ШІ.',
   },
   og: {
     nl: 'Oefen voor inburgering A2 en Staatsexamen NT2 B1, leer Nederland kennen en durf te spreken.',
@@ -44,8 +46,9 @@ export const META = {
     zh: '备考融入考试 A2 和 Staatsexamen NT2 B1，了解荷兰，敢于开口。',
     es: 'Prepárate para la integración A2 y el Staatsexamen NT2 B1, conoce los Países Bajos y atrévete a hablar.',
     ru: 'Готовьтесь к inburgering A2 и Staatsexamen NT2 B1, узнавайте Нидерланды и заговорите.',
+    uk: 'Готуйтеся до inburgering A2 і Staatsexamen NT2 B1, пізнавайте Нідерланди й заговоріть.',
   },
-  locale: { nl: 'nl_NL', en: 'en_GB', ar: 'ar_AR', tr: 'tr_TR', hi: 'hi_IN', zh: 'zh_CN', es: 'es_ES', ru: 'ru_RU' },
+  locale: { nl: 'nl_NL', en: 'en_GB', ar: 'ar_AR', tr: 'tr_TR', hi: 'hi_IN', zh: 'zh_CN', es: 'es_ES', ru: 'ru_RU', uk: 'uk_UA' },
 };
 
 const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');

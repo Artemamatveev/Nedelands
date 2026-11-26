@@ -152,7 +152,7 @@ conversation. Two menu buttons (aiMenu remembers the choice when returning from 
   topics; with facts the greeting is one of `again` (no model call). `end` with `remember:true` returns `facts` and `old`
   (what to forget) in the review call, so no extra call. The prompt forbids sensitive facts and `PRIVATE` drops them
   again on the way in and out. Profiel, "Wat Saskia over je weet" (`memScreen()`): see, erase, switch off. Deleting the account
-  drops them from the device too. privacy.html describes it in eight languages: change both together.
+  drops them from the device too. privacy.html describes it in nine languages: change both together.
 - `/api/talk` is a rewrite to `/api/check?kind=talk` (the 12-function limit); `check.js` imports `_talk.js` only then.
   `S.ai` `{id: {n, at}}` (merged like `S.gp`); the event `ai` counts started conversations. privacy.html says, in all
-  eight languages under the checking section, what goes to Anthropic and Google.
+  nine languages under the checking section, what goes to Anthropic and Google.

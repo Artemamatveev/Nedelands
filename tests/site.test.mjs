@@ -15,12 +15,12 @@ function landingCopy() {
   return vm.runInNewContext(block.replace('const copy =', 'copy =') + ';copy', {});
 }
 
-test('Every homepage text has all seven translations', () => {
+test('Every homepage text has all eight translations', () => {
   const html = read('index.html'), copy = landingCopy();
   const texts = [...html.matchAll(/<(\w+)[^>]*\sdata-t(?:\s[^>]*)?>([^<]*)</g)].map(m => decode(m[2]))
     .concat([...html.matchAll(/data-alt="([^"]*)"/g)].map(m => decode(m[1])));
   assert.ok(texts.length > 40);
-  const missing = texts.filter(t => !(copy[t] && copy[t].length === 7 && copy[t].every(Boolean)));
+  const missing = texts.filter(t => !(copy[t] && copy[t].length === 8 && copy[t].every(Boolean)));
   assert.deepEqual(missing, []);
 });
 
@@ -28,6 +28,11 @@ test('Every app menu string has all seven translations', async () => {
   const a = await app();
   const bad = a.run('Object.entries(UI).filter(([k,v])=>!Array.isArray(v)||v.length!==7||v.some(x=>typeof x!=="string"||!x)).map(([k])=>k)');
   assert.deepEqual([...bad], []);
+  // Ukrainian (26 November 2026) is its own table in data/ui.js, so the seven-language rows stay as they were
+  const ctx = {UI: {}, UIR: [], window: {}}; ctx.window = ctx;
+  (await import('node:vm')).runInNewContext(read('data/ui.js'), ctx);
+  const noUk = Object.keys(a.run('UI')).filter(k => typeof ctx.UK?.[k] !== 'string' || !ctx.UK[k]);
+  assert.deepEqual(noUk, [], 'every menu string has a Ukrainian translation (UK in data/ui.js)');
 });
 
 test('The numbers on the homepage are true', async () => {

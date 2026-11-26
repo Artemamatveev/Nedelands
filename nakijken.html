@@ -76,7 +76,7 @@ a:focus-visible{outline:3px solid var(--oranje);outline-offset:2px}
 </head>
 <body>
 <main>
-<div class="top"><label class="lang"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.6 3.9 5.6 3.9 9s-1.3 6.4-3.9 9c-2.6-2.6-3.9-5.6-3.9-9s1.3-6.4 3.9-9z"/></svg><span id="langs">NL</span><svg class="dn" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4"/></svg><select id="lang" aria-label="Taal"><option value="nl">Nederlands</option><option value="en">English</option><option value="ar">العربية</option><option value="tr">Türkçe</option><option value="hi">हिन्दी</option><option value="zh">中文</option><option value="es">Español</option><option value="ru">Русский</option></select></label></div>
+<div class="top"><label class="lang"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.6 3.9 5.6 3.9 9s-1.3 6.4-3.9 9c-2.6-2.6-3.9-5.6-3.9-9s1.3-6.4 3.9-9z"/></svg><span id="langs">NL</span><svg class="dn" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4"/></svg><select id="lang" aria-label="Taal"><option value="nl">Nederlands</option><option value="en">English</option><option value="ar">العربية</option><option value="tr">Türkçe</option><option value="hi">हिन्दी</option><option value="zh">中文</option><option value="es">Español</option><option value="ru">Русский</option><option value="uk">UK · Українська</option></select></label></div>
 <article data-l="nl" lang="nl">
 <a class="back" href="/"><span aria-hidden="true">←</span>Bittertalen</a>
 <h1>Zo kijkt Bittertalen na</h1>
@@ -318,14 +318,45 @@ Ik ben jullie buurman. Jullie maken altijd lawaai. Ik kan niet slapen. Dat is ni
 <p><a class="cta" href="/oefenen?open=today">Проверить текст бесплатно →</a></p>
 </article>
 
+<article data-l="uk" lang="uk" hidden>
+<a class="back" href="/"><span aria-hidden="true">←</span>Bittertalen</a>
+<h1>Як Bittertalen перевіряє відповіді</h1>
+<p>У розділах «Письмо» та «Усне мовлення» вашу відповідь читає Claude — ШІ компанії Anthropic. Claude ставить бали за тими самими критеріями, що й DUO, позначає помилки й дає виправлений текст. Тут показано, як це працює.</p>
+<h2>Бали в письмі A2</h2>
+<table class="pts"><thead><tr><th>Критерій</th><th>Бали</th><th>Що враховується</th></tr></thead><tbody><tr><td>Зміст</td><td>0–3</td><td>Чи виконано все, чого вимагає завдання? Чи зрозумілий текст, чи є доречне звертання й прощання?</td></tr><tr><td>Лексика</td><td>0–2</td><td>Чи достатньо доречних слів?</td></tr><tr><td>Граматика</td><td>0–2</td><td>0–2 помилки: 2 бали, 3–5 помилок: 1 бал, 6 і більше: 0 балів.</td></tr><tr><td>Орфографія</td><td>0–2</td><td>Скільки орфографічних помилок і чи можна впізнати слова?</td></tr><tr><td>Зв'язність</td><td>0–1</td><td>Чи пов'язані речення словами на кшталт en, maar, want і daarna?</td></tr></tbody></table>
+<p class="sub">Якщо за зміст 0, то всі бали 0. У Bittertalen текст зараховується, якщо за зміст не менше 2 балів і загалом не менше 7 з 10. Це наша мета для тренування, а не офіційна норма DUO.</p>
+<h2>Два приклади</h2>
+<p>Приклади вигадані. Так бали складаються за правилами вище.</p>
+<h2>Приклад 1: зараховано</h2>
+<div class="ex"><p class="q"><b>Завдання:</b> <span lang="nl">Je vriendin Lotte heeft je uitgenodigd voor haar verjaardag op zaterdag. Je kunt niet komen. Schrijf haar een berichtje. Feliciteer haar, schrijf waarom je niet kunt komen en stel voor om een andere keer af te spreken.</span></p>
+<p class="q"><b>Відповідь:</b></p><p class="a" lang="nl">Hoi Lotte,
+Gefeliciteerd met je verjaardag! Helaas ik kan niet komen op zaterdag, want mijn moeder komt uit Turkije en ik moet haar ophalen van Schiphol. Zullen we volgende week samen koffie drinken?
+Liefs,
+Elif</p>
+<p class="s"><b>Бали:</b> Зміст 3/3 · Лексика 2/2 · Граматика 2/2 · Орфографія 2/2 · Зв'язність 1/1 · <b>Разом 10/10</b></p></div>
+<p>Усі три пункти завдання виконано. Одна помилка в порядку слів: після ‘helaas’ спершу йде дієслово (‘helaas kan ik’). Це одна граматична помилка, тому все одно 2 бали.</p>
+<h2>Приклад 2: поки не зараховано</h2>
+<div class="ex"><p class="q"><b>Завдання:</b> <span lang="nl">Je nieuwe buren maken elke avond laat veel lawaai. Schrijf een briefje aan de buren. Stel jezelf voor, schrijf wat het probleem is en vraag of ze na tien uur stiller kunnen zijn.</span></p>
+<p class="q"><b>Відповідь:</b></p><p class="a" lang="nl">Hoi buren,
+Ik ben jullie buurman. Jullie maken altijd lawaai. Ik kan niet slapen. Dat is niet goed.</p>
+<p class="s"><b>Бали:</b> Зміст 1/3 · Лексика 1/2 · Граматика 2/2 · Орфографія 2/2 · Зв'язність 0/1 · <b>Разом 6/10</b></p></div>
+<p>Помилок майже немає, але немає прохання: автор не просить сусідів поводитися тихіше після десятої. Тому за зміст 1 бал, і текст не зараховано. Крім того, речення не пов'язані між собою.</p>
+<h2>Усне мовлення</h2>
+<p>Спершу телефон записує вашу відповідь текстом. Потім Claude ставить бали за зміст (0–3), лексику (0–2), граматику (0–2) і зв'язність (0–1). Вимову й темп Bittertalen оцінити не може, а на справжньому іспиті вони теж враховуються.</p>
+<h2>Що важливо знати</h2>
+<ul><li>Bittertalen не належить до DUO. Ваші бали — результат тренування. Вони не передбачають, чи складете ви іспит.</li><li>ШІ може помилятися. Завжди порівнюйте свою відповідь і з прикладом відповіді.</li><li>Перші перевірки отримують детальну перевірку, як із Plus або перепусткою; далі безкоштовні перевірки виконує швидша перевірка. Пробний іспит із Plus перевіряється найретельніше. Наскільки бали збігаються з оцінкою викладача NT2, ми ще вимірюємо: поки що це лише орієнтир.</li><li>Офіційні пробні іспити є на <a href="https://www.inburgeren.nl/examen-doen/oefenen.jsp" rel="noopener">inburgeren.nl ↗</a>.</li></ul>
+<h2>Спробуйте самі</h2>
+<p><a class="cta" href="/oefenen?open=today">Перевірити текст безкоштовно →</a></p>
+</article>
+
 <script>
 // The page follows the language of the app (ww-ui); the Dutch text is the official one and shows without a script
 (function(){
-  var S={nl:["nl","NL"],en:["en","EN"],ar:["ar","عربي"],tr:["tr","TR"],hi:["hi","हिं"],zh:["zh-Hans","中文"],es:["es","ES"],ru:["ru","RU"]},sel=document.getElementById("lang"),l=null,suffix="";
+  var S={nl:["nl","NL"],en:["en","EN"],ar:["ar","عربي"],tr:["tr","TR"],hi:["hi","हिं"],zh:["zh-Hans","中文"],es:["es","ES"],ru:["ru","RU"],uk:["uk","UK"]},sel=document.getElementById("lang"),l=null,suffix="";
   try{l=localStorage.getItem("ww-ui")}catch(e){}
   function show(k){if(!S[k])k="nl";var h=document.documentElement;
     document.querySelectorAll("article").forEach(function(a){var on=a.getAttribute("data-l")===k;a.hidden=!on;if(on)document.title=a.querySelector("h1").textContent+suffix});
-    h.lang=S[k][0];h.dir=k==="ar"?"rtl":"ltr";sel.value=k;sel.setAttribute("aria-label",k==="es"?"Idioma":k==="ru"?"Язык":"Taal");document.getElementById("langs").textContent=S[k][1]}
+    h.lang=S[k][0];h.dir=k==="ar"?"rtl":"ltr";sel.value=k;sel.setAttribute("aria-label",k==="es"?"Idioma":k==="ru"?"Язык":k==="uk"?"Мова":"Taal");document.getElementById("langs").textContent=S[k][1]}
   show(l);
   // "← Bittertalen" goes back to the app for someone who came from it (on a computer "/" is the homepage)
   try{if(new URL(document.referrer).origin===location.origin&&/^\/oefenen/.test(new URL(document.referrer).pathname))
