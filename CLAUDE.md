@@ -14,6 +14,7 @@ are in `docs/`, one file per area. Read the one for the area you change, and kee
 | `docs/server.md` | the 12 functions, accounts, free checks, AI spend limits, Plus and the Examenpas, groups, counts, admin |
 | `docs/ai.md` | grading of writing and speaking, conversations with Claude (Saskia and situations) |
 | `docs/native.md` | the Capacitor apps for the App Store and Google Play |
+| `docs/operations.md` | support, refunds, AI complaints, tax, the five weekly numbers, the beta |
 | `docs/store-listing.md` | store name, keywords, screenshots, review notes and what is open before submitting |
 
 ## Map
