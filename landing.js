@@ -3,6 +3,26 @@ try{const r=new URLSearchParams(location.search).get("ref");if(r&&/^[A-HJ-NP-Z2-
 const languages = ["en", "ar", "tr", "hi", "zh", "es", "ru", "uk"];
 // Dutch copy is also in the HTML so the page is readable without scripts.
 const copy = {
+  "Ontdek Bittertalen": ["Explore Bittertalen", "اكتشف Bittertalen", "Bittertalen’i keşfet", "Bittertalen को जानें", "探索 Bittertalen", "Descubre Bittertalen", "Откройте для себя Bittertalen", "Дізнайтеся більше про Bittertalen"],
+  "Geschiedenis, cultuur en geografie": ["History, culture and geography", "التاريخ والثقافة والجغرافيا", "Tarih, kültür ve coğrafya", "इतिहास, संस्कृति और भूगोल", "历史、文化与地理", "Historia, cultura y geografía", "История, культура и география", "Історія, культура й географія"],
+  "Maak kennis met de Nederlandse geschiedenis en cultuur via verhalen en schilderijen.": ["Discover Dutch history and culture through stories and paintings.", "تعرّف على تاريخ هولندا وثقافتها من خلال القصص واللوحات.", "Hikâyeler ve tablolar aracılığıyla Hollanda tarihini ve kültürünü tanı.", "कहानियों और चित्रों के ज़रिए नीदरलैंड के इतिहास और संस्कृति को जानें।", "通过故事和绘画了解荷兰的历史与文化。", "Descubre la historia y la cultura de los Países Bajos a través de relatos y pinturas.", "Знакомьтесь с историей и культурой Нидерландов через рассказы и картины.", "Знайомтеся з історією та культурою Нідерландів через оповідання й картини."],
+  "Lees in het Nederlands en bekijk de vertaling van woorden die je nog niet kent.": ["Read in Dutch and look up translations of words you do not know yet.", "اقرأ بالهولندية واطّلع على ترجمة الكلمات التي لا تعرفها بعد.", "Flemenkçe oku ve henüz bilmediğin kelimelerin çevirisine bak.", "डच में पढ़ें और अनजान शब्दों का अनुवाद देखें।", "阅读荷兰语书籍，查看不认识的单词的翻译。", "Lee en neerlandés y consulta la traducción de las palabras que todavía no conoces.", "Читайте на нидерландском и смотрите перевод незнакомых слов.", "Читайте нідерландською та переглядайте переклад незнайомих слів."],
+  "Praten met AI": ["Talk with AI", "تحدّث مع الذكاء الاصطناعي", "Yapay zekâyla konuş", "एआई से बात करें", "与 AI 对话", "Habla con IA", "Разговор с ИИ", "Розмови зі ШІ"],
+  "Oefen hardop Nederlands in een gesprek met AI. Jij spreekt, AI antwoordt.": ["Practise speaking Dutch aloud with AI. You speak, AI replies.", "تدرّب على التحدث بالهولندية مع الذكاء الاصطناعي. أنت تتكلم وهو يرد.", "Yapay zekâyla sesli Flemenkçe pratiği yap. Sen konuş, yapay zekâ yanıt versin.", "एआई के साथ बोलकर डच का अभ्यास करें। आप बोलें, एआई जवाब दे।", "和 AI 一起练习荷兰语口语。你开口，AI 回答。", "Practica neerlandés en voz alta con IA. Tú hablas y la IA responde.", "Практикуйте нидерландский вслух в разговоре с ИИ. Вы говорите, ИИ отвечает.", "Практикуйте нідерландську вголос у розмові зі ШІ. Ви говорите, ШІ відповідає."],
+  "Video’s en podcasts": ["Videos and podcasts", "فيديوهات وبودكاست", "Videolar ve podcast’ler", "वीडियो और पॉडकास्ट", "视频与播客", "Vídeos y pódcasts", "Видео и подкасты", "Відео й подкасти"],
+  "Kijk Nederlandse video’s en luister naar podcasts om je luistervaardigheid te oefenen.": ["Watch Dutch videos and listen to podcasts to practise your listening skills.", "شاهد مقاطع فيديو بالهولندية واستمع إلى البودكاست لتطوير مهارة الاستماع.", "Dinleme becerini geliştirmek için Flemenkçe videolar izle ve podcast dinle.", "सुनने का अभ्यास करने के लिए डच वीडियो देखें और पॉडकास्ट सुनें।", "观看荷兰语视频和收听播客，练习听力。", "Mira vídeos en neerlandés y escucha pódcasts para practicar la comprensión oral.", "Смотрите видео и слушайте подкасты на нидерландском, чтобы лучше понимать речь на слух.", "Дивіться нідерландські відео та слухайте подкасти, щоб краще розуміти мову на слух."],
+  "Voorbereiden op je examen": ["Prepare for your exam", "استعد لامتحانك", "Sınavına hazırlan", "परीक्षा की तैयारी करें", "准备考试", "Prepárate para tu examen", "Подготовка к экзамену", "Підготовка до іспиту"],
+  "Vorige kaart": ["Previous card", "البطاقة السابقة", "Önceki kart", "पिछला कार्ड", "上一张卡片", "Tarjeta anterior", "Предыдущая карточка", "Попередня картка"],
+  "Volgende kaart": ["Next card", "البطاقة التالية", "Sonraki kart", "अगला कार्ड", "下一张卡片", "Tarjeta siguiente", "Следующая карточка", "Наступна картка"],
+  "Geschiedenis": ["History", "التاريخ", "Tarih", "इतिहास", "历史", "Historia", "История", "Історія"],
+  "Lees over de hunebedden, de Tweede Wereldoorlog en de wederopbouw. Beantwoord na elk hoofdstuk vragen.": ["Read about the megalithic tombs, the Second World War and post-war reconstruction. Answer questions after each chapter.", "اقرأ عن المقابر الحجرية والحرب العالمية الثانية وإعادة الإعمار. أجب عن أسئلة بعد كل فصل.", "Megalit mezarları, İkinci Dünya Savaşı ve savaş sonrası yeniden yapılanmayı oku. Her bölümün ardından soruları yanıtla.", "महापाषाण कब्रों, दूसरे विश्व युद्ध और उसके बाद के पुनर्निर्माण के बारे में पढ़ें। हर अध्याय के बाद सवालों के जवाब दें।", "阅读巨石墓、第二次世界大战和战后重建的故事，并回答每章后的问题。", "Lee sobre las tumbas megalíticas, la Segunda Guerra Mundial y la reconstrucción. Responde preguntas después de cada capítulo.", "Читайте о мегалитических гробницах, Второй мировой войне и восстановлении страны. После каждой главы отвечайте на вопросы.", "Читайте про дольмени, Другу світову війну та післявоєнну відбудову. Відповідайте на запитання після кожного розділу."],
+  "Kunst en cultuur": ["Art and culture", "الفن والثقافة", "Sanat ve kültür", "कला और संस्कृति", "艺术与文化", "Arte y cultura", "Искусство и культура", "Мистецтво й культура"],
+  "Bekijk Gezicht op Delft van Vermeer en ontdek het verhaal achter het schilderij.": ["Explore Vermeer’s View of Delft and discover the story behind the painting.", "شاهد لوحة منظر دلفت لفيرمير واكتشف قصتها.", "Vermeer’in Delft Manzarası tablosunu incele ve hikâyesini keşfet.", "वर्मीर की डेल्फ़्ट की झलक देखें और चित्र के पीछे की कहानी जानें।", "欣赏维米尔的《代尔夫特风景》，了解画作背后的故事。", "Mira Vista de Delft de Vermeer y descubre la historia del cuadro.", "Рассмотрите «Вид Делфта» Вермеера и узнайте историю картины.", "Розгляньте «Вид Делфта» Вермеєра та дізнайтеся історію картини."],
+  "Geografie en water": ["Geography and water", "الجغرافيا والمياه", "Coğrafya ve su", "भूगोल और जल", "地理与水利", "Geografía y agua", "География и вода", "Географія й вода"],
+  "Ontdek waar Drenthe, Zeeland en het IJsselmeer liggen en hoe dijken Nederland beschermen.": ["Discover where Drenthe, Zeeland and Lake IJssel are and how dikes protect the Netherlands.", "اكتشف أين تقع درينته وزيلاند وبحيرة آيسل وكيف تحمي السدود هولندا.", "Drenthe, Zeeland ve IJsselmeer’in nerede olduğunu ve setlerin Hollanda’yı nasıl koruduğunu keşfet.", "जानें कि ड्रेंथे, ज़ीलैंड और आइसेल झील कहाँ हैं और तटबंध नीदरलैंड की रक्षा कैसे करते हैं।", "了解德伦特、泽兰和艾瑟尔湖的位置，以及堤坝如何保护荷兰。", "Descubre dónde están Drenthe, Zelanda y el lago IJssel, y cómo los diques protegen los Países Bajos.", "Узнайте, где находятся Дренте, Зеландия и озеро Эйсселмер и как дамбы защищают Нидерланды.", "Дізнайтеся, де розташовані Дренте, Зеландія та Ейсселмер і як дамби захищають Нідерланди."],
+  "Praat over een onderwerp dat je zelf kiest, of oefen een situatie zoals een bezoek aan de dokter, een gesprek op het werk of iets kopen in de winkel.": ["Talk about a topic of your choice or practise a situation such as visiting the doctor, talking at work or buying something in a shop.", "تحدث عن موضوع تختاره أو تدرّب على موقف مثل زيارة الطبيب أو التحدث في العمل أو الشراء من متجر.", "Seçtiğin bir konu hakkında konuş veya doktora gitme, iş yerinde konuşma ya da mağazada alışveriş yapma gibi bir durumu çalış.", "अपनी पसंद के विषय पर बात करें या डॉक्टर के पास जाने, काम पर बातचीत करने या दुकान में खरीदारी करने जैसी स्थिति का अभ्यास करें।", "自由选择话题，或练习看医生、在工作中交流、在商店购物等场景。", "Habla sobre un tema que tú elijas o practica una situación como ir al médico, hablar en el trabajo o comprar en una tienda.", "Поговорите на любую тему или разыграйте конкретную ситуацию: визит к врачу, разговор на работе или покупку в магазине.", "Розмовляйте на обрану тему або практикуйте життєві ситуації, наприклад візит до лікаря, розмову на роботі чи покупку в магазині."],
+  "Oefen lezen, luisteren, schrijven en spreken op A2 of B1. Op A2 oefen je ook KNM. Maak een proefexamen met een timer en bekijk daarna wat je nog kunt oefenen.": ["Practise reading, listening, writing and speaking at A2 or B1. At A2, also practise KNM. Take a timed mock exam and see what to practise next.", "تدرّب على القراءة والاستماع والكتابة والتحدث في A2 أو B1. في A2 تدرّب أيضًا على KNM. جرّب امتحانًا تجريبيًا بوقت محدد واعرف ما تحتاج إلى مراجعته.", "A2 veya B1 düzeyinde okuma, dinleme, yazma ve konuşma çalış. A2’de KNM de çalış. Süreli bir deneme sınavına gir ve sonra neleri çalışabileceğini gör.", "A2 या B1 स्तर पर पढ़ने, सुनने, लिखने और बोलने का अभ्यास करें। A2 पर KNM भी करें। समय-सीमा वाली अभ्यास परीक्षा दें और देखें कि आगे क्या अभ्यास करना है।", "练习 A2 或 B1 的阅读、听力、写作和口语。A2 还包括 KNM。完成计时模拟考试，看看接下来还要练习什么。", "Practica lectura, comprensión oral, escritura y expresión oral en A2 o B1. En A2 también puedes practicar KNM. Haz un simulacro cronometrado y revisa qué te queda por practicar.", "Тренируйте чтение, аудирование, письмо и устную речь на A2 или B1. На A2 также есть KNM. Пройдите пробный экзамен с таймером и посмотрите, что ещё стоит потренировать.", "Практикуйте читання, аудіювання, письмо й говоріння на рівні A2 або B1. На A2 також вивчайте KNM. Пройдіть пробний іспит із таймером та дізнайтеся, над чим ще попрацювати."],
+  "Probeer een KNM-vraag": ["Try a KNM question", "جرّب سؤالًا عن المجتمع الهولندي", "Bir KNM sorusu dene", "KNM का एक सवाल आज़माएँ", "试答一道 KNM 题", "Prueba una pregunta de KNM", "Попробуйте ответить на вопрос KNM", "Спробуйте відповісти на запитання KNM"],
   "Jaarpas": ["Year pass", "تصريح السنة", "Yıllık kart", "सालाना पास", "年度通行证", "Pase anual", "Годовой пропуск", "Річна перепустка"],
   "Een jaar Plus voor één betaling.": ["A year of Plus for one payment.", "سنة من Plus مقابل دفعة واحدة.", "Tek ödemeyle bir yıl Plus.", "एक भुगतान में एक साल का Plus।", "一次付款享一年 Plus。", "Un año de Plus con un solo pago.", "Год Plus за один платёж.", "Рік Plus за один платіж."],
   "Wordt niet automatisch verlengd.": ["Does not renew automatically.", "لا يتجدد تلقائيًا.", "Otomatik olarak yenilenmez.", "अपने-आप नवीनीकृत नहीं होता।", "不会自动续订。", "No se renueva automáticamente.", "Не продлевается автоматически.", "Не продовжується автоматично."],
@@ -453,3 +473,134 @@ document.querySelectorAll('a[href^="/oefenen?open="]').forEach(a => {
     navigator.serviceWorker.register("/sw.js").catch(() => {});
   }
 }
+
+function initProducts(section) {
+  const stage = section.querySelector(".product-stage");
+  const cards = [...stage.children];
+  const controls = section.querySelector(".product-controls");
+  const picks = [...controls.querySelectorAll("[data-product-pick]")];
+  const status = section.querySelector("[role=status]");
+  const details = section.querySelector(".product-details");
+  const panels = [...details.children];
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+  let expanded = -1;
+  let expansion;
+  for (const [i, panel] of panels.entries()) {
+    panel.hidden = true;
+    cards[i].querySelector("h3 a").setAttribute("aria-expanded", "false");
+    cards[i].querySelector("h3 a").setAttribute("aria-controls", panel.id);
+  }
+
+  function reveal(index, animate = true) {
+    if (expanded === index) return;
+    const from = details.getBoundingClientRect().height;
+    expansion?.cancel();
+    if (panels[expanded]?.contains(document.activeElement)) picks[index].focus({preventScroll:true});
+    expanded = index;
+    panels.forEach((panel, i) => {
+      panel.hidden = i !== index;
+      cards[i].querySelector("h3 a").setAttribute("aria-expanded", String(i === index));
+    });
+    if (animate && !reduced.matches && details.animate) {
+      expansion = details.animate(
+        [{height:from + "px", overflow:"clip"}, {height:details.scrollHeight + "px", overflow:"clip"}],
+        {duration:330, easing:"cubic-bezier(.25,.7,.25,1)"}
+      );
+    }
+  }
+  let active = 0;
+  let gesture;
+  let swiped = false;
+
+  function show(index, announce = true) {
+    const center = (index + cards.length) % cards.length;
+    if (center !== active && cards[active].contains(document.activeElement)) {
+      picks[center].focus({preventScroll:true});
+    }
+    active = center;
+    cards.forEach((card, i) => {
+      const distance = (i - active + cards.length) % cards.length;
+      card.dataset.position = distance === cards.length - 1 ? "left" : (["center", "right"][distance] || "away");
+      card.querySelector(".product-copy").inert = i !== active;
+      card.setAttribute("aria-hidden", String(i !== active));
+      picks[i].setAttribute("aria-pressed", String(i === active));
+    });
+    reveal(active, announce);
+    if (announce) status.textContent = picks[active].textContent;
+  }
+
+  controls.addEventListener("click", event => {
+    const button = event.target.closest("button");
+    if (!button) return;
+    const direct = button.hasAttribute("data-product-pick");
+    show(direct ? picks.indexOf(button) : active + Number(button.dataset.productStep));
+  });
+  section.addEventListener("keydown", event => {
+    if (details.contains(event.target) || event.altKey || event.ctrlKey || event.metaKey) return;
+    if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+    event.preventDefault();
+    const fromPicker = picks.includes(document.activeElement);
+    show(active + (event.key === "ArrowLeft" ? -1 : 1));
+    if (fromPicker) picks[active].focus();
+  });
+  stage.addEventListener("dragstart", event => event.preventDefault());
+  stage.addEventListener("pointerdown", event => {
+    if (!event.isPrimary || event.button !== 0) return;
+    swiped = false;
+    gesture = {id:event.pointerId, x:event.clientX, y:event.clientY};
+  });
+  stage.addEventListener("pointerup", event => {
+    if (gesture?.id !== event.pointerId) return;
+    const dx = event.clientX - gesture.x;
+    const dy = event.clientY - gesture.y;
+    gesture = null;
+    swiped = Math.abs(dx) > 38 && Math.abs(dx) > Math.abs(dy) * 1.25;
+    if (swiped) show(active + (dx < 0 ? 1 : -1));
+  });
+  stage.addEventListener("pointercancel", () => { gesture = null; });
+  stage.addEventListener("click", event => {
+    if (swiped && event.detail) {
+      event.preventDefault();
+      swiped = false;
+      return;
+    }
+
+    const card = event.target.closest(".product-card");
+    if (!card || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    const wasActive = cards[active] === card;
+    show(cards.indexOf(card));
+    if (wasActive) {
+      location.hash = panels[active].id;
+    }
+  });
+
+  controls.hidden = false;
+  show(0, false);
+  section.classList.add("products-ready");
+
+  const word = section.querySelector("[data-book-word]");
+  const definition = $("book-word");
+  definition.hidden = true;
+  word.hidden = false;
+  section.querySelector("[data-book-word-fallback]").hidden = true;
+  word.addEventListener("click", () => {
+    definition.hidden = !definition.hidden;
+    word.setAttribute("aria-expanded", String(!definition.hidden));
+  });
+
+  function revealAnchor(hash) {
+    if (!hash) return;
+    const target = $(hash.slice(1));
+    const index = panels.findIndex(panel => target && panel.contains(target));
+    if (index < 0) return;
+    show(index, false);
+    reveal(index, false);
+    return target;
+  }
+  const initialTarget = revealAnchor(location.hash);
+  if (initialTarget) requestAnimationFrame(() => initialTarget.scrollIntoView());
+  window.addEventListener("hashchange", () => revealAnchor(location.hash));
+}
+const productSection = $("ontdek");
+if (productSection) initProducts(productSection);
