@@ -1,0 +1,1996 @@
+de huisarts	сімейний лікар
+het ziekenhuis	лікарня
+de apotheek	аптека
+het recept	рецепт
+het medicijn	ліки
+de pijn	біль
+de hoofdpijn	головний біль
+de buikpijn	біль у животі
+de koorts	температура, жар
+hoesten	кашляти
+ziek	хворий
+beter worden	одужувати
+de tandarts	стоматолог
+de verpleegkundige	медсестра, медбрат
+de specialist	лікар-спеціаліст
+het bloed	кров
+de uitslag	результат
+de zorgverzekering	медичне страхування
+het eigen risico	франшиза, власна частка оплати
+de huisartsenpost	чергова служба лікарів
+de ambulance	швидка допомога
+het spreekuur	години прийому
+de griep	грип
+het been	нога
+de arm	рука
+de rug	спина
+de keel	горло
+gezond	здоровий
+de patiënt	пацієнт
+de wond	рана
+de pleister	пластир
+het verband	пов'язка, бинт
+de allergie	алергія
+de pijnstiller	знеболювальне
+zwanger	вагітна
+de verloskundige	акушерка
+de bril	окуляри
+de oogarts	офтальмолог
+de fysiotherapeut	фізіотерапевт
+de spoedeisende hulp	відділення невідкладної допомоги
+ongezond	шкідливий для здоров'я
+duizelig	із запамороченням
+misselijk	нудить
+moe	втомлений
+de hoest	кашель
+de wachtkamer	приймальня, зала очікування
+de behandeling	лікування
+de operatie	операція
+onderzoeken	обстежувати
+de prik	укол
+de vaccinatie	щеплення
+de dokter	лікар
+de afspraak	запис, зустріч
+de verkoudheid	застуда
+verkouden	застуджений
+niezen	чхати
+overgeven	блювати
+de diarree	пронос
+het zuur	печія
+de bloeddruk	тиск крові
+de suikerziekte	діабет
+de pil	таблетка
+de druppels	краплі
+de zalf	мазь
+de thermometer	градусник
+de rolstoel	інвалідний візок
+de kruk	милиця
+gebroken	зламаний
+de gips	гіпс
+bloeden	кровоточити
+de verwijzing	направлення
+de huisartsenpraktijk	кабінет сімейного лікаря
+de assistente	асистентка лікаря
+de spoed	терміновість
+het ongeluk	нещасний випадок
+gewond	поранений
+de EHBO	перша допомога
+de psycholoog	психолог
+de stress	стрес
+somber	пригнічений
+genezen	вилікуватися
+het gewicht	вага
+afvallen	худнути
+de vitamine	вітамін
+de bijwerking	побічна дія
+de bijsluiter	інструкція до ліків
+de huisartsenassistente	асистентка сімейного лікаря
+de kraamzorg	післяпологовий догляд удома
+ademen	дихати
+de verzekeringspas	картка страхування
+de baan	робота, посада
+de werkgever	роботодавець
+de werknemer	працівник
+de collega	колега
+de baas	начальник
+het salaris	зарплата
+het contract	договір, контракт
+de vacature	вакансія
+solliciteren	подавати заявку на роботу
+het sollicitatiegesprek	співбесіда
+het cv	резюме
+de ervaring	досвід
+de opleiding	навчання, освіта
+het diploma	диплом
+parttime	неповний робочий день
+fulltime	повний робочий день
+de werktijden	робочий час
+de pauze	перерва
+de vakantiedagen	дні відпустки
+het uitzendbureau	кадрове агентство
+werkloos	безробітний
+de uitkering	допомога, виплата
+het kantoor	офіс
+de vergadering	нарада
+het rooster	розклад, графік
+de klant	клієнт
+verdienen	заробляти
+ontslaan	звільняти
+de stage	стажування
+de werkplek	робоче місце
+de afdeling	відділ
+de overuren	понаднормові
+het pensioen	пенсія
+de vakbond	профспілка
+de proeftijd	випробувальний термін
+de loonstrook	розрахунковий листок
+het bedrijf	компанія, фірма
+de zzp'er	самозайнята особа
+de sollicitatiebrief	супровідний лист
+de ploegendienst	позмінна робота
+de nachtdienst	нічна зміна
+het uniform	уніформа
+de promotie	підвищення
+het ontslag	звільнення
+ontslag nemen	звільнитися за власним бажанням
+de sollicitatie	відгук на вакансію
+de werkervaring	досвід роботи
+het loon	заробітна плата
+het minimumloon	мінімальна зарплата
+bruto	до сплати податків
+netto	на руки, після податків
+het vakantiegeld	відпускні
+de cao	колективний трудовий договір
+het tijdelijk contract	строковий договір
+het vast contract	безстроковий договір
+zich ziek melden	повідомити про хворобу
+de bedrijfsarts	лікар підприємства
+de leidinggevende	керівник
+het team	команда
+de taak	завдання
+de opdracht	доручення
+de dienst	зміна
+de werkweek	робочий тиждень
+het verlof	відпустка, відгул
+het zwangerschapsverlof	декретна відпустка
+de werkvergunning	дозвіл на роботу
+de arbeidsmarkt	ринок праці
+de beloning	винагорода
+de reiskosten	транспортні витрати
+de ontslagbrief	лист про звільнення
+de werkzoekende	шукач роботи
+de vaardigheid	навичка
+de cursus	курс
+het certificaat	сертифікат
+de werktijd	робочий час
+de lunchpauze	обідня перерва
+de kantine	їдальня
+het personeel	персонал
+de werkloosheid	безробіття
+de uitzendkracht	тимчасовий працівник
+het arbeidscontract	трудовий договір
+de vrijwilliger	волонтер
+de ondernemer	підприємець
+de KvK	Торгова палата
+de factuur	рахунок-фактура
+de woning	житло
+het huis	будинок
+het appartement	квартира
+de huur	орендна плата
+de huurder	орендар, мешканець
+de verhuurder	орендодавець
+de woningcorporatie	житлова корпорація
+huren	орендувати
+verhuizen	переїжджати
+de buren	сусіди
+de buurt	район
+de verdieping	поверх
+de trap	сходи
+de lift	ліфт
+de slaapkamer	спальня
+de woonkamer	вітальня
+de badkamer	ванна кімната
+de keuken	кухня
+de wc	туалет
+de tuin	сад
+het balkon	балкон
+de verwarming	опалення
+de rekening	рахунок
+de stroom	електрика
+de vuilnisbak	смітник
+het afval	сміття
+de sleutel	ключ
+de monteur	майстер
+kapot	зламаний
+de reparatie	ремонт
+de vloer	підлога
+het plafond	стеля
+de muur	стіна
+het raam	вікно
+de deur	двері
+het dak	дах
+de kelder	підвал
+de zolder	горище
+de gang	коридор
+de schuur	сарай
+de bel	дзвінок
+de brievenbus	поштова скринька
+de borg	застава
+het huurcontract	договір оренди
+de schimmel	пліснява
+de lekkage	протікання
+schoonmaken	прибирати, чистити
+opruimen	прибирати, наводити лад
+het licht	світло
+de huisbaas	власник житла
+de koopwoning	власне житло
+de huurwoning	орендоване житло
+de hypotheek	іпотека
+de makelaar	ріелтор
+de wachtlijst	список очікування
+de inschrijving	реєстрація
+de bovenwoning	квартира на верхньому поверсі
+de benedenwoning	квартира на першому поверсі
+de begane grond	перший поверх
+de voordeur	вхідні двері
+de achterdeur	задні двері
+de kraan	кран
+de douche	душ
+het bad	ванна
+de wastafel	умивальник
+de cv-ketel	газовий котел
+de radiator	батарея
+het gas	газ
+de meter	лічильник
+de meterstand	показники лічильника
+de energieleverancier	постачальник енергії
+de servicekosten	плата за обслуговування
+de huurverhoging	підвищення орендної плати
+de opzegging	розірвання договору
+het onderhoud	обслуговування, догляд
+de overlast	незручності, турбування
+het lawaai	шум
+de verhuizing	переїзд
+de verhuisdoos	коробка для переїзду
+het meubel	меблі
+gemeubileerd	мебльований
+de woonruimte	житлова площа
+de vierkante meter	квадратний метр
+de kamer	кімната
+de studio	квартира-студія
+de portiek	під'їзд
+de flat	багатоповерхівка
+het rijtjeshuis	таунхаус
+de vensterbank	підвіконня
+de klusjesman	майстер на всі руки
+de rookmelder	датчик диму
+de container	контейнер
+het grofvuil	великогабаритне сміття
+scheiden	сортувати
+de stekker	штепсель
+de zekering	запобіжник
+het tapijt	килимове покриття
+de woonwijk	житловий район
+de buurtbewoner	мешканець району
+de trein	потяг
+de bus	автобус
+de tram	трамвай
+de metro	метро
+de fiets	велосипед
+de auto	машина
+het station	вокзал, станція
+het perron	перон
+de halte	зупинка
+het kaartje	квиток
+de ov-chipkaart	транспортна картка
+inchecken	відмітитися на вході
+uitchecken	відмітитися на виході
+overstappen	робити пересадку
+de vertraging	затримка
+vertrekken	вирушати
+aankomen	прибувати
+de reis	поїздка
+het rijbewijs	водійські права
+de file	затор
+parkeren	паркувати
+de weg	дорога
+het verkeer	рух (транспорту)
+het stoplicht	світлофор
+rechtsaf	праворуч
+linksaf	ліворуч
+rechtdoor	прямо
+de kruising	перехрестя
+de fietsenstalling	велопарковка
+de snelweg	автомагістраль
+de rotonde	кругове перехрестя
+het fietspad	велодоріжка
+de stoep	тротуар
+het zebrapad	пішохідний перехід
+de parkeerplaats	парковка
+de taxi	таксі
+het vliegtuig	літак
+het vliegveld	аеропорт
+de boot	човен, судно
+de pont	пором
+de conducteur	контролер, провідник
+de vertrektijd	час відправлення
+de aankomsttijd	час прибуття
+enkele reis	в один бік
+retour	туди й назад
+de spits	година пік
+de storing	збій, несправність
+de omleiding	об'їзд
+de benzine	бензин
+het tankstation	заправка
+de helm	шолом
+het slot	замок
+de band	шина
+de voorrang	перевага, пріоритет
+de bestuurder	водій
+de passagier	пасажир
+de dienstregeling	розклад
+het spoor	колія; номер колії
+de intercity	швидкісний потяг
+de sprinter	електричка
+de NS	Нідерландські залізниці
+het abonnement	абонемент, підписка
+het verkeersbord	дорожній знак
+de snelheid	швидкість
+de flitspaal	камера контролю швидкості
+de verkeersboete	штраф за порушення ПДР
+het rijexamen	іспит на права
+de rijles	урок водіння
+de APK	техогляд
+het kenteken	номерний знак
+het parkeerkaartje	паркувальний талон
+de parkeervergunning	дозвіл на паркування
+de bushalte	автобусна зупинка
+het knooppunt	розв'язка
+de afslag	з'їзд
+de fietser	велосипедист
+de voetganger	пішохід
+de scooter	скутер
+de motor	мотоцикл; двигун
+de vrachtauto	вантажний автомобіль
+botsen	зіткнутися
+inhalen	обганяти
+remmen	гальмувати
+oversteken	переходити вулицю
+de reiziger	мандрівник
+de bagage	багаж
+de koffer	валіза
+de vlucht	рейс, політ
+de instaptijd	час посадки
+de grens	кордон
+het visum	віза
+de winkel	магазин
+de supermarkt	супермаркет
+de markt	ринок
+de kassa	каса
+de bon	чек
+de prijs	ціна
+duur	дорогий
+goedkoop	дешевий
+de korting	знижка
+de aanbieding	акція, спецпропозиція
+betalen	платити
+pinnen	платити карткою
+contant	готівкою
+de pinpas	банківська картка
+het geld	гроші
+de portemonnee	гаманець
+de maat	розмір
+passen	приміряти; пасувати
+ruilen	обмінювати
+terugbrengen	повертати
+de klantenservice	служба підтримки клієнтів
+bestellen	замовляти
+het pakket	посилка
+bezorgen	доставляти
+de bank	банк
+het rekeningnummer	номер рахунку
+sparen	заощаджувати
+lenen	позичати
+de belasting	податок
+de bakker	пекарня
+de slager	м'ясна крамниця
+de drogist	магазин побутової хімії та косметики
+het warenhuis	універмаг
+het winkelcentrum	торговий центр
+de openingstijden	години роботи
+open	відчинено
+gesloten	зачинено
+de uitverkoop	розпродаж
+de garantie	гарантія
+de boodschappen	покупки, продукти
+het boodschappenlijstje	список покупок
+het mandje	кошик
+het winkelwagentje	візок
+de verkoper	продавець
+de munt	монета
+het bankbiljet	банкнота
+het wisselgeld	решта
+de schuld	борг
+de rente	відсотки
+de overschrijving	переказ (грошей)
+het saldo	баланс, залишок
+de pincode	ПІН-код
+de geldautomaat	банкомат
+gratis	безкоштовно
+kosten	коштувати
+de klantenkaart	картка лояльності
+het statiegeld	застава за тару
+inleveren	здавати
+de webwinkel	інтернет-магазин
+de bezorgkosten	вартість доставки
+retourneren	повертати товар
+de bedenktijd	строк на відмову від покупки
+de aankoop	покупка
+het koopje	вигідна покупка
+de kwaliteit	якість
+het merk	марка, бренд
+de verpakking	упаковка
+de houdbaarheidsdatum	термін придатності
+de kilo	кілограм
+de gram	грам
+de liter	літр
+het stuk	шматок, штука
+het blik	бляшанка
+de pot	банка
+de zak	пакет
+het tasje	пакет з магазину
+de zelfscan	самостійне сканування
+het filiaal	філія
+de etalage	вітрина
+de paskamer	примірочна
+het bonnetje	чек
+de spaarrekening	ощадний рахунок
+de betaalrekening	поточний рахунок
+het budget	бюджет
+uitgeven	витрачати
+de inkomsten	доходи
+de uitgaven	витрати
+het inkomen	дохід
+de schuldhulp	допомога з боргами
+de betalingsregeling	розстрочка
+de incasso	автоматичне списання
+de aanmaning	нагадування про оплату
+de deurwaarder	судовий виконавець
+de euro	євро
+de cent	цент
+wisselen	міняти
+de prijslijst	прайс-лист
+de basisschool	початкова школа
+de middelbare school	середня школа
+de groep	група; клас
+de leerkracht	учитель
+de juf	учителька
+de leerling	учень
+het huiswerk	домашнє завдання
+het rapport	табель
+de ouderavond	батьківські збори
+de kinderopvang	догляд за дітьми, ясла
+de oppas	няня
+het schoolreisje	шкільна екскурсія
+de schoolvakantie	шкільні канікули
+spijbelen	прогулювати школу
+leerplichtig	зобов'язаний навчатися
+de gymles	урок фізкультури
+het lokaal	клас (приміщення)
+de les	урок
+leren	вчити(ся)
+uitleggen	пояснювати
+het cijfer	оцінка; цифра
+de toets	контрольна
+de opvoeding	виховання
+het consultatiebureau	дитяча консультація
+de schooltas	портфель
+het schoolplein	шкільне подвір'я
+de directeur	директор
+het vak	предмет
+rekenen	рахувати, арифметика
+de pen	ручка
+het potlood	олівець
+het schrift	зошит
+de gum	гумка
+het woordenboek	словник
+de vraag	питання
+het antwoord	відповідь
+het examen	іспит
+slagen	скласти (іспит)
+zakken	не скласти (іспит)
+de universiteit	університет
+het mbo	професійна освіта
+de peuterspeelzaal	дитяча ігрова група
+de crèche	ясла
+de buitenschoolse opvang	група продовженого дня
+de ouderbijdrage	батьківський внесок
+de mentor	класний керівник
+de klas	клас
+het schooljaar	навчальний рік
+de voorschool	підготовча група
+de kleuter	дитина 4–5 років
+de peuter	малюк
+de leerplicht	обов'язкова освіта
+de leerplichtambtenaar	інспектор з відвідування
+het schooladvies	рекомендація школи
+de doorstroomtoets	підсумковий тест початкової школи
+het vmbo	передпрофесійна середня школа
+de havo	старша загальноосвітня школа
+het vwo	доуніверситетська освіта
+het hbo	вища професійна освіта
+de studiefinanciering	студентське фінансування
+de student	студент
+het lesrooster	розклад уроків
+de rekenmachine	калькулятор
+de liniaal	лінійка
+het etui	пенал
+de spreekbeurt	доповідь перед класом
+het werkstuk	реферат
+de leesles	урок читання
+de traktatie	частування з нагоди дня народження
+het schoolfeest	шкільне свято
+de ouderraad	батьківський комітет
+het oudergesprek	бесіда з батьками
+de schoolarts	шкільний лікар
+pesten	цькувати
+het speelgoed	іграшки
+de luier	підгузок
+de kinderwagen	дитячий візок
+het knuffeldier	м'яка іграшка
+opvoeden	виховувати
+de straf	покарання
+het voorbeeld	приклад
+de bijles	репетиторство
+het lesgeld	плата за навчання
+de gemeente	муніципалітет
+het gemeentehuis	будівля муніципалітету
+het loket	віконце, стійка
+het formulier	бланк, анкета
+invullen	заповнювати
+aanvragen	подавати заяву
+de aanvraag	заява
+het paspoort	паспорт
+de identiteitskaart	посвідчення особи
+geldig	дійсний
+verlopen	спливати (про термін)
+de handtekening	підпис
+ondertekenen	підписувати
+het adres	адреса
+zich inschrijven	реєструватися
+de Belastingdienst	податкова служба
+de toeslag	допомога, надбавка
+het burgerservicenummer	особистий номер (BSN)
+de politie	поліція
+de brandweer	пожежна служба
+het alarmnummer	номер екстреної служби
+de wet	закон
+de regel	правило
+de boete	штраф
+de verzekering	страхування
+de brief	лист
+de postcode	поштовий індекс
+de geboortedatum	дата народження
+de nationaliteit	громадянство
+de ambtenaar	службовець
+de burgemeester	мер
+de gemeenteraad	муніципальна рада
+het uittreksel	витяг
+de verblijfsvergunning	посвідка на проживання
+de IND	міграційна служба (IND)
+de inburgering	інтеграція
+de naturalisatie	натуралізація
+de huurtoeslag	субсидія на оренду
+de zorgtoeslag	субсидія на медстрахування
+de kinderbijslag	допомога на дітей
+het UWV	служба зайнятості (UWV)
+de bijstand	соціальна допомога
+de DigiD	DigiD (цифровий вхід)
+de belastingaangifte	податкова декларація
+de rechter	суддя
+de advocaat	адвокат
+het bezwaar	заперечення
+de klacht	скарга
+de rechten	права
+de plichten	обов'язки
+de basisregistratie	реєстр населення
+de uitschrijving	зняття з обліку
+de geboorteakte	свідоцтво про народження
+de huwelijksakte	свідоцтво про шлюб
+de legalisatie	легалізація
+de vertaling	переклад
+beëdigd	присяжний
+de leges	державне мито
+het wijkteam	районна соціальна команда
+de Wmo	закон про соціальну підтримку
+het sociaal loket	віконце соціальних послуг
+de klantmanager	куратор
+de SVB	Банк соціального страхування
+de AOW	державна пенсія
+DUO	DUO (служба з питань освіти)
+de lening	кредит, позика
+de rechtbank	суд
+de aangifte	заява до поліції
+de getuige	свідок
+het Juridisch Loket	юридична консультація
+de privacy	конфіденційність
+de gegevens	дані
+de machtiging	довіреність
+de termijn	строк
+de beslissing	рішення
+de toestemming	дозвіл
+de vergunning	ліцензія, дозвіл
+de inburgeringsplicht	обов'язок інтеграції
+de taalcoach	мовний наставник
+de verlenging	продовження
+het bewijs	доказ
+de kopie	копія
+de ochtend	ранок
+de middag	день, після обіду
+de avond	вечір
+de nacht	ніч
+vandaag	сьогодні
+morgen	завтра
+gisteren	учора
+overmorgen	післязавтра
+de week	тиждень
+het weekend	вихідні
+de maand	місяць
+het jaar	рік
+het uur	година
+het kwartier	чверть години
+vroeg	рано
+laat	пізно
+op tijd	вчасно
+het weer	погода
+de zon	сонце
+de regen	дощ
+de wind	вітер
+de sneeuw	сніг
+de wolk	хмара
+warm	теплий, жаркий
+koud	холодний
+nat	мокрий
+droog	сухий
+de lente	весна
+de zomer	літо
+de herfst	осінь
+de winter	зима
+de seconde	секунда
+de minuut	хвилина
+de dag	день
+de datum	дата
+de kalender	календар
+het seizoen	пора року
+de feestdag	свято
+altijd	завжди
+nooit	ніколи
+soms	іноді
+vaak	часто
+meestal	зазвичай
+straks	згодом
+meteen	одразу
+nu	зараз
+het onweer	гроза
+de mist	туман
+de temperatuur	температура
+de graad	градус
+bewolkt	хмарно
+zonnig	сонячно
+de hagel	град
+glad	слизько
+de weersverwachting	прогноз погоди
+de storm	шторм, буря
+vorige week	минулого тижня
+volgend jaar	наступного року
+maandag	понеділок
+dinsdag	вівторок
+woensdag	середа
+donderdag	четвер
+vrijdag	п'ятниця
+zaterdag	субота
+zondag	неділя
+januari	січень
+februari	лютий
+maart	березень
+april	квітень
+mei	травень
+juni	червень
+juli	липень
+augustus	серпень
+september	вересень
+oktober	жовтень
+november	листопад
+december	грудень
+de eeuw	століття
+het verleden	минуле
+de toekomst	майбутнє
+het moment	мить
+binnenkort	незабаром
+onlangs	нещодавно
+vroeger	раніше
+later	пізніше
+de regenboog	веселка
+de bliksem	блискавка
+de donder	грім
+de bui	злива
+de hittegolf	спека
+de ijzel	ожеледиця
+vriezen	морозити, замерзати
+regenen	іти (про дощ)
+sneeuwen	іти (про сніг)
+waaien	дути (про вітер)
+de familie	родичі
+het gezin	сім'я
+de ouders	батьки
+de vader	батько
+de moeder	мати
+de zoon	син
+de dochter	донька
+de broer	брат
+de zus	сестра
+de opa	дідусь
+de oma	бабуся
+de man	чоловік
+de vrouw	жінка; дружина
+getrouwd	одружений, заміжня
+gescheiden	розлучений
+de baby	немовля
+het kind	дитина
+de vriend	друг; хлопець
+de vriendin	подруга; дівчина
+de buurman	сусід
+de buurvrouw	сусідка
+de verjaardag	день народження
+jarig zijn	бути іменинником
+feliciteren	вітати
+trouwen	одружуватися
+oud	старий
+jong	молодий
+aardig	приємний, добрий
+boos	сердитий
+blij	радий
+verdrietig	сумний
+de grootouders	дідусь і бабуся
+de kleinkinderen	онуки
+de oom	дядько
+de tante	тітка
+de neef	племінник; двоюрідний брат
+de nicht	племінниця; двоюрідна сестра
+de schoonmoeder	свекруха, теща
+de zwager	зять, шурин, дівер
+de schoonzus	невістка, зовиця
+de weduwe	вдова
+alleenstaand	самотній, неодружений
+samenwonen	жити разом
+de bruiloft	весілля
+het huwelijk	шлюб
+de geboorte	народження
+overlijden	померти
+de begrafenis	похорон
+de tiener	підліток
+de volwassene	дорослий
+de kennis	знайомий
+de gast	гість
+de ex	колишній, колишня
+de echtgenoot	чоловік
+de echtgenote	дружина
+de partner	партнер
+de schoonvader	свекор, тесть
+de schoonouders	батьки чоловіка чи дружини
+de kleinzoon	онук
+de kleindochter	онука
+de tweeling	близнюки
+het familielid	родич
+de buurtgenoot	сусід по району
+de vreemde	незнайомець
+de jongen	хлопчик, хлопець
+het meisje	дівчинка, дівчина
+de meneer	пан
+de mevrouw	пані
+de bejaarde	літня людина
+de gepensioneerde	пенсіонер
+de nieuwkomer	новоприбулий
+de vluchteling	біженець
+de migrant	мігрант
+de Nederlander	нідерландець
+de achternaam	прізвище
+de voornaam	ім'я
+de leeftijd	вік
+de zwangerschap	вагітність
+het ontbijt	сніданок
+de lunch	обід
+het avondeten	вечеря
+het brood	хліб
+de boterham	бутерброд
+de kaas	сир
+de melk	молоко
+het ei	яйце
+de groente	овочі
+het fruit	фрукти
+de appel	яблуко
+het vlees	м'ясо
+de vis	риба
+de kip	курка
+de rijst	рис
+de aardappel	картопля
+de soep	суп
+de koffie	кава
+de thee	чай
+de suiker	цукор
+het zout	сіль
+koken	готувати; варити
+bakken	пекти; смажити
+snijden	різати
+de pan	каструля, сковорідка
+het bord	тарілка
+het glas	склянка
+het mes	ніж
+de vork	виделка
+de lepel	ложка
+lekker	смачний
+honger hebben	бути голодним
+dorst hebben	хотіти пити
+de boter	вершкове масло
+de olie	олія
+de jam	джем, варення
+de pindakaas	арахісова паста
+de hagelslag	шоколадна посипка
+de yoghurt	йогурт
+de pasta	макарони
+de saus	соус
+de sla	салат
+de tomaat	помідор
+de ui	цибуля
+de wortel	морква
+de banaan	банан
+de sinaasappel	апельсин
+de peer	груша
+de aardbei	полуниця
+het toetje	десерт
+de taart	торт
+het koekje	печиво
+het snoep	цукерки
+het sap	сік
+het bier	пиво
+de wijn	вино
+vegetarisch	вегетаріанський
+zoet	солодкий
+zuur	кислий
+bitter	гіркий
+pittig	гострий
+de kom	миска
+het kopje	чашка
+het menu	меню
+de ober	офіціант
+afrekenen	розраховуватися
+de fooi	чайові
+het broodje	булочка
+de pannenkoek	млинець
+de stamppot	картопляне пюре з овочами
+de erwtensoep	гороховий суп
+de kroket	крокет
+de bitterbal	біттербаль, кулька-крокет
+de patat	картопля фрі
+de stroopwafel	вафля із сиропом
+de drop	лакриця
+het gehakt	фарш
+het rundvlees	яловичина
+het varkensvlees	свинина
+het lamsvlees	баранина
+halal	халяльний
+veganistisch	веганський
+de noten	горіхи
+de bonen	квасоля
+de erwten	горох
+de paprika	солодкий перець
+de komkommer	огірок
+de champignon	печериця
+de knoflook	часник
+de citroen	лимон
+de druif	виноград
+de meloen	диня
+de kers	вишня, черешня
+het meel	борошно
+de peper	перець (спеція)
+het kruid	спеція
+de room	вершки
+de slagroom	збиті вершки
+het ijs	лід; морозиво
+de chocolade	шоколад
+de frisdrank	газована вода
+de borrel	фуршет, посиденьки
+het hapje	закуска
+de magnetronmaaltijd	готова страва
+de maaltijd	прийом їжі
+het gerecht	страва
+rauw	сирий
+gaar	готовий, проварений
+verbrand	пригорілий
+opwarmen	розігрівати
+proeven	куштувати
+de smaak	смак
+het bestek	столові прибори
+het servet	серветка
+de theepot	заварник
+zijn	бути
+hebben	мати
+gaan	іти, їхати
+komen	приходити
+doen	робити
+maken	робити, виготовляти
+zeggen	казати
+vertellen	розповідати
+vragen	питати
+antwoorden	відповідати
+praten	розмовляти
+spreken	говорити
+weten	знати
+kennen	знати, бути знайомим
+denken	думати
+begrijpen	розуміти
+zien	бачити
+kijken	дивитися
+horen	чути
+luisteren	слухати
+lezen	читати
+schrijven	писати
+werken	працювати
+wonen	жити (десь)
+leven	жити
+kopen	купувати
+verkopen	продавати
+geven	давати
+krijgen	отримувати
+nemen	брати
+brengen	приносити, відвозити
+halen	забирати, приносити
+zetten	ставити
+leggen	класти
+staan	стояти
+zitten	сидіти
+liggen	лежати
+lopen	ходити
+rennen	бігати
+rijden	їхати, керувати
+vliegen	літати
+wachten	чекати
+zoeken	шукати
+vinden	знаходити; вважати
+verliezen	губити
+beginnen	починати
+stoppen	зупинятися
+openmaken	відчиняти
+dichtdoen	зачиняти
+helpen	допомагати
+proberen	пробувати
+gebruiken	використовувати
+betekenen	означати
+herhalen	повторювати
+vergeten	забувати
+onthouden	запам'ятовувати
+willen	хотіти
+kunnen	могти
+moeten	мусити
+mogen	можна, дозволено
+houden van	любити
+hopen	сподіватися
+geloven	вірити
+spelen	грати
+slapen	спати
+wakker worden	прокидатися
+opstaan	вставати
+zich aankleden	одягатися
+wassen	мити, прати
+douchen	приймати душ
+eten	їсти
+drinken	пити
+bellen	дзвонити
+sturen	надсилати
+tellen	рахувати
+kiezen	вибирати
+beslissen	вирішувати
+veranderen	змінювати(ся)
+blijven	залишатися
+worden	ставати
+gebeuren	відбуватися
+lachen	сміятися
+huilen	плакати
+aanbieden	пропонувати
+aannemen	приймати; наймати
+afmaken	закінчувати
+afzeggen	скасовувати
+annuleren	анулювати
+bedanken	дякувати
+bedoelen	мати на увазі
+beloven	обіцяти
+bereiken	досягати
+beschrijven	описувати
+besteden	витрачати
+bewegen	рухатися
+bezoeken	відвідувати
+bijhouden	вести облік
+controleren	перевіряти
+delen	ділити(ся)
+doorgeven	передавати
+duren	тривати
+eindigen	закінчуватися
+groeten	вітатися
+herkennen	впізнавати
+houden	тримати; залишати собі
+inpakken	пакувати
+invoeren	вводити
+kloppen	стукати; бути правильним
+klagen	скаржитися
+lenen van	позичати в
+letten op	звертати увагу на
+meedoen	брати участь
+meenemen	брати з собою
+melden	повідомляти
+noemen	називати
+oefenen	вправлятися
+ontmoeten	зустрічати
+ontvangen	отримувати
+oplossen	розв'язувати
+opschrijven	записувати
+opletten	бути уважним
+organiseren	організовувати
+plannen	планувати
+regelen	влаштовувати
+reizen	подорожувати
+roepen	кликати
+schrikken	лякатися
+sluiten	закривати
+steunen	підтримувати
+stelen	красти
+storen	заважати, турбувати
+studeren	навчатися (у виші)
+toestaan	дозволяти
+uitgaan van	виходити з
+uitkiezen	вибирати
+uitproberen	випробовувати
+vallen	падати
+verbieden	забороняти
+verdwijnen	зникати
+vergelijken	порівнювати
+verhuren	здавати в оренду
+verklaren	пояснювати
+verlengen	продовжувати
+verplaatsen	переміщати
+verstaan	розчути
+vertalen	перекладати
+vertrouwen	довіряти
+verwachten	очікувати
+voelen	відчувати
+voorstellen	пропонувати; представляти
+waarschuwen	попереджати
+wegen	зважувати
+wennen	звикати
+winnen	перемагати
+zorgen voor	піклуватися про
+zwaaien	махати
+aanzetten	вмикати
+uitzetten	вимикати
+ophalen	забирати
+wegbrengen	відвозити
+aankondigen	оголошувати
+aanmelden	записуватися
+afhalen	забирати (замовлення)
+bespreken	обговорювати
+herinneren	пам'ятати; нагадувати
+missen	запізнитися; сумувати
+pakken	брати, хапати
+passen op	наглядати за
+rusten	відпочивати
+trouwen met	одружитися з
+zich voelen	почуватися
+zich vergissen	помилятися
+zich zorgen maken	хвилюватися
+zich haasten	поспішати
+zich schamen	соромитися
+zich vervelen	нудьгувати
+zich herinneren	згадувати
+zich voorbereiden	готуватися
+zich voorstellen	представитися; уявляти
+aanraken	торкатися
+bouwen	будувати
+breken	ламати
+drukken	натискати
+duwen	штовхати
+trekken	тягнути
+gooien	кидати
+vangen	ловити
+springen	стрибати
+klimmen	лізти
+vullen	наповнювати
+legen	спорожняти
+repareren	лагодити
+verven	фарбувати
+knippen	стригти, різати ножицями
+plakken	клеїти
+vouwen	складати
+zwijgen	мовчати
+fluisteren	шепотіти
+schreeuwen	кричати
+glimlachen	усміхатися
+knikken	кивати
+wijzen	показувати (пальцем)
+tonen	показувати
+besparen	економити
+verspillen	марнувати
+lukken	вдаватися
+mislukken	не вдаватися
+bestaan	існувати
+ontstaan	виникати
+stijgen	підніматися
+dalen	знижуватися
+groeien	рости
+sterven	помирати
+geboren worden	народитися
+zich aanpassen	пристосовуватися
+integreren	інтегруватися
+groot	великий
+klein	маленький
+lang	довгий; високий
+kort	короткий
+hoog	високий
+laag	низький
+breed	широкий
+smal	вузький
+dik	товстий
+dun	тонкий
+zwaar	важкий
+licht	легкий; світлий
+donker	темний
+nieuw	новий
+mooi	гарний
+lelijk	негарний
+schoon	чистий
+vies	брудний
+snel	швидкий
+langzaam	повільний
+makkelijk	легкий, простий
+moeilijk	важкий, складний
+druk	людний, зайнятий
+rustig	спокійний
+stil	тихий
+leeg	порожній
+vol	повний
+belangrijk	важливий
+mogelijk	можливий
+nodig	потрібний
+klaar	готовий
+bezig	зайнятий (чимось)
+bang	наляканий
+gelukkig	щасливий; на щастя
+tevreden	задоволений
+vriendelijk	привітний
+beleefd	ввічливий
+eerlijk	чесний; справедливий
+lui	лінивий
+slim	розумний
+dom	дурний
+rijk	багатий
+arm	бідний
+eerste	перший
+laatste	останній
+volgende	наступний
+verschillend	різний
+hetzelfde	те саме
+anders	інакше
+zeker	упевнений, точно
+beroemd	відомий
+gevaarlijk	небезпечний
+veilig	безпечний
+normaal	нормальний
+speciaal	особливий
+leuk	цікавий, приємний
+saai	нудний
+gek	божевільний, дивний
+nerveus	знервований
+vrij	вільний; вихідний
+handig	зручний; вправний
+nuttig	корисний
+duidelijk	зрозумілий, ясний
+ingewikkeld	складний
+eenvoudig	простий
+precies	точно
+juist	правильний
+fout	неправильний
+echt	справжній; справді
+nep	фальшивий
+vreemd	дивний; чужий
+bekend	відомий
+onbekend	невідомий
+goed	добрий
+slecht	поганий
+prettig	приємний
+vervelend	неприємний, набридливий
+heerlijk	чудовий, смачнющий
+fijn	приємний; дрібний
+sterk	сильний
+zwak	слабкий
+zacht	м'який; тихий
+hard	твердий; гучний; швидкий
+luid	гучний
+scherp	гострий
+bot	тупий; грубий
+gezellig	затишний, приємний
+ontspannen	розслаблений
+gespannen	напружений
+dichtbij	близько
+ver	далеко
+diep	глибокий
+ondiep	мілкий
+rond	круглий
+vierkant	квадратний
+recht	прямий
+scheef	кривий
+heet	гарячий
+lauw	теплуватий
+fris	прохолодний; свіжий
+vers	свіжий
+goedgekeurd	схвалений
+verplicht	обов'язковий
+verboden	заборонений
+toegestaan	дозволений
+beschikbaar	доступний
+bezet	зайнято
+geschikt	придатний
+ongeveer	приблизно
+zelfstandig	самостійний
+serieus	серйозний
+grappig	смішний
+bijzonder	особливий
+gewoon	звичайний
+typisch	типовий
+streng	суворий
+lief	милий, лагідний
+gemeen	підлий, злий
+jaloers	ревнивий, заздрісний
+trots	гордий
+verlegen	сором'язливий
+geduldig	терплячий
+ongeduldig	нетерплячий
+behulpzaam	послужливий
+hardwerkend	працьовитий
+en	і
+maar	але
+of	або; чи
+want	тому що
+omdat	тому що
+dus	тому
+als	якщо, коли; як
+wanneer	коли
+toen	тоді; коли
+dan	тоді; ніж
+eerst	спочатку
+daarna	потім
+ook	теж
+niet	не
+geen	жодний, немає
+wel	таки
+al	уже
+nog	ще
+alleen	тільки; сам
+samen	разом
+heel	дуже; цілий
+te	занадто
+veel	багато
+weinig	мало
+meer	більше
+minder	менше
+genoeg	досить
+bijna	майже
+misschien	можливо
+natuurlijk	звичайно; природний
+graag	охоче, із задоволенням
+hier	тут
+daar	там
+overal	скрізь
+binnen	всередині
+buiten	надворі, ззовні
+boven	нагорі
+beneden	унизу
+links	ліворуч
+rechts	праворуч
+naast	поруч із
+tussen	між
+achter	за, позаду
+voor	для; перед
+onder	під
+op	на
+in	в
+bij	біля, у
+met	з
+zonder	без
+naar	до, в
+van	з, від
+uit	з
+over	про; через
+tot	до
+sinds	з (якогось часу)
+tijdens	під час
+wie	хто
+wat	що
+waar	де; правда
+waarom	чому
+hoe	як
+hoeveel	скільки
+welk	який
+iemand	хтось
+niemand	ніхто
+iets	щось
+niets	нічого
+alles	усе
+iedereen	усі
+elke	кожен
+eigenlijk	насправді
+trouwens	до речі
+toch	все ж таки
+zelfs	навіть
+helaas	на жаль
+vooral	особливо
+daarom	тому
+hoewel	хоча
+terwijl	тоді як
+zodat	щоб
+voordat	перш ніж
+nadat	після того як
+totdat	доки не
+ergens	десь
+nergens	ніде
+allebei	обидва
+sommige	деякі
+andere	інші
+zo	так
+erg	дуже; жахливий
+steeds	постійно
+opnieuw	знову
+tegen	проти; до
+per	за, на
+langs	уздовж, повз
+door	через; завдяки
+om	навколо; о (про час)
+tegenover	навпроти
+elf	одинадцять
+twaalf	дванадцять
+dertien	тринадцять
+veertien	чотирнадцять
+vijftien	п'ятнадцять
+zestien	шістнадцять
+zeventien	сімнадцять
+achttien	вісімнадцять
+negentien	дев'ятнадцять
+twintig	двадцять
+dertig	тридцять
+veertig	сорок
+vijftig	п'ятдесят
+zestig	шістдесят
+zeventig	сімдесят
+tachtig	вісімдесят
+negentig	дев'яносто
+honderd	сто
+duizend	тисяча
+een miljoen	мільйон
+de helft	половина
+een kwart	чверть
+het nummer	номер
+het bedrag	сума
+nul	нуль
+één	один
+twee	два
+drie	три
+vier	чотири
+vijf	п'ять
+zes	шість
+zeven	сім
+acht	вісім
+negen	дев'ять
+tien	десять
+het procent	відсоток
+het paar	пара; кілька
+het dubbele	удвічі більше
+het lichaam	тіло
+het hoofd	голова
+het haar	волосся
+het gezicht	обличчя
+het oog	око
+het oor	вухо
+de neus	ніс
+de mond	рот
+de tand	зуб
+de tong	язик
+de nek	шия
+de schouder	плече
+de borst	груди
+de buik	живіт
+de hand	кисть руки
+de vinger	палець
+de knie	коліно
+de voet	стопа
+de teen	палець ноги
+de huid	шкіра
+het hart	серце
+de longen	легені
+de maag	шлунок
+de wang	щока
+de lip	губа
+de kin	підборіддя
+het voorhoofd	лоб
+de wenkbrauw	брова
+de baard	борода
+de elleboog	лікоть
+de pols	зап'ястя
+de duim	великий палець
+de nagel	ніготь
+de heup	стегно
+de enkel	щиколотка
+de hiel	п'ята
+het bot	кістка
+de spier	м'яз
+de hersenen	мозок
+de nier	нирка
+de lever	печінка
+het zweet	піт
+de kleren	одяг
+de jas	куртка, пальто
+de trui	светр
+het overhemd	сорочка
+het T-shirt	футболка
+de broek	штани
+de spijkerbroek	джинси
+de rok	спідниця
+de jurk	сукня
+de schoenen	взуття, туфлі
+de laarzen	чоботи
+de sokken	шкарпетки
+het ondergoed	білизна
+de muts	шапка
+de sjaal	шарф
+de handschoenen	рукавички
+de pet	кепка
+de riem	ремінь
+de tas	сумка
+de paraplu	парасолька
+aantrekken	одягати
+uittrekken	знімати (одяг)
+dragen	носити
+het pak	костюм
+de pyjama	піжама
+de sieraden	прикраси
+de ring	каблучка
+het horloge	наручний годинник
+de bh	бюстгальтер
+de hoofddoek	хустка
+de regenjas	дощовик
+de sportschoenen	кросівки
+de slippers	шльопанці
+het vest	кофта
+de knoop	ґудзик
+de rits	блискавка (застібка)
+de mouw	рукав
+de broekzak	кишеня
+de zonnebril	сонцезахисні окуляри
+de oorbel	сережка
+de ketting	ланцюжок, намисто
+de portefeuille	гаманець
+de rugzak	рюкзак
+passend	підхожий за розміром
+wijd	вільний, широкий
+strak	облягаючий
+de wasmand	кошик для білизни
+de tafel	стіл
+de stoel	стілець
+de fauteuil	крісло
+het bed	ліжко
+de kast	шафа
+de lamp	лампа
+het kussen	подушка
+de deken	ковдра
+de spiegel	дзеркало
+het gordijn	штора
+het vloerkleed	килим
+de wasmachine	пральна машина
+de koelkast	холодильник
+het fornuis	плита
+de oven	духовка
+de magnetron	мікрохвильовка
+de stofzuiger	пилосос
+de vaatwasser	посудомийна машина
+de handdoek	рушник
+de zeep	мило
+de tandenborstel	зубна щітка
+het toiletpapier	туалетний папір
+de prullenbak	відро для сміття
+het stopcontact	розетка
+de schaar	ножиці
+de doos	коробка
+de fles	пляшка
+de zitbank	диван
+het kussensloop	наволочка
+het laken	простирадло
+het dekbed	ковдра
+de wekker	будильник
+de klok	годинник
+het schilderij	картина
+de plank	полиця
+de la	шухляда
+de vuilniszak	пакет для сміття
+de bezem	віник, мітла
+de emmer	відро
+de dweil	ганчірка для підлоги
+de afwas	брудний посуд
+het afwasmiddel	засіб для миття посуду
+het wasmiddel	пральний порошок
+de was	прання, білизна
+strijken	прасувати
+het strijkijzer	праска
+de waterkoker	електрочайник
+het koffiezetapparaat	кавоварка
+de broodrooster	тостер
+de vriezer	морозильник
+het aanrecht	кухонна стільниця
+de gootsteen	мийка
+het snoer	дріт
+de verlichting	освітлення
+de gordijnrails	карниз
+het bureau	письмовий стіл
+de kapstok	вішак
+de hanger	вішалка-плечики
+de sleutelbos	в'язка ключів
+de kaars	свічка
+de plant	рослина
+de vaas	ваза
+de ladder	драбина
+de hamer	молоток
+de schroevendraaier	викрутка
+de boor	дриль
+het gereedschap	інструменти
+de hobby	хобі
+de sport	спорт
+sporten	займатися спортом
+wandelen	гуляти
+fietsen	їздити на велосипеді
+zwemmen	плавати
+voetballen	грати у футбол
+de sportschool	спортзал
+het museum	музей
+de bioscoop	кінотеатр
+de film	фільм
+het concert	концерт
+het theater	театр
+het park	парк
+de dierentuin	зоопарк
+de vereniging	клуб, товариство
+het lid	член (клубу)
+het feest	свято, вечірка
+uitgaan	ходити розважатися
+de vakantie	відпустка, канікули
+kamperen	відпочивати з наметом
+het hotel	готель
+de camping	кемпінг
+de foto	фотографія
+het spel	гра
+de muziek	музика
+zingen	співати
+tekenen	малювати
+het vrijwilligerswerk	волонтерська робота
+uitnodigen	запрошувати
+afspreken	домовлятися про зустріч
+de wedstrijd	матч, змагання
+de voetbalclub	футбольний клуб
+het zwemdiploma	диплом з плавання
+schaatsen	кататися на ковзанах
+de schaatsen	ковзани
+hardlopen	бігати (спорт)
+de fitness	фітнес
+de yoga	йога
+het tennis	теніс
+het basketbal	баскетбол
+de bibliotheekpas	читацький квиток
+het verhaal	розповідь
+de roman	роман
+het gedicht	вірш
+de tentoonstelling	виставка
+de voorstelling	вистава
+het festival	фестиваль
+de barbecue	барбекю
+de picknick	пікнік
+het uitje	вилазка, поїздка
+de dagjesmensen	туристи на один день
+de reisgids	путівник; гід
+het souvenir	сувенір
+de camera	фотоапарат
+het speelveld	ігровий майданчик
+de puzzel	пазл, головоломка
+het kaartspel	карткова гра
+de muziekles	урок музики
+het instrument	інструмент
+de gitaar	гітара
+de piano	піаніно
+het koor	хор
+dansen	танцювати
+genieten	насолоджуватися
+de vrije tijd	вільний час
+het lidmaatschap	членство
+de contributie	членський внесок
+de natuur	природа
+het dier	тварина
+de hond	собака
+de kat	кішка
+de vogel	птах
+het paard	кінь
+de koe	корова
+het schaap	вівця
+het varken	свиня
+de eend	качка
+de muis	миша
+het konijn	кролик
+de boom	дерево
+de bloem	квітка
+het gras	трава
+het bos	ліс
+de zee	море
+het strand	пляж
+de rivier	річка
+het meer	озеро
+de berg	гора
+het land	країна; земля
+de dijk	дамба
+de polder	польдер (осушена земля)
+de molen	млин
+de lucht	повітря; небо
+de grond	земля, ґрунт
+de steen	камінь
+de paddenstoel	гриб
+het blad	листок
+de tak	гілка
+het zaad	насіння
+de tulp	тюльпан
+de roos	троянда
+de bij	бджола
+de vlieg	муха
+de mug	комар
+de spin	павук
+de vlinder	метелик
+het insect	комаха
+de mier	мураха
+de rat	щур
+de haan	півень
+de geit	коза
+de ezel	віслюк
+de zwaan	лебідь
+de meeuw	чайка
+de reiger	чапля
+de boerderij	ферма
+het weiland	луг, пасовище
+het veld	поле
+het duin	дюна
+het eiland	острів
+de heuvel	пагорб
+de sloot	канава
+het milieu	довкілля
+het klimaat	клімат
+de vervuiling	забруднення
+recyclen	переробляти
+de zonnepanelen	сонячні панелі
+de windmolen	вітряк
+het huisdier	домашня тварина
+uitlaten	вигулювати
+de stad	місто
+het dorp	село
+het centrum	центр
+de wijk	район
+de straat	вулиця
+het plein	площа
+de brug	міст
+de gracht	канал
+de hoek	кут, ріг
+het gebouw	будівля
+het stadhuis	ратуша
+de kerk	церква
+de moskee	мечеть
+het politiebureau	поліцейська дільниця
+het café	кафе
+de school	школа
+het zwembad	басейн
+de speeltuin	дитячий майданчик
+het buurthuis	районний центр дозвілля
+de ingang	вхід
+de uitgang	вихід
+de fabriek	завод, фабрика
+de haven	порт
+de bibliotheek	бібліотека
+het postkantoor	пошта
+het restaurant	ресторан
+de snackbar	закусочна
+de begraafplaats	кладовище
+het monument	пам'ятник
+het standbeeld	статуя
+de toren	вежа
+het kasteel	замок
+de vuurtoren	маяк
+de sporthal	спортивна зала
+het sportveld	спортивний майданчик
+de rondweg	кільцева дорога
+het industrieterrein	промзона
+de binnenstad	історичний центр
+de buitenwijk	околиця
+de hoofdstad	столиця
+de inwoner	мешканець
+de toerist	турист
+de VVV	туристичний інформаційний центр
+de plattegrond	план, мапа міста
+het verkeerslicht	світлофор
+de lantaarnpaal	ліхтарний стовп
+het bankje	лавка
+de fontein	фонтан
+de steeg	провулок
+de kade	набережна
+de telefoon	телефон
+het telefoonnummer	номер телефону
+het bericht	повідомлення
+de e-mail	електронний лист
+de bijlage	вкладення
+versturen	надсилати
+het internet	інтернет
+de website	сайт
+de computer	комп'ютер
+de app	застосунок
+het wachtwoord	пароль
+inloggen	увійти (в систему)
+downloaden	завантажувати
+printen	друкувати
+de voicemail	голосова пошта
+terugbellen	передзвонювати
+opnemen	брати слухавку; записувати
+ophangen	кидати слухавку
+de krant	газета
+het nieuws	новини
+de televisie	телевізор
+de radio	радіо
+het tijdschrift	журнал
+de oplader	зарядний пристрій
+de batterij	батарейка, акумулятор
+het scherm	екран
+de smartphone	смартфон
+de mobiel	мобільний
+het sms'je	СМС
+appen	писати в месенджері
+het gesprek	розмова
+het videogesprek	відеодзвінок
+de onderwerpregel	тема листа
+de afzender	відправник
+de ontvanger	одержувач
+beantwoorden	відповідати на
+doorsturen	пересилати
+het account	акаунт
+uitloggen	вийти
+de wifi	вай-фай
+de link	посилання
+klikken	натискати, клацати
+het bestand	файл
+opslaan	зберігати
+de printer	принтер
+het toetsenbord	клавіатура
+typen	друкувати на клавіатурі
+het nieuwsbericht	новина
+sociale media	соцмережі
+het nepnieuws	фейкові новини
+de oplichting	шахрайство
+de postzegel	поштова марка
+de envelop	конверт
+de kaart	листівка; мапа
+de uitnodiging	запрошення
+het antwoordapparaat	автовідповідач
+de verbinding	зв'язок, з'єднання
+de taal	мова
+de moedertaal	рідна мова
+het woord	слово
+de zin	речення; бажання
+de uitspraak	вимова
+het accent	акцент
+de spelling	правопис
+spellen	вимовляти по літерах
+de kleur	колір
+rood	червоний
+blauw	синій
+geel	жовтий
+groen	зелений
+zwart	чорний
+wit	білий
+grijs	сірий
+bruin	коричневий
+oranje	помаранчевий
+roze	рожевий
+paars	фіолетовий
+de koning	король
+de koningin	королева
+de regering	уряд
+de minister	міністр
+de minister-president	прем'єр-міністр
+de Tweede Kamer	нижня палата парламенту
+de verkiezingen	вибори
+stemmen	голосувати
+de partij	партія
+de democratie	демократія
+de Grondwet	конституція
+de provincie	провінція
+het waterschap	управління водного господарства
+de vrijheid	свобода
+gelijk	рівний; має рацію
+de discriminatie	дискримінація
+de godsdienst	релігія
+de mening	думка
+de vlag	прапор
+het Wilhelmus	гімн Нідерландів
+Koningsdag	День короля (27 квітня)
+Bevrijdingsdag	День визволення (5 травня)
+Dodenherdenking	День пам'яті загиблих (4 травня)
+Sinterklaas	Сінтерклаас (5 грудня)
+de kerst	Різдво
+het Koninklijk Huis	королівський дім
+de Eerste Kamer	верхня палата парламенту
+het parlement	парламент
+de politicus	політик
+de politiek	політика
+het kabinet	кабінет міністрів
+de staat	держава
+de rechtsstaat	правова держава
+de grondrechten	основні права
+de vrijheid van meningsuiting	свобода слова
+de gelijkheid	рівність
+de Tweede Wereldoorlog	Друга світова війна
+de bevrijding	визволення
+de Gouden Eeuw	Золоте століття
+de Deltawerken	Дельта-проект
+de provinciehoofdstad	столиця провінції
+de koopzondag	торгова неділя
+de verjaardagskalender	календар днів народження
+het Nieuwjaar	Новий рік
+het vuurwerk	феєрверк
+de oliebol	пончик-оліболь
+Pasen	Великдень
+het Suikerfeest	Ураза-байрам
+de ramadan	Рамадан
+de kok	кухар
+de kapper	перукар
+de schoonmaker	прибиральник
+de chauffeur	водій
+de vrachtwagen	вантажівка
+de bezorger	кур'єр
+de postbode	листоноша
+de timmerman	тесля
+de loodgieter	сантехнік
+de elektricien	електрик
+de schilder	маляр
+de bouwvakker	будівельник
+de boer	фермер
+de tuinman	садівник
+de verkoopmedewerker	продавець-консультант
+de caissière	касирка
+de magazijnmedewerker	працівник складу
+de automonteur	автомеханік
+de garage	автосервіс
+de leraar	учитель
+de docent	викладач
+de verzorgende	доглядальниця
+de kinderopvangmedewerker	вихователь ясел
+de apotheker	фармацевт
+de agent	поліцейський
+de brandweerman	пожежник
+de soldaat	солдат
+de journalist	журналіст
+de programmeur	програміст
+de boekhouder	бухгалтер
+de secretaresse	секретар
+de receptionist	адміністратор, рецепціоніст
+de tolk	усний перекладач
+de vertaler	перекладач
+de bewaker	охоронець
+de kunstenaar	митець
+de ingenieur	інженер
+de architect	архітектор
+de dierenarts	ветеринар
+het gevoel	почуття
+de blijdschap	радість
+het verdriet	горе, смуток
+de angst	страх
+de woede	гнів
+de liefde	кохання, любов
+de hoop	надія
+de schaamte	сором
+de eenzaamheid	самотність
+eenzaam	самотній
+het heimwee	туга за домом
+de spijt	жаль
+spijt hebben	шкодувати
+opgelucht	з полегшенням
+teleurgesteld	розчарований
+verbaasd	здивований
+bezorgd	стурбований
+geïrriteerd	роздратований
+enthousiast	сповнений ентузіазму
+zenuwachtig	схвильований
+dankbaar	вдячний
+verliefd	закоханий
+de ruzie	сварка
+het excuus	вибачення
+troosten	втішати
+het humeur	настрій
+chagrijnig	не в гуморі
+vrolijk	веселий
+de vriendschap	дружба
+het noodgeval	надзвичайна ситуація
+de brand	пожежа
+blussen	гасити
+de rook	дим
+de inbraak	крадіжка зі зламом
+de dief	злодій
+de diefstal	крадіжка
+het slachtoffer	потерпілий
+de verdachte	підозрюваний
+de misdaad	злочин
+het geweld	насильство
+huiselijk geweld	домашнє насильство
+Veilig Thuis	«Безпечний дім» (служба допомоги)
+de wijkagent	дільничний
+het gevaar	небезпека
+de veiligheid	безпека
+de hulp	допомога
+de hulpverlener	соціальний працівник
+de maatschappelijk werker	соціальний працівник
+de huisartsenspoedpost	черговий пункт лікарів
+de reanimatie	реанімація
+de AED	дефібрилятор
+de brandblusser	вогнегасник
+de nooduitgang	запасний вихід
+de sirene	сирена
+de beveiliging	охорона
+de reden	причина
+het probleem	проблема
+de oplossing	рішення
+het idee	ідея
+de keuze	вибір
+de kans	шанс
+het doel	мета
+het plan	план
+de manier	спосіб
+de informatie	інформація
+de mogelijkheid	можливість
+het verschil	різниця
+de fout	помилка
+het begin	початок
+het einde	кінець
+de rij	ряд, черга
+de plek	місце
+de plaats	місце; населений пункт
+het deel	частина
+het geluid	звук
+de stem	голос
+de naam	ім'я, назва
+de wereld	світ
+het leven	життя
+de dood	смерть
+de mens	людина
+de oorlog	війна
+de vrede	мир
+de tijd	час
+de keer	раз
+het ding	річ
+het gebied	область, район
+de soort	вид, сорт
+het voordeel	перевага
+het nadeel	недолік
+de toekomstplannen	плани на майбутнє
+de ontwikkeling	розвиток
+de situatie	ситуація
+het gedrag	поведінка
+de gewoonte	звичка
+de cultuur	культура
+de traditie	традиція
+de samenleving	суспільство
+de waarde	цінність, вартість
+de norm	норма
+het respect	повага

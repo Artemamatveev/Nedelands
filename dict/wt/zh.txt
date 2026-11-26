@@ -1,0 +1,1996 @@
+de huisarts	家庭医生
+het ziekenhuis	医院
+de apotheek	药店
+het recept	处方
+het medicijn	药
+de pijn	疼痛
+de hoofdpijn	头痛
+de buikpijn	肚子疼
+de koorts	发烧
+hoesten	咳嗽
+ziek	生病的
+beter worden	好起来
+de tandarts	牙医
+de verpleegkundige	护士
+de specialist	专科医生
+het bloed	血
+de uitslag	结果
+de zorgverzekering	医疗保险
+het eigen risico	自付额
+de huisartsenpost	夜间及周末全科诊所
+de ambulance	救护车
+het spreekuur	门诊时间
+de griep	流感
+het been	腿
+de arm	胳膊
+de rug	背
+de keel	喉咙
+gezond	健康的
+de patiënt	病人
+de wond	伤口
+de pleister	创可贴
+het verband	绷带
+de allergie	过敏
+de pijnstiller	止痛药
+zwanger	怀孕的
+de verloskundige	助产士
+de bril	眼镜
+de oogarts	眼科医生
+de fysiotherapeut	理疗师
+de spoedeisende hulp	急诊科
+ongezond	不健康的
+duizelig	头晕的
+misselijk	恶心的
+moe	累
+de hoest	咳嗽
+de wachtkamer	候诊室
+de behandeling	治疗
+de operatie	手术
+onderzoeken	检查
+de prik	打针
+de vaccinatie	接种疫苗
+de dokter	医生
+de afspraak	预约
+de verkoudheid	感冒
+verkouden	感冒了
+niezen	打喷嚏
+overgeven	呕吐
+de diarree	腹泻
+het zuur	胃酸
+de bloeddruk	血压
+de suikerziekte	糖尿病
+de pil	药片
+de druppels	滴剂
+de zalf	药膏
+de thermometer	体温计
+de rolstoel	轮椅
+de kruk	拐杖
+gebroken	断了的
+de gips	石膏
+bloeden	流血
+de verwijzing	转诊单
+de huisartsenpraktijk	全科诊所
+de assistente	医生助理
+de spoed	紧急
+het ongeluk	事故
+gewond	受伤的
+de EHBO	急救
+de psycholoog	心理学家
+de stress	压力
+somber	忧郁的
+genezen	痊愈
+het gewicht	体重
+afvallen	减肥
+de vitamine	维生素
+de bijwerking	副作用
+de bijsluiter	说明书
+de huisartsenassistente	全科医生助理
+de kraamzorg	产后居家护理
+ademen	呼吸
+de verzekeringspas	保险卡
+de baan	工作
+de werkgever	雇主
+de werknemer	雇员
+de collega	同事
+de baas	老板
+het salaris	工资
+het contract	合同
+de vacature	空缺职位
+solliciteren	求职
+het sollicitatiegesprek	求职面试
+het cv	简历
+de ervaring	经验
+de opleiding	培训、教育
+het diploma	文凭
+parttime	兼职
+fulltime	全职
+de werktijden	工作时间
+de pauze	休息
+de vakantiedagen	假期天数
+het uitzendbureau	职业中介
+werkloos	失业的
+de uitkering	救济金
+het kantoor	办公室
+de vergadering	会议
+het rooster	排班表
+de klant	顾客
+verdienen	挣钱
+ontslaan	解雇
+de stage	实习
+de werkplek	工作场所
+de afdeling	部门
+de overuren	加班
+het pensioen	养老金
+de vakbond	工会
+de proeftijd	试用期
+de loonstrook	工资单
+het bedrijf	公司
+de zzp'er	自由职业者
+de sollicitatiebrief	求职信
+de ploegendienst	轮班
+de nachtdienst	夜班
+het uniform	制服
+de promotie	升职
+het ontslag	解雇
+ontslag nemen	辞职
+de sollicitatie	求职申请
+de werkervaring	工作经验
+het loon	工资
+het minimumloon	最低工资
+bruto	税前
+netto	税后
+het vakantiegeld	假期津贴
+de cao	集体劳动协议
+het tijdelijk contract	临时合同
+het vast contract	长期合同
+zich ziek melden	请病假
+de bedrijfsarts	企业医生
+de leidinggevende	主管
+het team	团队
+de taak	任务
+de opdracht	任务
+de dienst	班
+de werkweek	工作周
+het verlof	假
+het zwangerschapsverlof	产假
+de werkvergunning	工作许可证
+de arbeidsmarkt	劳动力市场
+de beloning	报酬
+de reiskosten	交通费
+de ontslagbrief	解雇信
+de werkzoekende	求职者
+de vaardigheid	技能
+de cursus	课程
+het certificaat	证书
+de werktijd	上班时间
+de lunchpauze	午休
+de kantine	食堂
+het personeel	员工
+de werkloosheid	失业
+de uitzendkracht	派遣工
+het arbeidscontract	劳动合同
+de vrijwilliger	志愿者
+de ondernemer	企业家
+de KvK	商会
+de factuur	发票
+de woning	住房
+het huis	房子
+het appartement	公寓
+de huur	房租
+de huurder	租客
+de verhuurder	房东
+de woningcorporatie	住房协会
+huren	租
+verhuizen	搬家
+de buren	邻居
+de buurt	街区
+de verdieping	楼层
+de trap	楼梯
+de lift	电梯
+de slaapkamer	卧室
+de woonkamer	客厅
+de badkamer	浴室
+de keuken	厨房
+de wc	厕所
+de tuin	花园
+het balkon	阳台
+de verwarming	暖气
+de rekening	账单
+de stroom	电
+de vuilnisbak	垃圾桶
+het afval	垃圾
+de sleutel	钥匙
+de monteur	维修工
+kapot	坏了
+de reparatie	修理
+de vloer	地板
+het plafond	天花板
+de muur	墙
+het raam	窗户
+de deur	门
+het dak	屋顶
+de kelder	地下室
+de zolder	阁楼
+de gang	走廊
+de schuur	棚子
+de bel	门铃
+de brievenbus	信箱
+de borg	押金
+het huurcontract	租房合同
+de schimmel	霉
+de lekkage	漏水
+schoonmaken	打扫
+opruimen	整理
+het licht	灯光
+de huisbaas	房东
+de koopwoning	自购房
+de huurwoning	租的房子
+de hypotheek	房贷
+de makelaar	房地产经纪人
+de wachtlijst	等候名单
+de inschrijving	登记
+de bovenwoning	楼上的住宅
+de benedenwoning	一楼住宅
+de begane grond	一楼
+de voordeur	前门
+de achterdeur	后门
+de kraan	水龙头
+de douche	淋浴
+het bad	浴缸
+de wastafel	洗手池
+de cv-ketel	暖气锅炉
+de radiator	暖气片
+het gas	燃气
+de meter	计量表
+de meterstand	表读数
+de energieleverancier	能源供应商
+de servicekosten	物业费
+de huurverhoging	涨房租
+de opzegging	解约通知
+het onderhoud	维修保养
+de overlast	骚扰、干扰
+het lawaai	噪音
+de verhuizing	搬家
+de verhuisdoos	搬家纸箱
+het meubel	家具
+gemeubileerd	带家具的
+de woonruimte	居住空间
+de vierkante meter	平方米
+de kamer	房间
+de studio	单间公寓
+de portiek	楼道
+de flat	公寓楼
+het rijtjeshuis	联排房屋
+de vensterbank	窗台
+de klusjesman	杂工
+de rookmelder	烟雾报警器
+de container	垃圾箱
+het grofvuil	大件垃圾
+scheiden	分类
+de stekker	插头
+de zekering	保险丝
+het tapijt	地毯
+de woonwijk	住宅区
+de buurtbewoner	居民
+de trein	火车
+de bus	公共汽车
+de tram	有轨电车
+de metro	地铁
+de fiets	自行车
+de auto	汽车
+het station	车站
+het perron	站台
+de halte	车站（公交）
+het kaartje	票
+de ov-chipkaart	公交卡
+inchecken	刷卡进站
+uitchecken	刷卡出站
+overstappen	换乘
+de vertraging	延误
+vertrekken	出发
+aankomen	到达
+de reis	旅行
+het rijbewijs	驾照
+de file	堵车
+parkeren	停车
+de weg	路
+het verkeer	交通
+het stoplicht	红绿灯
+rechtsaf	右转
+linksaf	左转
+rechtdoor	直走
+de kruising	十字路口
+de fietsenstalling	自行车停车场
+de snelweg	高速公路
+de rotonde	环岛
+het fietspad	自行车道
+de stoep	人行道
+het zebrapad	斑马线
+de parkeerplaats	停车位
+de taxi	出租车
+het vliegtuig	飞机
+het vliegveld	机场
+de boot	船
+de pont	渡船
+de conducteur	列车员
+de vertrektijd	出发时间
+de aankomsttijd	到达时间
+enkele reis	单程
+retour	往返
+de spits	高峰期
+de storing	故障
+de omleiding	绕行
+de benzine	汽油
+het tankstation	加油站
+de helm	头盔
+het slot	锁
+de band	轮胎
+de voorrang	优先通行权
+de bestuurder	驾驶员
+de passagier	乘客
+de dienstregeling	时刻表
+het spoor	铁轨；站台号
+de intercity	城际列车
+de sprinter	慢车
+de NS	荷兰铁路
+het abonnement	订阅、月票
+het verkeersbord	交通标志
+de snelheid	速度
+de flitspaal	测速摄像头
+de verkeersboete	交通罚款
+het rijexamen	驾驶考试
+de rijles	驾驶课
+de APK	年检
+het kenteken	车牌号
+het parkeerkaartje	停车票
+de parkeervergunning	停车许可证
+de bushalte	公交站
+het knooppunt	高速公路枢纽
+de afslag	出口
+de fietser	骑车人
+de voetganger	行人
+de scooter	踏板摩托
+de motor	摩托车；发动机
+de vrachtauto	货车
+botsen	相撞
+inhalen	超车
+remmen	刹车
+oversteken	过马路
+de reiziger	旅客
+de bagage	行李
+de koffer	行李箱
+de vlucht	航班
+de instaptijd	登机时间
+de grens	边境
+het visum	签证
+de winkel	商店
+de supermarkt	超市
+de markt	市场
+de kassa	收银台
+de bon	收据
+de prijs	价格
+duur	贵
+goedkoop	便宜
+de korting	折扣
+de aanbieding	特价
+betalen	付款
+pinnen	刷卡付款
+contant	现金
+de pinpas	借记卡
+het geld	钱
+de portemonnee	钱包
+de maat	尺码
+passen	试穿；合适
+ruilen	换
+terugbrengen	退还
+de klantenservice	客服
+bestellen	订购
+het pakket	包裹
+bezorgen	送货
+de bank	银行
+het rekeningnummer	账号
+sparen	存钱
+lenen	借
+de belasting	税
+de bakker	面包店
+de slager	肉铺
+de drogist	日化店
+het warenhuis	百货商店
+het winkelcentrum	购物中心
+de openingstijden	营业时间
+open	开着的
+gesloten	关着的
+de uitverkoop	大减价
+de garantie	保修
+de boodschappen	日常采购
+het boodschappenlijstje	购物清单
+het mandje	购物篮
+het winkelwagentje	购物车
+de verkoper	售货员
+de munt	硬币
+het bankbiljet	纸币
+het wisselgeld	找的零钱
+de schuld	债务
+de rente	利息
+de overschrijving	转账
+het saldo	余额
+de pincode	密码
+de geldautomaat	取款机
+gratis	免费
+kosten	花费
+de klantenkaart	会员卡
+het statiegeld	押瓶费
+inleveren	交还
+de webwinkel	网店
+de bezorgkosten	运费
+retourneren	退货
+de bedenktijd	冷静期
+de aankoop	购买
+het koopje	便宜货
+de kwaliteit	质量
+het merk	品牌
+de verpakking	包装
+de houdbaarheidsdatum	保质期
+de kilo	公斤
+de gram	克
+de liter	升
+het stuk	块
+het blik	罐头
+de pot	罐子
+de zak	袋子
+het tasje	购物袋
+de zelfscan	自助扫码
+het filiaal	分店
+de etalage	橱窗
+de paskamer	试衣间
+het bonnetje	小票
+de spaarrekening	储蓄账户
+de betaalrekening	活期账户
+het budget	预算
+uitgeven	花钱
+de inkomsten	收入
+de uitgaven	支出
+het inkomen	收入
+de schuldhulp	债务援助
+de betalingsregeling	分期付款安排
+de incasso	自动扣款
+de aanmaning	催款单
+de deurwaarder	执达员
+de euro	欧元
+de cent	分
+wisselen	兑换
+de prijslijst	价目表
+de basisschool	小学
+de middelbare school	中学
+de groep	组；年级
+de leerkracht	老师
+de juf	女老师
+de leerling	学生
+het huiswerk	作业
+het rapport	成绩单
+de ouderavond	家长会
+de kinderopvang	托儿服务
+de oppas	保姆
+het schoolreisje	学校郊游
+de schoolvakantie	学校假期
+spijbelen	逃学
+leerplichtig	义务教育年龄的
+de gymles	体育课
+het lokaal	教室
+de les	课
+leren	学；教
+uitleggen	解释
+het cijfer	分数；数字
+de toets	测验
+de opvoeding	教养
+het consultatiebureau	儿童保健所
+de schooltas	书包
+het schoolplein	校园操场
+de directeur	校长；主任
+het vak	科目
+rekenen	算术
+de pen	钢笔、笔
+het potlood	铅笔
+het schrift	练习本
+de gum	橡皮
+het woordenboek	词典
+de vraag	问题
+het antwoord	答案
+het examen	考试
+slagen	通过考试
+zakken	考试不及格
+de universiteit	大学
+het mbo	中等职业教育
+de peuterspeelzaal	幼儿游戏班
+de crèche	托儿所
+de buitenschoolse opvang	课后托管
+de ouderbijdrage	家长捐助费
+de mentor	班主任
+de klas	班级
+het schooljaar	学年
+de voorschool	学前班
+de kleuter	幼儿
+de peuter	学步儿童
+de leerplicht	义务教育
+de leerplichtambtenaar	学籍督察员
+het schooladvies	升学建议
+de doorstroomtoets	小学毕业测试
+het vmbo	预备职业中学
+de havo	高级普通中学
+het vwo	大学预科
+het hbo	应用科技大学
+de studiefinanciering	助学金
+de student	大学生
+het lesrooster	课程表
+de rekenmachine	计算器
+de liniaal	尺子
+het etui	笔袋
+de spreekbeurt	课堂演讲
+het werkstuk	作业报告
+de leesles	阅读课
+de traktatie	生日分享的零食
+het schoolfeest	学校联欢
+de ouderraad	家长委员会
+het oudergesprek	家长面谈
+de schoolarts	校医
+pesten	欺负
+het speelgoed	玩具
+de luier	尿布
+de kinderwagen	婴儿车
+het knuffeldier	毛绒玩具
+opvoeden	养育
+de straf	惩罚
+het voorbeeld	例子
+de bijles	补习
+het lesgeld	学费
+de gemeente	市政府
+het gemeentehuis	市政厅
+het loket	服务窗口
+het formulier	表格
+invullen	填写
+aanvragen	申请
+de aanvraag	申请
+het paspoort	护照
+de identiteitskaart	身份证
+geldig	有效的
+verlopen	过期
+de handtekening	签名
+ondertekenen	签字
+het adres	地址
+zich inschrijven	登记
+de Belastingdienst	税务局
+de toeslag	补贴
+het burgerservicenummer	公民服务号
+de politie	警察
+de brandweer	消防队
+het alarmnummer	紧急电话
+de wet	法律
+de regel	规定
+de boete	罚款
+de verzekering	保险
+de brief	信
+de postcode	邮编
+de geboortedatum	出生日期
+de nationaliteit	国籍
+de ambtenaar	公务员
+de burgemeester	市长
+de gemeenteraad	市议会
+het uittreksel	摘录证明
+de verblijfsvergunning	居留许可
+de IND	移民局
+de inburgering	融入
+de naturalisatie	入籍
+de huurtoeslag	租房补贴
+de zorgtoeslag	医疗保险补贴
+de kinderbijslag	儿童补贴
+het UWV	雇员保险局
+de bijstand	社会救助
+de DigiD	DigiD（政府数字身份）
+de belastingaangifte	报税
+de rechter	法官
+de advocaat	律师
+het bezwaar	异议
+de klacht	投诉
+de rechten	权利
+de plichten	义务
+de basisregistratie	居民登记系统
+de uitschrijving	注销登记
+de geboorteakte	出生证明
+de huwelijksakte	结婚证
+de legalisatie	认证
+de vertaling	翻译
+beëdigd	宣誓的
+de leges	手续费
+het wijkteam	社区援助小组
+de Wmo	社会支持法
+het sociaal loket	社会服务窗口
+de klantmanager	个案经理
+de SVB	社会保险银行
+de AOW	国家养老金
+DUO	DUO（教育执行局）
+de lening	贷款
+de rechtbank	法院
+de aangifte	报案
+de getuige	证人
+het Juridisch Loket	法律咨询处
+de privacy	隐私
+de gegevens	资料
+de machtiging	授权
+de termijn	期限
+de beslissing	决定
+de toestemming	许可
+de vergunning	许可证
+de inburgeringsplicht	融入义务
+de taalcoach	语言辅导员
+de verlenging	延期
+het bewijs	证明
+de kopie	复印件
+de ochtend	早上
+de middag	下午
+de avond	晚上
+de nacht	夜里
+vandaag	今天
+morgen	明天
+gisteren	昨天
+overmorgen	后天
+de week	星期
+het weekend	周末
+de maand	月
+het jaar	年
+het uur	小时
+het kwartier	一刻钟
+vroeg	早
+laat	晚
+op tijd	准时
+het weer	天气
+de zon	太阳
+de regen	雨
+de wind	风
+de sneeuw	雪
+de wolk	云
+warm	暖和、热
+koud	冷
+nat	湿的
+droog	干的
+de lente	春天
+de zomer	夏天
+de herfst	秋天
+de winter	冬天
+de seconde	秒
+de minuut	分钟
+de dag	天
+de datum	日期
+de kalender	日历
+het seizoen	季节
+de feestdag	节日
+altijd	总是
+nooit	从不
+soms	有时
+vaak	经常
+meestal	通常
+straks	待会儿
+meteen	马上
+nu	现在
+het onweer	雷雨
+de mist	雾
+de temperatuur	温度
+de graad	度
+bewolkt	多云的
+zonnig	晴朗的
+de hagel	冰雹
+glad	滑的
+de weersverwachting	天气预报
+de storm	暴风
+vorige week	上周
+volgend jaar	明年
+maandag	星期一
+dinsdag	星期二
+woensdag	星期三
+donderdag	星期四
+vrijdag	星期五
+zaterdag	星期六
+zondag	星期日
+januari	一月
+februari	二月
+maart	三月
+april	四月
+mei	五月
+juni	六月
+juli	七月
+augustus	八月
+september	九月
+oktober	十月
+november	十一月
+december	十二月
+de eeuw	世纪
+het verleden	过去
+de toekomst	未来
+het moment	时刻
+binnenkort	不久
+onlangs	最近
+vroeger	以前
+later	以后
+de regenboog	彩虹
+de bliksem	闪电
+de donder	雷
+de bui	阵雨
+de hittegolf	热浪
+de ijzel	冻雨
+vriezen	结冰
+regenen	下雨
+sneeuwen	下雪
+waaien	刮风
+de familie	亲戚
+het gezin	家庭
+de ouders	父母
+de vader	父亲
+de moeder	母亲
+de zoon	儿子
+de dochter	女儿
+de broer	兄弟
+de zus	姐妹
+de opa	爷爷、外公
+de oma	奶奶、外婆
+de man	男人；丈夫
+de vrouw	女人；妻子
+getrouwd	已婚的
+gescheiden	离婚的
+de baby	婴儿
+het kind	孩子
+de vriend	朋友；男朋友
+de vriendin	女朋友
+de buurman	男邻居
+de buurvrouw	女邻居
+de verjaardag	生日
+jarig zijn	过生日
+feliciteren	祝贺
+trouwen	结婚
+oud	老的、旧的
+jong	年轻的
+aardig	和善的
+boos	生气的
+blij	高兴的
+verdrietig	难过的
+de grootouders	祖父母
+de kleinkinderen	孙辈
+de oom	叔叔、舅舅
+de tante	阿姨、姑姑
+de neef	侄子；堂兄弟
+de nicht	侄女；堂姐妹
+de schoonmoeder	婆婆、岳母
+de zwager	姐夫、妹夫
+de schoonzus	嫂子、弟妹
+de weduwe	寡妇
+alleenstaand	单身的
+samenwonen	同居
+de bruiloft	婚礼
+het huwelijk	婚姻
+de geboorte	出生
+overlijden	去世
+de begrafenis	葬礼
+de tiener	青少年
+de volwassene	成年人
+de kennis	熟人
+de gast	客人
+de ex	前任
+de echtgenoot	丈夫
+de echtgenote	妻子
+de partner	伴侣
+de schoonvader	公公、岳父
+de schoonouders	公婆、岳父母
+de kleinzoon	孙子、外孙
+de kleindochter	孙女、外孙女
+de tweeling	双胞胎
+het familielid	亲戚
+de buurtgenoot	街坊
+de vreemde	陌生人
+de jongen	男孩
+het meisje	女孩
+de meneer	先生
+de mevrouw	女士
+de bejaarde	老年人
+de gepensioneerde	退休人员
+de nieuwkomer	新移民
+de vluchteling	难民
+de migrant	移民
+de Nederlander	荷兰人
+de achternaam	姓
+de voornaam	名
+de leeftijd	年龄
+de zwangerschap	怀孕期
+het ontbijt	早餐
+de lunch	午餐
+het avondeten	晚餐
+het brood	面包
+de boterham	一片面包
+de kaas	奶酪
+de melk	牛奶
+het ei	鸡蛋
+de groente	蔬菜
+het fruit	水果
+de appel	苹果
+het vlees	肉
+de vis	鱼
+de kip	鸡
+de rijst	米饭
+de aardappel	土豆
+de soep	汤
+de koffie	咖啡
+de thee	茶
+de suiker	糖
+het zout	盐
+koken	做饭；煮
+bakken	烤；煎
+snijden	切
+de pan	锅
+het bord	盘子
+het glas	玻璃杯
+het mes	刀
+de vork	叉子
+de lepel	勺子
+lekker	好吃的
+honger hebben	饿
+dorst hebben	渴
+de boter	黄油
+de olie	油
+de jam	果酱
+de pindakaas	花生酱
+de hagelslag	巧克力碎
+de yoghurt	酸奶
+de pasta	意大利面
+de saus	酱汁
+de sla	生菜
+de tomaat	西红柿
+de ui	洋葱
+de wortel	胡萝卜
+de banaan	香蕉
+de sinaasappel	橙子
+de peer	梨
+de aardbei	草莓
+het toetje	甜点
+de taart	蛋糕
+het koekje	饼干
+het snoep	糖果
+het sap	果汁
+het bier	啤酒
+de wijn	葡萄酒
+vegetarisch	素食的
+zoet	甜的
+zuur	酸的
+bitter	苦的
+pittig	辣的
+de kom	碗
+het kopje	杯子
+het menu	菜单
+de ober	服务员
+afrekenen	结账
+de fooi	小费
+het broodje	小面包、三明治
+de pannenkoek	薄煎饼
+de stamppot	蔬菜土豆泥
+de erwtensoep	豌豆汤
+de kroket	炸丸子
+de bitterbal	荷兰炸肉丸
+de patat	薯条
+de stroopwafel	糖浆华夫饼
+de drop	甘草糖
+het gehakt	肉末
+het rundvlees	牛肉
+het varkensvlees	猪肉
+het lamsvlees	羊肉
+halal	清真
+veganistisch	纯素的
+de noten	坚果
+de bonen	豆子
+de erwten	豌豆
+de paprika	甜椒
+de komkommer	黄瓜
+de champignon	蘑菇
+de knoflook	大蒜
+de citroen	柠檬
+de druif	葡萄
+de meloen	甜瓜
+de kers	樱桃
+het meel	面粉
+de peper	胡椒
+het kruid	香料
+de room	奶油
+de slagroom	鲜奶油
+het ijs	冰；冰淇淋
+de chocolade	巧克力
+de frisdrank	汽水
+de borrel	小酌聚会
+het hapje	小吃
+de magnetronmaaltijd	微波餐
+de maaltijd	一餐
+het gerecht	菜
+rauw	生的
+gaar	熟了
+verbrand	烧焦的
+opwarmen	加热
+proeven	品尝
+de smaak	味道
+het bestek	餐具
+het servet	餐巾
+de theepot	茶壶
+zijn	是
+hebben	有
+gaan	去
+komen	来
+doen	做
+maken	做、制作
+zeggen	说
+vertellen	讲述
+vragen	问
+antwoorden	回答
+praten	聊天
+spreken	说话
+weten	知道
+kennen	认识
+denken	想
+begrijpen	明白
+zien	看见
+kijken	看
+horen	听见
+luisteren	听
+lezen	读
+schrijven	写
+werken	工作
+wonen	居住
+leven	活着
+kopen	买
+verkopen	卖
+geven	给
+krijgen	得到
+nemen	拿
+brengen	带来
+halen	去取
+zetten	放
+leggen	平放
+staan	站
+zitten	坐
+liggen	躺
+lopen	走
+rennen	跑
+rijden	驾驶
+vliegen	飞
+wachten	等
+zoeken	找
+vinden	找到；认为
+verliezen	丢失、输
+beginnen	开始
+stoppen	停止
+openmaken	打开
+dichtdoen	关上
+helpen	帮助
+proberen	尝试
+gebruiken	使用
+betekenen	意思是
+herhalen	重复
+vergeten	忘记
+onthouden	记住
+willen	想要
+kunnen	能
+moeten	必须
+mogen	可以
+houden van	爱、喜欢
+hopen	希望
+geloven	相信
+spelen	玩
+slapen	睡觉
+wakker worden	醒来
+opstaan	起床
+zich aankleden	穿衣服
+wassen	洗
+douchen	淋浴
+eten	吃
+drinken	喝
+bellen	打电话
+sturen	发送
+tellen	数
+kiezen	选择
+beslissen	决定
+veranderen	改变
+blijven	留下
+worden	变成
+gebeuren	发生
+lachen	笑
+huilen	哭
+aanbieden	提供
+aannemen	接受；录用
+afmaken	完成
+afzeggen	取消
+annuleren	取消
+bedanken	感谢
+bedoelen	意思是
+beloven	答应
+bereiken	达到
+beschrijven	描述
+besteden	花费
+bewegen	动
+bezoeken	拜访
+bijhouden	记录
+controleren	检查
+delen	分享；分
+doorgeven	转告
+duren	持续
+eindigen	结束
+groeten	打招呼
+herkennen	认出
+houden	拿着；保留
+inpakken	打包
+invoeren	输入
+kloppen	敲；对
+klagen	抱怨
+lenen van	向……借
+letten op	注意
+meedoen	参加
+meenemen	带走
+melden	报告
+noemen	称呼
+oefenen	练习
+ontmoeten	遇见
+ontvangen	收到
+oplossen	解决
+opschrijven	写下
+opletten	注意
+organiseren	组织
+plannen	计划
+regelen	安排
+reizen	旅行
+roepen	喊
+schrikken	吓一跳
+sluiten	关闭
+steunen	支持
+stelen	偷
+storen	打扰
+studeren	学习（大学）
+toestaan	允许
+uitgaan van	假定
+uitkiezen	挑选
+uitproberen	试用
+vallen	摔倒
+verbieden	禁止
+verdwijnen	消失
+vergelijken	比较
+verhuren	出租
+verklaren	解释
+verlengen	延长
+verplaatsen	移动
+verstaan	听懂
+vertalen	翻译
+vertrouwen	信任
+verwachten	期待
+voelen	感觉
+voorstellen	建议；介绍
+waarschuwen	警告
+wegen	称重
+wennen	习惯
+winnen	赢
+zorgen voor	照顾
+zwaaien	挥手
+aanzetten	打开（电器）
+uitzetten	关掉
+ophalen	去接、去取
+wegbrengen	送去
+aankondigen	宣布
+aanmelden	报名
+afhalen	领取
+bespreken	讨论
+herinneren	记得；提醒
+missen	错过；想念
+pakken	拿
+passen op	照看
+rusten	休息
+trouwen met	和……结婚
+zich voelen	觉得（身体或情绪）
+zich vergissen	弄错
+zich zorgen maken	担心
+zich haasten	赶紧
+zich schamen	感到羞愧
+zich vervelen	感到无聊
+zich herinneren	回想起
+zich voorbereiden	准备
+zich voorstellen	自我介绍；想象
+aanraken	触摸
+bouwen	建造
+breken	打破
+drukken	按
+duwen	推
+trekken	拉
+gooien	扔
+vangen	接住
+springen	跳
+klimmen	爬
+vullen	装满
+legen	倒空
+repareren	修理
+verven	粉刷
+knippen	剪
+plakken	粘
+vouwen	折叠
+zwijgen	沉默
+fluisteren	低语
+schreeuwen	大喊
+glimlachen	微笑
+knikken	点头
+wijzen	指
+tonen	展示
+besparen	节省
+verspillen	浪费
+lukken	成功
+mislukken	失败
+bestaan	存在
+ontstaan	产生
+stijgen	上升
+dalen	下降
+groeien	生长
+sterven	死
+geboren worden	出生
+zich aanpassen	适应
+integreren	融入
+groot	大
+klein	小
+lang	长；高
+kort	短
+hoog	高
+laag	低
+breed	宽
+smal	窄
+dik	厚；胖
+dun	薄；瘦
+zwaar	重
+licht	轻；浅色的
+donker	黑暗的、深色的
+nieuw	新的
+mooi	漂亮
+lelijk	丑
+schoon	干净
+vies	脏
+snel	快
+langzaam	慢
+makkelijk	容易
+moeilijk	难
+druk	忙、热闹
+rustig	安静的
+stil	安静
+leeg	空的
+vol	满的
+belangrijk	重要的
+mogelijk	可能的
+nodig	需要的
+klaar	好了、完成
+bezig	正在做
+bang	害怕的
+gelukkig	幸福的；幸好
+tevreden	满意的
+vriendelijk	友好的
+beleefd	有礼貌的
+eerlijk	诚实的；公平的
+lui	懒
+slim	聪明
+dom	笨
+rijk	富有的
+arm	穷
+eerste	第一
+laatste	最后的
+volgende	下一个
+verschillend	不同的
+hetzelfde	一样的
+anders	不同；否则
+zeker	肯定的
+beroemd	著名的
+gevaarlijk	危险的
+veilig	安全的
+normaal	正常的
+speciaal	特别的
+leuk	有意思的
+saai	无聊的
+gek	疯狂的、奇怪的
+nerveus	紧张的
+vrij	自由的；休息
+handig	方便的、手巧的
+nuttig	有用的
+duidelijk	清楚的
+ingewikkeld	复杂的
+eenvoudig	简单的
+precies	正好
+juist	正确的
+fout	错的
+echt	真的
+nep	假的
+vreemd	奇怪的；外国的
+bekend	有名的、熟悉的
+onbekend	不认识的
+goed	好
+slecht	坏
+prettig	舒服的
+vervelend	烦人的
+heerlijk	美味的、美妙的
+fijn	好的；细的
+sterk	强壮的
+zwak	弱的
+zacht	软的；轻声的
+hard	硬的；大声；快
+luid	响亮的
+scherp	锋利的
+bot	钝的；粗鲁的
+gezellig	温馨愉快的
+ontspannen	放松的
+gespannen	紧张的
+dichtbij	附近
+ver	远
+diep	深的
+ondiep	浅的
+rond	圆的
+vierkant	方的
+recht	直的
+scheef	歪的
+heet	很烫的
+lauw	温的
+fris	凉爽的；新鲜的
+vers	新鲜的
+goedgekeurd	已批准的
+verplicht	必须的
+verboden	禁止的
+toegestaan	允许的
+beschikbaar	可用的
+bezet	有人的、占线
+geschikt	合适的
+ongeveer	大约
+zelfstandig	独立的
+serieus	认真的
+grappig	好笑的
+bijzonder	特别的
+gewoon	普通的
+typisch	典型的
+streng	严格的
+lief	可爱的
+gemeen	刻薄的
+jaloers	嫉妒的
+trots	自豪的
+verlegen	害羞的
+geduldig	有耐心的
+ongeduldig	没耐心的
+behulpzaam	乐于助人的
+hardwerkend	勤劳的
+en	和
+maar	但是
+of	或者；是否
+want	因为
+omdat	因为
+dus	所以
+als	如果、当；作为
+wanneer	什么时候
+toen	那时；当……时
+dan	然后；比
+eerst	首先
+daarna	之后
+ook	也
+niet	不
+geen	没有
+wel	倒是
+al	已经
+nog	还
+alleen	只；独自
+samen	一起
+heel	很；整个
+te	太
+veel	很多
+weinig	很少
+meer	更多
+minder	更少
+genoeg	足够
+bijna	几乎
+misschien	也许
+natuurlijk	当然；自然的
+graag	乐意
+hier	这里
+daar	那里
+overal	到处
+binnen	里面
+buiten	外面
+boven	上面、楼上
+beneden	下面、楼下
+links	左边
+rechts	右边
+naast	旁边
+tussen	之间
+achter	后面
+voor	为了；在……前面
+onder	下面
+op	在……上
+in	在……里
+bij	在……旁、在……家
+met	和、用
+zonder	没有
+naar	去、到
+van	的；从
+uit	从……出来
+over	关于；越过
+tot	直到
+sinds	自从
+tijdens	在……期间
+wie	谁
+wat	什么
+waar	哪里；真的
+waarom	为什么
+hoe	怎么
+hoeveel	多少
+welk	哪个
+iemand	某人
+niemand	没有人
+iets	某物
+niets	什么也没有
+alles	一切
+iedereen	每个人
+elke	每个
+eigenlijk	其实
+trouwens	顺便说
+toch	还是
+zelfs	甚至
+helaas	可惜
+vooral	尤其
+daarom	因此
+hoewel	虽然
+terwijl	一边……一边
+zodat	以便
+voordat	在……之前
+nadat	在……之后
+totdat	直到
+ergens	某处
+nergens	哪儿也不
+allebei	两个都
+sommige	有些
+andere	别的
+zo	这样
+erg	很；糟糕的
+steeds	一直
+opnieuw	再一次
+tegen	反对；对
+per	每
+langs	沿着
+door	穿过；被
+om	围绕；在（几点）
+tegenover	对面
+elf	十一
+twaalf	十二
+dertien	十三
+veertien	十四
+vijftien	十五
+zestien	十六
+zeventien	十七
+achttien	十八
+negentien	十九
+twintig	二十
+dertig	三十
+veertig	四十
+vijftig	五十
+zestig	六十
+zeventig	七十
+tachtig	八十
+negentig	九十
+honderd	一百
+duizend	一千
+een miljoen	一百万
+de helft	一半
+een kwart	四分之一
+het nummer	号码
+het bedrag	金额
+nul	零
+één	一
+twee	二
+drie	三
+vier	四
+vijf	五
+zes	六
+zeven	七
+acht	八
+negen	九
+tien	十
+het procent	百分之
+het paar	一对；几个
+het dubbele	两倍
+het lichaam	身体
+het hoofd	头
+het haar	头发
+het gezicht	脸
+het oog	眼睛
+het oor	耳朵
+de neus	鼻子
+de mond	嘴
+de tand	牙齿
+de tong	舌头
+de nek	脖子
+de schouder	肩膀
+de borst	胸
+de buik	肚子
+de hand	手
+de vinger	手指
+de knie	膝盖
+de voet	脚
+de teen	脚趾
+de huid	皮肤
+het hart	心脏
+de longen	肺
+de maag	胃
+de wang	脸颊
+de lip	嘴唇
+de kin	下巴
+het voorhoofd	额头
+de wenkbrauw	眉毛
+de baard	胡子
+de elleboog	肘
+de pols	手腕
+de duim	拇指
+de nagel	指甲
+de heup	臀部
+de enkel	脚踝
+de hiel	脚跟
+het bot	骨头
+de spier	肌肉
+de hersenen	大脑
+de nier	肾
+de lever	肝
+het zweet	汗
+de kleren	衣服
+de jas	外套
+de trui	毛衣
+het overhemd	衬衫
+het T-shirt	T恤
+de broek	裤子
+de spijkerbroek	牛仔裤
+de rok	裙子
+de jurk	连衣裙
+de schoenen	鞋
+de laarzen	靴子
+de sokken	袜子
+het ondergoed	内衣
+de muts	毛线帽
+de sjaal	围巾
+de handschoenen	手套
+de pet	帽子（鸭舌帽）
+de riem	腰带
+de tas	包
+de paraplu	雨伞
+aantrekken	穿上
+uittrekken	脱下
+dragen	穿着；搬
+het pak	西装
+de pyjama	睡衣
+de sieraden	首饰
+de ring	戒指
+het horloge	手表
+de bh	胸罩
+de hoofddoek	头巾
+de regenjas	雨衣
+de sportschoenen	运动鞋
+de slippers	拖鞋
+het vest	开衫
+de knoop	纽扣
+de rits	拉链
+de mouw	袖子
+de broekzak	口袋
+de zonnebril	太阳镜
+de oorbel	耳环
+de ketting	项链
+de portefeuille	皮夹
+de rugzak	背包
+passend	合身的
+wijd	宽松的
+strak	紧的
+de wasmand	洗衣篮
+de tafel	桌子
+de stoel	椅子
+de fauteuil	扶手椅
+het bed	床
+de kast	柜子
+de lamp	灯
+het kussen	枕头、靠垫
+de deken	毯子
+de spiegel	镜子
+het gordijn	窗帘
+het vloerkleed	地毯
+de wasmachine	洗衣机
+de koelkast	冰箱
+het fornuis	炉灶
+de oven	烤箱
+de magnetron	微波炉
+de stofzuiger	吸尘器
+de vaatwasser	洗碗机
+de handdoek	毛巾
+de zeep	肥皂
+de tandenborstel	牙刷
+het toiletpapier	卫生纸
+de prullenbak	垃圾桶
+het stopcontact	插座
+de schaar	剪刀
+de doos	盒子
+de fles	瓶子
+de zitbank	沙发
+het kussensloop	枕套
+het laken	床单
+het dekbed	被子
+de wekker	闹钟
+de klok	钟
+het schilderij	画
+de plank	架子
+de la	抽屉
+de vuilniszak	垃圾袋
+de bezem	扫帚
+de emmer	水桶
+de dweil	拖把布
+de afwas	洗碗
+het afwasmiddel	洗洁精
+het wasmiddel	洗衣粉
+de was	要洗的衣服
+strijken	熨
+het strijkijzer	熨斗
+de waterkoker	电水壶
+het koffiezetapparaat	咖啡机
+de broodrooster	烤面包机
+de vriezer	冰柜
+het aanrecht	灶台
+de gootsteen	水槽
+het snoer	电线
+de verlichting	照明
+de gordijnrails	窗帘轨道
+het bureau	书桌
+de kapstok	衣帽架
+de hanger	衣架
+de sleutelbos	一串钥匙
+de kaars	蜡烛
+de plant	植物
+de vaas	花瓶
+de ladder	梯子
+de hamer	锤子
+de schroevendraaier	螺丝刀
+de boor	电钻
+het gereedschap	工具
+de hobby	爱好
+de sport	运动
+sporten	运动
+wandelen	散步
+fietsen	骑自行车
+zwemmen	游泳
+voetballen	踢足球
+de sportschool	健身房
+het museum	博物馆
+de bioscoop	电影院
+de film	电影
+het concert	音乐会
+het theater	剧院
+het park	公园
+de dierentuin	动物园
+de vereniging	协会
+het lid	会员
+het feest	聚会
+uitgaan	出去玩
+de vakantie	假期
+kamperen	露营
+het hotel	酒店
+de camping	露营地
+de foto	照片
+het spel	游戏
+de muziek	音乐
+zingen	唱歌
+tekenen	画画
+het vrijwilligerswerk	志愿工作
+uitnodigen	邀请
+afspreken	约定
+de wedstrijd	比赛
+de voetbalclub	足球俱乐部
+het zwemdiploma	游泳证书
+schaatsen	滑冰
+de schaatsen	冰鞋
+hardlopen	跑步
+de fitness	健身
+de yoga	瑜伽
+het tennis	网球
+het basketbal	篮球
+de bibliotheekpas	借书证
+het verhaal	故事
+de roman	小说
+het gedicht	诗
+de tentoonstelling	展览
+de voorstelling	演出
+het festival	节日、音乐节
+de barbecue	烧烤
+de picknick	野餐
+het uitje	出游
+de dagjesmensen	一日游游客
+de reisgids	导游、旅游指南
+het souvenir	纪念品
+de camera	相机
+het speelveld	游戏场地
+de puzzel	拼图
+het kaartspel	纸牌游戏
+de muziekles	音乐课
+het instrument	乐器
+de gitaar	吉他
+de piano	钢琴
+het koor	合唱团
+dansen	跳舞
+genieten	享受
+de vrije tijd	空闲时间
+het lidmaatschap	会员资格
+de contributie	会费
+de natuur	大自然
+het dier	动物
+de hond	狗
+de kat	猫
+de vogel	鸟
+het paard	马
+de koe	牛
+het schaap	羊
+het varken	猪
+de eend	鸭子
+de muis	老鼠
+het konijn	兔子
+de boom	树
+de bloem	花
+het gras	草
+het bos	森林
+de zee	海
+het strand	海滩
+de rivier	河
+het meer	湖
+de berg	山
+het land	国家；土地
+de dijk	堤坝
+de polder	圩田
+de molen	风车
+de lucht	空气；天空
+de grond	地面、土地
+de steen	石头
+de paddenstoel	蘑菇
+het blad	叶子
+de tak	树枝
+het zaad	种子
+de tulp	郁金香
+de roos	玫瑰
+de bij	蜜蜂
+de vlieg	苍蝇
+de mug	蚊子
+de spin	蜘蛛
+de vlinder	蝴蝶
+het insect	昆虫
+de mier	蚂蚁
+de rat	大老鼠
+de haan	公鸡
+de geit	山羊
+de ezel	驴
+de zwaan	天鹅
+de meeuw	海鸥
+de reiger	苍鹭
+de boerderij	农场
+het weiland	牧场
+het veld	田野
+het duin	沙丘
+het eiland	岛
+de heuvel	小山
+de sloot	沟渠
+het milieu	环境
+het klimaat	气候
+de vervuiling	污染
+recyclen	回收利用
+de zonnepanelen	太阳能板
+de windmolen	风力发电机
+het huisdier	宠物
+uitlaten	遛狗
+de stad	城市
+het dorp	村庄
+het centrum	市中心
+de wijk	街区
+de straat	街道
+het plein	广场
+de brug	桥
+de gracht	运河
+de hoek	角落
+het gebouw	建筑
+het stadhuis	市政厅
+de kerk	教堂
+de moskee	清真寺
+het politiebureau	警察局
+het café	咖啡馆
+de school	学校
+het zwembad	游泳池
+de speeltuin	游乐场
+het buurthuis	社区中心
+de ingang	入口
+de uitgang	出口
+de fabriek	工厂
+de haven	港口
+de bibliotheek	图书馆
+het postkantoor	邮局
+het restaurant	餐馆
+de snackbar	小吃店
+de begraafplaats	墓地
+het monument	纪念碑
+het standbeeld	雕像
+de toren	塔
+het kasteel	城堡
+de vuurtoren	灯塔
+de sporthal	体育馆
+het sportveld	运动场
+de rondweg	环路
+het industrieterrein	工业区
+de binnenstad	老城区
+de buitenwijk	郊区
+de hoofdstad	首都
+de inwoner	居民
+de toerist	游客
+de VVV	旅游咨询处
+de plattegrond	地图、平面图
+het verkeerslicht	交通灯
+de lantaarnpaal	路灯
+het bankje	长椅
+de fontein	喷泉
+de steeg	小巷
+de kade	码头
+de telefoon	电话
+het telefoonnummer	电话号码
+het bericht	消息
+de e-mail	电子邮件
+de bijlage	附件
+versturen	发送
+het internet	互联网
+de website	网站
+de computer	电脑
+de app	应用
+het wachtwoord	密码
+inloggen	登录
+downloaden	下载
+printen	打印
+de voicemail	语音信箱
+terugbellen	回电话
+opnemen	接电话；录音
+ophangen	挂电话
+de krant	报纸
+het nieuws	新闻
+de televisie	电视
+de radio	收音机
+het tijdschrift	杂志
+de oplader	充电器
+de batterij	电池
+het scherm	屏幕
+de smartphone	智能手机
+de mobiel	手机
+het sms'je	短信
+appen	发消息
+het gesprek	谈话、通话
+het videogesprek	视频通话
+de onderwerpregel	主题行
+de afzender	发件人
+de ontvanger	收件人
+beantwoorden	回复
+doorsturen	转发
+het account	账户
+uitloggen	退出登录
+de wifi	无线网络
+de link	链接
+klikken	点击
+het bestand	文件
+opslaan	保存
+de printer	打印机
+het toetsenbord	键盘
+typen	打字
+het nieuwsbericht	新闻报道
+sociale media	社交媒体
+het nepnieuws	假新闻
+de oplichting	诈骗
+de postzegel	邮票
+de envelop	信封
+de kaart	卡片；地图
+de uitnodiging	邀请
+het antwoordapparaat	答录机
+de verbinding	连接
+de taal	语言
+de moedertaal	母语
+het woord	词
+de zin	句子；兴致
+de uitspraak	发音
+het accent	口音
+de spelling	拼写
+spellen	拼读
+de kleur	颜色
+rood	红色
+blauw	蓝色
+geel	黄色
+groen	绿色
+zwart	黑色
+wit	白色
+grijs	灰色
+bruin	棕色
+oranje	橙色
+roze	粉色
+paars	紫色
+de koning	国王
+de koningin	王后
+de regering	政府
+de minister	部长
+de minister-president	首相
+de Tweede Kamer	众议院
+de verkiezingen	选举
+stemmen	投票
+de partij	政党
+de democratie	民主
+de Grondwet	宪法
+de provincie	省
+het waterschap	水务局
+de vrijheid	自由
+gelijk	平等的；对的
+de discriminatie	歧视
+de godsdienst	宗教
+de mening	意见
+de vlag	旗帜
+het Wilhelmus	荷兰国歌
+Koningsdag	国王节（4月27日）
+Bevrijdingsdag	解放日（5月5日）
+Dodenherdenking	阵亡将士纪念日（5月4日）
+Sinterklaas	圣尼古拉节（12月5日）
+de kerst	圣诞节
+het Koninklijk Huis	王室
+de Eerste Kamer	参议院
+het parlement	议会
+de politicus	政治家
+de politiek	政治
+het kabinet	内阁
+de staat	国家
+de rechtsstaat	法治国家
+de grondrechten	基本权利
+de vrijheid van meningsuiting	言论自由
+de gelijkheid	平等
+de Tweede Wereldoorlog	第二次世界大战
+de bevrijding	解放
+de Gouden Eeuw	黄金时代
+de Deltawerken	三角洲工程
+de provinciehoofdstad	省会
+de koopzondag	周日营业日
+de verjaardagskalender	生日日历
+het Nieuwjaar	新年
+het vuurwerk	烟花
+de oliebol	荷兰油炸面球
+Pasen	复活节
+het Suikerfeest	开斋节
+de ramadan	斋月
+de kok	厨师
+de kapper	理发师
+de schoonmaker	清洁工
+de chauffeur	司机
+de vrachtwagen	卡车
+de bezorger	快递员
+de postbode	邮递员
+de timmerman	木匠
+de loodgieter	水管工
+de elektricien	电工
+de schilder	油漆工
+de bouwvakker	建筑工人
+de boer	农民
+de tuinman	园丁
+de verkoopmedewerker	店员
+de caissière	收银员
+de magazijnmedewerker	仓库工人
+de automonteur	汽车修理工
+de garage	汽车修理厂
+de leraar	男老师
+de docent	讲师
+de verzorgende	护理员
+de kinderopvangmedewerker	托儿所工作人员
+de apotheker	药剂师
+de agent	警察
+de brandweerman	消防员
+de soldaat	士兵
+de journalist	记者
+de programmeur	程序员
+de boekhouder	会计
+de secretaresse	秘书
+de receptionist	前台接待
+de tolk	口译员
+de vertaler	翻译
+de bewaker	保安
+de kunstenaar	艺术家
+de ingenieur	工程师
+de architect	建筑师
+de dierenarts	兽医
+het gevoel	感觉
+de blijdschap	喜悦
+het verdriet	悲伤
+de angst	恐惧
+de woede	愤怒
+de liefde	爱
+de hoop	希望
+de schaamte	羞耻
+de eenzaamheid	孤独
+eenzaam	孤独的
+het heimwee	思乡
+de spijt	后悔
+spijt hebben	后悔
+opgelucht	松了口气的
+teleurgesteld	失望的
+verbaasd	吃惊的
+bezorgd	担心的
+geïrriteerd	恼火的
+enthousiast	热情的
+zenuwachtig	紧张的
+dankbaar	感激的
+verliefd	恋爱中的
+de ruzie	争吵
+het excuus	道歉
+troosten	安慰
+het humeur	心情
+chagrijnig	脾气不好的
+vrolijk	快活的
+de vriendschap	友谊
+het noodgeval	紧急情况
+de brand	火灾
+blussen	灭火
+de rook	烟
+de inbraak	入室盗窃
+de dief	小偷
+de diefstal	偷窃
+het slachtoffer	受害者
+de verdachte	嫌疑人
+de misdaad	罪行
+het geweld	暴力
+huiselijk geweld	家庭暴力
+Veilig Thuis	家庭安全中心
+de wijkagent	社区警察
+het gevaar	危险
+de veiligheid	安全
+de hulp	帮助
+de hulpverlener	助人工作者
+de maatschappelijk werker	社工
+de huisartsenspoedpost	全科急诊
+de reanimatie	心肺复苏
+de AED	自动除颤器
+de brandblusser	灭火器
+de nooduitgang	紧急出口
+de sirene	警报器
+de beveiliging	安保
+de reden	原因
+het probleem	问题
+de oplossing	解决办法
+het idee	主意
+de keuze	选择
+de kans	机会
+het doel	目标
+het plan	计划
+de manier	方式
+de informatie	信息
+de mogelijkheid	可能性
+het verschil	区别
+de fout	错误
+het begin	开始
+het einde	结束
+de rij	排、队
+de plek	地方
+de plaats	地点
+het deel	部分
+het geluid	声音
+de stem	嗓音；选票
+de naam	名字
+de wereld	世界
+het leven	生活、生命
+de dood	死亡
+de mens	人
+de oorlog	战争
+de vrede	和平
+de tijd	时间
+de keer	次
+het ding	东西
+het gebied	地区
+de soort	种类
+het voordeel	好处
+het nadeel	坏处
+de toekomstplannen	未来计划
+de ontwikkeling	发展
+de situatie	情况
+het gedrag	行为
+de gewoonte	习惯
+de cultuur	文化
+de traditie	传统
+de samenleving	社会
+de waarde	价值
+de norm	规范
+het respect	尊重

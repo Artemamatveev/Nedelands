@@ -10,11 +10,14 @@ const ROOT = new URL("../", import.meta.url);
 const read = p => fs.readFileSync(new URL(p, ROOT));
 const hash = buf => crypto.createHash("sha256").update(buf).digest("hex").slice(0, 10);
 
+// the dictionary's parts and the word list's translations (dict/wt/<lang>.txt) share one version
 export function dictVersion() {
   const dir = new URL("dict/nl-en/", ROOT);
   if (!fs.existsSync(dir)) return "";
   const h = crypto.createHash("sha256");
   for (const f of fs.readdirSync(dir).filter(f => f.endsWith(".txt")).sort()) h.update(f).update(read("dict/nl-en/" + f));
+  const wt = new URL("dict/wt/", ROOT);
+  if (fs.existsSync(wt)) for (const f of fs.readdirSync(wt).filter(f => f.endsWith(".txt")).sort()) h.update("wt/" + f).update(read("dict/wt/" + f));
   return h.digest("hex").slice(0, 10);
 }
 

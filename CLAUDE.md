@@ -34,11 +34,12 @@ are in `docs/`, one file per area. Read the one for the area you change, and kee
 - **Deploy**: every push to `main` goes live. Push `main` first, then a working branch (see `docs/site.md`).
 - **Tests**: `npm ci --ignore-scripts` and `npm test` after changes; CI (`.github/workflows/check.yml`) also runs the
   browser tests and must pass.
-- **Versions**: after editing `data/`, `study/` or the dictionary run `node tools/stamp.mjs`. After editing `index.html`
+- **Versions**: after editing `data/`, `study/`, the dictionary or `dict/wt/` run `node tools/stamp.mjs`. After editing `index.html`
   or `copy` in `landing.js` run `node tools/build-lang.mjs`; never edit `en.html` … `ru.html` by hand. Change the
   `?v=` name of `landing.js`/`landing.css` in `index.html` when they change: the service worker keeps every version.
 - **Languages**: the menus exist in Dutch plus `[en, ar, tr, hi, zh, es, ru, uk]`. Every new menu string needs all eight
-  translations (`UI`/`UIR` in `data/ui.js` for the first seven, Ukrainian in `UK`/`UIRK` there; `copy` in `landing.js`). Exercises, conversations and reading stay Dutch
+  translations (`UI`/`UIR` in `data/ui.js` for the first seven, Ukrainian in `UK`/`UIRK` there; `copy` in `landing.js`); a new
+  word in `WT` needs its meaning in all eight `dict/wt/<lang>.txt`. Exercises, conversations and reading stay Dutch
   (`lang="nl"`). Arabic is right to left: use logical CSS. privacy.html, over.html, voorwaarden.html and nakijken.html
   have one article per language: change all nine together.
 - **Keys are progress**: item keys (`knm|3`, `lz|3.1`, `gs|<id>.<n>` …) are stored. Append items; never reorder or rename.

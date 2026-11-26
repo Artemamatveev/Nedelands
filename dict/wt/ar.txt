@@ -1,0 +1,1996 @@
+de huisarts	طبيب العائلة
+het ziekenhuis	مستشفى
+de apotheek	صيدلية
+het recept	وصفة طبية
+het medicijn	دواء
+de pijn	ألم
+de hoofdpijn	صداع
+de buikpijn	ألم في البطن
+de koorts	حمى
+hoesten	يسعل
+ziek	مريض
+beter worden	يتعافى
+de tandarts	طبيب الأسنان
+de verpleegkundige	ممرض، ممرضة
+de specialist	طبيب مختص
+het bloed	دم
+de uitslag	نتيجة
+de zorgverzekering	تأمين صحي
+het eigen risico	المبلغ الذي تدفعه بنفسك
+de huisartsenpost	عيادة الطوارئ المسائية
+de ambulance	سيارة إسعاف
+het spreekuur	ساعات الاستشارة
+de griep	إنفلونزا
+het been	ساق
+de arm	ذراع
+de rug	ظهر
+de keel	حلق
+gezond	صحي
+de patiënt	مريض
+de wond	جرح
+de pleister	لاصق جروح
+het verband	ضمادة
+de allergie	حساسية
+de pijnstiller	مسكّن
+zwanger	حامل
+de verloskundige	قابلة
+de bril	نظارة
+de oogarts	طبيب العيون
+de fysiotherapeut	معالج فيزيائي
+de spoedeisende hulp	قسم الطوارئ
+ongezond	غير صحي
+duizelig	دائخ
+misselijk	يشعر بالغثيان
+moe	متعب
+de hoest	سعال
+de wachtkamer	غرفة الانتظار
+de behandeling	علاج
+de operatie	عملية جراحية
+onderzoeken	يفحص
+de prik	حقنة
+de vaccinatie	تطعيم
+de dokter	طبيب
+de afspraak	موعد
+de verkoudheid	زكام
+verkouden	مصاب بالزكام
+niezen	يعطس
+overgeven	يتقيّأ
+de diarree	إسهال
+het zuur	حرقة المعدة
+de bloeddruk	ضغط الدم
+de suikerziekte	السكري
+de pil	حبّة دواء
+de druppels	قطرات
+de zalf	مرهم
+de thermometer	ميزان الحرارة
+de rolstoel	كرسي متحرك
+de kruk	عكّاز
+gebroken	مكسور
+de gips	جبيرة
+bloeden	ينزف
+de verwijzing	إحالة
+de huisartsenpraktijk	عيادة طبيب العائلة
+de assistente	مساعدة الطبيب
+de spoed	حالة عاجلة
+het ongeluk	حادث
+gewond	مصاب
+de EHBO	الإسعافات الأولية
+de psycholoog	أخصائي نفسي
+de stress	توتّر
+somber	كئيب
+genezen	يُشفى
+het gewicht	الوزن
+afvallen	يخسر الوزن
+de vitamine	فيتامين
+de bijwerking	عرض جانبي
+de bijsluiter	نشرة الدواء
+de huisartsenassistente	مساعدة طبيب العائلة
+de kraamzorg	رعاية الأم بعد الولادة في البيت
+ademen	يتنفّس
+de verzekeringspas	بطاقة التأمين الصحي
+de baan	وظيفة
+de werkgever	صاحب العمل
+de werknemer	موظف
+de collega	زميل
+de baas	مدير، رئيس
+het salaris	راتب
+het contract	عقد
+de vacature	وظيفة شاغرة
+solliciteren	يتقدم لوظيفة
+het sollicitatiegesprek	مقابلة عمل
+het cv	سيرة ذاتية
+de ervaring	خبرة
+de opleiding	تعليم، تدريب
+het diploma	شهادة
+parttime	دوام جزئي
+fulltime	دوام كامل
+de werktijden	ساعات العمل
+de pauze	استراحة
+de vakantiedagen	أيام الإجازة
+het uitzendbureau	وكالة توظيف مؤقت
+werkloos	عاطل عن العمل
+de uitkering	إعانة
+het kantoor	مكتب
+de vergadering	اجتماع
+het rooster	جدول
+de klant	زبون
+verdienen	يكسب
+ontslaan	يفصل من العمل
+de stage	تدريب عملي
+de werkplek	مكان العمل
+de afdeling	قسم
+de overuren	ساعات إضافية
+het pensioen	معاش التقاعد
+de vakbond	نقابة
+de proeftijd	فترة التجربة
+de loonstrook	قسيمة الراتب
+het bedrijf	شركة
+de zzp'er	عامل مستقل
+de sollicitatiebrief	رسالة طلب وظيفة
+de ploegendienst	العمل بنظام الورديات
+de nachtdienst	نوبة ليلية
+het uniform	زي موحد
+de promotie	ترقية
+het ontslag	فصل من العمل
+ontslag nemen	يستقيل
+de sollicitatie	طلب توظيف
+de werkervaring	خبرة عملية
+het loon	أجر
+het minimumloon	الحد الأدنى للأجور
+bruto	إجمالي (قبل الضريبة)
+netto	صافي (بعد الضريبة)
+het vakantiegeld	بدل الإجازة
+de cao	اتفاقية العمل الجماعية
+het tijdelijk contract	عقد مؤقت
+het vast contract	عقد دائم
+zich ziek melden	يبلّغ عن مرضه
+de bedrijfsarts	طبيب الشركة
+de leidinggevende	المسؤول المباشر
+het team	فريق
+de taak	مهمة
+de opdracht	مهمة
+de dienst	نوبة عمل
+de werkweek	أسبوع العمل
+het verlof	إجازة
+het zwangerschapsverlof	إجازة الأمومة
+de werkvergunning	تصريح العمل
+de arbeidsmarkt	سوق العمل
+de beloning	مكافأة
+de reiskosten	مصاريف التنقل
+de ontslagbrief	رسالة الفصل
+de werkzoekende	باحث عن عمل
+de vaardigheid	مهارة
+de cursus	دورة
+het certificaat	شهادة
+de werktijd	وقت العمل
+de lunchpauze	استراحة الغداء
+de kantine	مقصف
+het personeel	الموظفون
+de werkloosheid	البطالة
+de uitzendkracht	عامل مؤقت
+het arbeidscontract	عقد العمل
+de vrijwilliger	متطوّع
+de ondernemer	رائد أعمال
+de KvK	غرفة التجارة
+de factuur	فاتورة
+de woning	مسكن
+het huis	بيت
+het appartement	شقة
+de huur	إيجار
+de huurder	مستأجر
+de verhuurder	مؤجّر
+de woningcorporatie	شركة إسكان
+huren	يستأجر
+verhuizen	ينتقل إلى بيت آخر
+de buren	الجيران
+de buurt	الحي
+de verdieping	طابق
+de trap	درج
+de lift	مصعد
+de slaapkamer	غرفة النوم
+de woonkamer	غرفة الجلوس
+de badkamer	حمّام
+de keuken	مطبخ
+de wc	مرحاض
+de tuin	حديقة
+het balkon	شرفة
+de verwarming	تدفئة
+de rekening	فاتورة
+de stroom	كهرباء
+de vuilnisbak	سلة المهملات
+het afval	نفايات
+de sleutel	مفتاح
+de monteur	فني تصليح
+kapot	معطّل، مكسور
+de reparatie	تصليح
+de vloer	أرضية
+het plafond	سقف (من الداخل)
+de muur	جدار
+het raam	نافذة
+de deur	باب
+het dak	سطح
+de kelder	قبو
+de zolder	علّية
+de gang	ممر
+de schuur	سقيفة، مخزن
+de bel	جرس الباب
+de brievenbus	صندوق البريد
+de borg	تأمين (مبلغ ضمان)
+het huurcontract	عقد الإيجار
+de schimmel	عفن
+de lekkage	تسرّب
+schoonmaken	ينظّف
+opruimen	يرتّب
+het licht	ضوء
+de huisbaas	صاحب البيت
+de koopwoning	بيت مملوك
+de huurwoning	بيت مستأجر
+de hypotheek	قرض عقاري
+de makelaar	سمسار عقارات
+de wachtlijst	قائمة الانتظار
+de inschrijving	تسجيل
+de bovenwoning	شقة علوية
+de benedenwoning	شقة أرضية
+de begane grond	الطابق الأرضي
+de voordeur	الباب الأمامي
+de achterdeur	الباب الخلفي
+de kraan	صنبور
+de douche	دُش
+het bad	حوض الاستحمام
+de wastafel	مغسلة
+de cv-ketel	غلاية التدفئة
+de radiator	مشعّ التدفئة
+het gas	غاز
+de meter	عدّاد
+de meterstand	قراءة العدّاد
+de energieleverancier	مورّد الطاقة
+de servicekosten	رسوم الخدمات
+de huurverhoging	زيادة الإيجار
+de opzegging	إشعار الإنهاء
+het onderhoud	صيانة
+de overlast	إزعاج
+het lawaai	ضجيج
+de verhuizing	انتقال
+de verhuisdoos	صندوق نقل
+het meubel	قطعة أثاث
+gemeubileerd	مفروش
+de woonruimte	مسكن
+de vierkante meter	متر مربع
+de kamer	غرفة
+de studio	استوديو
+de portiek	مدخل العمارة
+de flat	عمارة سكنية
+het rijtjeshuis	بيت في صف
+de vensterbank	حافة النافذة
+de klusjesman	عامل تصليحات
+de rookmelder	كاشف الدخان
+de container	حاوية
+het grofvuil	نفايات كبيرة الحجم
+scheiden	يفرز
+de stekker	قابس
+de zekering	منصهر
+het tapijt	سجّاد
+de woonwijk	حيّ سكني
+de buurtbewoner	ساكن الحي
+de trein	قطار
+de bus	حافلة
+de tram	ترام
+de metro	مترو
+de fiets	درّاجة
+de auto	سيارة
+het station	محطة
+het perron	رصيف المحطة
+de halte	موقف
+het kaartje	تذكرة
+de ov-chipkaart	بطاقة المواصلات العامة
+inchecken	يسجّل الدخول (بالبطاقة)
+uitchecken	يسجّل الخروج (بالبطاقة)
+overstappen	يغيّر القطار أو الحافلة
+de vertraging	تأخير
+vertrekken	يغادر
+aankomen	يصل
+de reis	رحلة
+het rijbewijs	رخصة القيادة
+de file	ازدحام مروري
+parkeren	يركن السيارة
+de weg	طريق
+het verkeer	حركة المرور
+het stoplicht	إشارة المرور
+rechtsaf	انعطف يمينًا
+linksaf	انعطف يسارًا
+rechtdoor	مباشرة إلى الأمام
+de kruising	تقاطع
+de fietsenstalling	موقف الدراجات
+de snelweg	طريق سريع
+de rotonde	دوّار
+het fietspad	مسار الدراجات
+de stoep	رصيف المشاة
+het zebrapad	ممر المشاة
+de parkeerplaats	موقف سيارات
+de taxi	سيارة أجرة
+het vliegtuig	طائرة
+het vliegveld	مطار
+de boot	قارب
+de pont	عبّارة
+de conducteur	مراقب التذاكر
+de vertrektijd	وقت المغادرة
+de aankomsttijd	وقت الوصول
+enkele reis	ذهاب فقط
+retour	ذهاب وإياب
+de spits	ساعة الذروة
+de storing	عطل
+de omleiding	تحويلة
+de benzine	بنزين
+het tankstation	محطة وقود
+de helm	خوذة
+het slot	قفل
+de band	إطار
+de voorrang	أولوية المرور
+de bestuurder	سائق
+de passagier	راكب
+de dienstregeling	جدول المواعيد
+het spoor	سكة؛ رقم الرصيف
+de intercity	قطار سريع بين المدن
+de sprinter	قطار محلي
+de NS	السكك الحديدية الهولندية
+het abonnement	اشتراك
+het verkeersbord	إشارة مرور
+de snelheid	السرعة
+de flitspaal	كاميرا السرعة
+de verkeersboete	مخالفة مرورية
+het rijexamen	امتحان القيادة
+de rijles	درس قيادة
+de APK	الفحص الدوري للسيارة
+het kenteken	رقم لوحة السيارة
+het parkeerkaartje	تذكرة الوقوف
+de parkeervergunning	تصريح الوقوف
+de bushalte	موقف الحافلات
+het knooppunt	تقاطع طرق سريعة
+de afslag	مخرج الطريق
+de fietser	راكب الدراجة
+de voetganger	ماشٍ
+de scooter	دراجة نارية صغيرة
+de motor	دراجة نارية؛ محرّك
+de vrachtauto	شاحنة
+botsen	يصطدم
+inhalen	يتجاوز
+remmen	يفرمل
+oversteken	يعبر الشارع
+de reiziger	مسافر
+de bagage	أمتعة
+de koffer	حقيبة سفر
+de vlucht	رحلة جوية
+de instaptijd	وقت الصعود
+de grens	حدود
+het visum	تأشيرة
+de winkel	متجر
+de supermarkt	سوبرماركت
+de markt	سوق
+de kassa	صندوق الدفع
+de bon	إيصال
+de prijs	سعر
+duur	غالٍ
+goedkoop	رخيص
+de korting	خصم
+de aanbieding	عرض خاص
+betalen	يدفع
+pinnen	يدفع بالبطاقة
+contant	نقدًا
+de pinpas	بطاقة الدفع
+het geld	مال
+de portemonnee	محفظة
+de maat	مقاس
+passen	يجرّب (الملابس)؛ يناسب
+ruilen	يستبدل
+terugbrengen	يُرجع
+de klantenservice	خدمة العملاء
+bestellen	يطلب
+het pakket	طرد
+bezorgen	يوصّل
+de bank	بنك
+het rekeningnummer	رقم الحساب
+sparen	يدّخر
+lenen	يقترض؛ يُقرض
+de belasting	ضريبة
+de bakker	خبّاز، مخبز
+de slager	جزّار
+de drogist	محل مستحضرات
+het warenhuis	متجر كبير متعدد الأقسام
+het winkelcentrum	مركز تسوق
+de openingstijden	مواعيد العمل
+open	مفتوح
+gesloten	مغلق
+de uitverkoop	تخفيضات
+de garantie	ضمان
+de boodschappen	المشتريات
+het boodschappenlijstje	قائمة المشتريات
+het mandje	سلة
+het winkelwagentje	عربة التسوق
+de verkoper	بائع
+de munt	عملة معدنية
+het bankbiljet	ورقة نقدية
+het wisselgeld	الباقي
+de schuld	دَين
+de rente	فائدة
+de overschrijving	تحويل بنكي
+het saldo	الرصيد
+de pincode	الرقم السري
+de geldautomaat	صراف آلي
+gratis	مجاني
+kosten	يكلّف
+de klantenkaart	بطاقة الولاء
+het statiegeld	مبلغ تأمين الزجاجات
+inleveren	يسلّم
+de webwinkel	متجر إلكتروني
+de bezorgkosten	رسوم التوصيل
+retourneren	يُرجع البضاعة
+de bedenktijd	فترة التراجع
+de aankoop	مشتريات
+het koopje	صفقة رابحة
+de kwaliteit	الجودة
+het merk	علامة تجارية
+de verpakking	تغليف
+de houdbaarheidsdatum	تاريخ الصلاحية
+de kilo	كيلو
+de gram	غرام
+de liter	لتر
+het stuk	قطعة
+het blik	علبة معدنية
+de pot	برطمان
+de zak	كيس
+het tasje	كيس التسوق
+de zelfscan	المسح الذاتي
+het filiaal	فرع
+de etalage	واجهة المحل
+de paskamer	غرفة القياس
+het bonnetje	إيصال صغير
+de spaarrekening	حساب توفير
+de betaalrekening	حساب جارٍ
+het budget	ميزانية
+uitgeven	ينفق
+de inkomsten	المداخيل
+de uitgaven	المصاريف
+het inkomen	دخل
+de schuldhulp	المساعدة في الديون
+de betalingsregeling	خطة سداد بالتقسيط
+de incasso	خصم مباشر
+de aanmaning	إنذار بالدفع
+de deurwaarder	محضر قضائي
+de euro	يورو
+de cent	سنت
+wisselen	يصرف، يبدّل
+de prijslijst	قائمة الأسعار
+de basisschool	مدرسة ابتدائية
+de middelbare school	مدرسة ثانوية
+de groep	مجموعة؛ صف دراسي
+de leerkracht	معلّم
+de juf	المعلّمة
+de leerling	تلميذ
+het huiswerk	واجب منزلي
+het rapport	بطاقة الدرجات
+de ouderavond	اجتماع أولياء الأمور
+de kinderopvang	رعاية الأطفال
+de oppas	جليسة أطفال
+het schoolreisje	رحلة مدرسية
+de schoolvakantie	عطلة مدرسية
+spijbelen	يتغيّب عن المدرسة
+leerplichtig	في سن التعليم الإلزامي
+de gymles	حصة الرياضة
+het lokaal	غرفة الصف
+de les	درس
+leren	يتعلّم؛ يعلّم
+uitleggen	يشرح
+het cijfer	درجة؛ رقم
+de toets	اختبار
+de opvoeding	تربية
+het consultatiebureau	مركز رعاية الطفل
+de schooltas	حقيبة المدرسة
+het schoolplein	ساحة المدرسة
+de directeur	مدير
+het vak	مادة دراسية
+rekenen	يحسب
+de pen	قلم حبر
+het potlood	قلم رصاص
+het schrift	دفتر
+de gum	ممحاة
+het woordenboek	قاموس
+de vraag	سؤال
+het antwoord	جواب
+het examen	امتحان
+slagen	ينجح
+zakken	يرسب
+de universiteit	جامعة
+het mbo	التعليم المهني المتوسط
+de peuterspeelzaal	روضة للأطفال الصغار
+de crèche	حضانة
+de buitenschoolse opvang	رعاية بعد المدرسة
+de ouderbijdrage	مساهمة أولياء الأمور
+de mentor	مرشد الصف
+de klas	صفّ
+het schooljaar	السنة الدراسية
+de voorschool	ما قبل المدرسة
+de kleuter	طفل في الروضة
+de peuter	طفل صغير
+de leerplicht	التعليم الإلزامي
+de leerplichtambtenaar	موظف متابعة الحضور المدرسي
+het schooladvies	توصية المدرسة
+de doorstroomtoets	اختبار نهاية الابتدائية
+het vmbo	التعليم الثانوي المهني التمهيدي
+de havo	التعليم الثانوي العام العالي
+het vwo	التعليم ما قبل الجامعي
+het hbo	التعليم المهني العالي
+de studiefinanciering	تمويل الدراسة
+de student	طالب جامعي
+het lesrooster	جدول الحصص
+de rekenmachine	آلة حاسبة
+de liniaal	مسطرة
+het etui	مقلمة
+de spreekbeurt	عرض شفهي
+het werkstuk	بحث مدرسي
+de leesles	حصة القراءة
+de traktatie	حلوى توزّع بمناسبة عيد الميلاد
+het schoolfeest	حفلة المدرسة
+de ouderraad	مجلس أولياء الأمور
+het oudergesprek	لقاء الوالدين بالمعلم
+de schoolarts	طبيب المدرسة
+pesten	يتنمّر
+het speelgoed	ألعاب
+de luier	حفاضة
+de kinderwagen	عربة الأطفال
+het knuffeldier	دمية محشوة
+opvoeden	يربّي
+de straf	عقاب
+het voorbeeld	مثال
+de bijles	درس خصوصي
+het lesgeld	رسوم الدراسة
+de gemeente	البلدية
+het gemeentehuis	مبنى البلدية
+het loket	شبّاك الخدمة
+het formulier	استمارة
+invullen	يملأ
+aanvragen	يقدّم طلبًا
+de aanvraag	طلب
+het paspoort	جواز السفر
+de identiteitskaart	بطاقة الهوية
+geldig	صالح
+verlopen	ينتهي (صلاحيته)
+de handtekening	توقيع
+ondertekenen	يوقّع
+het adres	عنوان
+zich inschrijven	يسجّل نفسه
+de Belastingdienst	مصلحة الضرائب
+de toeslag	إعانة حكومية
+het burgerservicenummer	رقم الخدمة المدنية
+de politie	الشرطة
+de brandweer	الإطفاء
+het alarmnummer	رقم الطوارئ
+de wet	قانون
+de regel	قاعدة
+de boete	غرامة
+de verzekering	تأمين
+de brief	رسالة
+de postcode	الرمز البريدي
+de geboortedatum	تاريخ الميلاد
+de nationaliteit	الجنسية
+de ambtenaar	موظف حكومي
+de burgemeester	رئيس البلدية
+de gemeenteraad	المجلس البلدي
+het uittreksel	مستخرج رسمي
+de verblijfsvergunning	تصريح الإقامة
+de IND	دائرة الهجرة والتجنيس
+de inburgering	الاندماج
+de naturalisatie	التجنيس
+de huurtoeslag	إعانة الإيجار
+de zorgtoeslag	إعانة التأمين الصحي
+de kinderbijslag	إعانة الأطفال
+het UWV	مؤسسة تأمين الموظفين
+de bijstand	المساعدة الاجتماعية
+de DigiD	DigiD (هوية رقمية حكومية)
+de belastingaangifte	الإقرار الضريبي
+de rechter	قاضٍ
+de advocaat	محامٍ
+het bezwaar	اعتراض
+de klacht	شكوى
+de rechten	الحقوق
+de plichten	الواجبات
+de basisregistratie	السجل الأساسي للسكان
+de uitschrijving	إلغاء التسجيل
+de geboorteakte	شهادة الميلاد
+de huwelijksakte	عقد الزواج
+de legalisatie	تصديق الوثائق
+de vertaling	ترجمة
+beëdigd	محلَّف
+de leges	الرسوم الإدارية
+het wijkteam	فريق الحي
+de Wmo	قانون الدعم الاجتماعي
+het sociaal loket	مكتب الخدمات الاجتماعية
+de klantmanager	مدير الحالة
+de SVB	بنك التأمين الاجتماعي
+de AOW	المعاش الحكومي
+DUO	مؤسسة التعليم الحكومية DUO
+de lening	قرض
+de rechtbank	محكمة
+de aangifte	بلاغ
+de getuige	شاهد
+het Juridisch Loket	مكتب المساعدة القانونية
+de privacy	الخصوصية
+de gegevens	البيانات
+de machtiging	تفويض
+de termijn	المهلة
+de beslissing	قرار
+de toestemming	إذن
+de vergunning	ترخيص
+de inburgeringsplicht	إلزامية الاندماج
+de taalcoach	مدرّب لغة
+de verlenging	تمديد
+het bewijs	إثبات
+de kopie	نسخة
+de ochtend	صباح
+de middag	بعد الظهر
+de avond	مساء
+de nacht	ليل
+vandaag	اليوم
+morgen	غدًا
+gisteren	أمس
+overmorgen	بعد غد
+de week	أسبوع
+het weekend	عطلة نهاية الأسبوع
+de maand	شهر
+het jaar	سنة
+het uur	ساعة (مدة)
+het kwartier	ربع ساعة
+vroeg	مبكر
+laat	متأخر
+op tijd	في الموعد
+het weer	الطقس
+de zon	الشمس
+de regen	مطر
+de wind	ريح
+de sneeuw	ثلج
+de wolk	سحابة
+warm	دافئ، حار
+koud	بارد
+nat	مبلل
+droog	جاف
+de lente	الربيع
+de zomer	الصيف
+de herfst	الخريف
+de winter	الشتاء
+de seconde	ثانية
+de minuut	دقيقة
+de dag	يوم
+de datum	تاريخ
+de kalender	تقويم
+het seizoen	فصل
+de feestdag	يوم عطلة رسمية
+altijd	دائمًا
+nooit	أبدًا
+soms	أحيانًا
+vaak	غالبًا
+meestal	عادةً
+straks	بعد قليل
+meteen	فورًا
+nu	الآن
+het onweer	عاصفة رعدية
+de mist	ضباب
+de temperatuur	درجة الحرارة
+de graad	درجة
+bewolkt	غائم
+zonnig	مشمس
+de hagel	برَد
+glad	زلق
+de weersverwachting	توقعات الطقس
+de storm	عاصفة
+vorige week	الأسبوع الماضي
+volgend jaar	السنة القادمة
+maandag	الاثنين
+dinsdag	الثلاثاء
+woensdag	الأربعاء
+donderdag	الخميس
+vrijdag	الجمعة
+zaterdag	السبت
+zondag	الأحد
+januari	يناير
+februari	فبراير
+maart	مارس
+april	أبريل
+mei	مايو
+juni	يونيو
+juli	يوليو
+augustus	أغسطس
+september	سبتمبر
+oktober	أكتوبر
+november	نوفمبر
+december	ديسمبر
+de eeuw	قرن
+het verleden	الماضي
+de toekomst	المستقبل
+het moment	لحظة
+binnenkort	قريبًا
+onlangs	مؤخّرًا
+vroeger	في الماضي
+later	لاحقًا
+de regenboog	قوس قزح
+de bliksem	برق
+de donder	رعد
+de bui	زخّة مطر
+de hittegolf	موجة حر
+de ijzel	الجليد الأسود
+vriezen	يتجمّد
+regenen	تمطر
+sneeuwen	تثلج
+waaien	تهبّ الريح
+de familie	العائلة، الأقارب
+het gezin	الأسرة
+de ouders	الوالدان
+de vader	أب
+de moeder	أم
+de zoon	ابن
+de dochter	ابنة
+de broer	أخ
+de zus	أخت
+de opa	جد
+de oma	جدة
+de man	رجل؛ زوج
+de vrouw	امرأة؛ زوجة
+getrouwd	متزوج
+gescheiden	مطلّق
+de baby	رضيع
+het kind	طفل
+de vriend	صديق
+de vriendin	صديقة
+de buurman	الجار
+de buurvrouw	الجارة
+de verjaardag	عيد الميلاد
+jarig zijn	يكون يوم ميلاده
+feliciteren	يهنّئ
+trouwen	يتزوّج
+oud	قديم، كبير في السن
+jong	شاب، صغير
+aardig	لطيف
+boos	غاضب
+blij	سعيد
+verdrietig	حزين
+de grootouders	الأجداد
+de kleinkinderen	الأحفاد
+de oom	عمّ، خال
+de tante	عمّة، خالة
+de neef	ابن الأخ أو الأخت؛ ابن العم
+de nicht	ابنة الأخ أو الأخت؛ ابنة العم
+de schoonmoeder	الحماة
+de zwager	أخو الزوج أو الزوجة
+de schoonzus	أخت الزوج أو الزوجة
+de weduwe	أرملة
+alleenstaand	يعيش وحده
+samenwonen	يسكنان معًا
+de bruiloft	حفل الزفاف
+het huwelijk	زواج
+de geboorte	ولادة
+overlijden	يتوفّى
+de begrafenis	جنازة
+de tiener	مراهق
+de volwassene	بالغ
+de kennis	معارف، شخص تعرفه
+de gast	ضيف
+de ex	الشريك السابق
+de echtgenoot	زوج
+de echtgenote	زوجة
+de partner	شريك الحياة
+de schoonvader	الحمو
+de schoonouders	أهل الزوج أو الزوجة
+de kleinzoon	حفيد
+de kleindochter	حفيدة
+de tweeling	توأم
+het familielid	قريب
+de buurtgenoot	جار في الحي
+de vreemde	غريب
+de jongen	ولد
+het meisje	بنت
+de meneer	السيد
+de mevrouw	السيدة
+de bejaarde	مُسنّ
+de gepensioneerde	متقاعد
+de nieuwkomer	وافد جديد
+de vluchteling	لاجئ
+de migrant	مهاجر
+de Nederlander	هولندي
+de achternaam	اسم العائلة
+de voornaam	الاسم الأول
+de leeftijd	العمر
+de zwangerschap	الحمل
+het ontbijt	فطور
+de lunch	غداء
+het avondeten	عشاء
+het brood	خبز
+de boterham	شريحة خبز
+de kaas	جبن
+de melk	حليب
+het ei	بيضة
+de groente	خضار
+het fruit	فاكهة
+de appel	تفاحة
+het vlees	لحم
+de vis	سمك
+de kip	دجاج
+de rijst	أرز
+de aardappel	بطاطا
+de soep	حساء
+de koffie	قهوة
+de thee	شاي
+de suiker	سكر
+het zout	ملح
+koken	يطبخ؛ يغلي
+bakken	يخبز؛ يقلي
+snijden	يقطع
+de pan	قِدر، مقلاة
+het bord	صحن
+het glas	كأس
+het mes	سكين
+de vork	شوكة
+de lepel	ملعقة
+lekker	لذيذ
+honger hebben	يكون جائعًا
+dorst hebben	يكون عطشانًا
+de boter	زبدة
+de olie	زيت
+de jam	مربّى
+de pindakaas	زبدة الفول السوداني
+de hagelslag	حبيبات الشوكولاتة
+de yoghurt	لبن زبادي
+de pasta	معكرونة
+de saus	صلصة
+de sla	خس، سلطة
+de tomaat	طماطم
+de ui	بصل
+de wortel	جزر
+de banaan	موز
+de sinaasappel	برتقال
+de peer	إجاص
+de aardbei	فراولة
+het toetje	حلوى بعد الطعام
+de taart	كعكة
+het koekje	بسكويت
+het snoep	حلويات
+het sap	عصير
+het bier	بيرة
+de wijn	نبيذ
+vegetarisch	نباتي
+zoet	حلو
+zuur	حامض
+bitter	مرّ
+pittig	حار (طعم)
+de kom	وعاء
+het kopje	فنجان
+het menu	قائمة الطعام
+de ober	نادل
+afrekenen	يدفع الحساب
+de fooi	بقشيش
+het broodje	خبز صغير، سندويش
+de pannenkoek	فطيرة
+de stamppot	بطاطا مهروسة مع خضار
+de erwtensoep	حساء البازلاء
+de kroket	كروكيت
+de bitterbal	كرة مقلية صغيرة
+de patat	بطاطا مقلية
+de stroopwafel	وافل بالشراب
+de drop	عرق السوس
+het gehakt	لحم مفروم
+het rundvlees	لحم البقر
+het varkensvlees	لحم الخنزير
+het lamsvlees	لحم الضأن
+halal	حلال
+veganistisch	نباتي صرف
+de noten	مكسّرات
+de bonen	فاصولياء
+de erwten	بازلاء
+de paprika	فلفل حلو
+de komkommer	خيار
+de champignon	فطر
+de knoflook	ثوم
+de citroen	ليمون
+de druif	عنب
+de meloen	بطيخ أصفر
+de kers	كرز
+het meel	دقيق
+de peper	فلفل أسود
+het kruid	بهار، عشبة
+de room	قشدة
+de slagroom	كريمة مخفوقة
+het ijs	ثلج؛ بوظة
+de chocolade	شوكولاتة
+de frisdrank	مشروب غازي
+de borrel	جلسة مشروبات
+het hapje	لقمة خفيفة
+de magnetronmaaltijd	وجبة جاهزة
+de maaltijd	وجبة
+het gerecht	طبق
+rauw	نيء
+gaar	مطهوّ جيدًا
+verbrand	محروق
+opwarmen	يسخّن
+proeven	يتذوّق
+de smaak	الطعم
+het bestek	أدوات المائدة
+het servet	منديل
+de theepot	إبريق الشاي
+zijn	يكون
+hebben	يملك
+gaan	يذهب
+komen	يأتي
+doen	يفعل
+maken	يصنع
+zeggen	يقول
+vertellen	يحكي
+vragen	يسأل
+antwoorden	يجيب
+praten	يتحدّث
+spreken	يتكلّم
+weten	يعرف (معلومة)
+kennen	يعرف (شخصًا، مكانًا)
+denken	يفكّر
+begrijpen	يفهم
+zien	يرى
+kijken	ينظر، يشاهد
+horen	يسمع
+luisteren	يستمع
+lezen	يقرأ
+schrijven	يكتب
+werken	يعمل
+wonen	يسكن
+leven	يعيش
+kopen	يشتري
+verkopen	يبيع
+geven	يعطي
+krijgen	يحصل على
+nemen	يأخذ
+brengen	يُحضر
+halen	يجلب
+zetten	يضع
+leggen	يضع (أفقيًا)
+staan	يقف
+zitten	يجلس
+liggen	يستلقي
+lopen	يمشي
+rennen	يركض
+rijden	يقود
+vliegen	يطير
+wachten	ينتظر
+zoeken	يبحث
+vinden	يجد؛ يرى (رأيًا)
+verliezen	يفقد
+beginnen	يبدأ
+stoppen	يتوقّف
+openmaken	يفتح
+dichtdoen	يغلق
+helpen	يساعد
+proberen	يحاول
+gebruiken	يستعمل
+betekenen	يعني
+herhalen	يكرّر
+vergeten	ينسى
+onthouden	يتذكّر
+willen	يريد
+kunnen	يستطيع
+moeten	يجب
+mogen	يُسمح له
+houden van	يحب
+hopen	يأمل
+geloven	يصدّق، يؤمن
+spelen	يلعب
+slapen	ينام
+wakker worden	يستيقظ
+opstaan	ينهض
+zich aankleden	يرتدي ملابسه
+wassen	يغسل
+douchen	يستحمّ
+eten	يأكل
+drinken	يشرب
+bellen	يتصل
+sturen	يرسل
+tellen	يعدّ
+kiezen	يختار
+beslissen	يقرّر
+veranderen	يغيّر، يتغيّر
+blijven	يبقى
+worden	يصبح
+gebeuren	يحدث
+lachen	يضحك
+huilen	يبكي
+aanbieden	يعرض
+aannemen	يقبل؛ يوظّف
+afmaken	يُكمل
+afzeggen	يلغي
+annuleren	يلغي
+bedanken	يشكر
+bedoelen	يقصد
+beloven	يعِد
+bereiken	يصل إلى
+beschrijven	يصف
+besteden	يصرف
+bewegen	يتحرّك
+bezoeken	يزور
+bijhouden	يتابع
+controleren	يتحقّق
+delen	يتقاسم؛ يقسم
+doorgeven	يبلّغ
+duren	يستغرق
+eindigen	ينتهي
+groeten	يحيّي
+herkennen	يتعرّف على
+houden	يمسك؛ يحتفظ
+inpakken	يحزم
+invoeren	يُدخل البيانات
+kloppen	يطرق؛ يكون صحيحًا
+klagen	يشتكي
+lenen van	يقترض من
+letten op	ينتبه إلى
+meedoen	يشارك
+meenemen	يأخذ معه
+melden	يبلّغ
+noemen	يسمّي
+oefenen	يتمرّن
+ontmoeten	يلتقي
+ontvangen	يستلم
+oplossen	يحلّ
+opschrijven	يدوّن
+opletten	ينتبه
+organiseren	ينظّم
+plannen	يخطّط
+regelen	يرتّب
+reizen	يسافر
+roepen	ينادي
+schrikken	يفزع
+sluiten	يغلق
+steunen	يدعم
+stelen	يسرق
+storen	يزعج
+studeren	يدرس
+toestaan	يسمح
+uitgaan van	يفترض
+uitkiezen	ينتقي
+uitproberen	يجرّب
+vallen	يسقط
+verbieden	يمنع
+verdwijnen	يختفي
+vergelijken	يقارن
+verhuren	يؤجّر
+verklaren	يوضّح
+verlengen	يمدّد
+verplaatsen	ينقل
+verstaan	يفهم (الكلام)
+vertalen	يترجم
+vertrouwen	يثق
+verwachten	يتوقّع
+voelen	يشعر
+voorstellen	يقترح؛ يقدّم
+waarschuwen	يحذّر
+wegen	يزن
+wennen	يعتاد
+winnen	يفوز
+zorgen voor	يعتني بـ
+zwaaien	يلوّح
+aanzetten	يشغّل
+uitzetten	يطفئ
+ophalen	يجلب، يأخذ
+wegbrengen	يوصّل
+aankondigen	يعلن
+aanmelden	يسجّل
+afhalen	يستلم
+bespreken	يناقش
+herinneren	يتذكّر؛ يذكّر
+missen	يفوّت؛ يشتاق
+pakken	يمسك
+passen op	يرعى
+rusten	يرتاح
+trouwen met	يتزوّج من
+zich voelen	يشعر
+zich vergissen	يخطئ
+zich zorgen maken	يقلق
+zich haasten	يسرع
+zich schamen	يخجل
+zich vervelen	يشعر بالملل
+zich herinneren	يتذكّر
+zich voorbereiden	يستعد
+zich voorstellen	يعرّف بنفسه؛ يتخيّل
+aanraken	يلمس
+bouwen	يبني
+breken	يكسر
+drukken	يضغط
+duwen	يدفع
+trekken	يسحب
+gooien	يرمي
+vangen	يلتقط
+springen	يقفز
+klimmen	يتسلّق
+vullen	يملأ
+legen	يُفرغ
+repareren	يصلّح
+verven	يدهن
+knippen	يقصّ
+plakken	يلصق
+vouwen	يطوي
+zwijgen	يصمت
+fluisteren	يهمس
+schreeuwen	يصرخ
+glimlachen	يبتسم
+knikken	يومئ
+wijzen	يشير
+tonen	يُظهر
+besparen	يوفّر
+verspillen	يهدر
+lukken	ينجح
+mislukken	يفشل
+bestaan	يوجد
+ontstaan	ينشأ
+stijgen	يرتفع
+dalen	ينخفض
+groeien	ينمو
+sterven	يموت
+geboren worden	يولد
+zich aanpassen	يتأقلم
+integreren	يندمج
+groot	كبير
+klein	صغير
+lang	طويل
+kort	قصير
+hoog	عالٍ
+laag	منخفض
+breed	عريض
+smal	ضيّق
+dik	سميك؛ سمين
+dun	رقيق، نحيف
+zwaar	ثقيل
+licht	خفيف؛ فاتح
+donker	مظلم، غامق
+nieuw	جديد
+mooi	جميل
+lelijk	قبيح
+schoon	نظيف
+vies	متّسخ
+snel	سريع
+langzaam	بطيء
+makkelijk	سهل
+moeilijk	صعب
+druk	مزدحم، مشغول
+rustig	هادئ
+stil	صامت
+leeg	فارغ
+vol	ممتلئ
+belangrijk	مهم
+mogelijk	ممكن
+nodig	ضروري
+klaar	جاهز، انتهى
+bezig	مشغول
+bang	خائف
+gelukkig	سعيد؛ لحسن الحظ
+tevreden	راضٍ
+vriendelijk	ودود
+beleefd	مهذّب
+eerlijk	صادق؛ عادل
+lui	كسول
+slim	ذكي
+dom	غبي
+rijk	غني
+arm	فقير
+eerste	أول
+laatste	آخر
+volgende	التالي
+verschillend	مختلف
+hetzelfde	نفسه
+anders	مختلف؛ وإلّا
+zeker	متأكّد
+beroemd	مشهور
+gevaarlijk	خطير
+veilig	آمن
+normaal	عادي
+speciaal	خاص
+leuk	ممتع، لطيف
+saai	مملّ
+gek	مجنون، غريب
+nerveus	متوتّر
+vrij	حرّ؛ في إجازة
+handig	عملي
+nuttig	مفيد
+duidelijk	واضح
+ingewikkeld	معقّد
+eenvoudig	بسيط
+precies	بالضبط
+juist	صحيح
+fout	خطأ
+echt	حقيقي؛ حقًّا
+nep	مزيّف
+vreemd	غريب؛ أجنبي
+bekend	معروف
+onbekend	مجهول
+goed	جيد
+slecht	سيئ
+prettig	مريح، لطيف
+vervelend	مزعج
+heerlijk	رائع، لذيذ جدًّا
+fijn	جميل؛ ناعم
+sterk	قوي
+zwak	ضعيف
+zacht	ناعم؛ هادئ
+hard	صلب؛ عالٍ؛ سريع
+luid	عالٍ
+scherp	حادّ
+bot	غير حادّ؛ فظّ
+gezellig	ودّي ومريح
+ontspannen	مسترخٍ
+gespannen	متوتّر
+dichtbij	قريب
+ver	بعيد
+diep	عميق
+ondiep	ضحل
+rond	مستدير
+vierkant	مربّع
+recht	مستقيم
+scheef	مائل
+heet	ساخن جدًّا
+lauw	فاتر
+fris	منعش، بارد قليلًا
+vers	طازج
+goedgekeurd	موافق عليه
+verplicht	إلزامي
+verboden	ممنوع
+toegestaan	مسموح
+beschikbaar	متاح
+bezet	مشغول
+geschikt	مناسب
+ongeveer	تقريبًا
+zelfstandig	مستقل
+serieus	جادّ
+grappig	مضحك
+bijzonder	مميّز
+gewoon	عادي
+typisch	نموذجي
+streng	صارم
+lief	لطيف
+gemeen	لئيم
+jaloers	غيور
+trots	فخور
+verlegen	خجول
+geduldig	صبور
+ongeduldig	نافد الصبر
+behulpzaam	متعاون
+hardwerkend	مجتهد
+en	و
+maar	لكن
+of	أو؛ هل
+want	لأنّ
+omdat	لأنّ
+dus	إذن
+als	إذا، عندما؛ كـ
+wanneer	متى
+toen	حينئذ؛ عندما
+dan	ثم؛ من (مقارنة)
+eerst	أولًا
+daarna	بعد ذلك
+ook	أيضًا
+niet	لا، ليس
+geen	لا يوجد
+wel	بلى
+al	بالفعل
+nog	ما زال؛ بعد
+alleen	فقط؛ وحده
+samen	معًا
+heel	جدًّا؛ كامل
+te	جدًّا (أكثر من اللازم)
+veel	كثير
+weinig	قليل
+meer	أكثر
+minder	أقل
+genoeg	كافٍ
+bijna	تقريبًا
+misschien	ربما
+natuurlijk	طبعًا؛ طبيعي
+graag	بكل سرور
+hier	هنا
+daar	هناك
+overal	في كل مكان
+binnen	في الداخل
+buiten	في الخارج
+boven	في الأعلى
+beneden	في الأسفل
+links	يسارًا
+rechts	يمينًا
+naast	بجانب
+tussen	بين
+achter	خلف
+voor	لـ؛ أمام
+onder	تحت
+op	على
+in	في
+bij	عند
+met	مع
+zonder	بدون
+naar	إلى
+van	من
+uit	من (خارج)
+over	عن؛ فوق
+tot	حتى
+sinds	منذ
+tijdens	أثناء
+wie	مَن
+wat	ماذا
+waar	أين؛ صحيح
+waarom	لماذا
+hoe	كيف
+hoeveel	كم
+welk	أيّ
+iemand	شخص ما
+niemand	لا أحد
+iets	شيء ما
+niets	لا شيء
+alles	كل شيء
+iedereen	الجميع
+elke	كل
+eigenlijk	في الحقيقة
+trouwens	بالمناسبة
+toch	ومع ذلك
+zelfs	حتى
+helaas	للأسف
+vooral	خصوصًا
+daarom	لذلك
+hoewel	رغم أنّ
+terwijl	بينما
+zodat	لكي
+voordat	قبل أن
+nadat	بعد أن
+totdat	حتى
+ergens	في مكان ما
+nergens	لا مكان
+allebei	كلاهما
+sommige	بعض
+andere	آخر
+zo	هكذا
+erg	جدًّا؛ سيّئ
+steeds	باستمرار
+opnieuw	من جديد
+tegen	ضدّ؛ إلى
+per	لكل
+langs	على طول
+door	عبر؛ بواسطة
+om	حول؛ في الساعة
+tegenover	مقابل
+elf	أحد عشر
+twaalf	اثنا عشر
+dertien	ثلاثة عشر
+veertien	أربعة عشر
+vijftien	خمسة عشر
+zestien	ستة عشر
+zeventien	سبعة عشر
+achttien	ثمانية عشر
+negentien	تسعة عشر
+twintig	عشرون
+dertig	ثلاثون
+veertig	أربعون
+vijftig	خمسون
+zestig	ستون
+zeventig	سبعون
+tachtig	ثمانون
+negentig	تسعون
+honderd	مئة
+duizend	ألف
+een miljoen	مليون
+de helft	النصف
+een kwart	ربع
+het nummer	رقم
+het bedrag	مبلغ
+nul	صفر
+één	واحد
+twee	اثنان
+drie	ثلاثة
+vier	أربعة
+vijf	خمسة
+zes	ستة
+zeven	سبعة
+acht	ثمانية
+negen	تسعة
+tien	عشرة
+het procent	نسبة مئوية
+het paar	زوج؛ بعض
+het dubbele	الضعف
+het lichaam	جسم
+het hoofd	رأس
+het haar	شعر
+het gezicht	وجه
+het oog	عين
+het oor	أذن
+de neus	أنف
+de mond	فم
+de tand	سنّ
+de tong	لسان
+de nek	رقبة
+de schouder	كتف
+de borst	صدر
+de buik	بطن
+de hand	يد
+de vinger	إصبع
+de knie	ركبة
+de voet	قدم
+de teen	إصبع القدم
+de huid	جلد
+het hart	قلب
+de longen	الرئتان
+de maag	معدة
+de wang	خدّ
+de lip	شفة
+de kin	ذقن
+het voorhoofd	جبهة
+de wenkbrauw	حاجب
+de baard	لحية
+de elleboog	مرفق
+de pols	رسغ
+de duim	إبهام
+de nagel	ظفر
+de heup	ورك
+de enkel	كاحل
+de hiel	كعب القدم
+het bot	عظم
+de spier	عضلة
+de hersenen	الدماغ
+de nier	كلية
+de lever	كبد
+het zweet	عرق
+de kleren	ملابس
+de jas	معطف
+de trui	كنزة
+het overhemd	قميص
+het T-shirt	تي شيرت
+de broek	بنطال
+de spijkerbroek	بنطال جينز
+de rok	تنّورة
+de jurk	فستان
+de schoenen	أحذية
+de laarzen	جزمات
+de sokken	جوارب
+het ondergoed	ملابس داخلية
+de muts	قبعة صوفية
+de sjaal	وشاح
+de handschoenen	قفّازات
+de pet	قبعة
+de riem	حزام
+de tas	حقيبة
+de paraplu	مظلّة
+aantrekken	يلبس
+uittrekken	يخلع
+dragen	يرتدي؛ يحمل
+het pak	بدلة
+de pyjama	بيجامة
+de sieraden	مجوهرات
+de ring	خاتم
+het horloge	ساعة يد
+de bh	حمّالة صدر
+de hoofddoek	حجاب
+de regenjas	معطف المطر
+de sportschoenen	أحذية رياضية
+de slippers	شبشب
+het vest	سترة
+de knoop	زرّ
+de rits	سحّاب
+de mouw	كمّ
+de broekzak	جيب
+de zonnebril	نظارة شمسية
+de oorbel	قرط
+de ketting	قلادة
+de portefeuille	محفظة
+de rugzak	حقيبة ظهر
+passend	مناسب المقاس
+wijd	واسع
+strak	ضيّق
+de wasmand	سلة الغسيل
+de tafel	طاولة
+de stoel	كرسي
+de fauteuil	كرسي بذراعين
+het bed	سرير
+de kast	خزانة
+de lamp	مصباح
+het kussen	وسادة
+de deken	بطانية
+de spiegel	مرآة
+het gordijn	ستارة
+het vloerkleed	سجادة
+de wasmachine	غسّالة
+de koelkast	ثلاجة
+het fornuis	موقد
+de oven	فرن
+de magnetron	ميكروويف
+de stofzuiger	مكنسة كهربائية
+de vaatwasser	غسّالة الصحون
+de handdoek	منشفة
+de zeep	صابون
+de tandenborstel	فرشاة أسنان
+het toiletpapier	ورق المرحاض
+de prullenbak	سلة المهملات
+het stopcontact	مقبس كهربائي
+de schaar	مقص
+de doos	صندوق
+de fles	زجاجة
+de zitbank	أريكة
+het kussensloop	كيس الوسادة
+het laken	شرشف
+het dekbed	لحاف
+de wekker	منبّه
+de klok	ساعة حائط
+het schilderij	لوحة
+de plank	رفّ
+de la	درج
+de vuilniszak	كيس القمامة
+de bezem	مكنسة
+de emmer	دلو
+de dweil	ممسحة
+de afwas	غسيل الصحون
+het afwasmiddel	سائل الجلي
+het wasmiddel	مسحوق الغسيل
+de was	الغسيل
+strijken	يكوي
+het strijkijzer	مكواة
+de waterkoker	غلاية الماء
+het koffiezetapparaat	آلة القهوة
+de broodrooster	محمصة الخبز
+de vriezer	مجمّد
+het aanrecht	سطح المطبخ
+de gootsteen	حوض المطبخ
+het snoer	سلك
+de verlichting	الإضاءة
+de gordijnrails	قضيب الستارة
+het bureau	مكتب
+de kapstok	علّاقة المعاطف
+de hanger	علّاقة ملابس
+de sleutelbos	حزمة مفاتيح
+de kaars	شمعة
+de plant	نبتة
+de vaas	مزهرية
+de ladder	سلّم نقّال
+de hamer	مطرقة
+de schroevendraaier	مفك براغي
+de boor	مثقاب
+het gereedschap	أدوات
+de hobby	هواية
+de sport	رياضة
+sporten	يمارس الرياضة
+wandelen	يتنزّه
+fietsen	يركب الدراجة
+zwemmen	يسبح
+voetballen	يلعب كرة القدم
+de sportschool	نادٍ رياضي
+het museum	متحف
+de bioscoop	سينما
+de film	فيلم
+het concert	حفلة موسيقية
+het theater	مسرح
+het park	حديقة عامة
+de dierentuin	حديقة الحيوانات
+de vereniging	جمعية، نادٍ
+het lid	عضو
+het feest	حفلة
+uitgaan	يخرج للتنزّه
+de vakantie	عطلة
+kamperen	يخيّم
+het hotel	فندق
+de camping	مخيّم
+de foto	صورة
+het spel	لعبة
+de muziek	موسيقى
+zingen	يغنّي
+tekenen	يرسم
+het vrijwilligerswerk	العمل التطوعي
+uitnodigen	يدعو
+afspreken	يتّفق على موعد
+de wedstrijd	مباراة
+de voetbalclub	نادي كرة القدم
+het zwemdiploma	شهادة السباحة
+schaatsen	يتزلّج على الجليد
+de schaatsen	زلّاجات الجليد
+hardlopen	يجري (رياضة)
+de fitness	اللياقة البدنية
+de yoga	يوغا
+het tennis	تنس
+het basketbal	كرة السلة
+de bibliotheekpas	بطاقة المكتبة
+het verhaal	قصة
+de roman	رواية
+het gedicht	قصيدة
+de tentoonstelling	معرض
+de voorstelling	عرض
+het festival	مهرجان
+de barbecue	شواء
+de picknick	نزهة
+het uitje	نزهة جماعية
+de dagjesmensen	زوار ليوم واحد
+de reisgids	دليل سياحي
+het souvenir	تذكار
+de camera	كاميرا
+het speelveld	ساحة اللعب
+de puzzel	لغز
+het kaartspel	لعبة ورق
+de muziekles	درس موسيقى
+het instrument	آلة موسيقية
+de gitaar	غيتار
+de piano	بيانو
+het koor	جوقة
+dansen	يرقص
+genieten	يستمتع
+de vrije tijd	وقت الفراغ
+het lidmaatschap	عضوية
+de contributie	رسوم العضوية
+de natuur	الطبيعة
+het dier	حيوان
+de hond	كلب
+de kat	قطة
+de vogel	طائر
+het paard	حصان
+de koe	بقرة
+het schaap	خروف
+het varken	خنزير
+de eend	بطة
+de muis	فأر
+het konijn	أرنب
+de boom	شجرة
+de bloem	زهرة
+het gras	عشب
+het bos	غابة
+de zee	بحر
+het strand	شاطئ
+de rivier	نهر
+het meer	بحيرة
+de berg	جبل
+het land	بلد؛ أرض
+de dijk	سدّ ترابي
+de polder	أرض مستصلحة من الماء
+de molen	طاحونة هوائية
+de lucht	هواء؛ سماء
+de grond	أرض، تربة
+de steen	حجر
+de paddenstoel	فطر بري
+het blad	ورقة شجر
+de tak	غصن
+het zaad	بذرة
+de tulp	توليب
+de roos	وردة
+de bij	نحلة
+de vlieg	ذبابة
+de mug	بعوضة
+de spin	عنكبوت
+de vlinder	فراشة
+het insect	حشرة
+de mier	نملة
+de rat	جرذ
+de haan	ديك
+de geit	ماعز
+de ezel	حمار
+de zwaan	بجعة
+de meeuw	نورس
+de reiger	مالك الحزين
+de boerderij	مزرعة
+het weiland	مرعى
+het veld	حقل
+het duin	كثيب رملي
+het eiland	جزيرة
+de heuvel	تلّ
+de sloot	خندق مائي
+het milieu	البيئة
+het klimaat	المناخ
+de vervuiling	التلوّث
+recyclen	يعيد التدوير
+de zonnepanelen	ألواح شمسية
+de windmolen	توربين رياح
+het huisdier	حيوان أليف
+uitlaten	يُخرج الكلب
+de stad	مدينة
+het dorp	قرية
+het centrum	المركز
+de wijk	حيّ
+de straat	شارع
+het plein	ساحة
+de brug	جسر
+de gracht	قناة
+de hoek	زاوية
+het gebouw	مبنى
+het stadhuis	مبنى البلدية
+de kerk	كنيسة
+de moskee	مسجد
+het politiebureau	مركز الشرطة
+het café	مقهى
+de school	مدرسة
+het zwembad	مسبح
+de speeltuin	ملعب للأطفال
+het buurthuis	مركز الحي
+de ingang	مدخل
+de uitgang	مخرج
+de fabriek	مصنع
+de haven	ميناء
+de bibliotheek	مكتبة عامة
+het postkantoor	مكتب البريد
+het restaurant	مطعم
+de snackbar	محل الوجبات السريعة
+de begraafplaats	مقبرة
+het monument	نصب تذكاري
+het standbeeld	تمثال
+de toren	برج
+het kasteel	قلعة
+de vuurtoren	منارة
+de sporthal	صالة رياضية
+het sportveld	ملعب
+de rondweg	طريق دائري
+het industrieterrein	منطقة صناعية
+de binnenstad	وسط المدينة
+de buitenwijk	ضاحية
+de hoofdstad	العاصمة
+de inwoner	ساكن
+de toerist	سائح
+de VVV	مكتب المعلومات السياحية
+de plattegrond	خريطة
+het verkeerslicht	إشارة المرور
+de lantaarnpaal	عمود الإنارة
+het bankje	مقعد
+de fontein	نافورة
+de steeg	زقاق
+de kade	رصيف الميناء
+de telefoon	هاتف
+het telefoonnummer	رقم الهاتف
+het bericht	رسالة
+de e-mail	بريد إلكتروني
+de bijlage	مرفق
+versturen	يرسل
+het internet	الإنترنت
+de website	موقع إلكتروني
+de computer	حاسوب
+de app	تطبيق
+het wachtwoord	كلمة المرور
+inloggen	يسجّل الدخول
+downloaden	ينزّل
+printen	يطبع
+de voicemail	بريد صوتي
+terugbellen	يعاود الاتصال
+opnemen	يردّ (على الهاتف)؛ يسجّل
+ophangen	يُنهي المكالمة
+de krant	جريدة
+het nieuws	الأخبار
+de televisie	تلفاز
+de radio	راديو
+het tijdschrift	مجلة
+de oplader	شاحن
+de batterij	بطارية
+het scherm	شاشة
+de smartphone	هاتف ذكي
+de mobiel	هاتف محمول
+het sms'je	رسالة نصية
+appen	يراسل بالتطبيق
+het gesprek	محادثة
+het videogesprek	مكالمة فيديو
+de onderwerpregel	سطر الموضوع
+de afzender	المرسل
+de ontvanger	المستلم
+beantwoorden	يردّ على
+doorsturen	يعيد التوجيه
+het account	حساب
+uitloggen	يسجّل الخروج
+de wifi	واي فاي
+de link	رابط
+klikken	ينقر
+het bestand	ملف
+opslaan	يحفظ
+de printer	طابعة
+het toetsenbord	لوحة المفاتيح
+typen	يكتب على لوحة المفاتيح
+het nieuwsbericht	خبر
+sociale media	وسائل التواصل الاجتماعي
+het nepnieuws	أخبار كاذبة
+de oplichting	احتيال
+de postzegel	طابع بريدي
+de envelop	ظرف
+de kaart	بطاقة؛ خريطة
+de uitnodiging	دعوة
+het antwoordapparaat	جهاز الرد الآلي
+de verbinding	اتصال
+de taal	لغة
+de moedertaal	اللغة الأم
+het woord	كلمة
+de zin	جملة؛ رغبة
+de uitspraak	النطق
+het accent	لكنة
+de spelling	التهجئة
+spellen	يتهجّى
+de kleur	لون
+rood	أحمر
+blauw	أزرق
+geel	أصفر
+groen	أخضر
+zwart	أسود
+wit	أبيض
+grijs	رمادي
+bruin	بنّي
+oranje	برتقالي
+roze	وردي
+paars	بنفسجي
+de koning	الملك
+de koningin	الملكة
+de regering	الحكومة
+de minister	وزير
+de minister-president	رئيس الوزراء
+de Tweede Kamer	مجلس النواب
+de verkiezingen	الانتخابات
+stemmen	يصوّت
+de partij	حزب
+de democratie	الديمقراطية
+de Grondwet	الدستور
+de provincie	محافظة
+het waterschap	هيئة إدارة المياه
+de vrijheid	الحرية
+gelijk	متساوٍ؛ محق
+de discriminatie	التمييز
+de godsdienst	الدين
+de mening	رأي
+de vlag	علم
+het Wilhelmus	النشيد الوطني الهولندي
+Koningsdag	يوم الملك (27 أبريل)
+Bevrijdingsdag	يوم التحرير (5 مايو)
+Dodenherdenking	يوم إحياء ذكرى الموتى (4 مايو)
+Sinterklaas	سينتركلاس (5 ديسمبر)
+de kerst	عيد الميلاد
+het Koninklijk Huis	البيت الملكي
+de Eerste Kamer	مجلس الشيوخ
+het parlement	البرلمان
+de politicus	سياسي
+de politiek	السياسة
+het kabinet	الحكومة (مجلس الوزراء)
+de staat	الدولة
+de rechtsstaat	دولة القانون
+de grondrechten	الحقوق الأساسية
+de vrijheid van meningsuiting	حرية التعبير
+de gelijkheid	المساواة
+de Tweede Wereldoorlog	الحرب العالمية الثانية
+de bevrijding	التحرير
+de Gouden Eeuw	العصر الذهبي
+de Deltawerken	أعمال الدلتا
+de provinciehoofdstad	عاصمة المحافظة
+de koopzondag	أحد التسوّق
+de verjaardagskalender	تقويم أعياد الميلاد
+het Nieuwjaar	رأس السنة
+het vuurwerk	ألعاب نارية
+de oliebol	كرة عجين مقلية
+Pasen	عيد الفصح
+het Suikerfeest	عيد الفطر
+de ramadan	رمضان
+de kok	طبّاخ
+de kapper	حلّاق
+de schoonmaker	عامل نظافة
+de chauffeur	سائق
+de vrachtwagen	شاحنة
+de bezorger	عامل توصيل
+de postbode	ساعي البريد
+de timmerman	نجّار
+de loodgieter	سبّاك
+de elektricien	كهربائي
+de schilder	دهّان
+de bouwvakker	عامل بناء
+de boer	مزارع
+de tuinman	بستاني
+de verkoopmedewerker	موظف مبيعات
+de caissière	أمينة الصندوق
+de magazijnmedewerker	عامل مستودع
+de automonteur	ميكانيكي
+de garage	ورشة سيارات
+de leraar	معلّم
+de docent	مدرّس
+de verzorgende	مقدّم رعاية
+de kinderopvangmedewerker	عامل رعاية أطفال
+de apotheker	صيدلي
+de agent	شرطي
+de brandweerman	رجل إطفاء
+de soldaat	جندي
+de journalist	صحفي
+de programmeur	مبرمج
+de boekhouder	محاسب
+de secretaresse	سكرتيرة
+de receptionist	موظف الاستقبال
+de tolk	مترجم شفهي
+de vertaler	مترجم
+de bewaker	حارس
+de kunstenaar	فنان
+de ingenieur	مهندس
+de architect	مهندس معماري
+de dierenarts	طبيب بيطري
+het gevoel	شعور
+de blijdschap	فرح
+het verdriet	حزن
+de angst	خوف
+de woede	غضب
+de liefde	حبّ
+de hoop	أمل
+de schaamte	خجل
+de eenzaamheid	الوحدة
+eenzaam	وحيد
+het heimwee	الحنين إلى الوطن
+de spijt	ندم
+spijt hebben	يندم
+opgelucht	مرتاح
+teleurgesteld	محبط
+verbaasd	مندهش
+bezorgd	قلق
+geïrriteerd	منزعج
+enthousiast	متحمّس
+zenuwachtig	متوتّر
+dankbaar	ممتنّ
+verliefd	واقع في الحب
+de ruzie	شجار
+het excuus	اعتذار
+troosten	يواسي
+het humeur	المزاج
+chagrijnig	نكِد
+vrolijk	مرح
+de vriendschap	صداقة
+het noodgeval	حالة طوارئ
+de brand	حريق
+blussen	يُطفئ
+de rook	دخان
+de inbraak	سطو
+de dief	لص
+de diefstal	سرقة
+het slachtoffer	ضحية
+de verdachte	مشتبه به
+de misdaad	جريمة
+het geweld	عنف
+huiselijk geweld	العنف المنزلي
+Veilig Thuis	مؤسسة الأمان في البيت
+de wijkagent	شرطي الحي
+het gevaar	خطر
+de veiligheid	السلامة
+de hulp	مساعدة
+de hulpverlener	مقدّم المساعدة
+de maatschappelijk werker	أخصائي اجتماعي
+de huisartsenspoedpost	عيادة الطوارئ
+de reanimatie	الإنعاش
+de AED	جهاز الصدمات الكهربائية
+de brandblusser	طفاية حريق
+de nooduitgang	مخرج الطوارئ
+de sirene	صفّارة الإنذار
+de beveiliging	الحماية الأمنية
+de reden	سبب
+het probleem	مشكلة
+de oplossing	حلّ
+het idee	فكرة
+de keuze	اختيار
+de kans	فرصة
+het doel	هدف
+het plan	خطة
+de manier	طريقة
+de informatie	معلومات
+de mogelijkheid	إمكانية
+het verschil	فرق
+de fout	خطأ
+het begin	البداية
+het einde	النهاية
+de rij	صف، طابور
+de plek	مكان
+de plaats	مكان؛ بلدة
+het deel	جزء
+het geluid	صوت
+de stem	صوت؛ صوت انتخابي
+de naam	اسم
+de wereld	العالم
+het leven	الحياة
+de dood	الموت
+de mens	إنسان
+de oorlog	حرب
+de vrede	سلام
+de tijd	الوقت
+de keer	مرّة
+het ding	شيء
+het gebied	منطقة
+de soort	نوع
+het voordeel	ميزة
+het nadeel	عيب
+de toekomstplannen	خطط المستقبل
+de ontwikkeling	تطوّر
+de situatie	وضع
+het gedrag	سلوك
+de gewoonte	عادة
+de cultuur	ثقافة
+de traditie	تقليد
+de samenleving	المجتمع
+de waarde	قيمة
+de norm	معيار
+het respect	احترام

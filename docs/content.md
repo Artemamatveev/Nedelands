@@ -17,7 +17,10 @@ handed in (`submitExam()`, also when the time runs out). KNM follows the 8 offic
 of them per theme first and keeps each theme together, as DUO's voorbeeldexamens do; every KNM question has
 '▶ Lees voor' (Luisteren too), because the exam reads the questions aloud. A KNM row can have a photo from `foto/`
 as a 7th field, as every exam question has one. DUO's voorbeeldexamens are copyrighted: never copy their questions. Wrong options must be plausible (real instanties, real numbers) and about as long as the right one, so the
-longest answer is not a giveaway. Woordenschat has the definitions in `VO` and the themed A2 word list `WT`
+longest answer is not a giveaway. Woordenschat has the definitions in `VO` and the themed A2 word list `WT` (about 2000 words in 27 themes; the
+meaning of every word in the eight menu languages is in `dict/wt/<lang>.txt`, `word<TAB>meaning`, loaded by `wtLoad()`
+under DICTV and shown only after an answer (`wtNote()`) and in the word popup; a new WT word needs a line in all eight files,
+`tests/wordlist.test.mjs`; a description never contains its own word)
 (Dutch with de/het = a short Dutch description; small words get a gap sentence with ___, numbers the digits), practised three
 ways: word → description, description → word, and by ear (`wl|`: the word is only spoken, `hear`). Description → word can also be
 typed (the 'Typ het antwoord zelf' mode, with de/het). `BET` holds the Dutch meaning of a word (from `WT`, `VO` and a few more), for the Betekenis hint on verbs and de/het. Item keys (`lz|3.1`, `wn|de huis`) are
