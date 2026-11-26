@@ -24,6 +24,16 @@ export default async function handler(req, res) {
   }));
   const both = rows.filter((r) => !r.free.error && !r.paid.error);
   const summary = {
+    keyChecks: Object.fromEntries(["free", "paid"].map(tier => {
+      const [missing, complete, variant] = ["sleutel-ontbreekt", "sleutel-compleet", "sleutel-alternatief"]
+        .map(id => rows.find(row => row.id === id)?.[tier]?.scores);
+      if (![missing, complete, variant].every(score => Number.isInteger(score?.inhoud))) return [tier, null];
+      return [tier, {
+        content: missing.inhoud === 2 && complete.inhoud === 3 && variant.inhoud === 3,
+        language: ["woorden", "grammatica", "spelling", "samenhang"].every(key =>
+          Number.isInteger(complete[key]) && missing[key] === complete[key] && variant[key] === complete[key]),
+      }];
+    })),
     models: MODELS,
     compared: both.length,
     samePassed: both.filter((r) => r.free.passed === r.paid.passed).length,

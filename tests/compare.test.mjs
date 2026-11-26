@@ -18,7 +18,9 @@ async function ask({user = null, method = 'POST', same = true, fails = ''} = {})
       calls.push([s.id, model]);
       if (s.id === fails && model.includes('haiku')) throw Error('refusal');
       const total = model.includes('haiku') ? 7 : 8;
-      return {model, scores: {}, total, passed: total >= 7, errors: 2};
+      const scores={inhoud:s.id==='sleutel-ontbreekt'?2:3,woorden:2,grammatica:2,spelling:2,samenhang:1};
+      if(model.includes('haiku')&&s.id==='sleutel-alternatief')scores.woorden=1;
+      return {model, scores, total, passed: total >= 7, errors: 2};
     }},
     './_samples.js': {SAMPLES},
   };
@@ -45,6 +47,9 @@ test('Every sample is graded by both models; a failed call is reported, not fata
   assert.match(r.res.body.rows[0].free.error, /refusal/);
   assert.equal(r.res.body.summary.compared, SAMPLES.length - 1);
   assert.equal(r.res.body.summary.samePassed, SAMPLES.length - 1);
+  assert.equal(r.res.body.summary.keyChecks.free.content,true);
+  assert.equal(r.res.body.summary.keyChecks.free.language,false);
+  assert.equal(r.res.body.summary.keyChecks.paid.language,true);
   assert.equal(r.res.body.summary.meanDiff, 1); assert.equal(r.res.body.summary.maxDiff, 1);
 });
 test('The samples are made-up A2 answers with a task and a text', () => {

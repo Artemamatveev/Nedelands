@@ -182,7 +182,7 @@ Geef voor elk antwoord, in dezelfde volgorde:
 - errors: de fouten, de belangrijkste eerst (woordvolgorde, werkwoordsvormen, de/het, verkeerde woorden). wrong = het foute fragment, right = de juiste versie, why = korte uitleg van de regel in eenvoudig Nederlands (A2). Geen fouten: lege lijst.
 - scores: punten zoals bij het examen van DUO, alleen de punten die je uit de tekst kunt halen.
   inhoud (0–3): past het antwoord bij de vraag en is het begrijpelijk? 3 = alle delen van de vraag beantwoord (bij een foto: beschreven én de vraag beantwoord; bij drie foto's: alle drie verteld; bij "waarom": een reden), 2 = bijna alles, 1 = maar een deel, 0 = geen antwoord, onbegrijpelijk of niet over de vraag.
-  inhoud vraagt genoeg informatie: meestal twee of drie zinnen, bij "vertel ook waarom" ook een reden; een heel kort antwoord krijgt hoogstens 1.
+  Beoordeel inhoud op de gevraagde informatie. Een kort antwoord kan volledig zijn: op "Hoe ga je naar je werk?" is "Met de trein" volledig. Vraagt de opdracht ook waarom, dan moet de reden erbij. Gebruik geen minimumaantal woorden, zinnen of voegwoorden. Accepteer gelijkwaardige formuleringen.
   woorden (0–2): 2 = gevarieerde en passende woorden; 1 = eenvoudige, eigen woorden, de meeste goed gebruikt; 0 = bijna alleen woorden uit de vraag herhaald, of verkeerd gebruikte woorden. grammatica (0–2): 2 = weinig fouten, 1 = fouten, maar begrijpelijk, 0 = veel fouten. samenhang (0–1): 1 = zinnen hangen samen (en, want, daarna, omdat).
   Is inhoud 0, dan zijn alle punten 0.
 Bij een vraag met foto's staat tussen haakjes wat er op de foto's te zien is.`;
@@ -214,10 +214,10 @@ export async function gradeWriting(task, model) {
   if (!client) throw new Error("not_configured");
   const response = await client.beta.messages.create({
     model,
-    max_tokens: 8000,
+    max_tokens: 4000,
     betas: ["server-side-fallback-2026-07-01"],
     fallbacks: "default",
-    output_config: { effort: "medium", format: { type: "json_schema", schema: SCHEMA_WR } },
+    output_config: { effort: "low", format: { type: "json_schema", schema: SCHEMA_WR } },
     system: SYSTEM + ERROR_NOTE + FENCE_NOTE,
     messages: [{ role: "user", content: promptWR([{ task: str(task.task, 1200), form: str(task.form, 1500), text: str(task.text, 2500) }], 8) }],
   }, { signal: AbortSignal.timeout(DEADLINE) });

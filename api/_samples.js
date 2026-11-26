@@ -3,6 +3,14 @@
 export const SAMPLES = [
   { id: "buurvrouw", task: "Je gaat een week op vakantie. Schrijf een briefje aan je buurvrouw. Vraag of zij je planten water wil geven en schrijf waar de sleutel ligt.",
     text: "Beste Anja,\nVolgende week ga ik op vakantie naar Spanje. Wil jij mijn planten water geven? De planten staan in de keuken en in de woonkamer. De sleutel ligt onder de mat bij de achterdeur. Zaterdag kom ik terug.\nHeel erg bedankt!\nGroeten,\nSamira" },
+  ...[
+    ["sleutel-ontbreekt", "Kun je mijn planten water geven?"],
+    ["sleutel-compleet", "Kun je mijn planten water geven? De sleutel ligt in je brievenbus."],
+    ["sleutel-alternatief", "Wil je mijn planten water geven? Je vindt de sleutel in je brievenbus."],
+  ].map(([id, request]) => ({
+    id, task: "Je gaat op vakantie. Vraag je buurvrouw om je planten water te geven en zeg waar de sleutel ligt.",
+    text: `Hoi buurvrouw, ik ga op vakantie. ${request} Bedankt! Groetjes, Noor`,
+  })),
   { id: "ziek", task: "Je bent ziek en kunt morgen niet naar je werk. Schrijf een e-mail aan je leidinggevende, meneer De Vries. Schrijf wat je hebt, hoe lang je denkt thuis te blijven en vraag wat er met je afspraken moet gebeuren.",
     text: "Beste meneer De Vries,\nIk ben ziek. Ik heb koorts en hoofdpijn. Ik denk ik blijf twee dagen thuis. Morgen ik heb een afspraak met een klant om tien uur. Kan een collega die afspraak doen?\nMet vriendelijke groet,\nAhmed" },
   { id: "verjaardag", task: "Je vriendin Lotte heeft je uitgenodigd voor haar verjaardag op zaterdag. Je kunt niet komen. Schrijf haar een berichtje. Feliciteer haar, schrijf waarom je niet kunt komen en stel voor om een andere keer af te spreken.",

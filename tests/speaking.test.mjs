@@ -120,20 +120,23 @@ test('Speaking practice checks only the transcript explicitly confirmed by the l
   const a=await app({globals:{SpeechRecognition:native.Recognition},fetch:async(url,options)=>{
     if(url!=='/api/check')return new Response('{}');
     checks.push(JSON.parse(options.body).tasks[0].text);
-    return new Response(JSON.stringify({tasks:[{passed:true,errors:[],corrected:'Ik ga naar de les.'}]}));
+    return new Response(JSON.stringify({tasks:[{passed:true,errors:[],corrected:'Te voet.'}]}));
   }});
-  a.run('build("sp")');
+  a.run('build("sp",{...SEC.find(s=>s.id==="sp"),n:1,keep:1,pool:()=>[ITEMS.find(q=>q.k==="sp|3")]})');
   a.document.getElementById('spchk').click();
   await a.flush();
-  native.instances[0].result('Ik ga naar de fles');
+  native.instances[0].result('Te voetje');
   a.document.getElementById('recb').click();
   native.instances[0].end();
   assert.equal(checks.length,0);
-  assert.equal(a.document.getElementById('sptranscript').value,'Ik ga naar de fles');
-  a.document.getElementById('sptranscript').value='Ik ga naar de les';
+  assert.equal(a.document.getElementById('sptranscript').value,'Te voetje');
+  a.document.getElementById('sptranscript').value='…';
+  a.document.getElementById('spchk').click();
+  assert.equal(checks.length,0);
+  a.document.getElementById('sptranscript').value='Te voet';
   a.document.getElementById('spchk').click();
   await a.flush();
-  assert.deepEqual(checks,['Ik ga naar de les']);
+  assert.deepEqual(checks,['Te voet']);
 });
 
 test('A2 speaking exam retries the same transcript after connection loss and saves one result',async()=>{

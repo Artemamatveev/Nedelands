@@ -218,6 +218,7 @@ function compare() {
   const body = CMP.rows.map(r => `<tr${!r.free.error && !r.paid.error && r.free.passed !== r.paid.passed ? ' class="selected"' : ""}><td title="${esc(r.task)}">${esc(r.id)}</td>${cell(r.free)}${cell(r.paid)}</tr>`).join("");
   const S = CMP.summary;
   return `<section class="tile">${head}
+    ${S.keyChecks?["free","paid"].map(tier=>{const check=S.keyChecks[tier];return `<p class="sub">Письмо про ключ · ${tier==="free"?"бесплатная":"платная"} модель: ${check?`пропуск и две полные версии — ${check.content?"оценены ожидаемо":"проверить баллы за содержание"}; языковые критерии — ${check.language?"стабильны":"различаются, проверить ответы"}`:"нет результата"}</p>`}).join(""):""}
     <p class="sub">Сравнено ${S.compared} из ${CMP.rows.length}: одинаковый вердикт «сдал / не сдал» в <b>${S.samePassed}</b>; разница в баллах в среднем <b>${S.meanDiff ?? "—"}</b> из 10, максимум <b>${S.maxDiff ?? "—"}</b>. Строки, где вердикты разошлись, выделены.</p>
     <div class="scroll" tabindex="0" role="region" aria-label="Сравнение моделей"><table><thead><tr><th rowspan="2">Ответ</th><th colspan="3">${short(m.free)} (бесплатно)</th><th colspan="3">${short(m.paid)} (платно)</th></tr>
     <tr><th>Баллы</th><th>Сдал</th><th>Ошибок</th><th>Баллы</th><th>Сдал</th><th>Ошибок</th></tr></thead><tbody>${body}</tbody></table></div>${btn}</section>`;

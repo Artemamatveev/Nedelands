@@ -2339,10 +2339,13 @@ function recDone(r){
   if(!r.keep||r.box!==$("rec"))return;
   const s=Math.min(r.lim,Math.round((r.stop-r.start)/1e3));
   r.text=saidText(r);r.review=!!(r.conversation&&!r.submitted); r.url=r.chunks.length?URL.createObjectURL(new Blob(r.chunks,{type:r.mr.mimeType||""})):"";
-  r.note=(s>=r.lim?"De tijd is om. ":"")+`Je sprak ${s===1?"1 seconde":s+" seconden"}. `+(s<Math.min(15,r.lim/2)?"Dat is kort: zeg twee of drie zinnen. ":"");
+  r.note=(s>=r.lim?"De tijd is om. ":"")+`Je sprak ${s===1?"1 seconde":s+" seconden"}. `+(queue[pos]?.sec!=="sp"&&s<Math.min(15,r.lim/2)?"Dat is kort: zeg twee of drie zinnen. ":"");
   $("recb").disabled=false;r.done(r);
 }
 // Practice: a recording to play back
+function spokenTextReady(q,text){
+  return q.sec==="sp"?/[\p{L}\p{N}]/u.test(text):text.trim().split(/\s+/).filter(Boolean).length>=3;
+}
 function reviewSpokenAnswer(q,r){
   if(q!==queue[pos])return;
   const recordButton=$("recb"),checkButton=$("spchk");
@@ -2366,7 +2369,7 @@ function reviewSpokenAnswer(q,r){
   checkButton.disabled=false;
   checkButton.onclick=()=>{
     const text=input.value.trim();
-    if(text.split(/\s+/).filter(Boolean).length<3){$("recn").textContent="Schrijf minstens drie woorden of spreek je antwoord opnieuw in.";input.focus();return}
+    if(!spokenTextReady(q,text)){$("recn").textContent=q.sec==="sp"?"Vul in wat je hebt gezegd of spreek opnieuw in.":"Schrijf minstens drie woorden of spreek je antwoord opnieuw in.";input.focus();return}
     input.readOnly=true;
     checkButton.disabled=true;
     spGrade(q,{...r,text});
@@ -2381,7 +2384,7 @@ function spTake(r){
 // Practice: the phone writes the answer down and Claude grades it, like Schrijven
 async function spGrade(q,r){
   const attempt=cur,b=$("recb"),c=$("spchk"); b.textContent="● Opnemen";b.className="ghost wide";b.onclick=()=>listen("rec",spTake,r.lim);
-  if(r.text.split(" ").filter(Boolean).length<3){
+  if(!spokenTextReady(q,r.text)){
     if(r.fail)c.hidden=true; else c.disabled=false;
     $("recn").textContent=r.note+(r.fail?"Meeschrijven lukt hier niet. Neem je antwoord op en vergelijk het met het voorbeeld.":"Ik heb bijna niets verstaan. Spreek wat langzamer en probeer het nog een keer.");return}
   $("recn").textContent=r.note; c.hidden=true; b.disabled=true;
