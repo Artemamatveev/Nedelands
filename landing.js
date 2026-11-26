@@ -597,12 +597,16 @@ function initProducts(section) {
     const index = panels.findIndex(panel => target && panel.contains(target));
     if (index < 0) return;
     show(index, false);
-    reveal(index, false);
+    const topic = target.closest(".product-exam-topic");
+    if (topic) topic.open = true;
     return target;
   }
-  const initialTarget = revealAnchor(location.hash);
-  if (initialTarget) requestAnimationFrame(() => initialTarget.scrollIntoView());
-  window.addEventListener("hashchange", () => revealAnchor(location.hash));
+  function openHash() {
+    const target = revealAnchor(location.hash);
+    if (target) requestAnimationFrame(() => target.scrollIntoView({block:"start"}));
+  }
+  openHash();
+  window.addEventListener("hashchange", openHash);
 }
 const productSection = $("ontdek");
 if (productSection) initProducts(productSection);

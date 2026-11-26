@@ -32,7 +32,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=bittie1">
 <link rel="manifest" href="/manifest.json?v=bittie1">
 <script src="/ios-startup-v1.js" defer></script>
-<link rel="stylesheet" href="/landing.css?v=bittie-voice">
+<link rel="stylesheet" href="/landing.css?v=module-detail">
 <link rel="stylesheet" href="/voice-mark-v1.css">
 <script>
 // Browser visits start with the homepage, including returning learners on phones and tablets.
@@ -54,7 +54,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Bittertalen","url":"https://bittertalen.nl/en","applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":"en","educationalLevel":["A2","B1"],"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}
 </script>
-<script defer src="/landing.js?v=bittie-voice-pa"></script>
+<script defer src="/landing.js?v=module-detail"></script>
 <script defer src="/lib/gsap-3.15.1.min.js"></script>
 <script defer src="/lib/ScrollTrigger-3.15.1.min.js"></script>
 <script defer src="/landing-motion-v3.js?v=hero-still"></script>
@@ -184,14 +184,14 @@
           <article>
             <img src="/art/delft.jpg" alt="" loading="lazy">
             <div>
-              <h4><span data-t="Kunst en cultuur">Art and culture</span></h4>
+              <h4><a href="/oefenen?open=culture" data-t="Kunst en cultuur">Art and culture</a></h4>
               <p data-t="Bekijk Gezicht op Delft van Vermeer en ontdek het verhaal achter het schilderij.">Explore Vermeer’s View of Delft and discover the story behind the painting.</p>
             </div>
           </article>
           <article>
             <img src="/foto/afsluitdijk.jpg" alt="" loading="lazy">
             <div>
-              <h4><span data-t="Geografie en water">Geography and water</span></h4>
+              <h4><a href="/oefenen?open=geography" data-t="Geografie en water">Geography and water</a></h4>
               <p data-t="Ontdek waar Drenthe, Zeeland en het IJsselmeer liggen en hoe dijken Nederland beschermen.">Discover where Drenthe, Zeeland and Lake IJssel are and how dikes protect the Netherlands.</p>
             </div>
           </article>
@@ -222,11 +222,71 @@
       <section id="module-exam" class="module-detail" aria-labelledby="module-heading-exam">
         <h3 id="module-heading-exam" data-t="Voorbereiden op je examen">Prepare for your exam</h3>
         <p data-t="Oefen lezen, luisteren, schrijven en spreken op A2 of B1. Op A2 oefen je ook KNM. Maak een proefexamen met een timer en bekijk daarna wat je nog kunt oefenen.">Practise reading, listening, writing and speaking at A2 or B1. At A2, also practise KNM. Take a timed mock exam and see what to practise next.</p>
-        <div class="product-exam-links">
-          <a class="module-link" href="#niveaus" data-t="Waar oefen je voor?">What are you preparing for?</a>
-          <a class="module-link" href="#probeer" data-t="Probeer een KNM-vraag">Try a KNM question</a>
-          <a class="module-link" href="#voorbeeld" data-t="Zo wordt je tekst nagekeken">How your writing is checked</a>
-        </div>
+        <details class="product-exam-topic" id="niveaus">
+          <summary data-t="Waar oefen je voor?">What are you preparing for?</summary>
+          <div>
+            <div class="choices">
+              <a class="choice" href="/oefenen?open=a2"><span class="lt" aria-hidden="true">A</span><span class="tx"><b><span data-t="Inburgeringsexamen">Civic integration exam</span> <small>A2</small></b><span class="d" data-t="Oefen met Nederlands uit het dagelijks leven: lezen, luisteren, schrijven en spreken. Oefen ook Kennis van de Nederlandse Maatschappij (KNM).">Practise everyday Dutch: reading, listening, writing and speaking. You can also practise Knowledge of Dutch Society (KNM).</span></span><span class="go" data-t="Oefen op A2">Practise A2</span></a>
+              <a class="choice" href="/oefenen?open=b1"><span class="lt" aria-hidden="true">B</span><span class="tx"><b><span data-t="Staatsexamen NT2 · Programma I">NT2 state exam · Programme I</span> <small>B1</small></b><span class="d" data-t="Bereid je voor op lezen, luisteren, schrijven en spreken op B1, met langere teksten en opdrachten over werk, studie en het dagelijks leven.">Prepare for B1 reading, listening, writing and speaking with longer texts and tasks about work, study and everyday life.</span></span><span class="go" data-t="Oefen op B1">Practise B1</span></a>
+            </div>
+            <p class="note" data-t="Je kunt je niveau later veranderen in je profiel.">You can change your level later in your profile.</p>
+          </div>
+        </details>
+        <details class="product-exam-topic" id="probeer">
+          <summary data-t="Probeer een KNM-vraag">Try a KNM question</summary>
+          <div>
+            <p class="note" data-t="Een echte KNM-vraag, zoals in de app. Kies een antwoord.">A real KNM question, as in the app. Choose an answer.</p>
+            <div class="quiz" lang="nl" dir="ltr">
+              <p class="qq">Je verhuist. Waar geef je je nieuwe adres door?</p>
+              <div class="choices" role="group" aria-label="Antwoorden">
+                <button type="button" class="choice" data-ok="0"><span class="lt" aria-hidden="true">A</span><span class="tx">Bij de woningcorporatie</span></button>
+                <button type="button" class="choice" data-ok="1"><span class="lt" aria-hidden="true">B</span><span class="tx">Bij de gemeente</span></button>
+                <button type="button" class="choice" data-ok="0"><span class="lt" aria-hidden="true">C</span><span class="tx">Bij de Belastingdienst</span></button>
+              </div>
+              <p class="qfb" id="qfb" role="status" hidden></p>
+            </div>
+            <a class="button primary" id="qmore" href="/oefenen?open=today" hidden data-t="Begin gratis">Start for free</a>
+          </div>
+        </details>
+        <details class="product-exam-topic" id="voorbeeld">
+          <summary data-t="Zo wordt je tekst nagekeken">How your writing is checked</summary>
+          <div>
+            <p class="note" data-t="Feedback op je tekst: punten per onderdeel en je fouten in je eigen tekst.">Feedback on your writing: points per criterion and your mistakes marked in your own text.</p>
+            <div class="specimen" lang="nl" dir="ltr">
+              <p class="task">Je gaat een week op vakantie. Schrijf een briefje aan je buurvrouw. Vraag of zij je planten water wil geven en schrijf waar de sleutel ligt.</p>
+              <div class="sp-grid">
+                <div>
+                  <div class="own">Beste Anja,<br><mark>Volgende week ik ga<sup>1</sup></mark> op vakantie naar Turkije. Wil jij mijn planten water <mark>geeven<sup>2</sup></mark>? <mark>De planten staat<sup>3</sup></mark> in de keuken. De sleutel <mark>ligd<sup>4</sup></mark> onder de mat bij de achterdeur. <mark>Zaterdag ik kom terug<sup>5</sup></mark>.<br>Heel erg bedankt!<br>Groeten,<br>Samira</div>
+                  <ol class="fixes">
+                    <li><s>Volgende week ik ga</s> → <b>Volgende week ga ik</b></li>
+                    <li><s>geeven</s> → <b>geven</b></li>
+                    <li><s>De planten staat</s> → <b>De planten staan</b></li>
+                    <li><s>ligd</s> → <b>ligt</b></li>
+                    <li><s>Zaterdag ik kom terug</s> → <b>Zaterdag kom ik terug</b></li>
+                  </ol>
+                </div>
+                <div>
+                  <p class="verdict"><b>Voldoende</b> 9 van de 10 punten · voldoende vanaf 7</p>
+                  <ul class="ck">
+                    <li class="g"><i aria-hidden="true">✓</i><span><b>Heb je geschreven wat de opdracht vraagt?</b>Ja · 3 van 3 punten</span></li>
+                    <li class="g"><i aria-hidden="true">✓</i><span><b>Kies je de goede woorden?</b>Ja · 2 van 2 punten</span></li>
+                    <li class="m"><i aria-hidden="true">!</i><span><b>Zijn je zinnen goed gebouwd?</b>1 van 2 punten · Let op de woordvolgorde en het meervoud.</span></li>
+                    <li class="g"><i aria-hidden="true">✓</i><span><b>Is je spelling goed?</b>2 van 2 punten · De twee spelfouten maken je brief niet moeilijker te begrijpen.</span></li>
+                    <li class="g"><i aria-hidden="true">✓</i><span><b>Is het één duidelijk geheel?</b>Ja · 1 van 1 punt</span></li>
+                  </ul>
+                </div>
+              </div>
+              <div lang="nl" dir="ltr">
+                <p><b>Nieuwe situatie</b> · Schrijf aan een collega dat je morgen om negen uur begint. Begin met «Morgen».</p>
+                <details><summary>Bekijk een goed antwoord</summary><p>Morgen begin ik om negen uur.</p></details>
+              </div>
+            </div>
+            <p class="note" data-t="Voorbeeld: de tekst en de punten zijn verzonnen.">Example: the text and the points are made up.</p>
+            <p><a class="button primary" href="/oefenen?open=writing" data-t="Oefen met Schrijven A2">Practise A2 writing</a></p>
+            <p class="try-free" id="try-free" hidden></p>
+            <p class="note"><a href="/nakijken" data-t="Zo kijkt Bittertalen na →">How Bittertalen checks your work →</a></p>
+          </div>
+        </details>
         <a class="module-link" href="/oefenen?open=today" data-t="Begin met oefenen">Start practising</a>
       </section>
     </div>
@@ -239,68 +299,8 @@
     <li><b dir="ltr">30+</b><span data-t="gesprekken om hardop te oefenen">conversations to practise out loud</span></li>
   </ul>
 
-  <section id="niveaus" class="block paper">
-    <h2 data-t="Waar oefen je voor?">What are you preparing for?</h2>
-    <div class="choices">
-      <a class="choice" href="/oefenen?open=a2"><span class="lt" aria-hidden="true">A</span><span class="tx"><b><span data-t="Inburgeringsexamen">Civic integration exam</span> <small>A2</small></b><span class="d" data-t="Oefen met Nederlands uit het dagelijks leven: lezen, luisteren, schrijven en spreken. Oefen ook Kennis van de Nederlandse Maatschappij (KNM).">Practise everyday Dutch: reading, listening, writing and speaking. You can also practise Knowledge of Dutch Society (KNM).</span></span><span class="go" data-t="Oefen op A2">Practise A2</span></a>
-      <a class="choice" href="/oefenen?open=b1"><span class="lt" aria-hidden="true">B</span><span class="tx"><b><span data-t="Staatsexamen NT2 · Programma I">NT2 state exam · Programme I</span> <small>B1</small></b><span class="d" data-t="Bereid je voor op lezen, luisteren, schrijven en spreken op B1, met langere teksten en opdrachten over werk, studie en het dagelijks leven.">Prepare for B1 reading, listening, writing and speaking with longer texts and tasks about work, study and everyday life.</span></span><span class="go" data-t="Oefen op B1">Practise B1</span></a>
-    </div>
-    <p class="note" data-t="Je kunt je niveau later veranderen in je profiel.">You can change your level later in your profile.</p>
-  </section>
-
-  <section id="probeer" class="block paper">
-    <h2 data-t="Probeer het zelf">Try it yourself</h2>
-    <p class="note" data-t="Een echte KNM-vraag, zoals in de app. Kies een antwoord.">A real KNM question, as in the app. Choose an answer.</p>
-    <div class="quiz" lang="nl" dir="ltr">
-      <p class="qq">Je verhuist. Waar geef je je nieuwe adres door?</p>
-      <div class="choices" role="group" aria-label="Antwoorden">
-        <button type="button" class="choice" data-ok="0"><span class="lt" aria-hidden="true">A</span><span class="tx">Bij de woningcorporatie</span></button>
-        <button type="button" class="choice" data-ok="1"><span class="lt" aria-hidden="true">B</span><span class="tx">Bij de gemeente</span></button>
-        <button type="button" class="choice" data-ok="0"><span class="lt" aria-hidden="true">C</span><span class="tx">Bij de Belastingdienst</span></button>
-      </div>
-      <p class="qfb" id="qfb" role="status" hidden></p>
-    </div>
-    <a class="button primary" id="qmore" href="/oefenen?open=today" hidden data-t="Begin gratis">Start for free</a>
-  </section>
 
 
-  <section id="voorbeeld" class="block paper">
-    <h2 data-t="Zo wordt je tekst nagekeken">How your writing is checked</h2>
-    <p class="note" data-t="Feedback op je tekst: punten per onderdeel en je fouten in je eigen tekst.">Feedback on your writing: points per criterion and your mistakes marked in your own text.</p>
-    <div class="specimen" lang="nl" dir="ltr">
-      <p class="task">Je gaat een week op vakantie. Schrijf een briefje aan je buurvrouw. Vraag of zij je planten water wil geven en schrijf waar de sleutel ligt.</p>
-      <div class="sp-grid">
-        <div>
-          <div class="own">Beste Anja,<br><mark>Volgende week ik ga<sup>1</sup></mark> op vakantie naar Turkije. Wil jij mijn planten water <mark>geeven<sup>2</sup></mark>? <mark>De planten staat<sup>3</sup></mark> in de keuken. De sleutel <mark>ligd<sup>4</sup></mark> onder de mat bij de achterdeur. <mark>Zaterdag ik kom terug<sup>5</sup></mark>.<br>Heel erg bedankt!<br>Groeten,<br>Samira</div>
-          <ol class="fixes">
-            <li><s>Volgende week ik ga</s> → <b>Volgende week ga ik</b></li>
-            <li><s>geeven</s> → <b>geven</b></li>
-            <li><s>De planten staat</s> → <b>De planten staan</b></li>
-            <li><s>ligd</s> → <b>ligt</b></li>
-            <li><s>Zaterdag ik kom terug</s> → <b>Zaterdag kom ik terug</b></li>
-          </ol>
-        </div>
-        <div>
-          <p class="verdict"><b>Voldoende</b> 9 van de 10 punten · voldoende vanaf 7</p>
-          <ul class="ck">
-            <li class="g"><i aria-hidden="true">✓</i><span><b>Heb je geschreven wat de opdracht vraagt?</b>Ja · 3 van 3 punten</span></li>
-            <li class="g"><i aria-hidden="true">✓</i><span><b>Kies je de goede woorden?</b>Ja · 2 van 2 punten</span></li>
-            <li class="m"><i aria-hidden="true">!</i><span><b>Zijn je zinnen goed gebouwd?</b>1 van 2 punten · Let op de woordvolgorde en het meervoud.</span></li>
-            <li class="g"><i aria-hidden="true">✓</i><span><b>Is je spelling goed?</b>2 van 2 punten · De twee spelfouten maken je brief niet moeilijker te begrijpen.</span></li>
-            <li class="g"><i aria-hidden="true">✓</i><span><b>Is het één duidelijk geheel?</b>Ja · 1 van 1 punt</span></li>
-          </ul>
-        </div>
-      </div>
-      <div lang="nl" dir="ltr">
-        <p><b>Nieuwe situatie</b> · Schrijf aan een collega dat je morgen om negen uur begint. Begin met «Morgen».</p>
-        <details><summary>Bekijk een goed antwoord</summary><p>Morgen begin ik om negen uur.</p></details>
-      </div>
-    </div>
-    <p class="note" data-t="Voorbeeld: de tekst en de punten zijn verzonnen.">Example: the text and the points are made up.</p>
-    <p><a class="button primary" href="/oefenen?open=writing" data-t="Oefen met Schrijven A2">Practise A2 writing</a></p>
-    <p class="try-free" id="try-free" hidden></p>
-    <p class="note"><a href="/nakijken" data-t="Zo kijkt Bittertalen na →">How Bittertalen checks your work →</a></p>
-  </section>
 
   <section id="oefenvormen" class="block paper">
     <h2 data-t="Oefen voor je examen">Practise for your exam</h2>

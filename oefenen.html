@@ -940,6 +940,28 @@ html:has(#talk:not([hidden]) .bittie-call){overflow:hidden}
 .prow>span{flex:none}
 .prow input:not([switch]){flex:1;min-width:0;height:44px;padding:0;border:0;border-radius:0;background:none;font-size:var(--fs-b);font-weight:400;text-align:var(--te);color:var(--soft)}
 .prow input:not([switch]):focus{color:var(--ink)}
+.exam-date-heading{color:var(--ink)}
+.exam-date-row{direction:ltr}
+.exam-date-row>label{flex:1 1 auto;min-width:0;overflow-wrap:anywhere}
+.exam-date-field{position:relative;flex:none;margin-left:auto;direction:ltr;isolation:isolate}
+.exam-date-display{
+  display:flex;align-items:center;justify-content:flex-end;gap:8px;min-height:44px;
+  min-width:142px;padding:0 0 0 38px;border-radius:var(--rs);
+  color:inherit;font:inherit;
+  font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+.exam-date-display b{font-weight:inherit}
+.exam-date-display svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.7}
+.exam-date-row .exam-date-field input[type=date]{
+  position:absolute;inset:0;width:100%;height:100%;margin:0;padding:0;opacity:0;cursor:pointer;font-size:16px;
+}
+.exam-date-field input[type=date]::-webkit-calendar-picker-indicator{position:absolute;inset:0;width:auto;height:auto;margin:0;padding:0;cursor:pointer}
+.exam-date-field input:focus-visible + .exam-date-display{outline:2px solid var(--blue);outline-offset:2px}
+.exam-date-clear{
+  position:absolute;z-index:1;inset:0 auto 0 0;width:34px;border:0;background:transparent;
+  border-radius:var(--rs);font-size:18px;color:inherit;
+}
+@media(hover:hover){.exam-date-field:hover [data-ex-date]{text-decoration:underline;text-underline-offset:3px}}
 .pickrow{position:relative}
 .pickrow>span{flex:0 1 auto;min-width:0}
 .pickrow b{flex:1 0 auto;max-width:62%;margin-inline-start:auto;font-weight:400;color:var(--soft);text-align:var(--te);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -974,6 +996,24 @@ html:has(#talk:not([hidden]) .bittie-call){overflow:hidden}
 .pban small{display:block;margin-top:2px;font-size:var(--fs-m);opacity:.85;line-height:1.35}
 .pban::after{content:"›";margin-inline-start:auto;font-size:26px;line-height:1;opacity:.8}
 .pban:active{transform:scale(.99)}
+/* Profile rows, their values, and section labels share the app's body size. */
+#prof :is(.lh,.pinfo,.pmail,.pban small,.pg .it .d),
+:root[data-desktop] #prof .pickrow select{font-size:var(--fs-b)}
+#prof .pg .it b{font-weight:400}
+#prof .profile-choice{direction:ltr;column-gap:8px}
+#prof .profile-choice>span:first-child{overflow-wrap:anywhere}
+#prof .profile-choice>b{
+  display:block;flex:0 1 auto;margin-left:auto;color:var(--ink);text-align:right;font-weight:400;
+}
+#prof :is(.profile-choice>b,.exam-date-display){font-size:var(--fs-m)}
+#prof .profile-choice>svg{
+  display:block;width:17px;height:17px;stroke:var(--ink);stroke-width:1.7;
+}
+:root #prof .profile-choice select{
+  position:absolute;inset:0 0 0 auto;width:min(62%,232px);height:100%;margin:0;opacity:0;appearance:auto;cursor:pointer;
+}
+#prof .profile-choice:has(select:focus-visible)>b{outline:2px solid var(--blue);outline-offset:4px}
+@media(hover:hover){#prof .profile-choice:has(select:hover)>b{text-decoration:underline;text-underline-offset:3px}}
 /* Profiel: the trillen switch */
 .tog{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;margin:0 0 6px;font-size:var(--fs-b)}
 .tog input{flex:none;appearance:none;-webkit-appearance:none;width:51px;height:31px;margin:0;padding:0;border:0;border-radius:999px;background:var(--line);position:relative;cursor:pointer;transition:background-color var(--motion-ui) var(--motion-settle)}
@@ -1079,11 +1119,11 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
         <label class="prow"><span>Voornaam</span><input id="pname" autocomplete="given-name" maxlength="40"></label>
         <label class="prow"><span>Achternaam</span><input id="plast" autocomplete="family-name" maxlength="60"></label>
       </div>
-      <h3 class="lh">Data van mijn examens</h3>
+      <h3 class="lh exam-date-heading">Data van mijn examens</h3>
       <div class="pg" id="pexams"></div>
       <div class="pg">
-        <div class="prow pickrow"><span id="plvlt">Ik oefen voor</span><b id="plvlv"></b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg><select id="plvl" aria-labelledby="plvlt"></select></div>
-        <div class="prow pickrow langrow"><span id="plangt">Taal</span><b data-langn></b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg><select id="plang" data-lang aria-labelledby="plangt"></select></div>
+        <div class="prow pickrow profile-choice"><span id="plvlt" dir="auto">Ik oefen voor</span><b id="plvlv" aria-hidden="true"></b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg><select id="plvl" aria-labelledby="plvlt"></select></div>
+        <div class="prow pickrow langrow profile-choice"><span id="plangt" dir="auto">Taal</span><b data-langn aria-hidden="true"></b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg><select id="plang" data-lang aria-labelledby="plangt"></select></div>
         <label class="prow tog" id="ptrilw" hidden><span>Trillen bij een antwoord</span><input type="checkbox" switch id="ptril"></label>
         <button type="button" class="it" id="psm"><span><span class="th"><b>Wat Bittie over je weet</b></span></span></button>
         <button type="button" class="it" id="poff" hidden><span><span class="th"><b>Alles downloaden voor offline</b></span><span class="d" id="poffd">Schilderijen, foto's en het woordenboek: ongeveer 37 MB. Liefst via wifi.</span></span></button>
@@ -1415,10 +1455,20 @@ const lsSet=(k,v)=>{try{v==null?localStorage.removeItem(k):localStorage.setItem(
 // browser has an account; claimRef() then hands it to /api/referral once (api/referral.js).
 const REFRE=/^[A-HJ-NP-Z2-9]{8}$/i;
 {const r=new URLSearchParams(location.search).get("ref");if(r&&REFRE.test(r))lsSet("ww-ref",r.toUpperCase())}
-const amsDay=(at=new Date())=>new Intl.DateTimeFormat("en-CA",{timeZone:"Europe/Amsterdam"}).format(at);
+const amsCalendar=new Intl.DateTimeFormat("en-CA",{timeZone:"Europe/Amsterdam",year:"numeric",month:"2-digit",day:"2-digit"});
+const amsDay=(at=new Date())=>{
+  const parts=Object.fromEntries(amsCalendar.formatToParts(at).map(({type,value})=>[type,value]));
+  return `${parts.year}-${parts.month}-${parts.day}`;
+};
 // The learner's exam dates from Profiel: one per exam part of the level (S.me.exams {lz:"YYYY-MM-DD",…}, synced with the
 // progress). An older single date (S.me.exam) still counts until a part gets its own date. Days on Amsterdam's calendar.
 const DRE=/^\d{4}-\d{2}-\d{2}$/;
+function validExamDate(value){
+  if(!DRE.test(value))return false;
+  const date=new Date(value+"T12:00:00Z");
+  return Number.isFinite(+date)&&date.toISOString().slice(0,10)===value;
+}
+const examDateText=value=>validExamDate(value)?value.split("-").reverse().join("/"):"DD/MM/YYYY";
 // the dated parts: the exam parts of the level; for B1 also the ONA-eindgesprek and the participatieverklaring, which the
 // Staatsexamen does not include (both optional: an empty field is simply left out)
 const EXTRA={ona:"ONA-eindgesprek",pv:"Participatieverklaring"};
@@ -1427,8 +1477,8 @@ const exName=k=>PART[k]||EXTRA[k]||"";
 const dayN=d=>{const n=Math.round((Date.parse(d+"T12:00:00Z")-Date.parse(amsDay()+"T12:00:00Z"))/864e5);return n>=0&&n<=730?n:null};
 // the coming exams of this level: [{k, n}] (k "" for the old single date), soonest first
 const examsAhead=()=>{const me=S.me||{},ex=me.exams||{};
-  let o=examParts().filter(k=>DRE.test(ex[k]||"")).map(k=>({k,n:dayN(ex[k])}));
-  if(!Object.values(ex).some(v=>DRE.test(v||""))&&DRE.test(me.exam||""))o=[{k:"",n:dayN(me.exam)}];
+  let o=examParts().filter(k=>validExamDate(ex[k]||"")).map(k=>({k,n:dayN(ex[k])}));
+  if(!Object.values(ex).some(validExamDate)&&validExamDate(me.exam||""))o=[{k:"",n:dayN(me.exam)}];
   return o.filter(x=>x.n!=null).sort((a,b)=>a.n-b.n)};
 const examDays=()=>{const a=examsAhead();return a.length?a[0].n:null};
 const examLastDays=()=>{const a=examsAhead();return a.length?a[a.length-1].n:null};
@@ -2433,15 +2483,18 @@ function paint(){
 }
 // The story of the painting of the day: who made it and why it is famous, in A2 Dutch (read or listen),
 // then the things you can see on it, with the English meaning like in the books; a word can be kept in Mijn woorden, practised like the words from the books
-function story(p){
-  hush(); $("home").hidden=true; $("story").hidden=false; window.scrollTo(0,0);
+function story(p,fromHistory=false){
+  hush();
+  $("vback").innerHTML=fromHistory?'<span aria-hidden="true">←</span>Geschiedenis van Nederland':backHTML();
+  $("vback").onclick=fromHistory?hist:home;
+  $("home").hidden=true; $("story").hidden=false; window.scrollTo(0,0);
   const W=(p.w||"").split("|").filter(Boolean).map(x=>x.split("=")), has=w=>(S.words||[]).some(y=>y.w===w);
   $("vbody").innerHTML=`<button class="sart" id="vart" aria-label="Bekijk het hele schilderij"><img src="/art/${p.f}.jpg" alt=""></button>
     <h2 lang="nl">${p.t}</h2><p class="lab" lang="nl"><b>${p.a}</b>, ${p.d} · ${p.m}</p>
     ${canSpeak?`<button class="ghost" id="vsay">▶ Luister</button>`:""}
     <article class="book" lang="nl">${p.v.split("\n").map(x=>`<p>${x}</p>`).join("")}</article>
     ${W.length?`<h3 class="lh">Op het schilderij</h3><ul class="sw">${W.map((x,i)=>`<li><span lang="nl"><b>${x[0]}</b> — ${x[1]}</span>${canSpeak?`<button class="say" data-i="${i}" aria-label="Luister">▶</button>`:""}<button class="ghost" data-k="${i}"${has(x[0])?" disabled":""}>${has(x[0])?"Bewaard":"Bewaar"}</button></li>`).join("")}</ul>`:""}`;
-  $("vart").onclick=()=>{$("zoom").hidden=false};
+  $("vart").onclick=()=>zoomPic("/art/"+p.f+".jpg",`<b>${p.a}</b><br>${p.t}, ${p.d} · ${p.m}`);
   if($("vsay"))$("vsay").onclick=()=>{const b=$("vsay");
     if(b.dataset.on){hush();b.textContent="▶ Luister";delete b.dataset.on;return}
     speak(p.v);b.textContent="■ Stop";b.dataset.on=1;
@@ -3067,11 +3120,57 @@ function drawProfile(){
   // the exam dates, one row per exam part of this level (S.me.exams): a countdown on Examen and in the Plus screen;
   // an empty field clears that part. The first own date retires the older single date (S.me.exam).
   const pe=$("pexams");
-  if(pe){const ex=(S.me||{}).exams||{},old=DRE.test((S.me||{}).exam||"")&&!Object.values(ex).some(v=>DRE.test(v||""))?S.me.exam:"";
-    if(!pe.contains(document.activeElement))pe.innerHTML=examParts().map(k=>`<label class="prow"><span>${exName(k)}</span><input type="date" data-ex="${k}" min="${amsDay()}" value="${DRE.test(ex[k]||"")?ex[k]:old}"></label>`).join("");
-    pe.querySelectorAll("[data-ex]").forEach(i=>i.onchange=()=>{setTimeout(()=>remindPlan(),500);const me=S.me||{},all={...(me.exams||{})};
-      if(old)parts().forEach(k=>{if(!DRE.test(all[k]||""))all[k]=old}); // keep the old date on the parts it stood for
-      all[i.dataset.ex]=DRE.test(i.value)?i.value:"";S.me={...me,exams:all,exam:""};save();home()})}
+  if(pe){
+    const ex=me.exams||{},old=validExamDate(me.exam||"")&&!Object.values(ex).some(validExamDate)?me.exam:"";
+    const dateFor=k=>validExamDate(ex[k]||"")?ex[k]:old;
+    const today=amsDay(), rank=date=>!date?2:date<today?1:0;
+    const ordered=examParts().sort((a,b)=>{
+      const first=dateFor(a),second=dateFor(b);
+      return rank(first)-rank(second)||first.localeCompare(second);
+    });
+    if(!pe.contains(document.activeElement))pe.innerHTML=ordered.map(k=>{
+      const date=dateFor(k);
+      return `<div class="prow exam-date-row"><label dir="auto" for="exam-date-${k}">${exName(k)}</label>
+        <div class="exam-date-field">
+          <input id="exam-date-${k}" type="date" lang="nl-NL" dir="ltr" data-ex="${k}" value="${date}">
+          <span class="exam-date-display" aria-hidden="true"><b data-ex-date>${examDateText(date)}</b>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v5m8-5v5M3 11h18"/></svg>
+          </span>
+          <button type="button" class="exam-date-clear" aria-label="Datum wissen"${date?"":" hidden"}>×</button>
+        </div>
+      </div>`;
+    }).join("");
+    const fields=new Map([...pe.querySelectorAll("[data-ex]")].map(input=>[input.dataset.ex,input]));
+    const focused=document.activeElement;
+    ordered.forEach((key,index)=>{
+      const row=fields.get(key)?.closest(".exam-date-row");
+      if(row&&pe.children[index]!==row)pe.insertBefore(row,pe.children[index]);
+    });
+    if(pe.contains(focused)&&!focused.hidden&&document.activeElement!==focused)focused.focus({preventScroll:true});
+    fields.forEach(input=>{
+      const field=input.parentElement, clear=field.querySelector("button");
+      const select=event=>{
+        if(typeof input.showPicker!=="function")return;
+        try{input.showPicker();event.preventDefault()}catch{}
+      };
+      input.onclick=select;
+      input.onkeydown=event=>{if(event.key==="Enter"||event.key===" ")select(event)};
+      function change(value){
+        const k=input.dataset.ex;
+        const accepted=!value||validExamDate(value);
+        const date=accepted?value:dateFor(k);
+        input.value=date;
+        field.querySelector("[data-ex-date]").textContent=examDateText(date);
+        clear.hidden=!date;
+        if(!accepted||date===dateFor(k))return;
+        const profile=S.me||{},all={...(profile.exams||{})};
+        if(old)parts().forEach(part=>{if(!validExamDate(all[part]||""))all[part]=old});
+        all[k]=date;S.me={...profile,exams:all,exam:""};save();setTimeout(()=>remindPlan(),500);home();
+      }
+      input.onchange=()=>{if(!input.validity?.badInput)change(input.value)};
+      clear.onclick=()=>{input.focus();change("")};
+    });
+  }
   // the portrait: a Dutch woman or man in Golden Age dress (S.me.av, so it goes along); tap to switch
   // the avatar the learner picked (an earlier portrait, "v" or "m", falls back to the bitterbal)
   $("pavi").innerHTML=avSVG(me.av); $("pav").onclick=avScreen;
@@ -3566,9 +3665,9 @@ function picsHTML(P){
   return`<div class="pics n${P.length}">${P.map((f,i)=>`<figure${FOTO_CREDITS[f]?' class="credited"':""}><button data-pic="foto/${f}.jpg" aria-label="Plaatje ${i+1} groot bekijken"><img src="foto/${f}.jpg" alt="${FOTO[f]||""}" loading="lazy"></button>${P.length===3?`<span>${i+1}</span>`:""}${FOTO_CREDITS[f]?`<figcaption>${photoCreditHTML(f)}</figcaption>`:""}</figure>`).join("")}</div>`;
 }
 // A photo full screen in the painting viewer; closing puts the painting back
-function zoomPic(src){
+function zoomPic(src,caption){
   const z=$("zoom"),im=$("zimg"),c=$("zcap"),ps=im.src,pc=c.innerHTML;
-  im.src=src; c.innerHTML=photoCreditHTML(src.replace(/^.*\//,"").replace(/\.jpg$/,"")); z.hidden=false;
+  im.src=src; c.innerHTML=caption??photoCreditHTML(src.replace(/^.*\//,"").replace(/\.jpg$/,"")); z.hidden=false;
   z.onclick=()=>{z.hidden=true;im.src=ps;c.innerHTML=pc;z.onclick=()=>{z.hidden=true}};
 }
 function docHTML(t){
@@ -4263,24 +4362,45 @@ GS.forEach((c,i)=>(GSB[c.id]||[]).forEach((q,n)=>{ch("gb",c.id+"."+n,i,"Geschied
 const gsItems=c=>ITEMS.filter(x=>x.k.startsWith("gs|"+c.id+".")||lvl()==="B1"&&x.k.startsWith("gb|"+c.id+"."));
 let hGo=null; // where the back button (and a swipe) on the history screen goes
 function hBack(t,f){$("hback").innerHTML=`<span aria-hidden="true">←</span>${t}`;$("hback").onclick=hGo=f}
+function culture(){
+  $("hist").hidden=true;
+  story(ART.find(p=>p.f==="delft"),true);
+}
+function geography(){
+  closePop();hush();warmDict();
+  $("home").hidden=true;$("play").hidden=true;$("story").hidden=true;$("hist").hidden=false;window.scrollTo(0,0);
+  hBack("Geschiedenis van Nederland",hist);
+  const topics=[["hunebed","Drenthe en Groningen"],["kiesrecht","De Afsluitdijk en het IJsselmeer"],["watersnood","Zeeland en de Deltawerken"]];
+  $("hbody").innerHTML=`<h2>Geografie en water</h2><p class="sub">Kies een plek en lees het bijbehorende verhaal.</p>
+    <p class="book" lang="nl">Drenthe en Groningen liggen in het noorden. Zeeland ligt in het zuidwesten, aan zee. De Afsluitdijk verbindt Noord-Holland en Friesland. Aan de ene kant van de dijk ligt het IJsselmeer, aan de andere kant de Waddenzee.</p>
+    <div class="list">${topics.map(([id,place])=>{
+      const index=GS.findIndex(chapter=>chapter.id===id);
+      return itHTML(`data-geo="${index}"`,place,GS[index].t);
+    }).join("")}</div>`;
+  document.querySelectorAll("#hbody [data-geo]").forEach(button=>button.onclick=()=>chapter(+button.dataset.geo,geography));
+}
 function hist(){
   closePop();hush();warmDict();
-  $("home").hidden=true;$("play").hidden=true;$("hist").hidden=false;window.scrollTo(0,0);
+  $("home").hidden=true;$("play").hidden=true;$("story").hidden=true;$("hist").hidden=false;window.scrollTo(0,0);
   hBack(TABN[tab],home);
   // a chapter is done when every question was answered right at least once
   const st=c=>{const q=gsItems(c),ok=q.filter(x=>(S.items[x.k]||{}).r).length;
     return ok===q.length?`<span class="good">Klaar</span>`:ok?`${ok} van ${q.length} goed`:(S.hs||{})[c.id]?"Gelezen":null};
-  let h=`<h2>Geschiedenis van Nederland</h2><p class="sub">Van de hunebedden tot nu, in ${GS.length} korte hoofdstukken. Goed voor KNM.</p>`;
+  let h=`<h2>Geschiedenis van Nederland</h2><p class="sub">Van de hunebedden tot nu, in ${GS.length} korte hoofdstukken. Goed voor KNM.</p>
+    <div class="list">${itHTML('id="hculture"',"Kunst en cultuur","Johannes Vermeer · Gezicht op Delft")}
+    ${itHTML('id="hgeography"',"Geografie en water","Drenthe, Zeeland en het IJsselmeer")}</div>`;
   GS.forEach((c,i)=>{if(c.g)h+=(i?"</div>":"")+`<h3 class="lh">${c.g}</h3><div class="list">`;h+=itHTML(`data-h="${i}"`,c.t,c.y+" · "+c.s,{n:st(c)})});
   $("hbody").innerHTML=h+`</div><button class="ghost wide" id="hall">Herhaal de vragen van alle hoofdstukken</button>`;
   document.querySelectorAll("#hbody [data-h]").forEach(b=>b.onclick=()=>chapter(+b.dataset.h));
+  $("hculture").onclick=culture;
+  $("hgeography").onclick=geography;
   $("hall").onclick=()=>build("gs",{...SEC.find(x=>x.id==="gs"),back:{t:"Geschiedenis",f:hist}});
 }
-function chapter(i){
+function chapter(i,back=hist){
   const c=GS[i],nx=GS[i+1]; closePop();hush();
   S.hs=S.hs||{};S.hs[c.id]=Date.now();save();
   $("home").hidden=true;$("play").hidden=true;$("hist").hidden=false;
-  hBack("Geschiedenis",hist);
+  hBack(back===geography?"Geografie en water":"Geschiedenis",back);
   $("hbody").innerHTML=`<div lang="nl"><p class="ask">${c.y}</p><h2>${c.t}</h2></div>`
     +(c.p?`<figure class="hfig"><button data-pic="${c.p}" aria-label="Groot bekijken"><img src="${c.p}" alt="" style="object-position:50% ${c.py}%"></button><figcaption lang="nl">${c.pc}</figcaption></figure>`:"")
     +(canSpeak?`<button class="hint" id="hsay">▶ Lees voor</button>`:"")
@@ -4288,12 +4408,12 @@ function chapter(i){
       .map(f=>`<figure class="hfig in"><button data-pic="${f[0]}" aria-label="Groot bekijken"><img src="${f[0]}" alt="" loading="lazy"></button><figcaption lang="nl">${f[1]}</figcaption></figure>`).join("")).join("")}</article>`
     +`<p class="note">Tik op een woord: je ziet de betekenis in het Engels.</p>`
     +`<button class="btn wide" id="hq">Beantwoord de vragen</button>`
-    +(nx?`<div class="list hnext">${itHTML(`data-h="${i+1}"`,"Volgende: "+nx.t,nx.y)}</div>`:"");
+    +(nx&&back===hist?`<div class="list hnext">${itHTML(`data-h="${i+1}"`,"Volgende: "+nx.t,nx.y)}</div>`:"");
   $("hpage").style.fontSize=$("page").style.fontSize; // the letter size chosen in the reader
   document.querySelectorAll("#hbody [data-pic]").forEach(b=>b.onclick=()=>zoomPic(b.dataset.pic));
   if($("hsay"))$("hsay").onclick=()=>speak(c.x);
   $("hq").onclick=()=>build("custom",{id:"custom",t:c.t,n:gsItems(c).length,pool:()=>gsItems(c),
-    back:{t:"Geschiedenis",f:hist},next:nx&&{t:"Volgende hoofdstuk",f:()=>chapter(i+1)}});
+    back:{t:back===geography?"Geografie en water":"Geschiedenis",f:back},next:nx&&back===hist&&{t:"Volgende hoofdstuk",f:()=>chapter(i+1)}});
   document.querySelectorAll("#hbody [data-h]").forEach(b=>b.onclick=()=>chapter(+b.dataset.h));
   window.scrollTo(0,0);
 }
@@ -5651,7 +5771,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru","uk"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="e7887459f4";
+const UIV="96c7750ff0";
 let uiP=null;
 function uiLoaded(){try{trMemo.clear()}catch(e){} // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});
@@ -5855,7 +5975,7 @@ $("plang").innerHTML=Object.keys(LANGS).map(k=>`<option value="${k}">${LANGS[k].
 $("site-footer").innerHTML=siteFooter();
 if(LI>=0){applyLang();loadUI().then(applyLang).catch(()=>{})} else fitTabs(); // the direction at once, the words when they are here
 function openEntry(){
-  if(!["today","a2day","a2","b1","writing","speaking","sample","login","plus","books","history","media","talk"].includes(entry)||$("move").hidden===false)return;
+  if(!["today","a2day","a2","b1","writing","speaking","sample","login","plus","books","history","culture","geography","media","talk"].includes(entry)||$("move").hidden===false)return;
   const q=new URLSearchParams(location.search);
   if(q.has("code")||q.has("error")||q.has("plus")||location.hash.startsWith("#verhuis="))return;
   const choice=q.get("choice");
@@ -5876,7 +5996,7 @@ function openEntry(){
   if(entry==="a2"||entry==="b1"){setLvl(entry.toUpperCase());setTab("oefenen");home()}
   if(entry==="sample")tryOne();
   // the homepage's blocks "Meer dan examenvragen": their screen, with Oefenen behind the back button
-  const screen={books:library,history:hist,media,talk:()=>aiList("people")}[entry];
+  const screen={books:library,history:hist,culture,geography,media,talk:()=>aiList("people")}[entry];
   if(screen){setTab("oefenen");home();screen()}
   if(entry==="login"||entry==="plus"){
     setTab("profiel");home();

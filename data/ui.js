@@ -1102,3 +1102,48 @@ Object.assign(window.UK, {
   "Dit onthoudt Bittie": "Що запам’ятала Бітті",
   "Bittie denkt na…": "Бітті думає…"
 });
+
+Object.assign(UI, {
+  "Kunst en cultuur": [
+    "Art and culture",
+    "الفن والثقافة",
+    "Sanat ve kültür",
+    "कला और संस्कृति",
+    "艺术与文化",
+    "Arte y cultura",
+    "Искусство и культура"
+  ],
+  "Geografie en water": [
+    "Geography and water",
+    "الجغرافيا والمياه",
+    "Coğrafya ve su",
+    "भूगोल और जल",
+    "地理与水利",
+    "Geografía y agua",
+    "География и вода"
+  ],
+  "Kies een plek en lees het bijbehorende verhaal.": [
+    "Pick a place and read its story.",
+    "اختر مكانًا واقرأ قصته.",
+    "Bir yer seç ve hikâyesini oku.",
+    "कोई जगह चुनें और उसकी कहानी पढ़ें।",
+    "选择一个地点，阅读它的故事。",
+    "Elige un lugar y lee su historia.",
+    "Выберите место и прочитайте его историю."
+  ],
+  "Datum wissen": [
+    "Clear date",
+    "امسح التاريخ",
+    "Tarihi sil",
+    "तारीख हटाएँ",
+    "清除日期",
+    "Borrar fecha",
+    "Очистить дату"
+  ]
+});
+Object.assign(window.UK, {
+  "Kunst en cultuur": "Мистецтво й культура",
+  "Geografie en water": "Географія й вода",
+  "Kies een plek en lees het bijbehorende verhaal.": "Виберіть місце й прочитайте пов’язану з ним історію.",
+  "Datum wissen": "Очистити дату"
+});
