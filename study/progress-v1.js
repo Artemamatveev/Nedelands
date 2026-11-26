@@ -10,7 +10,7 @@ function rebaseProgress(base, local, remote, path = []) {
   if (counter && Number.isFinite(local) && Number.isFinite(remote))
     return remote + Math.max(0, local - (base || 0));
   if (local === undefined || remote === undefined && base !== undefined) return undefined;
-  if (section === "writingRules" && path.length === 2 && local && remote)
+  if ((section === "writingRules" && path.length === 2 || section === "speakFollow" && path.length === 1) && local && remote)
     return local.at >= remote.at ? local : remote;
   if (section === "day" && path.length === 1 && local?.d !== remote?.d)
     return (local?.d || 0) > (remote?.d || 0) ? local : remote;

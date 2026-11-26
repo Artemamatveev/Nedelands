@@ -400,7 +400,7 @@ textarea{display:block;width:100%;font-size:var(--fs-b);line-height:1.5;padding:
 .wide{width:100%}
 .reflink{overflow-wrap:anywhere;margin-block:10px}
 .gform{display:flex;gap:8px;margin-block:12px} .gform input{flex:1;min-width:0;height:52px;border:1.5px solid var(--ink);border-radius:var(--rc);padding:0 12px;font:inherit;font-size:var(--fs-b);letter-spacing:.08em;background:var(--card);color:var(--ink)} .gform .btn{flex:none}
-.offer{margin-block:14px} .note>[data-offer]{margin-top:10px}
+.offer{display:block;margin-block:14px} .note>[data-offer]{margin-top:10px}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .opt.sel{border-color:var(--oranje);box-shadow:inset 0 0 0 2px var(--oranje)}
 .opts.one .opt.sel{box-shadow:none;border-color:var(--line);font-weight:600}
@@ -1108,8 +1108,8 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
 <script src="/study/praise-art-v1.js?v=c86fa67273"></script>
 <script src="/study/praise-v1.js?v=cf226a4a76"></script>
 <script src="/study/language-v1.js?v=e94426af48"></script>
-<script src="/study/progress-v1.js?v=ef489051a9"></script>
-<script src="/study/writing-v1.js?v=d986d16b42"></script>
+<script src="/study/progress-v1.js?v=261b0e20d0"></script>
+<script src="/study/writing-v1.js?v=84ca5efa75"></script>
 <script src="/data/knm.js?v=50777b478a"></script>
 <script src="/data/a2.js?v=56c32c3473"></script>
 <script src="/data/b1.js?v=e9701bd331"></script>
@@ -1533,6 +1533,7 @@ function mergeS(a,b){
   o.gp=by(a.gp,b.gp,(x,y)=>({n:Math.max(x.n||0,y.n||0),b:Math.max(x.b||0,y.b||0),at:Math.max(x.at||0,y.at||0)}));
   o.bk=by(a.bk,b.bk,(x,y)=>(y.at||0)>(x.at||0)?y:x);
   o.res=by(a.res,b.res,(x,y)=>{const m=new Map();x.concat(y).forEach(r=>m.set(r.id||r.at,r));return [...m.values()].sort((p,q)=>p.at-q.at)});
+  if(a.speakFollow||b.speakFollow)o.speakFollow=(a.speakFollow?.at||0)>=(b.speakFollow?.at||0)?a.speakFollow:b.speakFollow;
   o.writingRules=by(a.writingRules,b.writingRules,(x,y)=>(y.at||0)>(x.at||0)?y:x);
   o.uit=by(a.uit,b.uit,(x,y)=>(y.at||0)>(x.at||0)?y:x);
   o.start=a.start&&b.start?(a.start.at>=b.start.at?a.start:b.start):a.start||b.start;
@@ -1787,11 +1788,23 @@ async function authHead(){
 // proefexamen below the practice target (the moments the buyer panel named). Only with an account, Plus or the Examenpas
 // switched on, and a level that isn't covered yet. The button opens the one Plus screen.
 const canOffer=()=>!NATIVE&&!!(acc.user&&acc.cfg&&(acc.cfg.pass||acc.cfg.plus)&&!isPlus(lvl()));
-const offerBtn=()=>`<button type="button" class="ghost wide" data-offer>${acc.cfg.pass?"Bekijk de Examenpas":"Bekijk Bittertalen Plus"}</button>`;
-const offerHTML=c=>c==="limit"&&canOffer()?"<br>"+offerBtn():"";
-const examOffer=()=>canOffer()?`<div class="offer"><p class="note">${acc.cfg.pass?`Wil je tot je examen elke dag laten nakijken? Met de Examenpas kan dat ${Math.round((acc.cfg.pass.days||91)/7)} weken lang, voor één betaling.`:"Wil je tot je examen elke dag laten nakijken? Met Bittertalen Plus kan dat."}</p>${offerBtn()}</div>`:"";
-document.addEventListener("click",e=>{if(e.target.closest("[data-offer]")){stopSpeak();plusScreen()}});
-const noCheck=c=>c==="ai_consent"?"Zonder je akkoord sturen we niets naar de AI. Je kunt gewoon verder oefenen.":c==="quota_unavailable"?"Nakijken is tijdelijk niet beschikbaar. Je kunt verder oefenen.":c==="login"?(acc.free===0?"Je gratis proefbeurten zijn op. Maak een gratis account voor nog 7 gratis nakijkbeurten.":"Log in bij Profiel om dit door Bittertalen te laten nakijken."):c==="limit"?((acc.checkPeriod||myPeriod())!=="day"?(acc.cfg?.plus&&!NATIVE&&!isPlus(lvl())?"Je gratis nakijkbeurten zijn op. Met Plus of de Examenpas kun je verder laten nakijken.":"Je gratis nakijkbeurten zijn op."):"Je dagtegoed is op. Morgen kun je weer laten nakijken."):c==="month"?"Je maandtegoed is op. Volgende maand kun je weer laten nakijken.":c==="pass"?"De nakijkbeurten van je Examenpas zijn op. Je kunt verder oefenen.":c==="timeout"?"Het nakijken duurde te lang. Je beurt is teruggegeven. Probeer het nog een keer.":c==="busy"?"Bittertalen heeft vandaag al heel veel teksten nagekeken. Morgen kan het weer.":null;
+function offerChoice(){
+  const days=examLastDays(), pass=acc.cfg?.pass;
+  const fits=days!=null&&pass?.plans?.[lvl()]&&days<pass.days;
+  return {days,pass,fits,choice:`${fits?"exam":"plus"}-${lvl().toLowerCase()}`};
+}
+function offerHTML(c){
+  if(c!=="limit"||!canOffer()||(acc.checkPeriod||myPeriod())==="day")return "";
+  const {days,pass,fits,choice}=offerChoice(), cap=acc.cfg.plus?.month;
+  const line=fits
+    ?`De Examenpas loopt tot na je laatste geplande examendatum.${pass.total?` Je krijgt ${pass.total} nakijkbeurten voor de hele periode.`:""}`
+    :`${pass?.days&&days!=null?"De Examenpas stopt vóór of op je laatste geplande examendatum. ":""}${cap?`Plus geeft tot ${cap} nakijkbeurten per kalendermaand.`:"Met Plus kun je meer antwoorden laten nakijken."}`;
+  return `<span class="offer">Je kunt gratis verder oefenen met de opdrachten en voorbeeldantwoorden. ${line}
+    <button type="button" class="ghost wide" data-offer="${choice}">${fits?"Bekijk de Examenpas":"Bekijk Bittertalen Plus"}</button></span>`;
+}
+const examOffer=()=>checksLeft()===0?offerHTML("limit"):"";
+document.addEventListener("click",e=>{const button=e.target.closest("[data-offer]");if(button){stopSpeak();plusScreen(button.dataset.offer)}});
+const noCheck=c=>c==="ai_consent"?"Zonder je akkoord sturen we niets naar de AI. Je kunt gewoon verder oefenen.":c==="quota_unavailable"?"Nakijken is tijdelijk niet beschikbaar. Je kunt verder oefenen.":c==="login"?(acc.free===0?"Je gratis proefbeurten zijn op. Maak een gratis account voor nog 7 gratis nakijkbeurten.":"Log in bij Profiel om dit door Bittertalen te laten nakijken."):c==="limit"?((acc.checkPeriod||myPeriod())!=="day"?"Je gratis nakijkbeurten zijn op.":"Je dagtegoed is op. Morgen kun je weer laten nakijken."):c==="month"?"Je maandtegoed is op. Volgende maand kun je weer laten nakijken.":c==="pass"?"De nakijkbeurten van je Examenpas zijn op. Je kunt verder oefenen.":c==="timeout"?"Het nakijken duurde te lang. Je beurt is teruggegeven. Probeer het nog een keer.":c==="busy"?"Bittertalen heeft vandaag al heel veel teksten nagekeken. Morgen kan het weer.":null;
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const answer=(v,t)=>t==="past"?v[2]:t==="pastpl"?v[3]:t==="pp"?v[4]:v[5];
 
@@ -2250,6 +2263,9 @@ async function spGrade(q,r){
     const res=(await nakijken([{kind:q.kind,task:spTask(q),text:r.text}],q.sec==="sb"?"sb":"sp"))[0];
     if(cur!==attempt||q!==queue[pos]||c!==$("spchk")||$("play").hidden)return;
     const errs=Array.isArray(res.errors)?res.errors:[], ok=!!res.passed;
+    if(q.sec==="sp"&&S.speakFollow&&cur.followSpeaking===S.speakFollow.at&&[0,1,2,3].includes(res.scores?.inhoud)){
+      S.speakFollow={...S.speakFollow,day:today()+1,lastKey:q.k,ok:res.scores.inhoud===3,at:Date.now()};
+    }
     if(q.sec==="sp"&&campaignSource()?.source==="a2s")campaignTrack("check");
     b.disabled=false; $("rev").hidden=true; keepErrs(errs); record(ok); if(!cur.exam)quickPraise.show(ok);
     $("fb").innerHTML=`<b class="${ok?"good":"bad"}">${ok?"Goed zo! Voldoende":"Nog niet voldoende"}</b>
@@ -2914,11 +2930,23 @@ function startExamFocus(source){
   build(source.sec,{...SEC.find(x=>x.id===source.sec),t:"Gerichte oefening",n:1,keep:1,pool:()=>[target],
     practiceSource:source.k,back:{t:"Mijn dag",f:openFocusDay}});
 }
+const occurrences=n=>n===1?"1 keer":`${n||1} keer`;
+const speakingFollowQuestions=state=>ITEMS.filter(q=>q.sec==="sp"&&/waarom/i.test(q.big+" "+q.sub)&&!state.examKeys?.includes(q.k));
+function speakingFollowUp(){
+  const state=S.speakFollow;
+  if(!state||state.ok||state.day>today())return;
+  const questions=speakingFollowQuestions(state);
+  if(!questions.length)return;
+  const target=questions.find(q=>q.k!==state.lastKey)||questions[0];
+  build("sp",{...SEC.find(x=>x.id==="sp"),n:1,keep:1,pool:()=>[target],followSpeaking:state.at});
+}
 function planHTML(){
   const d=today(),done=S.day&&S.day.d===d?S.day.done:[],P=planTasks(),steps=P.T,nx=steps.findIndex(t=>!done.includes(t.id));
   const nd=steps.filter(t=>done.includes(t.id)).length;
   const rule=lvl()==="A2"&&dueWritingRule(S.writingRules,d);
   const practised=lvl()==="A2"?Object.keys(WRITING_RULES).filter(kind=>S.writingRules?.[kind]?.ok):[];
+  const speaking=lvl()==="A2"?S.speakFollow:null;
+  const speakingDue=speaking&&!speaking.ok&&speaking.day<=d&&speakingFollowQuestions(speaking).length;
   const intro=nx<0?"Alles is klaar. Tot morgen!":P.bg?"Eerst de basis: elke dag één les.":P.pc!=null?`Vooral ${PART[P.k]}: daar scoor je nu het laagst.`:"Je oefent vandaag de onderdelen hieronder.";
   const focus=dayExamFocus(),last=focus?.focus.last;
   // new here at A2: where to begin, right under the heading, so it is seen above the tab bar on a phone. Gone after the
@@ -2942,8 +2970,13 @@ function planHTML(){
     <p class="sub">${intro}</p>
     ${review}
     ${rule?`<section class="list exam-focus"><h3>Pas de regel toe in een nieuwe zin</h3><p>${WRITING_RULES[rule].title}</p>
+      ${S.writingRules[rule].source==="exam"?`<p class="note">Dit ging ${occurrences(S.writingRules[rule].count)} mis in je schrijfproefexamen.</p>`:""}
       <button type="button" class="ghost wide" id="dayrule">Oefen met een nieuwe situatie</button></section>`:""}
-    ${practised.length?`<p class="note"><span>Gelukt in een nieuwe zin</span> · ${practised.map(kind=>WRITING_RULES[kind].title).join(", ")}</p>`:""}
+    ${practised.map(kind=>`<p class="note"><b>${WRITING_RULES[kind].title}</b> · ${occurrences(S.writingRules[kind].hits||1)} goed toegepast in een nieuwe zin.</p>`).join("")}
+    ${speakingDue?`<section class="list exam-focus"><h3>Spreken · Geef een volledig antwoord</h3>
+      <p class="note">Een volledig antwoord behandelt alle punten van de opdracht.</p>
+      <button type="button" class="ghost wide" id="dayspeak">Probeer een nieuwe spreekvraag</button></section>`:""}
+    ${speaking?.ok?`<p class="note"><b>Spreken</b> · Alle punten van een nieuwe spreekvraag beantwoord.</p>`:""}
     <ol class="steps">${steps.map((t,i)=>{const ok=done.includes(t.id),nxt=i===nx&&!ok,k=t.id.split(":")[1];
       return`<li><button class="step${ok?" ok":""}" data-p="${t.id}"${nxt?' aria-current="step"':""}><i class="sic">${ok?'<svg viewBox="0 0 24 24" aria-hidden="true"><path class="s" d="M5.5 12.5l4.2 4.2 8.8-9"/></svg>':IC[k]?`<svg viewBox="0 0 24 24" aria-hidden="true">${IC[k]}</svg>`:i+1}</i><b>${t.t}</b><span>${t.s}</span><em class="c">›</em></button></li>`}).join("")}</ol>
     ${P.bg?"":`<button class="ghost wide" data-p="s:mix">Meer tijd? Mix van de dag</button>`}`;
@@ -3021,6 +3054,7 @@ function drawPlan(){
     const st=$("streak");st.classList.remove("stamp");void st.offsetWidth;st.classList.add("stamp");buzz("good");remindPlan()}
   if($("dayexam"))$("dayexam").onclick=()=>{setTab("profiel");setTimeout(()=>{const f=$("pexams");if(f){f.scrollIntoView({block:"center"});f.querySelector("input")?.focus()}},120)};
   if($("dayrule"))$("dayrule").onclick=writingRuleScreen;
+  if($("dayspeak"))$("dayspeak").onclick=speakingFollowUp;
   const focus=dayExamFocus(),review=$("dayfocus");
   if(review&&focus?.target)review.onclick=()=>startExamFocus(focus.source);
   document.querySelectorAll("#plan [data-p]").forEach(b=>b.onclick=()=>{const id=b.dataset.p,[k,v]=id.split(":");planId=id;
@@ -3865,6 +3899,8 @@ async function examWrite(){
         <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(task.right)}</div></details>
         ${redoByTask[i].length?`<button class="ghost wide rdo" data-i="${i}">Schrijf het nog een keer</button>`:""}`;
     }).join("");
+    const rule=exam.part==="wr"&&review.complete?examWritingRule(review.rows):null;
+    if(rule)S.writingRules=scheduleWritingRules(S.writingRules,[rule],today(),Date.now(),"exam");
     if(review.complete){lsSet(completedDraft,null);keepRes(exam.part,review.percent,writingSnapshot(review))}
     else save();
     const passed=review.complete && review.percent>=passPc(exam.part);
@@ -3872,6 +3908,7 @@ async function examWrite(){
       <p class="ru">${review.complete?`${review.earned} van ${review.max} punten, `:""}${good} van ${tasks.length} opdrachten voldoende${review.unfinished?`; ${review.unfinished} niet gemaakt`:""}</p></div>
       <p><b class="${review.complete?(passed?"good":"bad"):""}">${!review.complete?"Onvolledige beoordeling":passed?"Oefendoel bereikt":"Meer oefenen"}</b></p>
       <p class="note">Het oefendoel is ${passPc(exam.part)}% van de punten. Dit is een oefenresultaat. De officiële uitslag wordt door DUO bepaald.</p>
+      ${rule?`<p class="note"><b>Volgende stap:</b> ${WRITING_RULES[rule.kind].title} ging ${occurrences(rule.count)} mis. Morgen krijg je in Mijn dag een nieuwe zin over deze regel.</p>`:""}
       ${review.complete&&!passed?examOffer():""}${writingReviewHTML(review)}
       <details class="writing-details"><summary>Bekijk elke opdracht en de verbeterde teksten</summary>${body}</details>${foot}`;
     const html=card.innerHTML, state={cur:exam,queue:tasks,pos,total,right,answered,planId}, backAction=$("back").onclick, backLabel=$("back").getAttribute("aria-label");
@@ -3926,10 +3963,12 @@ async function examSpeak(){
         <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(a.q.right)}</div></details>`}).join("");
     // score: points of all 16 questions (an unanswered one counts 0); without points (older server) the share of good answers
     const max=queue.reduce((s,q)=>s+(q.mx?mxPts(q.mx):SPMAX),0), pc=scored?Math.round(pts/max*100):Math.round(good/queue.length*100), pass=pc>=passPc(cur.part);
+    const incomplete=exam.part==="sp"?T.filter((grade,i)=>A[i]?.text&&grade?.scores?.inhoud===2).length:0;
+    if(incomplete)S.speakFollow={day:today()+1,ok:false,count:incomplete,at:Date.now(),examKeys:queue.map(q=>q.k)};
     keepRes(cur.part,pc,undefined,exam.spDraft?.id);clear();
     card.innerHTML=`<div class="done"><p class="ask">${cur.t}: uitslag</p><div class="big">${pc}%</div><p class="ru">${scored?`${pts} van ${max} punten, `:""}${good} van ${queue.length} antwoorden voldoende${A.length<queue.length?`; ${queue.length-A.length} ${queue.length-A.length===1?"vraag":"vragen"} niet beantwoord`:""}</p></div>
       <p><b class="${pass?"good":"bad"}">${pass?"Oefendoel bereikt":"Meer oefenen"}</b></p>
-      <p class="note">Het oefendoel is ${passPc(cur.part)}%. Deze score gaat over je uitgeschreven antwoorden. Uitspraak en vloeiendheid zijn niet beoordeeld.</p>`+(pass?"":examOffer())+body+foot; bind();
+      <p class="note">Het oefendoel is ${passPc(cur.part)}%. Deze score gaat over je uitgeschreven antwoorden. Uitspraak en vloeiendheid zijn niet beoordeeld.</p>`+(incomplete?`<p class="note"><b>Volgende stap:</b> oefen morgen in Mijn dag met een nieuwe vraag waarop je elk deel moet beantwoorden.</p>`:"")+(pass?"":examOffer())+body+foot; bind();
   }catch(e){
     if(!active())return;
     const c=e&&e.code,retry=checkRetry(c);
@@ -4526,11 +4565,12 @@ function plusScreen(choice){
   $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;window.scrollTo(0,0);
   tBack(TABN[tab],home);
   const c=acc.cfg.plus,p=acc.plus,on=isPlus(),plans=c.plans||{A2:{price:c.price}};
+  const dateOffer=offerChoice();
   if(NATIVE){$("tbody").innerHTML=`<h2 id="plusS">Bittertalen Plus</h2>`+(on?`<p class="sub"><b>${p.group?`<span lang="nl">${esc(p.group)}</span>`:p.pass?(p.year?"Jaarpas":"Examenpas"):"Bittertalen Plus"} ${p.level||""}</b> · ${plusLine()}</p>`:`<p class="sub">Bittertalen Plus is niet beschikbaar in deze app.</p>`)+`<p class="sub">Al het andere in Bittertalen blijft gratis.</p>`;return}
   $("tbody").innerHTML=`<h2 id="plusS">Bittertalen Plus</h2>`
     +(on?`<p class="sub"><b>${p.group?`<span lang="nl">${esc(p.group)}</span>`:p.pass?(p.year?"Jaarpas":"Examenpas"):"Bittertalen Plus"} ${p.level||""}</b> · ${plusLine()}</p>`:"")
     +`<p class="sub">Met Plus: tot ${c.month||200} nakijkbeurten per maand. Met een gratis account: ${acc.cfg.limit} gratis.</p><p class="sub">Al het andere in Bittertalen blijft gratis.</p>`
-    +(acc.cfg.pass&&!on&&examLastDays()!=null?`<p class="note">${((n,m)=>n<=(acc.cfg.pass.days||91)?(m?`Je laatste examen is over ${n} dagen. De Examenpas loopt tot na je laatste examen.`:`Je examen is over ${n} dagen. De Examenpas loopt tot na je examen.`):(m?`Je laatste examen is over ${n} dagen.`:`Je examen is over ${n} dagen.`))(examLastDays(),examMany())}</p>`:"")
+    +(dateOffer.pass&&!on&&dateOffer.days!=null?`<p class="note">${dateOffer.fits?"De Examenpas loopt tot na je laatste geplande examendatum.":"De Examenpas stopt vóór of op je laatste geplande examendatum."}</p>`:"")
     +(on&&p.status==="past_due"?`<p class="note">Je laatste betaling is niet gelukt. Stripe probeert het nog een paar keer.</p>`:"")
     +(plusMsg?`<p class="note" role="status">${esc(plusMsg)}</p>`:"")
     +(acc.user?`<section class="list"><label class="prow tog"><span>Laat Plus of de Examenpas meteen beginnen. Binnen 14 dagen kan ik herroepen en krijg ik mijn geld terug.</span><input type="checkbox" switch id="pstart"></label></section>`:"")
@@ -5456,7 +5496,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="cc9e26dca8";
+const UIV="a4cbcc105f";
 let uiP=null;
 function uiLoaded(){if(typeof trMemo!=="undefined")trMemo.clear(); // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});

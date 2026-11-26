@@ -149,22 +149,26 @@ test('Plus screen offers the Examenpas next to the subscriptions, and shows a ru
   a.run(`acc.plus={status:'active',level:'B1'};plusScreen()`);
   assert.equal(a.document.querySelectorAll('[data-pass-plan]').length,0);
 });
-test('The Examenpas is offered when the free checks are used up and after a writing or speaking exam below the target',async()=>{
+test('Dated offers lead to the relevant paid option only after free checks run out',async()=>{
   const {app}=await import('./app-harness.mjs');
   const a=await app();
   a.run(`acc.cfg={limit:7,period:'once',plus:{limit:60,price:'9,99',plans:{A2:{price:'9,99'},B1:{price:'14,99'}}},pass:{days:42,plans:{A2:{price:'19,99'},B1:{price:'24,99'}}}};acc.user=null;acc.plus=null;S.lvl='A2'`);
   assert.equal(a.run('offerHTML("limit")'),'','a guest is asked to log in, not to pay');
   a.run(`acc.user={id:'u1'}`);
-  assert.match(a.run('offerHTML("limit")'),/data-offer.*Bekijk de Examenpas/);
+  assert.match(a.run('offerHTML("limit")'),/data-offer="plus-a2"/);
+  a.run('S.me={exam:amsDay(new Date(Date.now()+14*864e5))}');
+  assert.match(a.run('offerHTML("limit")'),/data-offer="exam-a2"/);
   assert.equal(a.run('offerHTML("busy")'),'');
-  assert.match(a.run('examOffer()'),/6 weken lang, voor één betaling/);
+  assert.equal(a.run('examOffer()'),'');
+  a.run('acc.freeUsed=7');
+  assert.match(a.run('examOffer()'),/De Examenpas loopt tot na/);
   a.run(`acc.plus={status:'active',level:'A2'}`);
   assert.equal(a.run('offerHTML("limit")'),'','a covered level gets no offer');
   a.run(`S.lvl='B1'`);
   assert.match(a.run('offerHTML("limit")'),/data-offer/,'A2 Plus does not cover B1');
   a.run(`acc.plus=null;acc.cfg.pass=null`);
-  assert.match(a.run('examOffer()'),/Bittertalen Plus kan dat/);
-  a.run(`document.body.insertAdjacentHTML('beforeend',offerBtn());document.querySelector('[data-offer]').click()`);
+  assert.match(a.run('examOffer()'),/Bekijk Bittertalen Plus/);
+  a.run(`document.body.insertAdjacentHTML('beforeend',offerHTML('limit'));document.querySelector('[data-offer]').click()`);
   assert.ok(a.document.querySelectorAll('[data-plus-plan]').length>0,'the button opens the Plus screen');
 });
 

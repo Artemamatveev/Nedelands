@@ -227,3 +227,23 @@ test('A2 writing exam can retry the same draft after a timeout and record the re
   assert.equal(a.run('S.res.wr.length'),1);
   assert.equal(a.run('Object.values(S.xs).every(n=>n===1)'),true);
 });
+
+test('A2 writing uses the most frequent exam rule for two different day-plan sentences',async()=>{
+  const check=checker(grades=>grades.map((row,i)=>({...row,errors:[
+    {...row.errors[0],kind:'inversie'},...(i===0?[{wrong:'De fietsen staat',right:'De fietsen staan',kind:'meervoud'}]:[])
+  ]})));
+  const a=await app({fetch:check.fetch});
+  await submit(a);
+  assert.match(a.document.querySelector('#card').textContent,/Woordvolgorde ging 4 keer mis/);
+  assert.equal(a.run('Object.keys(S.writingRules).join()'),'inversie');
+  assert.equal(a.run('dueWritingRule(S.writingRules,today())'),undefined);
+  for(const [i,answer] of ['Morgen begin ik om negen uur.','Vanavond breng ik de sleutel.'].entries()){
+    a.run('S.writingRules.inversie.day=today();setTab("vandaag");home();drawPlan()');
+    a.document.querySelector('#dayrule').click();
+    a.document.querySelector('#ruleanswer').value=answer;
+    a.document.querySelector('#rulecheck').click();
+    assert.equal(a.run('S.writingRules.inversie.hits'),i+1);
+  }
+  assert.match(a.run('planHTML()'),/2 keer goed toegepast/);
+  assert.equal(a.run('dueWritingRule(S.writingRules,today()+1)'),undefined);
+});

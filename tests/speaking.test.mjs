@@ -204,3 +204,21 @@ test('A2 speaking restores the current completed answer and the original deadlin
   reopened.run('openProgress("another-owner")');
   assert.equal(reopened.run('speakingDraft()'),null);
 });
+
+test('A2 speaking recommends separate practice when part of an exam answer was missing',async()=>{
+  const a=await app({fetch:async(url,options)=>{
+    if(url!=='/api/check')return new Response('{}');
+    const {tasks}=JSON.parse(options.body);
+    return new Response(JSON.stringify({tasks:tasks.map(()=>({passed:true,errors:[],
+      scores:{inhoud:2,woorden:2,grammatica:2,samenhang:1},corrected:'Ik spreek Nederlands.'}))}));
+  }});
+  a.run('startExam("sp",true);cur.ans=[{q:queue[0],text:"Ik spreek Nederlands"}];pos=queue.length;finish()');
+  await a.flush();
+  assert.match(a.document.querySelector('#card').textContent,/oefen morgen in Mijn dag/);
+  assert.equal(a.run('S.speakFollow.count'),1);
+  assert.equal(a.run('S.speakFollow.day'),a.run('today()+1'));
+  a.run('S.speakFollow.day=today();setTab("vandaag");home();drawPlan()');
+  a.document.querySelector('#dayspeak').click();
+  assert.equal(a.run('S.speakFollow.examKeys.includes(queue[0].k)'),false);
+  assert.match(a.run('queue[0].big+queue[0].sub'),/waarom/i);
+});

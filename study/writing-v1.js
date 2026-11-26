@@ -142,23 +142,37 @@ const WRITING_RULES = {
   ]},
 };
 const ruleAnswer = text => String(text).normalize("NFC").trim().replace(/[.!?]+$/, "").trim().toLowerCase().replace(/\s+/g, " ");
-function scheduleWritingRules(progress, errors, day, at) {
+function examWritingRule(rows) {
+  const counts = new Map();
+  for (const row of rows) {
+    if (row.status !== "scored" || row.scores.inhoud === 0) continue;
+    for (const error of row.errors || []) {
+      if (Object.hasOwn(WRITING_RULES,error?.kind)) counts.set(error.kind,(counts.get(error.kind)||0)+1);
+    }
+  }
+  const strongest=[...counts].sort((a,b)=>b[1]-a[1])[0];
+  return strongest ? {kind:strongest[0],count:strongest[1]} : null;
+}
+const writingRulePending=state=>state&&(!state.ok||state.hits===1);
+function scheduleWritingRules(progress, errors, day, at, source="practice") {
   const rules = {...progress};
   for (const kind of new Set(errors.map(error => error.kind))) {
     if (!Object.hasOwn(WRITING_RULES, kind)) continue;
     const previous = rules[kind];
-    rules[kind] = {day:previous?.day > day ? previous.day : day+1, index:previous?.index || 0, ok:false, at};
+    const count=errors.filter(error=>error.kind===kind).reduce((sum,error)=>sum+(error.count||1),0);
+    rules[kind] = {day:source==="exam"?day+1:previous?.day>day?previous.day:day+1,
+      index:previous?.index||0,hits:0,count,source,ok:false,at};
   }
   return rules;
 }
 function dueWritingRule(progress, day) {
-  return Object.keys(WRITING_RULES).filter(kind => progress?.[kind] && !progress[kind].ok && progress[kind].day <= day)
+  return Object.keys(WRITING_RULES).filter(kind => writingRulePending(progress?.[kind]) && progress[kind].day <= day)
     .sort((a,b) => progress[a].day-progress[b].day)[0];
 }
 function answerWritingRule(kind, state, answer, day, at) {
   const rule = Object.hasOwn(WRITING_RULES, kind) && WRITING_RULES[kind];
-  if (!rule || !state || state.ok || state.day > day || !answer.trim()) return null;
+  if (!rule || !writingRulePending(state) || state.day > day || !answer.trim()) return null;
   const task = rule.tasks[state.index % rule.tasks.length];
   const ok = task[2].some(solution => ruleAnswer(solution) === ruleAnswer(answer));
-  return {ok, day:day+1, index:state.index+1, at};
+  return {...state, ok, hits:ok?Math.min(2,(state.hits||0)+1):0, day:day+1, index:state.index+1, at};
 }
