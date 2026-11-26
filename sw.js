@@ -21,11 +21,31 @@ const uiOf = html => { const v = (/const UIV="([0-9a-f]+)"/.exec(html) || [])[1]
 const hasUI = async c => c && (await c.keys()).some(r => new URL(r.url).pathname === "/data/ui.js");
 // One network request per versioned file, shared by the page that asks for it and the background that stores it
 const inflight = new Map();
-function fetchAsset(c, url) {
+function fetchAsset(url) {
   const u = new URL(url, location.origin).href;
-  if (!inflight.has(u)) inflight.set(u, fetch(u).then(async res => { if (res.ok) await c.put(u, res.clone()); return res })
-    .finally(() => inflight.delete(u)));
+  if (!inflight.has(u)) inflight.set(u, fetch(u).finally(() => inflight.delete(u)));
   return inflight.get(u).then(res => res.clone());
+}
+// Serialize page promotion and asset writes so a tab still using an older page can't restore a pruned file.
+let cacheWrite = Promise.resolve();
+function writeCache(operation) {
+  const next = cacheWrite.then(operation);
+  cacheWrite = next.catch(() => {});
+  return next;
+}
+async function cachePageAsset(c, url, res) {
+  if (!res.ok) return;
+  await writeCache(async () => {
+    const page = await c.match(APP);
+    if (page) {
+      const html = await page.text();
+      const asset = url.pathname + url.search;
+      const keep = url.pathname.startsWith("/dict/") ? url.searchParams.get("v") === dictOf(html)
+        : asset === uiOf(html) || assetsOf(html).includes(asset);
+      if (!keep) return;
+    }
+    await c.put(url.href, res);
+  });
 }
 // Every file the page loads, from the cache, an older cache (from) or the network; true when all are there
 async function keepAssets(c, html, from) {
@@ -35,8 +55,10 @@ async function keepAssets(c, html, from) {
     if (await c.match(u)) return true;
     const old = from && await from.match(u);
     if (old) { await c.put(u, old); return true }
-    const res = await fetchAsset(c, u).catch(() => null);
-    return !!(res && res.ok);
+    const res = await fetchAsset(u).catch(() => null);
+    if (!res?.ok) return false;
+    await c.put(u, res);
+    return true;
   }));
   return ok.every(Boolean);
 }
@@ -50,10 +72,12 @@ async function prune(c, html) {
   }
 }
 // A new copy of the app page goes into the cache only with all its files
-async function storeApp(c, res) {
-  const html = await res.clone().text();
-  if (!(await keepAssets(c, html))) return false;
-  await c.put(APP, res); await prune(c, html); return true;
+function storeApp(c, res) {
+  return writeCache(async () => {
+    const html = await res.clone().text();
+    if (!(await keepAssets(c, html))) return false;
+    await c.put(APP, res); await prune(c, html); return true;
+  });
 }
 async function rememberUpdate(c) {
   await c.put("/__changed", new Response(String(Date.now())));
@@ -142,7 +166,13 @@ self.addEventListener("fetch", e => {
   }
   // Versioned files: the same address always has the same content, so a cached copy is never fetched again
   if (u.searchParams.has("v") && /^\/(data|study|dict)\//.test(u.pathname)) {
-    e.respondWith(caches.open(CACHE).then(c => c.match(r).then(hit => hit || fetchAsset(c, r.url))));
+    e.respondWith(caches.open(CACHE).then(async c => {
+      const hit = await c.match(r);
+      if (hit) return hit;
+      const res = await fetchAsset(r.url);
+      await cachePageAsset(c, u, res.clone()).catch(() => {});
+      return res;
+    }));
     return;
   }
   // Recorded voices: kept after the first play (a file never changes, its name is the hash of its line). The audio
