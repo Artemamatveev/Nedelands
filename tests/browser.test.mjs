@@ -1297,15 +1297,16 @@ test('A2 launch path: guest writing and all five mock exams finish with recovera
     await s.p.locator('.hero a[href*="open=writing"]').click();
     await s.p.locator('#txt').fill(text);
     await s.p.locator('#chk').click();
-    await s.p.getByRole('button',{name:'Verbeter de eerste fout'}).click();
-    await s.p.locator('#fixinput').fill('volgende week ga ik');
+    await s.p.getByRole('button',{name:'Verbeter je fout'}).click();
+    await s.p.locator('#fix0').fill('volgende week ga ik');
     await s.p.locator('#fixcheck').click();
     await s.p.getByText('Precies goed!').waitFor();
+    assert.equal(await s.p.locator('#fixcheck').textContent(),'Verder');
     assert.equal(await s.p.evaluate(()=>acc.free),1);
     await s.go('/oefenen?open=writing&src=a2w');
     await s.p.locator('#txt').fill(text.replace('keuken','gang'));
     await s.p.locator('#chk').click();
-    await s.p.getByRole('button',{name:'Verbeter de eerste fout'}).waitFor();
+    await s.p.getByRole('button',{name:'Verbeter je fout'}).waitFor();
     await s.p.waitForFunction(()=>sessionStorage.getItem('bt-a2-campaign')?.includes('check'));
 
     await s.p.emulateMedia({reducedMotion:'reduce'});

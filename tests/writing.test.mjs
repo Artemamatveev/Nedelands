@@ -265,3 +265,34 @@ test('A2 guest can add missing content and compare without paying for a second c
   assert.match(a.document.querySelector('#revisionExample').textContent,/Voorbeeldantwoord/);
   assert.equal(mock.calls.length,1);
 });
+
+test('A2 practice: up to three corrections on one screen, punctuation-only ones left out',async()=>{
+  const errors=[
+    {wrong:'Morgen ik kom',right:'Morgen kom ik',why:'De persoonsvorm staat op plaats twee.'},
+    {wrong:'de huis',right:'het huis',why:'Huis is een het-woord.'},
+    {wrong:'Ik ben gisteren',right:'Ik ben gisteren.',why:'Aan het eind van een zin staat een punt.'},
+    {wrong:'ik heb gewerkt',right:'Ik heb gewerkt',why:'Een zin begint met een hoofdletter.'},
+    {wrong:'hij werk',right:'hij werkt',why:'Bij hij komt er een t achter.'},
+  ];
+  const mock=checker(()=>[{...grade({...perfect,grammatica:1},errors),corrected:'Morgen kom ik naar het huis. Ik heb gewerkt en hij werkt.'}]);
+  const a=await app({fetch:mock.fetch});
+  a.run('build("wr",{...SEC.find(s=>s.id==="wr"),n:1,keep:1,pool:()=>[ITEMS.find(q=>q.k==="wr|0")]})');
+  type(a,'#txt','Morgen ik kom naar de huis. ik heb gewerkt en hij werk. Ik ben gisteren');
+  a.document.querySelector('#chk').click();
+  await a.flush();
+  assert.doesNotMatch(a.document.querySelector('#fb').textContent,/Aan het eind van een zin staat een punt/);
+  const go=a.document.querySelector('#next');
+  assert.match(go.textContent,/Verbeter je 3 belangrijkste fouten/);
+  go.click();
+  assert.ok(a.document.querySelector('#fix0')&&a.document.querySelector('#fix2'));
+  assert.equal(a.document.querySelector('#fix3'),null);
+  assert.match(a.document.querySelector('#card').textContent,/De andere fout staat in de uitleg/);
+  a.document.querySelector('#fix0').value='Morgen kom ik';
+  a.document.querySelector('#fix1').value='het huis';
+  a.document.querySelector('#fixcheck').click();
+  assert.equal(a.document.querySelector('#fixcheck').textContent,'Controleer');
+  a.document.querySelector('#fix2').value='Ik heb gewerkt';
+  a.document.querySelector('#fixcheck').click();
+  assert.equal(a.document.querySelector('#fixcheck').textContent,'Verder');
+  assert.equal(mock.calls.length,1);
+});
