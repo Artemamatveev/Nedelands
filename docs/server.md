@@ -206,10 +206,12 @@ answers (with the share right) today / 7 days / in all, different questions, pro
 Claude checks and Plus; a row opens its minutes of the last 14 days and its exam history. Tables keep bordered, centred cells
 (the user's wish); the measurement explanation is expandable. "Расход на ИИ" lists `ai_spend` (the last 30 days, per day and
 model) in dollars from `PRICE` in the page (Anthropic's list prices, 18 November 2026: update them when they change), with
-the 7- and 30-day totals. "Сравнение моделей" (a button, ~$0.25 a run) posts to `/api/compare` (`api/_compare.js`, through `admin.js`, owner
-only, same origin): the ten made-up Schrijven A2 answers in `api/_samples.js` are graded by `GRADING_MODEL_FREE` and
-`GRADING_MODEL` through `gradeWriting()` in `api/check.js` (the practice prompt, schema, clamping and pass rule), and the
-table shows points, voldoende and error counts side by side, the rows where the verdicts differ highlighted. It loads the vendored Supabase library, reads the session the app left in
+the 7- and 30-day totals. "Сравнение моделей" (a button, ~$0.75 a run for Schrijven, ~$0.50 for Spreken) posts to `/api/compare` (`api/_compare.js`, through `admin.js`, owner
+only, same origin): the 30 made-up Schrijven A2 answers in `api/_samples.js` (`SAMPLES`), or with `{part: "sp"}` the 24 Spreken
+transcripts (`SAMPLES_SP`), are graded by `GRADING_MODEL_FREE` and
+`GRADING_MODEL` through `gradeWriting()` or `gradeSpeaking()` in `api/check.js` (the practice prompt, schema, clamping, short-answer cap and pass rule), and the
+table shows points, voldoende and error counts side by side, the rows where the verdicts differ highlighted; a select switches the part,
+and "Скачать для учителя (CSV)" gives the set without model results for a blind NT2 review (`docs/ai.md`). It loads the vendored Supabase library, reads the session the app left in
 this browser and asks `/api/admin` (`api/admin.js`) with the access token; the server answers only a confirmed e-mail in
 `ADMIN_EMAILS` (a Vercel env var, comma-separated; without it nobody gets in) and reads `admin_overview()` (in
 `supabase/schema.sql`, run it in the SQL editor; it works out the summaries inside the database, so the large progress rows

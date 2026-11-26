@@ -15,3 +15,10 @@ test('KNMS here is where the KNM situations start in the app', async () => {
   const fs = await import('node:fs');
   assert.match(fs.readFileSync(new URL('../oefenen.html', import.meta.url), 'utf8'), new RegExp(`const KNMS=${KNMS},`));
 });
+
+test('A2 reading, listening and KNM have three distinct nonempty choices', () => {
+  for (const item of questions().filter(q=>!q.set.includes('B1'))) {
+    const choices=[item.right,...item.wrong].map(s=>s.normalize('NFKC').trim().toLowerCase().replace(/[.!?]+$/,'').trim());
+    assert.ok(choices.every(Boolean) && new Set(choices).size===3, item.set+' '+item.key);
+  }
+});

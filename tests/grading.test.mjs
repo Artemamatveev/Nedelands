@@ -38,7 +38,7 @@ async function handler(options={}){
   const supa=new vm.SyntheticModule(Object.keys(values),function(){for(const [key,value]of Object.entries(values))this.setExport(key,value)},{context});
   const module=new vm.SourceTextModule(fs.readFileSync(new URL('api/check.js',root),'utf8'),{context});
   await module.link(name=>name==='@anthropic-ai/sdk'?sdk:supa);await module.evaluate();
-  const req={method:'POST',headers:{host:'example.test',origin:'https://example.test'},body:{...(options.requestId?{requestId:options.requestId}:{}),...(options.part?{part:options.part}:{}),tasks:Array.from({length:options.tasksCount||1},()=>({...(options.part||options.kind?{kind:options.kind||'z'}:{}),task:'Stuur een bericht',text:'Ik kom later. Personal test content.'}))}};
+  const req={method:'POST',headers:{host:'example.test',origin:'https://example.test'},body:{...(options.requestId?{requestId:options.requestId}:{}),...(options.part?{part:options.part}:{}),tasks:Array.from({length:options.tasksCount||1},()=>({...(options.part||options.kind?{kind:options.kind||'z'}:{}),task:'Stuur een bericht',text:options.text??'Ik kom later. Personal test content.'}))}};
   const response=()=>({statusCode:200,setHeader(){},status(n){this.statusCode=n;return this},json(body){this.body=body;return this}});
   const res=response();
   await module.namespace.default(req,res);
@@ -199,6 +199,17 @@ test('Spreken A2: voldoende follows from the points, not from what the model say
   assert.equal(good.res.body.tasks[0].passed,true); // 6 of 8
 });
 
+test('Spreken A2: a complete answer of a few words keeps full inhoud but cannot reach voldoende',async()=>{
+  const full={inhoud:3,woorden:2,grammatica:2,samenhang:1};
+  const short=await handler({part:'sp',text:'Met de trein.',scores:full});
+  assert.deepEqual({...short.res.body.tasks[0].scores},{inhoud:3,woorden:1,grammatica:1,samenhang:0});
+  assert.equal(short.res.body.tasks[0].passed,false);
+  assert.match(short.res.body.tasks[0].verdict,/Je antwoord is kort/);
+  const longer=await handler({part:'sp',text:'Ik ga met de trein, want dat is snel.',scores:full});
+  assert.deepEqual({...longer.res.body.tasks[0].scores},full);
+  assert.equal(longer.res.body.tasks[0].passed,true);
+  assert.doesNotMatch(longer.res.body.tasks[0].verdict,/kort/);
+});
 test('One spelling edit is returned once even if the model describes it with different context', async()=>{
   const result=await handler({errors:[
     {wrong:'De sleutel ligd onder de mat',right:'De sleutel ligt onder de mat',why:'Schrijf ligt.',kind:'spelling'},
