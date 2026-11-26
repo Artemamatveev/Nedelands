@@ -356,6 +356,7 @@ fetch("/api/config?v=once1").then(r => {
 // account or IP address; only when the server offers it, never with Global Privacy Control or Do Not Track
 const trackOn = () => !!(config && config.events) && !navigator.globalPrivacyControl && navigator.doNotTrack !== "1";
 function track(ev) {
+  try { if (window.plausible) plausible(ev, { props: { lang: localStorage.getItem("ww-ui") || "nl", app: "web" } }); } catch {}
   if (!trackOn()) return Promise.resolve(false);
   let ui = "nl";
   try { ui = localStorage.getItem("ww-ui") || "nl"; } catch {}
