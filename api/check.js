@@ -216,6 +216,12 @@ const promptWR = (tasks, max, n = nonce()) =>
     )
     .join("\n\n") + `\n\nNoem per opdracht maximaal ${max} fouten.`;
 
+// Spreken A2: the prompt for 1 to 16 answers {task, text}, the text being the transcript the learner confirmed
+const promptSP = (tasks, max, n = nonce()) =>
+  tasks
+    .map((t, i) => `VRAAG ${i + 1}:\n${fence("opdracht", n, t.task)}\nANTWOORD VAN DE CURSIST ${i + 1}:\n${fence("tekst", n, t.text || "(niets gezegd)")}`)
+    .join("\n\n") + `\n\nNoem per antwoord maximaal ${max} fouten.`;
+
 // One Schrijven A2 task graded by a given model, exactly as practice grades it (the same prompt, schema, clamping and
 // pass rule), for the owner's model comparison (api/compare.js). No allowance is used; the tokens go into ai_spend.
 export const MODELS = { free: MODEL_FREE, paid: MODEL };
@@ -235,6 +241,26 @@ export async function gradeWriting(task, model) {
   const t = JSON.parse(response.content.find((b) => b.type === "text")?.text || "{}").tasks?.[0] || {};
   const scores = clampScores(t.scores, SCORES_WR);
   return { model: response.model, scores, total: sum(scores), passed: wrPassed(scores), errors: uniqueCorrections(t.errors).length, verdict: str(t.verdict, 400) };
+}
+
+// One Spreken A2 answer graded by a given model as practice grades it (prompt, schema, clamping, the short-answer cap and
+// the pass rule), for the same comparison. No allowance is used; the tokens go into ai_spend.
+export async function gradeSpeaking(task, model) {
+  if (!client) throw new Error("not_configured");
+  const response = await client.beta.messages.create({
+    model,
+    max_tokens: 4000,
+    betas: ["server-side-fallback-2026-07-01"],
+    fallbacks: "default",
+    output_config: { effort: "low", format: { type: "json_schema", schema: SCHEMA_SP } },
+    system: SYSTEM_SP + ERROR_NOTE + FENCE_NOTE,
+    messages: [{ role: "user", content: promptSP([{ task: str(task.task, 1200), text: str(task.text, 2500) }], 8) }],
+  }, { signal: AbortSignal.timeout(DEADLINE) });
+  await addSpend(response.model, response.usage).catch(() => {});
+  if (response.stop_reason === "refusal" || response.stop_reason === "max_tokens") throw new Error(response.stop_reason);
+  const t = JSON.parse(response.content.find((b) => b.type === "text")?.text || "{}").tasks?.[0] || {};
+  const { scores } = capShortSpoken(clampScores(t.scores, SCORES_SP), task.text);
+  return { model: response.model, scores, total: sum(scores), passed: spPassed(scores), errors: uniqueCorrections(t.errors).length, verdict: str(t.verdict, 400) };
 }
 
 export default async function handler(req, res) {
@@ -373,9 +399,7 @@ async function gradeRequest(req, res, { user, input, sb, sp, wb, t0, save }) {
         )
         .join("\n\n") + `\n\nNoem per zinsopdracht maximaal 2 fouten, per formulier of e-mail maximaal 6.`
     : sp
-    ? tasks
-        .map((t, i) => `VRAAG ${i + 1}:\n${fence("opdracht", n, t.task)}\nANTWOORD VAN DE CURSIST ${i + 1}:\n${fence("tekst", n, t.text || "(niets gezegd)")}`)
-        .join("\n\n") + `\n\nNoem per antwoord maximaal ${max} fouten.`
+    ? promptSP(tasks, max, n)
     : promptWR(tasks, max, n);
 
   // The learner's menu language (en, ar, …): the explanation of each mistake comes in that language, so a beginner

@@ -5,16 +5,21 @@ import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import fs from 'node:fs';
 import {root} from './app-harness.mjs';
-import {SAMPLES} from '../api/_samples.js';
+import {SAMPLES, SAMPLES_SP} from '../api/_samples.js';
 
-async function ask({user = null, method = 'POST', same = true, fails = '', body = {}, samples = SAMPLES} = {}) {
+async function ask({user = null, method = 'POST', same = true, fails = '', body = {}, samples = SAMPLES, samplesSp = SAMPLES_SP} = {}) {
   const calls = [];
   const deps = {
     './_supa.js': {accounts: true, caller: async () => user, sameOrigin: () => same},
     './admin.js': {admins: () => ['eigenaar@example.nl'],
       verifiedMail: u => (u && u.email_confirmed_at ? String(u.email || '').toLowerCase() : ''),
       isOwner: u => !!(u && u.email_confirmed_at && String(u.email || '').toLowerCase() === 'eigenaar@example.nl')},
-    './check.js': {MODELS: {free: 'claude-haiku-5-5', paid: 'claude-sonnet-5-5'}, gradeWriting: async (s, model) => {
+    './check.js': {MODELS: {free: 'claude-haiku-5-5', paid: 'claude-sonnet-5-5'}, gradeSpeaking: async (s, model) => {
+      calls.push(['sp:' + s.id, model]);
+      const scores = {inhoud: 3, woorden: 2, grammatica: model.includes('haiku') ? 1 : 2, samenhang: 1};
+      const total = Object.values(scores).reduce((a, b) => a + b, 0);
+      return {model, scores, total, passed: total >= 6, errors: 0};
+    }, gradeWriting: async (s, model) => {
       calls.push([s.id, model]);
       if (s.id === fails && model.includes('haiku')) throw Error('refusal');
       const total = model.includes('haiku') ? 7 : 8;
@@ -22,7 +27,7 @@ async function ask({user = null, method = 'POST', same = true, fails = '', body 
       if(model.includes('haiku')&&s.id==='sleutel-alternatief')scores.woorden=1;
       return {model, scores, total, passed: total >= 7, errors: 2};
     }},
-    './_samples.js': {SAMPLES: samples},
+    './_samples.js': {SAMPLES: samples, SAMPLES_SP: samplesSp},
   };
   const context = vm.createContext({String, Math, Promise});
   const mods = Object.fromEntries(Object.entries(deps).map(([k, v]) => [k, new vm.SyntheticModule(Object.keys(v), function () { for (const [n, x] of Object.entries(v)) this.setExport(n, x); }, {context})]));
@@ -76,4 +81,19 @@ test('Without teacher scores there is no teacher comparison; with them the model
 });
 test('No sample carries a teacher score that a teacher did not give', () => {
   for (const s of SAMPLES.filter(s => s.expected)) assert.ok(s.expected.by && s.expected.date, s.id);
+});
+test('Spreken: the comparison grades the transcripts with the speaking grader and measures against the teacher without spelling', async () => {
+  const list = await ask({user: owner, body: {list: true, part: 'sp'}});
+  assert.equal(list.res.body.part, 'sp'); assert.equal(list.res.body.samples.length, SAMPLES_SP.length); assert.equal(list.calls.length, 0);
+  const scored = SAMPLES_SP.map((s, i) => i === 0 ? {...s, expected: {inhoud: 3, woorden: 2, grammatica: 2, samenhang: 1, by: 't', date: 'd'}} : s);
+  const r = await ask({user: owner, body: {part: 'sp'}, samplesSp: scored});
+  assert.equal(r.calls.length, SAMPLES_SP.length * 2); assert.ok(r.calls.every(([id]) => id.startsWith('sp:')));
+  assert.equal(r.res.body.summary.part, 'sp'); assert.equal(r.res.body.summary.max, 8);
+  assert.deepEqual(Object.keys(r.res.body.summary.teacher.paid.criteria).sort(), ['grammatica', 'inhoud', 'samenhang', 'woorden']);
+  assert.equal(r.res.body.summary.teacher.paid.within1, 100); assert.equal(r.res.body.summary.teacher.free.criteria.grammatica, 0);
+});
+test('The Spreken samples are made-up questions with a transcript, ids unique across both sets', () => {
+  assert.ok(SAMPLES_SP.length >= 20);
+  const ids = [...SAMPLES, ...SAMPLES_SP].map(s => s.id); assert.equal(new Set(ids).size, ids.length);
+  for (const s of SAMPLES_SP) { assert.ok(s.task.length > 10); assert.ok(s.text.length > 5); assert.ok(!s.expected || (s.expected.by && s.expected.date)); }
 });
