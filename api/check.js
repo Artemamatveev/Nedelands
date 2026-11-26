@@ -136,6 +136,7 @@ Geef voor elke opdracht, in dezelfde volgorde:
   grammatica (0–2): 2 = geen of bijna geen grammaticafouten (hoogstens 2 in een korte tekst); 1 = vrij veel fouten (3 tot 5); 0 = veel fouten (6 of meer), of fouten die het begrijpen moeilijk maken. Grammaticafouten zijn woordvolgorde, werkwoordsvormen, de/het, meervoud, lidwoorden en voorzetsels.
   spelling (0–2): 2 = de spelling is redelijk correct (hoogstens 2 spelfouten) en de fouten hinderen het begrijpen niet; 1 = meer spelfouten (3 tot 5), maar gewone woorden zijn goed te herkennen en persoonlijke gegevens zijn goed geschreven; 0 = veel spelfouten (6 of meer) of woorden die je niet herkent. Hoofdletters en leestekens horen bij spelling.
   samenhang (0–1): 1 = de zinnen hangen duidelijk samen (en, maar, want, omdat, daarna, verwijswoorden); 0 = losse zinnen of een lijstje.
+  Beoordeel elk criterium apart. Trek een ontbrekend gevraagd detail alleen af bij inhoud, tenzij er een afzonderlijke aantoonbare taalfout is. Ook zonder voegwoord kan een kort bericht logisch samenhangen. Benoem bij aftrek de concrete reden in verdict of errors. Verzin geen persoonlijke details voor corrected.
   Is inhoud 0, dan zijn alle punten 0.
 Een FORMULIER (zo staat het bij de opdracht) krijgt punten zoals in het beoordelingsmodel Formulier van DUO: alleen inhoud (0–3), woorden (0–2) en spelling (0–2), samen 7 punten. Geef bij een formulier grammatica 0 en samenhang 0; noem grammaticafouten wel bij errors.`;
 

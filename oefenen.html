@@ -3921,6 +3921,24 @@ function redo(items,back){
 }
 // a sentence to finish: the corrected text is the whole sentence, so the learner gets the whole sentence to correct
 const zWhole=z=>{const c=z.q.ctx,b=c&&!/___/.test(c)?c.replace(/[….\s]+$/,""):"";return b&&!z.text.startsWith(b)?b+" "+z.text:z.text};
+function reviseWritingContent(q,text,verdict){
+  const card=$("card");
+  card.innerHTML=`<p class="ask">Vul je antwoord aan</p><div class="sample">${esc(wrTask(q))}</div>
+    <p class="note">${esc(verdict)}</p>
+    <label class="fld"><span>Je antwoord</span><textarea id="revision" rows="6"></textarea></label>
+    <p class="note">Je oefent zonder extra nakijkbeurt. Je eerste score blijft staan.</p>
+    <button class="btn wide" id="compareRevision" disabled>Bekijk het voorbeeld</button>
+    <div id="revisionExample"></div><button class="ghost wide" id="revisionNext">Verder</button>`;
+  const input=$("revision"),compare=$("compareRevision");
+  input.value=text;input.focus();
+  input.oninput=()=>{compare.disabled=!input.value.trim()||input.value.trim()===text};
+  compare.onclick=()=>{
+    $("revisionExample").innerHTML=`<p class="ask">Voorbeeldantwoord</p><div class="sample">${esc(q.right)}</div>
+      <p class="note">Lees je eigen antwoord nog eens. Staat alles uit de opdracht erin? Je mag andere woorden gebruiken.</p>`;
+    compare.hidden=true;
+  };
+  $("revisionNext").onclick=()=>{pos++;show()};
+}
 async function check(q){
   const text=$("txt").value.trim();
   if(text.split(/\s+/).length<(q.kind==="z"||q.sec!=="wb"?3:5)){$("fb").innerHTML=`<p class="note">${q.kind==="z"?"Schrijf een hele zin.":"Schrijf minimaal een paar zinnen."}</p>`;return}
@@ -3933,6 +3951,9 @@ async function check(q){
     const errs=Array.isArray(res.errors)?res.errors:[];
     btn.hidden=true; const ok=!!res.passed;
     const RD=correctionPrompts(q,form,text,res);
+    const a2Practice=q.sec==="wr"&&!cur.exam;
+    const reviseContent=a2Practice&&!q.fields&&Number.isInteger(res.scores?.inhoud)&&res.scores.inhoud<3;
+    const changed=res.corrected?.trim()&&res.corrected.trim()!==text;
     if(q.sec==="wr"&&campaignSource()?.source==="a2w")campaignTrack("check");
     if(q.sec==="wr"&&!cur.exam&&!res.same)S.writingRules=scheduleWritingRules(S.writingRules,errs,today(),Date.now());
     keepErrs(errs); record(ok); if(!cur.exam)quickPraise.show(ok);
@@ -3940,11 +3961,13 @@ async function check(q){
       <p class="note">${esc(res.verdict)}</p>
       ${RD.length?`<p class="note"><b>Begin met deze verbetering:</b> ${esc(RD[0].why||RD[0].wrong)}</p><button class="btn wide" id="next">Verbeter de eerste fout</button>`:""}
       ${scoreHTML(res.scores,q.mx,errs)}
-      ${ownHTML(text,errs)}${errsHTML(errs)}${q.sec==="wr"&&errs.some(e=>Object.hasOwn(WRITING_RULES,e.kind))?`<p class="note">In Mijn dag kun je deze regel morgen oefenen in een nieuwe zin.</p>`:""}${freeNote()}
-      <p class="ask">Verbeterde tekst</p><div class="sample">${esc(res.corrected)}</div>
+      ${ownHTML(text,errs)}${a2Practice&&!errs.length?'<p class="note">Geen taalcorrecties in je tekst.</p>':errsHTML(errs)}${q.sec==="wr"&&errs.some(e=>Object.hasOwn(WRITING_RULES,e.kind))?`<p class="note">In Mijn dag kun je deze regel morgen oefenen in een nieuwe zin.</p>`:""}${freeNote()}
+      ${!a2Practice||changed?`<p class="ask">Verbeterde tekst</p><div class="sample">${esc(res.corrected)}</div>`:""}
+      ${reviseContent?'<button class="btn wide" id="reviseContent">Vul je antwoord aan</button>':""}
       <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(q.right)}</div></details>
       ${docBtn}${RD.length?"":`<button class="btn wide" id="next">Verder</button>`}`;
     $("next").onclick=()=>{pos++;show()};
+    if(reviseContent)$("reviseContent").onclick=()=>reviseWritingContent(q,text,res.verdict);
     if(RD.length)$("next").onclick=()=>practiseCorrections(RD);
     $("docx").onclick=()=>saveDocx([{task,form,text}]);
   }catch(e){
