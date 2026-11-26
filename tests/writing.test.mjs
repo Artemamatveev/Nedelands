@@ -247,3 +247,21 @@ test('A2 writing uses the most frequent exam rule for two different day-plan sen
   assert.match(a.run('planHTML()'),/2 keer goed toegepast/);
   assert.equal(a.run('dueWritingRule(S.writingRules,today()+1)'),undefined);
 });
+
+test('A2 guest can add missing content and compare without paying for a second check',async()=>{
+  const original='Hoi buurvrouw, ik ga een week op vakantie. Kun je mijn planten water geven? Bedankt!';
+  const mock=checker(()=>[{...grade({...perfect,inhoud:2}),corrected:original,verdict:'Schrijf ook waar de sleutel ligt.'}]);
+  const a=await app({fetch:mock.fetch});
+  a.run('build("wr",{...SEC.find(s=>s.id==="wr"),n:1,keep:1,pool:()=>[ITEMS.find(q=>q.k==="wr|0")],draftSlot:"landing"})');
+  type(a,'#txt',original);
+  a.document.querySelector('#chk').click();
+  await a.flush();
+  assert.doesNotMatch(a.document.querySelector('#fb').textContent,/Verbeterde tekst/);
+  a.document.querySelector('#reviseContent').click();
+  assert.equal(a.document.querySelector('#revision').value,original);
+  assert.ok(a.document.querySelector('#compareRevision').disabled);
+  type(a,'#revision',original+' De sleutel ligt bij de achterdeur.');
+  a.document.querySelector('#compareRevision').click();
+  assert.match(a.document.querySelector('#revisionExample').textContent,/Voorbeeldantwoord/);
+  assert.equal(mock.calls.length,1);
+});
