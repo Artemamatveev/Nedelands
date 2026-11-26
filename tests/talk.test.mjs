@@ -181,14 +181,13 @@ test('The app holds a whole conversation: start, a spoken turn with a fix, hangi
   assert.deepEqual(a.errors,[]);
 });
 
-test('The main conversation always opens Saskia with her approved human portrait; legacy avatars remain readable',async()=>{
+test('The main conversation opens Bittie with the voice dial; legacy avatars remain readable',async()=>{
   const a=await app();
   for(let i=0;i<3;i++){a.run('aiAny()');assert.equal(a.run('AK.c.id'),'saskia')}
-  assert.equal(a.document.querySelector('#aiav img').getAttribute('src'),'/art/characters/saskia-museum-v1.jpg');
-  assert.ok(a.document.querySelector('.aiportrait'),'the human portrait is a full card rather than a plush circle');
-  assert.match(a.document.querySelector('#tbody h2').textContent,/Saskia/);
+  assert.ok(a.document.querySelector('.bittie-call #aiav .voice-mark-dial'));
+  assert.match(a.document.querySelector('#tbody h2').textContent,/Bittie/);
   assert.equal(a.run('aiIds().filter(id=>PEOPLE.some(p=>p.id===id)).join(",")'),'saskia');
-  assert.ok(fs.existsSync(new URL('art/characters/saskia-museum-v1.jpg',root)));
+  assert.ok(fs.existsSync(new URL('voice-mark-v1.css',root)));
   a.run('aiTalk("vangogh")');
   assert.equal(a.document.querySelector('#aiav img').getAttribute('src'),'/art/avatars/vangogh.jpg');
   for(const av of JSON.parse(a.run('JSON.stringify(PEOPLE.map(p=>p.av).filter(Boolean))')))assert.ok(fs.existsSync(new URL(`art/avatars/${av}.jpg`,root)),av);
@@ -548,16 +547,16 @@ test('Audio session requests playback for the reply and automatic mode for the m
 });
 
 
-test('Saskia menu and conversation identify the museum host without claiming a live video connection',async()=>{
+test('The menu and server introduce Bittie as a conversation partner',async()=>{
   const a=await app();a.run('aiList("people")');
-  assert.equal(a.document.getElementById('aiany').textContent,'Praat met Saskia');
-  assert.match(a.document.getElementById('tbody').textContent,/museumcafé/);
-  assert.equal(a.document.querySelector('.aihost img').getAttribute('src'),'/art/characters/saskia-museum-v1.jpg');
+  assert.equal(a.document.getElementById('aiany').textContent,'Praat met Bittie');
+  assert.match(a.document.getElementById('tbody').textContent,/oefen hardop Nederlands met Bittie/);
+  assert.ok(a.document.querySelector('.aihost .voice-mark-dial'));
   assert.equal(a.document.querySelector('video,iframe'),null);
   const t=await load(),{body:{token,reply}}=await t.call({go:'start',topic:'saskia',level:'A2'});
   assert.ok(t.ns.TOPICS.saskia.open.includes(reply));
   await t.call({go:'say',token,history:[{t:reply},{me:true,t:'Ik hou van schilderijen.'}]});
-  assert.match(t.bodies[0].system,/museum cafe/);assert.doesNotMatch(t.bodies[0].system,/works as a nurse/);
+  assert.match(t.bodies[0].system,/Bittie.*AI conversation partner/);assert.match(reply,/Bittie/);assert.doesNotMatch(t.bodies[0].system,/works as a nurse/);
 });
 
 const turn=token=>({go:'say',stream:2,token,history:[{t:'Hoi'},{me:true,t:'ik heb gegaan'}]});
@@ -674,7 +673,7 @@ test('The phone voice gets a streamed reply in one piece: iOS drops speech that 
 
 const review={verdict:'Goed.',good:[],tips:[],facts:['Werkt als kok in Utrecht.','Is zwanger.','Woont op 1234 AB.','Heeft schulden.','Speelt muziek in een band.'],old:[1,9,0]};
 const seen=b=>b.system+'\n'+b.messages[0].content;
-test('Saskia gets the remembered facts as data; other people, a missing consent and sensitive facts give her nothing',async()=>{
+test('Bittie gets the remembered facts as data; other people, a missing consent and sensitive facts give her nothing',async()=>{
   const say=async(topic,body)=>{const t=await load();const {body:{token}}=await t.call({go:'start',topic});await t.call({go:'say',token,history:[{t:'Hoi'},{me:true,t:'Hallo'}],...body});return seen(t.bodies[0])};
   const facts=['2026-11-20 Werkt als kok in Utrecht.','2026-11-20 Heeft diabetes.','zonder datum',{x:1}];
   const s=await say('saskia',{facts});
@@ -685,7 +684,7 @@ test('Saskia gets the remembered facts as data; other people, a missing consent 
   const many=await say('saskia',{facts:Array.from({length:60},(_,i)=>`2026-11-20 Feit nummer ${i+1}. ${'x'.repeat(500)}`)});
   assert.match(many,/\n20\. /);assert.doesNotMatch(many,/\n21\. |x{200}/);
 });
-test('The review remembers only when asked, only for Saskia, and drops sensitive facts and impossible numbers',async()=>{
+test('The review remembers only when asked, only for Bittie, and drops sensitive facts and impossible numbers',async()=>{
   const end=async(topic,body)=>{const t=await load({out:review});const {body:{token}}=await t.call({go:'start',topic});
     const r=await t.call({go:'end',token,history:[{t:'Hoi'},{me:true,t:'Ik werk als kok'},{t:'Leuk'},{me:true,t:'Ja'}],...body});return {t,r}};
   const {t,r}=await end('saskia',{remember:true,facts:['2026-11-01 Gaat op vakantie.']});
@@ -716,7 +715,7 @@ test('Nothing is remembered before a yes; the yes is asked once, in the menu lan
   assert.ok(yes.sent.every(b=>!('facts' in b)&&!('remember' in b)&&!('known' in b)));
   yes.a.document.getElementById('memy').click();await yes.a.flush();
   assert.equal(yes.of('end')[0].remember,true);assert.equal(yes.a.run('memAll().map(x=>x.t).join("|")'),'Werkt als kok.|Houdt van kunst.');
-  assert.match(yes.a.document.getElementById('tctl').textContent,/Dit onthoudt Saskia/);
+  assert.match(yes.a.document.getElementById('tctl').textContent,/Dit onthoudt Bittie/);
   await yes.talk();assert.equal(yes.a.document.getElementById('mask')===null,true);
   assert.equal(yes.of('start')[1].known,true);assert.match(yes.of('say').at(-1).facts[0],/^\d{4}-\d{2}-\d{2} Werkt als kok\.$/);
   assert.equal(yes.a.run('memAll().length'),2,'the same fact is kept once');
@@ -758,5 +757,5 @@ test('An erased fact does not come back when devices merge, and two devices keep
 });
 test('The privacy statement describes the memory in every language',()=>{
   const parts=fs.readFileSync(new URL('privacy.html',root),'utf8').split('<article data-l="').slice(1);assert.equal(parts.length,9);
-  for(const p of parts)assert.equal((p.match(/Supabase[\s\S]{0,900}?Anthropic[\s\S]{0,300}?Google/g)||[]).length>=1&&/Saskia|ساسكيا|Саския|Саскія/.test(p),true,p.slice(0,2));
+  for(const p of parts)assert.equal((p.match(/Supabase[\s\S]{0,900}?Anthropic[\s\S]{0,300}?Google/g)||[]).length>=1&&/Bittie|بيتي|Битти|Бітті/.test(p),true,p.slice(0,2));
 });

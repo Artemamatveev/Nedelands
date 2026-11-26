@@ -3,6 +3,7 @@ try{const r=new URLSearchParams(location.search).get("ref");if(r&&/^[A-HJ-NP-Z2-
 const languages = ["en", "ar", "tr", "hi", "zh", "es", "ru", "uk"];
 // Dutch copy is also in the HTML so the page is readable without scripts.
 const copy = {
+  "Praat met Bittie": ["Talk with Bittie", "تحدّث مع بيتي", "Bittie ile konuş", "बिट्टी से बात करें", "和 Bittie 聊天", "Habla con Bittie", "Поговорить с Битти", "Поговоріть із Бітті"],
   "Ontdek Bittertalen": ["Explore Bittertalen", "اكتشف Bittertalen", "Bittertalen’i keşfet", "Bittertalen को जानें", "探索 Bittertalen", "Descubre Bittertalen", "Откройте для себя Bittertalen", "Дізнайтеся більше про Bittertalen"],
   "Geschiedenis, cultuur en geografie": ["History, culture and geography", "التاريخ والثقافة والجغرافيا", "Tarih, kültür ve coğrafya", "इतिहास, संस्कृति और भूगोल", "历史、文化与地理", "Historia, cultura y geografía", "История, культура и география", "Історія, культура й географія"],
   "Maak kennis met de Nederlandse geschiedenis en cultuur via verhalen en schilderijen.": ["Discover Dutch history and culture through stories and paintings.", "تعرّف على تاريخ هولندا وثقافتها من خلال القصص واللوحات.", "Hikâyeler ve tablolar aracılığıyla Hollanda tarihini ve kültürünü tanı.", "कहानियों और चित्रों के ज़रिए नीदरलैंड के इतिहास और संस्कृति को जानें।", "通过故事和绘画了解荷兰的历史与文化。", "Descubre la historia y la cultura de los Países Bajos a través de relatos y pinturas.", "Знакомьтесь с историей и культурой Нидерландов через рассказы и картины.", "Знайомтеся з історією та культурою Нідерландів через оповідання й картини."],

@@ -2,6 +2,7 @@
 <html lang="nl" translate="no">
 <head>
 <meta charset="utf-8">
+<link rel="stylesheet" href="/voice-mark-v1.css">
 <meta name="google" content="notranslate">
 <script>
 // If the app breaks while it starts, say so on the screen (with the error, for a screenshot) instead of staying empty
@@ -600,25 +601,76 @@ body.vfull{overflow:hidden}
 .aiav.big{width:112px;height:112px;margin:0 auto;font-size:44px;overflow:hidden}
 .aiav.pic{background:#fff}
 .aiav img{width:100%;height:100%;object-fit:cover}
-/* The approved human portrait is a still reference; no fake mouth or gesture animation. */
 .aihost{margin-top:16px}
-.aihost>img{display:block;width:100%;height:auto;max-height:280px;object-fit:cover;object-position:50% 28%;border-radius:var(--r)}
 .aihost h3{font-size:var(--fs-xl);font-weight:600;margin:14px 0 4px}
-.aiportrait{width:min(100%,300px);aspect-ratio:3/4;margin:0 auto;border-radius:var(--r);overflow:hidden;background:var(--wash);outline:2px solid transparent;outline-offset:3px;transition:outline-color .2s}
-.aiportrait img{display:block;width:100%;height:100%;object-fit:cover}
-.aiportrait.on{outline-color:var(--oranje)}
+.bittie-intro{display:flex;align-items:center;gap:8px}
+.bittie-intro img{border-radius:50%;object-fit:cover}
+button.voice-mark-orb{cursor:pointer;padding:0;touch-action:manipulation}
+button.voice-mark-orb:disabled{cursor:default;opacity:1}
+button.voice-mark-orb:focus-visible{outline:3px solid #fff;outline-offset:5px}
+.voice-mark-label{position:absolute;inset-block-start:calc(100% + 12px);inset-inline-start:50%;transform:translateX(-50%);font:650 12px/1.3 system-ui,sans-serif;white-space:nowrap;color:#dcf8ff}
+.voice-mark.recording .voice-mark-orb{background:#173f37;border-color:#a7f6d2;color:#e1fff0;box-shadow:0 0 30px #50dfab8c}
+.voice-mark.recording .voice-mark-mic{width:16px;height:16px;margin:0;border:0;border-radius:3px;background:currentColor}
+.voice-mark.recording .voice-mark-mic::before,.voice-mark.recording .voice-mark-mic::after{content:none}
+.aihost .voice-mark,.aip .voice-mark{
+  --dial-size:160px;width:min(100%,272px);height:192px;margin-inline:auto;border-radius:var(--r)
+}
+.aip .voice-mark.on .voice-mark-orb{box-shadow:0 0 0 9px #79e9ff35,0 0 42px #43dbff,inset 0 0 17px #7be9ff75}
 @media (prefers-reduced-motion:no-preference){
-  .aiportrait.saskia img{transform-origin:50% 38%;animation:saskia-idle 7s ease-in-out infinite}
-  .aiportrait.saskia.on img{animation:saskia-speaking 2.4s ease-in-out infinite}
+  .aip .voice-mark.on .voice-mark-dial::after,.aip .voice-mark.recording .voice-mark-dial::after{animation:voice-mark-sweep 5s linear infinite}
 }
-@keyframes saskia-idle{
-  0%,100%{transform:scale(1.035)}
-  50%{transform:translateY(-.35%) scale(1.047)}
+/* The active Bittie call owns the viewport. Only its transcript and form can scroll. */
+html:has(#talk:not([hidden]) .bittie-call){overflow:hidden}
+#talk:has(.bittie-call){
+  position:fixed;inset:var(--bittie-vtop,0px) 0 auto;z-index:20;max-width:none;
+  height:var(--bittie-vheight,100dvh);margin:0;border-radius:0;box-shadow:none;animation:none;
+  padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px);
 }
-@keyframes saskia-speaking{
-  0%,100%{transform:scale(1.035)}
-  30%{transform:translate(.25%,-.55%) rotate(.35deg) scale(1.055)}
-  65%{transform:translate(-.2%,-.15%) rotate(-.25deg) scale(1.044)}
+#talk:has(.bittie-call):not([hidden]){display:grid;grid-template-rows:auto minmax(0,1fr)}
+#talk:has(.bittie-call)>.back{justify-self:start;margin:3px 12px;min-height:44px}
+#tbody:has(>.bittie-call){min-height:0}
+.bittie-call{
+  display:grid;height:100%;min-width:0;
+  grid-template-rows:minmax(0,1fr) auto auto;
+}
+.bittie-call>.aip{
+  position:relative;display:grid;align-items:stretch;min-height:0;margin:0;overflow:hidden;
+  background:#071424;color:#dcf8ff;
+}
+.bittie-call>.aip .voice-mark{
+  width:100%;height:100%;min-height:0;border-radius:0;
+  --dial-size:min(72vw,42dvh,390px);
+}
+.bittie-call .voice-mark-dial{max-height:none;width:min(var(--dial-size),65cqh)}
+.bittie-call .voice-mark{container-type:size}
+.bittie-call .voice-mark-orb{width:clamp(56px,26cqh,112px)}
+.bittie-call .voice-mark-label{inset-block-start:calc(100% + 7px)}
+.bittie-call .bittie-name{
+  position:absolute;inset:8px 12px auto;display:flex;flex-wrap:wrap;align-items:baseline;
+  justify-content:center;gap:4px 8px;pointer-events:none;
+}
+#talk .bittie-name h2{margin:0;font-size:clamp(15px,3dvh,24px)}
+.bittie-name .aist{color:inherit;font-size:12px}
+.bittie-call #tlog{
+  min-height:0;max-height:min(25dvh,180px);max-height:min(calc(var(--bittie-vheight,100dvh)*.25),180px);margin:0;padding:0 16px;
+  overflow-y:auto;overscroll-behavior:contain;overflow-wrap:anywhere;
+}
+.bittie-call #tlog:empty{display:none}
+.bittie-call #tctl{
+  min-height:0;max-height:38dvh;max-height:min(38dvh,calc(var(--bittie-vheight,100dvh)*.42));
+  overflow:auto;overscroll-behavior:contain;
+  padding:8px max(12px,calc((100% - 640px)/2));border-top:1px solid var(--line);
+}
+.bittie-call #tctl:empty{display:none}
+.bittie-call #tctl .rec{padding-block:3px;margin-block:0 4px;background:none;border:0}
+.bittie-call #tctl .rec .clk{display:none}
+.bittie-call #tctl .rec .note{margin:2px 0}
+.bittie-call #tctl #aiend{min-height:36px;margin:0}
+@media(min-width:900px){
+  .bittie-call{grid-template-columns:minmax(0,1fr) minmax(285px,32%);grid-template-rows:minmax(0,1fr) auto}
+  .bittie-call>.aip{grid-area:1/1/3/2}
+  .bittie-call #tlog{display:block;grid-area:1/2;max-height:none}
+  .bittie-call #tctl{grid-area:2/2;padding-inline:14px}
 }
 .aiany{margin:16px 0 4px}
 .exam-focus{padding:14px;margin:12px 0}
@@ -1032,7 +1084,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
         <div class="prow pickrow"><span id="plvlt">Ik oefen voor</span><b id="plvlv"></b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg><select id="plvl" aria-labelledby="plvlt"></select></div>
         <div class="prow pickrow langrow"><span id="plangt">Taal</span><b data-langn></b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg><select id="plang" data-lang aria-labelledby="plangt"></select></div>
         <label class="prow tog" id="ptrilw" hidden><span>Trillen bij een antwoord</span><input type="checkbox" switch id="ptril"></label>
-        <button type="button" class="it" id="psm"><span><span class="th"><b>Wat Saskia over je weet</b></span></span></button>
+        <button type="button" class="it" id="psm"><span><span class="th"><b>Wat Bittie over je weet</b></span></span></button>
         <button type="button" class="it" id="poff" hidden><span><span class="th"><b>Alles downloaden voor offline</b></span><span class="d" id="poffd">Schilderijen, foto's en het woordenboek: ongeveer 37 MB. Liefst via wifi.</span></span></button>
         <div class="prow pickrow" id="premw" hidden><span id="premt">Dagelijkse herinnering</span><b id="premv"></b><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg><select id="prem" aria-labelledby="premt"></select></div>
       </div>
@@ -1972,11 +2024,12 @@ function aiLevel(buffer){
   const rms=Math.sqrt(sum/count);if(rms<.004)return 1;
   return Math.min(3,.9/peak,Math.max(.25,.12/rms));
 }
-function stopSpeak(){sayN++;sayOn=false;aiVoiceStop();if($("aiav")?.classList.contains("saskia"))aiSpk(false);if(!sayA.paused&&!sayA.ended)sayA.pause();try{if(canSpeak&&(speechSynthesis.speaking||speechSynthesis.pending))speechSynthesis.cancel()}catch(e){}}
+function stopSpeak(){sayN++;sayOn=false;aiVoiceStop();if($("aiav"))aiSpk(false);if(!sayA.paused&&!sayA.ended)sayA.pause();try{if(canSpeak&&(speechSynthesis.speaking||speechSynthesis.pending))speechSynthesis.cancel()}catch(e){}}
 // The phone's voice: left unset, so the phone uses the Dutch (nl-NL) voice picked in its settings;
 // in a dialogue ("A: …" / "B: …" lines) speaker B gets a higher pitch, so the two people sound different
-function utter(l,done,start){const m=l.match(/^([A-C]): (.*)$/),u=new SpeechSynthesisUtterance(m?m[2]:l);u.lang="nl-NL";u.rate=.95;u.volume=1;if(m)u.pitch={A:.9,B:1.35,C:1.1}[m[1]];
-  if(start)u.onstart=start;if(done)u.onend=u.onerror=done;speechSynthesis.speak(u)}
+function utter(l,done,start,bittie=false){const m=l.match(/^([A-C]): (.*)$/),u=new SpeechSynthesisUtterance(m?m[2]:l);u.lang="nl-NL";u.rate=.95;u.volume=1;if(m)u.pitch={A:.9,B:1.35,C:1.1}[m[1]];
+  if(bittie){u.pitch=1.3;u.rate=.94}
+  if(start)u.onstart=u.onboundary=start;if(done)u.onend=u.onerror=done;speechSynthesis.speak(u)}
 function speak(t){stopSpeak();const n=sayN,L=String(t).split("\n").map(l=>l.trim()).filter(Boolean),K=sayKeys(L),has=i=>!!VOICE&&VOICE.has(K[i]);
   try{if(!L.some((l,i)=>has(i))){if(canSpeak)L.forEach(l=>utter(l));return}}catch(e){return}
   sayOn=true;
@@ -2092,6 +2145,13 @@ const ownHTML=(text,errs,label="Jouw tekst")=>`<p class="ask">${label}</p><div c
 const ERROR_LABELS={inhoud:"Inhoud",woorden:"Woorden",grammatica:"Grammatica",inversie:"Grammatica · Woordvolgorde",meervoud:"Grammatica · Meervoud",spelling:"Spelling",samenhang:"Samenhang"};
 const errsHTML=errs=>errs.length?`<p class="ask">Fouten: ${errs.length}</p><ol class="errs fixes">${errs.map(e=>`<li><s>${esc(e.wrong)}</s> <strong>${esc(e.right)}</strong><span dir="auto">${Object.hasOwn(ERROR_LABELS,e.kind)?`<b>${ERROR_LABELS[e.kind]}</b> · `:""}${esc(e.why)}</span></li>`).join("")}</ol>`:`<p class="note">Geen fouten gevonden.</p>`;
 const spoken=t=>String(t).replace(/[\p{Extended_Pictographic}←-⇿️‍]/gu,"").replace(/\s+/g," ").trim();
+function recButtonLabel(button,label,recording=false){
+  const orbLabel = button.querySelector(".voice-mark-label");
+  if(orbLabel){
+    orbLabel.textContent=label.replace(/^[●■] /,"");
+    button.closest(".voice-mark").classList.toggle("recording",recording);
+  }else button.textContent=label;
+}
 const saidText=r=>r.said.concat(r.part).join(" ").replace(/\s+/g," ").trim();
 async function listen(mode,done,lim=SPK,options={}){ // AI conversations finish only through Klaar; exams keep their timer
   const box=$("rec"),b=$("recb"); recEnd(false); b.disabled=true; stopSpeak(); // never record the question
@@ -2109,7 +2169,7 @@ async function listen(mode,done,lim=SPK,options={}){ // AI conversations finish 
   if(r.conversation)aiAudioMode("auto");
   // the microphone is open: the button becomes Klaar
   r.go=()=>{if(r.ready||rec!==r||r.fin||r.stopping||!r.conversation)return;r.ready=true;clearTimeout(r.readyTimer);
-    $("recb").textContent="■ Klaar";$("recn").textContent="Spreek nu. Tik op Klaar als je antwoord af is."};
+    recButtonLabel($("recb"),"■ Klaar",true);$("recn").textContent="Spreek nu. Tik op Klaar als je antwoord af is."};
   if(mode==="say"&&SR)try{
     const open=()=>{
     // Reusing a recogniser after TTS can leave iOS listening without receiving any words.
@@ -2174,7 +2234,8 @@ async function listen(mode,done,lim=SPK,options={}){ // AI conversations finish 
   const doneLabel=r.conversation?"Klaar":cur?.exam&&cur.speak?"Antwoord klaar":"Stop";
   $("recn").textContent=mode==="rec"?(r.mr?`Spreek nu. Tik op ${doneLabel} als je klaar bent.`:"Opnemen lukt hier niet. Spreek toch hardop: de tijd loopt.")
     :r.sr?(r.conversation?"De microfoon start… Wacht tot je kunt spreken.":`Spreek nu. De telefoon schrijft mee. Tik op ${doneLabel} als je klaar bent.`):"Meeschrijven lukt hier niet. Spreek toch hardop: de tijd loopt.";
-  b.textContent=r.conversation&&r.sr&&!r.ready?"Wacht even…":"■ "+doneLabel;b.className="btn wide";b.disabled=false;b.onclick=()=>{r.submitted=true;recEnd(true)};
+  if(!b.classList.contains("voice-mark-orb"))b.className="btn wide";
+  recButtonLabel(b,r.conversation&&r.sr&&!r.ready?"Wacht even…":"■ "+doneLabel,r.conversation&&r.ready);b.disabled=false;b.onclick=()=>{r.submitted=true;recEnd(true)};
   const tick=()=>{if(box!==$("rec"))return recEnd(false);
     if(r.conversation){$("rect").textContent=mmss(Math.floor((Date.now()-r.start)/1e3));$("recm").style.width="100%";return}
     const ms=Math.max(0,r.end-Date.now());
@@ -2191,7 +2252,7 @@ function recEnd(keep){
     if(r.stream)r.stream.getTracks().forEach(t=>t.stop());return;
   }
   if(r.box===$("rec")){
-    const b=$("recb");b.disabled=true;b.textContent="Even afronden…";
+    const b=$("recb");b.disabled=true;recButtonLabel(b,"Even afronden…");
     r.box.setAttribute("aria-busy","true");$("recn").textContent="Je antwoord wordt afgerond. Je hoeft niet op de timer te wachten.";
   }
   if(r.sr){
@@ -2472,7 +2533,7 @@ function home(){
   $("books").innerHTML=itHTML(`data-x="books"`,"Boekenkast",lb?`Je leest nu: ${esc(lb.t)}, blz. ${lb.p+1}`:"Verhalen en je eigen e-books.",{ic:"books"})
     +itHTML(`data-x="hist"`,"Geschiedenis van Nederland",lh?`Je was bij: ${lh.t}`:"Van de hunebedden tot nu.",{n:gsDone?`${gsDone} van ${GS.length}`:null,ic:"hist"})
     +itHTML(`data-x="media"`,"Luisteren en kijken","Nieuws, video's en podcasts.",{ic:"media"})
-    +itHTML(`data-x="ai"`,"Gesprekken","Praat met Saskia over je dag, Nederland en kunst.",{n:(n=>n?`${n} van ${aiIds().length}`:null)(aiIds().filter(id=>(S.ai||{})[id]).length),ic:"talk"});
+    +itHTML(`data-x="ai"`,"Gesprekken","Praat met Bittie over een onderwerp dat jij kiest.",{n:(n=>n?`${n} van ${aiIds().length}`:null)(aiIds().filter(id=>(S.ai||{})[id]).length),ic:"talk"});
   $("mine").innerHTML=itHTML(`data-x="stats"`,"Kies een lastig onderwerp","Waar je de meeste fouten maakt.",{ic:"stats"})
     +((S.errs||[]).length?itHTML(`data-x="errs"`,"Oefen met je eigen fouten","Kies de juiste versie van zinnen uit je eerdere teksten en antwoorden.",{n:S.errs.length,ic:"errs"}):"")
     +((S.words||[]).length?itHTML(`data-x="words"`,"Mijn woorden","Die je bij het lezen hebt bewaard.",{n:S.words.length,ic:"words"}):"")
@@ -3044,7 +3105,7 @@ function drawProfile(){
     b.disabled=true;
     try{const r=await fetch("/api/account",{method:"DELETE",headers:await authHead()});if(!r.ok)throw 0;
       lsSet(ALINK,null);cloud=null;try{await acc.sb.auth.signOut({scope:"local"})}catch(e){}
-      const retained=progressClone(S); delete retained.sm; // what Saskia remembered goes with the account
+      const retained=progressClone(S); delete retained.sm; // what Bittie remembered goes with the account
       const guestEntry=readLocal(progressKey("guest"));
       lsSet(progressKey("guest"),JSON.stringify({data:mergeS(retained,guestEntry?.data||freshProgress()),frame:{},version:++localVersion}));
       acc.msg="Je account is verwijderd. Je voortgang op dit apparaat blijft.";await setUser(null)}
@@ -4769,8 +4830,17 @@ function talkEnd(){
 // 0 = January); wie says who they are, av is their plush avatar in art/avatars. The situations are the scripts in GP
 // (not the ONA ones), which the server gives Claude as a model conversation (api/_scenes.js, tools/build-scenes.mjs).
 // Ids and who (and a situation's task) must match TOPICS in api/_talk.js (tests/talk.test.mjs).
+function aiVoiceMark(inConversation=false){
+  const mic = '<span class="voice-mark-mic" aria-hidden="true"></span>';
+  const center = inConversation && SR
+    ? `<button type="button" class="voice-mark-orb" id="recb" disabled>${mic}<span class="voice-mark-label">Spreek</span></button>`
+    : `<span class="voice-mark-orb">${mic}</span>`;
+  return `<div class="voice-mark"${inConversation?' id="aiav"':""}${inConversation&&SR?"":' aria-hidden="true"'}>
+    <span class="voice-mark-dial" aria-hidden="true"></span>${center}
+  </div>`;
+}
 const PEOPLE=[
-  {id:"saskia",who:"Saskia",wie:"Je gastvrouw in het museumcafé",portrait:"/art/characters/saskia-museum-v1.jpg"},
+  {id:"saskia",who:"Bittie",wie:"Je maatje om Nederlands mee te praten"},
   {id:"jansen",who:"Mevrouw Jansen",wie:"Je buurvrouw"},
   {id:"slager",who:"Slager Henk",wie:"In de slagerij"},
   {id:"collega",who:"Collega Mo",wie:"Je collega, bij de koffieautomaat"},
@@ -4785,7 +4855,7 @@ const PEOPLE=[
   {id:"vermeer",who:"Johannes Vermeer",wie:"Schilder · Delft, 1665",av:"schilder"},
   {id:"visser",who:"Jan uit Volendam",wie:"Vissersjongen · Volendam, 1910",av:"volm"},
 ];
-// Saskia is the recurring host. Historical/seasonal ids remain readable for older sessions and progress.
+// Bittie keeps the original topic ID so saved practice and conversation memory continue to work.
 function aiAny(){aiTalk("saskia",true)}
 const aiScene=i=>({id:GP[i].id,who:GP[i].w,t:GP[i].t,s:GP[i].s,task:GP[i].o,p:GP[i].p,g:gpGroup(i),b1:GP[i].b1});
 const aiScenes=()=>{const L=GP.map((c,i)=>c.ona?null:aiScene(i)).filter(Boolean);return lvl()==="B1"?L.filter(c=>c.b1).concat(L.filter(c=>!c.b1)):L}; // at B1 the B1 group first
@@ -4806,9 +4876,9 @@ function aiList(menu){
     </div>
     <p class="note"><span>${talkCost()>1?`Elk gesprek kost ${talkCost()} nakijkbeurten.`:"Elk gesprek kost 1 nakijkbeurt."}</span>${SR?"":` <span>Meeschrijven lukt hier niet: je typt je antwoorden.</span>`}</p>${freeNote()}`;
   if(aiMenu==="people"){
-    h+=`<div class="aihost"><img src="/art/characters/saskia-museum-v1.jpg" alt="" width="768" height="1024">
-      <h3>Saskia</h3><p class="note">Je ontmoet Saskia in het museumcafé. Praat over je dag, Nederland en kunst.</p>
-      <button class="btn wide aiany" id="aiany">Praat met Saskia</button></div>`;
+    h+=`<div class="aihost">${aiVoiceMark()}
+      <h3 class="bittie-intro"><img src="/art/bitterbal-wave-nl-v1.jpg" alt="" width="42" height="42">Bittie</h3><p class="note">Kies zelf een onderwerp en oefen hardop Nederlands met Bittie.</p>
+      <button class="btn wide aiany" id="aiany">Praat met Bittie</button></div>`;
   }else{
     h+=`<p class="note">Kies een onderwerp en daarna een gesprek.</p><div class="list">`;
     const groups=[...new Set(aiScenes().map(c=>c.g))];
@@ -4830,17 +4900,28 @@ function aiList(menu){
 }
 // Blob URLs of the replies' voices are released when the conversation closes
 function aiDrop(){aiAudioMode("auto");if(AK)AK.log.flatMap(l=>l.parts||l).forEach(l=>{if(l.url)URL.revokeObjectURL(l.url)});AK=null}
+function aiViewport(){
+  const view=window.visualViewport;
+  const talk=$("talk");
+  if(!view||!talk||talk.hidden||!talk.querySelector(".bittie-call")||Math.abs(view.scale-1)>.01)return;
+  talk.style.setProperty("--bittie-vheight",view.height+"px");
+  talk.style.setProperty("--bittie-vtop",view.offsetTop+"px");
+}
+window.visualViewport?.addEventListener("resize",aiViewport);
+window.visualViewport?.addEventListener("scroll",aiViewport);
 function aiTalk(id,go){ // go: start at once (a person picked by the learner's tap), so the greeting is heard right away
   const c=aiTopic(id); if(!c)return aiList();
   bgOpen("Gesprekken",aiList); aiDrop();
   AK={c,log:[],tok:null,n:0,busy:false,mic:!!SR};
+  const bittie=c.id==="saskia";
   const init=esc(c.who.replace(/^(De|Dokter|Meneer|Mevrouw|Juf|Buurman|Buurvrouw|Slager|Collega|Haringboer|Kaasdrager|Het) /,"")[0]);
-  $("tbody").innerHTML=`<div lang="nl">`+(c.task
+  $("tbody").innerHTML=`<div lang="nl"${bittie?' class="bittie-call"':""}>`+(c.task
     ?`<p class="ask">${c.g}</p><h2>${esc(c.t)}</h2>`+(c.p?picsHTML([c.p]):"")+`<p class="ask">Jouw opdracht</p><div class="sample">${esc(c.task)}</div>
     <div class="aic"><span class="aiav" id="aiav" aria-hidden="true">${init}</span><span><b>${esc(c.who)}</b><span class="aist" id="aist"></span></span></div>`
-    :`<div class="aip${c.portrait?" human":""}">${c.portrait?`<div class="aiportrait${c.id==="saskia"?" saskia":""}" id="aiav" aria-hidden="true"><img src="${esc(c.portrait)}" alt="" width="768" height="1024"></div>`:`<span class="aiav big${c.av?" pic":""}" id="aiav" aria-hidden="true">${c.av?`<img src="/art/avatars/${c.av}.jpg" alt="">`:init}</span>`}
-    <h2>${esc(c.who)}</h2><p class="sub">${esc(c.wie)}</p><span class="aist" id="aist"></span></div>`)
+    :`<div class="aip">${c.id==="saskia"?aiVoiceMark(true):`<span class="aiav big${c.av?" pic":""}" id="aiav" aria-hidden="true">${c.av?`<img src="/art/avatars/${c.av}.jpg" alt="">`:init}</span>`}
+    ${bittie?'<div class="bittie-name"><h2>Bittie</h2><span class="aist" id="aist"></span></div>':`<h2>${esc(c.who)}</h2><p class="sub">${esc(c.wie)}</p><span class="aist" id="aist"></span>`}</div>`)
     +`    <div class="talk" id="tlog" aria-live="polite"></div><div id="tctl"></div></div>`;
+  if(bittie)aiViewport();
   document.querySelectorAll("#tbody [data-pic]").forEach(b=>b.onclick=()=>zoomPic(b.dataset.pic));
   aiReady();
   if(go&&!c.task)aiStart(); // a situation waits: the learner reads the task first
@@ -4930,11 +5011,11 @@ function aiHear(t,audio,done){
 }
 function aiPlay(l,done,slow){
   stopSpeak();aiAudioMode("playback"); const n=sayN;let finished=false,fallback=false;
-  const portrait=AK?.c.id==="saskia";
+  const bittie=AK?.c.id==="saskia";
   const start=()=>{if(n===sayN&&!finished)aiSpk(true)},
     end=()=>{if(n!==sayN||finished)return;finished=true;sayOn=false;aiSpk(false);done&&done()},
-    alt=()=>{if(n!==sayN||finished||fallback)return;fallback=true;if(AK)AK.voice="device";try{canSpeak?utter(l.t,end,start):end()}catch(e){end()}};
-  if(!portrait)start();
+    alt=()=>{if(n!==sayN||finished||fallback)return;fallback=true;if(AK)AK.voice="device";try{canSpeak?utter(l.t,end,start,bittie):end()}catch(e){end()}};
+  if(!bittie)start();
   if(AK?.voice==="device"||!l.url)return alt();
   sayOn=true;
   if(aiCtx&&l.bytes){
@@ -4950,15 +5031,18 @@ function aiPlay(l,done,slow){
     }).catch(alt);
     return;
   }
-  sayA.onended=end;sayA.onerror=alt;sayA.src=l.url;sayA.volume=1;sayA.playbackRate=slow?.85:1;sayA.play().then(()=>{if(!fallback)start()}).catch(alt);
+  sayA.onended=end;sayA.onerror=alt;sayA.onplaying=()=>{if(!fallback)start()};sayA.src=l.url;sayA.volume=1;sayA.playbackRate=slow?.85:1;sayA.play().then(()=>{if(!fallback)start()}).catch(alt);
 }
 function aiSpk(on){const a=$("aiav"),s=$("aist");if(a)a.classList.toggle("on",on);if(s&&AK)s.textContent=on?"spreekt":""}
 function aiDraw(){
   const k=AK; if(!k||!$("tlog"))return;
-  $("tlog").innerHTML=k.log.map((l,j)=>l.me
+  const log=$("tlog");
+  const follow=log.scrollHeight-log.clientHeight-log.scrollTop<40, scroll=log.scrollTop;
+  log.innerHTML=k.log.map((l,j)=>l.me
     ?`<div class="tl me"><p class="ask">Jij</p><p>${esc(l.t)}</p>${l.fix?`<p class="aifix"><b>Beter:</b> ${esc(l.fix.right)}${l.fix.why?`<span>${esc(l.fix.why)}</span>`:""}</p>`:""}</div>`
     :`<div class="tl"><p class="ask">${esc(k.c.who)} <button class="say" data-j="${j}" aria-label="Nog een keer luisteren">▶</button><button class="rep" data-r="${j}"${l.rep?" disabled":""}>${l.rep?"Gemeld":"Meld"}</button></p><p>${esc(l.t)}</p></div>`).join("");
   document.querySelectorAll("#tlog .say").forEach(b=>b.onclick=()=>{if(rec)recEnd(false);aiReplay(k.log[b.dataset.j])});
+  if(k.c.id==="saskia")log.scrollTop=follow?log.scrollHeight:scroll;
   // Report an AI answer (Google Play's AI-generated content policy): the answer and who said it go to the server's log for
   // the owner to read; nothing of the learner. Works also when the anonymous counts are off.
   document.querySelectorAll("#tlog .rep").forEach(b=>b.onclick=()=>{
@@ -4968,12 +5052,19 @@ function aiDraw(){
       body:JSON.stringify({ev:"report",lvl:lvl(),ui:lsGet("ww-ui")||"nl",who:String(k.c.id||k.c.who||"").slice(0,40),m:String(l.t||"").slice(0,600)})}).catch(()=>{})}catch(e){}});
 }
 function aiTurn(note,keep){
+  const orb = $("aiav")?.querySelector("#recb");
   $("tctl").innerHTML=(SR?`<div class="rec" id="rec"><div class="clk"><span class="t" id="rect">0:00</span><div class="m"><i id="recm"></i></div></div><div id="recp"></div>
-    <button class="btn wide" id="recb">● Spreek</button><p class="note" id="recn">${note||""}</p></div>`:note?`<p class="note">${note}</p>`:"")
+    ${orb?"":'<button class="btn wide" id="recb">● Spreek</button>'}<p class="note" id="recn">${note||""}</p></div>`:note?`<p class="note">${note}</p>`:"")
     +`<div class="type"><input id="tin" placeholder="${SR?"Of typ je antwoord":"Typ je antwoord"}" autocomplete="off" autocapitalize="sentences" spellcheck="false" aria-label="Je antwoord"><button class="${SR&&!keep?"ghost":"btn"}" id="tsend">Stuur</button></div>
     <button class="ghost wide" id="aiend">Ophangen</button>`;
   if(keep)$("tin").value=keep;
-  if(SR)$("recb").onclick=()=>{AK.mic=true;aiRec()};
+  if(SR){
+    const button = $("recb");
+    recButtonLabel(button,"● Spreek");
+    button.disabled=false;
+    if(orb)button.setAttribute("aria-describedby","recn");
+    button.onclick=()=>{AK.mic=true;aiRec()};
+  }
   $("tsend").onclick=()=>{const v=$("tin").value.trim();if(v){aiUnlock();aiSend(v)}};
   $("tin").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();$("tsend").click()}};
   $("aiend").onclick=()=>{hush();aiEnd()};
@@ -5021,7 +5112,7 @@ function aiSpeechChoices(text,alternatives=[]){
 }
 function aiHeard(r){
   const b=$("recb"); if(!b||!AK)return;
-  b.textContent="● Spreek";b.className="btn wide";b.onclick=()=>{AK.mic=true;aiRec()}; $("recp").innerHTML="";
+  recButtonLabel(b,"● Spreek");b.disabled=false;b.onclick=()=>{AK.mic=true;aiRec()}; $("recp").innerHTML="";
   const typed=$("tin")?.value.trim();
   if(!r.text&&r.submitted&&typed)return aiSend(typed); // typed while the microphone was open, then Klaar
   if(!r.text){AK.mic=false;$("recn").textContent=r.fail?`De microfoon geeft geen tekst door. Tik op Spreek en zeg je antwoord opnieuw, of typ het hieronder.${r.err?` (${r.err})`:""}`:"Ik heb niets verstaan. Tik op Spreek en praat wat harder.";return}
@@ -5035,6 +5126,7 @@ function aiHeard(r){
 async function aiSend(t){
   const k=AK; if(!k||k.busy||!k.tok)return;
   recEnd(false);stopSpeak();
+  const orb=$("aiav")?.querySelector("#recb");if(orb){orb.disabled=true;recButtonLabel(orb,"Bittie denkt na…")}
   k.busy=true;
   // Keep a failed answer visible and replace it on retry, so it is sent exactly once in history.
   if(k.pending)k.pending.t=t;
@@ -5068,8 +5160,8 @@ async function aiSend(t){
   k.pending=null;
   aiHear(String(j.reply||""),j.audio,!!j.done);
 }
-// What Saskia remembers: S.sm {on: true|false (not asked yet: none), onAt, f: {id: {t, at}}}, with the progress. Only after a
-// yes, only Saskia; the server filters sensitive facts (PRIVATE in api/_talk.js). Seen, erased and switched off in Profiel.
+// What Bittie remembers: S.sm {on: true|false (not asked yet: none), onAt, f: {id: {t, at}}}, with the progress. Only after a
+// yes, only Bittie; the server filters sensitive facts (PRIVATE in api/_talk.js). Seen, erased and switched off in Profiel.
 const MEM_MAX=20;
 const memAll=()=>Object.entries(S.sm?.f||{}).map(([id,x])=>({id,...x})).sort((a,b)=>a.at-b.at);
 const memOf=c=>c.id==="saskia"&&S.sm?.on===true?memAll().slice(-MEM_MAX):[];
@@ -5087,8 +5179,8 @@ function memKeep(mem,j){
 function memAsk(){
   return new Promise(ok=>{
     $("tctl").innerHTML="";
-    $("tbody").insertAdjacentHTML("beforeend",`<div class="mask" id="mask"><h3 class="lh">Mag Saskia dingen over je onthouden?</h3>
-      <p>Dan kan ze er een volgende keer over beginnen, bijvoorbeeld over je werk of je plannen. Ze onthoudt korte feiten uit jullie gesprekken. Die staan in je voortgang en gaan bij elk gesprek met Saskia mee naar Anthropic. Je ziet en wist ze in Profiel.</p>
+    $("tbody").insertAdjacentHTML("beforeend",`<div class="mask" id="mask"><h3 class="lh">Mag Bittie dingen over je onthouden?</h3>
+      <p>Dan kan Bittie er een volgende keer over beginnen, bijvoorbeeld over je werk of je plannen. Bittie onthoudt korte feiten uit jullie gesprekken. Die staan in je voortgang en gaan bij elk gesprek met Bittie mee naar Anthropic. Je ziet en wist ze in Profiel.</p>
       <button type="button" class="btn wide" id="memy">Ja, dat mag</button><button type="button" class="ghost wide" id="memn">Nee, liever niet</button></div>`);
     const end=on=>()=>{memSet(on);$("mask")?.remove();ok()};
     $("memy").onclick=end(true);$("memn").onclick=end(false);
@@ -5099,11 +5191,11 @@ function memScreen(){
   bgOpen(TABN[tab],home);aiDrop();
   const draw=()=>{
     const L=memAll().reverse(),on=S.sm?.on===true,fmt=new Intl.DateTimeFormat(lsGet("ww-ui")||"nl",{day:"numeric",month:"short"});
-    $("tbody").innerHTML=`<h2>Wat Saskia over je weet</h2><p class="sub">Korte feiten uit jullie gesprekken. Ze gaan bij elk gesprek met Saskia mee naar Anthropic.</p>
-      <div class="pg"><label class="prow tog"><span>Saskia mag dingen onthouden</span><input type="checkbox" switch id="memon"${on?" checked":""}></label></div>
-      ${!on&&L.length?`<p class="note">Saskia onthoudt niets nieuws en gebruikt deze feiten niet.</p>`:""}
+    $("tbody").innerHTML=`<h2>Wat Bittie over je weet</h2><p class="sub">Korte feiten uit jullie gesprekken. Ze gaan bij elk gesprek met Bittie mee naar Anthropic.</p>
+      <div class="pg"><label class="prow tog"><span>Bittie mag dingen onthouden</span><input type="checkbox" switch id="memon"${on?" checked":""}></label></div>
+      ${!on&&L.length?`<p class="note">Bittie onthoudt niets nieuws en gebruikt deze feiten niet.</p>`:""}
       ${L.length?`<div>${L.map(x=>`<div class="memrow"><span><span lang="nl">${esc(x.t)}</span><small>${esc(fmt.format(x.at))}</small></span><button type="button" class="ghost" data-mem="${esc(x.id)}">Wis</button></div>`).join("")}</div>
-      <p></p><button type="button" class="ghost wide" id="memclr">Alles wissen</button>`:`<p class="note">Nog niets. Praat met Saskia en hang op: dan kan ze iets onthouden.</p>`}`;
+      <p></p><button type="button" class="ghost wide" id="memclr">Alles wissen</button>`:`<p class="note">Nog niets. Praat met Bittie en hang op: dan kan Bittie iets onthouden.</p>`}`;
     $("memon").onchange=()=>{memSet($("memon").checked);draw()};
     document.querySelectorAll("[data-mem]").forEach(b=>b.onclick=()=>{const f={...S.sm.f};delete f[b.dataset.mem];S.sm={...S.sm,f};save();draw()});
     if($("memclr"))$("memclr").onclick=()=>{const b=$("memclr");
@@ -5115,9 +5207,14 @@ function memScreen(){
 // Hanging up or the natural end: what went well and the tips (no extra check)
 async function aiEnd(){
   const k=AK; if(!k||k.ending)return; k.ending=true;
+  if(k.c.id==="saskia"){
+    const dial=$("aiav");
+    if(dial){dial.classList.remove("recording");dial.outerHTML=aiVoiceMark()}
+    $("tbody").querySelector(".bittie-call")?.classList.remove("bittie-call");
+  }
   const c=k.c, L=aiScenes(), nx=c.task&&L[(L.findIndex(x=>x.id===c.id)+1)%L.length];
   const tail=nx?`<button class="btn wide" id="ainx">Volgende: ${esc(nx.t)}</button><button class="ghost wide" id="aire">Nog een keer</button>`
-      :`<button class="btn wide" id="ainx">Nieuw gesprek met Saskia</button><button class="ghost wide" id="aire">Terug naar Gesprekken</button>`,
+      :`<button class="btn wide" id="ainx">Nieuw gesprek met Bittie</button><button class="ghost wide" id="aire">Terug naar Gesprekken</button>`,
     bind=()=>{$("ainx").onclick=()=>nx?aiTalk(nx.id):aiAny();$("aire").onclick=()=>nx?aiTalk(c.id):aiList()};
   if(k.n<2){$("tctl").innerHTML=`<div class="tend"><b>Gesprek gestopt</b><p class="note">Te kort voor tips. Zeg de volgende keer wat meer.</p></div>`+tail;return bind()}
   S.ai=S.ai||{}; const g=S.ai[c.id]||{n:0}; S.ai[c.id]={n:(g.n||0)+1,at:Date.now()}; complete();
@@ -5133,7 +5230,7 @@ async function aiEnd(){
   $("tctl").innerHTML=`<div class="tend"><b class="good">Gesprek klaar!</b><p class="note">${j.ok?esc(j.verdict||""):"De tips lukten nu niet, maar het gesprek telt wel."}</p></div>`
     +(good.length?`<h3 class="lh">Dit ging goed</h3><ul class="aigood">${good.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:"")
     +(j.ok?`<h3 class="lh">Zo zeg je het beter</h3>${errsHTML(tips)}`:"")
-    +(fresh.length?`<h3 class="lh">Dit onthoudt Saskia</h3><ul class="aigood">${fresh.map(x=>`<li>${esc(x)}</li>`).join("")}</ul><button class="ghost wide" id="aimem">Bekijk of wis</button>`:"")+tail;
+    +(fresh.length?`<h3 class="lh">Dit onthoudt Bittie</h3><ul class="aigood">${fresh.map(x=>`<li>${esc(x)}</li>`).join("")}</ul><button class="ghost wide" id="aimem">Bekijk of wis</button>`:"")+tail;
   if($("aimem"))$("aimem").onclick=memScreen;
   bind();
 }
@@ -5550,7 +5647,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru","uk"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="97f22a7047";
+const UIV="e7887459f4";
 let uiP=null;
 function uiLoaded(){try{trMemo.clear()}catch(e){} // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});

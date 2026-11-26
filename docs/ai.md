@@ -75,15 +75,9 @@ result was invisible). Items made earlier stay in `S.gen` and are still added by
 Duolingo's video call (the user's request, 23 November 2026). On that day the user also chose to remove the free,
 offline scripted Gesprekken (keyword checks with `gpFits()`, October 2026): they were too rigid next to a real
 conversation. Two menu buttons (aiMenu remembers the choice when returning from a conversation): "Praat met iemand" and "Dagelijkse situaties". The latter opens expandable topic groups, each with individual situation rows; choosing a situation shows its task before starting. Two parts:
-- The first menu now opens Saskia, the recurring human host of a small museum cafe in Utrecht (the user's
-  approved direction, 24 November 2026). Her approved portrait is `art/characters/saskia-museum-v1.jpg` (768 pixels wide);
-  `aiList()` shows her card and `aiTalk()` her full portrait. The image is a still, not an animated video or a fake lip-sync.
-  `api/_talk.js` defines her museum-cafe persona and openers. `aiAny()` now consistently opens Saskia; `aiIds()` counts
-  her plus the situations. Older PEOPLE/TOPICS ids remain supported for old sessions and progress but are not offered
-  in the main menu. Her portrait, outfit and setting were created with built-in image generation; source and prompt
-  records are kept locally in `art/characters/`. No Tavus custom face has been trained or connected to the app. The
-  separate Tavus Dirk pilot and its stock face are not a Saskia video. Training her own face requires the user's paid
-  service activation and a later integration; do not describe the static portrait as completed video animation.
+- The first menu opens Bittie, the recurring AI partner for conversations on a topic the learner chooses.
+  The full-screen dial shows when Bittie is speaking and doubles as the microphone control. Text input and the transcript
+  remain available throughout the call. The existing topic key `saskia` keeps saved progress and memory compatible.
 - The situations: the old scripts in `GP` (`data/extra.js`, the ones without `ona`), in their groups: on the phone
   (huisarts, work, landlord, school, gemeente, 112, a language school), work, school and the doctor, in town (bakker,
   apotheek, café, station, exchanging, the bike repairer, the market, the library, asking the way), the neighbours, and
@@ -147,13 +141,13 @@ conversation. Two menu buttons (aiMenu remembers the choice when returning from 
   Close domain words with a shared ending (e.g. kering → haring in the fish conversation) and native alternatives are
   suggestions in the draft a stopped microphone leaves, never silent substitutions.
   A final result replaces its interim hypothesis, and the ready message waits for the recogniser's start event. No additional model calls or providers are used for these checks.
-- Saskia's memory (the user's wish, 24 November 2026, kept in the account): `S.sm` `{on, onAt, f: {id: {t, at}}}`, at most 20
+- Bittie's memory (the user's wish, 24 November 2026, kept in the account): `S.sm` `{on, onAt, f: {id: {t, at}}}`, at most 20
   short facts, with the progress (guests: on the device). Only after a yes: `memAsk()` asks once, before the first review,
-  in the menu language (outside the Dutch conversation); `on:false` is never asked again and nothing is sent. Only Saskia:
+  in the menu language (outside the Dutch conversation); `on:false` is never asked again and nothing is sent. Only Bittie:
   the page sends dated facts with `say` and `end`, the server puts them in the message as data and ignores them for other
   topics; with facts the greeting is one of `again` (no model call). `end` with `remember:true` returns `facts` and `old`
   (what to forget) in the review call, so no extra call. The prompt forbids sensitive facts and `PRIVATE` drops them
-  again on the way in and out. Profiel, "Wat Saskia over je weet" (`memScreen()`): see, erase, switch off. Deleting the account
+  again on the way in and out. Profiel, "Wat Bittie over je weet" (`memScreen()`): see, erase, switch off. Deleting the account
   drops them from the device too. privacy.html describes it in nine languages: change both together.
 - `/api/talk` is a rewrite to `/api/check?kind=talk` (the 12-function limit); `check.js` imports `_talk.js` only then.
   `S.ai` `{id: {n, at}}` (merged like `S.gp`); the event `ai` counts started conversations. privacy.html says, in all

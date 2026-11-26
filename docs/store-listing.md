@@ -17,7 +17,7 @@ Screenshots (6.9" and 6.5" iPhone, Play phone): a sentence of benefit on each, n
 2. "Elke dag een les tot je examen" (Mijn dag with the countdown).
 3. "Proefexamens met een timer" (Examen tab).
 4. "400+ KNM-vragen met uitleg" (a KNM question after answering).
-5. "Praat met Saskia en anderen" (a conversation with a fix).
+5. "Praat met Bittie" (a conversation with a fix).
 6. "Menu in 8 talen" (Profiel in Arabic).
 
 Never on a screenshot or in the text: a price, an offer, "koop", "abonnement" (Apple 3.1.1 while there is no in-app purchase), and never "DUO" as a word that suggests a link (5.2.1, Play impersonation). The description says once: "Bittertalen is niet van DUO."
@@ -61,6 +61,6 @@ Never on a screenshot or in the text: a price, an offer, "koop", "abonnement" (A
 - Google Play AI-generated content policy: every AI character's answer has **Meld** (report) in Gesprekken; the answer
   and the character go to the server log (`ai_report` in Vercel's logs, api/event.js). Read them weekly.
 - Privacy labels (App Store Connect) and Data safety (Play) say the same as `PrivacyInfo.xcprivacy`: e-mail and name,
-  user content (texts, Saskia's memory; linked), audio (transcribed, not kept), purchase history, product interaction
+  user content (texts, Bittie's memory; linked), audio (transcribed, not kept), purchase history, product interaction
   (anonymous counts, not linked), crash data (error messages, not linked). Third parties: Anthropic (AI), Google
   (voices; on Android also speech recognition), Stripe (payments, website only), Supabase and Vercel (hosting, EU).
