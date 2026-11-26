@@ -69,3 +69,5 @@ are in `docs/`, one file per area. Read the one for the area you change, and kee
   script, the file goes to `audio/<key>.mp3` and the key into `audio/live.json` (never recorded over). None yet.
 - The model prices in `admin.html` (`PRICE`) must be checked against Anthropic's price list when they change.
 - Grading has not yet been compared with an NT2 examiner (`supabase/calibration.sql`, `docs/ai.md`).
+- 26 November 2026: wrong options of 8 Luisteren A2 and 3 KNM questions were made longer, so the right answer is never
+  clearly the longest; run `node audio/build.mjs` on the Mac to record them (until then those options use the phone's voice).
