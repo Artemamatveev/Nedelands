@@ -703,3 +703,18 @@ end;
 $$;
 revoke execute on function public.use_guard(text, date, int, int) from public, anon, authenticated;
 grant execute on function public.use_guard(text, date, int, int) to service_role;
+
+-- Withdrawals (migration 20261125200000_withdrawals.sql)
+create table if not exists public.withdrawals (
+  id bigint generated always as identity primary key,
+  user_id uuid not null references auth.users on delete cascade,
+  kind text not null check (kind in ('sub', 'pass')),
+  ref text not null,                           -- Stripe subscription id (sub_…) or Checkout session (cs_…)
+  at timestamptz not null default now(),
+  refunded_at timestamptz                      -- set by hand when the money is back
+);
+create index if not exists withdrawals_user on public.withdrawals (user_id, at desc);
+alter table public.withdrawals enable row level security;
+revoke all on public.withdrawals from public, anon, authenticated;
+grant select, insert, update on public.withdrawals to service_role;
+grant update (until) on public.exam_pass to service_role;

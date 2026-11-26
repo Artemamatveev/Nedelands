@@ -26,7 +26,7 @@ async function handler(options={}){
     addSpend:async(model,u)=>{spends.push([model,u.input_tokens,u.output_tokens]);if(options.spendFails)throw Error('down');return true},
     bonusFor:async()=>{if(options.bonusFails)throw Error('down');return options.bonus??0},
     PLUS:60,plusOn:!!options.pay,
-    PLUS_MONTH:200,OPUS_DAY:2,monthOf:()=>'2026-11-01',amsterdamDay:()=>'2026-11-25',
+    PLUS_MONTH:200,OPUS_MONTH:8,PASS_TOTAL:250,PASS_OPUS:15,monthOf:()=>'2026-11-01',amsterdamDay:()=>'2026-11-25',
     useGuard:async(k,_d,cost,lim)=>{guards.push([k,cost]);if(options.guardFails)throw Error('down');const g=options.guard?.[k[0]];return g??lim-cost},
 
     plusFor:async()=>{if(options.plusFails)throw Error('down');return options.plan??null},
@@ -188,6 +188,8 @@ test('Spreken A2: voldoende follows from the points, not from what the model say
   assert.equal(said.res.body.tasks[0].passed,false); // inhoud below 2
   const few=await handler({part:'sp',claimPassed:true,scores:{inhoud:2,woorden:1,grammatica:1,samenhang:0}});
   assert.equal(few.res.body.tasks[0].passed,false); // 4 of 8
-  const good=await handler({part:'sp',claimPassed:false,scores:{inhoud:2,woorden:1,grammatica:1,samenhang:1}});
-  assert.equal(good.res.body.tasks[0].passed,true); // 5 of 8
+  const five=await handler({part:'sp',claimPassed:true,scores:{inhoud:2,woorden:1,grammatica:1,samenhang:1}});
+  assert.equal(five.res.body.tasks[0].passed,false); // 5 of 8: without pronunciation and fluency that is not enough
+  const good=await handler({part:'sp',claimPassed:false,scores:{inhoud:2,woorden:2,grammatica:1,samenhang:1}});
+  assert.equal(good.res.body.tasks[0].passed,true); // 6 of 8
 });

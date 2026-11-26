@@ -88,6 +88,13 @@
     <xhtml:link rel="alternate" hreflang="ru" href="https://bittertalen.nl/ru"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://bittertalen.nl/"/>
   </url>
+  <url><loc>https://bittertalen.nl/inburgeringsexamen-oefenen</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://bittertalen.nl/knm-oefenen</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://bittertalen.nl/a2-lezen-oefenen</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://bittertalen.nl/a2-luisteren-oefenen</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://bittertalen.nl/a2-schrijven-oefenen</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://bittertalen.nl/a2-spreken-oefenen</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://bittertalen.nl/staatsexamen-b1-oefenen</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://bittertalen.nl/nakijken</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
   <url><loc>https://bittertalen.nl/over</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
   <url><loc>https://bittertalen.nl/privacy</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>

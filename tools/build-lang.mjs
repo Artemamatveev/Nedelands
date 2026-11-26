@@ -16,14 +16,14 @@ export const url = l => l === 'nl' ? SITE + '/' : `${SITE}/${l}`;
 // The page's head in each language (the body comes from landing.js)
 export const META = {
   title: {
-    nl: 'Bittertalen — Word thuis in Nederland: inburgering A2 en B1',
-    en: 'Bittertalen — Feel at home in the Netherlands: inburgering A2 and B1',
-    ar: 'Bittertalen — اشعر بأنك في بيتك في هولندا: الاندماج A2 وB1',
-    tr: 'Bittertalen — Hollanda\'da kendini evinde hisset: uyum A2 ve B1',
-    hi: 'Bittertalen — नीदरलैंड में घर जैसा महसूस करें: इंटीग्रेशन A2 और B1',
-    zh: 'Bittertalen — 在荷兰安家：融入考试 A2 和 B1',
-    es: 'Bittertalen — Siéntete en casa en los Países Bajos: integración A2 y B1',
-    ru: 'Bittertalen — почувствуйте себя дома в Нидерландах: экзамены A2 и B1',
+    nl: "Inburgeringsexamen A2 en NT2 B1 gratis oefenen | Bittertalen",
+    en: "Free practice for the Dutch inburgering exam A2 and NT2 B1 | Bittertalen",
+    ar: "تدريب مجاني على امتحان الاندماج الهولندي A2 وNT2 B1 | Bittertalen",
+    tr: "Hollanda uyum sınavı (inburgering) A2 ve NT2 B1 ücretsiz deneme | Bittertalen",
+    hi: "डच इंटीग्रेशन परीक्षा (inburgering) A2 और NT2 B1 की मुफ़्त तैयारी | Bittertalen",
+    zh: "免费练习荷兰融入考试（inburgering）A2 和 NT2 B1 | Bittertalen",
+    es: "Prepara gratis el examen de integración neerlandés A2 y NT2 B1 | Bittertalen",
+    ru: "Экзамен inburgering A2 и NT2 B1: бесплатная подготовка | Bittertalen",
   },
   description: {
     nl: 'Oefen gratis voor het inburgeringsexamen A2 en het Staatsexamen NT2 B1, op weg naar naturalisatie. Proefexamens, geschiedenis, boeken en gesprekken met AI-personages.',

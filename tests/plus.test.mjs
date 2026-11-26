@@ -38,13 +38,13 @@ test('Config offers seven free account checks in all, a one-time trial, and the 
   assert.deepEqual(r.body.plus,{limit:20,month:200,talk:3,price:'9,99',plans:{A2:{price:'9,99'},B1:{price:'14,99'}}});assert.equal(r.body.limit,7);assert.equal(r.body.period,'once');assert.equal(r.body.freePeriod,'once');
 });
 test('Buying opens Checkout for the monthly price with the user in the subscription',async()=>{
-  const r=res();await plus({method:'POST',headers:H,body:{go:'buy'}},r);
+  const r=res();await plus({method:'POST',headers:H,body:{go:'buy',start:true}},r);
   assert.equal(r.body.url,'https://checkout.stripe.test/1');
   const q=new URLSearchParams(last('checkout/sessions').split(' ').pop());
   assert.equal(q.get('mode'),'subscription');assert.equal(q.get('line_items[0][price]'),'price_1');
   assert.equal(q.get('subscription_data[metadata][uid]'),'u1');assert.equal(q.get('customer_email'),'a@b.nl');
   assert.equal(q.get('success_url'),'https://bittertalen.nl/?plus=ok&plan=A2');
-  const other=res();await plus({method:'POST',headers:{...H,origin:'https://evil.test'},body:{go:'buy'}},other);assert.equal(other.statusCode,403);
+  const other=res();await plus({method:'POST',headers:{...H,origin:'https://evil.test'},body:{go:'buy',start:true}},other);assert.equal(other.statusCode,403);
 });
 test('The webhook refuses a wrong or old signature and keeps the subscription as Stripe has it',async()=>{
   assert.equal((await send('customer.subscription.created','whsec_other')).statusCode,400);
@@ -55,9 +55,9 @@ test('The webhook refuses a wrong or old signature and keeps the subscription as
   assert.equal(db.plus.until,new Date(FUTURE*1000).toISOString());
 });
 test('With Plus, buying again opens the portal; after cancelling, a new Checkout reuses the customer',async()=>{
-  let r=res();await plus({method:'POST',headers:H,body:{go:'buy'}},r);assert.equal(r.body.url,'https://billing.stripe.test/1');
+  let r=res();await plus({method:'POST',headers:H,body:{go:'buy',start:true}},r);assert.equal(r.body.url,'https://billing.stripe.test/1');
   db.subStatus='canceled';await send('customer.subscription.deleted');assert.equal(db.plus.status,'canceled');
-  r=res();await plus({method:'POST',headers:H,body:{go:'buy'}},r);
+  r=res();await plus({method:'POST',headers:H,body:{go:'buy',start:true}},r);
   const q=new URLSearchParams(last('checkout/sessions').split(' ').pop());assert.equal(q.get('customer'),'cus_1');assert.equal(q.get('customer_email'),null);
 });
 test('Deleting the account cancels the subscription first; an event for a deleted account cancels it too',async()=>{
@@ -71,17 +71,17 @@ test('Deleting the account cancels the subscription first; an event for a delete
 
 test('B1 Checkout uses the EUR 14.99 monthly price and rejects client-provided unknown levels',async()=>{
   db.plus=null;db.subStatus='active';db.level='B1';
-  const r=res();await plus({method:'POST',headers:H,body:{go:'buy',level:'B1',price:'price_1',amount:1}},r);
+  const r=res();await plus({method:'POST',headers:H,body:{go:'buy',start:true,level:'B1',price:'price_1',amount:1}},r);
   assert.equal(r.statusCode,200);
   const q=new URLSearchParams(last('checkout/sessions').split(' ').pop());
   assert.equal(q.get('line_items[0][price]'),'price_b1');assert.equal(q.get('subscription_data[metadata][level]'),'B1');
   assert.equal(q.get('subscription_data[trial_period_days]'),null);
-  const n=calls.length,bad=res();await plus({method:'POST',headers:H,body:{go:'buy',level:'FREE'}},bad);
+  const n=calls.length,bad=res();await plus({method:'POST',headers:H,body:{go:'buy',start:true,level:'FREE'}},bad);
   assert.equal(bad.statusCode,400);assert.equal(calls.slice(n).filter(c=>c.includes('checkout/sessions')).length,0);
 });
 test('A2 to B1 opens a Stripe confirmation for the same subscription, without an update or second Checkout',async()=>{
   db.gone=false;db.level='A2';db.subStatus='active';await send('customer.subscription.updated');
-  const n=calls.length,r=res();await plus({method:'POST',headers:H,body:{go:'buy',level:'B1'}},r);
+  const n=calls.length,r=res();await plus({method:'POST',headers:H,body:{go:'buy',start:true,level:'B1'}},r);
   assert.equal(r.statusCode,200);assert.equal(r.body.url,'https://billing.stripe.test/1');
   const q=new URLSearchParams(last('billing_portal/sessions').split(' ').pop());
   assert.equal(q.get('configuration'),'bpc_tiers');assert.equal(q.get('flow_data[type]'),'subscription_update_confirm');
@@ -99,7 +99,7 @@ test('The authenticated entitlement endpoint follows the actual subscribed price
 });
 test('An incorrect configured B1 amount cannot reach Checkout',async()=>{
   db.plus=null;db.priceAmount=999;const n=calls.length,r=res();
-  await plus({method:'POST',headers:H,body:{go:'buy',level:'B1'}},r);
+  await plus({method:'POST',headers:H,body:{go:'buy',start:true,level:'B1'}},r);
   assert.equal(r.statusCode,502);assert.ok(!calls.slice(n).some(c=>c.includes('checkout/sessions')));db.priceAmount=null;
 });
 

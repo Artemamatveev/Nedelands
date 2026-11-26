@@ -16,6 +16,10 @@ globalThis.fetch=async(url,init={})=>{
   const J=(o,s=200)=>new Response(JSON.stringify(o),{status:s,headers:{'content-type':'application/json'}});
   if(url.endsWith('/auth/v1/user'))return J({id:'u1',email:'a@b.nl'});
   if(url.includes('/rest/v1/plus?user_id'))return J(db.plus?[db.plus]:[]);
+  if(url.includes('/rest/v1/exam_pass?user_id')&&url.includes('created_at=gt')){const since=decodeURIComponent(url.match(/created_at=gt\.([^&]+)/)[1]),now=decodeURIComponent(url.match(/until=gt\.([^&]+)/)[1]);
+    return J(db.passes.filter(p=>(p.created_at||'')>since&&p.until>now).map(({session,level,created_at})=>({session,level,created_at})))}
+  if(url.includes('/rest/v1/exam_pass?session=eq.')&&m==='PATCH'){const id=decodeURIComponent(url.split('session=eq.')[1]);const p=db.passes.find(x=>x.session===id);if(p)p.until=JSON.parse(init.body).until;return new Response(null,{status:204})}
+  if(url.endsWith('/rest/v1/withdrawals')&&m==='POST'){(db.withdrawals||=[]).push(JSON.parse(init.body));return new Response(null,{status:201})}
   if(url.includes('/rest/v1/exam_pass?user_id')){const since=decodeURIComponent(url.match(/until=gt\.([^&]+)/)[1]);
     return J(db.passes.filter(p=>p.until>since).sort((a,b)=>b.until.localeCompare(a.until)).map(({session,level,until})=>({session,level,until})))}
   if(url.endsWith('/rest/v1/exam_pass')&&m==='POST'){if(db.gone)return J({code:'23503'},409);const row=JSON.parse(init.body);
@@ -44,14 +48,15 @@ test('Config offers the Examenpas with its fixed prices and length',async()=>{
   assert.deepEqual(r.body.year,{days:365,plans:{A2:{price:'79,99'},B1:{price:'119,99'}}});
 });
 test('Buying a pass opens a one-time Checkout with the consent text and the user in its metadata',async()=>{
-  const r=res();await plus({method:'POST',headers:H,body:{go:'pass',level:'B1'}},r);
+  const r=res();await plus({method:'POST',headers:H,body:{go:'pass',start:true,level:'B1'}},r);
   assert.equal(r.body.url,'https://checkout.stripe.test/pass');
   const q=new URLSearchParams(last('checkout/sessions').split(' ').pop());
   assert.equal(q.get('mode'),'payment');assert.equal(q.get('line_items[0][price]'),'price_pb1');
   assert.equal(q.get('metadata[uid]'),'u1');assert.equal(q.get('metadata[kind]'),'pass');assert.equal(q.get('client_reference_id'),'u1');
-  assert.match(q.get('custom_text[submit][message]'),/herroepingsrecht/);
-  const bad=res();await plus({method:'POST',headers:H,body:{go:'pass',level:'C1'}},bad);assert.equal(bad.statusCode,400);
-  const other=res();await plus({method:'POST',headers:{...H,origin:'https://evil.test'},body:{go:'pass',level:'A2'}},other);assert.equal(other.statusCode,403);
+  assert.match(q.get('custom_text[submit][message]'),/herroepen/);assert.ok(q.get('metadata[start_now]'));
+  const unticked=res();await plus({method:'POST',headers:H,body:{go:'pass',level:'B1'}},unticked);assert.equal(unticked.statusCode,400);assert.equal(unticked.body.error,'start');
+  const bad=res();await plus({method:'POST',headers:H,body:{go:'pass',start:true,level:'C1'}},bad);assert.equal(bad.statusCode,400);
+  const other=res();await plus({method:'POST',headers:{...H,origin:'https://evil.test'},body:{go:'pass',start:true,level:'A2'}},other);assert.equal(other.statusCode,403);
 });
 test('A paid session gives 91 days at its level, once, and a second pass extends a running one',async()=>{
   assert.equal((await send(paid('cs_1','A2'))).statusCode,200);
@@ -102,7 +107,7 @@ test('A school group gives the Plus checks of its level until its end date, unle
 
 test('The Jaarpas: one-time Checkout with kind year, 365 days once paid, shown as a Jaarpas, never confused with an Examenpas',async()=>{
   db.passes=[];
-  const r=res();await plus({method:'POST',headers:H,body:{go:'pass',level:'A2',kind:'year'}},r);
+  const r=res();await plus({method:'POST',headers:H,body:{go:'pass',start:true,level:'A2',kind:'year'}},r);
   const q=new URLSearchParams(last('checkout/sessions').split(' ').pop());
   assert.equal(q.get('mode'),'payment');assert.equal(q.get('line_items[0][price]'),'price_ya2');assert.equal(q.get('metadata[kind]'),'year');
   const year=(id,level,o={})=>paid(id,level,{metadata:{uid:'u1',level,kind:'year'},line_items:{data:[{quantity:1,price:passPrice(level==='B1'?'price_yb1':'price_ya2')}]},...o});
@@ -117,5 +122,18 @@ test('The Jaarpas: one-time Checkout with kind year, 365 days once paid, shown a
   await send(year('cs_y2','A2',{line_items:{data:[{quantity:1,price:passPrice('price_pa2')}]}}));
   await send(paid('cs_y3','A2',{line_items:{data:[{quantity:1,price:passPrice('price_ya2')}]}}));
   assert.equal(db.passes.length,0);
+  db.passes=[];
+});
+test('The withdrawal button ends a pass bought in the last 14 days at once and keeps the statement; an older one stays',async()=>{
+  const now=Date.now();
+  db.passes=[{session:'cs_new',user_id:'u1',level:'A2',until:new Date(now+80*DAY).toISOString(),created_at:new Date(now-2*DAY).toISOString()},
+    {session:'cs_old',user_id:'u1',level:'B1',until:new Date(now+60*DAY).toISOString(),created_at:new Date(now-30*DAY).toISOString()}];
+  db.plus=null;db.withdrawals=[];
+  const r=res();await plus({method:'POST',headers:H,body:{go:'withdraw'}},r);
+  assert.equal(r.statusCode,200);assert.deepEqual(r.body.withdrawn,[{kind:'pass',level:'A2'}]);assert.ok(r.body.at);
+  assert.ok(Date.parse(db.passes[0].until)<=Date.now());assert.ok(Date.parse(db.passes[1].until)>Date.now());
+  assert.equal(db.withdrawals.length,1);assert.equal(db.withdrawals[0].ref,'cs_new');assert.equal(db.withdrawals[0].kind,'pass');
+  const again=res();await plus({method:'POST',headers:H,body:{go:'withdraw'}},again);assert.deepEqual(again.body.withdrawn,[]);
+  const other=res();await plus({method:'POST',headers:{...H,origin:'https://evil.test'},body:{go:'withdraw'}},other);assert.equal(other.statusCode,403);
   db.passes=[];
 });

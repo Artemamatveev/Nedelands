@@ -52,7 +52,9 @@ async function ask({user, method = 'POST', body = {}, query = {}}) {
       makeGroup: async g => { calls.push(['make', g]); return 'ABCDEFGH'; },
       groupList: async () => { calls.push(['list']); return []; },
       teacherOverview: async mail => { calls.push(['teach', mail]); return []; }},
-    './admin.js': {admins: () => ['eigenaar@example.nl']},
+    './admin.js': {admins: () => ['eigenaar@example.nl'],
+      verifiedMail: u => (u && u.email_confirmed_at ? String(u.email || '').toLowerCase() : ''),
+      isOwner: u => !!(u && u.email_confirmed_at && String(u.email || '').toLowerCase() === 'eigenaar@example.nl')},
     './_referral.js': {default: async (req, res) => res.status(200).json({referral: true})},
   };
   const context = vm.createContext({String, Math, parseInt});

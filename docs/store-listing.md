@@ -1,0 +1,55 @@
+# App Store and Google Play: listing, review and what is still open (25 November 2026)
+
+## Listing (ASO)
+
+The home-screen name stays **Bittertalen** (`CFBundleDisplayName`). The store name and subtitle carry the search words,
+as the competitors do ("Inburgering: DUO & NT2 examen", "Swipelijk: Inburgering Exam A2", "Tulp: Inburgering & KNM Prep").
+
+| Field | Dutch (main) | English |
+| --- | --- | --- |
+| Name (30) | Bittertalen: Inburgering A2 KNM | Bittertalen: Dutch exam A2 KNM |
+| Subtitle (30) | Proefexamen NT2 B1 en DUO A2 | Inburgering & NT2 B1 practice |
+| Keywords (100, App Store) | inburgering,inburgeringsexamen,knm,nt2,staatsexamen,b1,a2,nederlands,duo,naturalisatie,examen | inburgering,dutch,exam,knm,nt2,a2,b1,citizenship,netherlands,naturalisation |
+| Short description (80, Play) | Oefen gratis voor inburgering A2, KNM en Staatsexamen B1. AI kijkt je tekst na. | Free practice for the Dutch inburgering exam A2, KNM and NT2 B1, with AI feedback. |
+
+Screenshots (6.9" and 6.5" iPhone, Play phone): a sentence of benefit on each, not a feature name.
+1. "Je tekst nagekeken met de criteria van DUO" (a graded Schrijven task with mistakes and why).
+2. "Elke dag een les tot je examen" (Mijn dag with the countdown).
+3. "Proefexamens met een timer" (Examen tab).
+4. "400+ KNM-vragen met uitleg" (a KNM question after answering).
+5. "Praat met Saskia en anderen" (a conversation with a fix).
+6. "Menu in 8 talen" (Profiel in Arabic).
+
+Never on a screenshot or in the text: a price, an offer, "koop", "abonnement" (Apple 3.1.1 while there is no in-app purchase).
+
+## Review notes (App Store Connect → App Review Information)
+
+- Demo account: make one with Plus via a group (`/admin` → group with one seat), so the reviewer sees grading.
+- "Bittertalen works offline (open it in flight mode after one visit); speech recognition runs on the device
+  (SFSpeechRecognizer via the speech-recognition plugin); a daily reminder is set in Profiel; Sign in with Apple is offered;
+  accounts are deleted in Profiel → Account verwijderen. Before the first text goes to Anthropic the app asks for
+  consent (guideline 5.1.2(i))."
+- Native features to name against 4.2: offline start, on-device speech recognition, local notifications planned per day
+  with the days until the exam, haptics, Sign in with Apple.
+
+## Still open before submitting (needs the owner)
+
+1. **Buying inside the app (Apple 3.1.1 / 3.1.3(b)).** Plus bought on the website unlocks the app, so Apple expects the
+   same subscriptions as in-app purchases. Choose: (a) StoreKit / RevenueCat in-app subscriptions at the Small Business
+   rate (15%), app prices A2 €10,99, B1 €16,99; server webhook that writes the `plus` row; then drop the rule "no prices in
+   the native apps" in CLAUDE.md for the IAP screen only. Or (b) the EU external purchase link entitlement (link to the
+   website, Apple's commission on the link-out). Until one is in place, expect a rejection; argue in Resolution Center only
+   as a last resort.
+2. **Android.** `cd native && npm install && npx cap add android && npx cap sync`, then target SDK 36, permissions
+   `RECORD_AUDIO` and `POST_NOTIFICATIONS`, a monochrome notification icon. A new personal Play account needs a closed test
+   with 12 testers for 14 days in a row: start it as soon as the build runs. Data safety: e-mail, user content (texts and
+   transcripts go to Anthropic and, on Android, speech to Google), app interactions; no ads, no tracking.
+3. **Speech plugin.** `native/package.json` now lists `@capacitor-community/speech-recognition`; run `npm install` and
+   `npx cap sync` in `native/`, check that the plugin version supports Capacitor 8, and test Spreken and Gesprekken on a
+   real iPhone and Android phone (the page falls back to the web API when the plugin is missing).
+4. **Privacy manifest.** `native/ios/App/App/PrivacyInfo.xcprivacy` is in the Xcode project (Copy Bundle Resources);
+   the App Store privacy labels must say the same.
+5. **Account deletion for Google Play** needs a web address too: privacy.html's "Account verwijderen" section or a page
+   that explains Profiel → Account verwijderen and offers hallo@bittertalen.nl.
+6. **Seller details (EU DSA trader status).** The name and address in App Store Connect and Play Console are shown
+   publicly; use the KvK details once registered. An organisation account needs a D-U-N-S number (1–4 weeks).

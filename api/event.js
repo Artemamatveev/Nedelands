@@ -10,7 +10,7 @@ const PARTS = ["lz", "ls", "wr", "sp", "knm", "l1", "lb", "wb", "sb"];
 // The way to paying: plus (the Plus screen opened), buy and pass (Checkout started for a subscription or an Examenpas),
 // paid and stop (back from Stripe, paid or stopped). err: an error on the page; its technical message (m, f, l: message,
 // file and line, never the learner's text) is only written to the server's log, never to the table.
-export const EVENTS = new Set(["open", "new", "home", "begin", "quiz", "test", "day", "ai", "plus", "buy", "pass", "paid", "stop", "err",
+export const EVENTS = new Set(["open", "new", "home", "begin", "quiz", "test", "day", "ai", "plus", "buy", "pass", "paid", "stop", "err", "won", "remind",
   ...PARTS.map(p => "exam_" + p), ...PARTS.map(p => "done_" + p)]);
 const LVLS = new Set(["", "A2", "B1"]), UIS = new Set(["nl", "en", "ar", "tr", "hi", "zh", "es", "ru"]);
 export const eventsOn = () => accounts && process.env.EVENTS !== "0";

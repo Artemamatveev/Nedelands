@@ -31,18 +31,23 @@ export function questions(D = load()) {
 const len = (s) => s.trim().length;
 export const longest = (x) => len(x.right) > Math.max(...x.wrong.map(len));
 export const clearly = (x) => len(x.right) >= MARGIN * Math.max(...x.wrong.map(len)) && len(x.right) - Math.max(...x.wrong.map(len)) >= 8;
+// Absolute words (altijd, nooit, alleen, moet …) are a second give-away: an exam-wise learner drops options with them.
+// absWrong / absRight: the share of wrong and right options with one. Far more in wrong ones than in right ones means
+// "skip the absolute option" works; tests/answer-length.test.mjs reports it (no limit yet: options are recorded audio).
+export const ABS = /\b(altijd|nooit|alleen|nergens|niemand|iedereen|alles|niets|moet|moeten|verplicht|verboden|elke|ieder)\b/i;
 export function report(Q = questions()) {
   const sets = {};
   for (const x of Q) {
-    const s = (sets[x.set] ||= { n: 0, longest: 0, clearly: 0 });
+    const s = (sets[x.set] ||= { n: 0, longest: 0, clearly: 0, absW: 0, absR: 0 });
     s.n++; if (longest(x)) s.longest++; if (clearly(x)) s.clearly++;
+    s.absW += x.wrong.filter((w) => ABS.test(w)).length; if (ABS.test(x.right)) s.absR++;
   }
-  for (const s of Object.values(sets)) s.share = s.longest / s.n;
+  for (const s of Object.values(sets)) { s.share = s.longest / s.n; s.absWrong = s.absW / (2 * s.n); s.absRight = s.absR / s.n; }
   return sets;
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   const Q = questions(), R = report(Q);
-  for (const [k, s] of Object.entries(R)) console.log(`${k.padEnd(20)} ${String(s.n).padStart(4)} questions, right answer longest ${(100 * s.share).toFixed(0)}%, clearly longest ${s.clearly}`);
+  for (const [k, s] of Object.entries(R)) console.log(`${k.padEnd(20)} ${String(s.n).padStart(4)} questions, right answer longest ${(100 * s.share).toFixed(0)}%, clearly longest ${s.clearly}, absolute words: wrong ${(100 * s.absWrong).toFixed(0)}% / right ${(100 * s.absRight).toFixed(0)}%`);
   if (process.argv.includes('--list')) for (const x of Q.filter(clearly)) console.log(`${x.set} ${x.key}: ${x.q}\n  + ${x.right}\n  - ${x.wrong.join('\n  - ')}`);
 }

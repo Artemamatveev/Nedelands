@@ -160,3 +160,13 @@ menu language (`gtURL()`, English for Dutch menus); the reader's "Vertaal de zin
 - **Over Bittertalen**: `over.html` (served as /over, in the sitemap, linked from Profiel above the privacy row):
   what it is, the name, who makes it, how it works, what it is not (not DUO), where everything comes from, contact.
   The maker's own story and photo go there when the user gives them.
+
+## Reminders in the store app (26 November 2026)
+
+`remindPlan()` plans the daily reminder for the next 7 days (ids 1–7) with the days left and today's part, never on a
+finished day and not on an exam day. `examDayPlan()` adds, for every exam date in Profiel, a message at 07:00 that morning
+(ids 20–29): "Succes vandaag!" / "Vandaag is je examen …. Je hebt goed geoefend. Je kunt dit! Succes!". It needs only
+the notification permission, not the daily reminder, and is planned again when a date changes or the app opens.
+
+After the first start test the store app shows Bittie's question "Mag Bittie je meldingen sturen?" (yes: the reminder at 19:00, the time in Profiel). Only after "Ja, dat mag" does iOS/Android show its own permission prompt, so a "no" never
+spends that one-time prompt. Asked once per device (`ww-notif-asked`); Profiel → Herinnering changes it later.
