@@ -4184,23 +4184,20 @@ function remindAskHTML(){
   if(!remindCan())return"";
   return`<section class="list remind-ask" id="rask"><div style="padding:16px;display:flex;gap:14px;align-items:flex-start">
     <img src="/art/bittie-wave-v2.svg" width="64" height="64" alt="" style="flex:none">
-    <div><h3>Zal Bittie je elke dag herinneren?</h3><p>Een kort berichtje op jouw tijd, en op de ochtend van je examen wenst Bittie je succes.</p>
-    <div class="seg" role="group" aria-label="Hoe laat?" style="grid-template-columns:repeat(4,minmax(0,1fr))">${REMH.map(h=>`<button type="button" data-rh="${h}" aria-pressed="${h==="19"}">${h.padStart(2,"0")}:00</button>`).join("")}</div>
-    <div class="two"><button type="button" class="ghost" id="rno">Nee, bedankt</button><button type="button" class="ghost" id="ryes">Ja, herinner me</button></div></div></div></section>`}
+    <div><h3>Mag Bittie je meldingen sturen?</h3><p>Een herinnering voor je les, en op de ochtend van je examen een succeswens.</p>
+    <div class="two"><button type="button" class="ghost" id="rno">Nee, bedankt</button><button type="button" class="ghost" id="ryes">Ja, dat mag</button></div></div></div></section>`}
 function remindAskBind(){
   const box=$("rask");if(!box)return;
-  let h="19";
-  box.querySelectorAll("[data-rh]").forEach(b=>b.onclick=()=>{h=b.dataset.rh;box.querySelectorAll("[data-rh]").forEach(x=>x.setAttribute("aria-pressed",String(x===b)))});
   const say=t=>{box.innerHTML=`<div style="padding:16px"><p role="status">${t}</p></div>`};
-  $("rno").onclick=()=>{lsSet("ww-notif-asked","1");say("Goed. Je kunt herinneringen later aanzetten in Profiel.")};
+  $("rno").onclick=()=>{lsSet("ww-notif-asked","1");say("Goed. Je kunt meldingen later aanzetten in Profiel.")};
   $("ryes").onclick=async()=>{
     lsSet("ww-notif-asked","1");$("ryes").disabled=true;
     try{
       const perm=await Capacitor.Plugins.LocalNotifications.requestPermissions();
       if(perm.display!=="granted"){say("Meldingen staan uit voor Bittertalen. Zet ze aan in Instellingen.");return}
-      lsSet("ww-remind",h);await remindPlan();track("remind");
-      say(`Top! Bittie herinnert je elke dag om ${h.padStart(2,"0")}:00.`);
-    }catch(e){say("Dat lukt nu niet. Je kunt herinneringen later aanzetten in Profiel.")}
+      lsSet("ww-remind","19");await remindPlan();track("remind"); // the reminder at 19:00; Profiel changes the time
+      say("Top! Bittie stuurt je meldingen. De tijd kies je in Profiel.");
+    }catch(e){say("Dat lukt nu niet. Je kunt meldingen later aanzetten in Profiel.")}
   };
 }
 // The morning of every exam day (the dates in Profiel), at 07:00: good luck and "je kunt dit". Planned whenever
@@ -5192,7 +5189,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="3a37cec12b";
+const UIV="9450786fff";
 let uiP=null;
 function uiLoaded(){ // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});
