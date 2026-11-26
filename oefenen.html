@@ -293,7 +293,10 @@ a.it{text-decoration:none} .it.ext::after{content:none}
   transform:translateX(calc(var(--i,0) * 100%));transition:transform 440ms var(--motion-ease),scale 360ms var(--motion-ease),background-color var(--motion-ui) var(--motion-settle)}
 /* on a phone the lens is moved by glide() (Web Animations on the compositor, from wherever it is now), not by a CSS
    transition: a transition restarted from its end on every tap and froze while the new tab was drawn */
-:root:not([data-desktop]) .tabs .lens{transform:none;translate:calc(var(--i,0) * 100%) 0;transition:scale 360ms var(--motion-ease),opacity var(--motion-ui) var(--motion-settle),background-color var(--motion-ui) var(--motion-settle);will-change:transform;backface-visibility:hidden}
+:root:not([data-desktop]) .tabs .lens{transform:translateX(calc(var(--i,0) * 100%));translate:none;transition:scale 360ms var(--motion-ease),opacity var(--motion-ui) var(--motion-settle),background-color var(--motion-ui) var(--motion-settle);will-change:transform;backface-visibility:hidden}
+/* on a phone no backdrop blur under the bar: it is nearly opaque anyway, and WebKit repainted the blur on every
+   scroll frame and during every page change (the "slightly sticky" scrolling); the computer keeps the glass */
+:root:not([data-desktop]) .tabs{-webkit-backdrop-filter:none;backdrop-filter:none;background:color-mix(in srgb,var(--card) 96%,transparent)}
 .tabs.drag .lens{transition:scale 220ms var(--motion-ease),opacity var(--motion-ui) var(--motion-settle);scale:1.03 1.14;opacity:.85}
 .tabs.drag button{color:var(--ink)} .tabs.drag button.on{color:#fff}
 /* scroll down and the bar shrinks to its icons; scroll up and the names come back */
@@ -736,7 +739,7 @@ body.vfull{overflow:hidden}
 :root[dir=rtl] :is(p,h2,h3,b,small,li,.d){unicode-bidi:plaintext}
 :root[dir=rtl] :is(header,#play,#read,[lang=nl],.book,.doc,.sample,.msum,.tl,.bgl,input[type=email]){direction:ltr;text-align:left;--ta:left;--te:right}
 :root[dir=rtl] .tabs .lens{left:auto;right:5px;transform:translateX(calc(var(--i,0) * -100%))}
-:root[dir=rtl]:not([data-desktop]) .tabs .lens{transform:none;translate:calc(var(--i,0) * -100%) 0}
+:root[dir=rtl]:not([data-desktop]) .tabs .lens{transform:translateX(calc(var(--i,0) * -100%));translate:none}
 :root[data-desktop] main{overflow-x:visible}
 :root[data-desktop] header{border-image:none}
 :root[data-desktop] main.big:has(#home:not([hidden])) header{height:360px}
@@ -2556,9 +2559,10 @@ function setTab(t,top=true,moved=false){
   tab=t; document.querySelector("main").classList.toggle("big",t==="vandaag");
   document.querySelectorAll("#home [data-tab]").forEach(e=>{e.hidden=e.dataset.tab!==t});
   const panel=$("home");
+  // restart the page-in animation without reading offsetWidth: that forced a layout of the whole page on every tap,
+  // in the same frame as drawing the new tab (felt as a short hitch of the lens and the page)
   panel.classList.remove("tab-in");
-  void panel.offsetWidth;
-  panel.classList.add("tab-in");
+  requestAnimationFrame(()=>panel.classList.add("tab-in"));
   document.querySelectorAll("#tabs button").forEach(b=>b.toggleAttribute("aria-current",b.dataset.t===t));
   ["sback","vback","lback"].forEach(id=>$(id).innerHTML=backHTML());
   $("tabs").classList.remove("min"); if(top)window.scrollTo(0,0);
@@ -2577,16 +2581,18 @@ var LENS=(()=>{
   const still=()=>matchMedia("(prefers-reduced-motion: reduce)").matches;
   const W=.021; // the spring's speed per millisecond: one tab settles in about 400 ms
   const clamp=x=>Math.max(0,Math.min(N,x));
-  // the place is the translate property, not transform: the stretch (scale) then happens around the lens's own middle
-  // and does not push it sideways (a scale after a transform scales the way it moved too)
-  const tx=x=>`${(clamp(x)*sg()*100).toFixed(3)}% 0px`;
-  const put=x=>{L.style.translate=tx(x)};
+  // the place is a transform, translateX first and the stretch after it, so the stretch happens around the lens's own
+  // middle. A transform, not the translate property: WebKit (the iPhone app) runs transform animations on the
+  // compositor, while the separate translate/scale properties were animated on the main thread and stuttered whenever
+  // the new tab was being drawn
+  const tx=x=>`translateX(${(clamp(x)*sg()*100).toFixed(3)}%)`;
+  const put=x=>{L.style.transform=tx(x)};
   let st=null; // the running glide: {x0, v0, to, anim}
   const pos=(s,t)=>{const e=s.x0-s.to,a=s.v0+W*e;return s.to+(e+a*t)*Math.exp(-W*t)};
   const vel=(s,t)=>{const e=s.x0-s.to,a=s.v0+W*e;return(a-W*(e+a*t))*Math.exp(-W*t)};
   // where the lens is now (in tabs, 0 … 4) and its speed (tabs per ms)
-  const at=()=>{const w=L.offsetWidth;if(!w)return null;const t=getComputedStyle(L).translate,v=parseFloat(t);
-    return !t||t==="none"||isNaN(v)?0:(/%/.test(t.split(" ")[0])?v/100:v/w)*sg()};
+  const at=()=>{const w=L.offsetWidth;if(!w)return null;const t=getComputedStyle(L).transform;
+    if(!t||t==="none")return 0;try{return new DOMMatrixReadOnly(t).m41/w*sg()}catch(_){return 0}};
   function now(){
     if(st&&st.anim.playState!=="finished"){const t=st.anim.currentTime||0;return{x:pos(st,t),v:vel(st,t)}}
     const x=at();return{x:x??TABS.indexOf(tab),v:0};
@@ -2596,16 +2602,17 @@ var LENS=(()=>{
     if(!row()||!L.offsetParent)return;
     const {x,v,flat}=from||now();
     stop();
-    if(still()||Math.abs(to-x)<.002&&Math.abs(v)<.00005){L.style.translate="";return}
+    if(still()||Math.abs(to-x)<.002&&Math.abs(v)<.00005){L.style.transform="";return}
     const s={x0:x,v0:v,to},K=[];let T=0;
     for(;T<1200;T+=16){const p=pos(s,T),q=vel(s,T);K.push([T,p,q]);if(T>0&&Math.abs(p-to)<.0015&&Math.abs(q)<.00004)break}
     K.push([T+16,to,0]);T+=16;
-    const frames=K.map(([t,p,q])=>{const f={offset:t/T,translate:tx(p)};if(!flat){const k=Math.min(.08,Math.abs(q)*4.5);f.scale=`${(1+k).toFixed(4)} ${(1-k/3).toFixed(4)}`}return f});
+    const frames=K.map(([t,p,q])=>{const k=flat?0:Math.min(.08,Math.abs(q)*4.5);
+      return{offset:t/T,transform:tx(p)+(k?` scale(${(1+k).toFixed(4)},${(1-k/3).toFixed(4)})`:" scale(1,1)")}});
     put(to); // the end place is already set underneath, so nothing flashes when the animation ends
     s.anim=L.animate(frames,{duration:T,easing:"linear"});st=s;
     // started now, not when the busy frame with the new tab is finally drawn: otherwise the lens stood still for it
     try{const c=document.timeline?.currentTime;if(c!=null)s.anim.startTime=c}catch(_){}
-    s.anim.onfinish=()=>{if(st===s){st=null;L.style.translate=""}};
+    s.anim.onfinish=()=>{if(st===s){st=null;L.style.transform=""}};
   }
   // Drag the lens along the bar, like on iPhone: it catches up with the finger (no jump when it is picked up), and
   // where you let go is the tab you open; it glides there with the speed it had
@@ -5191,7 +5198,7 @@ const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translatio
 const UI={}, UIR=[];
 const UIV="9450786fff";
 let uiP=null;
-function uiLoaded(){ // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
+function uiLoaded(){if(typeof trMemo!=="undefined")trMemo.clear(); // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});
 }
 function loadUI(){
@@ -5348,7 +5355,11 @@ Object.assign(UI,{
 const uiR=s=>{for(const[r,f]of UIR)if(r.test(s)){const v=s.replace(r,Array.isArray(f)?f[LI]:f);if(v!==s)return v}return null};
 const UIO=new WeakMap(), UIA=new WeakMap();
 const rtlMark=v=>LANG==="ar"?"\u200f"+v:v; // an Arabic line that starts with a Latin word (KNM, Face ID) still runs right to left
-const trS=s=>{const t=s.trim();if(!t)return null;const v=uiT(t)||uiR(t);if(v)return s.replace(t,rtlMark(v));
+// the same strings come back on every redraw: remember each answer (per language), so a redraw doesn't run every
+// text through all the UIR patterns again (that was a noticeable part of a tab change in another language)
+const trMemo=new Map();
+const trS=s=>{const k=LI+"\u0001"+s;if(trMemo.has(k))return trMemo.get(k);const v=trS0(s);if(trMemo.size>8000)trMemo.clear();trMemo.set(k,v);return v};
+const trS0=s=>{const t=s.trim();if(!t)return null;const v=uiT(t)||uiR(t);if(v)return s.replace(t,rtlMark(v));
   if(t.includes(" · ")){const p=t.split(" · "),q=p.map(x=>uiT(x)||uiR(x)||x);if(q.some((x,i)=>x!==p[i]))return s.replace(t,rtlMark(q.join(" · ")))}
   return null};
 const DUTCH="#play,:not(html)[lang=nl],script,style,.doc,.sample,.msum,.bgl"; // never translated, and left to right: lang="nl" marks Dutch content
