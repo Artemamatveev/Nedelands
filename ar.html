@@ -53,10 +53,10 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Bittertalen","url":"https://bittertalen.nl/ar","applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":"ar","educationalLevel":["A2","B1"],"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}
 </script>
-<script defer src="/landing.js?v=launch7"></script>
+<script defer src="/landing.js?v=launch-a2-pa"></script>
 <script defer src="/lib/gsap-3.15.1.min.js"></script>
 <script defer src="/lib/ScrollTrigger-3.15.1.min.js"></script>
-<script defer src="/landing-motion-v3.js?v=extra2"></script>
+<script defer src="/landing-motion-v3.js?v=hero-still"></script>
 <script defer src="/pa-v1.js"></script>
 </head>
 <body>
@@ -87,9 +87,11 @@
       <h1 id="intro" data-t="Word thuis in Nederland">اشعر بأنك في بيتك في هولندا</h1>
       <p class="lead" data-t="Oefen gratis voor je inburgeringsexamen A2 en het Staatsexamen NT2 B1. AI kijkt je schrijven en spreken na met de criteria van DUO, en met geschiedenis, verhalen en oefengesprekken leer je het land kennen.">تدرّب مجانًا لامتحان الاندماج A2 وامتحان Staatsexamen NT2 B1. يصحّح الذكاء الاصطناعي كتابتك وكلامك وفق معايير DUO، ومع التاريخ والقصص ومحادثات التدريب تتعرّف على البلد.</p>
       <div class="download-actions">
-        <a class="button primary" id="hero-start" href="/oefenen?open=today" data-t="Begin gratis">ابدأ مجانًا</a>
+        <a class="button primary" id="hero-start" href="/oefenen?open=a2day" data-t="Oefen op A2">تدرّب على A2</a>
+        <a class="button outline" href="/oefenen?open=b1" data-t="Oefen op B1">تدرّب على B1</a>
         <a class="button apple-download" id="download-app" href="#install-app"><span data-t="Installeer de app">ثبّت التطبيق</span></a>
       </div>
+      <p><a href="/oefenen?open=writing" data-t="Oefen met Schrijven A2">تدرّب على الكتابة A2</a></p>
       <p class="hero-note" data-t="Gratis en zonder account te proberen, ook met AI-nakijken.">جرّبه مجانًا وبدون حساب، مع التصحيح بالذكاء الاصطناعي أيضًا.</p>
     </div>
     <figure class="hero-art">
@@ -115,8 +117,70 @@
     <li><b dir="ltr">30+</b><span data-t="gesprekken om hardop te oefenen">محادثة للتدرّب بصوت عالٍ</span></li>
   </ul>
 
+  <section id="niveaus" class="block paper">
+    <h2 data-t="Waar oefen je voor?">لأي امتحان تستعد؟</h2>
+    <div class="choices">
+      <a class="choice" href="/oefenen?open=a2"><span class="lt" aria-hidden="true">A</span><span class="tx"><b><span data-t="Inburgeringsexamen">امتحان الاندماج</span> <small>A2</small></b><span class="d" data-t="Oefen met Nederlands uit het dagelijks leven: lezen, luisteren, schrijven en spreken. Oefen ook Kennis van de Nederlandse Maatschappij (KNM).">تدرّب على الهولندية في الحياة اليومية: القراءة والاستماع والكتابة والتحدث. وتدرّب أيضًا على معرفة المجتمع الهولندي (KNM).</span></span><span class="go" data-t="Oefen op A2">تدرّب على A2</span></a>
+      <a class="choice" href="/oefenen?open=b1"><span class="lt" aria-hidden="true">B</span><span class="tx"><b><span data-t="Staatsexamen NT2 · Programma I">امتحان الدولة NT2 · البرنامج الأول</span> <small>B1</small></b><span class="d" data-t="Bereid je voor op lezen, luisteren, schrijven en spreken op B1, met langere teksten en opdrachten over werk, studie en het dagelijks leven.">استعد للقراءة والاستماع والكتابة والتحدث في مستوى B1 مع نصوص أطول ومهام عن العمل والدراسة والحياة اليومية.</span></span><span class="go" data-t="Oefen op B1">تدرّب على B1</span></a>
+    </div>
+    <p class="note" data-t="Je kunt je niveau later veranderen in je profiel.">يمكنك تغيير مستواك لاحقًا في ملفك الشخصي.</p>
+  </section>
+
+  <section id="probeer" class="block paper">
+    <h2 data-t="Probeer het zelf">جرّب بنفسك</h2>
+    <p class="note" data-t="Een echte KNM-vraag, zoals in de app. Kies een antwoord.">سؤال KNM حقيقي كما في التطبيق. اختر إجابة.</p>
+    <div class="quiz" lang="nl" dir="ltr">
+      <p class="qq">Je verhuist. Waar geef je je nieuwe adres door?</p>
+      <div class="choices" role="group" aria-label="Antwoorden">
+        <button type="button" class="choice" data-ok="0"><span class="lt" aria-hidden="true">A</span><span class="tx">Bij de woningcorporatie</span></button>
+        <button type="button" class="choice" data-ok="1"><span class="lt" aria-hidden="true">B</span><span class="tx">Bij de gemeente</span></button>
+        <button type="button" class="choice" data-ok="0"><span class="lt" aria-hidden="true">C</span><span class="tx">Bij de Belastingdienst</span></button>
+      </div>
+      <p class="qfb" id="qfb" role="status" hidden></p>
+    </div>
+    <a class="button primary" id="qmore" href="/oefenen?open=today" hidden data-t="Begin gratis">ابدأ مجانًا</a>
+  </section>
+
+
+  <section id="voorbeeld" class="block paper">
+    <h2 data-t="Zo wordt je tekst nagekeken">هكذا يصحّح Bittertalen نصك</h2>
+    <p class="note" data-t="Feedback op je tekst: punten per onderdeel en je fouten in je eigen tekst.">تصحيح لنصك: نقاط لكل معيار وأخطاؤك مُعلَّمة في نصك.</p>
+    <div class="specimen" lang="nl" dir="ltr">
+      <p class="task">Je gaat een week op vakantie. Schrijf een briefje aan je buurvrouw. Vraag of zij je planten water wil geven en schrijf waar de sleutel ligt.</p>
+      <div class="sp-grid">
+        <div>
+          <div class="own">Beste Anja,<br><mark>Volgende week ik ga<sup>1</sup></mark> op vakantie naar Turkije. Wil jij mijn planten water <mark>geeven<sup>2</sup></mark>? <mark>De planten staat<sup>3</sup></mark> in de keuken. De sleutel <mark>ligd<sup>4</sup></mark> onder de mat bij de achterdeur. <mark>Zaterdag ik kom terug<sup>5</sup></mark>.<br>Heel erg bedankt!<br>Groeten,<br>Samira</div>
+          <ol class="fixes">
+            <li><s>Volgende week ik ga</s> → <b>Volgende week ga ik</b></li>
+            <li><s>geeven</s> → <b>geven</b></li>
+            <li><s>De planten staat</s> → <b>De planten staan</b></li>
+            <li><s>ligd</s> → <b>ligt</b></li>
+            <li><s>Zaterdag ik kom terug</s> → <b>Zaterdag kom ik terug</b></li>
+          </ol>
+        </div>
+        <div>
+          <p class="verdict"><b>Voldoende</b> 9 van de 10 punten · voldoende vanaf 7</p>
+          <ul class="ck">
+            <li class="g"><i aria-hidden="true">✓</i><span><b>Heb je geschreven wat de opdracht vraagt?</b>Ja · 3 van 3 punten</span></li>
+            <li class="g"><i aria-hidden="true">✓</i><span><b>Kies je de goede woorden?</b>Ja · 2 van 2 punten</span></li>
+            <li class="m"><i aria-hidden="true">!</i><span><b>Zijn je zinnen goed gebouwd?</b>1 van 2 punten · Let op de woordvolgorde en het meervoud.</span></li>
+            <li class="g"><i aria-hidden="true">✓</i><span><b>Is je spelling goed?</b>2 van 2 punten · De twee spelfouten maken je brief niet moeilijker te begrijpen.</span></li>
+            <li class="g"><i aria-hidden="true">✓</i><span><b>Is het één duidelijk geheel?</b>Ja · 1 van 1 punt</span></li>
+          </ul>
+        </div>
+      </div>
+      <div lang="nl" dir="ltr">
+        <p><b>Nieuwe situatie</b> · Schrijf aan een collega dat je morgen om negen uur begint. Begin met «Morgen».</p>
+        <details><summary>Bekijk een goed antwoord</summary><p>Morgen begin ik om negen uur.</p></details>
+      </div>
+    </div>
+    <p class="note" data-t="Voorbeeld: de tekst en de punten zijn verzonnen.">مثال: النص والنقاط من تأليفنا.</p>
+    <p><a class="button primary" href="/oefenen?open=writing" data-t="Oefen met Schrijven A2">تدرّب على الكتابة A2</a></p>
+    <p class="try-free" id="try-free" hidden></p>
+    <p class="note"><a href="/nakijken" data-t="Zo kijkt Bittertalen na →">كيف يصحّح Bittertalen ←</a></p>
+  </section>
+
   <section id="oefenvormen" class="block paper">
-    <p class="qnum" data-t="Vraag 1">السؤال 1</p>
     <h2 data-t="Oefen voor je examen">تدرّب لامتحانك</h2>
     <ul class="ways feature-grid" role="list">
       <li><details name="learning-feature"><summary><span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18m-13 5 3 3 5-5"/></svg></span><h3 data-t="Een les per dag">درس كل يوم</h3></summary><p data-t="Kies 10, 20 of 40 minuten. Bittertalen stelt je les samen en geeft extra aandacht aan wat je lastig vindt.">اختر 10 أو 20 أو 40 دقيقة. يعدّ Bittertalen درسًا يركّز على ما تجده صعبًا.</p></details></li>
@@ -128,7 +192,6 @@
 
   <!-- Dutch beyond the exam: four blocks, each with a piece of the app itself (the Dutch stays Dutch), opening that screen -->
   <section id="ontdek" class="block paper">
-    <p class="qnum" data-t="Vraag 2">السؤال 2</p>
     <h2 data-t="Leer het land kennen en durf te spreken">تعرّف على البلد وتشجّع على الكلام</h2>
     <ul class="extras" role="list">
       <li class="extra">
@@ -172,67 +235,6 @@
   </section>
 
   <!-- The homepage asks like the exam form ("Examenblad", the app's style): lettered answers in square boxes -->
-  <section id="niveaus" class="block paper">
-    <p class="qnum" data-t="Vraag 3">السؤال 3</p>
-    <h2 data-t="Waar oefen je voor?">لأي امتحان تستعد؟</h2>
-    <div class="choices">
-      <a class="choice" href="/oefenen?open=a2"><span class="lt" aria-hidden="true">A</span><span class="tx"><b><span data-t="Inburgeringsexamen">امتحان الاندماج</span> <small>A2</small></b><span class="d" data-t="Oefen met Nederlands uit het dagelijks leven: lezen, luisteren, schrijven en spreken. Oefen ook Kennis van de Nederlandse Maatschappij (KNM).">تدرّب على الهولندية في الحياة اليومية: القراءة والاستماع والكتابة والتحدث. وتدرّب أيضًا على معرفة المجتمع الهولندي (KNM).</span></span><span class="go" data-t="Oefen op A2">تدرّب على A2</span></a>
-      <a class="choice" href="/oefenen?open=b1"><span class="lt" aria-hidden="true">B</span><span class="tx"><b><span data-t="Staatsexamen NT2 · Programma I">امتحان الدولة NT2 · البرنامج الأول</span> <small>B1</small></b><span class="d" data-t="Bereid je voor op lezen, luisteren, schrijven en spreken op B1, met langere teksten en opdrachten over werk, studie en het dagelijks leven.">استعد للقراءة والاستماع والكتابة والتحدث في مستوى B1 مع نصوص أطول ومهام عن العمل والدراسة والحياة اليومية.</span></span><span class="go" data-t="Oefen op B1">تدرّب على B1</span></a>
-    </div>
-    <p class="note" data-t="Je kunt je niveau later veranderen in je profiel.">يمكنك تغيير مستواك لاحقًا في ملفك الشخصي.</p>
-  </section>
-
-  <section id="probeer" class="block paper">
-    <p class="qnum" data-t="Vraag 4">السؤال 4</p>
-    <h2 data-t="Probeer het zelf">جرّب بنفسك</h2>
-    <p class="note" data-t="Een echte KNM-vraag, zoals in de app. Kies een antwoord.">سؤال KNM حقيقي كما في التطبيق. اختر إجابة.</p>
-    <div class="quiz" lang="nl" dir="ltr">
-      <p class="qq">Je verhuist. Waar geef je je nieuwe adres door?</p>
-      <div class="choices" role="group" aria-label="Antwoorden">
-        <button type="button" class="choice" data-ok="0"><span class="lt" aria-hidden="true">A</span><span class="tx">Bij de woningcorporatie</span></button>
-        <button type="button" class="choice" data-ok="1"><span class="lt" aria-hidden="true">B</span><span class="tx">Bij de gemeente</span></button>
-        <button type="button" class="choice" data-ok="0"><span class="lt" aria-hidden="true">C</span><span class="tx">Bij de Belastingdienst</span></button>
-      </div>
-      <p class="qfb" id="qfb" role="status" hidden></p>
-    </div>
-    <a class="button primary" id="qmore" href="/oefenen?open=today" hidden data-t="Begin gratis">ابدأ مجانًا</a>
-  </section>
-
-
-  <section id="voorbeeld" class="block paper">
-    <p class="qnum" data-t="Vraag 5">السؤال 5</p>
-    <h2 data-t="Zo wordt je tekst nagekeken">هكذا يصحّح Bittertalen نصك</h2>
-    <p class="note" data-t="Feedback op je tekst: punten per onderdeel en je fouten in je eigen tekst.">تصحيح لنصك: نقاط لكل معيار وأخطاؤك مُعلَّمة في نصك.</p>
-    <div class="specimen" lang="nl" dir="ltr">
-      <p class="task">Je gaat een week op vakantie. Schrijf een briefje aan je buurvrouw. Vraag of zij je planten water wil geven en schrijf waar de sleutel ligt.</p>
-      <div class="sp-grid">
-        <div>
-          <div class="own">Beste Anja,<br><mark>volgende week ik ga<sup>1</sup></mark> op vakantie naar Turkije. Wil jij mijn planten water <mark>geeven<sup>2</sup></mark>? <mark>De planten staat<sup>3</sup></mark> in de keuken. De sleutel <mark>ligd<sup>4</sup></mark> onder de mat bij de achterdeur. <mark>Zaterdag ik kom terug<sup>5</sup></mark>.<br>Heel erg bedankt!<br>Groeten,<br>Samira</div>
-          <ol class="fixes">
-            <li><s>volgende week ik ga</s> → <b>volgende week ga ik</b></li>
-            <li><s>geeven</s> → <b>geven</b></li>
-            <li><s>De planten staat</s> → <b>De planten staan</b></li>
-            <li><s>ligd</s> → <b>ligt</b></li>
-            <li><s>Zaterdag ik kom terug</s> → <b>Zaterdag kom ik terug</b></li>
-          </ol>
-        </div>
-        <div>
-          <p class="verdict"><b>Voldoende</b> 9 van de 10 punten · voldoende vanaf 7</p>
-          <ul class="ck">
-            <li class="g"><i aria-hidden="true">✓</i><span><b>Heb je geschreven wat de opdracht vraagt?</b>Ja · 3 van 3 punten</span></li>
-            <li class="g"><i aria-hidden="true">✓</i><span><b>Kies je de goede woorden?</b>Ja · 2 van 2 punten</span></li>
-            <li class="m"><i aria-hidden="true">!</i><span><b>Zijn je zinnen goed gebouwd?</b>Bijna · 1 van 2 punten</span></li>
-            <li class="g"><i aria-hidden="true">✓</i><span><b>Is je spelling goed?</b>Ja · 2 van 2 punten</span></li>
-            <li class="g"><i aria-hidden="true">✓</i><span><b>Is het één duidelijk geheel?</b>Ja · 1 van 1 punt</span></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <p class="note" data-t="Voorbeeld: de tekst en de punten zijn verzonnen.">مثال: النص والنقاط من تأليفنا.</p>
-    <p class="try-free" id="try-free" hidden></p>
-    <p class="note"><a href="/nakijken" data-t="Zo kijkt Bittertalen na →">كيف يصحّح Bittertalen ←</a></p>
-  </section>
-
   <section id="prijzen" class="block">
     <h2 data-t="Wat kost het?">كم التكلفة؟</h2>
     <div class="grid three pricing">
@@ -253,20 +255,21 @@
         <p class="price" id="plus-price"><bdi>€ 9,99</bdi> <small data-t="per maand">شهريًا</small></p>
         <ul>
           <li id="plus-checks" data-t="Tot 200 nakijkbeurten per maand voor je teksten en gesproken antwoorden">حتى 200 تصحيح شهريًا لنصوصك وإجاباتك الشفهية</li>
-          <li data-t="Uitgebreide feedback van een sterker AI-model, ook op je proefexamens.">ملاحظات مفصّلة من نموذج ذكاء اصطناعي أقوى، وأيضًا على امتحاناتك التجريبية.</li>
+          <li data-t="AI-feedback op Schrijven en Spreken A2, ook bij proefexamens.">ملاحظات بالذكاء الاصطناعي على الكتابة والتحدث A2، بما في ذلك الامتحانات التجريبية.</li>
+          <li data-t="Handig voor één of twee maanden voorbereiding.">مناسب للتحضير لمدة شهر أو شهرين.</li>
           <li data-t="Elke maand opzegbaar">يمكن الإلغاء كل شهر</li>
         </ul>
-        <a class="button outline" href="/oefenen?open=plus" id="plus-link" data-t="Kies Plus A2">اختر Plus A2</a>
+        <a class="button outline" href="/oefenen?open=plus&amp;choice=plus-a2" id="plus-link" data-t="Kies Plus A2">اختر Plus A2</a>
       </article>
       <article class="card plus" id="plus-b1-card">
         <h3>Bittertalen Plus B1</h3>
         <p class="price" id="plus-b1-price"><bdi>€ 14,99</bdi> <small data-t="per maand">شهريًا</small></p>
         <ul>
           <li id="plus-b1-checks" data-t="Tot 200 nakijkbeurten per maand voor je teksten en gesproken antwoorden">حتى 200 تصحيح شهريًا لنصوصك وإجاباتك الشفهية</li>
-          <li data-t="Ook Schrijven en Spreken B1, met A2 erbij.">يشمل أيضًا الكتابة والتحدث لمستوى B1، مع A2.</li>
+          <li data-t="AI-feedback op Schrijven en Spreken B1 én A2 met één tegoed.">ملاحظات بالذكاء الاصطناعي على الكتابة والتحدث في B1 وA2 برصيد مشترك.</li>
           <li data-t="Elke maand opzegbaar">يمكن الإلغاء كل شهر</li>
         </ul>
-        <a class="button outline" href="/oefenen?open=plus" data-t="Kies Plus B1">اختر Plus B1</a>
+        <a class="button outline" href="/oefenen?open=plus&amp;choice=plus-b1" data-t="Kies Plus B1">اختر Plus B1</a>
       </article>
       <article class="card plus" id="pass-card">
         <h3 data-t="Examenpas">تصريح الامتحان</h3>
@@ -274,21 +277,25 @@
         <ul>
           <li data-t="Eén keer betalen, geen abonnement.">ادفع مرة واحدة، دون اشتراك.</li>
           <li id="pass-weeks" data-t="17 weken geldig vanaf je betaling">صالح لمدة 17 أسبوعًا من الدفع</li>
-          <li data-t="A2 of B1, met dezelfde nakijkbeurten als Plus.">A2 أو B1، مع التصحيحات نفسها كما في Plus.</li>
+          <li data-t="Eén tegoed voor de hele periode. B1 is inclusief A2.">رصيد واحد للفترة كلها. تشمل B1 مستوى A2.</li>
+          <li id="pass-total" hidden></li>
+          <li data-t="Handig als je examendatum vaststaat.">مناسب إذا كان موعد امتحانك محددًا.</li>
         </ul>
-        <a class="button outline" href="/oefenen?open=plus" data-t="Kies de Examenpas">اختر تصريح الامتحان</a>
+        <a class="button outline" href="/oefenen?open=plus&amp;choice=exam" data-t="Kies de Examenpas">اختر تصريح الامتحان</a>
       </article>
       <article class="card plus" id="year-card">
         <h3 data-t="Jaarpas">تصريح السنة</h3>
         <p class="price" id="year-price"><bdi>€ 79,99</bdi> <small>A2</small><br><bdi>€ 119,99</bdi> <small>B1</small></p>
         <ul>
-          <li data-t="Een jaar Plus voor één betaling.">سنة من Plus مقابل دفعة واحدة.</li>
+          <li data-t="Een jaar AI-feedback voor één betaling. B1 is inclusief A2.">عام من ملاحظات الذكاء الاصطناعي بدفعة واحدة. تشمل B1 مستوى A2.</li>
           <li data-t="Wordt niet automatisch verlengd.">لا يتجدد تلقائيًا.</li>
-          <li data-t="A2 of B1, met dezelfde nakijkbeurten als Plus.">A2 أو B1، مع التصحيحات نفسها كما في Plus.</li>
+          <li id="year-checks" hidden></li>
+          <li data-t="Voordeliger vanaf negen maanden Plus.">أوفر من تسعة أقساط شهرية أو أكثر من Plus.</li>
         </ul>
-        <a class="button outline" href="/oefenen?open=plus" data-t="Kies de Jaarpas">اختر تصريح السنة</a>
+        <a class="button outline" href="/oefenen?open=plus&amp;choice=year" data-t="Kies de Jaarpas">اختر تصريح السنة</a>
       </article>
     </div>
+    <p class="note" data-t="Losse opdracht: meestal 1 beurt. Proefexamen Schrijven: 2 op A2 of 4 op B1. Proefexamen Spreken: 6.">المهمة الواحدة: عادةً تصحيح واحد. امتحان الكتابة التجريبي: 2‏ لـ A2 أو 4 لـ B1. امتحان التحدث التجريبي: 6.</p>
     <p class="guarantee" data-t="Niet tevreden? Binnen 14 dagen na je eerste betaling krijg je je geld terug.">غير راضٍ؟ استرد مالك خلال 14 يومًا من أول دفعة.</p>
   </section>
 

@@ -33,8 +33,8 @@ export function pages(D = data()) {
   const ls = D.LS.slice(0, 5).map((r) => ({ q: r[1], right: r[2], wrong: [r[3], r[4]], say: r[0] }));
   const reading = (T) => T.map((r) => `<section class="tekst"><div class="doc">${para(r[0])}</div><ol class="qs">${r[1].map((x, i) => mc({ q: x[0], right: x[1], wrong: [x[2], x[3]] }, i)).join('')}</ol></section>`).join('');
   const listen = ls.map((x, i) => `<li class="q"><details class="say"><summary>Lees wat je hoort</summary><p>${esc(typeof x.say === 'string' ? x.say : '')}</p></details><p class="qq">${esc(x.q)}</p><ol class="opts" type="A">${order(x, i).map((o) => `<li>${esc(o)}</li>`).join('')}</ol><details><summary>Bekijk het antwoord</summary><p><b>${esc(x.right)}</b></p></details></li>`).join('');
-  const writing = D.WR.slice(0, 4).map((r) => `<li class="q"><p class="qq">${esc(r[0])}</p><details><summary>Bekijk een voorbeeldantwoord</summary><div class="doc">${para(r[1])}</div></details></li>`).join('');
-  const speaking = D.SP.slice(0, 6).map((r) => `<li class="q"><p class="qq">${esc(r[0])}</p><details><summary>Bekijk een voorbeeldantwoord</summary><p>${esc(r[2])}</p></details></li>`).join('');
+  const writing = D.WR.slice(0, 4).map((r, i) => `<li class="q"><p class="qq">${esc(r[0])}</p>${i===0?`<ul><li>Vraag of je buurvrouw voor de planten kan zorgen.</li><li>Schrijf waar ze de sleutel vindt.</li></ul>`:""}<details><summary>Bekijk een voorbeeldantwoord</summary><div class="doc">${para(r[1])}</div></details>${i===0?`<p><a class="go" href="/oefenen?open=writing">Laat je eigen briefje nakijken</a></p>`:""}</li>`).join('');
+  const speaking = D.SP.slice(0, 6).map((r, i) => `<li class="q"><p class="qq">${esc(r[0])}</p>${r[1]?`<p>${esc(r[1])}</p>`:""}${i===0?"<p>Zeg wat je gisteren deed. Vertel daarna nog één ding dat je deed.</p>":""}<details><summary>Bekijk een voorbeeldantwoord</summary><p>${esc(r[2])}</p></details>${i===0?`<p><a class="go" href="/oefenen?open=speaking">Spreek je antwoord in</a></p>`:""}</li>`).join('');
   return [
     { slug: 'knm-oefenen', open: 'a2', title: 'KNM oefenen: gratis oefenvragen Kennis van de Nederlandse Maatschappij | Bittertalen',
       desc: 'Oefen gratis voor het KNM-examen van de inburgering: echte oefenvragen over de 8 thema’s, met uitleg. Meer dan 400 KNM-vragen in de app.',
@@ -48,11 +48,11 @@ export function pages(D = data()) {
       desc: 'Gratis oefenen voor Luisteren A2: korte gesprekken en berichten met vragen, zoals op het inburgeringsexamen.',
       h1: 'Luisteren A2 oefenen', lead: 'Bij Luisteren A2 hoor je korte gesprekken en berichten en beantwoord je een vraag. In de app hoor je de fragmenten; hier kun je ze lezen.',
       body: `<ol class="qs">${listen}</ol>`, more: 'In de app luister je naar alle fragmenten en doe je proefexamens Luisteren.' },
-    { slug: 'a2-schrijven-oefenen', open: 'sample', title: 'Schrijven A2 oefenen: opdrachten met voorbeeldantwoord en AI-feedback | Bittertalen',
+    { slug: 'a2-schrijven-oefenen', open: 'writing', title: 'Schrijven A2 oefenen: opdrachten met voorbeeldantwoord en AI-feedback | Bittertalen',
       desc: 'Oefen Schrijven A2 voor het inburgeringsexamen: echte schrijfopdrachten met een voorbeeldantwoord. In de app kijkt AI je tekst na met de criteria van DUO.',
       h1: 'Schrijven A2 oefenen', lead: 'Bij Schrijven A2 schrijf je korte berichten en e-mails en vul je een formulier in. Je moet alle punten van de opdracht noemen, in begrijpelijke zinnen. Op het echte examen schrijf je met de hand. Probeer eerst zelf een antwoord, open dan het voorbeeld.',
       body: `<ol class="qs">${writing}</ol>`, more: 'In de app kijkt AI je tekst na met de criteria van DUO (inhoud, woorden, grammatica, spelling, samenhang) en zie je je fouten met uitleg. Twee keer gratis, zonder account.' },
-    { slug: 'a2-spreken-oefenen', open: 'a2', title: 'Spreken A2 oefenen voor het inburgeringsexamen | Bittertalen',
+    { slug: 'a2-spreken-oefenen', open: 'speaking', title: 'Spreken A2 oefenen voor het inburgeringsexamen | Bittertalen',
       desc: 'Oefen Spreken A2: echte vragen zoals op het inburgeringsexamen, met voorbeeldantwoorden. In de app spreek je je antwoord in en krijg je feedback.',
       h1: 'Spreken A2 oefenen', lead: 'Bij Spreken A2 beantwoord je vragen over jezelf en over foto’s. Een goed antwoord is twee of drie zinnen, met een reden als dat gevraagd wordt. Zeg je antwoord hardop, open dan het voorbeeld.',
       body: `<ol class="qs">${speaking}</ol>`, more: 'In de app spreek je je antwoord in, en AI zegt wat goed is en wat beter kan. Uitspraak en vloeiendheid beoordeelt de app niet: oefen die ook met mensen.' },

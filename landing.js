@@ -27,6 +27,16 @@ const copy = {
   "Open deze website in Chrome. Tik op het menu ⋮ en kies App installeren of Toevoegen aan startscherm.": ["Open this website in Chrome. Tap the ⋮ menu and choose Install app or Add to home screen.", "افتح هذا الموقع في Chrome. اضغط على القائمة ⋮ واختر تثبيت التطبيق أو الإضافة إلى الشاشة الرئيسية.", "Bu siteyi Chrome’da aç. ⋮ menüsüne dokun ve Uygulamayı yükle veya Ana ekrana ekle’yi seç.", "इस वेबसाइट को Chrome में खोलें। ⋮ मेनू में ऐप इंस्टॉल करें या होम स्क्रीन पर जोड़ें चुनें।", "在 Chrome 中打开此网站。轻点 ⋮ 菜单，选择“安装应用”或“添加到主屏幕”。", "Abre este sitio en Chrome. Toca el menú ⋮ y elige Instalar aplicación o Añadir a pantalla de inicio.", "Откройте этот сайт в Chrome. В меню ⋮ выберите «Установить приложение» или «Добавить на главный экран».", "Відкрийте цей сайт у Chrome. У меню ⋮ виберіть «Установити застосунок» або «Додати на головний екран»."],
   "Computer": ["Computer", "الكمبيوتر", "Bilgisayar", "कंप्यूटर", "电脑", "Ordenador", "Компьютер", "Комп'ютер"],
   "Open deze website in Chrome of Edge. Klik op het installatiepictogram in de adresbalk of kies Deze pagina als app installeren in het browsermenu.": ["Open this website in Chrome or Edge. Click the install icon in the address bar or choose Install this page as an app in the browser menu.", "افتح هذا الموقع في Chrome أو Edge. انقر على رمز التثبيت في شريط العنوان أو اختر تثبيت هذه الصفحة كتطبيق من قائمة المتصفح.", "Bu siteyi Chrome veya Edge’de aç. Adres çubuğundaki yükleme simgesine tıkla veya tarayıcı menüsünden Bu sayfayı uygulama olarak yükle’yi seç.", "इस वेबसाइट को Chrome या Edge में खोलें। पता बार में इंस्टॉल आइकन पर क्लिक करें या ब्राउज़र मेनू में इस पेज को ऐप के रूप में इंस्टॉल करें चुनें।", "在 Chrome 或 Edge 中打开此网站。点击地址栏中的安装图标，或在浏览器菜单中选择“将此页面安装为应用”。", "Abre este sitio en Chrome o Edge. Haz clic en el icono de instalación de la barra de direcciones o elige Instalar esta página como una aplicación en el menú del navegador.", "Откройте этот сайт в Chrome или Edge. Нажмите значок установки в адресной строке или выберите «Установить эту страницу как приложение» в меню браузера.", "Відкрийте цей сайт у Chrome або Edge. Натисніть значок установлення в адресному рядку або виберіть «Установити цю сторінку як застосунок» у меню браузера."],
+  "Handig als je examendatum vaststaat.": ["Useful when you know your exam date.", "مناسب إذا كان موعد امتحانك محددًا.", "Sınav tarihin belliyse kullanışlı.", "अगर परीक्षा की तारीख तय है तो सुविधाजनक।", "适合已确定考试日期的考生。", "Práctico si ya sabes la fecha del examen.", "Подходит, если дата экзамена уже известна.", "Зручно, якщо дата іспиту вже відома."],
+  "Voordeliger vanaf negen maanden Plus.": ["Cheaper than nine or more monthly Plus payments.", "أوفر من تسعة أقساط شهرية أو أكثر من Plus.", "Dokuz ay ve üzeri Plus ödemesinden daha uygun.", "Plus के नौ या अधिक मासिक भुगतानों से सस्ता।", "比按月支付九个月及以上的 Plus 更便宜。", "Más económico que nueve o más mensualidades de Plus.", "Дешевле девяти и более месячных платежей Plus.", "Вигідніше за дев’ять або більше місяців підписки Plus."],
+  "AI-feedback op Schrijven en Spreken A2, ook bij proefexamens.": ["AI feedback for A2 writing and speaking, including mock exams.", "ملاحظات بالذكاء الاصطناعي على الكتابة والتحدث A2، بما في ذلك الامتحانات التجريبية.", "Deneme sınavları dahil A2 yazma ve konuşma için yapay zekâ geri bildirimi.", "अभ्यास परीक्षाओं सहित A2 लेखन और बोलने पर AI फ़ीडबैक।", "AI 批改 A2 写作和口语，包括模拟考试。", "Comentarios de IA para escritura y expresión oral A2, incluidos los simulacros.", "ИИ проверяет письмо и устную речь A2, в том числе на пробных экзаменах.", "Відгуки ШІ щодо письма й говоріння на рівні A2, зокрема на пробних іспитах."],
+  "Handig voor één of twee maanden voorbereiding.": ["Useful for one or two months of preparation.", "مناسب للتحضير لمدة شهر أو شهرين.", "Bir veya iki aylık hazırlık için uygun.", "एक या दो महीने की तैयारी के लिए सुविधाजनक।", "适合一到两个月的备考。", "Práctico para uno o dos meses de preparación.", "Подходит для одного-двух месяцев подготовки.", "Зручно, якщо маєте один або два місяці на підготовку."],
+  "AI-feedback op Schrijven en Spreken B1 én A2 met één tegoed.": ["AI feedback for writing and speaking at B1 and A2, with one shared allowance.", "ملاحظات بالذكاء الاصطناعي على الكتابة والتحدث في B1 وA2 برصيد مشترك.", "B1 ve A2 yazma ve konuşma için ortak hakla yapay zekâ geri bildirimi.", "एक साझा कोटे से B1 और A2 लेखन और बोलने पर AI फ़ीडबैक।", "AI 批改 B1 和 A2 写作及口语，共用额度。", "Comentarios de IA para escritura y expresión oral B1 y A2 con un saldo compartido.", "ИИ проверяет письмо и устную речь на B1 и A2. Лимит общий.", "Відгуки ШІ щодо письма й говоріння на рівнях B1 та A2 зі спільним лімітом."],
+  "Eén tegoed voor de hele periode. B1 is inclusief A2.": ["One allowance for the whole period. B1 includes A2.", "رصيد واحد للفترة كلها. تشمل B1 مستوى A2.", "Tüm dönem için tek hak. B1, A2'yi de içerir.", "पूरी अवधि के लिए एक कोटा। B1 में A2 भी शामिल है।", "整个有效期共用一个额度。B1 包含 A2。", "Un saldo para todo el periodo. B1 incluye A2.", "Один лимит на весь срок. В B1 входит A2.", "Спільний ліміт на весь період. B1 включає A2."],
+  "Een jaar AI-feedback voor één betaling. B1 is inclusief A2.": ["A year of AI feedback with one payment. B1 includes A2.", "عام من ملاحظات الذكاء الاصطناعي بدفعة واحدة. تشمل B1 مستوى A2.", "Tek ödemeyle bir yıl yapay zekâ geri bildirimi. B1, A2'yi de içerir.", "एक भुगतान में एक साल का AI फ़ीडबैक। B1 में A2 भी शामिल है।", "一次付款可获得一年 AI 批改。B1 包含 A2。", "Un año de comentarios de IA con un solo pago. B1 incluye A2.", "Год AI-проверок за одну оплату. В B1 входит A2.", "Рік відгуків ШІ за один платіж. B1 включає A2."],
+  "Handig als je bijna het hele jaar wilt oefenen.": ["Useful if you want to practise for most of the year.", "مناسب إذا أردت التدرّب معظم العام.", "Yılın büyük bölümünde çalışacaksan uygun.", "अगर आप लगभग पूरे साल अभ्यास करना चाहते हैं तो सुविधाजनक।", "适合一年中大部分时间都要练习的人。", "Práctico si quieres practicar durante casi todo el año.", "Подходит, если планируете заниматься большую часть года.", "Зручно, якщо плануєте займатися майже весь рік."],
+  "Losse opdracht: meestal 1 beurt. Proefexamen Schrijven: 2 op A2 of 4 op B1. Proefexamen Spreken: 6.": ["Single task: usually 1 check. Writing mock exam: 2 for A2 or 4 for B1. Speaking mock exam: 6.", "المهمة الواحدة: عادةً تصحيح واحد. امتحان الكتابة التجريبي: 2‏ لـ A2 أو 4 لـ B1. امتحان التحدث التجريبي: 6.", "Tek görev: genelde 1 hak. Yazma deneme sınavı: A2 için 2, B1 için 4. Konuşma deneme sınavı: 6.", "एक अभ्यास: आम तौर पर 1 जाँच। लेखन अभ्यास परीक्षा: A2 के लिए 2 या B1 के लिए 4। बोलने की अभ्यास परीक्षा: 6।", "单项练习通常用 1 次。写作模拟考试：A2 用 2 次，B1 用 4 次。口语模拟考试：6 次。", "Tarea suelta: normalmente 1 revisión. Simulacro de escritura: 2 para A2 o 4 para B1. Simulacro oral: 6.", "Одно задание — обычно 1 проверка. Пробник письма — 2 на A2 или 4 на B1. Пробник устной речи — 6.", "Окреме завдання: зазвичай 1 перевірка. Пробний іспит із письма: 2 для A2 або 4 для B1. Пробний усний іспит: 6."],
+  "Bereid je voor op Inburgering A2 of Staatsexamen NT2 B1. Krijg punten per criterium voor Schrijven en Spreken en oefen verder met je eigen fouten.": ["Prepare for Inburgering A2 or Staatsexamen NT2 B1. Get scores by criterion for writing and speaking and practise with your own mistakes.", "استعد لامتحان Inburgering A2 أو Staatsexamen NT2 B1. احصل على نقاط حسب المعيار للكتابة والتحدث، وتدرّب على أخطائك.", "Inburgering A2 veya Staatsexamen NT2 B1 sınavına hazırlan. Yazma ve konuşmada her ölçüt için puan al, kendi hatalarınla pratik yap.", "Inburgering A2 या Staatsexamen NT2 B1 की तैयारी करें। लेखन और बोलने के हर मानदंड पर अंक पाएँ और अपनी ग़लतियों पर अभ्यास करें।", "准备 Inburgering A2 或 Staatsexamen NT2 B1 考试。查看写作和口语各项评分，并针对自己的错误练习。", "Prepárate para Inburgering A2 o Staatsexamen NT2 B1. Recibe una puntuación por criterio en escritura y expresión oral, y practica con tus propios errores.", "Подготовьтесь к Inburgering A2 или Staatsexamen NT2 B1. Получайте баллы по каждому критерию за письмо и устную речь и тренируйтесь на своих ошибках.", "Готуйтеся до Inburgering A2 або Staatsexamen NT2 B1. Отримуйте бали за кожним критерієм письма й говоріння та працюйте над власними помилками."],
 
   "Gebruiksvoorwaarden": ["Terms of use", "شروط الاستخدام", "Kullanım koşulları", "उपयोग की शर्तें", "使用条款", "Condiciones de uso", "Условия использования", "Умови використання"],
   "Bittertalen is een onafhankelijke oefenapp en is niet verbonden aan DUO.": ["Bittertalen is an independent practice app and is not affiliated with DUO.", "Bittertalen تطبيق مستقل للتدرّب ولا يرتبط بـ DUO.", "Bittertalen bağımsız bir alıştırma uygulamasıdır ve DUO ile bağlantılı değildir.", "Bittertalen एक स्वतंत्र अभ्यास ऐप है और DUO से संबद्ध नहीं है।", "Bittertalen 是独立的练习应用，与 DUO 没有隶属或合作关系。", "Bittertalen es una aplicación de práctica independiente y no está afiliada a DUO.", "Bittertalen — независимое приложение для подготовки, не связанное с DUO.", "Bittertalen — незалежний застосунок для підготовки, не пов'язаний із DUO."],
@@ -139,11 +149,12 @@ const copy = {
   "Kies de Examenpas": ["Choose the exam pass", "اختر تصريح الامتحان", "Sınav kartını seç", "परीक्षा पास चुनें", "选择考试通行证", "Elegir el pase de examen", "Выбрать пропуск", "Вибрати перепустку"],
   "Zo kijkt Bittertalen na →": ["How Bittertalen checks your work →", "كيف يصحّح Bittertalen ←", "Bittertalen nasıl kontrol eder →", "Bittertalen कैसे जाँचता है →", "Bittertalen 如何批改 →", "Cómo revisa Bittertalen →", "Как Bittertalen проверяет ответы →", "Як Bittertalen перевіряє відповіді →"],
   "Kies Plus B1": ["Choose Plus B1", "اختر Plus B1", "Plus B1 seç", "Plus B1 चुनें", "选择 Plus B1", "Elegir Plus B1", "Выбрать Plus B1", "Вибрати Plus B1"],
+  "Oefen met Schrijven A2": ["Practise A2 writing", "تدرّب على الكتابة A2", "A2 yazma çalış", "A2 लेखन का अभ्यास करें", "练习 A2 写作", "Practica la escritura A2", "Потренировать письмо A2", "Попрактикуйтеся у письмі A2"],
 };
 
 const pricing = {
-  nl: ["per maand", n => `Met een gratis account: ${n} gratis nakijkbeurten`, n => `Tot ${n} nakijkbeurten per maand voor je teksten en gesproken antwoorden`],
-  en: ["per month", n => `With a free account: ${n} free checks`, n => `Up to ${n} checks a month for your writing and spoken answers`],
+  nl: ["per maand", n => `Met een gratis account: ${n} gratis nakijkbeurten (eenmalig)`, n => `Tot ${n} nakijkbeurten per maand voor je teksten en gesproken antwoorden`],
+  en: ["per month", n => `With a free account: ${n} free checks (one time)`, n => `Up to ${n} checks a month for your writing and spoken answers`],
   ar: ["شهريًا", n => `بحساب مجاني: ${n} تصحيحات مجانية`, n => `حتى ${n} تصحيح شهريًا لنصوصك وإجاباتك الشفهية`],
   tr: ["aylık", n => `Ücretsiz hesapla ${n} ücretsiz kontrol`, n => `Yazıların ve sözlü yanıtların için ayda ${n}'e kadar kontrol`],
   hi: ["प्रति माह", n => `मुफ़्त खाते से ${n} मुफ़्त जाँचें`, n => `आपके लेखन और बोले गए जवाबों के लिए महीने में ${n} तक जाँचें`],
@@ -153,6 +164,15 @@ const pricing = {
   uk: ["на місяць", n => `Безкоштовних перевірок із безкоштовним акаунтом: ${n}`, n => `До ${n} перевірок на місяць для ваших текстів і усних відповідей`],
 };
 // The Examenpas card: how long one payment lasts
+const dailyCopy = {
+  nl:n=>`tot ${n} per dag`, en:n=>`up to ${n} a day`, ar:n=>`حتى ${n} يوميًا`, tr:n=>`günde en fazla ${n}`,
+  hi:n=>`रोज़ अधिकतम ${n}`, zh:n=>`每天最多 ${n} 次`, es:n=>`hasta ${n} al día`, ru:n=>`до ${n} в день`, uk:n=>`до ${n} на день`
+};
+const totalCopy = {
+  nl:n=>`${n} nakijkbeurten voor de hele periode`, en:n=>`${n} checks for the whole period`, ar:n=>`${n} تصحيح للفترة كلها`,
+  tr:n=>`Tüm dönem için ${n} kontrol`, hi:n=>`पूरी अवधि के लिए ${n} जाँचें`, zh:n=>`整个有效期共 ${n} 次批改`,
+  es:n=>`${n} revisiones para todo el periodo`, ru:n=>`${n} проверок на весь срок`, uk:n=>`${n} перевірок на весь період`
+};
 const passWeeks = {
   nl: n => `${n} weken geldig vanaf je betaling`, en: n => `Valid for ${n} weeks from payment`,
   ar: n => `صالح لمدة ${n} أسابيع من الدفع`, tr: n => `Ödemeden itibaren ${n} hafta geçerli`,
@@ -220,7 +240,13 @@ function render() {
   if (config?.free) $("trial-checks").textContent = trialCopy[lang](config.free);
   $("try-free").hidden = !(config?.free && config?.limit);
   if (config?.free && config?.limit) $("try-free").textContent = tryCopy[lang](config.free, config.limit);
+  const allowance = plus?.month && plus?.limit ? `${checks(plus.month)} · ${dailyCopy[lang](plus.limit)}` : "";
   const pass = config?.pass;
+  $("pass-total").hidden = !pass?.total;
+  if (pass?.total && plus?.limit) $("pass-total").textContent = `${totalCopy[lang](pass.total)} · ${dailyCopy[lang](plus.limit)}`;
+  const yearTotal = config?.year?.total;
+  $("year-checks").hidden = !yearTotal;
+  if (yearTotal && plus?.limit) $("year-checks").textContent = `${totalCopy[lang](yearTotal)} · ${dailyCopy[lang](plus.limit)}`;
   $("pass-card").hidden = config ? !(active && pass?.plans?.A2 && pass?.plans?.B1) : false;
   if (pass?.plans?.A2 && pass?.plans?.B1) {
     const eur = p => `€ ${lang === "en" ? String(p).replace(",", ".") : p}`;
@@ -246,7 +272,7 @@ function render() {
     const period = document.createElement("small");
     period.textContent = month;
     $(price).replaceChildren(amount, " ", period);
-    $(check).textContent = checks(plus.month || 200);
+    if (allowance) $(check).textContent = allowance;
   }
 }
 select.addEventListener("change", () => {

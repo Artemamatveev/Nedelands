@@ -61,8 +61,10 @@ the last task shows “Antwoorden inleveren”. Before advancing, “Opnieuw opn
 answer-time limit, without restarting thinking time or the overall exam clock. The previous answer remains until a new
 nonempty transcript/recording replaces it at the same question index; an empty failed retake explicitly retains the old
 answer. Superseded audio URLs are released. The retry control is hidden while recording and on each new question.
-Navigation/late native events cannot complete a different task or append an answer twice. Natural MediaRecorder stop also completes the active take. Recordings and transcripts stay in memory only. "Zeg het na" (free, no Claude call):
+Navigation/late native events cannot complete a different task or append an answer twice. Natural MediaRecorder stop also completes the active take. Recordings stay in memory only. A2 speaking exam transcripts are saved in a local draft until grading succeeds or the learner discards the draft. "Zeg het na" (free, no Claude call):
 the learner reads the example or corrected answer aloud and the words speech recognition missed are marked.
+
+When checking fails temporarily, single-task writing practice keeps the text editable and speaking practice retries the same transcript. Writing and speaking exam results offer a retry with the submitted answers, without registering another exam attempt. Speaking practice transcripts remain available in the open exercise only. The local A2 exam draft also restores the original deadline and question order after reopening.
 
 Making new Lezen and Luisteren material with Claude was removed (it cost a call per tap and its
 result was invisible). Items made earlier stay in `S.gen` and are still added by `addGenerated()`.
@@ -156,3 +158,28 @@ conversation. Two menu buttons (aiMenu remembers the choice when returning from 
 - `/api/talk` is a rewrite to `/api/check?kind=talk` (the 12-function limit); `check.js` imports `_talk.js` only then.
   `S.ai` `{id: {n, at}}` (merged like `S.gp`); the event `ai` counts started conversations. privacy.html says, in all
   nine languages under the checking section, what goes to Anthropic and Google.
+
+## Review of A2 writing feedback
+
+The checker labels each correction with a criterion. Inversion in a main clause and singular instead of plural agreement
+are grammar labels with their own follow-up exercises. The server collapses duplicate edits that only differ in how much
+unchanged text surrounds the edit. Full spelling points can still coexist with minor mistakes that leave the text
+understandable. The result explains this next to the score. The versioned writing cache avoids replaying older feedback
+without these labels.
+
+After ordinary A2 writing practice, Mijn dag offers a different sentence on the next day for either of those two grammar
+rules. The words are supplied so the check can focus on the intended rule. A correct sentence records success for that
+exercise. A missed sentence returns the next day with a different prompt. Progress stores only the rule, prompt index,
+date, result and update time along with existing progress. The new sentence is checked on the device.
+
+In speaking practice, learners can correct the recognised text or speak again before explicitly requesting a check.
+Only that confirmed text goes to the existing grading endpoint. The edit field stays in the current exercise and is
+discarded on leaving. Pronunciation and speaking speed still require audio and are outside the transcript score.
+
+For NT2 calibration, ask a qualified reviewer to score the original A2 tasks before seeing the app's result. Include
+the brief asking a neighbour to water the plants and a form. For the brief, compare a complete clear answer, a clear answer
+with small spelling errors, an answer missing the key location, and an off-topic answer. For the form, include a complete
+form and cases missing a required field or giving an unclear open answer. Record criterion-level scores and the reason
+for any disagreement. Check the free and paid models on the same set. Keep these results separate from pass-rate claims.
+
+A completed Schrijven A2 exam schedules the most frequent supported rule in scored responses for the next study day. The following two sentences test that rule with different wording. A Spreken A2 exam with near-complete answers can schedule a new question that also asks for a reason. The plan only displays successful speaking practice after the new response receives full content points. Only rule labels, question keys, counts and dates go into this follow-up progress.

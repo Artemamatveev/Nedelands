@@ -31,8 +31,8 @@ zoom use the native CSS anchor. Desktop WebKit/emulated checks cannot fully repr
 - **Mijn dag** (the first tab; it was called "Vandaag", which the user found unclear, November 2026; its key in the
 code is still `vandaag`, and "Vandaag" below means this tab): the painting and its label, then today's lesson: how far you are today (a bar of six pills, "2 van 6
 klaar"), one short line, and the steps (a new A2 learner sees "Waar begin ik?" right under the heading, above the time
-choice, so it shows above the tab bar on a phone): all alike: its icon, title, a short line and ›, a done one a green check; no exam dates. When all are done the streak ribbon drops down once that day (`ww-stamp`) with a tap of the
-phone. The learner chooses 10, 20 or 40 minutes. `planTasks()` selects short rounds within that estimated budget, prioritises weak parts, and rotates ties. `S.lessonPlan` freezes the steps for that day, level and budget so completed work does not reorder the lesson. Full timed exams start from Examen. Then Mix van de dag.
+choice, so it shows above the tab bar on a phone): all alike: its icon, title, a short line and ›, a done one a green check. The next saved exam date appears over the steps. When all are done the streak ribbon drops down once that day (`ww-stamp`) with a tap of the
+phone. The learner chooses 10, 20 or 40 minutes. `planTasks()` selects short rounds within that estimated budget, starts with the closest exam parts within fourteen days, then prioritises weak parts and rotates ties. When a writing follow-up is due, it appears above the steps with a new sentence on the same rule. `S.lessonPlan` freezes the steps for that day, level and budget so completed work does not reorder the lesson. Full timed exams start from Examen. Then Mix van de dag.
 - **Examen**: "Naar het examen": one row per exam part (`.rd`, from `ready()`), the whole row starts that part's
 proefexamen: its icon, the name with its minutes under it, the score on the right ("76%" in ink with where it comes
 from under it; nothing without one) and ›; under it the bar with the pass line (`passOf()`: Lezen and Luisteren 19 of

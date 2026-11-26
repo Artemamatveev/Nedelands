@@ -3,15 +3,13 @@ Part of the project notes; CLAUDE.md is the short index. Keep these true when th
 
 ## Homepage and public pages
 Bittertalen (a pun on bitterballen: "bitter languages", self-irony about learning Dutch) is a single-page study app for the Dutch A2 integration exam (inburgeringsexamen).
-Positioning (the user's choice, 25 November 2026): exams on the way to naturalisation, with history, culture and
-conversations to feel at home and dare to speak. The hero says "Word thuis in Nederland"; Vraag 1 is "Oefen voor je
-examen", Vraag 2 "Leer het land kennen en durf te spreken" (books, history and art, media, Saskia and the other
-characters), and the FAQ answers "Helpt Bittertalen ook bij naturalisatie?" from ind.nl (an inburgeringsdiploma,
-usually at least A2; the IND decides). Never promise a passport, a pass or that B1 is required for naturalisation.
+The homepage says “Word thuis in Nederland”, with free A2 and B1 exam preparation in the subtitle and separate buttons for each level. The level cards, KNM
+question and writing feedback example come before the sections on features and culture. The example explains the spelling
+score, shows a new sentence on the same rule and opens the corresponding A2 exercise. The FAQ keeps the naturalisation
+information. Never promise a passport, a pass or that B1 is required for naturalisation.
 The public homepage is `index.html` (`landing.js` translates it: every `data-t` text and `data-alt` alt text needs all
 eight translations in `copy`, which `tests/site.test.mjs` checks) and reads Plus pricing from `/api/config`. Its main
-button, "Begin met oefenen" in the bar (`#enter`), opens `/oefenen?open=today`; the hero has the heading (no
-full stop), one paragraph, a Download de app button and the app in a phone. The download button uses the browser install
+button, "Begin met oefenen" in the bar (`#enter`), opens `/oefenen?open=today`; the hero has separate A2 and B1 buttons, one paragraph, an install button and the app in a phone. Pricing links focus the selected offer in the app. The download button uses the browser install
 prompt when available, otherwise links to #install-app with instructions for iOS, Android and desktop (November 2026). The bar: the name (30 px, 28 on a phone), the page's links, the language, Inloggen and the main button;
 on a phone two straight rows, the name with the button, then the links with the language and Inloggen (two wrapping flex
 rows: a grid tied the second row to the button's width; the type follows the screen's width and the narrowest phones leave
@@ -123,7 +121,7 @@ switching back restores it). The user's rule: only the menus, the privacy statem
 So never inside `#play` (exercises), conversations or the text of what you read: books, chapters, painting stories and the museum label stay Dutch, with
 their titles on their own page. Everything around them is translated: list rows (conversation, chapter and book titles and descriptions), back buttons,
 the reader's buttons, and information such as the ONA screen. `lang="nl"` marks Dutch content (`DUTCH`: never translated, always
-left to right): a conversation wraps its content in `<div lang="nl">`, because `#tbody` and `#hbody` also hold menus. A new menu string needs all seven translations in `UI` plus Ukrainian in `UK` (regex rows in `UIRK`, same order as `UIR`). The
+left to right): a conversation wraps its content in `<div lang="nl">`, because `#tbody` and `#hbody` also hold menus. A new menu string needs all eight translations in `UI` plus Ukrainian in `UK` (regex rows in `UIRK`, same order as `UIR`). The
 translations were made by Claude and not yet checked by native speakers.
 Arabic runs right to left (`<html dir="rtl">`, set by `applyLang()`): use logical CSS (`padding-inline-start`,
 `inset-inline-start`, `text-align:var(--ta)` and `var(--te)` for left and right), not physical sides, for anything in the menus. Dutch

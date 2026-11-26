@@ -14,7 +14,7 @@
 // With accounts set up (Supabase, see _supa.js) only a signed-in user may grade, CHECK_LIMIT checks a day;
 // the answer then also has `left`, the checks left today. With Bittertalen Plus (api/plus.js) PLUS_LIMIT a day.
 import Anthropic from "@anthropic-ai/sdk";
-import { accounts, caller, checkCost, useChecks, LIMIT, PLUS, plusOn, plusFor, coversLevel, sameOrigin, FREE, visitor, useFree, useTotal, addSpend, bonusFor, useGuard, PLUS_MONTH, OPUS_MONTH, PASS_TOTAL, PASS_OPUS, YEAR_TOTAL, YEAR_OPUS, monthOf, amsterdamDay } from "./_supa.js";
+import { accounts, caller, checkCost, useChecks, LIMIT, PLUS, plusOn, plusFor, coversLevel, sameOrigin, FREE, visitor, useFree, useTotal, addSpend, bonusFor, useGuard, PLUS_MONTH, OPUS_MONTH, PASS_TOTAL, PASS_OPUS, YEAR_TOTAL, YEAR_OPUS, monthOf, amsterdamDay, gradingDigest, gradingReceipt } from "./_supa.js";
 
 // Created only when the key is set, so a missing key gives a clear error instead of a crash
 // (trimmed: a key pasted into the dashboard with a trailing newline breaks the request header)
@@ -31,6 +31,7 @@ const MODEL_EXAM = (process.env.GRADING_MODEL_EXAM || "claude-opus-5-5").trim();
 const MODEL_FREE = (process.env.GRADING_MODEL_FREE || "claude-haiku-5-5").trim();
 const FREE_STRONG = Math.max(0, parseInt(process.env.FREE_STRONG ?? "2", 10) || 0);
 
+const ERROR_KINDS = ["inhoud", "woorden", "grammatica", "spelling", "samenhang", "inversie", "meervoud"];
 const RESULT = {
   type: "object",
   properties: {
@@ -41,8 +42,8 @@ const RESULT = {
       type: "array",
       items: {
         type: "object",
-        properties: { wrong: { type: "string" }, right: { type: "string" }, why: { type: "string" } },
-        required: ["wrong", "right", "why"],
+        properties: { wrong: { type: "string" }, right: { type: "string" }, why: { type: "string" }, kind: { type: "string", enum: ERROR_KINDS } },
+        required: ["wrong", "right", "why", "kind"],
         additionalProperties: false,
       },
     },
@@ -80,6 +81,25 @@ const clampScores = (sc, SC) => {
   const o = Object.fromEntries(Object.entries(SC).map(([k, max]) => [k, Math.max(0, Math.min(max, Math.round(Number(sc?.[k]) || 0)))]));
   return o.inhoud ? o : Object.fromEntries(Object.keys(SC).map((k) => [k, 0])); // no answer to the question: no points at all
 };
+// Models sometimes describe the same edit once as a word and once inside a longer fragment.
+export function uniqueCorrections(errors) {
+  const seen = new Set();
+  const tokens = value => String(value || "").normalize("NFC").replaceAll("’", "'").match(/[\p{L}\p{M}\d]+(?:'[\p{L}\p{M}\d]+)*|[^\s]/gu) || [];
+  return (Array.isArray(errors) ? errors : []).filter(error => {
+    const before = tokens(error?.wrong), after = tokens(error?.right);
+    while (before.length && after.length && before[0] === after[0]) { before.shift(); after.shift(); }
+    while (before.length && after.length && before.at(-1) === after.at(-1)) { before.pop(); after.pop(); }
+    if (!before.length && !after.length) return false;
+    const key = JSON.stringify([before, after]);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+const ERROR_NOTE = `
+- Geef elke correctie één keer. Gebruik het kortste fragment dat de fout duidelijk laat zien, eventueel met een paar woorden context. Geef dezelfde wijziging niet ook in een langere zin.
+- Geef elke fout één kind: inhoud, woorden, grammatica, spelling, samenhang. Gebruik inversie alleen als na een tijd- of plaatsbepaling vooraan het onderwerp en de persoonsvorm verkeerd staan in een hoofdzin. Gebruik meervoud alleen als bij een meervoudig onderwerp de persoonsvorm ten onrechte in het enkelvoud staat. Beide tellen bij grammatica. Een verkeerd gespelde werkwoordsvorm met de juiste persoon en het juiste getal (zoals ligd → ligt) is spelling.
+`;
 // Schrijven: voldoende follows from the points, not from Claude's overall impression
 const sum = (o) => Object.values(o).reduce((a, b) => a + b, 0);
 const wrPassed = (sc) => sc.inhoud >= 2 && sum(sc) >= 7;
@@ -197,14 +217,14 @@ export async function gradeWriting(task, model) {
     betas: ["server-side-fallback-2026-07-01"],
     fallbacks: "default",
     output_config: { effort: "medium", format: { type: "json_schema", schema: SCHEMA_WR } },
-    system: SYSTEM + FENCE_NOTE,
+    system: SYSTEM + ERROR_NOTE + FENCE_NOTE,
     messages: [{ role: "user", content: promptWR([{ task: str(task.task, 1200), form: str(task.form, 1500), text: str(task.text, 2500) }], 8) }],
   }, { signal: AbortSignal.timeout(DEADLINE) });
   await addSpend(response.model, response.usage).catch(() => {});
   if (response.stop_reason === "refusal" || response.stop_reason === "max_tokens") throw new Error(response.stop_reason);
   const t = JSON.parse(response.content.find((b) => b.type === "text")?.text || "{}").tasks?.[0] || {};
   const scores = clampScores(t.scores, SCORES_WR);
-  return { model: response.model, scores, total: sum(scores), passed: wrPassed(scores), errors: Array.isArray(t.errors) ? t.errors.length : 0, verdict: str(t.verdict, 400) };
+  return { model: response.model, scores, total: sum(scores), passed: wrPassed(scores), errors: uniqueCorrections(t.errors).length, verdict: str(t.verdict, 400) };
 }
 
 export default async function handler(req, res) {
@@ -222,13 +242,41 @@ export default async function handler(req, res) {
   const input = Array.isArray(req.body?.tasks) ? req.body.tasks.slice(0, sp ? 16 : wb ? 12 : 4) : [];
   if (!input.length) return res.status(400).json({ error: "no_tasks" });
 
+  const user = await caller(req).catch(() => null);
+  const id = req.body?.requestId;
+  const validId = typeof id === "string" && /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(id);
+  if (!user || !validId) return gradeRequest(req, res, { user, input, sb, sp, wb, t0 });
+
+  const digest = gradingDigest([req.body?.part || "", input]);
+  res.setHeader("Cache-Control", "private, no-store");
+  let receipt;
+  try { receipt = await gradingReceipt(user.id, id, digest, "claim"); }
+  catch { return res.status(503).json({ error: "quota_unavailable" }); }
+  if (receipt?.state === "done") return res.status(200).json({ ...receipt.result, replayed: true });
+  if (receipt?.state === "pending") return res.status(409).json({ error: "check_pending" });
+  if (receipt?.state !== "new") return res.status(503).json({ error: "quota_unavailable" });
+  let completed = false;
+  try {
+    return await gradeRequest(req, res, { user, input, sb, sp, wb, t0, save: async result => {
+      try { await gradingReceipt(user.id, id, digest, "save", result); }
+      catch (error) {
+        const saved = await gradingReceipt(user.id, id, digest, "read").catch(() => null);
+        if (!saved) throw error;
+      }
+      completed = true;
+    } });
+  } finally {
+    if (!completed) await gradingReceipt(user.id, id, digest, "discard").catch(() => {});
+  }
+}
+
+async function gradeRequest(req, res, { user, input, sb, sp, wb, t0, save }) {
   // Accounts: who is asking, and take the checks before calling Claude (given back if grading fails)
   let uid = null, left, lim = LIMIT, plus = false, period = "once", plan = null;
   const checkedAt = new Date().toISOString();
   const cost = checkCost(input.length);
   let who = null, free;
   {
-    const user = await caller(req).catch(() => null);
     if (!user) {
       // Without a login: a few single tasks a day for free (no proefexamens), counted per visitor
       who = FREE && cost === 1 ? visitor(req, res) : "";
@@ -334,7 +382,7 @@ export default async function handler(req, res) {
       betas: ["server-side-fallback-2026-07-01"],
       fallbacks: "default",
       output_config: { effort: exam || tasks.length > 1 ? "medium" : "low", format: { type: "json_schema", schema: sp ? SCHEMA_SP : SCHEMA_WR } },
-      system: (sb ? SYSTEM_SB : sp ? SYSTEM_SP : wb ? SYSTEM_WB : SYSTEM) + FENCE_NOTE,
+      system: (sb ? SYSTEM_SB : sp ? SYSTEM_SP : wb ? SYSTEM_WB : SYSTEM) + ERROR_NOTE + FENCE_NOTE,
       messages: [{ role: "user", content }],
     }, { signal: AbortSignal.timeout(left_ms), maxRetries: exam ? 0 : 1 });
     console.info(JSON.stringify({ event: "grading_usage", model: response.model, usage: response.usage, units: cost }));
@@ -344,8 +392,12 @@ export default async function handler(req, res) {
     if (response.stop_reason === "max_tokens") { await giveBack(); return res.status(502).json({ error: "failed" }); }
     const text = response.content.find((b) => b.type === "text")?.text;
     const result = JSON.parse(text);
-    const out = result.tasks.slice(0, tasks.length);
-    return res.status(200).json({
+    if (!Array.isArray(result.tasks) || result.tasks.length !== tasks.length) {
+      await giveBack();
+      return res.status(502).json({ error: "failed" });
+    }
+    const out = result.tasks;
+    const payload = {
       left: who ? free : left,
       limit: who ? FREE : lim,
       period: who ? "once" : period,
@@ -355,9 +407,11 @@ export default async function handler(req, res) {
         const form = !sp && !wb && tasks[i].kind === "f";
         const SC = wb ? SCORES_WB[tasks[i].kind] : sb ? SCORES_SB[tasks[i].kind] : sp ? SCORES_SP : form ? SCORES_WF : SCORES_WR;
         const scores = clampScores(t.scores, SC);
-        return { ...t, scores, passed: sb ? sbPassed(scores, SC) : sp ? spPassed(scores) : wb ? wbPassed(scores, SC) : form ? wfPassed(scores) : wrPassed(scores) };
+        return { ...t, errors: uniqueCorrections(t.errors), scores, passed: sb ? sbPassed(scores, SC) : sp ? spPassed(scores) : wb ? wbPassed(scores, SC) : form ? wfPassed(scores) : wrPassed(scores) };
       }),
-    });
+    };
+    if (save) await save(payload);
+    return res.status(200).json(payload);
   } catch (error) {
     await giveBack();
     if (error instanceof Anthropic.AuthenticationError) return res.status(503).json({ error: "not_configured" });

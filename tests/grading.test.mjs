@@ -14,7 +14,7 @@ async function handler(options={}){
     beta={messages:{create:async(body)=>{
       modelCalls++;models.push(body.model);
       if(options.providerFailure)throw Error('connection interrupted');
-      return {stop_reason:options.stopReason||'end_turn',model:'test-model',usage:{input_tokens:100,output_tokens:30},content:[{type:'text',text:JSON.stringify({tasks:[{passed:options.claimPassed??true,verdict:'Goed',corrected:'Ik kom later.',errors:[],scores:options.scores||{inhoud:3,woorden:2,grammatica:2,spelling:2,samenhang:1}}]})}]};
+      return {stop_reason:options.stopReason||'end_turn',model:'test-model',usage:{input_tokens:100,output_tokens:30},content:[{type:'text',text:JSON.stringify({tasks:Array.from({length:options.taskOutputs??options.tasksCount??1},()=>({passed:options.claimPassed??true,verdict:'Goed',corrected:'Ik kom later.',errors:options.errors||[],scores:options.scores||{inhoud:3,woorden:2,grammatica:2,spelling:2,samenhang:1}}))})}]};
     }}};
   }
   const values={
@@ -27,6 +27,7 @@ async function handler(options={}){
     bonusFor:async()=>{if(options.bonusFails)throw Error('down');return options.bonus??0},
     PLUS:60,plusOn:!!options.pay,
     PLUS_MONTH:200,OPUS_MONTH:8,PASS_TOTAL:250,PASS_OPUS:15,YEAR_TOTAL:600,YEAR_OPUS:30,monthOf:()=>'2026-11-01',amsterdamDay:()=>'2026-11-25',
+    gradingDigest:JSON.stringify,gradingReceipt:options.receipt||(()=>{throw Error("unexpected receipt")}),
     useGuard:async(k,_d,cost,lim)=>{guards.push([k,cost]);if(options.guardFails)throw Error('down');const g=options.guard?.[k[0]];return g??lim-cost},
 
     plusFor:async()=>{if(options.plusFails)throw Error('down');return options.plan??null},
@@ -37,10 +38,13 @@ async function handler(options={}){
   const supa=new vm.SyntheticModule(Object.keys(values),function(){for(const [key,value]of Object.entries(values))this.setExport(key,value)},{context});
   const module=new vm.SourceTextModule(fs.readFileSync(new URL('api/check.js',root),'utf8'),{context});
   await module.link(name=>name==='@anthropic-ai/sdk'?sdk:supa);await module.evaluate();
-  const req={method:'POST',headers:{host:'example.test',origin:'https://example.test'},body:{...(options.part?{part:options.part}:{}),tasks:Array.from({length:options.tasksCount||1},()=>({...(options.part||options.kind?{kind:options.kind||'z'}:{}),task:'Stuur een bericht',text:'Ik kom later. Personal test content.'}))}};
-  const res={statusCode:200,status(n){this.statusCode=n;return this},json(body){this.body=body;return this}};
+  const req={method:'POST',headers:{host:'example.test',origin:'https://example.test'},body:{...(options.requestId?{requestId:options.requestId}:{}),...(options.part?{part:options.part}:{}),tasks:Array.from({length:options.tasksCount||1},()=>({...(options.part||options.kind?{kind:options.kind||'z'}:{}),task:'Stuur een bericht',text:'Ik kom later. Personal test content.'}))}};
+  const response=()=>({statusCode:200,setHeader(){},status(n){this.statusCode=n;return this},json(body){this.body=body;return this}});
+  const res=response();
   await module.namespace.default(req,res);
-  return {res,usage,quotas,logs,lims,periods,stamps,modelCalls,models,spends};
+  const retry=options.repeat?response():null;
+  if(retry)await module.namespace.default(req,retry);
+  return {res,retry,usage,quotas,logs,lims,periods,stamps,modelCalls,models,spends};
 }
 
 test('Missing account configuration blocks the paid provider',async()=>{
@@ -193,4 +197,49 @@ test('Spreken A2: voldoende follows from the points, not from what the model say
   assert.equal(five.res.body.tasks[0].passed,false); // 5 of 8: without pronunciation and fluency that is not enough
   const good=await handler({part:'sp',claimPassed:false,scores:{inhoud:2,woorden:2,grammatica:1,samenhang:1}});
   assert.equal(good.res.body.tasks[0].passed,true); // 6 of 8
+});
+
+test('One spelling edit is returned once even if the model describes it with different context', async()=>{
+  const result=await handler({errors:[
+    {wrong:'De sleutel ligd onder de mat',right:'De sleutel ligt onder de mat',why:'Schrijf ligt.',kind:'spelling'},
+    {wrong:'ligd',right:'ligt',why:'Schrijf ligt.',kind:'spelling'},
+    {wrong:'water geeven',right:'water geven',why:'Schrijf één e.',kind:'spelling'},
+  ]});
+  const grade=result.res.body.tasks[0];
+  assert.equal(grade.errors.length,2);
+  assert.ok(grade.errors.every(error=>error.kind==='spelling'));
+  assert.equal(grade.scores.spelling,2);
+});
+
+test('An authenticated exam retry returns its original grade without another debit or provider call',async()=>{
+  let cached;
+  const actions=[];
+  const r=await handler({part:'sp',requestId:'56143131-9e52-435c-a52a-2697864bf313',repeat:true,receipt:async(owner,id,digest,action,result)=>{
+    assert.equal(owner,'test-user');
+    assert.equal(id,'56143131-9e52-435c-a52a-2697864bf313');
+    actions.push(action);
+    if(action==='save')cached=result;
+    if(action==='claim')return cached?{state:'done',result:cached}:{state:'new'};
+  }});
+  assert.deepEqual(actions,['claim','save','claim']);
+  assert.deepEqual(JSON.parse(JSON.stringify(r.retry.body)),JSON.parse(JSON.stringify({...r.res.body,replayed:true})));
+  assert.equal(r.modelCalls,1);
+  assert.deepEqual(r.usage,[1]);
+});
+
+test('A concurrent grading retry and a failed receipt store cannot claim a second check',async()=>{
+  const requestId='56143131-9e52-435c-a52a-2697864bf313';
+  const pending=await handler({requestId,receipt:async()=>({state:'pending'})});
+  assert.equal(pending.res.statusCode,409);assert.equal(pending.res.body.error,'check_pending');
+  assert.deepEqual(pending.usage,[]);assert.equal(pending.modelCalls,0);
+  const failed=await handler({requestId,receipt:async()=>{throw Error('unavailable')}});
+  assert.equal(failed.res.statusCode,503);assert.deepEqual(failed.usage,[]);assert.equal(failed.modelCalls,0);
+});
+
+test('A partial model response is retryable and cannot become a permanent exam receipt',async()=>{
+  const actions=[];
+  const result=await handler({tasksCount:4,taskOutputs:3,requestId:'56143131-9e52-435c-a52a-2697864bf313',
+    receipt:async(_owner,_id,_digest,action)=>{actions.push(action);return {state:'new'}}});
+  assert.equal(result.res.statusCode,502);
+  assert.deepEqual(actions,['claim','discard']);
 });
