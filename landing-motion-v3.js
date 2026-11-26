@@ -46,8 +46,7 @@
     if (!introPlayed && scrollY < 80 && !location.hash) {
       introPlayed = true;
       intro = gsap.timeline({ defaults: { duration: 0.85, ease: 'power3.out', clearProps: 'transform,opacity' } });
-      intro.from('.hero-copy > *', { y: 22, stagger: 0.08 }, 0)
-        .from('.phone', { y: 48, rotation: 6, scale: 0.9, opacity: 0, duration: 1.2 }, 0.15)
+      intro.from('.phone', { y: 48, rotation: 6, scale: 0.9, opacity: 0, duration: 1.2 }, 0.15)
         .from('.greeter > img', { y: 24, scale: 0.9, rotation: -6, opacity: 0, ease: 'power3.out', duration: 1.1 }, 0.45)
         .from('.greeter .bubble', { y: 12, scale: 0.97, opacity: 0 }, 0.8)
         .from('.preview-switch', { y: 12, opacity: 0 }, 0.95);

@@ -1036,7 +1036,7 @@ test('Monthly A2 and B1 offers fit the homepage and the app sends the selected l
   let browser;
   try{browser=chromium&&await chromium.launch()}catch(e){if(process.env.BROWSER_TESTS)throw e}
   if(!browser){if(process.env.BROWSER_TESTS)assert.fail('Playwright is not installed');return t.skip('no browser here')}
-  const config={url:'https://example.supabase.co',anon:'fixture',login:[],limit:7,period:'once',free:2,freePeriod:'once',plus:{limit:60,price:'9,99',plans:{A2:{price:'9,99'},B1:{price:'14,99'}}}};
+  const config={url:'https://example.supabase.co',anon:'fixture',login:[],limit:7,period:'once',free:2,freePeriod:'once',plus:{limit:20,month:200,price:'9,99',plans:{A2:{price:'9,99'},B1:{price:'14,99'}}},pass:{days:91,total:260,plans:{A2:{price:'29,99'},B1:{price:'39,99'}}},year:{days:365,plans:{A2:{price:'79,99'},B1:{price:'119,99'}}}};
   const server=await serve({config}),base=`http://127.0.0.1:${server.address().port}`;
   try{
     for(const [lang,width] of [['nl',1280],['ru',390],['ar',375],['hi',320]]){
@@ -1044,6 +1044,9 @@ test('Monthly A2 and B1 offers fit the homepage and the app sends the selected l
       await s.p.waitForFunction(()=>!document.querySelector('#plus-b1-card').hidden);
       assert.match(await s.p.locator('#plus-price').textContent(),/9,99/);
       assert.match(await s.p.locator('#plus-b1-price').textContent(),/14,99/);
+      assert.match(await s.p.locator('#pass-total').textContent(),/260/);
+      assert.match(await s.p.locator('#year-checks').textContent(),/200/);
+      assert.match(await s.p.locator('#pass-price').textContent(),/39,99/);
       assert.equal(await overflow(s.p),0);assert.deepEqual(s.errors,[]);await s.ctx.close();
     }
     const s=await page(browser,base);await s.go('/');
@@ -1107,4 +1110,113 @@ test('The tab bar lens glides without jumps', async t => {
       assert.deepEqual(s.errors,[]);await s.ctx.close();
     }
   } finally{await browser.close();await new Promise(ok=>server.close(ok))}
+});
+
+test('A2 launch path: guest writing and all five mock exams finish with recoverable answers', async t=>{
+  let browser;
+  try { browser=chromium&&await chromium.launch(); } catch(e) { if(process.env.BROWSER_TESTS)throw e; }
+  if(!browser)return t.skip('no browser here');
+  const config={url:'https://example.supabase.co',anon:'fixture',login:[],limit:7,period:'once',free:2,freePeriod:'once',events:1};
+  const events=[],server=await serve({config,events}),base=`http://127.0.0.1:${server.address().port}`,s=await page(browser,base,{});
+  const failures=new Set(['wr','sp']),attempts=[];
+  const say='Ik woon in Nederland en volg hier een cursus.';
+  const text='Beste Anja, volgende week ik ga op vakantie. Wil je mijn planten water geven? De sleutel ligt in de keuken. Groeten, Samira.';
+  try {
+    await s.p.addInitScript(()=>{
+      class TestRecognition{constructor(){window.fixtureSpeech=this}start(){}stop(){}abort(){this.onend?.()}
+        finish(text){this.onresult?.({results:[[{transcript:text}]]});document.querySelector('#recb').click();this.onend?.()}}
+      Object.defineProperty(window,'SpeechRecognition',{configurable:true,value:TestRecognition});
+      Object.defineProperty(window,'webkitSpeechRecognition',{configurable:true,value:TestRecognition});
+    });
+    await s.ctx.route('**/api/check', async route=>{
+      const body=route.request().postDataJSON(),part=body.part??'wr';
+      attempts.push(body);
+      if(body.requestId&&failures.delete(part)){
+        if(part==='sp')return route.abort('internetdisconnected');
+        return route.fulfill({status:504,json:{error:'timeout'}});
+      }
+      await route.fulfill({json:{free:1,tasks:body.tasks.map(task=>({
+        passed:true,verdict:'Je hebt alle punten van de opdracht beantwoord.',corrected:say,
+        scores:{inhoud:3,woorden:2,grammatica:2,...(part==='wr'?{spelling:2}:{}),samenhang:1},
+        errors:body.requestId?[]:[{wrong:'volgende week ik ga',right:'volgende week ga ik',why:'Het werkwoord komt op plaats twee.',kind:'inversie'}]
+      }))}});
+    });
+    await s.go('/');
+    await s.p.locator('.hero a[href*="open=writing"]').click();
+    await s.p.locator('#txt').fill(text);
+    await s.p.locator('#chk').click();
+    await s.p.getByRole('button',{name:'Verbeter de eerste fout'}).click();
+    await s.p.locator('#fixinput').fill('volgende week ga ik');
+    await s.p.locator('#fixcheck').click();
+    await s.p.getByText('Precies goed!').waitFor();
+    assert.equal(await s.p.evaluate(()=>acc.free),1);
+    await s.go('/oefenen?open=writing&src=a2w');
+    await s.p.locator('#txt').fill(text.replace('keuken','gang'));
+    await s.p.locator('#chk').click();
+    await s.p.getByRole('button',{name:'Verbeter de eerste fout'}).waitFor();
+    await s.p.waitForFunction(()=>sessionStorage.getItem('bt-a2-campaign')?.includes('check'));
+
+    await s.p.emulateMedia({reducedMotion:'reduce'});
+    for(const [part,count] of [['lz',25],['ls',25],['knm',40],['wr',4],['sp',16]]){
+      await s.p.evaluate(()=>home());
+      await s.p.locator('#tabs [data-t="examen"]').click();
+      await s.p.locator(`#exam [data-e="${part}"]`).click();
+      await s.p.locator('#ggo').click();
+      assert.equal(await s.p.evaluate(()=>queue.length),count,part);
+      for(let i=0;i<count;i++){
+        if(part==='sp'){
+          await s.p.locator('#recb').click();
+          await s.p.evaluate(answer=>window.fixtureSpeech.finish(answer),say);
+          if(i===0){
+            const current=await s.p.evaluate(()=>tEnd);
+            await s.p.reload();
+            await s.p.locator('#tabs [data-t="examen"]').click();
+            await s.p.locator('#exam [data-e="sp"]').click();
+            await s.p.locator('#ggo').click();
+            assert.equal(await s.p.evaluate(()=>cur.ans[0].text),say);
+            assert.equal(await s.p.evaluate(()=>tEnd),current);
+          }
+          await s.p.locator('#recb').click();
+        }else{
+          if(part==='wr'){
+            for(const field of await s.p.locator('#card input[id^="f"]').all())await field.fill('Antwoord');
+            await s.p.locator('#txt').fill(text);
+          }else {
+            if(part==='ls'&&i===0)await s.p.locator('#say').click();
+            await s.p.locator('#card .opt').nth(await s.p.evaluate(()=>cur.op[pos].indexOf(queue[pos].right))).click();
+            if(i===0){
+              const current=await s.p.evaluate(()=>tEnd);
+              await s.p.reload();
+              await s.p.locator('#tabs [data-t="examen"]').click();
+              await s.p.locator(`#exam [data-e="${part}"]`).click();
+              await s.p.locator('#ggo').click();
+              assert.equal(await s.p.evaluate(()=>cur.pick[0]===queue[0].right),true);
+              assert.equal(await s.p.evaluate(()=>tEnd),current);
+              if(part==='ls')assert.equal(await s.p.evaluate(()=>cur.plays[queue[0].say]),1);
+            }
+          }
+          await s.p.locator('#nxt').click();
+        }
+      }
+      if(part!=='sp'){
+        assert.equal(await s.p.evaluate(()=>queue.filter((_,i)=>picked(i)).length),count,part);
+        await s.p.locator('#lever').click();
+      }
+      if(part==='wr'||part==='sp'){
+        await s.p.locator('#retrycheck').click();
+        const sent=attempts.filter(r=>r.requestId&&(r.part??'wr')===part);
+        await s.p.waitForFunction(p=>S.res?.[p]?.length===1,part);
+        const final=attempts.filter(r=>r.requestId&&(r.part??'wr')===part);
+        assert.equal(final.length,2);assert.deepEqual(final[0],final[1]);
+        assert.equal(sent[0].tasks.length,count);
+      }else {
+        await s.p.waitForFunction(p=>S.res?.[p]?.length===1,part,{timeout:5000}).catch(error=>{
+          throw new Error(`Missing ${part} result: ${s.errors.join('; ')}`,{cause:error});
+        });
+        assert.equal(await s.p.evaluate(p=>S.res[p][0].pc,part),100);
+      }
+      assert.equal(await s.p.evaluate(p=>S.res[p].length,part),1);
+    }
+    for(const event of ['ads_wr_visit','ads_wr_check'])assert.equal(events.filter(row=>row.ev===event).length,1);
+  }finally{await s.ctx.close();await browser.close();server.close()}
 });

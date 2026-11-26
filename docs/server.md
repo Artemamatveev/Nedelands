@@ -217,6 +217,8 @@ owner: `adminCheck()` asks `/api/admin?me=1` once per login (200 only for an `AD
 
 `supabase/calibration.sql` is a read-only owner report of self-reported real exam outcomes by practice-score band, with sample sizes and Wilson intervals. It does not expose a public view or change the schema. Do not claim the training targets have been empirically calibrated until this report and a qualified NT2 review have been completed against the correct project. Keep historical label changes in mind when analysing outcomes.
 
+Signed-in exam grading accepts a request ID. Apply `20261125123000_grading_receipts.sql` before deploying the matching app and API revision. A server-only receipt claims the account, request ID and answer digest before reserving quota. The completed response is returned on a retry for 24 hours, without grading or charging again. Receipt requests prune expired rows. Account deletion removes receipts.
+
 ## Withdrawal button (herroeping, 25 November 2026)
 
 Art. 11a of the consumer rights directive (since 19 June 2026) asks for a withdrawal function. Profiel → Plus shows

@@ -209,3 +209,21 @@ test('A2 writing explains full spelling points and practises an identified rule 
   assert.match(a.document.querySelector('#rulestatus').textContent,/goed toegepast/);
   assert.equal(a.run('S.writingRules.inversie.ok'),true);
 });
+
+test('A2 writing exam can retry the same draft after a timeout and record the result once',async()=>{
+  const mock=checker();
+  let attempts=0;
+  const a=await app({fetch:(url,options)=>{
+    if(url==='/api/check'&&++attempts===1)return new Response('{"error":"timeout"}',{status:504});
+    return mock.fetch(url,options);
+  }});
+  await submit(a);
+  assert.equal(a.run('!!getDraft("wr",true)'),true);
+  assert.equal(a.run('S.res?.wr?.length || 0'),0);
+  a.document.querySelector('#retrycheck').click();
+  await a.flush();
+  assert.equal(attempts,2);
+  assert.equal(a.run('!!getDraft("wr",true)'),false);
+  assert.equal(a.run('S.res.wr.length'),1);
+  assert.equal(a.run('Object.values(S.xs).every(n=>n===1)'),true);
+});

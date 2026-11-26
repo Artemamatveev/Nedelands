@@ -3,6 +3,15 @@ try{const r=new URLSearchParams(location.search).get("ref");if(r&&/^[A-HJ-NP-Z2-
 const languages = ["en", "ar", "tr", "hi", "zh", "es", "ru"];
 // Dutch copy is also in the HTML so the page is readable without scripts.
 const copy = {
+  "Handig als je examendatum vaststaat.": ["Useful when you know your exam date.", "مناسب إذا كان موعد امتحانك محددًا.", "Sınav tarihin belliyse kullanışlı.", "अगर परीक्षा की तारीख तय है तो सुविधाजनक।", "适合已确定考试日期的考生。", "Práctico si ya sabes la fecha del examen.", "Подходит, если дата экзамена уже известна."],
+  "Voordeliger vanaf negen maanden Plus.": ["Cheaper than nine or more monthly Plus payments.", "أوفر من تسعة أقساط شهرية أو أكثر من Plus.", "Dokuz ay ve üzeri Plus ödemesinden daha uygun.", "Plus के नौ या अधिक मासिक भुगतानों से सस्ता।", "比按月支付九个月及以上的 Plus 更便宜。", "Más económico que nueve o más mensualidades de Plus.", "Дешевле девяти и более месячных платежей Plus."],
+  "AI-feedback op Schrijven en Spreken A2, ook bij proefexamens.": ["AI feedback for A2 writing and speaking, including mock exams.", "ملاحظات بالذكاء الاصطناعي على الكتابة والتحدث A2، بما في ذلك الامتحانات التجريبية.", "Deneme sınavları dahil A2 yazma ve konuşma için yapay zekâ geri bildirimi.", "अभ्यास परीक्षाओं सहित A2 लेखन और बोलने पर AI फ़ीडबैक।", "AI 批改 A2 写作和口语，包括模拟考试。", "Comentarios de IA para escritura y expresión oral A2, incluidos los simulacros.", "ИИ проверяет письмо и устную речь A2, в том числе на пробных экзаменах."],
+  "Handig voor één of twee maanden voorbereiding.": ["Useful for one or two months of preparation.", "مناسب للتحضير لمدة شهر أو شهرين.", "Bir veya iki aylık hazırlık için uygun.", "एक या दो महीने की तैयारी के लिए सुविधाजनक।", "适合一到两个月的备考。", "Práctico para uno o dos meses de preparación.", "Подходит для одного-двух месяцев подготовки."],
+  "AI-feedback op Schrijven en Spreken B1 én A2 met één tegoed.": ["AI feedback for writing and speaking at B1 and A2, with one shared allowance.", "ملاحظات بالذكاء الاصطناعي على الكتابة والتحدث في B1 وA2 برصيد مشترك.", "B1 ve A2 yazma ve konuşma için ortak hakla yapay zekâ geri bildirimi.", "एक साझा कोटे से B1 और A2 लेखन और बोलने पर AI फ़ीडबैक।", "AI 批改 B1 和 A2 写作及口语，共用额度。", "Comentarios de IA para escritura y expresión oral B1 y A2 con un saldo compartido.", "ИИ проверяет письмо и устную речь на B1 и A2. Лимит общий."],
+  "Eén tegoed voor de hele periode. B1 is inclusief A2.": ["One allowance for the whole period. B1 includes A2.", "رصيد واحد للفترة كلها. تشمل B1 مستوى A2.", "Tüm dönem için tek hak. B1, A2'yi de içerir.", "पूरी अवधि के लिए एक कोटा। B1 में A2 भी शामिल है।", "整个有效期共用一个额度。B1 包含 A2。", "Un saldo para todo el periodo. B1 incluye A2.", "Один лимит на весь срок. В B1 входит A2."],
+  "Een jaar AI-feedback voor één betaling. B1 is inclusief A2.": ["A year of AI feedback with one payment. B1 includes A2.", "عام من ملاحظات الذكاء الاصطناعي بدفعة واحدة. تشمل B1 مستوى A2.", "Tek ödemeyle bir yıl yapay zekâ geri bildirimi. B1, A2'yi de içerir.", "एक भुगतान में एक साल का AI फ़ीडबैक। B1 में A2 भी शामिल है।", "一次付款可获得一年 AI 批改。B1 包含 A2。", "Un año de comentarios de IA con un solo pago. B1 incluye A2.", "Год AI-проверок за одну оплату. В B1 входит A2."],
+  "Handig als je bijna het hele jaar wilt oefenen.": ["Useful if you want to practise for most of the year.", "مناسب إذا أردت التدرّب معظم العام.", "Yılın büyük bölümünde çalışacaksan uygun.", "अगर आप लगभग पूरे साल अभ्यास करना चाहते हैं तो सुविधाजनक।", "适合一年中大部分时间都要练习的人。", "Práctico si quieres practicar durante casi todo el año.", "Подходит, если планируете заниматься большую часть года."],
+  "Losse opdracht: meestal 1 beurt. Proefexamen Schrijven: 2 op A2 of 4 op B1. Proefexamen Spreken: 6.": ["Single task: usually 1 check. Writing mock exam: 2 for A2 or 4 for B1. Speaking mock exam: 6.", "المهمة الواحدة: عادةً تصحيح واحد. امتحان الكتابة التجريبي: 2‏ لـ A2 أو 4 لـ B1. امتحان التحدث التجريبي: 6.", "Tek görev: genelde 1 hak. Yazma deneme sınavı: A2 için 2, B1 için 4. Konuşma deneme sınavı: 6.", "एक अभ्यास: आम तौर पर 1 जाँच। लेखन अभ्यास परीक्षा: A2 के लिए 2 या B1 के लिए 4। बोलने की अभ्यास परीक्षा: 6।", "单项练习通常用 1 次。写作模拟考试：A2 用 2 次，B1 用 4 次。口语模拟考试：6 次。", "Tarea suelta: normalmente 1 revisión. Simulacro de escritura: 2 para A2 o 4 para B1. Simulacro oral: 6.", "Одно задание — обычно 1 проверка. Пробник письма — 2 на A2 или 4 на B1. Пробник устной речи — 6."],
   "Jaarpas": ["Year pass", "تصريح السنة", "Yıllık kart", "सालाना पास", "年度通行证", "Pase anual", "Годовой пропуск"],
   "Een jaar Plus voor één betaling.": ["A year of Plus for one payment.", "سنة من Plus مقابل دفعة واحدة.", "Tek ödemeyle bir yıl Plus.", "एक भुगतान में एक साल का Plus।", "一次付款享一年 Plus。", "Un año de Plus con un solo pago.", "Год Plus за один платёж."],
   "Wordt niet automatisch verlengd.": ["Does not renew automatically.", "لا يتجدد تلقائيًا.", "Otomatik olarak yenilenmez.", "अपने-आप नवीनीकृत नहीं होता।", "不会自动续订。", "No se renueva automáticamente.", "Не продлевается автоматически."],
@@ -142,8 +151,8 @@ const copy = {
 };
 
 const pricing = {
-  nl: ["per maand", n => `Met een gratis account: ${n} gratis nakijkbeurten`, n => `Tot ${n} nakijkbeurten per maand voor je teksten en gesproken antwoorden`],
-  en: ["per month", n => `With a free account: ${n} free checks`, n => `Up to ${n} checks a month for your writing and spoken answers`],
+  nl: ["per maand", n => `Met een gratis account: ${n} gratis nakijkbeurten (eenmalig)`, n => `Tot ${n} nakijkbeurten per maand voor je teksten en gesproken antwoorden`],
+  en: ["per month", n => `With a free account: ${n} free checks (one time)`, n => `Up to ${n} checks a month for your writing and spoken answers`],
   ar: ["شهريًا", n => `بحساب مجاني: ${n} تصحيحات مجانية`, n => `حتى ${n} تصحيح شهريًا لنصوصك وإجاباتك الشفهية`],
   tr: ["aylık", n => `Ücretsiz hesapla ${n} ücretsiz kontrol`, n => `Yazıların ve sözlü yanıtların için ayda ${n}'e kadar kontrol`],
   hi: ["प्रति माह", n => `मुफ़्त खाते से ${n} मुफ़्त जाँचें`, n => `आपके लेखन और बोले गए जवाबों के लिए महीने में ${n} तक जाँचें`],
@@ -152,6 +161,15 @@ const pricing = {
   ru: ["в месяц", n => `Бесплатных проверок с бесплатным аккаунтом: ${n}`, n => `До ${n} проверок в месяц для ваших текстов и устных ответов`],
 };
 // The Examenpas card: how long one payment lasts
+const dailyCopy = {
+  nl:n=>`tot ${n} per dag`, en:n=>`up to ${n} a day`, ar:n=>`حتى ${n} يوميًا`, tr:n=>`günde en fazla ${n}`,
+  hi:n=>`रोज़ अधिकतम ${n}`, zh:n=>`每天最多 ${n} 次`, es:n=>`hasta ${n} al día`, ru:n=>`до ${n} в день`
+};
+const totalCopy = {
+  nl:n=>`${n} nakijkbeurten voor de hele periode`, en:n=>`${n} checks for the whole period`, ar:n=>`${n} تصحيح للفترة كلها`,
+  tr:n=>`Tüm dönem için ${n} kontrol`, hi:n=>`पूरी अवधि के लिए ${n} जाँचें`, zh:n=>`整个有效期共 ${n} 次批改`,
+  es:n=>`${n} revisiones para todo el periodo`, ru:n=>`${n} проверок на весь срок`
+};
 const passWeeks = {
   nl: n => `${n} weken geldig vanaf je betaling`, en: n => `Valid for ${n} weeks from payment`,
   ar: n => `صالح لمدة ${n} أسابيع من الدفع`, tr: n => `Ödemeden itibaren ${n} hafta geçerli`,
@@ -216,7 +234,12 @@ function render() {
   if (config?.free) $("trial-checks").textContent = trialCopy[lang](config.free);
   $("try-free").hidden = !(config?.free && config?.limit);
   if (config?.free && config?.limit) $("try-free").textContent = tryCopy[lang](config.free, config.limit);
+  const allowance = plus?.month && plus?.limit ? `${checks(plus.month)} · ${dailyCopy[lang](plus.limit)}` : "";
   const pass = config?.pass;
+  $("pass-total").hidden = !pass?.total;
+  if (pass?.total && plus?.limit) $("pass-total").textContent = `${totalCopy[lang](pass.total)} · ${dailyCopy[lang](plus.limit)}`;
+  $("year-checks").hidden = !allowance;
+  if (allowance) $("year-checks").textContent = allowance;
   $("pass-card").hidden = config ? !(active && pass?.plans?.A2 && pass?.plans?.B1) : false;
   if (pass?.plans?.A2 && pass?.plans?.B1) {
     const eur = p => `€ ${lang === "en" ? String(p).replace(",", ".") : p}`;
@@ -242,7 +265,7 @@ function render() {
     const period = document.createElement("small");
     period.textContent = month;
     $(price).replaceChildren(amount, " ", period);
-    $(check).textContent = checks(plus.month || 200);
+    if (allowance) $(check).textContent = allowance;
   }
 }
 select.addEventListener("change", () => {

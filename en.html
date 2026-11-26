@@ -52,10 +52,10 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Bittertalen","url":"https://bittertalen.nl/en","applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":"en","educationalLevel":["A2","B1"],"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}
 </script>
-<script defer src="/landing.js?v=launch-a2-review"></script>
+<script defer src="/landing.js?v=launch-offers"></script>
 <script defer src="/lib/gsap-3.15.1.min.js"></script>
 <script defer src="/lib/ScrollTrigger-3.15.1.min.js"></script>
-<script defer src="/landing-motion-v3.js?v=hero-readable"></script>
+<script defer src="/landing-motion-v3.js?v=hero-still"></script>
 </head>
 <body>
 <header class="top">
@@ -89,6 +89,7 @@
         <a class="button outline" href="/oefenen?open=b1" data-t="Oefen op B1">Practise B1</a>
         <a class="button apple-download" id="download-app" href="#install-app"><span data-t="Installeer de app">Install the app</span></a>
       </div>
+      <p><a href="/oefenen?open=writing" data-t="Oefen met Schrijven A2">Practise A2 writing</a></p>
       <p class="hero-note" data-t="Gratis en zonder account te proberen, ook met AI-nakijken.">Free to try without an account, AI checking included.</p>
     </div>
     <figure class="hero-art">
@@ -252,7 +253,8 @@
         <p class="price" id="plus-price"><bdi>€ 9,99</bdi> <small data-t="per maand">per month</small></p>
         <ul>
           <li id="plus-checks" data-t="Tot 200 nakijkbeurten per maand voor je teksten en gesproken antwoorden">Up to 200 checks a month for your writing and spoken answers</li>
-          <li data-t="Uitgebreide feedback van een sterker AI-model, ook op je proefexamens.">Detailed feedback from a stronger AI model, also on your practice exams.</li>
+          <li data-t="AI-feedback op Schrijven en Spreken A2, ook bij proefexamens.">AI feedback for A2 writing and speaking, including mock exams.</li>
+          <li data-t="Handig voor één of twee maanden voorbereiding.">Useful for one or two months of preparation.</li>
           <li data-t="Elke maand opzegbaar">Cancel any month</li>
         </ul>
         <a class="button outline" href="/oefenen?open=plus&amp;choice=plus-a2" id="plus-link" data-t="Kies Plus A2">Choose Plus A2</a>
@@ -262,7 +264,7 @@
         <p class="price" id="plus-b1-price"><bdi>€ 14,99</bdi> <small data-t="per maand">per month</small></p>
         <ul>
           <li id="plus-b1-checks" data-t="Tot 200 nakijkbeurten per maand voor je teksten en gesproken antwoorden">Up to 200 checks a month for your writing and spoken answers</li>
-          <li data-t="Ook Schrijven en Spreken B1, met A2 erbij.">Also Writing and Speaking B1, with A2 included.</li>
+          <li data-t="AI-feedback op Schrijven en Spreken B1 én A2 met één tegoed.">AI feedback for writing and speaking at B1 and A2, with one shared allowance.</li>
           <li data-t="Elke maand opzegbaar">Cancel any month</li>
         </ul>
         <a class="button outline" href="/oefenen?open=plus&amp;choice=plus-b1" data-t="Kies Plus B1">Choose Plus B1</a>
@@ -273,7 +275,9 @@
         <ul>
           <li data-t="Eén keer betalen, geen abonnement.">Pay once, no subscription.</li>
           <li id="pass-weeks" data-t="13 weken geldig vanaf je betaling">Valid for 13 weeks from payment</li>
-          <li data-t="A2 of B1, met dezelfde nakijkbeurten als Plus.">A2 or B1, with the same checks as Plus.</li>
+          <li data-t="Eén tegoed voor de hele periode. B1 is inclusief A2.">One allowance for the whole period. B1 includes A2.</li>
+          <li id="pass-total" hidden></li>
+          <li data-t="Handig als je examendatum vaststaat.">Useful when you know your exam date.</li>
         </ul>
         <a class="button outline" href="/oefenen?open=plus&amp;choice=exam" data-t="Kies de Examenpas">Choose the exam pass</a>
       </article>
@@ -281,13 +285,15 @@
         <h3 data-t="Jaarpas">Year pass</h3>
         <p class="price" id="year-price"><bdi>€ 79,99</bdi> <small>A2</small><br><bdi>€ 119,99</bdi> <small>B1</small></p>
         <ul>
-          <li data-t="Een jaar Plus voor één betaling.">A year of Plus for one payment.</li>
+          <li data-t="Een jaar AI-feedback voor één betaling. B1 is inclusief A2.">A year of AI feedback with one payment. B1 includes A2.</li>
           <li data-t="Wordt niet automatisch verlengd.">Does not renew automatically.</li>
-          <li data-t="A2 of B1, met dezelfde nakijkbeurten als Plus.">A2 or B1, with the same checks as Plus.</li>
+          <li id="year-checks" hidden></li>
+          <li data-t="Voordeliger vanaf negen maanden Plus.">Cheaper than nine or more monthly Plus payments.</li>
         </ul>
         <a class="button outline" href="/oefenen?open=plus&amp;choice=year" data-t="Kies de Jaarpas">Choose the year pass</a>
       </article>
     </div>
+    <p class="note" data-t="Losse opdracht: meestal 1 beurt. Proefexamen Schrijven: 2 op A2 of 4 op B1. Proefexamen Spreken: 6.">Single task: usually 1 check. Writing mock exam: 2 for A2 or 4 for B1. Speaking mock exam: 6.</p>
     <p class="note" data-t="Niet tevreden? Binnen 14 dagen na je eerste betaling krijg je je geld terug.">Not satisfied? Get your money back within 14 days of your first payment.</p>
   </section>
 

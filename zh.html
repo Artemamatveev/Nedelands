@@ -52,10 +52,10 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Bittertalen","url":"https://bittertalen.nl/zh","applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":"zh-Hans","educationalLevel":["A2","B1"],"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}
 </script>
-<script defer src="/landing.js?v=launch-a2-review"></script>
+<script defer src="/landing.js?v=launch-offers"></script>
 <script defer src="/lib/gsap-3.15.1.min.js"></script>
 <script defer src="/lib/ScrollTrigger-3.15.1.min.js"></script>
-<script defer src="/landing-motion-v3.js?v=hero-readable"></script>
+<script defer src="/landing-motion-v3.js?v=hero-still"></script>
 </head>
 <body>
 <header class="top">
@@ -89,6 +89,7 @@
         <a class="button outline" href="/oefenen?open=b1" data-t="Oefen op B1">练习 B1</a>
         <a class="button apple-download" id="download-app" href="#install-app"><span data-t="Installeer de app">安装应用</span></a>
       </div>
+      <p><a href="/oefenen?open=writing" data-t="Oefen met Schrijven A2">练习 A2 写作</a></p>
       <p class="hero-note" data-t="Gratis en zonder account te proberen, ook met AI-nakijken.">无需账户即可免费试用，包括 AI 批改。</p>
     </div>
     <figure class="hero-art">
@@ -252,7 +253,8 @@
         <p class="price" id="plus-price"><bdi>€ 9,99</bdi> <small data-t="per maand">每月</small></p>
         <ul>
           <li id="plus-checks" data-t="Tot 200 nakijkbeurten per maand voor je teksten en gesproken antwoorden">每月最多 200 次批改，用于你的写作和口语回答</li>
-          <li data-t="Uitgebreide feedback van een sterker AI-model, ook op je proefexamens.">由更强的 AI 模型给出详细反馈，模拟考试也一样。</li>
+          <li data-t="AI-feedback op Schrijven en Spreken A2, ook bij proefexamens.">AI 批改 A2 写作和口语，包括模拟考试。</li>
+          <li data-t="Handig voor één of twee maanden voorbereiding.">适合一到两个月的备考。</li>
           <li data-t="Elke maand opzegbaar">每月都可取消</li>
         </ul>
         <a class="button outline" href="/oefenen?open=plus&amp;choice=plus-a2" id="plus-link" data-t="Kies Plus A2">选择 Plus A2</a>
@@ -262,7 +264,7 @@
         <p class="price" id="plus-b1-price"><bdi>€ 14,99</bdi> <small data-t="per maand">每月</small></p>
         <ul>
           <li id="plus-b1-checks" data-t="Tot 200 nakijkbeurten per maand voor je teksten en gesproken antwoorden">每月最多 200 次批改，用于你的写作和口语回答</li>
-          <li data-t="Ook Schrijven en Spreken B1, met A2 erbij.">还包括 B1 写作和口语，并含 A2。</li>
+          <li data-t="AI-feedback op Schrijven en Spreken B1 én A2 met één tegoed.">AI 批改 B1 和 A2 写作及口语，共用额度。</li>
           <li data-t="Elke maand opzegbaar">每月都可取消</li>
         </ul>
         <a class="button outline" href="/oefenen?open=plus&amp;choice=plus-b1" data-t="Kies Plus B1">选择 Plus B1</a>
@@ -273,7 +275,9 @@
         <ul>
           <li data-t="Eén keer betalen, geen abonnement.">一次付款，无需订阅。</li>
           <li id="pass-weeks" data-t="13 weken geldig vanaf je betaling">自付款起 13 周内有效</li>
-          <li data-t="A2 of B1, met dezelfde nakijkbeurten als Plus.">A2 或 B1，批改次数与 Plus 相同。</li>
+          <li data-t="Eén tegoed voor de hele periode. B1 is inclusief A2.">整个有效期共用一个额度。B1 包含 A2。</li>
+          <li id="pass-total" hidden></li>
+          <li data-t="Handig als je examendatum vaststaat.">适合已确定考试日期的考生。</li>
         </ul>
         <a class="button outline" href="/oefenen?open=plus&amp;choice=exam" data-t="Kies de Examenpas">选择考试通行证</a>
       </article>
@@ -281,13 +285,15 @@
         <h3 data-t="Jaarpas">年度通行证</h3>
         <p class="price" id="year-price"><bdi>€ 79,99</bdi> <small>A2</small><br><bdi>€ 119,99</bdi> <small>B1</small></p>
         <ul>
-          <li data-t="Een jaar Plus voor één betaling.">一次付款享一年 Plus。</li>
+          <li data-t="Een jaar AI-feedback voor één betaling. B1 is inclusief A2.">一次付款可获得一年 AI 批改。B1 包含 A2。</li>
           <li data-t="Wordt niet automatisch verlengd.">不会自动续订。</li>
-          <li data-t="A2 of B1, met dezelfde nakijkbeurten als Plus.">A2 或 B1，批改次数与 Plus 相同。</li>
+          <li id="year-checks" hidden></li>
+          <li data-t="Voordeliger vanaf negen maanden Plus.">比按月支付九个月及以上的 Plus 更便宜。</li>
         </ul>
         <a class="button outline" href="/oefenen?open=plus&amp;choice=year" data-t="Kies de Jaarpas">选择年度通行证</a>
       </article>
     </div>
+    <p class="note" data-t="Losse opdracht: meestal 1 beurt. Proefexamen Schrijven: 2 op A2 of 4 op B1. Proefexamen Spreken: 6.">单项练习通常用 1 次。写作模拟考试：A2 用 2 次，B1 用 4 次。口语模拟考试：6 次。</p>
     <p class="note" data-t="Niet tevreden? Binnen 14 dagen na je eerste betaling krijg je je geld terug.">不满意？首次付款后 14 天内可退款。</p>
   </section>
 

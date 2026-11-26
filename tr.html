@@ -52,10 +52,10 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Bittertalen","url":"https://bittertalen.nl/tr","applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":"tr","educationalLevel":["A2","B1"],"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}
 </script>
-<script defer src="/landing.js?v=launch-a2-review"></script>
+<script defer src="/landing.js?v=launch-offers"></script>
 <script defer src="/lib/gsap-3.15.1.min.js"></script>
 <script defer src="/lib/ScrollTrigger-3.15.1.min.js"></script>
-<script defer src="/landing-motion-v3.js?v=hero-readable"></script>
+<script defer src="/landing-motion-v3.js?v=hero-still"></script>
 </head>
 <body>
 <header class="top">
@@ -89,6 +89,7 @@
         <a class="button outline" href="/oefenen?open=b1" data-t="Oefen op B1">B1 çalış</a>
         <a class="button apple-download" id="download-app" href="#install-app"><span data-t="Installeer de app">Uygulamayı yükle</span></a>
       </div>
+      <p><a href="/oefenen?open=writing" data-t="Oefen met Schrijven A2">A2 yazma çalış</a></p>
       <p class="hero-note" data-t="Gratis en zonder account te proberen, ook met AI-nakijken.">Hesapsız ve ücretsiz dene, yapay zekâ kontrolü dahil.</p>
     </div>
     <figure class="hero-art">
@@ -252,7 +253,8 @@
         <p class="price" id="plus-price"><bdi>€ 9,99</bdi> <small data-t="per maand">aylık</small></p>
         <ul>
           <li id="plus-checks" data-t="Tot 200 nakijkbeurten per maand voor je teksten en gesproken antwoorden">Yazıların ve sözlü yanıtların için ayda 200'e kadar kontrol</li>
-          <li data-t="Uitgebreide feedback van een sterker AI-model, ook op je proefexamens.">Daha güçlü bir yapay zekâ modelinden ayrıntılı geri bildirim, deneme sınavlarında da.</li>
+          <li data-t="AI-feedback op Schrijven en Spreken A2, ook bij proefexamens.">Deneme sınavları dahil A2 yazma ve konuşma için yapay zekâ geri bildirimi.</li>
+          <li data-t="Handig voor één of twee maanden voorbereiding.">Bir veya iki aylık hazırlık için uygun.</li>
           <li data-t="Elke maand opzegbaar">Her ay iptal edilebilir</li>
         </ul>
         <a class="button outline" href="/oefenen?open=plus&amp;choice=plus-a2" id="plus-link" data-t="Kies Plus A2">Plus A2 seç</a>
@@ -262,7 +264,7 @@
         <p class="price" id="plus-b1-price"><bdi>€ 14,99</bdi> <small data-t="per maand">aylık</small></p>
         <ul>
           <li id="plus-b1-checks" data-t="Tot 200 nakijkbeurten per maand voor je teksten en gesproken antwoorden">Yazıların ve sözlü yanıtların için ayda 200'e kadar kontrol</li>
-          <li data-t="Ook Schrijven en Spreken B1, met A2 erbij.">B1 Yazma ve Konuşma da dahil, A2 ile birlikte.</li>
+          <li data-t="AI-feedback op Schrijven en Spreken B1 én A2 met één tegoed.">B1 ve A2 yazma ve konuşma için ortak hakla yapay zekâ geri bildirimi.</li>
           <li data-t="Elke maand opzegbaar">Her ay iptal edilebilir</li>
         </ul>
         <a class="button outline" href="/oefenen?open=plus&amp;choice=plus-b1" data-t="Kies Plus B1">Plus B1 seç</a>
@@ -273,7 +275,9 @@
         <ul>
           <li data-t="Eén keer betalen, geen abonnement.">Bir kez öde, abonelik yok.</li>
           <li id="pass-weeks" data-t="13 weken geldig vanaf je betaling">Ödemeden itibaren 13 hafta geçerli</li>
-          <li data-t="A2 of B1, met dezelfde nakijkbeurten als Plus.">A2 veya B1, Plus ile aynı kontrollerle.</li>
+          <li data-t="Eén tegoed voor de hele periode. B1 is inclusief A2.">Tüm dönem için tek hak. B1, A2'yi de içerir.</li>
+          <li id="pass-total" hidden></li>
+          <li data-t="Handig als je examendatum vaststaat.">Sınav tarihin belliyse kullanışlı.</li>
         </ul>
         <a class="button outline" href="/oefenen?open=plus&amp;choice=exam" data-t="Kies de Examenpas">Sınav kartını seç</a>
       </article>
@@ -281,13 +285,15 @@
         <h3 data-t="Jaarpas">Yıllık kart</h3>
         <p class="price" id="year-price"><bdi>€ 79,99</bdi> <small>A2</small><br><bdi>€ 119,99</bdi> <small>B1</small></p>
         <ul>
-          <li data-t="Een jaar Plus voor één betaling.">Tek ödemeyle bir yıl Plus.</li>
+          <li data-t="Een jaar AI-feedback voor één betaling. B1 is inclusief A2.">Tek ödemeyle bir yıl yapay zekâ geri bildirimi. B1, A2'yi de içerir.</li>
           <li data-t="Wordt niet automatisch verlengd.">Otomatik olarak yenilenmez.</li>
-          <li data-t="A2 of B1, met dezelfde nakijkbeurten als Plus.">A2 veya B1, Plus ile aynı kontrollerle.</li>
+          <li id="year-checks" hidden></li>
+          <li data-t="Voordeliger vanaf negen maanden Plus.">Dokuz ay ve üzeri Plus ödemesinden daha uygun.</li>
         </ul>
         <a class="button outline" href="/oefenen?open=plus&amp;choice=year" data-t="Kies de Jaarpas">Yıllık kartı seç</a>
       </article>
     </div>
+    <p class="note" data-t="Losse opdracht: meestal 1 beurt. Proefexamen Schrijven: 2 op A2 of 4 op B1. Proefexamen Spreken: 6.">Tek görev: genelde 1 hak. Yazma deneme sınavı: A2 için 2, B1 için 4. Konuşma deneme sınavı: 6.</p>
     <p class="note" data-t="Niet tevreden? Binnen 14 dagen na je eerste betaling krijg je je geld terug.">Memnun değil misin? İlk ödemenden sonraki 14 gün içinde paranı geri al.</p>
   </section>
 

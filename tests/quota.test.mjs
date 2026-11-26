@@ -47,3 +47,27 @@ test('Postgres enforces weekly, daily and one-time budgets, refunds, resets and 
     await db.exec('reset role');
   } finally { await db.close(); }
 });
+
+test('Grading receipts replay completed work only to the same owner and expire before re-use', async () => {
+  const db = new PGlite();
+  const first = '11111111-1111-1111-1111-111111111111', second = '22222222-2222-2222-2222-222222222222';
+  const id = '33333333-3333-3333-3333-333333333333';
+  try {
+    await db.exec(`create role anon; create role authenticated; create role service_role bypassrls;
+      create schema auth; create table auth.users(id uuid primary key);
+      insert into auth.users values ('${first}'), ('${second}');`);
+    await db.exec(fs.readFileSync(new URL('../supabase/migrations/20261125123000_grading_receipts.sql', import.meta.url), 'utf8'));
+    const claim = async (owner, digest = 'digest') => (await db.query(
+      'select public.claim_grading_receipt($1, $2, $3) as receipt', [owner, id, digest])).rows[0].receipt;
+    assert.deepEqual(await claim(first), {state:'new'});
+    assert.deepEqual(await claim(first), {state:'pending'});
+    await db.query('update public.grading_receipts set result=$1 where owner=$2', [JSON.stringify({tasks:[]}), first]);
+    assert.deepEqual(await claim(first), {state:'done',result:{tasks:[]}});
+    assert.deepEqual(await claim(second), {state:'new'});
+    assert.deepEqual(await claim(first, 'edited'), {state:'new'});
+    await db.exec("update public.grading_receipts set created_at=now()-interval '25 hours'");
+    assert.deepEqual(await claim(first), {state:'new'});
+    await db.exec('set role authenticated');
+    await assert.rejects(claim(first), /permission denied/);
+  } finally { await db.close(); }
+});
