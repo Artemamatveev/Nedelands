@@ -93,8 +93,7 @@ Mail aan dat adres komt binnen in de mailbox van de maker bij Apple (iCloud Mail
 <h2>Zonder account</h2>
 <p>Je kunt Bittertalen gebruiken zonder account. Je voortgang (je antwoorden, proefexamens, woorden en je naam als je
 die invult), je eigen boeken, concepten van schrijfopdrachten en waar je was in een podcast staan dan alleen in je browser, op je
-eigen apparaat. Wij krijgen dat niet te zien. Opnames en uitgeschreven antwoorden bij Spreken blijven alleen in het
-geheugen tot je de pagina sluit.</p>
+eigen apparaat. Wij krijgen dat niet te zien. Opnames blijven in het geheugen tot je de pagina sluit. Uitgeschreven antwoorden van een onafgemaakt proefexamen Spreken A2 blijven in een concept op dit apparaat. Na beoordeling verdwijnt het concept. Je kunt het ook zelf wissen.</p>
 
 <h2>Met een account</h2>
 <p>Een account is niet verplicht. Maak je er een, dan bewaren we:</p>
@@ -118,7 +117,7 @@ verbeteren, niet voor reclame (gerechtvaardigd belang, artikel 6 lid 1 f AVG).</
 <h2>Nakijken van teksten</h2>
 <p>Bij Schrijven en Spreken kun je je tekst of je uitgeschreven antwoord laten nakijken. Dan gaan de opdracht en jouw
 tekst via onze server naar Anthropic, in de Verenigde Staten. Je naam en e-mailadres gaan
-niet mee. Wij bewaren je teksten niet op onze server. Anthropic gebruikt ze niet om modellen te trainen en verwijdert
+niet mee. Bij een proefexamen met een account bewaren we de beoordeling tijdelijk bij Supabase in Frankfurt. Zo kun je dezelfde beoordeling 24 uur lang opnieuw ophalen zonder een tweede nakijkbeurt. Verlopen beoordelingen worden bij een volgende aanvraag opgeruimd. Anthropic gebruikt ze niet om modellen te trainen en verwijdert
 ze volgens zijn eigen regels binnen 30 dagen, behalve als het ze langer nodig heeft om misbruik te onderzoeken of omdat
 de wet dat vraagt.</p>
 <p>Bij Gesprekken voer je een gesprek met AI. Wat je zegt (zoals je telefoon het opschrijft) en het gesprek tot dan toe gaan op dezelfde manier naar Anthropic. Wat de ander in het gesprek zegt, gaat naar Google (Cloud Text-to-Speech), dat er een stem van maakt. Wij bewaren het gesprek niet op onze server. Alleen de tips aan het eind komen bij je eigen fouten, in je voortgang.</p>
@@ -188,6 +187,7 @@ De video's en podcasts zijn van hun makers; Bittertalen laat ze alleen zien en v
 <h2>Cookies</h2>
 <p>Bittertalen gebruikt één noodzakelijke cookie, <code>bt_trial</code>, alleen zonder account en alleen voor de twee proefbeurten (zie hierboven), en volgt je niet op andere websites. De app bewaart wel gegevens in je browser
 (local storage en IndexedDB), maar alleen om te werken: je voortgang, je instellingen, of je bent ingelogd, de datum waarop je apparaat voor het laatst is geteld en de uitnodigingscode van een vriend als je via zijn link komt.</p>
+<p>Bij zoekadvertenties tellen we anoniem het begin, de eerste controle, het openen van de betaalpagina en bevestigde toegang per advertentiegroep. De groep en de stappen staan alleen in het browsertabblad.</p>
 
 <h2>Buiten de EU</h2>
 <p>Vercel, Anthropic, Google en Apple zitten in de Verenigde Staten. Stripe kan gegevens ook in de Verenigde Staten verwerken. Daar gaan gegevens alleen heen met de waarborgen die de AVG
@@ -196,7 +196,7 @@ vraagt, zoals het EU-VS Data Privacy Framework of de standaardcontractbepalingen
 <h2>Hoe lang</h2>
 <ul>
 <li>Je account en je voortgang: tot je je account verwijdert. Dan wordt alles bij Supabase meteen gewist.</li>
-<li>Teksten die je laat nakijken: niet bij ons; bij Anthropic hooguit 30 dagen (zie boven).</li>
+<li>Anthropic bewaart teksten voor nakijken hooguit 30 dagen (zie boven).</li>
 <li>Logboeken van Vercel, Supabase en Resend: korte tijd, voor beveiliging en om problemen op te lossen.</li>
 <li>Op je eigen apparaat: tot je de gegevens van de site wist in je browser.</li>
 <li>De cookie en code voor het eenmalige proeftegoed zonder account: hooguit 400 dagen.</li>
@@ -248,7 +248,7 @@ laatst gebeurde.</p>
 <p>Bittertalen is made by Artem Matveev. He is responsible for your data (the data controller). Questions about your data? Send an e-mail to <a href="mailto:privacy@bittertalen.nl">privacy@bittertalen.nl</a>. E-mail to that address arrives in the maker's mailbox at Apple (iCloud Mail).</p>
 
 <h2>Without an account</h2>
-<p>You can use Bittertalen without an account. Your progress (your answers, practice exams, words and your name if you fill it in), your own books, drafts of writing tasks and where you were in a podcast are then only in your browser, on your own device. We do not get to see that. Recordings and written-out answers in Speaking stay only in the memory until you close the page.</p>
+<p>You can use Bittertalen without an account. Your progress (your answers, practice exams, words and your name if you fill it in), your own books, drafts of writing tasks and where you were in a podcast are then only in your browser, on your own device. We do not get to see that. Recordings stay in memory until you close the page. Transcripts of unfinished A2 Speaking practice exams are saved as a draft on this device. The draft clears after grading and you can also delete it yourself.</p>
 
 <h2>With an account</h2>
 <p>An account is not required. If you make one, we keep:</p>
@@ -265,7 +265,7 @@ laatst gebeurde.</p>
 <p>The maker of Bittertalen can see an overview of the accounts: when you last practised and how much (how many questions, practice exams and minutes). Only he can open that overview. He uses it to run and improve the app, not for advertising (legitimate interest, Article 6(1)(f) GDPR).</p>
 
 <h2>Checking your writing</h2>
-<p>In Writing and Speaking you can have your text or your written-out answer checked. The task and your text then go through our server to Anthropic, in the United States. Your name and e-mail address do not go with it. We do not keep your texts on our server. Anthropic does not use them to train models and, under its own rules, deletes them within 30 days, unless it needs them longer to investigate abuse or because the law requires it.</p>
+<p>In Writing and Speaking you can have your text or your written-out answer checked. The task and your text then go through our server to Anthropic, in the United States. Your name and e-mail address do not go with it. When you take a practice exam while signed in, we temporarily store the feedback at Supabase in Frankfurt. You can retrieve the same feedback for 24 hours without using another check. Expired feedback is cleared on a later request. Anthropic does not use them to train models and, under its own rules, deletes them within 30 days, unless it needs them longer to investigate abuse or because the law requires it.</p>
 <p>In Conversations you have a conversation with AI. What you say (as your phone writes it down) and the conversation so far go to Anthropic in the same way. What the other person in the conversation says goes to Google (Cloud Text-to-Speech), which turns it into a voice. We do not keep the conversation on our server. Only the tips at the end go to your own mistakes, in your progress.</p>
 <p>If an AI character's answer is wrong, hurtful or inappropriate, you can report it (Report). We then receive that answer and which character said it, to review and improve it (legitimate interest, Article 6(1)(f) GDPR). Your own text and your account are not sent.</p>
 <p>Saskia can remember things about you, but only if you give permission (Article 6(1)(a) GDPR). These are short facts from your conversations, such as your work or your plans, at most twenty. They are kept in your progress: without an account on your device, with an account also at Supabase. In a conversation with Saskia they go along to Anthropic, and what she says about them goes to Google. We ask the AI not to remember anything about health, religion, politics, residence status, money or contact details, and a filter stops such facts, but it can make mistakes. In Profile, under What Saskia knows about you, you can see everything, erase it and switch it off. If you delete your account, they disappear too.</p>
@@ -298,6 +298,7 @@ laatst gebeurde.</p>
 
 <h2>Cookies</h2>
 <p>Bittertalen uses one necessary cookie, <code>bt_trial</code>, only without an account and only for the two trial checks (see above), and does not follow you on other websites. The app does keep data in your browser (local storage and IndexedDB), but only in order to work: your progress, your settings, whether you are logged in, the date your device was last counted and a friend’s invitation code if you came through their link.</p>
+<p>For search ads we anonymously count starts, first checks, checkout opens and confirmed access by ad group. The group and steps stay in the browser tab.</p>
 
 <h2>Outside the EU</h2>
 <p>Vercel, Anthropic, Google and Apple are in the United States. Stripe may also process data in the United States. Data only goes there with the safeguards the GDPR requires, such as the EU-US Data Privacy Framework or the European Commission's standard contractual clauses.</p>
@@ -305,7 +306,7 @@ laatst gebeurde.</p>
 <h2>How long</h2>
 <ul>
 <li>Your account and your progress: until you delete your account. Then everything at Supabase is erased at once.</li>
-<li>Texts you have checked: not with us; at Anthropic for at most 30 days (see above).</li>
+<li>Anthropic keeps texts sent for checking for at most 30 days (see above).</li>
 <li>Logs of Vercel, Supabase and Resend: a short time, for security and to solve problems.</li>
 <li>On your own device: until you clear the site's data in your browser.</li>
 <li>The code for free checks without an account: at most two days.</li>
@@ -350,7 +351,7 @@ laatst gebeurde.</p>
 <p>صنع Bittertalen هو Artem Matveev. وهو المسؤول عن بياناتك (المتحكم في البيانات). هل لديك أسئلة عن بياناتك؟ راسل <a href="mailto:privacy@bittertalen.nl">privacy@bittertalen.nl</a>. تصل الرسائل إلى هذا العنوان إلى صندوق بريد صانع التطبيق لدى Apple (iCloud Mail).</p>
 
 <h2>بدون حساب</h2>
-<p>يمكنك استخدام Bittertalen بدون حساب. عندها يبقى تقدّمك (إجاباتك وامتحاناتك التجريبية وكلماتك واسمك إن أدخلته) وكتبك ومسودات مهام الكتابة والموضع الذي وصلت إليه في البودكاست في متصفحك فقط، على جهازك. لا نطّلع نحن على ذلك. أما التسجيلات والإجابات المكتوبة في قسم المحادثة فتبقى في الذاكرة فقط حتى تغلق الصفحة.</p>
+<p>يمكنك استخدام Bittertalen بدون حساب. عندها يبقى تقدّمك (إجاباتك وامتحاناتك التجريبية وكلماتك واسمك إن أدخلته) وكتبك ومسودات مهام الكتابة والموضع الذي وصلت إليه في البودكاست في متصفحك فقط، على جهازك. لا نطّلع نحن على ذلك. تبقى التسجيلات في الذاكرة حتى تغلق الصفحة. تُحفظ النصوص المفرغة لامتحان المحادثة التجريبي A2 غير المكتمل كمسودة على هذا الجهاز. تُحذف المسودة بعد التصحيح، ويمكنك حذفها بنفسك أيضًا.</p>
 
 <h2>مع الحساب</h2>
 <p>الحساب ليس إلزاميًا. إذا أنشأت حسابًا، نحفظ:</p>
@@ -367,7 +368,7 @@ laatst gebeurde.</p>
 <p>يستطيع صانع Bittertalen أن يرى نظرة عامة على الحسابات: متى تدرّبت آخر مرة وكم تدرّبت (عدد الأسئلة والامتحانات التجريبية والدقائق). هو وحده يستطيع فتح هذه النظرة العامة. يستخدمها لإدارة التطبيق وتحسينه، وليس للإعلانات (المصلحة المشروعة، المادة 6 الفقرة 1 و من GDPR).</p>
 
 <h2>تصحيح النصوص</h2>
-<p>في قسمي الكتابة والمحادثة يمكنك طلب تصحيح نصك أو إجابتك المكتوبة. عندها تُرسل المهمة ونصك عبر خادمنا إلى Anthropic، في الولايات المتحدة. لا يُرسل اسمك ولا بريدك الإلكتروني معهما. لا نحفظ نصوصك على خادمنا. لا تستخدمها Anthropic لتدريب النماذج، وتحذفها وفق قواعدها خلال 30 يومًا، إلا إذا احتاجت إليها مدة أطول للتحقيق في إساءة الاستخدام أو لأن القانون يتطلب ذلك.</p>
+<p>في قسمي الكتابة والمحادثة يمكنك طلب تصحيح نصك أو إجابتك المكتوبة. عندها تُرسل المهمة ونصك عبر خادمنا إلى Anthropic، في الولايات المتحدة. لا يُرسل اسمك ولا بريدك الإلكتروني معهما. عند تقديم امتحان تجريبي وأنت مسجّل الدخول، نحفظ التقييم مؤقتًا لدى Supabase في فرانكفورت. يمكنك استرجاع التقييم نفسه خلال 24 ساعة دون استخدام محاولة تصحيح أخرى. تُزال التقييمات المنتهية عند طلب لاحق. لا تستخدمها Anthropic لتدريب النماذج، وتحذفها وفق قواعدها خلال 30 يومًا، إلا إذا احتاجت إليها مدة أطول للتحقيق في إساءة الاستخدام أو لأن القانون يتطلب ذلك.</p>
 <p>في «المحادثات» تُجري محادثة مع الذكاء الاصطناعي. ما تقوله (كما يكتبه هاتفك) والمحادثة حتى تلك اللحظة يُرسلان بالطريقة نفسها إلى Anthropic. وما يقوله الطرف الآخر في المحادثة يُرسل إلى Google (Cloud Text-to-Speech) لتحويله إلى صوت. لا نحفظ المحادثة على خادمنا. فقط النصائح في النهاية تُضاف إلى أخطائك، ضمن تقدّمك.</p>
 <p>إذا كانت إجابة إحدى الشخصيات الذكية خاطئة أو مؤذية أو غير لائقة، يمكنك الإبلاغ عنها (إبلاغ). نتلقى عندها تلك الإجابة واسم الشخصية لمراجعتها وتحسينها (مصلحة مشروعة، المادة 6(1)(و) من اللائحة العامة لحماية البيانات). لا يُرسل نصك ولا حسابك.</p>
 <p>يمكن لساسكيا أن تتذكر أشياء عنك، ولكن فقط إذا سمحت بذلك (المادة 6 فقرة 1 حرف أ من GDPR). إنها حقائق قصيرة من محادثاتكما، مثل عملك أو خططك، بحد أقصى عشرين. تُحفظ ضمن تقدّمك: من دون حساب على جهازك، ومع حساب لدى Supabase أيضًا. في المحادثة مع ساسكيا تُرسل إلى Anthropic، وما تقوله عنها يُرسل إلى Google. نطلب من الذكاء الاصطناعي ألا يتذكر شيئًا عن الصحة أو الدين أو السياسة أو وضع الإقامة أو المال أو بيانات الاتصال، ويمنع مرشِّح مثل هذه الحقائق، لكنه قد يخطئ. في الملف الشخصي، تحت «ما تعرفه ساسكيا عنك»، يمكنك رؤية كل شيء ومسحه وإيقافه. وإذا حذفت حسابك اختفت أيضًا.</p>
@@ -400,6 +401,7 @@ laatst gebeurde.</p>
 
 <h2>ملفات تعريف الارتباط</h2>
 <p>يستخدم Bittertalen ملف تعريف ارتباط ضروريًا واحدًا، <code>bt_trial</code>، فقط بدون حساب وفقط للتصحيحين التجريبيين (انظر أعلاه)، ولا يتتبعك على مواقع أخرى. لكن التطبيق يحفظ بيانات في متصفحك (local storage وIndexedDB)، وذلك فقط لكي يعمل: تقدّمك وإعداداتك وهل سجّلت الدخول، وتاريخ آخر مرة حُسب فيها جهازك، ورمز دعوة صديق إذا جئت عبر رابطه.</p>
+<p>نحصي بشكل مجهول بدء التمرين وأول تصحيح وفتح صفحة الدفع وتأكيد الوصول لكل مجموعة إعلانات بحث. تبقى المجموعة والخطوات في علامة تبويب المتصفح.</p>
 
 <h2>خارج الاتحاد الأوروبي</h2>
 <p>توجد Vercel وAnthropic وGoogle وApple في الولايات المتحدة. وقد تعالج Stripe البيانات أيضًا في الولايات المتحدة. لا تُرسل البيانات إلى هناك إلا بالضمانات التي تطلبها GDPR، مثل إطار خصوصية البيانات بين الاتحاد الأوروبي والولايات المتحدة أو البنود التعاقدية القياسية للمفوضية الأوروبية.</p>
@@ -407,7 +409,7 @@ laatst gebeurde.</p>
 <h2>إلى متى</h2>
 <ul>
 <li>حسابك وتقدّمك: حتى تحذف حسابك. عندها يُمسح كل شيء لدى Supabase فورًا.</li>
-<li>النصوص التي تطلب تصحيحها: لا تُحفظ لدينا؛ ولدى Anthropic 30 يومًا كحد أقصى (انظر أعلاه).</li>
+<li>تحتفظ Anthropic بنصوص التصحيح مدة لا تتجاوز 30 يومًا (انظر أعلاه).</li>
 <li>سجلات Vercel وSupabase وResend: لفترة قصيرة، للأمان ولحل المشكلات.</li>
 <li>على جهازك: حتى تمسح بيانات الموقع في متصفحك.</li>
 <li>رمز التصحيح المجاني بدون حساب: يومان كحد أقصى.</li>
@@ -452,7 +454,7 @@ laatst gebeurde.</p>
 <p>Bittertalen'i Artem Matveev yapıyor. Verilerinden o sorumludur (veri sorumlusu). Verilerinle ilgili soruların mı var? <a href="mailto:privacy@bittertalen.nl">privacy@bittertalen.nl</a> adresine yaz. Bu adrese gelen e-postalar, uygulamayı yapan kişinin Apple'daki (iCloud Mail) posta kutusuna düşer.</p>
 
 <h2>Hesap olmadan</h2>
-<p>Bittertalen'i hesap olmadan kullanabilirsin. O zaman ilerlemen (cevapların, deneme sınavların, kelimelerin ve yazdıysan adın), kendi kitapların, yazma görevi taslakların ve bir podcast'te kaldığın yer yalnızca tarayıcında, kendi cihazında durur. Biz bunları görmeyiz. Konuşma bölümündeki kayıtlar ve yazıya dökülmüş cevaplar, sayfayı kapatana kadar yalnızca bellekte kalır.</p>
+<p>Bittertalen'i hesap olmadan kullanabilirsin. O zaman ilerlemen (cevapların, deneme sınavların, kelimelerin ve yazdıysan adın), kendi kitapların, yazma görevi taslakların ve bir podcast'te kaldığın yer yalnızca tarayıcında, kendi cihazında durur. Biz bunları görmeyiz. Kayıtlar sayfayı kapatana kadar bellekte kalır. Tamamlanmamış A2 Konuşma denemesinin yazıya dökülmüş cevapları bu cihazda taslak olarak saklanır. Taslak değerlendirmeden sonra silinir; kendin de silebilirsin.</p>
 
 <h2>Hesapla</h2>
 <p>Hesap zorunlu değildir. Hesap açarsan şunları saklarız:</p>
@@ -469,7 +471,7 @@ laatst gebeurde.</p>
 <p>Bittertalen'i yapan kişi hesapların bir özetini görebilir: en son ne zaman ve ne kadar çalıştığın (kaç soru, deneme sınavı ve dakika). Bu özeti yalnızca o açabilir. Onu uygulamayı yönetmek ve geliştirmek için kullanır, reklam için değil (meşru menfaat, GDPR madde 6 fıkra 1 f).</p>
 
 <h2>Metin kontrolü</h2>
-<p>Yazma ve Konuşma bölümlerinde metnini veya yazıya dökülmüş cevabını kontrol ettirebilirsin. O zaman görev ve metnin, sunucumuz üzerinden Amerika Birleşik Devletleri'ndeki Anthropic'e gider. Adın ve e-posta adresin onlarla gitmez. Metinlerini sunucumuzda saklamayız. Anthropic bunları model eğitmek için kullanmaz ve kendi kurallarına göre 30 gün içinde siler; kötüye kullanımı araştırmak için daha uzun süre gerekirse veya yasa gerektiriyorsa bu süre uzayabilir.</p>
+<p>Yazma ve Konuşma bölümlerinde metnini veya yazıya dökülmüş cevabını kontrol ettirebilirsin. O zaman görev ve metnin, sunucumuz üzerinden Amerika Birleşik Devletleri'ndeki Anthropic'e gider. Adın ve e-posta adresin onlarla gitmez. Hesabınla bir deneme sınavına girdiğinde değerlendirmeyi Frankfurt’taki Supabase’de geçici olarak saklarız. Aynı değerlendirmeyi 24 saat boyunca yeni bir kontrol hakkı kullanmadan alabilirsin. Süresi dolan değerlendirmeler sonraki bir istekte silinir. Anthropic bunları model eğitmek için kullanmaz ve kendi kurallarına göre 30 gün içinde siler; kötüye kullanımı araştırmak için daha uzun süre gerekirse veya yasa gerektiriyorsa bu süre uzayabilir.</p>
 <p>Konuşmalar bölümünde yapay zekâyla sohbet edersin. Söylediklerin (telefonunun yazıya döktüğü hâliyle) ve o ana kadarki sohbet aynı şekilde Anthropic'e gider. Sohbetteki diğer kişinin söyledikleri, onu sese çeviren Google'a (Cloud Text-to-Speech) gider. Sohbeti sunucumuzda saklamayız. Yalnızca sondaki ipuçları, ilerlemende kendi hatalarına eklenir.</p>
 <p>Bir yapay zekâ karakterinin cevabı yanlış, incitici veya uygunsuzsa onu bildirebilirsin (Bildir). O zaman o cevabı ve hangi karakterin söylediğini inceleyip iyileştirmek için alırız (meşru menfaat, GVKT madde 6(1)(f)). Kendi metnin ve hesabın gönderilmez.</p>
 <p>Saskia senin hakkında bir şeyler hatırlayabilir, ama yalnızca izin verirsen (GDPR madde 6 fıkra 1 a). Bunlar sohbetlerinizden kısa bilgilerdir, örneğin işin ya da planların, en fazla yirmi tane. İlerlemende dururlar: hesapsız cihazında, hesapla ayrıca Supabase'de. Saskia ile sohbette Anthropic'e gider, Saskia'nın bunlar hakkında söyledikleri de Google'a gider. Yapay zekâdan sağlık, din, siyaset, oturum durumu, para ya da iletişim bilgileri hakkında bir şey hatırlamamasını isteriz ve bir filtre böyle bilgileri durdurur, ama hata yapabilir. Profil bölümünde, Saskia'nın senin hakkında bildikleri altında hepsini görebilir, silebilir ve kapatabilirsin. Hesabını silersen onlar da silinir.</p>
@@ -502,6 +504,7 @@ laatst gebeurde.</p>
 
 <h2>Çerezler</h2>
 <p>Bittertalen yalnızca hesapsız ve yalnızca iki deneme kontrolü için tek bir zorunlu çerez, <code>bt_trial</code>, kullanır (yukarıya bak) ve seni başka web sitelerinde izlemez. Uygulama tarayıcında veri saklar (local storage ve IndexedDB), ama yalnızca çalışmak için: ilerlemen, ayarların, giriş yapıp yapmadığın, cihazının en son sayıldığı tarih ve bir arkadaşının linkiyle geldiysen onun davet kodu.</p>
+<p>Arama reklamlarında alıştırma başlangıcını, ilk kontrolü, ödeme sayfasını ve erişim onayını reklam grubuna göre anonim sayarız. Grup ve adımlar tarayıcı sekmesinde kalır.</p>
 
 <h2>AB dışında</h2>
 <p>Vercel, Anthropic, Google ve Apple Amerika Birleşik Devletleri'ndedir. Stripe da verileri Amerika Birleşik Devletleri'nde işleyebilir. Veriler oraya yalnızca GDPR'ın istediği güvencelerle gider; örneğin AB-ABD Veri Gizliliği Çerçevesi veya Avrupa Komisyonu'nun standart sözleşme maddeleri.</p>
@@ -509,7 +512,7 @@ laatst gebeurde.</p>
 <h2>Ne kadar süre</h2>
 <ul>
 <li>Hesabın ve ilerlemen: hesabını silene kadar. O zaman Supabase'deki her şey hemen silinir.</li>
-<li>Kontrol ettirdiğin metinler: bizde durmaz; Anthropic'te en fazla 30 gün (yukarıya bak).</li>
+<li>Anthropic, kontrol edilen metinleri en fazla 30 gün tutar (yukarıya bak).</li>
 <li>Vercel, Supabase ve Resend kayıtları: güvenlik ve sorun çözmek için kısa süre.</li>
 <li>Kendi cihazında: tarayıcında sitenin verilerini silene kadar.</li>
 <li>Hesapsız ücretsiz kontrol kodu: en fazla iki gün.</li>
@@ -554,7 +557,7 @@ laatst gebeurde.</p>
 <p>Bittertalen को Artem Matveev बनाते हैं। आपके डेटा की ज़िम्मेदारी उन्हीं की है (डेटा नियंत्रक)। अपने डेटा के बारे में कोई प्रश्न है? <a href="mailto:privacy@bittertalen.nl">privacy@bittertalen.nl</a> पर ई-मेल करें। इस पते पर आने वाले ई-मेल Apple (iCloud Mail) पर निर्माता के मेलबॉक्स में पहुँचते हैं।</p>
 
 <h2>बिना खाते के</h2>
-<p>आप Bittertalen को बिना खाते के इस्तेमाल कर सकते हैं। तब आपकी प्रगति (आपके उत्तर, अभ्यास परीक्षाएँ, शब्द और अगर आपने भरा हो तो आपका नाम), आपकी अपनी किताबें, लिखने के कार्यों के ड्राफ़्ट और पॉडकास्ट में आप जहाँ तक पहुँचे थे, वह सब केवल आपके ब्राउज़र में, आपके अपने डिवाइस पर रहता है। हम उसे नहीं देखते। बोलने वाले भाग की रिकॉर्डिंग और लिखे गए उत्तर पेज बंद करने तक केवल मेमोरी में रहते हैं।</p>
+<p>आप Bittertalen को बिना खाते के इस्तेमाल कर सकते हैं। तब आपकी प्रगति (आपके उत्तर, अभ्यास परीक्षाएँ, शब्द और अगर आपने भरा हो तो आपका नाम), आपकी अपनी किताबें, लिखने के कार्यों के ड्राफ़्ट और पॉडकास्ट में आप जहाँ तक पहुँचे थे, वह सब केवल आपके ब्राउज़र में, आपके अपने डिवाइस पर रहता है। हम उसे नहीं देखते। रिकॉर्डिंग पेज बंद करने तक मेमोरी में रहती हैं। अधूरी A2 बोलने की अभ्यास परीक्षा के लिखित उत्तर इसी डिवाइस पर ड्राफ़्ट में रहते हैं। जाँच के बाद ड्राफ़्ट हट जाता है और आप उसे ख़ुद भी हटा सकते हैं।</p>
 
 <h2>खाते के साथ</h2>
 <p>खाता ज़रूरी नहीं है। अगर आप खाता बनाते हैं, तो हम ये रखते हैं:</p>
@@ -571,7 +574,7 @@ laatst gebeurde.</p>
 <p>Bittertalen के निर्माता खातों का एक सार देख सकते हैं: आपने आख़िरी बार कब और कितना अभ्यास किया (कितने प्रश्न, अभ्यास परीक्षाएँ और मिनट)। यह सार केवल वही खोल सकते हैं। वे इसका उपयोग ऐप चलाने और बेहतर बनाने के लिए करते हैं, विज्ञापन के लिए नहीं (वैध हित, GDPR का अनुच्छेद 6(1)(f))।</p>
 
 <h2>लेखन की जाँच</h2>
-<p>लिखने और बोलने वाले भागों में आप अपना पाठ या लिखा गया उत्तर जँचवा सकते हैं। तब कार्य और आपका पाठ हमारे सर्वर के ज़रिए संयुक्त राज्य अमेरिका में Anthropic को जाते हैं। आपका नाम और ई-मेल पता साथ नहीं जाते। हम आपके पाठ अपने सर्वर पर नहीं रखते। Anthropic उनसे मॉडल प्रशिक्षित नहीं करता और अपने नियमों के अनुसार उन्हें 30 दिनों के भीतर हटा देता है, सिवाय इसके कि दुरुपयोग की जाँच के लिए उसे उनकी ज़्यादा समय तक ज़रूरत हो या कानून ऐसा माँगे।</p>
+<p>लिखने और बोलने वाले भागों में आप अपना पाठ या लिखा गया उत्तर जँचवा सकते हैं। तब कार्य और आपका पाठ हमारे सर्वर के ज़रिए संयुक्त राज्य अमेरिका में Anthropic को जाते हैं। आपका नाम और ई-मेल पता साथ नहीं जाते। खाते से अभ्यास परीक्षा देने पर हम मूल्यांकन को फ़्रैंकफ़र्ट में Supabase पर अस्थायी रूप से रखते हैं। आप 24 घंटे तक एक और जाँच खर्च किए बिना वही मूल्यांकन फिर पा सकते हैं। समय-सीमा पूरी होने पर अगले अनुरोध में मूल्यांकन हट जाता है। Anthropic उनसे मॉडल प्रशिक्षित नहीं करता और अपने नियमों के अनुसार उन्हें 30 दिनों के भीतर हटा देता है, सिवाय इसके कि दुरुपयोग की जाँच के लिए उसे उनकी ज़्यादा समय तक ज़रूरत हो या कानून ऐसा माँगे।</p>
 <p>«बातचीत» में आप AI से बातचीत करते हैं। आप जो कहते हैं (जैसा आपका फ़ोन उसे लिखता है) और तब तक की बातचीत उसी तरह Anthropic को जाती है। बातचीत में दूसरा व्यक्ति जो कहता है, वह Google (Cloud Text-to-Speech) को जाता है, जो उसे आवाज़ में बदलता है। हम बातचीत अपने सर्वर पर नहीं रखते। केवल अंत के सुझाव आपकी प्रगति में आपकी अपनी गलतियों में जुड़ते हैं।</p>
 <p>अगर किसी AI पात्र का जवाब गलत, दुख पहुँचाने वाला या अनुचित है, तो आप उसे रिपोर्ट कर सकते हैं (रिपोर्ट करें)। तब हमें वह जवाब और किस पात्र ने कहा, यह मिलता है, ताकि हम उसे देखें और सुधारें (वैध हित, GDPR अनुच्छेद 6(1)(f))। आपका अपना पाठ और खाता नहीं भेजा जाता।</p>
 <p>Saskia आपके बारे में बातें याद रख सकती है, लेकिन केवल आपकी अनुमति से (GDPR अनुच्छेद 6(1)(a))। ये आपकी बातचीत से छोटी बातें हैं, जैसे आपका काम या योजनाएँ, अधिकतम बीस। ये आपकी प्रगति में रहती हैं: खाते के बिना आपके उपकरण पर, खाते के साथ Supabase पर भी। Saskia के साथ बातचीत में ये Anthropic को जाती हैं, और वह इनके बारे में जो कहती है वह Google को जाता है। हम AI से कहते हैं कि स्वास्थ्य, धर्म, राजनीति, निवास स्थिति, पैसे या संपर्क जानकारी के बारे में कुछ याद न रखे, और एक फ़िल्टर ऐसी बातों को रोकता है, लेकिन उससे गलती हो सकती है। प्रोफ़ाइल में «Saskia आपके बारे में क्या जानती है» के नीचे आप सब देख, मिटा और बंद कर सकते हैं। खाता हटाने पर ये भी हट जाती हैं।</p>
@@ -604,6 +607,7 @@ laatst gebeurde.</p>
 
 <h2>कुकी</h2>
 <p>Bittertalen सिर्फ़ एक ज़रूरी कुकी, <code>bt_trial</code>, इस्तेमाल करता है, केवल बिना खाते के और केवल दो आज़माइशी जाँचों के लिए (ऊपर देखें), और दूसरी वेबसाइटों पर आपका पीछा नहीं करता। ऐप आपके ब्राउज़र में डेटा रखता है (local storage और IndexedDB), लेकिन केवल काम करने के लिए: आपकी प्रगति, सेटिंग, यह कि आप लॉग इन हैं या नहीं, वह तारीख जब आपका डिवाइस आख़िरी बार गिना गया, और किसी दोस्त का आमंत्रण कोड अगर आप उसके लिंक से आए हैं।</p>
+<p>खोज विज्ञापनों के लिए हम शुरुआत, पहली जाँच, भुगतान पेज और पुष्टि किए गए ऐक्सेस को समूह के हिसाब से गुमनाम रूप से गिनते हैं। समूह और चरण ब्राउज़र टैब में रहते हैं।</p>
 
 <h2>EU के बाहर</h2>
 <p>Vercel, Anthropic, Google और Apple संयुक्त राज्य अमेरिका में हैं। Stripe भी संयुक्त राज्य अमेरिका में डेटा प्रोसेस कर सकता है। डेटा वहाँ केवल उन सुरक्षा उपायों के साथ जाता है जो GDPR माँगता है, जैसे EU-US Data Privacy Framework या यूरोपीय आयोग के मानक संविदात्मक खंड।</p>
@@ -611,7 +615,7 @@ laatst gebeurde.</p>
 <h2>कितने समय तक</h2>
 <ul>
 <li>आपका खाता और प्रगति: जब तक आप खाता नहीं हटाते। तब Supabase पर सब कुछ तुरंत मिटा दिया जाता है।</li>
-<li>जाँच के लिए दिए गए पाठ: हमारे पास नहीं; Anthropic के पास अधिकतम 30 दिन (ऊपर देखें)।</li>
+<li>Anthropic जाँच के लिए दिए पाठ अधिकतम 30 दिन रखता है (ऊपर देखें)।</li>
 <li>Vercel, Supabase और Resend के लॉग: थोड़े समय के लिए, सुरक्षा और समस्याएँ हल करने के लिए।</li>
 <li>आपके अपने डिवाइस पर: जब तक आप ब्राउज़र में साइट का डेटा नहीं मिटाते।</li>
 <li>बिना खाते की मुफ़्त जाँच का कोड: अधिकतम दो दिन।</li>
@@ -656,7 +660,7 @@ laatst gebeurde.</p>
 <p>Bittertalen 由 Artem Matveev 制作。他对你的数据负责（数据控制者）。对你的数据有疑问？请发邮件至 <a href="mailto:privacy@bittertalen.nl">privacy@bittertalen.nl</a>。发往该地址的邮件会进入制作者在 Apple（iCloud Mail）的邮箱。</p>
 
 <h2>没有账户时</h2>
-<p>你可以不用账户使用 Bittertalen。这时你的进度（你的回答、模拟考试、单词以及你填写的姓名）、你自己的书、写作任务草稿和播客的收听位置都只保存在你设备上的浏览器里。我们看不到这些内容。口语部分的录音和转写的回答只保留在内存中，直到你关闭页面。</p>
+<p>你可以不用账户使用 Bittertalen。这时你的进度（你的回答、模拟考试、单词以及你填写的姓名）、你自己的书、写作任务草稿和播客的收听位置都只保存在你设备上的浏览器里。我们看不到这些内容。录音会保留在内存中，直到你关闭页面。未完成的 A2 口语模拟考试的转写答案会以草稿形式保存在此设备上。批改后草稿将被清除，你也可以自行删除。</p>
 
 <h2>有账户时</h2>
 <p>账户不是必需的。如果你创建账户，我们会保存：</p>
@@ -673,7 +677,7 @@ laatst gebeurde.</p>
 <p>Bittertalen 的制作者可以查看账户概览：你最后一次练习的时间和练习量（多少道题、模拟考试和分钟数）。只有他能打开这个概览。他用它来管理和改进应用，不用于广告（正当利益，GDPR 第 6 条第 1 款 f 项）。</p>
 
 <h2>文字批改</h2>
-<p>在写作和口语部分，你可以让系统批改你的文字或转写的回答。这时任务和你的文字会通过我们的服务器发送给美国的 Anthropic。你的姓名和电子邮箱不会一起发送。我们不在服务器上保存你的文字。Anthropic 不会用它们训练模型，并按其规则在 30 天内删除，除非为调查滥用或依法需要保留更长时间。</p>
+<p>在写作和口语部分，你可以让系统批改你的文字或转写的回答。这时任务和你的文字会通过我们的服务器发送给美国的 Anthropic。你的姓名和电子邮箱不会一起发送。登录后参加模拟考试时，我们会将批改反馈暂存在法兰克福的 Supabase。你可以在 24 小时内重新获取同一份反馈，无需再用一次批改额度。过期反馈会在后续请求时清除。Anthropic 不会用它们训练模型，并按其规则在 30 天内删除，除非为调查滥用或依法需要保留更长时间。</p>
 <p>在“对话”中，你会和 AI 对话。你说的话（按手机记录下来的文字）和到那时为止的对话会以同样的方式发送给 Anthropic。对话中另一方说的话会发送给 Google（Cloud Text-to-Speech），由它转换成语音。我们不在服务器上保存对话。只有最后的建议会加入你进度里的“我的错误”。</p>
 <p>如果某个 AI 角色的回答有误、伤人或不当，你可以举报（举报）。我们会收到该回答以及是哪个角色说的，以便检查和改进（合法利益，GDPR 第 6(1)(f) 条）。你自己的文字和账户不会被发送。</p>
 <p>Saskia 可以记住关于你的事，但只有在你同意之后（GDPR 第 6 条第 1 款 a 项）。这些是你们对话中的简短信息，例如你的工作或计划，最多二十条。它们保存在你的进度里：没有账户时在你的设备上，有账户时也在 Supabase。和 Saskia 对话时它们会发送给 Anthropic，她谈到的内容会发送给 Google。我们要求 AI 不要记住有关健康、宗教、政治、居留身份、金钱或联系方式的内容，并有过滤器拦截这类信息，但它可能出错。在个人资料的“Saskia 知道你的哪些事”中，你可以查看、删除全部内容并关闭此功能。如果你删除账户，它们也会消失。</p>
@@ -706,6 +710,7 @@ laatst gebeurde.</p>
 
 <h2>Cookie</h2>
 <p>Bittertalen 只使用一个必要的 Cookie：<code>bt_trial</code>，仅在没有账户时、仅用于两次试用批改（见上文），也不会在其他网站上跟踪你。应用确实会在你的浏览器中保存数据（local storage 和 IndexedDB），但只是为了正常运行：你的进度、设置、是否已登录、你的设备最后一次被统计的日期，以及你通过朋友链接进入时的邀请码。</p>
+<p>我们按搜索广告组匿名统计开始练习、首次批改、打开付款页和确认访问。广告组和步骤仅存于浏览器标签页。</p>
 
 <h2>欧盟以外</h2>
 <p>Vercel、Anthropic、Google 和 Apple 位于美国。Stripe 也可能在美国处理数据。数据只有在具备 GDPR 要求的保障措施时才会传送到那里，例如欧盟-美国数据隐私框架或欧盟委员会的标准合同条款。</p>
@@ -713,7 +718,7 @@ laatst gebeurde.</p>
 <h2>保存多久</h2>
 <ul>
 <li>你的账户和进度：直到你删除账户。届时 Supabase 上的所有内容会立即删除。</li>
-<li>你批改的文字：我们不保存；Anthropic 最多保存 30 天（见上文）。</li>
+<li>Anthropic 最多保存待批改的文字 30 天（见上文）。</li>
 <li>Vercel、Supabase 和 Resend 的日志：短期保存，用于安全和解决问题。</li>
 <li>你自己的设备上：直到你在浏览器中清除网站数据。</li>
 <li>无账户免费批改的代码：最多两天。</li>
@@ -759,7 +764,7 @@ laatst gebeurde.</p>
 <p>Artem Matveev, creador de Bittertalen, es el responsable del tratamiento. Si tienes preguntas sobre tus datos, escribe a <a href="mailto:privacy@bittertalen.nl">privacy@bittertalen.nl</a>. Los mensajes llegan al buzón del creador en Apple (iCloud Mail).</p>
 
 <h2>Sin cuenta</h2>
-<p>Puedes usar Bittertalen sin cuenta. Tu progreso (respuestas, simulacros, palabras y tu nombre si lo introduces), tus libros, los borradores de escritura y tu posición en los pódcast se guardan solo en el navegador de tu dispositivo. No tenemos acceso a estos datos. En Expresión oral, las grabaciones y transcripciones solo quedan en la memoria hasta que cierras la página.</p>
+<p>Puedes usar Bittertalen sin cuenta. Tu progreso (respuestas, simulacros, palabras y tu nombre si lo introduces), tus libros, los borradores de escritura y tu posición en los pódcast se guardan solo en el navegador de tu dispositivo. No tenemos acceso a estos datos. Las grabaciones quedan en la memoria hasta que cierras la página. Las transcripciones del simulacro de Expresión oral A2 sin terminar se guardan como borrador en este dispositivo. El borrador se elimina tras la corrección y también puedes borrarlo tú.</p>
 
 <h2>Con una cuenta</h2>
 <p>La cuenta es opcional. Si creas una, guardamos los siguientes datos.</p>
@@ -776,7 +781,7 @@ laatst gebeurde.</p>
 <p>El creador de Bittertalen puede ver un resumen de las cuentas: cuándo practicaste por última vez y cuánto (cuántas preguntas, simulacros y minutos). Solo él puede abrir ese resumen. Lo usa para gestionar y mejorar la aplicación, no para publicidad (interés legítimo, artículo 6.1.f del RGPD).</p>
 
 <h2>Revisión de textos</h2>
-<p>En Escritura y Expresión oral puedes pedir que se revise tu texto o respuesta transcrita. La tarea y tu texto pasan por nuestro servidor a Anthropic, en Estados Unidos. No enviamos tu nombre ni tu correo. No guardamos el texto en nuestro servidor. Anthropic no lo usa para entrenar modelos y, según sus reglas, lo borra en un plazo de 30 días, salvo que lo necesite durante más tiempo para investigar un abuso o por exigencia legal.</p>
+<p>En Escritura y Expresión oral puedes pedir que se revise tu texto o respuesta transcrita. La tarea y tu texto pasan por nuestro servidor a Anthropic, en Estados Unidos. No enviamos tu nombre ni tu correo. Si haces un simulacro con tu cuenta, guardamos temporalmente la corrección en Supabase, en Fráncfort. Puedes volver a obtener la misma corrección durante 24 horas sin gastar otra revisión. Las correcciones caducadas se eliminan en una solicitud posterior. Anthropic no lo usa para entrenar modelos y, según sus reglas, lo borra en un plazo de 30 días, salvo que lo necesite durante más tiempo para investigar un abuso o por exigencia legal.</p>
 <p>En Conversaciones mantienes una conversación con IA. Lo que dices (tal como lo escribe tu teléfono) y la conversación hasta ese momento se envían a Anthropic de la misma manera. Lo que dice la otra persona de la conversación se envía a Google (Cloud Text-to-Speech), que lo convierte en voz. No guardamos la conversación en nuestro servidor. Solo los consejos del final se añaden a tus propios errores, en tu progreso.</p>
 <p>Si la respuesta de un personaje de IA es incorrecta, hiriente o inapropiada, puedes denunciarla (Denunciar). Recibimos esa respuesta y qué personaje la dijo, para revisarla y mejorarla (interés legítimo, artículo 6.1.f del RGPD). No se envían tu texto ni tu cuenta.</p>
 <p>Saskia puede recordar cosas sobre ti, pero solo si das tu permiso (artículo 6, apartado 1, letra a, del RGPD). Son datos breves de vuestras conversaciones, como tu trabajo o tus planes, veinte como máximo. Se guardan en tu progreso: sin cuenta en tu dispositivo, con cuenta también en Supabase. En una conversación con Saskia se envían a Anthropic, y lo que ella dice sobre ellos se envía a Google. Pedimos a la IA que no recuerde nada sobre salud, religión, política, situación de residencia, dinero o datos de contacto, y un filtro detiene esos datos, pero puede equivocarse. En Perfil, en Lo que Saskia sabe de ti, puedes verlo todo, borrarlo y desactivarlo. Si eliminas tu cuenta, también desaparecen.</p>
@@ -809,6 +814,7 @@ laatst gebeurde.</p>
 
 <h2>Cookies</h2>
 <p>Bittertalen usa una sola cookie necesaria, <code>bt_trial</code>, solo sin cuenta y solo para las dos correcciones de prueba (ver arriba), y no hace un seguimiento de tu actividad en otros sitios. Para funcionar, la aplicación guarda en tu navegador (almacenamiento local e IndexedDB) tu progreso, tus ajustes, si has iniciado sesión, la fecha en que se contó tu dispositivo por última vez y el código de invitación de un amigo si llegas por su enlace.</p>
+<p>Contamos de forma anónima el inicio, la primera revisión, la apertura de la página de pago y el acceso confirmado por grupo de anuncios de búsqueda. El grupo y los pasos quedan en la pestaña.</p>
 
 <h2>Fuera de la UE</h2>
 <p>Vercel, Anthropic, Google y Apple están en Estados Unidos. Stripe también puede tratar datos allí. Solo se transfieren datos con las garantías exigidas por el RGPD, como el Marco de Privacidad de Datos UE-EE. UU. o las cláusulas contractuales tipo de la Comisión Europea.</p>
@@ -816,7 +822,7 @@ laatst gebeurde.</p>
 <h2>Plazos de conservación</h2>
 <ul>
 <li>Cuenta y progreso: hasta que elimines la cuenta. En ese momento se borran todos esos datos de Supabase.</li>
-<li>Textos enviados a revisión: Anthropic los conserva durante un máximo de 30 días (ver arriba). Nosotros no los guardamos.</li>
+<li>Anthropic conserva los textos enviados a revisión durante un máximo de 30 días (ver arriba).</li>
 <li>Registros de Vercel, Supabase y Resend: durante un periodo breve por seguridad y para resolver problemas.</li>
 <li>Datos en tu dispositivo: hasta que borres los datos del sitio en el navegador.</li>
 <li>Código de revisiones gratuitas sin cuenta: hasta dos días.</li>
@@ -861,7 +867,7 @@ laatst gebeurde.</p>
 <p>Артём Матвеев, создатель Bittertalen, отвечает за обработку данных. По вопросам о ваших данных пишите на <a href="mailto:privacy@bittertalen.nl">privacy@bittertalen.nl</a>. Письма поступают в почтовый ящик создателя в Apple (iCloud Mail).</p>
 
 <h2>Без аккаунта</h2>
-<p>Bittertalen можно использовать без аккаунта. Ваш прогресс (ответы, пробные экзамены, слова и имя, если вы его указали), книги, черновики письменных заданий и позиция в подкастах хранятся только в браузере на вашем устройстве. У нас нет доступа к этим данным. Записи и расшифровки устных ответов хранятся в памяти до закрытия страницы.</p>
+<p>Bittertalen можно использовать без аккаунта. Ваш прогресс (ответы, пробные экзамены, слова и имя, если вы его указали), книги, черновики письменных заданий и позиция в подкастах хранятся только в браузере на вашем устройстве. У нас нет доступа к этим данным. Записи хранятся в памяти до закрытия страницы. Расшифровки незавершённого пробного экзамена по устной речи A2 сохраняются в черновике на этом устройстве. Черновик удаляется после проверки, его также можно удалить самостоятельно.</p>
 
 <h2>С аккаунтом</h2>
 <p>Аккаунт создаётся по желанию. Если вы его создадите, мы будем хранить следующие данные.</p>
@@ -878,7 +884,7 @@ laatst gebeurde.</p>
 <p>Создатель Bittertalen видит сводку по аккаунтам: когда вы занимались в последний раз и сколько (число вопросов, пробных экзаменов и минут). Открыть эту сводку может только он. Она нужна, чтобы поддерживать и улучшать приложение, а не для рекламы (законный интерес, статья 6(1)(f) GDPR).</p>
 
 <h2>Проверка текстов</h2>
-<p>В разделах «Письмо» и «Устная речь» можно отправить текст или расшифровку ответа на проверку. Задание и ваш текст передаются через наш сервер в Anthropic в США. Имя и адрес почты не передаются. Мы не храним тексты на своём сервере. Anthropic не использует их для обучения моделей и по своим правилам удаляет в течение 30 дней. Хранение может длиться дольше для расследования злоупотреблений или по требованию закона.</p>
+<p>В разделах «Письмо» и «Устная речь» можно отправить текст или расшифровку ответа на проверку. Задание и ваш текст передаются через наш сервер в Anthropic в США. Имя и адрес почты не передаются. Если вы сдаёте пробный экзамен с аккаунтом, мы временно сохраняем результат проверки в Supabase во Франкфурте. В течение 24 часов вы можете получить ту же проверку без повторного списания. Просроченные результаты удаляются при следующем запросе. Anthropic не использует их для обучения моделей и по своим правилам удаляет в течение 30 дней. Хранение может длиться дольше для расследования злоупотреблений или по требованию закона.</p>
 <p>В разделе «Разговоры» вы разговариваете с ИИ. То, что вы говорите (в том виде, как это записал телефон), и весь разговор до этого момента так же передаются в Anthropic. То, что говорит собеседник, передаётся в Google (Cloud Text-to-Speech), который превращает текст в голос. Мы не храним разговор на своём сервере. Только советы в конце попадают в ваши ошибки, в вашем прогрессе.</p>
 <p>Если ответ ИИ-персонажа неверный, обидный или неуместный, на него можно пожаловаться («Пожаловаться»). Тогда мы получаем этот ответ и имя персонажа, чтобы проверить и исправить (законный интерес, ст. 6(1)(f) GDPR). Ваш собственный текст и аккаунт не передаются.</p>
 <p>Саския может запоминать что-то о вас, но только с вашего согласия (статья 6, пункт 1, подпункт a GDPR). Это короткие факты из ваших разговоров, например о работе или планах, не больше двадцати. Они хранятся в вашем прогрессе: без аккаунта на вашем устройстве, с аккаунтом также в Supabase. При разговоре с Саскией они передаются в Anthropic, а то, что она о них говорит, передаётся в Google. Мы просим ИИ не запоминать ничего о здоровье, религии, политике, статусе пребывания, деньгах и контактных данных, и фильтр останавливает такие факты, но он может ошибаться. В профиле, в разделе «Что Саския о вас знает», можно всё посмотреть, стереть и отключить. Если вы удалите аккаунт, они тоже исчезнут.</p>
@@ -911,6 +917,7 @@ laatst gebeurde.</p>
 
 <h2>Файлы cookie</h2>
 <p>Bittertalen использует один необходимый файл cookie, <code>bt_trial</code>, только без аккаунта и только для двух пробных проверок (см. выше), и не отслеживает вашу активность на других сайтах. Для работы приложение хранит в браузере (в local storage и IndexedDB) ваш прогресс, настройки, статус входа, дату, когда устройство последний раз учитывалось в статистике, и код приглашения друга, если вы пришли по его ссылке.</p>
+<p>Для поисковой рекламы мы анонимно считаем по группе объявлений вход, первую проверку, переход к оплате и подтверждённый доступ. Группа и шаги сохраняются во вкладке.</p>
 
 <h2>За пределами ЕС</h2>
 <p>Vercel, Anthropic, Google и Apple находятся в США. Stripe также может обрабатывать данные в США. Данные передаются только с гарантиями, предусмотренными GDPR, например в рамках EU–US Data Privacy Framework или на основании стандартных договорных положений Европейской комиссии.</p>
@@ -918,7 +925,7 @@ laatst gebeurde.</p>
 <h2>Сроки хранения</h2>
 <ul>
 <li>Аккаунт и прогресс хранятся до удаления аккаунта. После этого все эти данные сразу удаляются из Supabase.</li>
-<li>Тексты, отправленные на проверку, хранятся у Anthropic до 30 дней (см. выше). Мы их не храним.</li>
+<li>Anthropic хранит тексты, отправленные на проверку, до 30 дней (см. выше).</li>
 <li>Журналы Vercel, Supabase и Resend хранятся недолго для безопасности и устранения сбоев.</li>
 <li>Данные на устройстве хранятся, пока вы не очистите данные сайта в браузере.</li>
 <li>Код для бесплатных проверок без аккаунта хранится до двух дней.</li>

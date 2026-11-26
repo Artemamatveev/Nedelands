@@ -19,6 +19,8 @@ New A2/B1 writing results also have an optional `writing` v1 snapshot: task-type
 
 Writing drafts are local and account-scoped (`ww-writing:<owner>:practice|exam:<section>`). They retain task keys, text, form fields, position, grouped B1 sentences and the original exam deadline. Practice has no timer. An expired exam opens its review without another timed attempt. Successful grading clears the draft. An unsuccessful request preserves it.
 
+A2 speaking exam drafts are local and account-scoped (`ww-speaking:<owner>:exam:sp`). They keep the question order, transcribed answers, original deadline and submission ID. Audio is held in memory. An expired draft opens submission review. Successful grading or explicit discard removes the draft.
+
 Writing feedback recommends at most two actions, prioritising unfinished tasks and critical content before other lost points. A zero for content is not treated as separate evidence of grammar or spelling weakness. Identified word-order errors can open the existing A2/B1 word-order section; other actions open the relevant writing task. These focused tasks use a separate `:focus/<task-key>` draft slot, appear among resumable drafts, and preserve ordinary practice drafts. Returning restores the exam result without grading or recording the attempt again. Detailed corrections, rewriting and Word export remain available under the summary.
 
 Run `npm ci --ignore-scripts` and `npm test` after changes. `tests/browser.test.mjs` opens the homepage and the app
@@ -56,3 +58,5 @@ back to exercises. Migration visits do not emit usage events. On legacy origins 
 immediately, navigates open windows to the migration gate, and uses network-only navigation. Offline it shows a blocking
 move message rather than cached practice; all local data/cache remains intact. Devices must connect once to receive
 this worker update. Normal bittertalen.nl startup, offline caching and account isolation are unchanged.
+
+A2 Lezen, Luisteren and KNM practice-exam drafts stay on the device under the current account or guest scope. They include question keys, selected answers, option order, playback counts and the original deadline. Submitting clears the draft.

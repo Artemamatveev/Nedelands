@@ -243,3 +243,16 @@ test('Answers are counted per day for the overview; a retry after a mistake is n
   assert.equal(a.run(`S.qd[${JSON.stringify(d)}]`),2);
   assert.equal(a.run(`S.qr[${JSON.stringify(d)}]`),1);
 });
+
+test('Low-quota offers pick a matching level and only promise a pass that covers the saved exam dates',async()=>{
+  const a=await app();
+  a.run('acc.user={id:"test"};acc.cfg={limit:7,plus:{month:200},pass:{days:91,total:250,plans:{A2:{},B1:{}}}};acc.freeUsed=7;S.lvl="A2"');
+  assert.match(a.run('offerHTML("limit")'),/plus-a2/);
+  a.run('S.me={exams:{wr:amsDay(new Date(Date.now()+30*864e5))}}');
+  assert.match(a.run('offerHTML("limit")'),/exam-a2/);
+  assert.match(a.run('offerHTML("limit")'),/250 nakijkbeurten/);
+  a.run('S.me.exams.sp=amsDay(new Date(Date.now()+91*864e5))');
+  assert.match(a.run('offerHTML("limit")'),/plus-a2/);
+  a.run('acc.checkPeriod="day"');
+  assert.equal(a.run('offerHTML("limit")'),'');
+});

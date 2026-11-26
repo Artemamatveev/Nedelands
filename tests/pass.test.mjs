@@ -44,8 +44,8 @@ const last=s=>calls.filter(c=>c.includes(s)).pop();
 
 test('Config offers the Examenpas with its fixed prices and length',async()=>{
   const r=res();await config({method:'GET',headers:H},r);
-  assert.deepEqual(r.body.pass,{days:119,plans:{A2:{price:'29,99'},B1:{price:'39,99'}}});
-  assert.deepEqual(r.body.year,{days:365,plans:{A2:{price:'79,99'},B1:{price:'119,99'}}});
+  assert.deepEqual(r.body.pass,{days:119,total:250,plans:{A2:{price:'29,99'},B1:{price:'39,99'}}});
+  assert.deepEqual(r.body.year,{days:365,total:600,plans:{A2:{price:'79,99'},B1:{price:'119,99'}}});
 });
 test('Buying a pass opens a one-time Checkout with the consent text and the user in its metadata',async()=>{
   const r=res();await plus({method:'POST',headers:H,body:{go:'pass',start:true,level:'B1'}},r);

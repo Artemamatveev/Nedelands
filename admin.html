@@ -256,6 +256,16 @@ async function runCompare() {
   cmpBusy = false; draw();
 }
 
+function adCounts(rows) {
+  if (!rows) return "";
+  const stages = ["visit", "check", "start", "paid"];
+  const labels = {wr:"Schrijven A2",sp:"Spreken A2"};
+  return `<section class="tile"><h2>Поисковая реклама за 30 дней</h2>
+    <p class="sub">Анонимные события в одной вкладке. Для выручки используй подтверждённые платежи Stripe.</p>
+    <table><thead><tr><th>Упражнение</th><th>Вход</th><th>Проверка</th><th>Checkout</th><th>Доступ подтверждён</th></tr></thead>
+    <tbody>${Object.entries(labels).map(([part,label])=>`<tr><th scope="row">${label}</th>${stages.map(stage=>`<td>${rows.filter(r=>r.ev===`ads_${part}_${stage}`).reduce((sum,r)=>sum+r.n,0)}</td>`).join("")}</tr>`).join("")}</tbody></table>
+    </section>`;
+}
 function counts(rows) {
   if (!rows) return `<section class="tile"><h2>Посещения</h2><p class="sub">Таблицы <code>usage_counts</code> нет в базе.</p></section>`;
   const by = {};
@@ -267,7 +277,7 @@ function counts(rows) {
   const days = Object.keys(by).sort().reverse();
   const body = days.map(d => `<tr><td>${new Date(d + "T12:00:00Z").toLocaleDateString("ru-RU", {weekday: "short", day: "numeric", month: "short", timeZone: "UTC"})}</td>` +
     EV.map(([k], i) => `<td>${by[d][k] || (i ? "<span class=muted>·</span>" : "0")}</td>`).join("") + `</tr>`).join("");
-  return `<section class="tile"><h2>Посещения за 30 дней</h2>
+  return adCounts(rows)+`<section class="tile"><h2>Посещения за 30 дней</h2>
     <p class="sub">Анонимные события, с аккаунтом и без. Это не число людей или устройств: очистка хранилища, другой браузер или повторная отправка могут увеличить счётчик.</p>
     <div class="scroll events" tabindex="0" role="region" aria-label="Посещения по дням"><table><thead><tr><th>День</th>${EV.map(([, l]) => `<th>${l}</th>`).join("")}</tr></thead>
     <tbody>${body || `<tr><td colspan="${EV.length + 1}" class="muted">Пока пусто.</td></tr>`}</tbody></table></div></section>`;

@@ -189,3 +189,61 @@ test('Profiel has no results tile any more (removed at the user\'s wish); the sc
   assert.equal(a.document.querySelector('#myres'),null);
   assert.equal(a.run('typeof drawResults'),'undefined');
 });
+
+test('A2 writing explains full spelling points and practises an identified rule in a different sentence the next day', async()=>{
+  const a=await app();
+  assert.match(a.run('scoreHTML({inhoud:3,spelling:2},null,[{kind:"spelling"}])'),/Kleine spelfouten kunnen bij deze score/);
+  a.run('S.lvl="A2"; S.writingRules=scheduleWritingRules(null,[{kind:"inversie"}],today(),1);drawPlan()');
+  assert.equal(a.document.querySelector('#dayrule'),null);
+  a.run('S.writingRules.inversie.day=today();drawPlan()');
+  a.document.querySelector('#dayrule').click();
+  assert.match(a.document.querySelector('#tbody').textContent,/Schrijf aan een collega/);
+  a.document.querySelector('#ruleanswer').value='Morgen ik begin om negen uur';
+  a.document.querySelector('#rulecheck').click();
+  assert.match(a.document.querySelector('#rulestatus').textContent,/Morgen krijg je een nieuwe zin/);
+  a.run('S.writingRules.inversie.day=today();home();drawPlan()');
+  a.document.querySelector('#dayrule').click();
+  assert.match(a.document.querySelector('#tbody').textContent,/Schrijf aan een buur/);
+  a.document.querySelector('#ruleanswer').value='Vanavond breng ik de sleutel.';
+  a.document.querySelector('#rulecheck').click();
+  assert.match(a.document.querySelector('#rulestatus').textContent,/goed toegepast/);
+  assert.equal(a.run('S.writingRules.inversie.ok'),true);
+});
+
+test('A2 writing exam can retry the same draft after a timeout and record the result once',async()=>{
+  const mock=checker();
+  let attempts=0;
+  const a=await app({fetch:(url,options)=>{
+    if(url==='/api/check'&&++attempts===1)return new Response('{"error":"timeout"}',{status:504});
+    return mock.fetch(url,options);
+  }});
+  await submit(a);
+  assert.equal(a.run('!!getDraft("wr",true)'),true);
+  assert.equal(a.run('S.res?.wr?.length || 0'),0);
+  a.document.querySelector('#retrycheck').click();
+  await a.flush();
+  assert.equal(attempts,2);
+  assert.equal(a.run('!!getDraft("wr",true)'),false);
+  assert.equal(a.run('S.res.wr.length'),1);
+  assert.equal(a.run('Object.values(S.xs).every(n=>n===1)'),true);
+});
+
+test('A2 writing uses the most frequent exam rule for two different day-plan sentences',async()=>{
+  const check=checker(grades=>grades.map((row,i)=>({...row,errors:[
+    {...row.errors[0],kind:'inversie'},...(i===0?[{wrong:'De fietsen staat',right:'De fietsen staan',kind:'meervoud'}]:[])
+  ]})));
+  const a=await app({fetch:check.fetch});
+  await submit(a);
+  assert.match(a.document.querySelector('#card').textContent,/Woordvolgorde ging 4 keer mis/);
+  assert.equal(a.run('Object.keys(S.writingRules).join()'),'inversie');
+  assert.equal(a.run('dueWritingRule(S.writingRules,today())'),undefined);
+  for(const [i,answer] of ['Morgen begin ik om negen uur.','Vanavond breng ik de sleutel.'].entries()){
+    a.run('S.writingRules.inversie.day=today();setTab("vandaag");home();drawPlan()');
+    a.document.querySelector('#dayrule').click();
+    a.document.querySelector('#ruleanswer').value=answer;
+    a.document.querySelector('#rulecheck').click();
+    assert.equal(a.run('S.writingRules.inversie.hits'),i+1);
+  }
+  assert.match(a.run('planHTML()'),/2 keer goed toegepast/);
+  assert.equal(a.run('dueWritingRule(S.writingRules,today()+1)'),undefined);
+});
