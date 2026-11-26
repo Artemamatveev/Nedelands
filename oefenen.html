@@ -1113,9 +1113,9 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
 <script src="/study/language-v1.js?v=e94426af48"></script>
 <script src="/study/progress-v1.js?v=d7e5e64206"></script>
 <script src="/study/writing-v1.js?v=e5690fd786"></script>
-<script src="/data/knm.js?v=50777b478a"></script>
-<script src="/data/a2.js?v=56c32c3473"></script>
-<script src="/data/b1.js?v=e9701bd331"></script>
+<script src="/data/knm.js?v=c9b283ab33"></script>
+<script src="/data/a2.js?v=602c13ff58"></script>
+<script src="/data/b1.js?v=1c0276cbe5"></script>
 <script src="/data/extra.js?v=e80c7f18b2"></script>
 <script>
 
@@ -1231,7 +1231,7 @@ const SEC=[
 {id:"v1",t:"Woordenschat B1",s:"Werk, geld, gezondheid, wonen",n:10},
 {id:"vo",t:"Woordenschat",s:"Ruim 1000 woorden in 23 thema's",n:10},
 {id:"gs",t:"Geschiedenis",s:"Vragen over de geschiedenis van Nederland",n:10},
-{id:"bg",t:"Beginnen",s:"Twaalf korte lessen",n:8}
+{id:"bg",t:"Beginnen",s:"Twintig korte lessen",n:8}
 ];
 // Days until a question comes back after a right answer, per box (S.items .b). The last steps (30, 60) let a known
 // question rest instead of returning every two weeks for ever. Old progress (boxes 0–4) keeps working.
@@ -2379,7 +2379,7 @@ function home(){
     <div class="list">${parts().map(k=>k==="knm"?knmRow():row(k)).join("")}</div>`;
   $("gram").innerHTML=`<h2>Grammatica en woorden</h2><p class="sub">Rondes van 10 vragen.</p>`+(lvl()==="B1"
     ?`<div class="list">${["g1","w1","v1"].map(row).join("")}</div><h3 class="lh">Herhalen op A2-niveau</h3><div class="list">${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`
-    :`<div class="list">${itHTML(`data-x="bg"`,"Beginnen","Twaalf korte lessen, voor als je net begint.",{ic:"bg",n:(n=>n?`${n} van ${BG.length}`:null)(BG.filter(bgDone).length)})}${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`);
+    :`<div class="list">${itHTML(`data-x="bg"`,"Beginnen","Twintig korte lessen, voor als je net begint.",{ic:"bg",n:(n=>n?`${n} van ${BG.length}`:null)(BG.filter(bgDone).length)})}${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`);
   $("books").innerHTML=itHTML(`data-x="books"`,"Boekenkast",lb?`Je leest nu: ${esc(lb.t)}, blz. ${lb.p+1}`:"Verhalen en je eigen e-books.",{ic:"books"})
     +itHTML(`data-x="hist"`,"Geschiedenis van Nederland",lh?`Je was bij: ${lh.t}`:"Van de hunebedden tot nu.",{n:gsDone?`${gsDone} van ${GS.length}`:null,ic:"hist"})
     +itHTML(`data-x="media"`,"Luisteren en kijken","Nieuws, video's en podcasts.",{ic:"media"})
@@ -3987,7 +3987,7 @@ function bgOpen(back,f){
 }
 function bgList(){
   bgOpen(TABN[tab],home);
-  $("tbody").innerHTML=`<h2>Beginnen</h2><p class="sub">Twaalf korte lessen met de basis van het Nederlands.</p>
+  $("tbody").innerHTML=`<h2>Beginnen</h2><p class="sub">Twintig korte lessen met de basis van het Nederlands.</p>
     <div class="list">${BG.map((l,i)=>itHTML(`data-i="${i}"`,`Les ${i+1}: ${l.t}`,l.s,{n:bgDone(l)?"Klaar":null})).join("")}</div>
     <button class="ghost wide" id="bgt">${S.start?"Doe de starttest opnieuw":"Doe de starttest"}</button>`;
   document.querySelectorAll("#tbody [data-i]").forEach(b=>b.onclick=()=>bgLes(+b.dataset.i));
@@ -5242,7 +5242,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru","uk"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="c2f94dd7ee";
+const UIV="f4d0a6c9f5";
 let uiP=null;
 function uiLoaded(){try{trMemo.clear()}catch(e){} // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});
