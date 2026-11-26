@@ -2862,7 +2862,7 @@ function drawProfile(){
   const pe=$("pexams");
   if(pe){const ex=(S.me||{}).exams||{},old=DRE.test((S.me||{}).exam||"")&&!Object.values(ex).some(v=>DRE.test(v||""))?S.me.exam:"";
     if(!pe.contains(document.activeElement))pe.innerHTML=examParts().map(k=>`<label class="prow"><span>${exName(k)}</span><input type="date" data-ex="${k}" min="${amsDay()}" value="${DRE.test(ex[k]||"")?ex[k]:old}"></label>`).join("");
-    pe.querySelectorAll("[data-ex]").forEach(i=>i.onchange=()=>{const me=S.me||{},all={...(me.exams||{})};
+    pe.querySelectorAll("[data-ex]").forEach(i=>i.onchange=()=>{setTimeout(()=>remindPlan(),500);const me=S.me||{},all={...(me.exams||{})};
       if(old)parts().forEach(k=>{if(!DRE.test(all[k]||""))all[k]=old}); // keep the old date on the parts it stood for
       all[i.dataset.ex]=DRE.test(i.value)?i.value:"";S.me={...me,exams:all,exam:""};save();home()})}
   // the portrait: a Dutch woman or man in Golden Age dress (S.me.av, so it goes along); tap to switch
@@ -4160,19 +4160,38 @@ function remindRow(){
 async function remindPlan(){
   const N=NATIVE&&window.Capacitor?.Plugins?.LocalNotifications,h=lsGet("ww-remind");if(!N)return;
   try{
-    await N.cancel({notifications:[1,2,3,4,5,6,7,8].map(id=>({id}))});
+    await N.cancel({notifications:[1,2,3,4,5,6,7,8,...EXAMDAY_IDS].map(id=>({id}))});
+    await examDayPlan(N);
     if(!h)return;
     const P=planTasks(),done=S.day&&S.day.d===today()?S.day.done:[],fin=P.T.length>0&&P.T.every(t=>done.includes(t.id));
-    const part=P.bg?"":PART[P.k]||"",ex=examDays(),L=[];
+    const part=P.bg?"":PART[P.k]||"",ex=examDays(),exam=new Set(examsAhead().map(x=>x.n)),L=[];
     for(let i=0;i<7;i++){
       const at=new Date();at.setDate(at.getDate()+i);at.setHours(+h,0,0,0);
       if(i===0&&(fin||at<=new Date()))continue;
+      if(exam.has(i))continue; // the exam day has its own good-luck message in the morning
       const n=ex!=null?ex-i:null;
       const body=n===1?`Morgen is je examen. Vandaag: ${part||"je les"}.`:n!=null&&n>1?`Nog ${n} dagen tot je examen. Vandaag: ${part||"je les"}.`:part?`Je les van vandaag staat klaar. Eerst ${part}.`:"Tijd voor je les van vandaag.";
       L.push({id:i+1,title:"Bittertalen",body:trS(body)||body,schedule:{at,allowWhileIdle:true}});
     }
     if(L.length)await N.schedule({notifications:L});
   }catch(e){}
+}
+// The morning of every exam day (the dates in Profiel), at 07:00: good luck and "je kunt dit". Planned whenever
+// notifications are allowed, also without the daily reminder; one message a day, naming the parts of that day.
+const EXAMDAY_IDS=[20,21,22,23,24,25,26,27,28,29],EXAMDAY_H=7;
+async function examDayPlan(N){
+  const perm=await N.checkPermissions().catch(()=>null);
+  if(!perm||perm.display!=="granted")return;
+  const days=new Map();
+  for(const x of examsAhead()){if(!days.has(x.n))days.set(x.n,[]);if(x.k)days.get(x.n).push(exName(x.k))}
+  const L=[];
+  for(const [n,ks] of [...days].sort((a,b)=>a[0]-b[0]).slice(0,EXAMDAY_IDS.length)){
+    const at=new Date();at.setDate(at.getDate()+n);at.setHours(EXAMDAY_H,0,0,0);
+    if(at<=new Date())continue;
+    const body=ks.length?`Vandaag is je examen ${ks.join(", ")}. Je hebt goed geoefend. Je kunt dit! Succes!`:"Vandaag is je examen. Je hebt goed geoefend. Je kunt dit! Succes!";
+    L.push({id:EXAMDAY_IDS[L.length],title:trS("Succes vandaag!")||"Succes vandaag!",body:trS(body)||body,schedule:{at,allowWhileIdle:true}});
+  }
+  if(L.length)await N.schedule({notifications:L});
 }
 async function claimRef(){
   const code=lsGet("ww-ref"),uid=acc.user?.id; if(!code||!uid)return;
@@ -5146,7 +5165,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="0b925ba459";
+const UIV="1d6817a740";
 let uiP=null;
 function uiLoaded(){ // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});

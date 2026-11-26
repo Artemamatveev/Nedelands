@@ -813,3 +813,12 @@ UIR.push(
   [/^Je bent geslaagd voor (.+)\.$/,["You passed $1.", "لقد نجحت في $1.", "$1 sınavını geçtin.", "आप $1 में पास हो गए।", "你通过了 $1。", "Has aprobado $1.", "Вы сдали: $1."]],
   [/^Nog te doen: (.+)\. Die staan nu vooraan in Mijn dag\.$/,["Still to do: $1. They are now first in My day.", "ما زال عليك: $1. أصبحت الآن في مقدمة يومي.", "Kalanlar: $1. Artık Günüm'de en başta.", "अभी बाकी: $1। ये अब मेरा दिन में सबसे ऊपर हैं।", "还剩：$1。它们现在排在“我的一天”最前面。", "Te queda: $1. Ahora aparecen primero en Mi día.", "Осталось: $1. Теперь они первыми в «Моём дне»."]],
 );
+
+// Good luck on the morning of the exam, 26 November 2026
+Object.assign(UI,{
+"Succes vandaag!":["Good luck today!", "بالتوفيق اليوم!", "Bugün bol şans!", "आज के लिए शुभकामनाएँ!", "今天祝你好运！", "¡Mucha suerte hoy!", "Удачи сегодня!"],
+"Vandaag is je examen. Je hebt goed geoefend. Je kunt dit! Succes!":["Your exam is today. You have practised well. You can do this! Good luck!", "امتحانك اليوم. لقد تدرّبت جيدًا. أنت قادر على ذلك! بالتوفيق!", "Sınavın bugün. İyi çalıştın. Sen bunu yapabilirsin! Bol şans!", "आज आपकी परीक्षा है। आपने अच्छा अभ्यास किया है। आप यह कर सकते हैं! शुभकामनाएँ!", "今天就是你的考试。你已经认真练习过了。你一定能行！祝你好运！", "Hoy es tu examen. Has practicado bien. ¡Tú puedes! ¡Mucha suerte!", "Сегодня ваш экзамен. Вы хорошо подготовились. Вы всё сможете! Удачи!"],
+});
+UIR.push(
+  [/^Vandaag is je examen (.+)\. Je hebt goed geoefend\. Je kunt dit! Succes!$/,["Today is your exam: $1. You have practised well. You can do this! Good luck!", "اليوم امتحانك: $1. لقد تدرّبت جيدًا. أنت قادر على ذلك! بالتوفيق!", "Bugün sınavın var: $1. İyi çalıştın. Sen bunu yapabilirsin! Bol şans!", "आज आपकी परीक्षा है: $1। आपने अच्छा अभ्यास किया है। आप यह कर सकते हैं! शुभकामनाएँ!", "今天是你的考试：$1。你已经认真练习过了。你一定能行！祝你好运！", "Hoy tienes examen: $1. Has practicado bien. ¡Tú puedes! ¡Mucha suerte!", "Сегодня ваш экзамен: $1. Вы хорошо подготовились. Вы всё сможете! Удачи!"]],
+);

@@ -160,3 +160,10 @@ menu language (`gtURL()`, English for Dutch menus); the reader's "Vertaal de zin
 - **Over Bittertalen**: `over.html` (served as /over, in the sitemap, linked from Profiel above the privacy row):
   what it is, the name, who makes it, how it works, what it is not (not DUO), where everything comes from, contact.
   The maker's own story and photo go there when the user gives them.
+
+## Reminders in the store app (26 November 2026)
+
+`remindPlan()` plans the daily reminder for the next 7 days (ids 1–7) with the days left and today's part, never on a
+finished day and not on an exam day. `examDayPlan()` adds, for every exam date in Profiel, a message at 07:00 that morning
+(ids 20–29): "Succes vandaag!" / "Vandaag is je examen …. Je hebt goed geoefend. Je kunt dit! Succes!". It needs only
+the notification permission, not the daily reminder, and is planned again when a date changes or the app opens.
