@@ -154,7 +154,7 @@ menu language (`gtURL()`, English for Dutch menus); the reader's "Vertaal de zin
   kept in the page gave nothing on the user's iPhone). A switch in Profiel turns it off per device
   (`ww-tril`); it shows only on phones that can do it.
 - **Zo kijkt Bittertalen na**: `nakijken.html` (served as /nakijken, in the sitemap; linked under Vraag 5 on the homepage
-  and from Profiel's Hulp group), built like over.html in eight languages: DUO's Schrijven A2 points and Bittertalen's
+  and from Profiel's Hulp group), built like over.html in nine languages: DUO's Schrijven A2 points and Bittertalen's
   practice pass rule, two made-up examples scored by those rules (the examples stay Dutch), Speaking, and what to know
   (not DUO, AI can be wrong, Haiku for free checks, Sonnet/Opus for paid ones). Keep it true when the scoring rules or models change.
 - **Over Bittertalen**: `over.html` (served as /over, in the sitemap, linked from Profiel above the privacy row):

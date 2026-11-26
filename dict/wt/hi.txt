@@ -1,0 +1,1996 @@
+de huisarts	फ़ैमिली डॉक्टर
+het ziekenhuis	अस्पताल
+de apotheek	दवा की दुकान
+het recept	पर्चा
+het medicijn	दवा
+de pijn	दर्द
+de hoofdpijn	सिरदर्द
+de buikpijn	पेट दर्द
+de koorts	बुख़ार
+hoesten	खाँसना
+ziek	बीमार
+beter worden	ठीक होना
+de tandarts	दाँतों का डॉक्टर
+de verpleegkundige	नर्स
+de specialist	विशेषज्ञ डॉक्टर
+het bloed	ख़ून
+de uitslag	नतीजा
+de zorgverzekering	स्वास्थ्य बीमा
+het eigen risico	ख़ुद भरी जाने वाली राशि
+de huisartsenpost	रात/छुट्टी वाली डॉक्टर सेवा
+de ambulance	एम्बुलेंस
+het spreekuur	डॉक्टर से मिलने का समय
+de griep	फ़्लू
+het been	टाँग
+de arm	बाँह
+de rug	पीठ
+de keel	गला
+gezond	स्वस्थ
+de patiënt	मरीज़
+de wond	घाव
+de pleister	बैंडेड
+het verband	पट्टी
+de allergie	एलर्जी
+de pijnstiller	दर्द की दवा
+zwanger	गर्भवती
+de verloskundige	दाई
+de bril	चश्मा
+de oogarts	आँखों का डॉक्टर
+de fysiotherapeut	फ़िज़ियोथेरेपिस्ट
+de spoedeisende hulp	आपातकालीन विभाग
+ongezond	अस्वस्थ, नुकसानदेह
+duizelig	चक्कर आना
+misselijk	जी मिचलाना
+moe	थका हुआ
+de hoest	खाँसी
+de wachtkamer	प्रतीक्षा कक्ष
+de behandeling	इलाज
+de operatie	ऑपरेशन
+onderzoeken	जाँच करना
+de prik	सुई, टीका
+de vaccinatie	टीकाकरण
+de dokter	डॉक्टर
+de afspraak	मुलाक़ात का समय
+de verkoudheid	ज़ुकाम
+verkouden	ज़ुकाम होना
+niezen	छींकना
+overgeven	उल्टी करना
+de diarree	दस्त
+het zuur	सीने की जलन
+de bloeddruk	रक्तचाप
+de suikerziekte	मधुमेह
+de pil	गोली
+de druppels	बूँदें
+de zalf	मरहम
+de thermometer	थर्मामीटर
+de rolstoel	व्हीलचेयर
+de kruk	बैसाखी
+gebroken	टूटा हुआ
+de gips	प्लास्टर
+bloeden	ख़ून बहना
+de verwijzing	रेफ़रल
+de huisartsenpraktijk	डॉक्टर का क्लिनिक
+de assistente	डॉक्टर की सहायिका
+de spoed	तत्काल ज़रूरत
+het ongeluk	दुर्घटना
+gewond	घायल
+de EHBO	प्राथमिक चिकित्सा
+de psycholoog	मनोवैज्ञानिक
+de stress	तनाव
+somber	उदास
+genezen	ठीक होना
+het gewicht	वज़न
+afvallen	वज़न घटाना
+de vitamine	विटामिन
+de bijwerking	दुष्प्रभाव
+de bijsluiter	दवा की पर्ची
+de huisartsenassistente	फ़ैमिली डॉक्टर की सहायिका
+de kraamzorg	प्रसव के बाद घर पर देखभाल
+ademen	साँस लेना
+de verzekeringspas	बीमा कार्ड
+de baan	नौकरी
+de werkgever	नियोक्ता
+de werknemer	कर्मचारी
+de collega	सहकर्मी
+de baas	मालिक, बॉस
+het salaris	वेतन
+het contract	अनुबंध
+de vacature	रिक्त पद
+solliciteren	नौकरी के लिए आवेदन करना
+het sollicitatiegesprek	नौकरी का इंटरव्यू
+het cv	बायोडाटा
+de ervaring	अनुभव
+de opleiding	शिक्षा, प्रशिक्षण
+het diploma	डिप्लोमा
+parttime	पार्ट-टाइम
+fulltime	फ़ुल-टाइम
+de werktijden	काम के घंटे
+de pauze	अवकाश, ब्रेक
+de vakantiedagen	छुट्टी के दिन
+het uitzendbureau	अस्थायी रोज़गार एजेंसी
+werkloos	बेरोज़गार
+de uitkering	सरकारी भत्ता
+het kantoor	दफ़्तर
+de vergadering	बैठक
+het rooster	समय-सारिणी
+de klant	ग्राहक
+verdienen	कमाना
+ontslaan	नौकरी से निकालना
+de stage	इंटर्नशिप
+de werkplek	कार्यस्थल
+de afdeling	विभाग
+de overuren	ओवरटाइम
+het pensioen	पेंशन
+de vakbond	मज़दूर संघ
+de proeftijd	परिवीक्षा अवधि
+de loonstrook	वेतन पर्ची
+het bedrijf	कंपनी
+de zzp'er	स्वरोज़गार व्यक्ति
+de sollicitatiebrief	आवेदन पत्र
+de ploegendienst	पाली का काम
+de nachtdienst	रात की पाली
+het uniform	वर्दी
+de promotie	पदोन्नति
+het ontslag	बर्ख़ास्तगी
+ontslag nemen	इस्तीफ़ा देना
+de sollicitatie	नौकरी का आवेदन
+de werkervaring	काम का अनुभव
+het loon	मज़दूरी
+het minimumloon	न्यूनतम वेतन
+bruto	कर से पहले
+netto	कर के बाद
+het vakantiegeld	छुट्टी भत्ता
+de cao	सामूहिक श्रम समझौता
+het tijdelijk contract	अस्थायी अनुबंध
+het vast contract	स्थायी अनुबंध
+zich ziek melden	बीमारी की सूचना देना
+de bedrijfsarts	कंपनी का डॉक्टर
+de leidinggevende	सुपरवाइज़र
+het team	टीम
+de taak	काम, कार्य
+de opdracht	ज़िम्मेदारी, काम
+de dienst	पाली
+de werkweek	कार्य सप्ताह
+het verlof	छुट्टी
+het zwangerschapsverlof	मातृत्व अवकाश
+de werkvergunning	कार्य परमिट
+de arbeidsmarkt	श्रम बाज़ार
+de beloning	इनाम
+de reiskosten	यात्रा ख़र्च
+de ontslagbrief	बर्ख़ास्तगी पत्र
+de werkzoekende	नौकरी ढूँढने वाला
+de vaardigheid	कौशल
+de cursus	कोर्स
+het certificaat	प्रमाणपत्र
+de werktijd	काम का समय
+de lunchpauze	लंच ब्रेक
+de kantine	कैंटीन
+het personeel	कर्मचारी (सब)
+de werkloosheid	बेरोज़गारी
+de uitzendkracht	अस्थायी कर्मचारी
+het arbeidscontract	रोज़गार अनुबंध
+de vrijwilliger	स्वयंसेवक
+de ondernemer	उद्यमी
+de KvK	वाणिज्य मंडल
+de factuur	बिल, चालान
+de woning	घर, आवास
+het huis	घर
+het appartement	अपार्टमेंट
+de huur	किराया
+de huurder	किरायेदार
+de verhuurder	मकान मालिक
+de woningcorporatie	आवास संस्था
+huren	किराये पर लेना
+verhuizen	घर बदलना
+de buren	पड़ोसी
+de buurt	आस-पड़ोस
+de verdieping	मंज़िल
+de trap	सीढ़ियाँ
+de lift	लिफ़्ट
+de slaapkamer	सोने का कमरा
+de woonkamer	बैठक
+de badkamer	बाथरूम
+de keuken	रसोई
+de wc	शौचालय
+de tuin	बगीचा
+het balkon	बालकनी
+de verwarming	हीटिंग
+de rekening	बिल
+de stroom	बिजली
+de vuilnisbak	कूड़ेदान
+het afval	कचरा
+de sleutel	चाबी
+de monteur	मिस्त्री
+kapot	टूटा हुआ
+de reparatie	मरम्मत
+de vloer	फ़र्श
+het plafond	छत (अंदर की)
+de muur	दीवार
+het raam	खिड़की
+de deur	दरवाज़ा
+het dak	छत
+de kelder	तहख़ाना
+de zolder	अटारी
+de gang	गलियारा
+de schuur	शेड
+de bel	घंटी
+de brievenbus	लेटरबॉक्स
+de borg	ज़मानत राशि
+het huurcontract	किराया अनुबंध
+de schimmel	फफूँद
+de lekkage	रिसाव
+schoonmaken	साफ़ करना
+opruimen	सामान समेटना
+het licht	रोशनी
+de huisbaas	मकान मालिक
+de koopwoning	ख़रीदा हुआ घर
+de huurwoning	किराये का घर
+de hypotheek	गृह ऋण
+de makelaar	प्रॉपर्टी डीलर
+de wachtlijst	प्रतीक्षा सूची
+de inschrijving	पंजीकरण
+de bovenwoning	ऊपर की मंज़िल का घर
+de benedenwoning	भूतल का घर
+de begane grond	भूतल
+de voordeur	सामने का दरवाज़ा
+de achterdeur	पीछे का दरवाज़ा
+de kraan	नल
+de douche	शावर
+het bad	बाथटब
+de wastafel	वॉश बेसिन
+de cv-ketel	हीटिंग बॉयलर
+de radiator	रेडिएटर
+het gas	गैस
+de meter	मीटर
+de meterstand	मीटर रीडिंग
+de energieleverancier	बिजली-गैस कंपनी
+de servicekosten	सेवा शुल्क
+de huurverhoging	किराये में बढ़ोतरी
+de opzegging	अनुबंध समाप्ति की सूचना
+het onderhoud	रख-रखाव
+de overlast	परेशानी
+het lawaai	शोर
+de verhuizing	घर बदलना
+de verhuisdoos	सामान का डिब्बा
+het meubel	फ़र्नीचर
+gemeubileerd	फ़र्निश्ड
+de woonruimte	रहने की जगह
+de vierkante meter	वर्ग मीटर
+de kamer	कमरा
+de studio	एक कमरे का फ़्लैट
+de portiek	साझा प्रवेश और सीढ़ी
+de flat	अपार्टमेंट बिल्डिंग
+het rijtjeshuis	क़तार वाला घर
+de vensterbank	खिड़की की चौखट
+de klusjesman	छोटे काम करने वाला मिस्त्री
+de rookmelder	धुआँ अलार्म
+de container	बड़ा कूड़ेदान
+het grofvuil	बड़ा कचरा
+scheiden	अलग करना
+de stekker	प्लग
+de zekering	फ़्यूज़
+het tapijt	कालीन
+de woonwijk	आवासीय क्षेत्र
+de buurtbewoner	मोहल्ले का निवासी
+de trein	ट्रेन
+de bus	बस
+de tram	ट्राम
+de metro	मेट्रो
+de fiets	साइकिल
+de auto	कार
+het station	स्टेशन
+het perron	प्लेटफ़ॉर्म
+de halte	स्टॉप
+het kaartje	टिकट
+de ov-chipkaart	सार्वजनिक परिवहन कार्ड
+inchecken	चेक-इन करना
+uitchecken	चेक-आउट करना
+overstappen	गाड़ी बदलना
+de vertraging	देरी
+vertrekken	रवाना होना
+aankomen	पहुँचना
+de reis	यात्रा
+het rijbewijs	ड्राइविंग लाइसेंस
+de file	ट्रैफ़िक जाम
+parkeren	गाड़ी खड़ी करना
+de weg	सड़क
+het verkeer	यातायात
+het stoplicht	ट्रैफ़िक लाइट
+rechtsaf	दाईं ओर मुड़ना
+linksaf	बाईं ओर मुड़ना
+rechtdoor	सीधे
+de kruising	चौराहा
+de fietsenstalling	साइकिल स्टैंड
+de snelweg	हाईवे
+de rotonde	गोल चक्कर
+het fietspad	साइकिल पथ
+de stoep	फ़ुटपाथ
+het zebrapad	ज़ेब्रा क्रॉसिंग
+de parkeerplaats	पार्किंग
+de taxi	टैक्सी
+het vliegtuig	हवाई जहाज़
+het vliegveld	हवाई अड्डा
+de boot	नाव
+de pont	फ़ेरी
+de conducteur	टिकट निरीक्षक
+de vertrektijd	रवाना होने का समय
+de aankomsttijd	पहुँचने का समय
+enkele reis	एक तरफ़ा
+retour	आने-जाने का
+de spits	भीड़ का समय
+de storing	ख़राबी
+de omleiding	बदला हुआ रास्ता
+de benzine	पेट्रोल
+het tankstation	पेट्रोल पंप
+de helm	हेलमेट
+het slot	ताला
+de band	टायर
+de voorrang	पहले जाने का अधिकार
+de bestuurder	चालक
+de passagier	यात्री
+de dienstregeling	समय-सारिणी
+het spoor	रेल पटरी; प्लेटफ़ॉर्म नंबर
+de intercity	इंटरसिटी ट्रेन
+de sprinter	लोकल ट्रेन
+de NS	डच रेलवे
+het abonnement	सदस्यता
+het verkeersbord	यातायात संकेत
+de snelheid	गति
+de flitspaal	स्पीड कैमरा
+de verkeersboete	ट्रैफ़िक जुर्माना
+het rijexamen	ड्राइविंग टेस्ट
+de rijles	ड्राइविंग क्लास
+de APK	वाहन जाँच
+het kenteken	नंबर प्लेट
+het parkeerkaartje	पार्किंग टिकट
+de parkeervergunning	पार्किंग परमिट
+de bushalte	बस स्टॉप
+het knooppunt	हाईवे जंक्शन
+de afslag	निकास (हाईवे)
+de fietser	साइकिल सवार
+de voetganger	पैदल यात्री
+de scooter	स्कूटर
+de motor	मोटरसाइकिल; इंजन
+de vrachtauto	मालवाहक ट्रक
+botsen	टकराना
+inhalen	ओवरटेक करना
+remmen	ब्रेक लगाना
+oversteken	सड़क पार करना
+de reiziger	यात्री
+de bagage	सामान
+de koffer	सूटकेस
+de vlucht	उड़ान
+de instaptijd	बोर्डिंग का समय
+de grens	सीमा
+het visum	वीज़ा
+de winkel	दुकान
+de supermarkt	सुपरमार्केट
+de markt	बाज़ार
+de kassa	कैश काउंटर
+de bon	रसीद
+de prijs	दाम
+duur	महँगा
+goedkoop	सस्ता
+de korting	छूट
+de aanbieding	ख़ास ऑफ़र
+betalen	भुगतान करना
+pinnen	कार्ड से भुगतान करना
+contant	नक़द
+de pinpas	डेबिट कार्ड
+het geld	पैसा
+de portemonnee	बटुआ
+de maat	नाप
+passen	पहनकर देखना; फ़िट होना
+ruilen	बदलना
+terugbrengen	वापस करना
+de klantenservice	ग्राहक सेवा
+bestellen	ऑर्डर करना
+het pakket	पार्सल
+bezorgen	पहुँचाना
+de bank	बैंक
+het rekeningnummer	खाता संख्या
+sparen	बचत करना
+lenen	उधार लेना; उधार देना
+de belasting	टैक्स
+de bakker	बेकरी
+de slager	क़साई
+de drogist	दवा और सौंदर्य सामान की दुकान
+het warenhuis	डिपार्टमेंटल स्टोर
+het winkelcentrum	शॉपिंग सेंटर
+de openingstijden	खुलने का समय
+open	खुला
+gesloten	बंद
+de uitverkoop	सेल
+de garantie	वारंटी
+de boodschappen	रोज़ का सामान
+het boodschappenlijstje	सामान की सूची
+het mandje	टोकरी
+het winkelwagentje	शॉपिंग ट्रॉली
+de verkoper	विक्रेता
+de munt	सिक्का
+het bankbiljet	नोट
+het wisselgeld	छुट्टा, बाक़ी पैसे
+de schuld	क़र्ज़
+de rente	ब्याज
+de overschrijving	बैंक ट्रांसफ़र
+het saldo	शेष राशि
+de pincode	पिन कोड
+de geldautomaat	एटीएम
+gratis	मुफ़्त
+kosten	क़ीमत होना
+de klantenkaart	लॉयल्टी कार्ड
+het statiegeld	बोतल जमा राशि
+inleveren	जमा करना
+de webwinkel	ऑनलाइन दुकान
+de bezorgkosten	डिलीवरी शुल्क
+retourneren	सामान वापस भेजना
+de bedenktijd	सोचने की अवधि
+de aankoop	ख़रीदारी
+het koopje	सस्ता सौदा
+de kwaliteit	गुणवत्ता
+het merk	ब्रांड
+de verpakking	पैकिंग
+de houdbaarheidsdatum	एक्सपायरी तारीख़
+de kilo	किलो
+de gram	ग्राम
+de liter	लीटर
+het stuk	टुकड़ा
+het blik	टिन का डिब्बा
+de pot	मर्तबान
+de zak	थैला
+het tasje	थैली
+de zelfscan	ख़ुद स्कैन करना
+het filiaal	शाखा
+de etalage	शोकेस
+de paskamer	ट्रायल रूम
+het bonnetje	रसीद
+de spaarrekening	बचत खाता
+de betaalrekening	चालू खाता
+het budget	बजट
+uitgeven	ख़र्च करना
+de inkomsten	आमदनी
+de uitgaven	ख़र्च
+het inkomen	आय
+de schuldhulp	क़र्ज़ सहायता
+de betalingsregeling	किस्तों में भुगतान योजना
+de incasso	स्वचालित भुगतान
+de aanmaning	भुगतान का अनुस्मारक
+de deurwaarder	वसूली अधिकारी
+de euro	यूरो
+de cent	सेंट
+wisselen	बदलना
+de prijslijst	मूल्य सूची
+de basisschool	प्राथमिक स्कूल
+de middelbare school	माध्यमिक स्कूल
+de groep	समूह; कक्षा
+de leerkracht	शिक्षक
+de juf	अध्यापिका
+de leerling	छात्र
+het huiswerk	गृहकार्य
+het rapport	रिपोर्ट कार्ड
+de ouderavond	अभिभावक बैठक
+de kinderopvang	बच्चों की देखभाल केंद्र
+de oppas	आया
+het schoolreisje	स्कूल यात्रा
+de schoolvakantie	स्कूल की छुट्टी
+spijbelen	स्कूल से भागना
+leerplichtig	स्कूल जाना अनिवार्य
+de gymles	पीटी की कक्षा
+het lokaal	कक्षा का कमरा
+de les	पाठ
+leren	सीखना; सिखाना
+uitleggen	समझाना
+het cijfer	अंक
+de toets	परीक्षा
+de opvoeding	परवरिश
+het consultatiebureau	शिशु स्वास्थ्य केंद्र
+de schooltas	स्कूल बैग
+het schoolplein	स्कूल का मैदान
+de directeur	प्रधानाचार्य; निदेशक
+het vak	विषय
+rekenen	गणित करना
+de pen	पेन
+het potlood	पेंसिल
+het schrift	कॉपी
+de gum	रबड़
+het woordenboek	शब्दकोश
+de vraag	सवाल
+het antwoord	जवाब
+het examen	परीक्षा
+slagen	पास होना
+zakken	फ़ेल होना
+de universiteit	विश्वविद्यालय
+het mbo	व्यावसायिक शिक्षा
+de peuterspeelzaal	छोटे बच्चों का खेल-घर
+de crèche	शिशु-गृह
+de buitenschoolse opvang	स्कूल के बाद की देखभाल
+de ouderbijdrage	अभिभावक योगदान
+de mentor	कक्षा मार्गदर्शक
+de klas	कक्षा
+het schooljaar	स्कूल वर्ष
+de voorschool	प्री-स्कूल
+de kleuter	छोटा बच्चा (4-5 साल)
+de peuter	छोटा बच्चा (2-3 साल)
+de leerplicht	अनिवार्य शिक्षा
+de leerplichtambtenaar	स्कूल उपस्थिति अधिकारी
+het schooladvies	स्कूल की सलाह
+de doorstroomtoets	प्राथमिक स्कूल की अंतिम परीक्षा
+het vmbo	प्रारंभिक व्यावसायिक माध्यमिक शिक्षा
+de havo	सामान्य उच्च माध्यमिक शिक्षा
+het vwo	विश्वविद्यालय-पूर्व शिक्षा
+het hbo	उच्च व्यावसायिक शिक्षा
+de studiefinanciering	छात्र वित्तीय सहायता
+de student	विद्यार्थी
+het lesrooster	कक्षा समय-सारिणी
+de rekenmachine	कैलकुलेटर
+de liniaal	रूलर
+het etui	पेंसिल बॉक्स
+de spreekbeurt	कक्षा में भाषण
+het werkstuk	परियोजना कार्य
+de leesles	पढ़ने की कक्षा
+de traktatie	जन्मदिन की मिठाई
+het schoolfeest	स्कूल का उत्सव
+de ouderraad	अभिभावक परिषद
+het oudergesprek	अभिभावक-शिक्षक बातचीत
+de schoolarts	स्कूल का डॉक्टर
+pesten	परेशान करना, धमकाना
+het speelgoed	खिलौने
+de luier	डायपर
+de kinderwagen	बच्चा गाड़ी
+het knuffeldier	मुलायम खिलौना
+opvoeden	पालना
+de straf	सज़ा
+het voorbeeld	उदाहरण
+de bijles	ट्यूशन
+het lesgeld	शिक्षा शुल्क
+de gemeente	नगरपालिका
+het gemeentehuis	नगरपालिका भवन
+het loket	काउंटर
+het formulier	फ़ॉर्म
+invullen	भरना
+aanvragen	आवेदन करना
+de aanvraag	आवेदन
+het paspoort	पासपोर्ट
+de identiteitskaart	पहचान पत्र
+geldig	मान्य
+verlopen	समाप्त होना
+de handtekening	हस्ताक्षर
+ondertekenen	हस्ताक्षर करना
+het adres	पता
+zich inschrijven	पंजीकरण कराना
+de Belastingdienst	कर विभाग
+de toeslag	सरकारी भत्ता
+het burgerservicenummer	नागरिक सेवा संख्या
+de politie	पुलिस
+de brandweer	दमकल
+het alarmnummer	आपातकालीन नंबर
+de wet	क़ानून
+de regel	नियम
+de boete	जुर्माना
+de verzekering	बीमा
+de brief	पत्र
+de postcode	पिन कोड
+de geboortedatum	जन्मतिथि
+de nationaliteit	राष्ट्रीयता
+de ambtenaar	सरकारी कर्मचारी
+de burgemeester	महापौर
+de gemeenteraad	नगर परिषद
+het uittreksel	रिकॉर्ड का प्रमाणित अंश
+de verblijfsvergunning	निवास परमिट
+de IND	आप्रवासन विभाग
+de inburgering	एकीकरण
+de naturalisatie	नागरिकता मिलना
+de huurtoeslag	किराया भत्ता
+de zorgtoeslag	स्वास्थ्य बीमा भत्ता
+de kinderbijslag	बाल भत्ता
+het UWV	कर्मचारी बीमा एजेंसी
+de bijstand	सामाजिक सहायता
+de DigiD	DigiD (सरकारी लॉग-इन)
+de belastingaangifte	कर रिटर्न
+de rechter	न्यायाधीश
+de advocaat	वकील
+het bezwaar	आपत्ति
+de klacht	शिकायत
+de rechten	अधिकार
+de plichten	कर्तव्य
+de basisregistratie	निवासी रजिस्टर
+de uitschrijving	पंजीकरण रद्द करना
+de geboorteakte	जन्म प्रमाणपत्र
+de huwelijksakte	विवाह प्रमाणपत्र
+de legalisatie	वैधीकरण
+de vertaling	अनुवाद
+beëdigd	शपथबद्ध
+de leges	सरकारी शुल्क
+het wijkteam	मोहल्ला सहायता टीम
+de Wmo	सामाजिक सहायता क़ानून
+het sociaal loket	सामाजिक सेवा काउंटर
+de klantmanager	केस प्रबंधक
+de SVB	सामाजिक बीमा बैंक
+de AOW	सरकारी पेंशन
+DUO	DUO (शिक्षा एजेंसी)
+de lening	ऋण
+de rechtbank	अदालत
+de aangifte	पुलिस रिपोर्ट
+de getuige	गवाह
+het Juridisch Loket	क़ानूनी सलाह केंद्र
+de privacy	निजता
+de gegevens	जानकारी
+de machtiging	प्राधिकरण
+de termijn	समय सीमा
+de beslissing	फ़ैसला
+de toestemming	अनुमति
+de vergunning	परमिट
+de inburgeringsplicht	एकीकरण की बाध्यता
+de taalcoach	भाषा कोच
+de verlenging	विस्तार
+het bewijs	सबूत
+de kopie	प्रतिलिपि
+de ochtend	सुबह
+de middag	दोपहर
+de avond	शाम
+de nacht	रात
+vandaag	आज
+morgen	कल (आने वाला)
+gisteren	कल (बीता हुआ)
+overmorgen	परसों
+de week	हफ़्ता
+het weekend	सप्ताहांत
+de maand	महीना
+het jaar	साल
+het uur	घंटा
+het kwartier	पंद्रह मिनट
+vroeg	जल्दी
+laat	देर से
+op tijd	समय पर
+het weer	मौसम
+de zon	सूरज
+de regen	बारिश
+de wind	हवा
+de sneeuw	बर्फ़
+de wolk	बादल
+warm	गरम
+koud	ठंडा
+nat	गीला
+droog	सूखा
+de lente	वसंत
+de zomer	गर्मी
+de herfst	पतझड़
+de winter	सर्दी
+de seconde	सेकंड
+de minuut	मिनट
+de dag	दिन
+de datum	तारीख़
+de kalender	कैलेंडर
+het seizoen	मौसम (ऋतु)
+de feestdag	त्योहार, छुट्टी का दिन
+altijd	हमेशा
+nooit	कभी नहीं
+soms	कभी-कभी
+vaak	अक्सर
+meestal	आम तौर पर
+straks	थोड़ी देर में
+meteen	तुरंत
+nu	अभी
+het onweer	आँधी-तूफ़ान
+de mist	कोहरा
+de temperatuur	तापमान
+de graad	डिग्री
+bewolkt	बादल छाए
+zonnig	धूप वाला
+de hagel	ओले
+glad	फिसलन भरा
+de weersverwachting	मौसम का पूर्वानुमान
+de storm	तूफ़ान
+vorige week	पिछले हफ़्ते
+volgend jaar	अगले साल
+maandag	सोमवार
+dinsdag	मंगलवार
+woensdag	बुधवार
+donderdag	गुरुवार
+vrijdag	शुक्रवार
+zaterdag	शनिवार
+zondag	रविवार
+januari	जनवरी
+februari	फ़रवरी
+maart	मार्च
+april	अप्रैल
+mei	मई
+juni	जून
+juli	जुलाई
+augustus	अगस्त
+september	सितंबर
+oktober	अक्टूबर
+november	नवंबर
+december	दिसंबर
+de eeuw	सदी
+het verleden	अतीत
+de toekomst	भविष्य
+het moment	पल
+binnenkort	जल्द ही
+onlangs	हाल ही में
+vroeger	पहले
+later	बाद में
+de regenboog	इंद्रधनुष
+de bliksem	बिजली (आकाश की)
+de donder	गरज
+de bui	बौछार
+de hittegolf	लू
+de ijzel	सड़क पर जमी बर्फ़
+vriezen	जमना
+regenen	बारिश होना
+sneeuwen	बर्फ़ गिरना
+waaien	हवा चलना
+de familie	परिवार, रिश्तेदार
+het gezin	घर का परिवार
+de ouders	माता-पिता
+de vader	पिता
+de moeder	माँ
+de zoon	बेटा
+de dochter	बेटी
+de broer	भाई
+de zus	बहन
+de opa	दादा, नाना
+de oma	दादी, नानी
+de man	आदमी; पति
+de vrouw	औरत; पत्नी
+getrouwd	शादीशुदा
+gescheiden	तलाक़शुदा
+de baby	शिशु
+het kind	बच्चा
+de vriend	दोस्त
+de vriendin	सहेली
+de buurman	पड़ोसी
+de buurvrouw	पड़ोसन
+de verjaardag	जन्मदिन
+jarig zijn	जन्मदिन होना
+feliciteren	बधाई देना
+trouwen	शादी करना
+oud	बूढ़ा, पुराना
+jong	जवान
+aardig	अच्छा, दयालु
+boos	गुस्सा
+blij	ख़ुश
+verdrietig	दुखी
+de grootouders	दादा-दादी, नाना-नानी
+de kleinkinderen	पोते-पोतियाँ
+de oom	चाचा, मामा
+de tante	चाची, मौसी
+de neef	भतीजा; चचेरा भाई
+de nicht	भतीजी; चचेरी बहन
+de schoonmoeder	सास
+de zwager	साला, देवर, जीजा
+de schoonzus	ननद, साली, भाभी
+de weduwe	विधवा
+alleenstaand	अकेला रहने वाला
+samenwonen	साथ रहना
+de bruiloft	शादी समारोह
+het huwelijk	विवाह
+de geboorte	जन्म
+overlijden	देहांत होना
+de begrafenis	अंतिम संस्कार
+de tiener	किशोर
+de volwassene	वयस्क
+de kennis	जान-पहचान वाला
+de gast	मेहमान
+de ex	पूर्व साथी
+de echtgenoot	पति
+de echtgenote	पत्नी
+de partner	साथी
+de schoonvader	ससुर
+de schoonouders	सास-ससुर
+de kleinzoon	पोता, नाती
+de kleindochter	पोती, नातिन
+de tweeling	जुड़वाँ
+het familielid	रिश्तेदार
+de buurtgenoot	पड़ोसी
+de vreemde	अजनबी
+de jongen	लड़का
+het meisje	लड़की
+de meneer	श्रीमान
+de mevrouw	श्रीमती
+de bejaarde	बुज़ुर्ग
+de gepensioneerde	सेवानिवृत्त
+de nieuwkomer	नया आने वाला
+de vluchteling	शरणार्थी
+de migrant	प्रवासी
+de Nederlander	डच व्यक्ति
+de achternaam	उपनाम
+de voornaam	पहला नाम
+de leeftijd	उम्र
+de zwangerschap	गर्भावस्था
+het ontbijt	नाश्ता
+de lunch	दोपहर का खाना
+het avondeten	रात का खाना
+het brood	ब्रेड
+de boterham	ब्रेड का टुकड़ा
+de kaas	पनीर, चीज़
+de melk	दूध
+het ei	अंडा
+de groente	सब्ज़ी
+het fruit	फल
+de appel	सेब
+het vlees	मांस
+de vis	मछली
+de kip	मुर्ग़ी, चिकन
+de rijst	चावल
+de aardappel	आलू
+de soep	सूप
+de koffie	कॉफ़ी
+de thee	चाय
+de suiker	चीनी
+het zout	नमक
+koken	खाना बनाना; उबालना
+bakken	सेंकना; तलना
+snijden	काटना
+de pan	पतीला, कड़ाही
+het bord	प्लेट
+het glas	गिलास
+het mes	चाकू
+de vork	काँटा
+de lepel	चम्मच
+lekker	स्वादिष्ट
+honger hebben	भूख लगना
+dorst hebben	प्यास लगना
+de boter	मक्खन
+de olie	तेल
+de jam	जैम
+de pindakaas	पीनट बटर
+de hagelslag	चॉकलेट के दाने
+de yoghurt	दही
+de pasta	पास्ता
+de saus	चटनी, सॉस
+de sla	सलाद पत्ता
+de tomaat	टमाटर
+de ui	प्याज़
+de wortel	गाजर
+de banaan	केला
+de sinaasappel	संतरा
+de peer	नाशपाती
+de aardbei	स्ट्रॉबेरी
+het toetje	मिठाई (खाने के बाद)
+de taart	केक
+het koekje	बिस्कुट
+het snoep	टॉफ़ी, मिठाई
+het sap	जूस
+het bier	बीयर
+de wijn	शराब (वाइन)
+vegetarisch	शाकाहारी
+zoet	मीठा
+zuur	खट्टा
+bitter	कड़वा
+pittig	तीखा
+de kom	कटोरा
+het kopje	कप
+het menu	मेन्यू
+de ober	वेटर
+afrekenen	बिल चुकाना
+de fooi	टिप
+het broodje	छोटा बन
+de pannenkoek	पैनकेक
+de stamppot	सब्ज़ी वाला आलू मैश
+de erwtensoep	मटर का सूप
+de kroket	क्रोकेट
+de bitterbal	छोटा तला गोला
+de patat	फ़्रेंच फ़्राइज़
+de stroopwafel	सिरप वाफ़ल
+de drop	मुलेठी टॉफ़ी
+het gehakt	क़ीमा
+het rundvlees	गाय का मांस
+het varkensvlees	सूअर का मांस
+het lamsvlees	भेड़ का मांस
+halal	हलाल
+veganistisch	वीगन
+de noten	मेवे
+de bonen	फलियाँ
+de erwten	मटर
+de paprika	शिमला मिर्च
+de komkommer	खीरा
+de champignon	मशरूम
+de knoflook	लहसुन
+de citroen	नींबू
+de druif	अंगूर
+de meloen	ख़रबूज़ा
+de kers	चेरी
+het meel	आटा
+de peper	काली मिर्च
+het kruid	मसाला
+de room	मलाई
+de slagroom	व्हीप्ड क्रीम
+het ijs	बर्फ़; आइसक्रीम
+de chocolade	चॉकलेट
+de frisdrank	सॉफ़्ट ड्रिंक
+de borrel	पेय पार्टी
+het hapje	नाश्ता (थोड़ा)
+de magnetronmaaltijd	तैयार खाना
+de maaltijd	भोजन
+het gerecht	व्यंजन
+rauw	कच्चा
+gaar	पका हुआ
+verbrand	जला हुआ
+opwarmen	गरम करना
+proeven	चखना
+de smaak	स्वाद
+het bestek	छुरी-काँटे
+het servet	नैपकिन
+de theepot	चायदानी
+zijn	होना
+hebben	के पास होना
+gaan	जाना
+komen	आना
+doen	करना
+maken	बनाना
+zeggen	कहना
+vertellen	बताना
+vragen	पूछना
+antwoorden	जवाब देना
+praten	बातें करना
+spreken	बोलना
+weten	जानना (बात)
+kennen	पहचानना
+denken	सोचना
+begrijpen	समझना
+zien	देखना
+kijken	देखना
+horen	सुनना
+luisteren	ध्यान से सुनना
+lezen	पढ़ना
+schrijven	लिखना
+werken	काम करना
+wonen	रहना
+leven	जीना
+kopen	ख़रीदना
+verkopen	बेचना
+geven	देना
+krijgen	पाना
+nemen	लेना
+brengen	लाना, पहुँचाना
+halen	लेकर आना
+zetten	रखना
+leggen	रखना (लिटाकर)
+staan	खड़ा होना
+zitten	बैठना
+liggen	लेटना
+lopen	चलना
+rennen	दौड़ना
+rijden	गाड़ी चलाना
+vliegen	उड़ना
+wachten	इंतज़ार करना
+zoeken	ढूँढना
+vinden	पाना; मानना
+verliezen	खोना
+beginnen	शुरू करना
+stoppen	रुकना
+openmaken	खोलना
+dichtdoen	बंद करना
+helpen	मदद करना
+proberen	कोशिश करना
+gebruiken	इस्तेमाल करना
+betekenen	मतलब होना
+herhalen	दोहराना
+vergeten	भूलना
+onthouden	याद रखना
+willen	चाहना
+kunnen	सकना
+moeten	ज़रूरी होना
+mogen	अनुमति होना
+houden van	प्यार करना, पसंद करना
+hopen	उम्मीद करना
+geloven	विश्वास करना
+spelen	खेलना
+slapen	सोना
+wakker worden	जागना
+opstaan	उठना
+zich aankleden	कपड़े पहनना
+wassen	धोना
+douchen	नहाना (शावर)
+eten	खाना
+drinken	पीना
+bellen	फ़ोन करना
+sturen	भेजना
+tellen	गिनना
+kiezen	चुनना
+beslissen	फ़ैसला करना
+veranderen	बदलना
+blijven	रुकना
+worden	बनना, हो जाना
+gebeuren	होना, घटित होना
+lachen	हँसना
+huilen	रोना
+aanbieden	पेश करना
+aannemen	स्वीकार करना; नौकरी देना
+afmaken	पूरा करना
+afzeggen	रद्द करना
+annuleren	रद्द करना
+bedanken	धन्यवाद देना
+bedoelen	मतलब होना
+beloven	वादा करना
+bereiken	पहुँचना
+beschrijven	वर्णन करना
+besteden	ख़र्च करना
+bewegen	हिलना
+bezoeken	मिलने जाना
+bijhouden	हिसाब रखना
+controleren	जाँचना
+delen	बाँटना
+doorgeven	आगे बताना
+duren	चलना (समय)
+eindigen	ख़त्म होना
+groeten	नमस्ते करना
+herkennen	पहचानना
+houden	पकड़ना; रखना
+inpakken	पैक करना
+invoeren	दर्ज करना
+kloppen	खटखटाना; सही होना
+klagen	शिकायत करना
+lenen van	से उधार लेना
+letten op	ध्यान देना
+meedoen	हिस्सा लेना
+meenemen	साथ ले जाना
+melden	सूचित करना
+noemen	नाम लेना
+oefenen	अभ्यास करना
+ontmoeten	मिलना
+ontvangen	प्राप्त करना
+oplossen	हल करना
+opschrijven	लिख लेना
+opletten	ध्यान देना
+organiseren	आयोजन करना
+plannen	योजना बनाना
+regelen	इंतज़ाम करना
+reizen	यात्रा करना
+roepen	पुकारना
+schrikken	चौंकना
+sluiten	बंद करना
+steunen	सहारा देना
+stelen	चोरी करना
+storen	परेशान करना
+studeren	पढ़ाई करना
+toestaan	अनुमति देना
+uitgaan van	मान लेना
+uitkiezen	चुनना
+uitproberen	आज़माना
+vallen	गिरना
+verbieden	मना करना
+verdwijnen	ग़ायब होना
+vergelijken	तुलना करना
+verhuren	किराये पर देना
+verklaren	स्पष्ट करना
+verlengen	बढ़ाना
+verplaatsen	हटाना, खिसकाना
+verstaan	सुनकर समझना
+vertalen	अनुवाद करना
+vertrouwen	भरोसा करना
+verwachten	उम्मीद करना
+voelen	महसूस करना
+voorstellen	सुझाव देना; परिचय देना
+waarschuwen	चेतावनी देना
+wegen	तौलना
+wennen	आदत पड़ना
+winnen	जीतना
+zorgen voor	देखभाल करना
+zwaaien	हाथ हिलाना
+aanzetten	चालू करना
+uitzetten	बंद करना
+ophalen	लेने जाना
+wegbrengen	छोड़ आना
+aankondigen	घोषणा करना
+aanmelden	नाम लिखवाना
+afhalen	ले लेना
+bespreken	चर्चा करना
+herinneren	याद आना; याद दिलाना
+missen	छूट जाना; याद करना
+pakken	पकड़ना
+passen op	देखभाल करना
+rusten	आराम करना
+trouwen met	किसी से शादी करना
+zich voelen	ख़ुद को महसूस करना
+zich vergissen	ग़लती करना
+zich zorgen maken	चिंता करना
+zich haasten	जल्दी करना
+zich schamen	शर्मिंदा होना
+zich vervelen	ऊब जाना
+zich herinneren	याद करना
+zich voorbereiden	तैयारी करना
+zich voorstellen	अपना परिचय देना; कल्पना करना
+aanraken	छूना
+bouwen	बनाना (इमारत)
+breken	तोड़ना
+drukken	दबाना
+duwen	धकेलना
+trekken	खींचना
+gooien	फेंकना
+vangen	पकड़ना
+springen	कूदना
+klimmen	चढ़ना
+vullen	भरना
+legen	ख़ाली करना
+repareren	मरम्मत करना
+verven	रंगना
+knippen	कैंची से काटना
+plakken	चिपकाना
+vouwen	मोड़ना, तह करना
+zwijgen	चुप रहना
+fluisteren	फुसफुसाना
+schreeuwen	चिल्लाना
+glimlachen	मुस्कुराना
+knikken	सिर हिलाना
+wijzen	इशारा करना
+tonen	दिखाना
+besparen	बचाना
+verspillen	बर्बाद करना
+lukken	सफल होना
+mislukken	असफल होना
+bestaan	मौजूद होना
+ontstaan	उत्पन्न होना
+stijgen	बढ़ना, ऊपर जाना
+dalen	घटना, नीचे जाना
+groeien	बढ़ना
+sterven	मरना
+geboren worden	जन्म लेना
+zich aanpassen	ढल जाना
+integreren	घुलना-मिलना
+groot	बड़ा
+klein	छोटा
+lang	लंबा
+kort	छोटा (लंबाई में)
+hoog	ऊँचा
+laag	नीचा
+breed	चौड़ा
+smal	संकरा
+dik	मोटा
+dun	पतला
+zwaar	भारी
+licht	हल्का
+donker	अँधेरा, गहरा
+nieuw	नया
+mooi	सुंदर
+lelijk	बदसूरत
+schoon	साफ़
+vies	गंदा
+snel	तेज़
+langzaam	धीमा
+makkelijk	आसान
+moeilijk	मुश्किल
+druk	व्यस्त, भीड़ भरा
+rustig	शांत
+stil	ख़ामोश
+leeg	ख़ाली
+vol	भरा हुआ
+belangrijk	ज़रूरी, महत्वपूर्ण
+mogelijk	संभव
+nodig	ज़रूरी
+klaar	तैयार, पूरा
+bezig	लगा हुआ
+bang	डरा हुआ
+gelukkig	ख़ुश; सौभाग्य से
+tevreden	संतुष्ट
+vriendelijk	मिलनसार
+beleefd	विनम्र
+eerlijk	ईमानदार; न्यायसंगत
+lui	आलसी
+slim	होशियार
+dom	बेवकूफ़
+rijk	अमीर
+arm	ग़रीब
+eerste	पहला
+laatste	आख़िरी
+volgende	अगला
+verschillend	अलग-अलग
+hetzelfde	वही, एक जैसा
+anders	अलग; वरना
+zeker	पक्का
+beroemd	प्रसिद्ध
+gevaarlijk	ख़तरनाक
+veilig	सुरक्षित
+normaal	सामान्य
+speciaal	ख़ास
+leuk	मज़ेदार
+saai	उबाऊ
+gek	पागल, अजीब
+nerveus	घबराया हुआ
+vrij	आज़ाद; छुट्टी पर
+handig	सुविधाजनक
+nuttig	उपयोगी
+duidelijk	स्पष्ट
+ingewikkeld	जटिल
+eenvoudig	सरल
+precies	बिल्कुल ठीक
+juist	सही
+fout	ग़लत
+echt	असली; सच में
+nep	नक़ली
+vreemd	अजीब; विदेशी
+bekend	जाना-पहचाना
+onbekend	अनजान
+goed	अच्छा
+slecht	बुरा
+prettig	सुखद
+vervelend	परेशान करने वाला
+heerlijk	बहुत बढ़िया
+fijn	अच्छा; बारीक
+sterk	मज़बूत
+zwak	कमज़ोर
+zacht	मुलायम; धीमा
+hard	सख़्त; ज़ोर से; तेज़
+luid	ऊँची आवाज़ में
+scherp	तेज़ (धार वाला)
+bot	भोथरा; रूखा
+gezellig	आरामदायक, ख़ुशनुमा
+ontspannen	तनावमुक्त
+gespannen	तनावग्रस्त
+dichtbij	नज़दीक
+ver	दूर
+diep	गहरा
+ondiep	उथला
+rond	गोल
+vierkant	चौकोर
+recht	सीधा
+scheef	टेढ़ा
+heet	बहुत गरम
+lauw	गुनगुना
+fris	ताज़ा, ठंडा
+vers	ताज़ा
+goedgekeurd	स्वीकृत
+verplicht	अनिवार्य
+verboden	मना
+toegestaan	अनुमति है
+beschikbaar	उपलब्ध
+bezet	व्यस्त, भरा हुआ
+geschikt	उपयुक्त
+ongeveer	लगभग
+zelfstandig	आत्मनिर्भर
+serieus	गंभीर
+grappig	मज़ाकिया
+bijzonder	अनोखा
+gewoon	साधारण
+typisch	ख़ास तौर पर
+streng	सख़्त
+lief	प्यारा
+gemeen	बुरा, नीच
+jaloers	ईर्ष्यालु
+trots	गर्वित
+verlegen	शर्मीला
+geduldig	धैर्यवान
+ongeduldig	अधीर
+behulpzaam	मददगार
+hardwerkend	मेहनती
+en	और
+maar	लेकिन
+of	या; कि
+want	क्योंकि
+omdat	क्योंकि
+dus	इसलिए
+als	अगर, जब; जैसे
+wanneer	कब
+toen	तब; जब
+dan	फिर; से (तुलना)
+eerst	पहले
+daarna	उसके बाद
+ook	भी
+niet	नहीं
+geen	कोई नहीं
+wel	ज़रूर, हाँ
+al	पहले ही
+nog	अभी भी; और
+alleen	केवल; अकेला
+samen	साथ में
+heel	बहुत; पूरा
+te	बहुत ज़्यादा
+veel	बहुत
+weinig	थोड़ा
+meer	ज़्यादा
+minder	कम
+genoeg	काफ़ी
+bijna	लगभग
+misschien	शायद
+natuurlijk	बेशक; प्राकृतिक
+graag	ख़ुशी से
+hier	यहाँ
+daar	वहाँ
+overal	हर जगह
+binnen	अंदर
+buiten	बाहर
+boven	ऊपर
+beneden	नीचे
+links	बाईं ओर
+rechts	दाईं ओर
+naast	बगल में
+tussen	बीच में
+achter	पीछे
+voor	के लिए; के सामने
+onder	नीचे
+op	पर
+in	में
+bij	के पास
+met	के साथ
+zonder	बिना
+naar	की ओर
+van	का; से
+uit	से, बाहर
+over	के बारे में; ऊपर से
+tot	तक
+sinds	से (समय)
+tijdens	के दौरान
+wie	कौन
+wat	क्या
+waar	कहाँ; सच
+waarom	क्यों
+hoe	कैसे
+hoeveel	कितना
+welk	कौन-सा
+iemand	कोई
+niemand	कोई नहीं
+iets	कुछ
+niets	कुछ नहीं
+alles	सब कुछ
+iedereen	सब लोग
+elke	हर
+eigenlijk	असल में
+trouwens	वैसे
+toch	फिर भी
+zelfs	यहाँ तक कि
+helaas	दुर्भाग्य से
+vooral	ख़ास कर
+daarom	इसलिए
+hoewel	हालाँकि
+terwijl	जबकि
+zodat	ताकि
+voordat	से पहले
+nadat	के बाद
+totdat	जब तक
+ergens	कहीं
+nergens	कहीं नहीं
+allebei	दोनों
+sommige	कुछ
+andere	दूसरे
+zo	ऐसे
+erg	बहुत; बुरा
+steeds	बार-बार
+opnieuw	फिर से
+tegen	के विरुद्ध; से
+per	प्रति
+langs	के किनारे
+door	के बीच से; द्वारा
+om	के आसपास; बजे
+tegenover	के सामने
+elf	ग्यारह
+twaalf	बारह
+dertien	तेरह
+veertien	चौदह
+vijftien	पंद्रह
+zestien	सोलह
+zeventien	सत्रह
+achttien	अठारह
+negentien	उन्नीस
+twintig	बीस
+dertig	तीस
+veertig	चालीस
+vijftig	पचास
+zestig	साठ
+zeventig	सत्तर
+tachtig	अस्सी
+negentig	नब्बे
+honderd	सौ
+duizend	हज़ार
+een miljoen	दस लाख
+de helft	आधा
+een kwart	चौथाई
+het nummer	नंबर
+het bedrag	राशि
+nul	शून्य
+één	एक
+twee	दो
+drie	तीन
+vier	चार
+vijf	पाँच
+zes	छह
+zeven	सात
+acht	आठ
+negen	नौ
+tien	दस
+het procent	प्रतिशत
+het paar	जोड़ा; कुछ
+het dubbele	दोगुना
+het lichaam	शरीर
+het hoofd	सिर
+het haar	बाल
+het gezicht	चेहरा
+het oog	आँख
+het oor	कान
+de neus	नाक
+de mond	मुँह
+de tand	दाँत
+de tong	जीभ
+de nek	गर्दन
+de schouder	कंधा
+de borst	छाती
+de buik	पेट
+de hand	हाथ
+de vinger	उँगली
+de knie	घुटना
+de voet	पैर
+de teen	पैर की उँगली
+de huid	त्वचा
+het hart	दिल
+de longen	फेफड़े
+de maag	पेट (आमाशय)
+de wang	गाल
+de lip	होंठ
+de kin	ठोड़ी
+het voorhoofd	माथा
+de wenkbrauw	भौंह
+de baard	दाढ़ी
+de elleboog	कोहनी
+de pols	कलाई
+de duim	अँगूठा
+de nagel	नाख़ून
+de heup	कूल्हा
+de enkel	टखना
+de hiel	एड़ी
+het bot	हड्डी
+de spier	मांसपेशी
+de hersenen	दिमाग़
+de nier	गुर्दा
+de lever	जिगर
+het zweet	पसीना
+de kleren	कपड़े
+de jas	कोट
+de trui	स्वेटर
+het overhemd	कमीज़
+het T-shirt	टी-शर्ट
+de broek	पतलून
+de spijkerbroek	जीन्स
+de rok	स्कर्ट
+de jurk	फ़्रॉक, ड्रेस
+de schoenen	जूते
+de laarzen	बूट
+de sokken	मोज़े
+het ondergoed	अंडरवियर
+de muts	ऊनी टोपी
+de sjaal	मफ़लर
+de handschoenen	दस्ताने
+de pet	टोपी (कैप)
+de riem	बेल्ट
+de tas	बैग
+de paraplu	छाता
+aantrekken	पहनना
+uittrekken	उतारना
+dragen	पहनना; उठाना
+het pak	सूट
+de pyjama	पजामा
+de sieraden	गहने
+de ring	अँगूठी
+het horloge	घड़ी (कलाई की)
+de bh	ब्रा
+de hoofddoek	सिर का दुपट्टा
+de regenjas	बरसाती
+de sportschoenen	खेल के जूते
+de slippers	चप्पल
+het vest	बंडी, कार्डिगन
+de knoop	बटन
+de rits	ज़िप
+de mouw	आस्तीन
+de broekzak	जेब
+de zonnebril	धूप का चश्मा
+de oorbel	झुमका, बाली
+de ketting	हार
+de portefeuille	बटुआ
+de rugzak	पिट्ठू बैग
+passend	फ़िट
+wijd	ढीला
+strak	तंग
+de wasmand	कपड़ों की टोकरी
+de tafel	मेज़
+de stoel	कुर्सी
+de fauteuil	आराम कुर्सी
+het bed	बिस्तर
+de kast	अलमारी
+de lamp	लैंप
+het kussen	तकिया
+de deken	कंबल
+de spiegel	शीशा
+het gordijn	पर्दा
+het vloerkleed	दरी, कालीन
+de wasmachine	वॉशिंग मशीन
+de koelkast	फ़्रिज
+het fornuis	चूल्हा
+de oven	ओवन
+de magnetron	माइक्रोवेव
+de stofzuiger	वैक्यूम क्लीनर
+de vaatwasser	बर्तन धोने की मशीन
+de handdoek	तौलिया
+de zeep	साबुन
+de tandenborstel	टूथब्रश
+het toiletpapier	टॉयलेट पेपर
+de prullenbak	कूड़ेदान
+het stopcontact	बिजली का सॉकेट
+de schaar	कैंची
+de doos	डिब्बा
+de fles	बोतल
+de zitbank	सोफ़ा
+het kussensloop	तकिये का खोल
+het laken	चादर
+het dekbed	रज़ाई
+de wekker	अलार्म घड़ी
+de klok	घड़ी
+het schilderij	चित्र
+de plank	ताक़, शेल्फ़
+de la	दराज़
+de vuilniszak	कूड़े का थैला
+de bezem	झाड़ू
+de emmer	बाल्टी
+de dweil	पोछा
+de afwas	बर्तन धोना
+het afwasmiddel	बर्तन धोने का साबुन
+het wasmiddel	कपड़े धोने का पाउडर
+de was	धुलाई के कपड़े
+strijken	इस्त्री करना
+het strijkijzer	इस्त्री
+de waterkoker	केतली
+het koffiezetapparaat	कॉफ़ी मशीन
+de broodrooster	टोस्टर
+de vriezer	फ़्रीज़र
+het aanrecht	रसोई का काउंटर
+de gootsteen	रसोई का सिंक
+het snoer	तार
+de verlichting	रोशनी की व्यवस्था
+de gordijnrails	पर्दे की रॉड
+het bureau	डेस्क
+de kapstok	कोट टाँगने की खूँटी
+de hanger	हैंगर
+de sleutelbos	चाबियों का गुच्छा
+de kaars	मोमबत्ती
+de plant	पौधा
+de vaas	फूलदान
+de ladder	सीढ़ी (उठाने वाली)
+de hamer	हथौड़ा
+de schroevendraaier	पेचकस
+de boor	ड्रिल
+het gereedschap	औज़ार
+de hobby	शौक़
+de sport	खेल
+sporten	कसरत करना
+wandelen	सैर करना
+fietsen	साइकिल चलाना
+zwemmen	तैरना
+voetballen	फ़ुटबॉल खेलना
+de sportschool	जिम
+het museum	संग्रहालय
+de bioscoop	सिनेमाघर
+de film	फ़िल्म
+het concert	संगीत कार्यक्रम
+het theater	थिएटर
+het park	पार्क
+de dierentuin	चिड़ियाघर
+de vereniging	संस्था, क्लब
+het lid	सदस्य
+het feest	पार्टी
+uitgaan	बाहर घूमने जाना
+de vakantie	छुट्टी
+kamperen	कैंपिंग करना
+het hotel	होटल
+de camping	कैंपिंग साइट
+de foto	फ़ोटो
+het spel	खेल (गेम)
+de muziek	संगीत
+zingen	गाना
+tekenen	चित्र बनाना
+het vrijwilligerswerk	स्वयंसेवा
+uitnodigen	न्योता देना
+afspreken	मिलने का समय तय करना
+de wedstrijd	मैच
+de voetbalclub	फ़ुटबॉल क्लब
+het zwemdiploma	तैराकी प्रमाणपत्र
+schaatsen	बर्फ़ पर स्केटिंग करना
+de schaatsen	आइस स्केट्स
+hardlopen	दौड़ लगाना
+de fitness	फ़िटनेस
+de yoga	योग
+het tennis	टेनिस
+het basketbal	बास्केटबॉल
+de bibliotheekpas	लाइब्रेरी कार्ड
+het verhaal	कहानी
+de roman	उपन्यास
+het gedicht	कविता
+de tentoonstelling	प्रदर्शनी
+de voorstelling	प्रदर्शन
+het festival	उत्सव
+de barbecue	बारबेक्यू
+de picknick	पिकनिक
+het uitje	सैर-सपाटा
+de dagjesmensen	एक दिन के सैलानी
+de reisgids	यात्रा गाइड
+het souvenir	स्मृति चिह्न
+de camera	कैमरा
+het speelveld	खेल का मैदान
+de puzzel	पहेली
+het kaartspel	ताश का खेल
+de muziekles	संगीत की कक्षा
+het instrument	वाद्य यंत्र
+de gitaar	गिटार
+de piano	पियानो
+het koor	गायक मंडली
+dansen	नाचना
+genieten	आनंद लेना
+de vrije tijd	ख़ाली समय
+het lidmaatschap	सदस्यता
+de contributie	सदस्यता शुल्क
+de natuur	प्रकृति
+het dier	जानवर
+de hond	कुत्ता
+de kat	बिल्ली
+de vogel	पक्षी
+het paard	घोड़ा
+de koe	गाय
+het schaap	भेड़
+het varken	सूअर
+de eend	बत्तख
+de muis	चूहा
+het konijn	ख़रगोश
+de boom	पेड़
+de bloem	फूल
+het gras	घास
+het bos	जंगल
+de zee	समुद्र
+het strand	समुद्र तट
+de rivier	नदी
+het meer	झील
+de berg	पहाड़
+het land	देश; ज़मीन
+de dijk	बाँध (तटबंध)
+de polder	पोल्डर (पानी से निकाली ज़मीन)
+de molen	पवनचक्की
+de lucht	हवा; आसमान
+de grond	ज़मीन, मिट्टी
+de steen	पत्थर
+de paddenstoel	कुकुरमुत्ता
+het blad	पत्ता
+de tak	डाली
+het zaad	बीज
+de tulp	ट्यूलिप
+de roos	गुलाब
+de bij	मधुमक्खी
+de vlieg	मक्खी
+de mug	मच्छर
+de spin	मकड़ी
+de vlinder	तितली
+het insect	कीड़ा
+de mier	चींटी
+de rat	चूहा (बड़ा)
+de haan	मुर्ग़ा
+de geit	बकरी
+de ezel	गधा
+de zwaan	हंस
+de meeuw	समुद्री चिड़िया
+de reiger	बगुला
+de boerderij	खेत, फ़ार्म
+het weiland	चरागाह
+het veld	मैदान
+het duin	रेत का टीला
+het eiland	द्वीप
+de heuvel	पहाड़ी
+de sloot	नाली
+het milieu	पर्यावरण
+het klimaat	जलवायु
+de vervuiling	प्रदूषण
+recyclen	रीसायकल करना
+de zonnepanelen	सौर पैनल
+de windmolen	पवन चक्की
+het huisdier	पालतू जानवर
+uitlaten	कुत्ते को घुमाना
+de stad	शहर
+het dorp	गाँव
+het centrum	केंद्र
+de wijk	मोहल्ला
+de straat	गली, सड़क
+het plein	चौक
+de brug	पुल
+de gracht	नहर
+de hoek	कोना
+het gebouw	इमारत
+het stadhuis	टाउन हॉल
+de kerk	गिरजाघर
+de moskee	मस्जिद
+het politiebureau	पुलिस थाना
+het café	कैफ़े
+de school	स्कूल
+het zwembad	स्विमिंग पूल
+de speeltuin	खेल का मैदान
+het buurthuis	सामुदायिक केंद्र
+de ingang	प्रवेश द्वार
+de uitgang	निकास
+de fabriek	कारख़ाना
+de haven	बंदरगाह
+de bibliotheek	पुस्तकालय
+het postkantoor	डाकघर
+het restaurant	रेस्टोरेंट
+de snackbar	स्नैक बार
+de begraafplaats	क़ब्रिस्तान
+het monument	स्मारक
+het standbeeld	मूर्ति
+de toren	मीनार
+het kasteel	क़िला
+de vuurtoren	प्रकाशस्तंभ
+de sporthal	इनडोर खेल हॉल
+het sportveld	खेल का मैदान
+de rondweg	रिंग रोड
+het industrieterrein	औद्योगिक क्षेत्र
+de binnenstad	पुराना शहर
+de buitenwijk	उपनगर
+de hoofdstad	राजधानी
+de inwoner	निवासी
+de toerist	पर्यटक
+de VVV	पर्यटक सूचना केंद्र
+de plattegrond	नक़्शा
+het verkeerslicht	ट्रैफ़िक लाइट
+de lantaarnpaal	बिजली का खंभा
+het bankje	बेंच
+de fontein	फ़व्वारा
+de steeg	गली
+de kade	घाट
+de telefoon	फ़ोन
+het telefoonnummer	फ़ोन नंबर
+het bericht	संदेश
+de e-mail	ई-मेल
+de bijlage	अटैचमेंट
+versturen	भेजना
+het internet	इंटरनेट
+de website	वेबसाइट
+de computer	कंप्यूटर
+de app	ऐप
+het wachtwoord	पासवर्ड
+inloggen	लॉग इन करना
+downloaden	डाउनलोड करना
+printen	प्रिंट करना
+de voicemail	वॉइसमेल
+terugbellen	वापस फ़ोन करना
+opnemen	फ़ोन उठाना; रिकॉर्ड करना
+ophangen	फ़ोन रखना
+de krant	अख़बार
+het nieuws	समाचार
+de televisie	टेलीविज़न
+de radio	रेडियो
+het tijdschrift	पत्रिका
+de oplader	चार्जर
+de batterij	बैटरी
+het scherm	स्क्रीन
+de smartphone	स्मार्टफ़ोन
+de mobiel	मोबाइल
+het sms'je	एसएमएस
+appen	मैसेज भेजना
+het gesprek	बातचीत
+het videogesprek	वीडियो कॉल
+de onderwerpregel	विषय पंक्ति
+de afzender	भेजने वाला
+de ontvanger	प्राप्तकर्ता
+beantwoorden	उत्तर देना
+doorsturen	आगे भेजना
+het account	खाता
+uitloggen	लॉग आउट करना
+de wifi	वाई-फ़ाई
+de link	लिंक
+klikken	क्लिक करना
+het bestand	फ़ाइल
+opslaan	सेव करना
+de printer	प्रिंटर
+het toetsenbord	कीबोर्ड
+typen	टाइप करना
+het nieuwsbericht	समाचार
+sociale media	सोशल मीडिया
+het nepnieuws	फ़र्ज़ी ख़बर
+de oplichting	धोखाधड़ी
+de postzegel	डाक टिकट
+de envelop	लिफ़ाफ़ा
+de kaart	कार्ड; नक़्शा
+de uitnodiging	निमंत्रण
+het antwoordapparaat	आंसरिंग मशीन
+de verbinding	कनेक्शन
+de taal	भाषा
+de moedertaal	मातृभाषा
+het woord	शब्द
+de zin	वाक्य; इच्छा
+de uitspraak	उच्चारण
+het accent	लहजा
+de spelling	वर्तनी
+spellen	स्पेलिंग बोलना
+de kleur	रंग
+rood	लाल
+blauw	नीला
+geel	पीला
+groen	हरा
+zwart	काला
+wit	सफ़ेद
+grijs	स्लेटी
+bruin	भूरा
+oranje	नारंगी
+roze	गुलाबी
+paars	बैंगनी
+de koning	राजा
+de koningin	रानी
+de regering	सरकार
+de minister	मंत्री
+de minister-president	प्रधानमंत्री
+de Tweede Kamer	प्रतिनिधि सभा
+de verkiezingen	चुनाव
+stemmen	वोट देना
+de partij	राजनीतिक दल
+de democratie	लोकतंत्र
+de Grondwet	संविधान
+de provincie	प्रांत
+het waterschap	जल प्रबंधन बोर्ड
+de vrijheid	आज़ादी
+gelijk	बराबर; सही
+de discriminatie	भेदभाव
+de godsdienst	धर्म
+de mening	राय
+de vlag	झंडा
+het Wilhelmus	नीदरलैंड का राष्ट्रगान
+Koningsdag	राजा दिवस (27 अप्रैल)
+Bevrijdingsdag	मुक्ति दिवस (5 मई)
+Dodenherdenking	शहीद स्मृति दिवस (4 मई)
+Sinterklaas	सिंटरक्लास (5 दिसंबर)
+de kerst	क्रिसमस
+het Koninklijk Huis	शाही परिवार
+de Eerste Kamer	उच्च सदन
+het parlement	संसद
+de politicus	राजनेता
+de politiek	राजनीति
+het kabinet	मंत्रिमंडल
+de staat	राज्य
+de rechtsstaat	क़ानून का राज
+de grondrechten	मौलिक अधिकार
+de vrijheid van meningsuiting	अभिव्यक्ति की स्वतंत्रता
+de gelijkheid	समानता
+de Tweede Wereldoorlog	द्वितीय विश्व युद्ध
+de bevrijding	मुक्ति
+de Gouden Eeuw	स्वर्ण युग
+de Deltawerken	डेल्टा वर्क्स
+de provinciehoofdstad	प्रांत की राजधानी
+de koopzondag	ख़रीदारी वाला रविवार
+de verjaardagskalender	जन्मदिन कैलेंडर
+het Nieuwjaar	नया साल
+het vuurwerk	आतिशबाज़ी
+de oliebol	तला हुआ आटे का गोला
+Pasen	ईस्टर
+het Suikerfeest	ईद-उल-फ़ित्र
+de ramadan	रमज़ान
+de kok	रसोइया
+de kapper	नाई
+de schoonmaker	सफ़ाईकर्मी
+de chauffeur	ड्राइवर
+de vrachtwagen	ट्रक
+de bezorger	डिलीवरी करने वाला
+de postbode	डाकिया
+de timmerman	बढ़ई
+de loodgieter	प्लंबर
+de elektricien	बिजली मिस्त्री
+de schilder	पेंटर
+de bouwvakker	निर्माण मज़दूर
+de boer	किसान
+de tuinman	माली
+de verkoopmedewerker	बिक्री सहायक
+de caissière	कैशियर
+de magazijnmedewerker	गोदाम कर्मचारी
+de automonteur	मोटर मैकेनिक
+de garage	गैराज
+de leraar	अध्यापक
+de docent	प्राध्यापक
+de verzorgende	देखभाल करने वाला
+de kinderopvangmedewerker	बाल देखभाल कर्मचारी
+de apotheker	फ़ार्मासिस्ट
+de agent	पुलिसकर्मी
+de brandweerman	दमकलकर्मी
+de soldaat	सैनिक
+de journalist	पत्रकार
+de programmeur	प्रोग्रामर
+de boekhouder	मुनीम, लेखाकार
+de secretaresse	सचिव
+de receptionist	रिसेप्शनिस्ट
+de tolk	दुभाषिया
+de vertaler	अनुवादक
+de bewaker	सुरक्षा गार्ड
+de kunstenaar	कलाकार
+de ingenieur	इंजीनियर
+de architect	वास्तुकार
+de dierenarts	पशु चिकित्सक
+het gevoel	भावना
+de blijdschap	ख़ुशी
+het verdriet	दुख
+de angst	डर
+de woede	क्रोध
+de liefde	प्यार
+de hoop	आशा
+de schaamte	शर्म
+de eenzaamheid	अकेलापन
+eenzaam	अकेला
+het heimwee	घर की याद
+de spijt	पछतावा
+spijt hebben	पछताना
+opgelucht	राहत महसूस करना
+teleurgesteld	निराश
+verbaasd	हैरान
+bezorgd	चिंतित
+geïrriteerd	चिढ़ा हुआ
+enthousiast	उत्साहित
+zenuwachtig	घबराया हुआ
+dankbaar	आभारी
+verliefd	प्यार में
+de ruzie	झगड़ा
+het excuus	माफ़ी
+troosten	दिलासा देना
+het humeur	मनोदशा
+chagrijnig	चिड़चिड़ा
+vrolijk	प्रसन्न
+de vriendschap	दोस्ती
+het noodgeval	आपात स्थिति
+de brand	आग
+blussen	आग बुझाना
+de rook	धुआँ
+de inbraak	सेंधमारी
+de dief	चोर
+de diefstal	चोरी
+het slachtoffer	पीड़ित
+de verdachte	संदिग्ध
+de misdaad	अपराध
+het geweld	हिंसा
+huiselijk geweld	घरेलू हिंसा
+Veilig Thuis	सेफ़ एट होम (सहायता संस्था)
+de wijkagent	मोहल्ले का पुलिसकर्मी
+het gevaar	ख़तरा
+de veiligheid	सुरक्षा
+de hulp	मदद
+de hulpverlener	सहायताकर्मी
+de maatschappelijk werker	सामाजिक कार्यकर्ता
+de huisartsenspoedpost	आपात क्लिनिक
+de reanimatie	सीपीआर
+de AED	डिफ़िब्रिलेटर
+de brandblusser	अग्निशामक यंत्र
+de nooduitgang	आपातकालीन निकास
+de sirene	सायरन
+de beveiliging	सुरक्षा व्यवस्था
+de reden	कारण
+het probleem	समस्या
+de oplossing	समाधान
+het idee	विचार
+de keuze	चुनाव, विकल्प
+de kans	मौक़ा
+het doel	लक्ष्य
+het plan	योजना
+de manier	तरीक़ा
+de informatie	जानकारी
+de mogelijkheid	संभावना
+het verschil	अंतर
+de fout	ग़लती
+het begin	शुरुआत
+het einde	अंत
+de rij	क़तार
+de plek	जगह
+de plaats	स्थान
+het deel	हिस्सा
+het geluid	आवाज़
+de stem	आवाज़; वोट
+de naam	नाम
+de wereld	दुनिया
+het leven	जीवन
+de dood	मृत्यु
+de mens	इंसान
+de oorlog	युद्ध
+de vrede	शांति
+de tijd	समय
+de keer	बार
+het ding	चीज़
+het gebied	क्षेत्र
+de soort	प्रकार
+het voordeel	फ़ायदा
+het nadeel	नुक़सान
+de toekomstplannen	भविष्य की योजनाएँ
+de ontwikkeling	विकास
+de situatie	स्थिति
+het gedrag	व्यवहार
+de gewoonte	आदत
+de cultuur	संस्कृति
+de traditie	परंपरा
+de samenleving	समाज
+de waarde	मूल्य
+de norm	मानदंड
+het respect	सम्मान

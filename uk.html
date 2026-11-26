@@ -1,0 +1,337 @@
+<!doctype html>
+<!-- Made by tools/build-lang.mjs from index.html and landing.js: edit those, then run it again. -->
+<html lang="uk" dir="ltr" data-page="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>@view-transition{navigation:auto}@media(prefers-reduced-motion:reduce){@view-transition{navigation:none}}</style>
+<link rel="stylesheet" href="/motion-v1.css">
+<title>Іспит inburgering A2 і NT2 B1: безкоштовна підготовка | Bittertalen</title>
+<meta name="description" content="Безкоштовна підготовка до іспиту з інтеграції в Нідерландах (inburgeringsexamen) A2 і Staatsexamen NT2 B1 на шляху до натуралізації. Пробні іспити, історія, книжки й розмови з персонажами ШІ.">
+<link rel="canonical" href="https://bittertalen.nl/uk">
+<link rel="alternate" hreflang="nl" href="https://bittertalen.nl/">
+<link rel="alternate" hreflang="en" href="https://bittertalen.nl/en">
+<link rel="alternate" hreflang="ar" href="https://bittertalen.nl/ar">
+<link rel="alternate" hreflang="tr" href="https://bittertalen.nl/tr">
+<link rel="alternate" hreflang="hi" href="https://bittertalen.nl/hi">
+<link rel="alternate" hreflang="zh-Hans" href="https://bittertalen.nl/zh">
+<link rel="alternate" hreflang="es" href="https://bittertalen.nl/es">
+<link rel="alternate" hreflang="ru" href="https://bittertalen.nl/ru">
+<link rel="alternate" hreflang="uk" href="https://bittertalen.nl/uk">
+<link rel="alternate" hreflang="x-default" href="https://bittertalen.nl/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="uk_UA">
+<meta property="og:site_name" content="Bittertalen">
+<meta property="og:title" content="Іспит inburgering A2 і NT2 B1: безкоштовна підготовка | Bittertalen">
+<meta property="og:description" content="Готуйтеся до inburgering A2 і Staatsexamen NT2 B1, пізнавайте Нідерланди й заговоріть.">
+<meta property="og:url" content="https://bittertalen.nl/uk">
+<meta property="og:image" content="https://bittertalen.nl/art/og-delft.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#1F3C96">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=bittie1">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=bittie1">
+<link rel="manifest" href="/manifest.json?v=bittie1">
+<script src="/ios-startup-v1.js" defer></script>
+<link rel="stylesheet" href="/landing.css?v=launch5">
+<script>
+// Browser visits start with the homepage, including returning learners on phones and tablets.
+// Installed launches enter practice; an explicit Website home link stays on the public homepage.
+// Sign-in, payment, migration and legacy aliases still enter the app.
+(() => {
+  const q = new URLSearchParams(location.search);
+  const alias = /^(bittertalen|nedelands)\.vercel\.app$/.test(location.hostname);
+  // The App Store / Google Play shell counts as installed: its links to "/" (Over, Privacy) return to practice
+  // instead of the homepage with its prices.
+  const installed = navigator.standalone || matchMedia("(display-mode: standalone)").matches ||
+    !!(window.Capacitor && typeof Capacitor.isNativePlatform === "function" && Capacitor.isNativePlatform());
+  if (alias || q.has("code") || q.has("error") || q.has("plus") || location.hash.startsWith("#verhuis=") ||
+      (installed && !q.has("home"))) {
+    location.replace("/oefenen" + location.search + location.hash);
+  } else if (!installed && q.has("home") && q.size === 1) history.replaceState(null, "", location.pathname + location.hash);
+})();
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Bittertalen","url":"https://bittertalen.nl/uk","applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":"uk","educationalLevel":["A2","B1"],"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}
+</script>
+<script defer src="/landing.js?v=launch-a2-combined"></script>
+<script defer src="/lib/gsap-3.15.1.min.js"></script>
+<script defer src="/lib/ScrollTrigger-3.15.1.min.js"></script>
+<script defer src="/landing-motion-v3.js?v=hero-still"></script>
+</head>
+<body>
+<header class="top">
+  <div class="wrap bar">
+    <a class="brand" href="/uk" aria-label="Bittertalen">B<span class="brand-i">ı</span>ttertalen</a>
+    <nav class="nav" aria-label="Bittertalen">
+      <a href="#niveaus" data-t="Niveaus">Рівні</a>
+      <a href="#oefenvormen" data-t="Zo werkt het">Як це працює</a>
+      <a href="#prijzen" data-t="Prijzen">Ціни</a>
+    </nav>
+    <div class="actions header-actions">
+      <label class="language"><span id="language-code" aria-hidden="true">UK</span><span aria-hidden="true">⌄</span>
+      <select id="language" aria-label="Taal / Language">
+        <option value="nl">NL · Nederlands</option><option value="en">EN · English</option>
+        <option value="ar">العربية</option><option value="tr">TR · Türkçe</option>
+        <option value="hi">हिन्दी</option><option value="zh">中文</option>
+        <option value="es">ES · Español</option><option value="ru">RU · Русский</option><option value="uk" selected>UK · Українська</option>
+      </select></label>
+      <a class="signin" href="/oefenen?open=login" data-t="Inloggen">Увійти</a>
+      <a class="button primary" id="enter" href="/oefenen?open=today" data-t="Begin met oefenen">Почати займатися</a>
+    </div>
+  </div>
+</header>
+<main class="wrap">
+  <section class="hero" aria-labelledby="intro">
+    <div class="hero-copy">
+      <h1 id="intro" data-t="Oefen gratis voor je inburgeringsexamen">Готуйтеся до іспиту inburgering безкоштовно</h1>
+      <p class="lead" data-t="Bereid je voor op Inburgering A2 of Staatsexamen NT2 B1. Krijg punten per criterium voor Schrijven en Spreken en oefen verder met je eigen fouten.">Готуйтеся до Inburgering A2 або Staatsexamen NT2 B1. Отримуйте бали за кожним критерієм письма й говоріння та працюйте над власними помилками.</p>
+      <div class="download-actions">
+        <a class="button primary" id="hero-start" href="/oefenen?open=a2day" data-t="Oefen op A2">Практика A2</a>
+        <a class="button outline" href="/oefenen?open=b1" data-t="Oefen op B1">Практика B1</a>
+        <a class="button apple-download" id="download-app" href="#install-app"><span data-t="Installeer de app">Установити застосунок</span></a>
+      </div>
+      <p><a href="/oefenen?open=writing" data-t="Oefen met Schrijven A2">Попрактикуйтеся у письмі A2</a></p>
+      <p class="hero-note" data-t="Gratis en zonder account te proberen, ook met AI-nakijken.">Спробуйте безкоштовно й без акаунта, зокрема перевірку ШІ.</p>
+    </div>
+    <figure class="hero-art">
+      <button class="preview-motion" id="preview-motion" type="button" aria-pressed="true" hidden><span aria-hidden="true">Ⅱ</span><span data-t="Animatie">Анімація</span></button>
+      <div class="phone-stage"><div class="phone-float"><div class="phone">
+        <img data-preview-screen="day" src="/shots/app-day-v2.webp" width="390" height="780" fetchpriority="high" data-alt="Je les van vandaag in Bittertalen, met de stappen van vandaag" alt="Урок дня в Bittertalen із кроками на сьогодні">
+        <img data-preview-screen="practice" src="/shots/app-practice-v2.webp" width="390" height="780" loading="lazy" data-alt="Oefeningen in Bittertalen" alt="Вправи в Bittertalen" hidden>
+        <img data-preview-screen="exam" src="/shots/app-exam-v2.webp" width="390" height="780" loading="lazy" data-alt="Proefexamens in Bittertalen" alt="Пробні іспити в Bittertalen" hidden>
+      </div></div></div>
+      <div class="preview-switch" role="group" aria-labelledby="preview-caption">
+        <p id="preview-caption" data-t="Bekijk de app">Перегляньте застосунок</p>
+        <div><button type="button" data-preview="day" aria-pressed="true" data-t="Mijn dag">Мій день</button><button type="button" data-preview="practice" aria-pressed="false" data-t="Oefenen">Вправи</button><button type="button" data-preview="exam" aria-pressed="false" data-t="Examen">Іспит</button></div>
+      </div>
+      <!-- Bittie welcomes visitors beside the app. -->
+      <div class="greeter"><p class="bubble"><b data-t="Hoi! Ik ben Bittie.">Привіт! Я Бітті.</b> <span data-t="Zullen we samen Nederlands oefenen?">Потренуймо нідерландську разом?</span></p><img src="/art/bitterbal-wave-nl-v1.jpg" width="360" height="360" alt=""></div>
+    </figure>
+  </section>
+
+  <ul class="stats" aria-label="Bittertalen">
+    <li><b dir="ltr">6000+</b><span data-t="oefenvragen">тренувальних питань</span></li>
+    <li><b dir="ltr">400+</b><span data-t="KNM-vragen over de 8 thema's">питань KNM за 8 темами</span></li>
+    <li><b dir="ltr">5</b><span data-t="proefexamens per niveau, met een timer">пробних іспитів на час для кожного рівня</span></li>
+    <li><b dir="ltr">30+</b><span data-t="gesprekken om hardop te oefenen">діалогів для тренування вголос</span></li>
+  </ul>
+
+  <section id="niveaus" class="block paper">
+    <h2 data-t="Waar oefen je voor?">До якого іспиту ви готуєтеся?</h2>
+    <div class="choices">
+      <a class="choice" href="/oefenen?open=a2"><span class="lt" aria-hidden="true">A</span><span class="tx"><b><span data-t="Inburgeringsexamen">Інтеграційний іспит</span> <small>A2</small></b><span class="d" data-t="Oefen met Nederlands uit het dagelijks leven: lezen, luisteren, schrijven en spreken. Oefen ook Kennis van de Nederlandse Maatschappij (KNM).">Практикуйте нідерландську для повсякденного життя: читання, аудіювання, письмо й усне мовлення. Готуйтеся й до розділу про нідерландське суспільство (KNM).</span></span><span class="go" data-t="Oefen op A2">Практика A2</span></a>
+      <a class="choice" href="/oefenen?open=b1"><span class="lt" aria-hidden="true">B</span><span class="tx"><b><span data-t="Staatsexamen NT2 · Programma I">Державний іспит NT2 · Програма I</span> <small>B1</small></b><span class="d" data-t="Bereid je voor op lezen, luisteren, schrijven en spreken op B1, met langere teksten en opdrachten over werk, studie en het dagelijks leven.">Тренуйте читання, аудіювання, письмо й усне мовлення на рівні B1. Тут тексти довші, а завдання присвячені роботі, навчанню й повсякденному життю.</span></span><span class="go" data-t="Oefen op B1">Практика B1</span></a>
+    </div>
+    <p class="note" data-t="Je kunt je niveau later veranderen in je profiel.">Рівень можна змінити пізніше в профілі.</p>
+  </section>
+
+  <section id="probeer" class="block paper">
+    <h2 data-t="Probeer het zelf">Спробуйте самі</h2>
+    <p class="note" data-t="Een echte KNM-vraag, zoals in de app. Kies een antwoord.">Справжнє питання KNM, як у застосунку. Виберіть відповідь.</p>
+    <div class="quiz" lang="nl" dir="ltr">
+      <p class="qq">Je verhuist. Waar geef je je nieuwe adres door?</p>
+      <div class="choices" role="group" aria-label="Antwoorden">
+        <button type="button" class="choice" data-ok="0"><span class="lt" aria-hidden="true">A</span><span class="tx">Bij de woningcorporatie</span></button>
+        <button type="button" class="choice" data-ok="1"><span class="lt" aria-hidden="true">B</span><span class="tx">Bij de gemeente</span></button>
+        <button type="button" class="choice" data-ok="0"><span class="lt" aria-hidden="true">C</span><span class="tx">Bij de Belastingdienst</span></button>
+      </div>
+      <p class="qfb" id="qfb" role="status" hidden></p>
+    </div>
+    <a class="button primary" id="qmore" href="/oefenen?open=today" hidden data-t="Begin gratis">Почати безкоштовно</a>
+  </section>
+
+
+  <section id="voorbeeld" class="block paper">
+    <h2 data-t="Zo wordt je tekst nagekeken">Так Bittertalen перевіряє ваш текст</h2>
+    <p class="note" data-t="Feedback op je tekst: punten per onderdeel en je fouten in je eigen tekst.">Розбір тексту: бали за кожним критерієм і помилки, позначені прямо у вашому тексті.</p>
+    <div class="specimen" lang="nl" dir="ltr">
+      <p class="task">Je gaat een week op vakantie. Schrijf een briefje aan je buurvrouw. Vraag of zij je planten water wil geven en schrijf waar de sleutel ligt.</p>
+      <div class="sp-grid">
+        <div>
+          <div class="own">Beste Anja,<br><mark>Volgende week ik ga<sup>1</sup></mark> op vakantie naar Turkije. Wil jij mijn planten water <mark>geeven<sup>2</sup></mark>? <mark>De planten staat<sup>3</sup></mark> in de keuken. De sleutel <mark>ligd<sup>4</sup></mark> onder de mat bij de achterdeur. <mark>Zaterdag ik kom terug<sup>5</sup></mark>.<br>Heel erg bedankt!<br>Groeten,<br>Samira</div>
+          <ol class="fixes">
+            <li><s>Volgende week ik ga</s> → <b>Volgende week ga ik</b></li>
+            <li><s>geeven</s> → <b>geven</b></li>
+            <li><s>De planten staat</s> → <b>De planten staan</b></li>
+            <li><s>ligd</s> → <b>ligt</b></li>
+            <li><s>Zaterdag ik kom terug</s> → <b>Zaterdag kom ik terug</b></li>
+          </ol>
+        </div>
+        <div>
+          <p class="verdict"><b>Voldoende</b> 9 van de 10 punten · voldoende vanaf 7</p>
+          <ul class="ck">
+            <li class="g"><i aria-hidden="true">✓</i><span><b>Heb je geschreven wat de opdracht vraagt?</b>Ja · 3 van 3 punten</span></li>
+            <li class="g"><i aria-hidden="true">✓</i><span><b>Kies je de goede woorden?</b>Ja · 2 van 2 punten</span></li>
+            <li class="m"><i aria-hidden="true">!</i><span><b>Zijn je zinnen goed gebouwd?</b>1 van 2 punten · Let op de woordvolgorde en het meervoud.</span></li>
+            <li class="g"><i aria-hidden="true">✓</i><span><b>Is je spelling goed?</b>2 van 2 punten · De twee spelfouten maken je brief niet moeilijker te begrijpen.</span></li>
+            <li class="g"><i aria-hidden="true">✓</i><span><b>Is het één duidelijk geheel?</b>Ja · 1 van 1 punt</span></li>
+          </ul>
+        </div>
+      </div>
+      <div lang="nl" dir="ltr">
+        <p><b>Nieuwe situatie</b> · Schrijf aan een collega dat je morgen om negen uur begint. Begin met «Morgen».</p>
+        <details><summary>Bekijk een goed antwoord</summary><p>Morgen begin ik om negen uur.</p></details>
+      </div>
+    </div>
+    <p class="note" data-t="Voorbeeld: de tekst en de punten zijn verzonnen.">Приклад: текст і бали вигадані.</p>
+    <p><a class="button primary" href="/oefenen?open=writing" data-t="Oefen met Schrijven A2">Попрактикуйтеся у письмі A2</a></p>
+    <p class="try-free" id="try-free" hidden></p>
+    <p class="note"><a href="/nakijken" data-t="Zo kijkt Bittertalen na →">Як Bittertalen перевіряє відповіді →</a></p>
+  </section>
+
+  <section id="oefenvormen" class="block paper">
+    <h2 data-t="Oefen voor je examen">Готуйтеся до іспиту</h2>
+    <ul class="ways feature-grid" role="list">
+      <li><details name="learning-feature"><summary><span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18m-13 5 3 3 5-5"/></svg></span><h3 data-t="Een les per dag">Один урок на день</h3></summary><p data-t="Kies 10, 20 of 40 minuten. Bittertalen stelt je les samen en geeft extra aandacht aan wat je lastig vindt.">Виберіть 10, 20 або 40 хвилин. Bittertalen складе урок і приділить більше уваги тому, що дається важче.</p></details></li>
+      <li><details name="learning-feature"><summary><span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span><h3 data-t="Zelf kiezen">Виберіть, що тренувати</h3></summary><p data-t="Oefen één vaardigheid, herhaal woorden, doe grammatica of lees en luister naar verhalen in het Nederlands.">Тренуйте окрему навичку, повторюйте слова й граматику, читайте та слухайте оповідання нідерландською.</p></details></li>
+      <li><details name="learning-feature"><summary><span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 9h6m-6 4h3m-3 4h6"/></svg></span><h3 data-t="Een proefexamen maken">Пройдіть пробний іспит</h3></summary><p data-t="Oefen een examenonderdeel met een timer en bekijk je resultaten om te zien wat je nog kunt oefenen.">Пройдіть розділ іспиту на час і перегляньте результати, щоб зрозуміти, над чим ще попрацювати.</p></details></li>
+      <li><details name="learning-feature"><summary><span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7v5h-5M4 17v-5h5M6 7a7 7 0 0 1 12-2l2 2M4 17l2 2a7 7 0 0 0 12-2"/></svg></span><h3 data-t="Leren van je fouten">Робота над помилками</h3></summary><p data-t="Herhaal vragen die je eerder fout had en oefen extra met wat nog lastig is.">Повторюйте завдання, у яких раніше помилялися, і приділяйте більше уваги складним темам.</p></details></li>
+    </ul>
+  </section>
+
+  <!-- Dutch beyond the exam: four blocks, each with a piece of the app itself (the Dutch stays Dutch), opening that screen -->
+  <section id="ontdek" class="block paper">
+    <h2 data-t="Leer het land kennen en durf te spreken">Пізнайте країну й заговоріть</h2>
+    <ul class="extras" role="list">
+      <li class="extra">
+        <div class="ex-art ex-book" lang="nl" dir="ltr" aria-hidden="true">
+          <p>Maar Lena wil Nederlands leren. Ze koopt een schrift en een <mark>woordenboek</mark>.</p>
+          <div class="ex-pop"><b>het woordenboek</b><span>mv. woordenboeken</span><i lang="en">dictionary</i></div>
+        </div>
+        <h3><a href="/oefenen?open=books" data-t="Boeken lezen met vertaling">Книжки з перекладом</a></h3>
+        <p data-t="Tik op een woord en je ziet wat het betekent in het Engels. Lees onze verhalen of je eigen e-book.">Натисніть на слово й побачите його значення англійською. Читайте наші оповідання або свою електронну книжку.</p>
+        <span class="go" aria-hidden="true" data-t="Naar de boeken">До книжок</span>
+      </li>
+      <li class="extra">
+        <div class="ex-art ex-wall" aria-hidden="true">
+          <img src="/art/melkmeisje.jpg" width="892" height="1000" loading="lazy" alt="">
+          <img src="/foto/amsterdam1538.jpg" width="640" height="465" loading="lazy" alt="">
+          <img src="/foto/voc.jpg" width="640" height="331" loading="lazy" alt="">
+        </div>
+        <h3><a href="/oefenen?open=history" data-t="Geschiedenis en kunst">Історія та мистецтво</a></h3>
+        <p data-t="Van de hunebedden tot nu, in korte hoofdstukken. En elke dag een schilderij met het verhaal erachter.">Від давніх дольменів до наших днів, короткими розділами. І щодня картина з її історією.</p>
+        <span class="go" aria-hidden="true" data-t="Naar de geschiedenis">До історії</span>
+      </li>
+      <li class="extra">
+        <div class="ex-art ex-play" lang="nl" dir="ltr" aria-hidden="true">
+          <div class="ex-video"><img src="/foto/markt.jpg" width="640" height="480" loading="lazy" alt=""><b>Video</b><i></i><p>Wat koop je vandaag op de markt?</p></div>
+          <div class="ex-pod"><i></i><div><p><b>Podcast</b> <span>De Dag</span></p><u></u></div><small>0,75×</small></div>
+        </div>
+        <h3><a href="/oefenen?open=media" data-t="Video’s, podcasts en nieuws">Відео, подкасти й новини</a></h3>
+        <p data-t="Kijk video’s met Nederlandse ondertitels, volg het nieuws (NOS, Jeugdjournaal) en luister naar podcasts. Van makkelijk tot moeilijk.">Дивіться відео з нідерландськими субтитрами, стежте за новинами (NOS, Jeugdjournaal) і слухайте подкасти. Від простого до складного.</p>
+        <span class="go" aria-hidden="true" data-t="Kijk en luister">Дивитися й слухати</span>
+      </li>
+      <li class="extra">
+        <div class="ex-art ex-talk" lang="nl" dir="ltr" aria-hidden="true">
+          <img src="/art/characters/saskia-card-v1.jpg" width="640" height="584" loading="lazy" alt="">
+          <div><p>Hoi! Wat heb jij vandaag gedaan?</p><p class="me">Ik heb naar de markt gegaan.</p><p class="fix"><b>Beter:</b> Ik ben naar de markt gegaan.</p></div>
+        </div>
+        <h3><a href="/oefenen?open=talk" data-t="Praat met Saskia en anderen">Поговоріть із Саскією та іншими</a></h3>
+        <p data-t="Saskia en de andere personages zijn AI. Praat met Saskia in het museumcafé, met Rembrandt of Van Gogh, of oefen bij de dokter, op je werk of in de winkel. Ze verbeteren je zinnen.">Саскія та інші персонажі — це ШІ. Спілкуйтеся із Саскією в кафе музею, з Рембрандтом або Ван Гогом, чи тренуйтеся в лікаря, на роботі й у магазині. Вони виправляють ваші фрази.</p>
+        <span class="go" aria-hidden="true" data-t="Begin een gesprek">Почати розмову</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- The homepage asks like the exam form ("Examenblad", the app's style): lettered answers in square boxes -->
+  <section id="prijzen" class="block">
+    <h2 data-t="Wat kost het?">Скільки це коштує?</h2>
+    <div class="grid three pricing">
+      <article class="card">
+        <h3 data-t="Gratis">Безкоштовно</h3>
+        <p class="price">€ 0</p>
+        <ul>
+          <li data-t="Alle oefeningen en proefexamens op A2 en B1">Усі вправи та пробні іспити A2 і B1</li>
+          <li data-t="Oefenen zonder account">Практика без акаунта</li>
+          <li data-t="Met een gratis account: voortgang op al je apparaten">З безкоштовним акаунтом прогрес доступний на всіх ваших пристроях</li>
+          <li id="free-checks" hidden></li>
+          <li id="trial-checks" hidden></li>
+        </ul>
+        <a class="button outline" href="/oefenen?open=today" data-t="Open Bittertalen">Відкрити Bittertalen</a>
+      </article>
+      <article class="card plus" id="plus-card">
+        <h3>Bittertalen Plus A2</h3>
+        <p class="price" id="plus-price"><bdi>€ 9,99</bdi> <small data-t="per maand">на місяць</small></p>
+        <ul>
+          <li id="plus-checks" data-t="Tot 200 nakijkbeurten per maand voor je teksten en gesproken antwoorden">До 200 перевірок на місяць для ваших текстів і усних відповідей</li>
+          <li data-t="AI-feedback op Schrijven en Spreken A2, ook bij proefexamens.">Відгуки ШІ щодо письма й говоріння на рівні A2, зокрема на пробних іспитах.</li>
+          <li data-t="Handig voor één of twee maanden voorbereiding.">Зручно, якщо маєте один або два місяці на підготовку.</li>
+          <li data-t="Elke maand opzegbaar">Можна скасувати будь-якого місяця</li>
+        </ul>
+        <a class="button outline" href="/oefenen?open=plus&amp;choice=plus-a2" id="plus-link" data-t="Kies Plus A2">Вибрати Plus A2</a>
+      </article>
+      <article class="card plus" id="plus-b1-card">
+        <h3>Bittertalen Plus B1</h3>
+        <p class="price" id="plus-b1-price"><bdi>€ 14,99</bdi> <small data-t="per maand">на місяць</small></p>
+        <ul>
+          <li id="plus-b1-checks" data-t="Tot 200 nakijkbeurten per maand voor je teksten en gesproken antwoorden">До 200 перевірок на місяць для ваших текстів і усних відповідей</li>
+          <li data-t="AI-feedback op Schrijven en Spreken B1 én A2 met één tegoed.">Відгуки ШІ щодо письма й говоріння на рівнях B1 та A2 зі спільним лімітом.</li>
+          <li data-t="Elke maand opzegbaar">Можна скасувати будь-якого місяця</li>
+        </ul>
+        <a class="button outline" href="/oefenen?open=plus&amp;choice=plus-b1" data-t="Kies Plus B1">Вибрати Plus B1</a>
+      </article>
+      <article class="card plus" id="pass-card">
+        <h3 data-t="Examenpas">Екзаменаційна перепустка</h3>
+        <p class="price" id="pass-price"><bdi>€ 29,99</bdi> <small>A2</small><br><bdi>€ 39,99</bdi> <small>B1</small></p>
+        <ul>
+          <li data-t="Eén keer betalen, geen abonnement.">Одна оплата, без підписки.</li>
+          <li id="pass-weeks" data-t="17 weken geldig vanaf je betaling">Діє 17 тижнів від моменту оплати</li>
+          <li data-t="Eén tegoed voor de hele periode. B1 is inclusief A2.">Спільний ліміт на весь період. B1 включає A2.</li>
+          <li id="pass-total" hidden></li>
+          <li data-t="Handig als je examendatum vaststaat.">Зручно, якщо дата іспиту вже відома.</li>
+        </ul>
+        <a class="button outline" href="/oefenen?open=plus&amp;choice=exam" data-t="Kies de Examenpas">Вибрати перепустку</a>
+      </article>
+      <article class="card plus" id="year-card">
+        <h3 data-t="Jaarpas">Річна перепустка</h3>
+        <p class="price" id="year-price"><bdi>€ 79,99</bdi> <small>A2</small><br><bdi>€ 119,99</bdi> <small>B1</small></p>
+        <ul>
+          <li data-t="Een jaar AI-feedback voor één betaling. B1 is inclusief A2.">Рік відгуків ШІ за один платіж. B1 включає A2.</li>
+          <li data-t="Wordt niet automatisch verlengd.">Не продовжується автоматично.</li>
+          <li id="year-checks" hidden></li>
+          <li data-t="Voordeliger vanaf negen maanden Plus.">Вигідніше за дев’ять або більше місяців підписки Plus.</li>
+        </ul>
+        <a class="button outline" href="/oefenen?open=plus&amp;choice=year" data-t="Kies de Jaarpas">Вибрати річну перепустку</a>
+      </article>
+    </div>
+    <p class="note" data-t="Losse opdracht: meestal 1 beurt. Proefexamen Schrijven: 2 op A2 of 4 op B1. Proefexamen Spreken: 6.">Окреме завдання: зазвичай 1 перевірка. Пробний іспит із письма: 2 для A2 або 4 для B1. Пробний усний іспит: 6.</p>
+    <p class="guarantee" data-t="Niet tevreden? Binnen 14 dagen na je eerste betaling krijg je je geld terug.">Не сподобалося? Повернемо гроші протягом 14 днів після першої оплати.</p>
+  </section>
+
+  <section id="install-app" class="block faq" aria-labelledby="install-title">
+    <h2 id="install-title" data-t="Download de app">Завантажити застосунок</h2>
+    <p data-t="Zet Bittertalen gratis op je beginscherm. Geen account nodig.">Безкоштовно додайте Bittertalen на головний екран. Акаунт не потрібен.</p>
+    <details><summary>iPhone / iPad</summary><p data-t="Open deze website in Safari. Tik op Deel en daarna op Zet op beginscherm.">Відкрийте цей сайт у Safari. Натисніть «Поділитися», потім «На початковий екран».</p></details>
+    <details><summary>Android</summary><p data-t="Open deze website in Chrome. Tik op het menu ⋮ en kies App installeren of Toevoegen aan startscherm.">Відкрийте цей сайт у Chrome. У меню ⋮ виберіть «Установити застосунок» або «Додати на головний екран».</p></details>
+    <details><summary data-t="Computer">Комп'ютер</summary><p data-t="Open deze website in Chrome of Edge. Klik op het installatiepictogram in de adresbalk of kies Deze pagina als app installeren in het browsermenu.">Відкрийте цей сайт у Chrome або Edge. Натисніть значок установлення в адресному рядку або виберіть «Установити цю сторінку як застосунок» у меню браузера.</p></details>
+  </section>
+
+  <section id="vragen" class="block faq">
+    <h2 data-t="Veelgestelde vragen">Часті запитання</h2>
+    <details><summary data-t="Is Bittertalen van DUO?">Bittertalen — це DUO?</summary><p data-t="Nee. Bittertalen is een onafhankelijke oefenapp. De echte examens en de officiële oefenexamens vind je bij DUO en op inburgeren.nl.">Ні. Bittertalen — незалежний застосунок для тренування. Справжні іспити й офіційні пробні іспити — у DUO та на inburgeren.nl.</p></details>
+    <details><summary data-t="Welk examen moet ik doen: A2 of B1?">Який іспит мені складати: A2 чи B1?</summary><p data-t="Dat hangt af van je situatie, bijvoorbeeld welke inburgeringswet voor jou geldt. Kijk op inburgeren.nl of vraag het aan je gemeente. In Bittertalen kies je je niveau zelf, en je kunt het later veranderen.">Це залежить від вашої ситуації, наприклад від того, який закон про інтеграцію стосується вас. Подивіться на inburgeren.nl або запитайте в муніципалітеті. У Bittertalen ви самі вибираєте рівень і можете потім його змінити.</p></details>
+    <details><summary data-t="Helpt Bittertalen ook bij naturalisatie?">Чи допомагає Bittertalen з натуралізацією?</summary><p data-t="Voor naturalisatie heb je meestal een inburgeringsdiploma nodig, op minimaal A2-niveau. Bittertalen helpt je oefenen voor de examens en leert je over Nederland. De IND beslist over je aanvraag: kijk op ind.nl wat voor jou geldt.">Для натуралізації зазвичай потрібен диплом про інтеграцію рівня не нижче A2. Bittertalen допомагає готуватися до іспитів і знайомить із Нідерландами. Рішення щодо заяви ухвалює IND: перевірте на ind.nl, що діє у вашому випадку.</p></details>
+    <details><summary data-t="Wat is KNM?">Що таке KNM?</summary><p data-t="Kennis van de Nederlandse Maatschappij: vragen over werk, wonen, gezondheid, instanties, geschiedenis en hoe mensen in Nederland met elkaar omgaan. Je oefent de acht thema's van het examen, samen of één voor één.">Знання нідерландського суспільства: питання про роботу, житло, здоров'я, установи, історію та про те, як люди в Нідерландах спілкуються одне з одним. Ви тренуєте вісім тем іспиту — усі разом або по одній.</p></details>
+    <details><summary data-t="Heb ik een account nodig?">Чи потрібен мені акаунт?</summary><p data-t="Nee, je kunt meteen beginnen. Met een gratis account bewaar je je voortgang op al je apparaten en laat je je teksten en gesproken antwoorden vaker nakijken.">Ні, можна почати одразу. З безкоштовним акаунтом прогрес зберігається на всіх ваших пристроях, а тексти й усні відповіді можна перевіряти частіше.</p></details>
+    <details><summary data-t="Werkt het zonder internet?">Чи працює без інтернету?</summary><p data-t="Ja, de meeste oefeningen werken ook offline, bijvoorbeeld in de trein. Voor het nakijken door Bittertalen heb je internet nodig, en op sommige telefoons ook voor het herkennen van spraak.">Так, більшість вправ працює й офлайн, наприклад у потязі. Для перевірки Bittertalen потрібен інтернет, а на деяких телефонах — і для розпізнавання мовлення.</p></details>
+    <details><summary data-t="Kan ik Bittertalen op mijn telefoon zetten?">Чи можна встановити Bittertalen на телефон?</summary><p data-t="Ja. Open Bittertalen in je browser en zet het op je beginscherm (op een iPhone in Safari: Deel, dan Zet op beginscherm). Dan opent het als een app.">Так. Відкрийте Bittertalen у браузері й додайте на початковий екран (на iPhone у Safari: «Поділитися», потім «На початковий екран»). Тоді він відкриватиметься як застосунок.</p></details>
+    <details><summary data-t="Betekent een goede score dat ik slaag?">Хороший результат означає, що я складу?</summary><p data-t="Nee. Je score laat zien hoeveel antwoorden goed waren bij het oefenen. Het echte examen kan anders zijn. Doe daarom ook de officiële oefenexamens van DUO.">Ні. Результат показує, скільки відповідей було правильних на тренуванні. Справжній іспит може відрізнятися, тому пройдіть і офіційні пробні іспити DUO.</p></details>
+  </section>
+
+  <section class="closing">
+    <h2 data-t="Klaar voor je eerste oefening?">Готові до першого завдання?</h2>
+    <a class="button primary" href="/oefenen?open=today" data-t="Begin gratis">Почати безкоштовно</a>
+  </section>
+</main>
+<footer class="wrap footer footer-legal">
+  <div class="footer-top"><span class="copyright">© 2026 Bittertalen</span><div class="actions">
+    <a href="/over" data-t="Over Bittertalen">Про Bittertalen</a><a href="/contact" data-t="Contact">Контакти</a><a href="/privacy" data-t="Privacyverklaring">Політика конфіденційності</a><a href="/voorwaarden" data-t="Gebruiksvoorwaarden">Умови використання</a>
+  </div></div>
+  <nav class="footer-practice" lang="nl" aria-label="Gratis oefenvragen"><a href="/inburgeringsexamen-oefenen">Inburgeringsexamen oefenen</a> · <a href="/knm-oefenen">KNM oefenen</a> · <a href="/a2-lezen-oefenen">Lezen A2</a> · <a href="/a2-luisteren-oefenen">Luisteren A2</a> · <a href="/a2-schrijven-oefenen">Schrijven A2</a> · <a href="/a2-spreken-oefenen">Spreken A2</a> · <a href="/staatsexamen-b1-oefenen">Staatsexamen B1</a></nav>
+  <p data-t="Bittertalen is een onafhankelijke oefenapp en is niet verbonden aan DUO.">Bittertalen — незалежний застосунок для підготовки, не пов'язаний із DUO.</p>
+  <p data-t="Oefenresultaten bieden geen garantie op het behalen van een officieel examen.">Результати тренувань не гарантують складання офіційного іспиту.</p>
+  <p class="footer-owner"><span>Artem Matveev</span> · <a href="/contact"><bdi>hallo@bittertalen.nl</bdi></a> · <span>KVK: <bdi>000000000</bdi></span> · <span>BTW-id: <bdi>000000000</bdi></span></p>
+  <p class="footer-placeholder" data-t="KVK en btw-id zijn tijdelijke placeholders en moeten nog worden ingevuld.">Номери KVK і BTW-id — тимчасові заповнювачі; їх ще потрібно вказати.</p>
+</footer>
+</body>
+</html>

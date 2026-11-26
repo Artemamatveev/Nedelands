@@ -15,4 +15,4 @@ Start with phrase or exact matches around schrijfopdrachten A2 and spreken A2 oe
 
 - Check the deployed routes, guest writing trial, all five A2 mock exams, quotas and the Stripe return.
 - Apply the grading-receipt migration to the intended Supabase project before deploying the matching application/API. The preview build itself neither changes the database nor activates new prices. On a separate Stripe test-mode setup, exercise subscription, Examenpas and Jaarpas, plus cancellation and successful entitlement activation. Repository tests use mocked Stripe and Supabase.
-- Compare the published limits with /api/config. Pay attention to Examenpas's whole-term limit and the Jaarpas's monthly reset.
+- Compare the published limits with /api/config. Pay attention to Examenpas's whole-term limit and the Jaarpas's separate whole-term limit.

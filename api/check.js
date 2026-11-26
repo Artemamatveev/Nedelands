@@ -14,7 +14,7 @@
 // With accounts set up (Supabase, see _supa.js) only a signed-in user may grade, CHECK_LIMIT checks a day;
 // the answer then also has `left`, the checks left today. With Bittertalen Plus (api/plus.js) PLUS_LIMIT a day.
 import Anthropic from "@anthropic-ai/sdk";
-import { accounts, caller, checkCost, useChecks, LIMIT, PLUS, plusOn, plusFor, coversLevel, sameOrigin, FREE, visitor, useFree, useTotal, addSpend, bonusFor, useGuard, PLUS_MONTH, OPUS_MONTH, PASS_TOTAL, PASS_OPUS, monthOf, amsterdamDay, gradingDigest, gradingReceipt } from "./_supa.js";
+import { accounts, caller, checkCost, useChecks, LIMIT, PLUS, plusOn, plusFor, coversLevel, sameOrigin, FREE, visitor, useFree, useTotal, addSpend, bonusFor, useGuard, PLUS_MONTH, OPUS_MONTH, PASS_TOTAL, PASS_OPUS, YEAR_TOTAL, YEAR_OPUS, monthOf, amsterdamDay, gradingDigest, gradingReceipt } from "./_supa.js";
 
 // Created only when the key is set, so a missing key gives a clear error instead of a crash
 // (trimmed: a key pasted into the dashboard with a trailing newline breaks the request header)
@@ -29,6 +29,7 @@ const MODEL = (process.env.GRADING_MODEL || "claude-sonnet-5-5").trim();
 const MODEL_EXAM = (process.env.GRADING_MODEL_EXAM || "claude-opus-5-5").trim();
 // Free checks (a guest's trial and a free account's seven) use the cheaper GRADING_MODEL_FREE, also for a proefexamen.
 const MODEL_FREE = (process.env.GRADING_MODEL_FREE || "claude-haiku-5-5").trim();
+const FREE_STRONG = Math.max(0, parseInt(process.env.FREE_STRONG ?? "2", 10) || 0);
 
 const ERROR_KINDS = ["inhoud", "woorden", "grammatica", "spelling", "samenhang", "inversie", "meervoud"];
 const RESULT = {
@@ -185,7 +186,7 @@ Geef voor elk antwoord, in dezelfde volgorde:
   Is inhoud 0, dan zijn alle punten 0.
 Bij een vraag met foto's staat tussen haakjes wat er op de foto's te zien is.`;
 
-const UI_LANG = Object.freeze({ en: "Engels", ar: "Arabisch", tr: "Turks", hi: "Hindi", zh: "Chinees (vereenvoudigd)", es: "Spaans", ru: "Russisch" });
+const UI_LANG = Object.freeze({ en: "Engels", ar: "Arabisch", tr: "Turks", hi: "Hindi", zh: "Chinees (vereenvoudigd)", es: "Spaans", ru: "Russisch", uk: "Oekraïens" });
 const str = (v, max) => (typeof v === "string" ? v.slice(0, max) : "");
 // Everything a page sends (the task, a form, the learner's text) goes between fences with a random name per request, so a
 // text can't close its own block and write a second task or its own points ("OPDRACHT 2 … inhoud 3"). Old fence marks
@@ -311,9 +312,9 @@ async function gradeRequest(req, res, { user, input, sb, sp, wb, t0, save }) {
   // 13-week pass can't cost three months of the monthly ceiling. A counter that can't be reached never blocks a paying
   // learner (it is logged).
   const exam = input.length >= 4;
-  const pass = !!(plan?.pass && !plan?.group && !plan?.year && plan?.until); // a Jaarpas counts per month, like Plus
+  const pass = !!(plan?.pass && !plan?.group && plan?.until); // an Examenpas or a Jaarpas counts over its whole term
   const gk = pass ? "p:" + uid : "m:" + uid, gday = pass ? String(plan.until).slice(0, 10) : monthOf(new Date(checkedAt));
-  const glim = pass ? PASS_TOTAL : PLUS_MONTH, olim = pass ? PASS_OPUS : OPUS_MONTH;
+  const glim = pass ? (plan.year ? YEAR_TOTAL : PASS_TOTAL) : PLUS_MONTH, olim = pass ? (plan.year ? YEAR_OPUS : PASS_OPUS) : OPUS_MONTH;
   const ok = pass ? "q:" + uid : "o:" + uid;
   let month = false, opus = false, guardO = false;
   if (plus) {
@@ -326,7 +327,11 @@ async function gradeRequest(req, res, { user, input, sb, sp, wb, t0, save }) {
       guardO = o != null && o >= 0;
     }
   }
-  const model = !plus ? MODEL_FREE : exam && opus ? MODEL_EXAM : MODEL;
+  // A first impression of the good grading (26 November 2026): a guest's trial checks and the first FREE_STRONG (2)
+  // checks of a free account use the paid model, so a learner has seen what Plus gives before being asked to pay.
+  // Proefexamens and everything after that: the free model.
+  const firstFree = !plus && !exam && (who ? true : Number.isSafeInteger(left) && lim - left <= FREE_STRONG);
+  const model = !plus ? (firstFree ? MODEL : MODEL_FREE) : exam && opus ? MODEL_EXAM : MODEL;
   let providerStarted = false;
   // A failure gives the learner's daily check back. Once the model was called its tokens are paid, so the monthly and
   // exam-model counters keep that call: failed calls can't run up the bill without limit.
@@ -365,7 +370,7 @@ async function gradeRequest(req, res, { user, input, sb, sp, wb, t0, save }) {
 
   // The learner's menu language (en, ar, …): the explanation of each mistake comes in that language, so a beginner
   // understands the rule; the corrections and the verdict stay Dutch
-  const ui = UI_LANG[req.body?.ui];
+  const ui = Object.hasOwn(UI_LANG, String(req.body?.ui)) ? UI_LANG[req.body.ui] : null;
   const content = ui ? prompt + `\n\nSchrijf "why" bij elke fout in het ${ui}, met eenvoudige woorden, zodat de cursist de regel begrijpt. Al het andere blijft in het Nederlands.` : prompt;
   try {
     providerStarted = true;

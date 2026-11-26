@@ -298,6 +298,9 @@ a.it{text-decoration:none} .it.ext::after{content:none}
    scroll frame and during every page change (the "slightly sticky" scrolling); the computer keeps the glass */
 :root:not([data-desktop]) .tabs{-webkit-backdrop-filter:none;backdrop-filter:none;background:color-mix(in srgb,var(--card) 96%,transparent)}
 .tabs.drag .lens{transition:scale 220ms var(--motion-ease),opacity var(--motion-ui) var(--motion-settle);scale:1.03 1.14;opacity:.85}
+/* on a phone the lens's place is a transform, and the scale property would scale that move too (the lens ran ahead of
+   the finger): there the drag stretch is part of the transform (put() in LENS) */
+:root:not([data-desktop]) .tabs.drag .lens{scale:none}
 .tabs.drag button{color:var(--ink)} .tabs.drag button.on{color:#fff}
 /* scroll down and the bar shrinks to its icons; scroll up and the names come back */
 .tabs.min{width:min(300px,calc(100vw - 24px))}
@@ -565,12 +568,14 @@ body.vfull{overflow:hidden}
 .tl p{margin:0}
 .tl .ask{display:flex;align-items:center;gap:6px;font-size:var(--fs-xs)}
 .tl .say{background:none;border:0;color:var(--blue);font-size:var(--fs-s);padding:2px 6px;margin:-2px 0}
+.tl .rep{margin-inline-start:auto;background:none;border:0;color:var(--soft);font-size:var(--fs-xs);padding:2px 6px}
 .tl.me{padding-left:28px}
 .tl.me .ask{color:var(--soft)}
 .tl.no p:last-child{color:var(--soft)}
 .tl small{display:block;color:var(--bad);font-size:var(--fs-s)}
 #tctl{margin-top:16px}
 #tctl .rec{margin-bottom:10px}
+.recpick{outline:2px solid var(--oranje);outline-offset:-2px}
 #tctl .type{margin-bottom:6px}
 #tctl .type input{font-size:var(--fs-b);font-weight:400}
 #tctl .hint{margin:4px 0 8px}
@@ -981,7 +986,7 @@ const NS=window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.SplashScreen;
 if(NS){const img=document.querySelector("#app-loading img");let done=0;const go=()=>{if(!done++)NS.hide({fadeOutDuration:250}).catch(()=>{})};
   if(img){img.decode().catch(()=>{}).then(()=>requestAnimationFrame(go));setTimeout(go,1500)}else go()}
 let lang="nl";try{lang=localStorage.getItem("ww-ui")||"nl"}catch{}
-const labels={nl:"Laden…",en:"Loading…",ar:"جارٍ التحميل…",tr:"Yükleniyor…",hi:"लोड हो रहा है…",zh:"加载中…",es:"Cargando…",ru:"Загрузка…"};
+const labels={nl:"Laden…",en:"Loading…",ar:"جارٍ التحميل…",tr:"Yükleniyor…",hi:"लोड हो रहा है…",zh:"加载中…",es:"Cargando…",ru:"Загрузка…",uk:"Завантаження…"};
 const label=document.getElementById("boot-label");label.textContent=labels[lang]||labels.nl;label.lang=lang;
 document.querySelector("#app-loading img").addEventListener("error",function(){
   if(/\/bittie-wave-v\d+\.svg(?:\?|$)/.test(this.currentSrc)){
@@ -1110,9 +1115,9 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
 <script src="/study/language-v1.js?v=e94426af48"></script>
 <script src="/study/progress-v1.js?v=261b0e20d0"></script>
 <script src="/study/writing-v1.js?v=84ca5efa75"></script>
-<script src="/data/knm.js?v=50777b478a"></script>
-<script src="/data/a2.js?v=56c32c3473"></script>
-<script src="/data/b1.js?v=e9701bd331"></script>
+<script src="/data/knm.js?v=c9b283ab33"></script>
+<script src="/data/a2.js?v=167ee7c30c"></script>
+<script src="/data/b1.js?v=1c0276cbe5"></script>
 <script src="/data/extra.js?v=e80c7f18b2"></script>
 <script>
 
@@ -1226,9 +1231,9 @@ const SEC=[
 {id:"g1",t:"Grammatica B1",s:"Die en dat, zou, het passief, er, voegwoorden",n:10},
 {id:"w1",t:"Woordvolgorde B1",s:"Lange zinnen met bijzinnen",n:6},
 {id:"v1",t:"Woordenschat B1",s:"Werk, geld, gezondheid, wonen",n:10},
-{id:"vo",t:"Woordenschat",s:"Ruim 1000 woorden in 23 thema's",n:10},
+{id:"vo",t:"Woordenschat",s:"Bijna 2000 woorden in 27 thema's",n:10},
 {id:"gs",t:"Geschiedenis",s:"Vragen over de geschiedenis van Nederland",n:10},
-{id:"bg",t:"Beginnen",s:"Twaalf korte lessen",n:8}
+{id:"bg",t:"Beginnen",s:"Twintig korte lessen",n:8}
 ];
 // Days until a question comes back after a right answer, per box (S.items .b). The last steps (30, 60) let a known
 // question rest instead of returning every two weeks for ever. Old progress (boxes 0–4) keeps working.
@@ -2014,24 +2019,26 @@ function voiceTexts(){
 // plugin the web API is used as before. Results arrive as partial results; the last one is sent again as final at the end.
 const NSR=NATIVE&&window.Capacitor?.Plugins?.SpeechRecognition;
 class NativeSR{
-  constructor(){this.lang="nl-NL";this.continuous=true;this.interimResults=true;this.maxAlternatives=1;this._on=false;this._last=""}
+  constructor(){this.lang="nl-NL";this.continuous=true;this.interimResults=true;this.maxAlternatives=1;this._on=false;this._last="";this._gen=0}
   _ev(t,fin){return{resultIndex:0,results:[Object.assign([{transcript:t,confidence:1}],{isFinal:fin})]}}
   async start(){
+    const g=++this._gen; // a stop() while permission is being asked cancels this start
     try{
       const ok=s=>s&&(s.speechRecognition==="granted"||s.permission===true);
       let perm=await NSR.checkPermissions().catch(()=>null);
       if(!ok(perm))perm=await NSR.requestPermissions().catch(()=>null);
       if(!ok(perm)){this.onerror?.({error:"not-allowed"});this.onend?.();return}
+      if(g!==this._gen){this.onend?.();return}
       this._last="";this._on=true;
       this._h1=await NSR.addListener("partialResults",d=>{const t=String((d&&d.matches||[])[0]||"").trim();if(t&&this._on){this._last=t;this.onresult?.(this._ev(t,false))}});
-      this._h2=await NSR.addListener("listeningState",d=>{if(d&&d.status==="stopped")this._done()});
+      this._h2=await NSR.addListener("listeningState",d=>{if(d&&d.status==="stopped"&&g===this._gen)this._done()});
       this.onstart?.();this.onaudiostart?.();
       await NSR.start({language:this.lang||"nl-NL",maxResults:1,partialResults:true,popup:false});
     }catch(e){this.onerror?.({error:"audio-capture"});this._done()}
   }
   _done(){if(!this._on)return;this._on=false;if(this._last)this.onresult?.(this._ev(this._last,true));
     try{this._h1?.remove?.();this._h2?.remove?.()}catch(e){}this.onend?.()}
-  stop(){Promise.resolve(NSR.stop()).catch(()=>{}).finally(()=>this._done())}
+  stop(){this._gen++;if(!this._on){this.onend?.();return}Promise.resolve(NSR.stop()).catch(()=>{}).finally(()=>this._done())}
   abort(){this._last="";this.stop()}
 }
 let rec=null,recUrl=null;
@@ -2461,7 +2468,7 @@ function home(){
     <div class="list">${parts().map(k=>k==="knm"?knmRow():row(k)).join("")}</div>`;
   $("gram").innerHTML=`<h2>Grammatica en woorden</h2><p class="sub">Rondes van 10 vragen.</p>`+(lvl()==="B1"
     ?`<div class="list">${["g1","w1","v1"].map(row).join("")}</div><h3 class="lh">Herhalen op A2-niveau</h3><div class="list">${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`
-    :`<div class="list">${itHTML(`data-x="bg"`,"Beginnen","Twaalf korte lessen, voor als je net begint.",{ic:"bg",n:(n=>n?`${n} van ${BG.length}`:null)(BG.filter(bgDone).length)})}${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`);
+    :`<div class="list">${itHTML(`data-x="bg"`,"Beginnen","Twintig korte lessen, voor als je net begint.",{ic:"bg",n:(n=>n?`${n} van ${BG.length}`:null)(BG.filter(bgDone).length)})}${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`);
   $("books").innerHTML=itHTML(`data-x="books"`,"Boekenkast",lb?`Je leest nu: ${esc(lb.t)}, blz. ${lb.p+1}`:"Verhalen en je eigen e-books.",{ic:"books"})
     +itHTML(`data-x="hist"`,"Geschiedenis van Nederland",lh?`Je was bij: ${lh.t}`:"Van de hunebedden tot nu.",{n:gsDone?`${gsDone} van ${GS.length}`:null,ic:"hist"})
     +itHTML(`data-x="media"`,"Luisteren en kijken","Nieuws, video's en podcasts.",{ic:"media"})
@@ -2678,7 +2685,7 @@ var LENS=(()=>{
   // compositor, while the separate translate/scale properties were animated on the main thread and stuttered whenever
   // the new tab was being drawn
   const tx=x=>`translateX(${(clamp(x)*sg()*100).toFixed(3)}%)`;
-  const put=x=>{L.style.transform=tx(x)};
+  const put=x=>{L.style.transform=tx(x)+(n.classList.contains("drag")?" scale(1.03,1.14)":"")};
   let st=null; // the running glide: {x0, v0, to, anim}
   const pos=(s,t)=>{const e=s.x0-s.to,a=s.v0+W*e;return s.to+(e+a*t)*Math.exp(-W*t)};
   const vel=(s,t)=>{const e=s.x0-s.to,a=s.v0+W*e;return(a-W*(e+a*t))*Math.exp(-W*t)};
@@ -2720,7 +2727,7 @@ var LENS=(()=>{
   n.addEventListener("pointermove",e=>{
     if(x0==null||e.pointerId!==id)return;
     if(!drag){if(Math.abs(e.clientX-x0)<8)return;drag=true;try{n.setPointerCapture(id)}catch(_){}
-      const h=now();stop();cur=clamp(h.x);dv=h.v;put(cur);n.classList.add("drag")}
+      const h=now();stop();cur=clamp(h.x);dv=h.v;n.classList.add("drag");put(cur)}
     goal=clamp(((e.clientX-left)*sg()-w/2)/w);
     if(still()){cur=goal;put(cur);mark()}
     else if(!raf){t0=0;raf=requestAnimationFrame(step)}
@@ -3248,7 +3255,10 @@ function show(){
     <button class="btn wide" id="recb">${cur.exam?"● Antwoord geven":"● Opnemen"}</button>${cur.exam?`<button class="ghost wide" id="spredo" hidden>↻ Opnieuw opnemen</button>`:""}<p class="note" id="recn" role="status" aria-atomic="true">${q.spk?`${q.prep?`Denk eerst ${q.prep} seconden na. `:""}Je hebt ${q.spk} seconden om te antwoorden, zoals op het Staatsexamen.${cur.exam?" Na de vraag begint de tijd vanzelf.":" Daarna kun je jezelf terugluisteren."}`:cur.exam?"Je hebt één minuut per vraag.":"Je hebt één minuut. Daarna kun je jezelf terugluisteren."}</p></div>
     ${cur.exam?"":`${SR?`<button class="ghost wide" id="spchk" style="margin-bottom:10px">Spreek in en laat nakijken</button>${acc.cfg&&!acc.user?(acc.cfg.free?freeNote():`<p class="note">Nakijken kan als je bent ingelogd (Profiel).</p>`):""}`:""}<button class="ghost wide" id="rev">Toon voorbeeld</button>`}`;
   else if(S.typing&&q.canType)h+=`<div class="type"><input id="inp" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Je antwoord"><button class="btn" id="chk">Controleer</button></div>`;
-  else{const nv=cur.nav&&q.type==="choice";o=nv?cur.op[pos]=cur.op[pos]||q.opts():q.opts();const C=x=>capA(q,x);
+  else{const nv=cur.nav&&q.type==="choice";o=nv?cur.op[pos]=cur.op[pos]||q.opts():q.opts();
+    // a Beginnen "Wat betekent" question shows its English options in the menu language (the answer itself is unchanged)
+    const BW=q.sec==="bg"&&/^Wat betekent/.test(q.big||"")?(window.BGW||{})[LANG]:null;
+    const C=x=>BW&&BW[x]?`<span dir="auto">${esc(BW[x])}</span>`:capA(q,x);
     const one=o.length===3||o.some(x=>x.length>14);
     h+=`<div class="opts${one?" one":""}">${o.map((x,i)=>`<button class="opt${nv&&cur.pick[pos]===x?" sel":""}" data-n="${i}"${nv?` aria-pressed="${cur.pick[pos]===x}"`:""}>${one?optLt(i,C(x)):C(x)}</button>`).join("")}</div>`;
     if(nv)h+=navHTML()}
@@ -3357,7 +3367,7 @@ function feedback(ok,q,pick){
   }
   // wrong: a short heading, then the right answer in ink (a long red heading was loud)
   $("fb").innerHTML=`<p class="fbh"><i aria-hidden="true">${ok?"✓":"✕"}</i><b class="${ok?"good":"bad"}" data-ui>${ok?"Goed zo!":"Niet goed"}</b></p>${ok?"":`<p class="fbr"><span data-ui>Goed is:</span> <strong>${capA(q,q.right)}</strong></p>`}
-    ${q.note?(q.sec==="verb"?q.note:noteHTML(q.note)):""}
+    ${q.note?(q.sec==="verb"?q.note:noteHTML(q.note)):""}${wtNote(q)}
     <button class="btn wide" id="next" data-ui>Verder</button>`;
   $("next").onclick=()=>{pos++;show()}; $("next").focus();
   if(q.tts&&q.big!==q.tts&&canSpeak)speak(q.tts); // description → word: hear the Dutch word
@@ -3568,7 +3578,7 @@ async function nakijken(tasks,part,requestId){
   return out}
 // Apple 5.1.2(i): in the store app, ask once before a text or a spoken answer goes to an AI company (Anthropic). On the
 // website privacy.html says it; the app asks out loud, with a yes that is remembered on this device.
-const AIOK="bt-ai-ok",AIASK="Om na te kijken en te praten stuurt Bittertalen je tekst of je uitgeschreven antwoord naar Anthropic (Claude, in de Verenigde Staten). Je naam en e-mailadres gaan niet mee en Anthropic traint er geen modellen mee. Ga je akkoord?";
+const AIOK="bt-ai-ok",AIASK="Om na te kijken en te praten stuurt Bittertalen je tekst of je uitgeschreven antwoord naar Anthropic (Claude, in de Verenigde Staten). Wat de AI-personages zeggen, wordt door Google voorgelezen. Je naam en e-mailadres gaan niet mee en er worden geen modellen mee getraind. Ga je akkoord?";
 function aiAsk(){
   if(!NATIVE||typeof confirm!=="function")return true;
   try{if(localStorage.getItem(AIOK))return true}catch(e){}
@@ -4243,7 +4253,7 @@ function bgOpen(back,f){
 }
 function bgList(){
   bgOpen(TABN[tab],home);
-  $("tbody").innerHTML=`<h2>Beginnen</h2><p class="sub">Twaalf korte lessen met de basis van het Nederlands.</p>
+  $("tbody").innerHTML=`<h2>Beginnen</h2><p class="sub">Twintig korte lessen met de basis van het Nederlands.</p>
     <div class="list">${BG.map((l,i)=>itHTML(`data-i="${i}"`,`Les ${i+1}: ${l.t}`,l.s,{n:bgDone(l)?"Klaar":null})).join("")}</div>
     <button class="ghost wide" id="bgt">${S.start?"Doe de starttest opnieuw":"Doe de starttest"}</button>`;
   document.querySelectorAll("#tbody [data-i]").forEach(b=>b.onclick=()=>bgLes(+b.dataset.i));
@@ -4251,11 +4261,14 @@ function bgList(){
 }
 function bgLes(i){
   const l=BG[i],V=pairs(l.v),W=pairs(l.w),has=w=>(S.words||[]).some(y=>y.w===w),para=t=>t.split("\n").map(x=>`<p>${x}</p>`).join("");
+  // in the menu language when there is a translation (data/ui.js BGI), else English; the explanation is open at once then
+  const T=(window.BGI||{})[l.id]?.[LANG],TL=T?LANGS[LANG].c:"en",open=!!T||LANG==="en";
+  if(!T&&LANG!=="nl"&&LANG!=="en"&&typeof loadUI==="function")Promise.resolve(loadUI()).then(()=>{if((window.BGI||{})[l.id]?.[LANG]&&$("bgx"))bgLes(i)}).catch(()=>{});
   bgOpen("Beginnen",bgList);
   $("tbody").innerHTML=`<p class="ask">Les ${i+1} van ${BG.length}</p><h2>${l.t}</h2>
-    <div class="bgl" lang="nl">${para(l.x)}</div><button class="hint bgl" id="bge" style="margin-top:0" aria-expanded="${LANG==="en"}">English</button><div id="bgx" lang="en" class="note bgl"${LANG==="en"?"":" hidden"}>${para(l.e)}</div>
-    <h3 class="lh">Voorbeelden</h3><ul class="sw">${V.map((x,j)=>`<li><span class="bgl" lang="nl"><b>${x[0]}</b><small lang="en">${x[1]}</small></span>${canSpeak?`<button class="say" data-v="${j}" aria-label="Luister">▶</button>`:""}</li>`).join("")}</ul>
-    <h3 class="lh">Woorden</h3><ul class="sw">${W.map((x,j)=>`<li><span class="bgl"><b lang="nl">${x[0]}</b> — <span lang="en">${x[1]}</span></span>${canSpeak?`<button class="say" data-w="${j}" aria-label="Luister">▶</button>`:""}</li>`).join("")}</ul>
+    <div class="bgl" lang="nl">${para(l.x)}</div><button class="hint bgl" id="bge" style="margin-top:0" aria-expanded="${open}">${T?LANGS[LANG].n:"English"}</button><div id="bgx" lang="${TL}" dir="auto" class="note bgl"${open?"":" hidden"}>${para(esc(T?T.e:l.e).replace(/\n/g,"\n"))}</div>
+    <h3 class="lh">Voorbeelden</h3><ul class="sw">${V.map((x,j)=>`<li><span class="bgl" lang="nl"><b>${x[0]}</b><small lang="${TL}" dir="auto">${T?esc(T.v[j]):x[1]}</small></span>${canSpeak?`<button class="say" data-v="${j}" aria-label="Luister">▶</button>`:""}</li>`).join("")}</ul>
+    <h3 class="lh">Woorden</h3><ul class="sw">${W.map((x,j)=>`<li><span class="bgl"><b lang="nl">${x[0]}</b> — <span lang="${TL}" dir="auto">${T?esc(T.w[j]):x[1]}</span></span>${canSpeak?`<button class="say" data-w="${j}" aria-label="Luister">▶</button>`:""}</li>`).join("")}</ul>
     <button class="ghost wide" id="bgk" style="margin:12px 0 10px"${W.every(x=>has(x[0]))?" disabled":""}>${W.every(x=>has(x[0]))?"Bewaard in Mijn woorden":"Bewaar in Mijn woorden"}</button>
     <button class="btn wide" id="bgo">Oefenen</button>`;
   $("bge").onclick=()=>{const x=$("bgx");x.hidden=!x.hidden;$("bge").setAttribute("aria-expanded",!x.hidden)};
@@ -4344,7 +4357,7 @@ function setUit(k,ok){
 // share. Passed parts leave Mijn dag (planTasks). The shared text has the learner's invite link when there is one.
 const WONSHARE={nl:p=>`Ik ben geslaagd voor ${p}! Ik heb geoefend met Bittertalen.`,en:p=>`I passed ${p}! I practised with Bittertalen.`,
   ar:p=>`نجحت في ${p}! تدرّبت مع Bittertalen.`,tr:p=>`${p} sınavını geçtim! Bittertalen ile çalıştım.`,hi:p=>`मैं ${p} में पास हो गया/गई! मैंने Bittertalen से अभ्यास किया।`,
-  zh:p=>`我通过了 ${p}！我是用 Bittertalen 练习的。`,es:p=>`¡He aprobado ${p}! Practiqué con Bittertalen.`,ru:p=>`Я сдал(а) ${p}! Готовился(-ась) с Bittertalen.`};
+  zh:p=>`我通过了 ${p}！我是用 Bittertalen 练习的。`,es:p=>`¡He aprobado ${p}! Practiqué con Bittertalen.`,ru:p=>`Я сдал(а) ${p}! Готовился(-ась) с Bittertalen.`,uk:p=>`Я склав(-ла) ${p}! Готувався(-лася) з Bittertalen.`};
 function wonScreen(k){
   closePop();hush();TK=null;$("card").innerHTML="";
   $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;window.scrollTo(0,0);
@@ -4436,12 +4449,12 @@ function remindRow(){
 async function remindPlan(){
   const N=NATIVE&&window.Capacitor?.Plugins?.LocalNotifications,h=lsGet("ww-remind");if(!N)return;
   try{
-    await N.cancel({notifications:[1,2,3,4,5,6,7,8,...EXAMDAY_IDS].map(id=>({id}))});
+    await N.cancel({notifications:[...Array(30).keys()].slice(1).concat(EXAMDAY_IDS).map(id=>({id}))});
     await examDayPlan(N);
     if(!h)return;
     const P=planTasks(),done=S.day&&S.day.d===today()?S.day.done:[],fin=P.T.length>0&&P.T.every(t=>done.includes(t.id));
     const part=P.bg?"":PART[P.k]||"",ex=examDays(),exam=new Set(examsAhead().map(x=>x.n)),L=[];
-    for(let i=0;i<7;i++){
+    for(let i=0;i<REMIND_DAYS;i++){
       const at=new Date();at.setDate(at.getDate()+i);at.setHours(+h,0,0,0);
       if(i===0&&(fin||at<=new Date()))continue;
       if(exam.has(i))continue; // the exam day has its own good-luck message in the morning
@@ -4478,7 +4491,9 @@ function remindAskBind(){
 }
 // The morning of every exam day (the dates in Profiel), at 07:00: good luck and "je kunt dit". Planned whenever
 // notifications are allowed, also without the daily reminder; one message a day, naming the parts of that day.
-const EXAMDAY_IDS=[20,21,22,23,24,25,26,27,28,29],EXAMDAY_H=7;
+// 28 days ahead, one notification each (iOS keeps up to 64 waiting): someone who doesn't open the app for a week still
+// gets reminded (the first version planned 7 and then went quiet); the exam mornings use ids 40–49
+const REMIND_DAYS=28,EXAMDAY_IDS=[40,41,42,43,44,45,46,47,48,49],EXAMDAY_H=7;
 async function examDayPlan(N){
   const perm=await N.checkPermissions().catch(()=>null);
   if(!perm||perm.display!=="granted")return;
@@ -4510,7 +4525,8 @@ const REFSHARE={nl:"Ik oefen voor het inburgeringsexamen met Bittertalen. Met mi
   hi:"मैं Bittertalen से डच एकीकरण परीक्षा का अभ्यास करता/करती हूँ। मेरे लिंक से आपको 3 अतिरिक्त मुफ़्त जाँचें मिलेंगी:",
   zh:"我在用 Bittertalen 准备荷兰融入考试。通过我的链接，你可以多获得 3 次免费批改：",
   es:"Practico para el examen de integración neerlandés con Bittertalen. Con mi enlace recibes 3 revisiones gratis extra:",
-  ru:"Я готовлюсь к экзамену на интеграцию в Нидерландах с Bittertalen. По моей ссылке вы получите 3 дополнительные бесплатные проверки:"};
+  ru:"Я готовлюсь к экзамену на интеграцию в Нидерландах с Bittertalen. По моей ссылке вы получите 3 дополнительные бесплатные проверки:",
+  uk:"Я готуюся до іспиту з інтеграції в Нідерландах із Bittertalen. За моїм посиланням ви отримаєте 3 додаткові безкоштовні перевірки:"};
 async function refScreen(){
   if(!acc.user)return home();
   closePop();hush();TK=null;$("card").innerHTML="";
@@ -4559,6 +4575,24 @@ function resumePlanChoice(){
     }
   }catch(e){}
 }
+// One recommendation first (26 November 2026: six cards with six filled buttons made nobody choose): the Examenpas of the
+// learner's level, until after the exam date when there is one, with what the same months of Plus would cost. The other
+// plans stay below under "Andere opties", with plain buttons.
+let REC=false;
+function recHTML(on,plans){
+  const lv=lvl(),P=acc.cfg.pass,n=examLastDays();REC=false;
+  if(on||!P||!P.plans?.[lv]||(n!=null&&n>=P.days))return"";
+  REC=true;
+  const days=P.days||119,weeks=Math.round(days/7),months=Math.ceil(days/30.5);
+  const eur=v=>Number(String(v).replace(",",".")),fmt=v=>v.toFixed(2).replace(".",",");
+  const monthly=plans[lv]?.price?eur(plans[lv].price):null,save=monthly?monthly*months-eur(P.plans[lv].price):0;
+  return`<section class="list recpick" data-rec="${lv}"><div style="padding:16px"><p class="ask">Aanbevolen voor jou</p><h3>Examenpas ${lv}</h3>
+    <p>${n!=null&&n<days?`Elke dag feedback op Schrijven en Spreken tot na je examen.`:`${weeks} weken elke dag feedback op Schrijven en Spreken.`}</p>
+    <p><b dir="ltr">€ ${esc(P.plans[lv].price)}</b> <span>eenmalig, geen abonnement</span></p>
+    ${save>1?`<p class="note">Goedkoper dan ${months} maanden Plus (€ ${fmt(monthly*months)}).</p>`:""}
+    <button class="btn wide" id="precbuy" data-level="${lv}" ${acc.user?"":`data-plus-login="exam-${lv.toLowerCase()}"`}>Kies de Examenpas ${lv}</button></div></section>
+    <h3 class="lh">Andere opties</h3>`;
+}
 function plusScreen(choice){
   if(!acc.cfg||!acc.cfg.plus)return home();
   closePop();hush();TK=null;$("card").innerHTML="";
@@ -4574,27 +4608,28 @@ function plusScreen(choice){
     +(on&&p.status==="past_due"?`<p class="note">Je laatste betaling is niet gelukt. Stripe probeert het nog een paar keer.</p>`:"")
     +(plusMsg?`<p class="note" role="status">${esc(plusMsg)}</p>`:"")
     +(acc.user?`<section class="list"><label class="prow tog"><span>Laat Plus of de Examenpas meteen beginnen. Binnen 14 dagen kan ik herroepen en krijg ik mijn geld terug.</span><input type="checkbox" switch id="pstart"></label></section>`:"")
+    +recHTML(on,plans)
     +["A2","B1"].filter(level=>plans[level]).map(level=>`<section class="list" data-plus-plan="${level}"><div style="padding:16px"><h3>Bittertalen Plus ${level}</h3>
       <p>${level==="A2"?"Uitgebreide feedback van een sterker AI-model, ook op je proefexamens.":"Ook Schrijven en Spreken B1, met A2 erbij."}</p>
       <p><b dir="ltr">€ ${esc(plans[level].price)}</b> <span>per maand</span></p>
       <p class="note">Je kunt elke maand opzeggen.</p>
-      ${!acc.user?`<button class="btn wide" data-plus-login="plus-${level.toLowerCase()}">${level==="A2"?"Kies Plus A2":"Kies Plus B1"}</button>`
+      ${!acc.user?`<button class="${REC?"ghost":"btn"} wide" data-plus-login="plus-${level.toLowerCase()}">${level==="A2"?"Kies Plus A2":"Kies Plus B1"}</button>`
         :on&&!p.pass?level==="B1"&&p.level==="A2"?`<button class="btn wide" data-plus-buy="B1">Overstappen naar Plus B1</button>`:""
-        :p&&p.status!=="canceled"?"":`<button class="btn wide" data-plus-buy="${level}">${level==="A2"?"Kies Plus A2":"Kies Plus B1"}</button>`}
+        :p&&p.status!=="canceled"?"":`<button class="${REC?"ghost":"btn"} wide" data-plus-buy="${level}">${level==="A2"?"Kies Plus A2":"Kies Plus B1"}</button>`}
       </div></section>`).join("")
     +(acc.cfg.pass&&!(on&&!p.pass&&p.level==="B1")?`<h3 class="lh">Examenpas</h3><p class="sub">Eén keer betalen, geen abonnement.</p>`
       +["A2","B1"].filter(level=>acc.cfg.pass.plans?.[level]&&!(on&&!p.pass&&isPlus(level))).map(level=>`<section class="list" data-pass-plan="${level}"><div style="padding:16px"><h3>Examenpas ${level}</h3>
-      <p>${Math.round((acc.cfg.pass.days||91)/7)} weken AI-feedback voor ${level}.</p>
+      <p>${Math.round((acc.cfg.pass.days||119)/7)} weken AI-feedback voor ${level}.</p>
       <p>${acc.cfg.pass.total?`${esc(acc.cfg.pass.total)} nakijkbeurten voor de hele periode.`:"Eén tegoed voor de hele periode."}</p>
       <p><b dir="ltr">€ ${esc(acc.cfg.pass.plans[level].price)}</b> <span>eenmalig</span></p>
-      <button class="${on?"ghost":"btn"} wide" ${acc.user?`data-plus-pass="${level}"`:`data-plus-login="exam-${level.toLowerCase()}"`}>${level==="A2"?"Kies Examenpas A2":"Kies Examenpas B1"}</button>
+      <button class="${on||REC?"ghost":"btn"} wide" ${acc.user?`data-plus-pass="${level}"`:`data-plus-login="exam-${level.toLowerCase()}"`}>${level==="A2"?"Kies Examenpas A2":"Kies Examenpas B1"}</button>
       </div></section>`).join(""):"")
     // the Jaarpas: a year of Plus for one payment, never renewed (api/_supa.js YEARS)
     +(acc.cfg.year&&!(on&&!p.pass&&p.level==="B1")?`<h3 class="lh">Jaarpas</h3><p class="sub">Een jaar Plus voor één betaling. Wordt niet automatisch verlengd.</p>`
       +["A2","B1"].filter(level=>acc.cfg.year.plans?.[level]&&!(on&&!p.pass&&isPlus(level))).map(level=>`<section class="list" data-year-plan="${level}"><div style="padding:16px"><h3>Jaarpas ${level}</h3>
-      <p>Een jaar AI-feedback voor ${level}. Het tegoed wordt elke kalendermaand vernieuwd.</p>
+      <p>Een jaar AI-feedback voor ${level}. ${acc.cfg.year.total?`${esc(acc.cfg.year.total)} nakijkbeurten voor de hele periode.`:"Eén tegoed voor de hele periode."}</p>
       <p><b dir="ltr">€ ${esc(acc.cfg.year.plans[level].price)}</b> <span>eenmalig</span></p>
-      <button class="${on?"ghost":"btn"} wide" ${acc.user?`data-plus-year="${level}"`:`data-plus-login="year-${level.toLowerCase()}"`}>${level==="A2"?"Kies Jaarpas A2":"Kies Jaarpas B1"}</button>
+      <button class="${on||REC?"ghost":"btn"} wide" ${acc.user?`data-plus-year="${level}"`:`data-plus-login="year-${level.toLowerCase()}"`}>${level==="A2"?"Kies Jaarpas A2":"Kies Jaarpas B1"}</button>
       </div></section>`).join(""):"")
     +`<p class="note">Niet tevreden? Binnen 14 dagen na je eerste betaling krijg je je geld terug.</p>`
     +(acc.user&&acc.withdraw?`<button class="ghost wide" id="pwd">Herroepen</button><p class="note">Herroep je aankoop van de laatste 14 dagen. Plus of je Examenpas stopt meteen en je krijgt je geld binnen 14 dagen terug.</p>`:"")
@@ -4612,7 +4647,7 @@ function plusScreen(choice){
   }
   const go=async(w,b,level,kind)=>{
     if(w!=="manage"&&!$("pstart")?.checked){plusMsg="Zet eerst aan dat Plus of de Examenpas meteen mag beginnen.";plusScreen();$("pstart")?.focus();return}
-    if(w!=="manage")track(w);b.disabled=true;document.querySelectorAll("[data-plus-buy],[data-plus-pass],[data-plus-year],#pman").forEach(x=>x.disabled=true);plusMsg="";
+    if(w!=="manage")track(w);b.disabled=true;document.querySelectorAll("[data-plus-buy],[data-plus-pass],[data-plus-year],#precbuy,#pman").forEach(x=>x.disabled=true);plusMsg="";
     try{const r=await fetch("/api/plus",{method:"POST",headers:{"Content-Type":"application/json",...await authHead()},body:JSON.stringify({go:w,...(level?{level}:{}),...(kind?{kind}:{}),...(w!=="manage"?{start:true}:{})})});
       const j=await r.json().catch(()=>({}));if(!r.ok||!j.url)throw 0;
       if(w!=="manage")campaignTrack("start");
@@ -4621,6 +4656,7 @@ function plusScreen(choice){
   document.querySelectorAll("[data-plus-buy]").forEach(b=>b.onclick=()=>go("buy",b,b.dataset.plusBuy));
   document.querySelectorAll("[data-plus-pass]").forEach(b=>b.onclick=()=>go("pass",b,b.dataset.plusPass));
   document.querySelectorAll("[data-plus-year]").forEach(b=>b.onclick=()=>go("pass",b,b.dataset.plusYear,"year"));
+  if(acc.user&&$("precbuy"))$("precbuy").onclick=()=>go("pass",$("precbuy"),$("precbuy").dataset.level);
   if($("pman"))$("pman").onclick=()=>go("manage",$("pman"));
   if($("pwd"))$("pwd").onclick=async()=>{
     if(!confirm("Weet je zeker dat je wilt herroepen? Plus of je Examenpas stopt dan meteen."))return;
@@ -4921,8 +4957,15 @@ function aiDraw(){
   const k=AK; if(!k||!$("tlog"))return;
   $("tlog").innerHTML=k.log.map((l,j)=>l.me
     ?`<div class="tl me"><p class="ask">Jij</p><p>${esc(l.t)}</p>${l.fix?`<p class="aifix"><b>Beter:</b> ${esc(l.fix.right)}${l.fix.why?`<span>${esc(l.fix.why)}</span>`:""}</p>`:""}</div>`
-    :`<div class="tl"><p class="ask">${esc(k.c.who)} <button class="say" data-j="${j}" aria-label="Nog een keer luisteren">▶</button></p><p>${esc(l.t)}</p></div>`).join("");
+    :`<div class="tl"><p class="ask">${esc(k.c.who)} <button class="say" data-j="${j}" aria-label="Nog een keer luisteren">▶</button><button class="rep" data-r="${j}"${l.rep?" disabled":""}>${l.rep?"Gemeld":"Meld"}</button></p><p>${esc(l.t)}</p></div>`).join("");
   document.querySelectorAll("#tlog .say").forEach(b=>b.onclick=()=>{if(rec)recEnd(false);aiReplay(k.log[b.dataset.j])});
+  // Report an AI answer (Google Play's AI-generated content policy): the answer and who said it go to the server's log for
+  // the owner to read; nothing of the learner. Works also when the anonymous counts are off.
+  document.querySelectorAll("#tlog .rep").forEach(b=>b.onclick=()=>{
+    if(typeof confirm==="function"&&!confirm("Is dit antwoord verkeerd, kwetsend of ongepast? Dan sturen we het naar Bittertalen om te bekijken."))return;
+    const l=k.log[b.dataset.r];l.rep=true;aiDraw();
+    try{fetch("/api/event",{method:"POST",keepalive:true,headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({ev:"report",lvl:lvl(),ui:lsGet("ww-ui")||"nl",who:String(k.c.id||k.c.who||"").slice(0,40),m:String(l.t||"").slice(0,600)})}).catch(()=>{})}catch(e){}});
 }
 function aiTurn(note,keep){
   $("tctl").innerHTML=(SR?`<div class="rec" id="rec"><div class="clk"><span class="t" id="rect">0:00</span><div class="m"><i id="recm"></i></div></div><div id="recp"></div>
@@ -5194,9 +5237,20 @@ function playEp(i){
 // The dictionary is split by the first letter of the word (dict/nl-en/<letter>.txt, "_" for the rest; dict/split.py):
 // a part is loaded the first time a word needs it, so a tap waits for about 100 KB instead of the whole 7 MB.
 // DICTV is the parts' version (set by node tools/stamp.mjs): the service worker keeps each part for good under it.
-const DICTV="84c7072bb3", DSH="abcdefghijklmnopqrstuvwxyz_".split("");
+const DICTV="a084f83c3e", DSH="abcdefghijklmnopqrstuvwxyz_".split("");
 const dshard=k=>{const c=String(k).slice(0,1).toLowerCase().normalize("NFD")[0]||"";return c>="a"&&c<="z"?c:"_"}; // as shard() in dict/split.py
 const dictURL=s=>`/dict/nl-en/${s}.txt?v=${DICTV}`;
+// The themed word list (WT, about 2000 words) in the menu language: dict/wt/<lang>.txt, "word<TAB>meaning" per line, under
+// the same DICTV. Shown after a Woordenschat answer and in the word popup; never before an answer (it would give it away).
+const WTR=new Map();let wtP=null;
+const wtURL=c=>`/dict/wt/${c}.txt?v=${DICTV}`;
+function wtLoad(){const c=LANG;if(c==="nl"||WTR.has(c))return Promise.resolve(WTR.get(c)||null);
+  return wtP||(wtP=fetch(wtURL(c)).then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>{const m=new Map();
+    for(const l of t.split("\n")){const i=l.indexOf("\t");if(i>0)m.set(l.slice(0,i),l.slice(i+1))}WTR.set(c,m);return m})
+    .catch(()=>null).finally(()=>{wtP=null}))}
+function wtTr(w){const m=WTR.get(LANG);if(!m||!w)return"";const b=String(w).replace(/^(de\/het|de|het) /,"");return m.get(w)||m.get("de "+b)||m.get("het "+b)||m.get(b)||""}
+const wtNote=q=>{if(q.sec!=="vo"||!/^w[ntl]\|/.test(q.k||""))return"";const w=q.k.slice(3),t=wtTr(w);
+  return t?`<p class="note wtr"><b lang="nl">${esc(w)}</b> = <span lang="${LANGS[LANG].c}" dir="auto">${esc(t)}</span></p>`:""};
 let DICT=null,dictMiss=null;const dictHave=new Set(),dictP=new Map();
 function dictPart(s){
   if(dictHave.has(s))return Promise.resolve();
@@ -5215,7 +5269,7 @@ function dictPart(s){
 // The parts these words need
 function loadDict(words){return Promise.all([...new Set((words||[]).map(dshard))].map(dictPart)).then(()=>DICT)}
 // Every part into the cache in the background (the reader or the history opened), so tapping a word works offline later
-function warmDict(force){if(!force&&!bulkOK())return;try{navigator.serviceWorker.controller.postMessage({warm:DSH.map(dictURL)})}catch(e){}}
+function warmDict(force){if(!force&&!bulkOK())return;try{navigator.serviceWorker.controller.postMessage({warm:DSH.map(dictURL).concat(LANG!=="nl"?[wtURL(LANG)]:[])})}catch(e){}}
 // Every painting and photo (~30 MB) and the dictionary (~7 MB) are fetched in the background only on a fast connection
 // that is not mobile data and without Save-Data; elsewhere (iPhone has no navigator.connection) a picture is cached
 // when it is first shown, and Profiel offers "Alles downloaden voor offline".
@@ -5303,7 +5357,7 @@ function place(){
 }
 // The explanation under a marked answer: tap a word for the dictionary (like in the reader), and translate it whole
 // into the menu language. Plain-text notes only; a note with markup (verb tables) stays as it is.
-const GTL={en:"en",ar:"ar",tr:"tr",hi:"hi",zh:"zh-CN",es:"es",ru:"ru"},tlang=()=>GTL[lsGet("ww-ui")]||"en";
+const GTL={en:"en",ar:"ar",tr:"tr",hi:"hi",zh:"zh-CN",es:"es",ru:"ru",uk:"uk"},tlang=()=>GTL[lsGet("ww-ui")]||"en";
 const gtURL=t=>`https://translate.google.com/?sl=nl&tl=${tlang()}&op=translate&text=${encodeURIComponent(t)}`;
 const noteHTML=n=>/</.test(n)?`<div class="note">${n}</div>`
   :`<div class="note"><span class="s">${wordsHTML(n,knownSet())}</span> <a class="hint" href="${gtURL(n)}" target="_blank" rel="noopener" data-ui>Vertaal ↗</a></div>`;
@@ -5318,11 +5372,11 @@ async function tapWord(el){
   const host=el.closest("#read,#hist,#play"); if(pp.parentNode!==host)host.appendChild(pp);
   pp.hidden=false; place();
   if($("psay"))$("psay").onclick=()=>speak(word);
-  let E;try{E=await lookUp(word,sent)}catch(e){if(tok===popTok){$("pdef").innerHTML=`<p class="pm">Het woordenboek laadt niet. Ben je online?</p>`;place()}return}
+  let E;try{[E]=await Promise.all([lookUp(word,sent),wtLoad()])}catch(e){if(tok===popTok){$("pdef").innerHTML=`<p class="pm">Het woordenboek laadt niet. Ben je online?</p>`;place()}return}
   if(tok!==popTok)return;
   if(!E.length){$("pdef").innerHTML=`<p class="pm">Niet in het woordenboek. <a href="${gt(word)}" target="_blank" rel="noopener">Google Translate ↗</a></p>`;return place()}
   $("pdef").innerHTML=E.map((e,n)=>{const x=entryParts(e);
-    return`<div class="pe"><div><p class="pw">${e.sep?"samen: ":""}<b>${esc(x.w)}</b>${e.comp?" <small>(samengesteld)</small>":""}</p><p class="pm">${esc(x.meta)}</p><p class="pt">${esc(e.g)}</p></div><button class="ghost" data-n="${n}">Bewaar</button></div>`}).join("");
+    return`<div class="pe"><div><p class="pw">${e.sep?"samen: ":""}<b>${esc(x.w)}</b>${e.comp?" <small>(samengesteld)</small>":""}</p><p class="pm">${esc(x.meta)}</p><p class="pt">${esc(e.g)}</p>${(t=>t?`<p class="pt" lang="${LANGS[LANG].c}" dir="auto">${esc(t)}</p>`:"")(LANG!=="en"&&wtTr(x.w))}</div><button class="ghost" data-n="${n}">Bewaar</button></div>`}).join("");
   const f=word.toLowerCase();
   $("pdef").querySelectorAll("button").forEach(b=>{
     const e=E[b.dataset.n],x=entryParts(e),has=()=>S.words.find(y=>y.w===x.w);
@@ -5494,11 +5548,11 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // (UIO), so switching restores it; a MutationObserver translates what later renders draw.
 // The menus' translations: empty tables here, filled by data/ui.js, which is loaded only when the menus are in another
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
-const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
+const LCODE=["en","ar","tr","hi","zh","es","ru","uk"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="a4cbcc105f";
+const UIV="97f22a7047";
 let uiP=null;
-function uiLoaded(){if(typeof trMemo!=="undefined")trMemo.clear(); // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
+function uiLoaded(){try{trMemo.clear()}catch(e){} // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});
 }
 function loadUI(){
@@ -5506,14 +5560,15 @@ function loadUI(){
   return uiP||(uiP=new Promise((ok,no)=>{const s=document.createElement("script");s.src=`/data/ui.js?v=${UIV}`;
     s.onload=()=>{uiLoaded();ok()};s.onerror=()=>{uiP=null;s.remove();no()};document.head.appendChild(s)}));
 }
-const LANGS={nl:{n:"Nederlands",s:"NL",c:"nl"},en:{n:"English",s:"EN",c:"en"},ar:{n:"العربية",s:"عربي",c:"ar"},tr:{n:"Türkçe",s:"TR",c:"tr"},hi:{n:"हिन्दी",s:"हिं",c:"hi"},zh:{n:"中文",s:"中文",c:"zh-Hans"},es:{n:"Español",s:"ES",c:"es"},ru:{n:"Русский",s:"RU",c:"ru"}};
+const LANGS={nl:{n:"Nederlands",s:"NL",c:"nl"},en:{n:"English",s:"EN",c:"en"},ar:{n:"العربية",s:"عربي",c:"ar"},tr:{n:"Türkçe",s:"TR",c:"tr"},hi:{n:"हिन्दी",s:"हिं",c:"hi"},zh:{n:"中文",s:"中文",c:"zh-Hans"},es:{n:"Español",s:"ES",c:"es"},ru:{n:"Русский",s:"RU",c:"ru"},uk:{n:"Українська",s:"UK",c:"uk"}};
 let LANG=LANGS[lsGet("ww-ui")]?lsGet("ww-ui"):"nl", LI=LCODE.indexOf(LANG);
 // Month and day names come from the browser; only the order differs per language
 const NLM=["januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december"];
 const NLD=["maandag","dinsdag","woensdag","donderdag","vrijdag","zaterdag","zondag"];
 const lName=(o,d)=>new Intl.DateTimeFormat(LANGS[LANG].c,o).format(d);
-const dayMon=(n,mo)=>{const i=NLM.indexOf(mo.toLowerCase());if(i<0)return`${n} ${mo}`;if(LANG==="es"||LANG==="ru")return lName({day:"numeric",month:"long"},new Date(2026,i,Number(n)));return LANG==="zh"?`${i+1}月${n}日`:`${n} ${lName({month:"long"},new Date(2026,i,15))}`};
-const uiT=s=>(UI[s]||[])[LI];
+const dayMon=(n,mo)=>{const i=NLM.indexOf(mo.toLowerCase());if(i<0)return`${n} ${mo}`;if(LANG==="es"||LANG==="ru"||LANG==="uk")return lName({day:"numeric",month:"long"},new Date(2026,i,Number(n)));return LANG==="zh"?`${i+1}月${n}日`:`${n} ${lName({month:"long"},new Date(2026,i,15))}`};
+// Ukrainian (LI 7) has its own tables in data/ui.js (UK, UIRK), so the seven-language rows stay as they are
+const uiT=s=>LI===7?(window.UK||{})[s]:(UI[s]||[])[LI];
 Object.assign(UI,{
   "Nederlands, stap voor stap.": [
     "Dutch, step by step.","الهولندية، خطوة بخطوة.","Adım adım Hollandaca.","डच, कदम दर कदम।","荷兰语，一步一步来。","Neerlandés, paso a paso.","Нидерландский, шаг за шагом."
@@ -5652,7 +5707,7 @@ Object.assign(UI,{
   "E-mail":["Email","بريد إلكتروني","E-posta","ईमेल","电子邮件","Correo electrónico","Электронная почта"],
   "Schrijfopdracht":["Writing task","مهمة كتابة","Yazma görevi","लेखन कार्य","写作题","Tarea de escritura","Письменное задание"]
 });
-const uiR=s=>{for(const[r,f]of UIR)if(r.test(s)){const v=s.replace(r,Array.isArray(f)?f[LI]:f);if(v!==s)return v}return null};
+const uiR=s=>{const U=LI===7?(window.UIRK||[]):UIR;for(const[r,f]of U)if(r.test(s)){const v=s.replace(r,Array.isArray(f)?f[LI]:f);if(v!==s)return v}return null};
 const UIO=new WeakMap(), UIA=new WeakMap();
 const rtlMark=v=>LANG==="ar"?"\u200f"+v:v; // an Arabic line that starts with a Latin word (KNM, Face ID) still runs right to left
 // the same strings come back on every redraw: remember each answer (per language), so a redraw doesn't run every
@@ -5683,7 +5738,7 @@ const GLOBE=`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12"
 // a native list over the pill, so an iPhone shows its own menu; every language is named in itself
 const langHTML=()=>`<label class="lang">${GLOBE}<span data-langs>${LANGS[LANG].s}</span><svg class="dn" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4"/></svg><select data-lang aria-label="Taal">${Object.keys(LANGS).map(k=>`<option value="${k}"${k===LANG?" selected":""}>${LANGS[k].n}</option>`).join("")}</select></label>`;
 function setLangBtns(){document.querySelectorAll("[data-langs]").forEach(b=>b.textContent=LANGS[LANG].s);document.querySelectorAll("[data-langn]").forEach(b=>b.textContent=LANGS[LANG].n);document.querySelectorAll("[data-lang]").forEach(b=>b.value=LANG)}
-function applyLang(){const h=document.documentElement;h.lang=LANGS[LANG].c;h.dir=LANG==="ar"?"rtl":"ltr";uiBusy=true;try{trNode(document.body)}finally{uiBusy=false}setLangBtns();fitTabs()}
+function applyLang(){wtLoad();const h=document.documentElement;h.lang=LANGS[LANG].c;h.dir=LANG==="ar"?"rtl":"ltr";uiBusy=true;try{trNode(document.body)}finally{uiBusy=false}setLangBtns();fitTabs()}
 // On a phone a tab's name that is wider than its button ("Повторение") is set a little smaller, down to 9.5 px,
 // instead of running past the oranje lens; on a computer the names have room in the menu
 function fitTabs(){

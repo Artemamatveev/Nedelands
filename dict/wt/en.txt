@@ -1,0 +1,1996 @@
+de huisarts	GP, family doctor
+het ziekenhuis	hospital
+de apotheek	pharmacy
+het recept	prescription
+het medicijn	medicine
+de pijn	pain
+de hoofdpijn	headache
+de buikpijn	stomach ache
+de koorts	fever
+hoesten	to cough
+ziek	ill, sick
+beter worden	to get better
+de tandarts	dentist
+de verpleegkundige	nurse
+de specialist	specialist (doctor)
+het bloed	blood
+de uitslag	result
+de zorgverzekering	health insurance
+het eigen risico	deductible
+de huisartsenpost	out-of-hours GP service
+de ambulance	ambulance
+het spreekuur	consultation hours
+de griep	flu
+het been	leg
+de arm	arm
+de rug	back
+de keel	throat
+gezond	healthy
+de patiënt	patient
+de wond	wound
+de pleister	plaster, band-aid
+het verband	bandage
+de allergie	allergy
+de pijnstiller	painkiller
+zwanger	pregnant
+de verloskundige	midwife
+de bril	glasses
+de oogarts	eye doctor
+de fysiotherapeut	physiotherapist
+de spoedeisende hulp	emergency department
+ongezond	unhealthy
+duizelig	dizzy
+misselijk	nauseous, sick
+moe	tired
+de hoest	cough
+de wachtkamer	waiting room
+de behandeling	treatment
+de operatie	operation
+onderzoeken	to examine
+de prik	injection, jab
+de vaccinatie	vaccination
+de dokter	doctor
+de afspraak	appointment
+de verkoudheid	cold (illness)
+verkouden	having a cold
+niezen	to sneeze
+overgeven	to vomit
+de diarree	diarrhoea
+het zuur	heartburn
+de bloeddruk	blood pressure
+de suikerziekte	diabetes
+de pil	pill
+de druppels	drops
+de zalf	ointment
+de thermometer	thermometer
+de rolstoel	wheelchair
+de kruk	crutch
+gebroken	broken
+de gips	plaster cast
+bloeden	to bleed
+de verwijzing	referral
+de huisartsenpraktijk	GP surgery
+de assistente	(doctor's) assistant
+de spoed	urgency
+het ongeluk	accident
+gewond	injured
+de EHBO	first aid
+de psycholoog	psychologist
+de stress	stress
+somber	gloomy, low
+genezen	to heal, to cure
+het gewicht	weight
+afvallen	to lose weight
+de vitamine	vitamin
+de bijwerking	side effect
+de bijsluiter	package leaflet
+de huisartsenassistente	GP's assistant
+de kraamzorg	maternity care at home
+ademen	to breathe
+de verzekeringspas	health insurance card
+de baan	job
+de werkgever	employer
+de werknemer	employee
+de collega	colleague
+de baas	boss
+het salaris	salary
+het contract	contract
+de vacature	vacancy
+solliciteren	to apply for a job
+het sollicitatiegesprek	job interview
+het cv	CV, résumé
+de ervaring	experience
+de opleiding	training, education
+het diploma	diploma
+parttime	part-time
+fulltime	full-time
+de werktijden	working hours
+de pauze	break
+de vakantiedagen	days off, holiday days
+het uitzendbureau	employment agency
+werkloos	unemployed
+de uitkering	benefit (money)
+het kantoor	office
+de vergadering	meeting
+het rooster	schedule, rota
+de klant	customer
+verdienen	to earn
+ontslaan	to dismiss, to fire
+de stage	internship
+de werkplek	workplace
+de afdeling	department
+de overuren	overtime
+het pensioen	pension
+de vakbond	trade union
+de proeftijd	probation period
+de loonstrook	payslip
+het bedrijf	company
+de zzp'er	self-employed person, freelancer
+de sollicitatiebrief	application letter
+de ploegendienst	shift work
+de nachtdienst	night shift
+het uniform	uniform
+de promotie	promotion
+het ontslag	dismissal
+ontslag nemen	to resign
+de sollicitatie	job application
+de werkervaring	work experience
+het loon	wage
+het minimumloon	minimum wage
+bruto	gross (before tax)
+netto	net (after tax)
+het vakantiegeld	holiday pay
+de cao	collective labour agreement
+het tijdelijk contract	temporary contract
+het vast contract	permanent contract
+zich ziek melden	to call in sick
+de bedrijfsarts	company doctor
+de leidinggevende	manager, supervisor
+het team	team
+de taak	task
+de opdracht	assignment, order
+de dienst	shift
+de werkweek	working week
+het verlof	leave
+het zwangerschapsverlof	maternity leave
+de werkvergunning	work permit
+de arbeidsmarkt	labour market
+de beloning	reward, pay
+de reiskosten	travel expenses
+de ontslagbrief	letter of dismissal
+de werkzoekende	jobseeker
+de vaardigheid	skill
+de cursus	course
+het certificaat	certificate
+de werktijd	working time
+de lunchpauze	lunch break
+de kantine	canteen
+het personeel	staff
+de werkloosheid	unemployment
+de uitzendkracht	temp worker
+het arbeidscontract	employment contract
+de vrijwilliger	volunteer
+de ondernemer	entrepreneur
+de KvK	Chamber of Commerce
+de factuur	invoice
+de woning	home, dwelling
+het huis	house
+het appartement	apartment, flat
+de huur	rent
+de huurder	tenant
+de verhuurder	landlord
+de woningcorporatie	housing association
+huren	to rent
+verhuizen	to move house
+de buren	neighbours
+de buurt	neighbourhood
+de verdieping	floor, storey
+de trap	stairs
+de lift	lift, elevator
+de slaapkamer	bedroom
+de woonkamer	living room
+de badkamer	bathroom
+de keuken	kitchen
+de wc	toilet
+de tuin	garden
+het balkon	balcony
+de verwarming	heating
+de rekening	bill
+de stroom	electricity
+de vuilnisbak	rubbish bin
+het afval	waste, rubbish
+de sleutel	key
+de monteur	mechanic, repairman
+kapot	broken
+de reparatie	repair
+de vloer	floor
+het plafond	ceiling
+de muur	wall
+het raam	window
+de deur	door
+het dak	roof
+de kelder	basement, cellar
+de zolder	attic
+de gang	hallway
+de schuur	shed
+de bel	doorbell
+de brievenbus	letterbox
+de borg	deposit
+het huurcontract	rental agreement
+de schimmel	mould
+de lekkage	leak
+schoonmaken	to clean
+opruimen	to tidy up
+het licht	light
+de huisbaas	landlord
+de koopwoning	owner-occupied home
+de huurwoning	rented home
+de hypotheek	mortgage
+de makelaar	estate agent
+de wachtlijst	waiting list
+de inschrijving	registration
+de bovenwoning	upstairs flat
+de benedenwoning	ground-floor flat
+de begane grond	ground floor
+de voordeur	front door
+de achterdeur	back door
+de kraan	tap
+de douche	shower
+het bad	bath
+de wastafel	washbasin
+de cv-ketel	central heating boiler
+de radiator	radiator
+het gas	gas
+de meter	meter
+de meterstand	meter reading
+de energieleverancier	energy supplier
+de servicekosten	service charges
+de huurverhoging	rent increase
+de opzegging	notice (of termination)
+het onderhoud	maintenance
+de overlast	nuisance
+het lawaai	noise
+de verhuizing	move (house)
+de verhuisdoos	moving box
+het meubel	piece of furniture
+gemeubileerd	furnished
+de woonruimte	living space
+de vierkante meter	square metre
+de kamer	room
+de studio	studio flat
+de portiek	shared entrance and stairwell
+de flat	block of flats
+het rijtjeshuis	terraced house
+de vensterbank	windowsill
+de klusjesman	handyman
+de rookmelder	smoke alarm
+de container	wheelie bin, container
+het grofvuil	bulky waste
+scheiden	to separate (waste)
+de stekker	plug
+de zekering	fuse
+het tapijt	carpet
+de woonwijk	residential area
+de buurtbewoner	local resident
+de trein	train
+de bus	bus
+de tram	tram
+de metro	underground, metro
+de fiets	bike
+de auto	car
+het station	station
+het perron	platform
+de halte	stop (bus, tram)
+het kaartje	ticket
+de ov-chipkaart	public transport card
+inchecken	to check in
+uitchecken	to check out
+overstappen	to change (trains)
+de vertraging	delay
+vertrekken	to leave, to depart
+aankomen	to arrive
+de reis	journey, trip
+het rijbewijs	driving licence
+de file	traffic jam
+parkeren	to park
+de weg	road
+het verkeer	traffic
+het stoplicht	traffic light
+rechtsaf	to the right (turn)
+linksaf	to the left (turn)
+rechtdoor	straight on
+de kruising	crossroads, junction
+de fietsenstalling	bicycle parking
+de snelweg	motorway
+de rotonde	roundabout
+het fietspad	cycle path
+de stoep	pavement, sidewalk
+het zebrapad	zebra crossing
+de parkeerplaats	parking space
+de taxi	taxi
+het vliegtuig	aeroplane
+het vliegveld	airport
+de boot	boat
+de pont	ferry
+de conducteur	conductor
+de vertrektijd	departure time
+de aankomsttijd	arrival time
+enkele reis	single (ticket)
+retour	return (ticket)
+de spits	rush hour
+de storing	disruption, breakdown
+de omleiding	diversion
+de benzine	petrol
+het tankstation	petrol station
+de helm	helmet
+het slot	lock
+de band	tyre
+de voorrang	right of way
+de bestuurder	driver
+de passagier	passenger
+de dienstregeling	timetable
+het spoor	track; platform number
+de intercity	intercity train
+de sprinter	local train
+de NS	Dutch Railways
+het abonnement	subscription
+het verkeersbord	road sign
+de snelheid	speed
+de flitspaal	speed camera
+de verkeersboete	traffic fine
+het rijexamen	driving test
+de rijles	driving lesson
+de APK	MOT, vehicle inspection
+het kenteken	registration number
+het parkeerkaartje	parking ticket
+de parkeervergunning	parking permit
+de bushalte	bus stop
+het knooppunt	motorway junction
+de afslag	exit (motorway)
+de fietser	cyclist
+de voetganger	pedestrian
+de scooter	scooter
+de motor	motorbike; engine
+de vrachtauto	lorry
+botsen	to crash, to collide
+inhalen	to overtake
+remmen	to brake
+oversteken	to cross (the road)
+de reiziger	traveller
+de bagage	luggage
+de koffer	suitcase
+de vlucht	flight
+de instaptijd	boarding time
+de grens	border
+het visum	visa
+de winkel	shop
+de supermarkt	supermarket
+de markt	market
+de kassa	checkout, till
+de bon	receipt
+de prijs	price
+duur	expensive
+goedkoop	cheap
+de korting	discount
+de aanbieding	special offer
+betalen	to pay
+pinnen	to pay by card
+contant	cash
+de pinpas	debit card
+het geld	money
+de portemonnee	wallet, purse
+de maat	size
+passen	to try on; to fit
+ruilen	to exchange
+terugbrengen	to return, to bring back
+de klantenservice	customer service
+bestellen	to order
+het pakket	parcel
+bezorgen	to deliver
+de bank	bank
+het rekeningnummer	account number
+sparen	to save (money)
+lenen	to borrow; to lend
+de belasting	tax
+de bakker	baker, bakery
+de slager	butcher
+de drogist	chemist (shop)
+het warenhuis	department store
+het winkelcentrum	shopping centre
+de openingstijden	opening hours
+open	open
+gesloten	closed
+de uitverkoop	sale
+de garantie	guarantee, warranty
+de boodschappen	groceries, shopping
+het boodschappenlijstje	shopping list
+het mandje	basket
+het winkelwagentje	shopping trolley
+de verkoper	shop assistant, seller
+de munt	coin
+het bankbiljet	banknote
+het wisselgeld	change (money)
+de schuld	debt
+de rente	interest
+de overschrijving	bank transfer
+het saldo	balance
+de pincode	PIN
+de geldautomaat	cash machine
+gratis	free (no cost)
+kosten	to cost
+de klantenkaart	loyalty card
+het statiegeld	deposit (on bottles)
+inleveren	to hand in
+de webwinkel	online shop
+de bezorgkosten	delivery costs
+retourneren	to return (goods)
+de bedenktijd	cooling-off period
+de aankoop	purchase
+het koopje	bargain
+de kwaliteit	quality
+het merk	brand
+de verpakking	packaging
+de houdbaarheidsdatum	best-before date
+de kilo	kilo
+de gram	gram
+de liter	litre
+het stuk	piece
+het blik	tin, can
+de pot	jar
+de zak	bag
+het tasje	carrier bag
+de zelfscan	self-scanning
+het filiaal	branch
+de etalage	shop window
+de paskamer	fitting room
+het bonnetje	receipt
+de spaarrekening	savings account
+de betaalrekening	current account
+het budget	budget
+uitgeven	to spend
+de inkomsten	income
+de uitgaven	expenses
+het inkomen	income
+de schuldhulp	debt counselling
+de betalingsregeling	payment plan
+de incasso	direct debit
+de aanmaning	payment reminder
+de deurwaarder	bailiff
+de euro	euro
+de cent	cent
+wisselen	to change, to exchange
+de prijslijst	price list
+de basisschool	primary school
+de middelbare school	secondary school
+de groep	group; class (year)
+de leerkracht	teacher
+de juf	(female) teacher
+de leerling	pupil
+het huiswerk	homework
+het rapport	school report
+de ouderavond	parents' evening
+de kinderopvang	childcare
+de oppas	babysitter
+het schoolreisje	school trip
+de schoolvakantie	school holiday
+spijbelen	to skip school
+leerplichtig	of compulsory school age
+de gymles	PE lesson
+het lokaal	classroom
+de les	lesson
+leren	to learn; to teach
+uitleggen	to explain
+het cijfer	mark, grade; digit
+de toets	test
+de opvoeding	upbringing
+het consultatiebureau	child health clinic
+de schooltas	school bag
+het schoolplein	playground (school)
+de directeur	head teacher; director
+het vak	school subject
+rekenen	to do sums, arithmetic
+de pen	pen
+het potlood	pencil
+het schrift	exercise book
+de gum	eraser
+het woordenboek	dictionary
+de vraag	question
+het antwoord	answer
+het examen	exam
+slagen	to pass (an exam)
+zakken	to fail (an exam)
+de universiteit	university
+het mbo	vocational school
+de peuterspeelzaal	playgroup (toddlers)
+de crèche	day nursery
+de buitenschoolse opvang	after-school care
+de ouderbijdrage	parental contribution
+de mentor	mentor, class tutor
+de klas	class
+het schooljaar	school year
+de voorschool	preschool
+de kleuter	infant (age 4-5)
+de peuter	toddler
+de leerplicht	compulsory education
+de leerplichtambtenaar	school attendance officer
+het schooladvies	school recommendation
+de doorstroomtoets	final primary school test
+het vmbo	pre-vocational secondary education
+de havo	senior general secondary education
+het vwo	pre-university education
+het hbo	university of applied sciences
+de studiefinanciering	student finance
+de student	student
+het lesrooster	timetable (school)
+de rekenmachine	calculator
+de liniaal	ruler
+het etui	pencil case
+de spreekbeurt	class presentation
+het werkstuk	project, assignment
+de leesles	reading lesson
+de traktatie	birthday treat
+het schoolfeest	school party
+de ouderraad	parents' council
+het oudergesprek	parent-teacher meeting
+de schoolarts	school doctor
+pesten	to bully
+het speelgoed	toys
+de luier	nappy
+de kinderwagen	pram
+het knuffeldier	soft toy
+opvoeden	to raise, to bring up
+de straf	punishment
+het voorbeeld	example
+de bijles	tutoring
+het lesgeld	tuition fee
+de gemeente	municipality
+het gemeentehuis	town hall
+het loket	counter, desk
+het formulier	form
+invullen	to fill in
+aanvragen	to apply for
+de aanvraag	application
+het paspoort	passport
+de identiteitskaart	identity card
+geldig	valid
+verlopen	to expire
+de handtekening	signature
+ondertekenen	to sign
+het adres	address
+zich inschrijven	to register
+de Belastingdienst	tax office
+de toeslag	allowance, benefit
+het burgerservicenummer	citizen service number (BSN)
+de politie	police
+de brandweer	fire brigade
+het alarmnummer	emergency number
+de wet	law
+de regel	rule
+de boete	fine
+de verzekering	insurance
+de brief	letter
+de postcode	postcode
+de geboortedatum	date of birth
+de nationaliteit	nationality
+de ambtenaar	civil servant
+de burgemeester	mayor
+de gemeenteraad	municipal council
+het uittreksel	extract (from a register)
+de verblijfsvergunning	residence permit
+de IND	immigration service (IND)
+de inburgering	integration (civic)
+de naturalisatie	naturalisation
+de huurtoeslag	rent allowance
+de zorgtoeslag	healthcare allowance
+de kinderbijslag	child benefit
+het UWV	employee insurance agency (UWV)
+de bijstand	social assistance
+de DigiD	DigiD (government login)
+de belastingaangifte	tax return
+de rechter	judge
+de advocaat	lawyer
+het bezwaar	objection
+de klacht	complaint
+de rechten	rights
+de plichten	duties, obligations
+de basisregistratie	personal records database
+de uitschrijving	deregistration
+de geboorteakte	birth certificate
+de huwelijksakte	marriage certificate
+de legalisatie	legalisation
+de vertaling	translation
+beëdigd	sworn (translator)
+de leges	administrative fees
+het wijkteam	neighbourhood support team
+de Wmo	social support act (Wmo)
+het sociaal loket	social services desk
+de klantmanager	case manager
+de SVB	social insurance bank (SVB)
+de AOW	state pension
+DUO	DUO (education executive agency)
+de lening	loan
+de rechtbank	court
+de aangifte	police report
+de getuige	witness
+het Juridisch Loket	legal aid office
+de privacy	privacy
+de gegevens	data, details
+de machtiging	authorisation
+de termijn	deadline, term
+de beslissing	decision
+de toestemming	permission
+de vergunning	permit, licence
+de inburgeringsplicht	integration obligation
+de taalcoach	language coach
+de verlenging	extension, renewal
+het bewijs	proof
+de kopie	copy
+de ochtend	morning
+de middag	afternoon
+de avond	evening
+de nacht	night
+vandaag	today
+morgen	tomorrow
+gisteren	yesterday
+overmorgen	the day after tomorrow
+de week	week
+het weekend	weekend
+de maand	month
+het jaar	year
+het uur	hour
+het kwartier	quarter of an hour
+vroeg	early
+laat	late
+op tijd	on time
+het weer	weather
+de zon	sun
+de regen	rain
+de wind	wind
+de sneeuw	snow
+de wolk	cloud
+warm	warm, hot
+koud	cold
+nat	wet
+droog	dry
+de lente	spring
+de zomer	summer
+de herfst	autumn
+de winter	winter
+de seconde	second
+de minuut	minute
+de dag	day
+de datum	date
+de kalender	calendar
+het seizoen	season
+de feestdag	public holiday
+altijd	always
+nooit	never
+soms	sometimes
+vaak	often
+meestal	usually
+straks	later today, soon
+meteen	straight away
+nu	now
+het onweer	thunderstorm
+de mist	fog
+de temperatuur	temperature
+de graad	degree
+bewolkt	cloudy
+zonnig	sunny
+de hagel	hail
+glad	slippery
+de weersverwachting	weather forecast
+de storm	storm, gale
+vorige week	last week
+volgend jaar	next year
+maandag	Monday
+dinsdag	Tuesday
+woensdag	Wednesday
+donderdag	Thursday
+vrijdag	Friday
+zaterdag	Saturday
+zondag	Sunday
+januari	January
+februari	February
+maart	March
+april	April
+mei	May
+juni	June
+juli	July
+augustus	August
+september	September
+oktober	October
+november	November
+december	December
+de eeuw	century
+het verleden	the past
+de toekomst	the future
+het moment	moment
+binnenkort	soon
+onlangs	recently
+vroeger	in the past
+later	later
+de regenboog	rainbow
+de bliksem	lightning
+de donder	thunder
+de bui	shower (rain)
+de hittegolf	heatwave
+de ijzel	black ice, freezing rain
+vriezen	to freeze
+regenen	to rain
+sneeuwen	to snow
+waaien	to be windy
+de familie	family, relatives
+het gezin	family (household)
+de ouders	parents
+de vader	father
+de moeder	mother
+de zoon	son
+de dochter	daughter
+de broer	brother
+de zus	sister
+de opa	grandfather
+de oma	grandmother
+de man	man; husband
+de vrouw	woman; wife
+getrouwd	married
+gescheiden	divorced
+de baby	baby
+het kind	child
+de vriend	friend; boyfriend
+de vriendin	(female) friend; girlfriend
+de buurman	(male) neighbour
+de buurvrouw	(female) neighbour
+de verjaardag	birthday
+jarig zijn	to have one's birthday
+feliciteren	to congratulate
+trouwen	to marry
+oud	old
+jong	young
+aardig	kind, nice
+boos	angry
+blij	happy, glad
+verdrietig	sad
+de grootouders	grandparents
+de kleinkinderen	grandchildren
+de oom	uncle
+de tante	aunt
+de neef	nephew; male cousin
+de nicht	niece; female cousin
+de schoonmoeder	mother-in-law
+de zwager	brother-in-law
+de schoonzus	sister-in-law
+de weduwe	widow
+alleenstaand	single, living alone
+samenwonen	to live together
+de bruiloft	wedding
+het huwelijk	marriage
+de geboorte	birth
+overlijden	to die, to pass away
+de begrafenis	funeral
+de tiener	teenager
+de volwassene	adult
+de kennis	acquaintance
+de gast	guest
+de ex	ex (partner)
+de echtgenoot	husband
+de echtgenote	wife
+de partner	partner
+de schoonvader	father-in-law
+de schoonouders	parents-in-law
+de kleinzoon	grandson
+de kleindochter	granddaughter
+de tweeling	twins
+het familielid	relative
+de buurtgenoot	neighbour (local)
+de vreemde	stranger
+de jongen	boy
+het meisje	girl
+de meneer	gentleman, sir
+de mevrouw	lady, madam
+de bejaarde	elderly person
+de gepensioneerde	pensioner
+de nieuwkomer	newcomer
+de vluchteling	refugee
+de migrant	migrant
+de Nederlander	Dutch person
+de achternaam	surname
+de voornaam	first name
+de leeftijd	age
+de zwangerschap	pregnancy
+het ontbijt	breakfast
+de lunch	lunch
+het avondeten	dinner, evening meal
+het brood	bread
+de boterham	slice of bread, sandwich
+de kaas	cheese
+de melk	milk
+het ei	egg
+de groente	vegetables
+het fruit	fruit
+de appel	apple
+het vlees	meat
+de vis	fish
+de kip	chicken
+de rijst	rice
+de aardappel	potato
+de soep	soup
+de koffie	coffee
+de thee	tea
+de suiker	sugar
+het zout	salt
+koken	to cook; to boil
+bakken	to bake; to fry
+snijden	to cut
+de pan	pan
+het bord	plate
+het glas	glass
+het mes	knife
+de vork	fork
+de lepel	spoon
+lekker	tasty, nice
+honger hebben	to be hungry
+dorst hebben	to be thirsty
+de boter	butter
+de olie	oil
+de jam	jam
+de pindakaas	peanut butter
+de hagelslag	chocolate sprinkles
+de yoghurt	yoghurt
+de pasta	pasta
+de saus	sauce
+de sla	lettuce, salad
+de tomaat	tomato
+de ui	onion
+de wortel	carrot
+de banaan	banana
+de sinaasappel	orange
+de peer	pear
+de aardbei	strawberry
+het toetje	dessert
+de taart	cake, tart
+het koekje	biscuit, cookie
+het snoep	sweets, candy
+het sap	juice
+het bier	beer
+de wijn	wine
+vegetarisch	vegetarian
+zoet	sweet
+zuur	sour
+bitter	bitter
+pittig	spicy
+de kom	bowl
+het kopje	cup
+het menu	menu
+de ober	waiter
+afrekenen	to pay (the bill)
+de fooi	tip
+het broodje	bread roll
+de pannenkoek	pancake
+de stamppot	mashed potatoes with vegetables
+de erwtensoep	pea soup
+de kroket	croquette
+de bitterbal	bitterbal (small croquette)
+de patat	chips, fries
+de stroopwafel	syrup waffle
+de drop	liquorice
+het gehakt	minced meat
+het rundvlees	beef
+het varkensvlees	pork
+het lamsvlees	lamb (meat)
+halal	halal
+veganistisch	vegan
+de noten	nuts
+de bonen	beans
+de erwten	peas
+de paprika	pepper (vegetable)
+de komkommer	cucumber
+de champignon	mushroom
+de knoflook	garlic
+de citroen	lemon
+de druif	grape
+de meloen	melon
+de kers	cherry
+het meel	flour
+de peper	pepper (spice)
+het kruid	herb, spice
+de room	cream
+de slagroom	whipped cream
+het ijs	ice; ice cream
+de chocolade	chocolate
+de frisdrank	soft drink
+de borrel	drinks (get-together)
+het hapje	snack, bite
+de magnetronmaaltijd	ready meal
+de maaltijd	meal
+het gerecht	dish
+rauw	raw
+gaar	cooked, done
+verbrand	burnt
+opwarmen	to heat up
+proeven	to taste
+de smaak	taste
+het bestek	cutlery
+het servet	napkin
+de theepot	teapot
+zijn	to be
+hebben	to have
+gaan	to go
+komen	to come
+doen	to do
+maken	to make
+zeggen	to say
+vertellen	to tell
+vragen	to ask
+antwoorden	to answer
+praten	to talk
+spreken	to speak
+weten	to know (a fact)
+kennen	to know (a person, a place)
+denken	to think
+begrijpen	to understand
+zien	to see
+kijken	to look, to watch
+horen	to hear
+luisteren	to listen
+lezen	to read
+schrijven	to write
+werken	to work
+wonen	to live (somewhere)
+leven	to live, to be alive
+kopen	to buy
+verkopen	to sell
+geven	to give
+krijgen	to get, to receive
+nemen	to take
+brengen	to bring
+halen	to fetch, to get
+zetten	to put (upright)
+leggen	to lay, to put (flat)
+staan	to stand
+zitten	to sit
+liggen	to lie (down)
+lopen	to walk
+rennen	to run
+rijden	to drive, to ride
+vliegen	to fly
+wachten	to wait
+zoeken	to look for
+vinden	to find; to think
+verliezen	to lose
+beginnen	to begin
+stoppen	to stop
+openmaken	to open
+dichtdoen	to close
+helpen	to help
+proberen	to try
+gebruiken	to use
+betekenen	to mean
+herhalen	to repeat
+vergeten	to forget
+onthouden	to remember
+willen	to want
+kunnen	can, to be able to
+moeten	must, to have to
+mogen	may, to be allowed to
+houden van	to love, to like
+hopen	to hope
+geloven	to believe
+spelen	to play
+slapen	to sleep
+wakker worden	to wake up
+opstaan	to get up
+zich aankleden	to get dressed
+wassen	to wash
+douchen	to shower
+eten	to eat
+drinken	to drink
+bellen	to call, to phone
+sturen	to send
+tellen	to count
+kiezen	to choose
+beslissen	to decide
+veranderen	to change
+blijven	to stay
+worden	to become
+gebeuren	to happen
+lachen	to laugh
+huilen	to cry
+aanbieden	to offer
+aannemen	to accept; to hire
+afmaken	to finish
+afzeggen	to cancel
+annuleren	to cancel
+bedanken	to thank
+bedoelen	to mean
+beloven	to promise
+bereiken	to reach
+beschrijven	to describe
+besteden	to spend (time, money)
+bewegen	to move
+bezoeken	to visit
+bijhouden	to keep track of
+controleren	to check
+delen	to share; to divide
+doorgeven	to pass on
+duren	to last
+eindigen	to end
+groeten	to greet
+herkennen	to recognise
+houden	to hold; to keep
+inpakken	to pack
+invoeren	to enter (data)
+kloppen	to knock; to be correct
+klagen	to complain
+lenen van	to borrow from
+letten op	to pay attention to
+meedoen	to take part
+meenemen	to take along
+melden	to report
+noemen	to name, to call
+oefenen	to practise
+ontmoeten	to meet
+ontvangen	to receive
+oplossen	to solve
+opschrijven	to write down
+opletten	to pay attention
+organiseren	to organise
+plannen	to plan
+regelen	to arrange
+reizen	to travel
+roepen	to call, to shout
+schrikken	to be startled
+sluiten	to close
+steunen	to support
+stelen	to steal
+storen	to disturb
+studeren	to study
+toestaan	to allow
+uitgaan van	to assume
+uitkiezen	to pick out
+uitproberen	to try out
+vallen	to fall
+verbieden	to forbid
+verdwijnen	to disappear
+vergelijken	to compare
+verhuren	to let, to rent out
+verklaren	to explain, to declare
+verlengen	to extend
+verplaatsen	to move (something)
+verstaan	to hear, to understand (speech)
+vertalen	to translate
+vertrouwen	to trust
+verwachten	to expect
+voelen	to feel
+voorstellen	to suggest; to introduce
+waarschuwen	to warn
+wegen	to weigh
+wennen	to get used to
+winnen	to win
+zorgen voor	to take care of
+zwaaien	to wave
+aanzetten	to switch on
+uitzetten	to switch off
+ophalen	to collect, to pick up
+wegbrengen	to take (somewhere)
+aankondigen	to announce
+aanmelden	to sign up
+afhalen	to collect
+bespreken	to discuss
+herinneren	to remember; to remind
+missen	to miss
+pakken	to grab, to take
+passen op	to look after
+rusten	to rest
+trouwen met	to marry (someone)
+zich voelen	to feel (oneself)
+zich vergissen	to be mistaken
+zich zorgen maken	to worry
+zich haasten	to hurry
+zich schamen	to be ashamed
+zich vervelen	to be bored
+zich herinneren	to remember
+zich voorbereiden	to prepare oneself
+zich voorstellen	to introduce oneself; to imagine
+aanraken	to touch
+bouwen	to build
+breken	to break
+drukken	to press
+duwen	to push
+trekken	to pull
+gooien	to throw
+vangen	to catch
+springen	to jump
+klimmen	to climb
+vullen	to fill
+legen	to empty
+repareren	to repair
+verven	to paint
+knippen	to cut (with scissors)
+plakken	to stick
+vouwen	to fold
+zwijgen	to be silent
+fluisteren	to whisper
+schreeuwen	to shout
+glimlachen	to smile
+knikken	to nod
+wijzen	to point
+tonen	to show
+besparen	to save (money, energy)
+verspillen	to waste
+lukken	to succeed, to work out
+mislukken	to fail
+bestaan	to exist
+ontstaan	to arise, to come into being
+stijgen	to rise
+dalen	to fall, to go down
+groeien	to grow
+sterven	to die
+geboren worden	to be born
+zich aanpassen	to adapt
+integreren	to integrate
+groot	big
+klein	small
+lang	long; tall
+kort	short
+hoog	high
+laag	low
+breed	wide
+smal	narrow
+dik	thick; fat
+dun	thin
+zwaar	heavy
+licht	light (weight, colour)
+donker	dark
+nieuw	new
+mooi	beautiful
+lelijk	ugly
+schoon	clean
+vies	dirty
+snel	fast
+langzaam	slow
+makkelijk	easy
+moeilijk	difficult
+druk	busy
+rustig	calm, quiet
+stil	silent, quiet
+leeg	empty
+vol	full
+belangrijk	important
+mogelijk	possible
+nodig	necessary
+klaar	ready, finished
+bezig	busy (doing something)
+bang	afraid
+gelukkig	happy; fortunately
+tevreden	satisfied
+vriendelijk	friendly
+beleefd	polite
+eerlijk	honest; fair
+lui	lazy
+slim	clever
+dom	stupid
+rijk	rich
+arm	poor
+eerste	first
+laatste	last
+volgende	next
+verschillend	different (various)
+hetzelfde	the same
+anders	different; otherwise
+zeker	sure, certain
+beroemd	famous
+gevaarlijk	dangerous
+veilig	safe
+normaal	normal
+speciaal	special
+leuk	fun, nice
+saai	boring
+gek	crazy, strange
+nerveus	nervous
+vrij	free (not busy); off
+handig	handy, practical
+nuttig	useful
+duidelijk	clear
+ingewikkeld	complicated
+eenvoudig	simple
+precies	exactly, precise
+juist	correct, right
+fout	wrong
+echt	real; really
+nep	fake
+vreemd	strange; foreign
+bekend	well-known, familiar
+onbekend	unknown
+goed	good
+slecht	bad
+prettig	pleasant
+vervelend	annoying
+heerlijk	delicious, lovely
+fijn	nice; fine
+sterk	strong
+zwak	weak
+zacht	soft; quiet
+hard	hard; loud; fast
+luid	loud
+scherp	sharp
+bot	blunt; rude
+gezellig	cosy, sociable
+ontspannen	relaxed
+gespannen	tense
+dichtbij	nearby
+ver	far
+diep	deep
+ondiep	shallow
+rond	round
+vierkant	square
+recht	straight
+scheef	crooked
+heet	hot
+lauw	lukewarm
+fris	cool; fresh
+vers	fresh
+goedgekeurd	approved
+verplicht	compulsory
+verboden	forbidden
+toegestaan	allowed
+beschikbaar	available
+bezet	occupied, engaged
+geschikt	suitable
+ongeveer	about, approximately
+zelfstandig	independent
+serieus	serious
+grappig	funny
+bijzonder	special, remarkable
+gewoon	ordinary; just
+typisch	typical
+streng	strict
+lief	sweet, kind
+gemeen	mean, nasty
+jaloers	jealous
+trots	proud
+verlegen	shy
+geduldig	patient
+ongeduldig	impatient
+behulpzaam	helpful
+hardwerkend	hard-working
+en	and
+maar	but
+of	or; whether
+want	because (for)
+omdat	because
+dus	so
+als	if, when; as
+wanneer	when
+toen	then; when (past)
+dan	then; than
+eerst	first
+daarna	afterwards
+ook	also
+niet	not
+geen	no, not a
+wel	indeed (positive)
+al	already
+nog	still; yet
+alleen	only; alone
+samen	together
+heel	very; whole
+te	too; to
+veel	much, many
+weinig	little, few
+meer	more
+minder	less
+genoeg	enough
+bijna	almost
+misschien	maybe
+natuurlijk	of course; natural
+graag	gladly, please
+hier	here
+daar	there
+overal	everywhere
+binnen	inside
+buiten	outside
+boven	upstairs, above
+beneden	downstairs, below
+links	left
+rechts	right
+naast	next to
+tussen	between
+achter	behind
+voor	for; in front of
+onder	under
+op	on
+in	in
+bij	at, near, with
+met	with
+zonder	without
+naar	to (direction)
+van	of, from
+uit	out of, from
+over	about; over
+tot	until
+sinds	since
+tijdens	during
+wie	who
+wat	what
+waar	where; true
+waarom	why
+hoe	how
+hoeveel	how much, how many
+welk	which
+iemand	someone
+niemand	nobody
+iets	something
+niets	nothing
+alles	everything
+iedereen	everybody
+elke	every
+eigenlijk	actually
+trouwens	by the way
+toch	still, anyway; isn't it
+zelfs	even
+helaas	unfortunately
+vooral	especially
+daarom	that's why
+hoewel	although
+terwijl	while
+zodat	so that
+voordat	before
+nadat	after
+totdat	until
+ergens	somewhere
+nergens	nowhere
+allebei	both
+sommige	some
+andere	other
+zo	so, like this
+erg	very; terrible
+steeds	again and again
+opnieuw	again
+tegen	against; to
+per	per
+langs	along, past
+door	through; by
+om	around; at (time)
+tegenover	opposite
+elf	eleven
+twaalf	twelve
+dertien	thirteen
+veertien	fourteen
+vijftien	fifteen
+zestien	sixteen
+zeventien	seventeen
+achttien	eighteen
+negentien	nineteen
+twintig	twenty
+dertig	thirty
+veertig	forty
+vijftig	fifty
+zestig	sixty
+zeventig	seventy
+tachtig	eighty
+negentig	ninety
+honderd	hundred
+duizend	thousand
+een miljoen	a million
+de helft	half
+een kwart	a quarter
+het nummer	number
+het bedrag	amount
+nul	zero
+één	one
+twee	two
+drie	three
+vier	four
+vijf	five
+zes	six
+zeven	seven
+acht	eight
+negen	nine
+tien	ten
+het procent	percent
+het paar	pair; a few
+het dubbele	double
+het lichaam	body
+het hoofd	head
+het haar	hair
+het gezicht	face
+het oog	eye
+het oor	ear
+de neus	nose
+de mond	mouth
+de tand	tooth
+de tong	tongue
+de nek	neck
+de schouder	shoulder
+de borst	chest; breast
+de buik	belly, stomach
+de hand	hand
+de vinger	finger
+de knie	knee
+de voet	foot
+de teen	toe
+de huid	skin
+het hart	heart
+de longen	lungs
+de maag	stomach
+de wang	cheek
+de lip	lip
+de kin	chin
+het voorhoofd	forehead
+de wenkbrauw	eyebrow
+de baard	beard
+de elleboog	elbow
+de pols	wrist
+de duim	thumb
+de nagel	nail
+de heup	hip
+de enkel	ankle
+de hiel	heel
+het bot	bone
+de spier	muscle
+de hersenen	brain
+de nier	kidney
+de lever	liver
+het zweet	sweat
+de kleren	clothes
+de jas	coat
+de trui	jumper, sweater
+het overhemd	shirt
+het T-shirt	T-shirt
+de broek	trousers
+de spijkerbroek	jeans
+de rok	skirt
+de jurk	dress
+de schoenen	shoes
+de laarzen	boots
+de sokken	socks
+het ondergoed	underwear
+de muts	woolly hat
+de sjaal	scarf
+de handschoenen	gloves
+de pet	cap
+de riem	belt
+de tas	bag
+de paraplu	umbrella
+aantrekken	to put on (clothes)
+uittrekken	to take off (clothes)
+dragen	to wear; to carry
+het pak	suit
+de pyjama	pyjamas
+de sieraden	jewellery
+de ring	ring
+het horloge	watch
+de bh	bra
+de hoofddoek	headscarf
+de regenjas	raincoat
+de sportschoenen	trainers
+de slippers	flip-flops
+het vest	cardigan
+de knoop	button
+de rits	zip
+de mouw	sleeve
+de broekzak	pocket
+de zonnebril	sunglasses
+de oorbel	earring
+de ketting	necklace
+de portefeuille	wallet
+de rugzak	backpack
+passend	fitting
+wijd	loose, wide
+strak	tight
+de wasmand	laundry basket
+de tafel	table
+de stoel	chair
+de fauteuil	armchair
+het bed	bed
+de kast	cupboard
+de lamp	lamp
+het kussen	pillow, cushion
+de deken	blanket
+de spiegel	mirror
+het gordijn	curtain
+het vloerkleed	rug
+de wasmachine	washing machine
+de koelkast	fridge
+het fornuis	cooker, stove
+de oven	oven
+de magnetron	microwave
+de stofzuiger	vacuum cleaner
+de vaatwasser	dishwasher
+de handdoek	towel
+de zeep	soap
+de tandenborstel	toothbrush
+het toiletpapier	toilet paper
+de prullenbak	wastepaper bin
+het stopcontact	socket
+de schaar	scissors
+de doos	box
+de fles	bottle
+de zitbank	sofa
+het kussensloop	pillowcase
+het laken	sheet
+het dekbed	duvet
+de wekker	alarm clock
+de klok	clock
+het schilderij	painting
+de plank	shelf
+de la	drawer
+de vuilniszak	bin bag
+de bezem	broom
+de emmer	bucket
+de dweil	floor cloth, mop
+de afwas	washing-up
+het afwasmiddel	washing-up liquid
+het wasmiddel	laundry detergent
+de was	laundry
+strijken	to iron
+het strijkijzer	iron
+de waterkoker	kettle
+het koffiezetapparaat	coffee maker
+de broodrooster	toaster
+de vriezer	freezer
+het aanrecht	kitchen counter
+de gootsteen	kitchen sink
+het snoer	cord, lead
+de verlichting	lighting
+de gordijnrails	curtain rail
+het bureau	desk
+de kapstok	coat rack
+de hanger	hanger
+de sleutelbos	bunch of keys
+de kaars	candle
+de plant	plant
+de vaas	vase
+de ladder	ladder
+de hamer	hammer
+de schroevendraaier	screwdriver
+de boor	drill
+het gereedschap	tools
+de hobby	hobby
+de sport	sport
+sporten	to do sport
+wandelen	to walk (for pleasure)
+fietsen	to cycle
+zwemmen	to swim
+voetballen	to play football
+de sportschool	gym
+het museum	museum
+de bioscoop	cinema
+de film	film
+het concert	concert
+het theater	theatre
+het park	park
+de dierentuin	zoo
+de vereniging	club, association
+het lid	member
+het feest	party
+uitgaan	to go out
+de vakantie	holiday
+kamperen	to camp
+het hotel	hotel
+de camping	campsite
+de foto	photo
+het spel	game
+de muziek	music
+zingen	to sing
+tekenen	to draw
+het vrijwilligerswerk	volunteer work
+uitnodigen	to invite
+afspreken	to arrange, to agree to meet
+de wedstrijd	match, competition
+de voetbalclub	football club
+het zwemdiploma	swimming certificate
+schaatsen	to ice-skate
+de schaatsen	ice skates
+hardlopen	to run (as a sport)
+de fitness	fitness, gym training
+de yoga	yoga
+het tennis	tennis
+het basketbal	basketball
+de bibliotheekpas	library card
+het verhaal	story
+de roman	novel
+het gedicht	poem
+de tentoonstelling	exhibition
+de voorstelling	performance, show
+het festival	festival
+de barbecue	barbecue
+de picknick	picnic
+het uitje	outing
+de dagjesmensen	day-trippers
+de reisgids	travel guide
+het souvenir	souvenir
+de camera	camera
+het speelveld	play area
+de puzzel	puzzle
+het kaartspel	card game
+de muziekles	music lesson
+het instrument	instrument
+de gitaar	guitar
+de piano	piano
+het koor	choir
+dansen	to dance
+genieten	to enjoy
+de vrije tijd	free time
+het lidmaatschap	membership
+de contributie	membership fee
+de natuur	nature
+het dier	animal
+de hond	dog
+de kat	cat
+de vogel	bird
+het paard	horse
+de koe	cow
+het schaap	sheep
+het varken	pig
+de eend	duck
+de muis	mouse
+het konijn	rabbit
+de boom	tree
+de bloem	flower
+het gras	grass
+het bos	forest, wood
+de zee	sea
+het strand	beach
+de rivier	river
+het meer	lake
+de berg	mountain
+het land	country; land
+de dijk	dike
+de polder	polder (reclaimed land)
+de molen	windmill
+de lucht	air; sky
+de grond	ground, soil
+de steen	stone
+de paddenstoel	mushroom (wild)
+het blad	leaf
+de tak	branch
+het zaad	seed
+de tulp	tulip
+de roos	rose
+de bij	bee
+de vlieg	fly
+de mug	mosquito
+de spin	spider
+de vlinder	butterfly
+het insect	insect
+de mier	ant
+de rat	rat
+de haan	rooster
+de geit	goat
+de ezel	donkey
+de zwaan	swan
+de meeuw	seagull
+de reiger	heron
+de boerderij	farm
+het weiland	meadow, pasture
+het veld	field
+het duin	dune
+het eiland	island
+de heuvel	hill
+de sloot	ditch
+het milieu	environment
+het klimaat	climate
+de vervuiling	pollution
+recyclen	to recycle
+de zonnepanelen	solar panels
+de windmolen	wind turbine
+het huisdier	pet
+uitlaten	to walk (a dog)
+de stad	town, city
+het dorp	village
+het centrum	centre
+de wijk	district, neighbourhood
+de straat	street
+het plein	square
+de brug	bridge
+de gracht	canal
+de hoek	corner
+het gebouw	building
+het stadhuis	town hall
+de kerk	church
+de moskee	mosque
+het politiebureau	police station
+het café	café, pub
+de school	school
+het zwembad	swimming pool
+de speeltuin	playground
+het buurthuis	community centre
+de ingang	entrance
+de uitgang	exit
+de fabriek	factory
+de haven	harbour, port
+de bibliotheek	library
+het postkantoor	post office
+het restaurant	restaurant
+de snackbar	snack bar
+de begraafplaats	cemetery
+het monument	monument
+het standbeeld	statue
+de toren	tower
+het kasteel	castle
+de vuurtoren	lighthouse
+de sporthal	sports hall
+het sportveld	sports field
+de rondweg	ring road
+het industrieterrein	industrial estate
+de binnenstad	town centre
+de buitenwijk	suburb
+de hoofdstad	capital
+de inwoner	inhabitant
+de toerist	tourist
+de VVV	tourist information office
+de plattegrond	map, floor plan
+het verkeerslicht	traffic light
+de lantaarnpaal	lamppost
+het bankje	bench
+de fontein	fountain
+de steeg	alley
+de kade	quay
+de telefoon	telephone
+het telefoonnummer	phone number
+het bericht	message
+de e-mail	e-mail
+de bijlage	attachment
+versturen	to send
+het internet	internet
+de website	website
+de computer	computer
+de app	app
+het wachtwoord	password
+inloggen	to log in
+downloaden	to download
+printen	to print
+de voicemail	voicemail
+terugbellen	to call back
+opnemen	to answer (the phone); to record
+ophangen	to hang up
+de krant	newspaper
+het nieuws	news
+de televisie	television
+de radio	radio
+het tijdschrift	magazine
+de oplader	charger
+de batterij	battery
+het scherm	screen
+de smartphone	smartphone
+de mobiel	mobile phone
+het sms'je	text message
+appen	to message (by app)
+het gesprek	conversation, call
+het videogesprek	video call
+de onderwerpregel	subject line
+de afzender	sender
+de ontvanger	recipient
+beantwoorden	to reply to
+doorsturen	to forward
+het account	account
+uitloggen	to log out
+de wifi	wifi
+de link	link
+klikken	to click
+het bestand	file
+opslaan	to save
+de printer	printer
+het toetsenbord	keyboard
+typen	to type
+het nieuwsbericht	news item
+sociale media	social media
+het nepnieuws	fake news
+de oplichting	fraud, scam
+de postzegel	stamp
+de envelop	envelope
+de kaart	card; map
+de uitnodiging	invitation
+het antwoordapparaat	answering machine
+de verbinding	connection
+de taal	language
+de moedertaal	mother tongue
+het woord	word
+de zin	sentence; desire
+de uitspraak	pronunciation
+het accent	accent
+de spelling	spelling
+spellen	to spell
+de kleur	colour
+rood	red
+blauw	blue
+geel	yellow
+groen	green
+zwart	black
+wit	white
+grijs	grey
+bruin	brown
+oranje	orange
+roze	pink
+paars	purple
+de koning	king
+de koningin	queen
+de regering	government
+de minister	minister
+de minister-president	prime minister
+de Tweede Kamer	House of Representatives
+de verkiezingen	elections
+stemmen	to vote
+de partij	(political) party
+de democratie	democracy
+de Grondwet	constitution
+de provincie	province
+het waterschap	water board
+de vrijheid	freedom
+gelijk	equal; right
+de discriminatie	discrimination
+de godsdienst	religion
+de mening	opinion
+de vlag	flag
+het Wilhelmus	Dutch national anthem
+Koningsdag	King's Day (27 April)
+Bevrijdingsdag	Liberation Day (5 May)
+Dodenherdenking	Remembrance of the Dead (4 May)
+Sinterklaas	Saint Nicholas (5 December)
+de kerst	Christmas
+het Koninklijk Huis	Royal House
+de Eerste Kamer	Senate
+het parlement	parliament
+de politicus	politician
+de politiek	politics
+het kabinet	cabinet
+de staat	state
+de rechtsstaat	rule of law
+de grondrechten	fundamental rights
+de vrijheid van meningsuiting	freedom of speech
+de gelijkheid	equality
+de Tweede Wereldoorlog	Second World War
+de bevrijding	liberation
+de Gouden Eeuw	Dutch Golden Age
+de Deltawerken	Delta Works
+de provinciehoofdstad	provincial capital
+de koopzondag	Sunday shopping day
+de verjaardagskalender	birthday calendar
+het Nieuwjaar	New Year
+het vuurwerk	fireworks
+de oliebol	oliebol (doughnut ball)
+Pasen	Easter
+het Suikerfeest	Eid al-Fitr
+de ramadan	Ramadan
+de kok	cook, chef
+de kapper	hairdresser
+de schoonmaker	cleaner
+de chauffeur	driver
+de vrachtwagen	lorry, truck
+de bezorger	delivery person
+de postbode	postman
+de timmerman	carpenter
+de loodgieter	plumber
+de elektricien	electrician
+de schilder	painter
+de bouwvakker	construction worker
+de boer	farmer
+de tuinman	gardener
+de verkoopmedewerker	sales assistant
+de caissière	cashier
+de magazijnmedewerker	warehouse worker
+de automonteur	car mechanic
+de garage	garage
+de leraar	(male) teacher
+de docent	teacher, lecturer
+de verzorgende	carer
+de kinderopvangmedewerker	childcare worker
+de apotheker	pharmacist
+de agent	police officer
+de brandweerman	firefighter
+de soldaat	soldier
+de journalist	journalist
+de programmeur	programmer
+de boekhouder	bookkeeper, accountant
+de secretaresse	secretary
+de receptionist	receptionist
+de tolk	interpreter
+de vertaler	translator
+de bewaker	security guard
+de kunstenaar	artist
+de ingenieur	engineer
+de architect	architect
+de dierenarts	vet
+het gevoel	feeling
+de blijdschap	joy
+het verdriet	sorrow, grief
+de angst	fear
+de woede	anger, rage
+de liefde	love
+de hoop	hope
+de schaamte	shame
+de eenzaamheid	loneliness
+eenzaam	lonely
+het heimwee	homesickness
+de spijt	regret
+spijt hebben	to regret
+opgelucht	relieved
+teleurgesteld	disappointed
+verbaasd	surprised
+bezorgd	worried
+geïrriteerd	irritated
+enthousiast	enthusiastic
+zenuwachtig	nervous
+dankbaar	grateful
+verliefd	in love
+de ruzie	quarrel
+het excuus	apology
+troosten	to comfort
+het humeur	mood
+chagrijnig	grumpy
+vrolijk	cheerful
+de vriendschap	friendship
+het noodgeval	emergency
+de brand	fire
+blussen	to extinguish
+de rook	smoke
+de inbraak	burglary
+de dief	thief
+de diefstal	theft
+het slachtoffer	victim
+de verdachte	suspect
+de misdaad	crime
+het geweld	violence
+huiselijk geweld	domestic violence
+Veilig Thuis	Safe at Home (domestic abuse helpline)
+de wijkagent	community police officer
+het gevaar	danger
+de veiligheid	safety
+de hulp	help
+de hulpverlener	social worker, care worker
+de maatschappelijk werker	social worker
+de huisartsenspoedpost	out-of-hours GP clinic
+de reanimatie	CPR, resuscitation
+de AED	defibrillator (AED)
+de brandblusser	fire extinguisher
+de nooduitgang	emergency exit
+de sirene	siren
+de beveiliging	security
+de reden	reason
+het probleem	problem
+de oplossing	solution
+het idee	idea
+de keuze	choice
+de kans	chance
+het doel	goal, aim
+het plan	plan
+de manier	way, manner
+de informatie	information
+de mogelijkheid	possibility
+het verschil	difference
+de fout	mistake
+het begin	beginning
+het einde	end
+de rij	row, queue
+de plek	spot, place
+de plaats	place
+het deel	part
+het geluid	sound
+de stem	voice; vote
+de naam	name
+de wereld	world
+het leven	life
+de dood	death
+de mens	human being
+de oorlog	war
+de vrede	peace
+de tijd	time
+de keer	time (occasion)
+het ding	thing
+het gebied	area, region
+de soort	kind, type
+het voordeel	advantage
+het nadeel	disadvantage
+de toekomstplannen	plans for the future
+de ontwikkeling	development
+de situatie	situation
+het gedrag	behaviour
+de gewoonte	habit
+de cultuur	culture
+de traditie	tradition
+de samenleving	society
+de waarde	value
+de norm	norm
+het respect	respect

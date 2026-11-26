@@ -1,0 +1,1996 @@
+de huisarts	aile hekimi
+het ziekenhuis	hastane
+de apotheek	eczane
+het recept	reçete
+het medicijn	ilaç
+de pijn	ağrı
+de hoofdpijn	baş ağrısı
+de buikpijn	karın ağrısı
+de koorts	ateş
+hoesten	öksürmek
+ziek	hasta
+beter worden	iyileşmek
+de tandarts	diş hekimi
+de verpleegkundige	hemşire
+de specialist	uzman doktor
+het bloed	kan
+de uitslag	sonuç
+de zorgverzekering	sağlık sigortası
+het eigen risico	kendi katkı payı
+de huisartsenpost	nöbetçi aile hekimi
+de ambulance	ambulans
+het spreekuur	muayene saati
+de griep	grip
+het been	bacak
+de arm	kol
+de rug	sırt
+de keel	boğaz
+gezond	sağlıklı
+de patiënt	hasta
+de wond	yara
+de pleister	yara bandı
+het verband	sargı
+de allergie	alerji
+de pijnstiller	ağrı kesici
+zwanger	hamile
+de verloskundige	ebe
+de bril	gözlük
+de oogarts	göz doktoru
+de fysiotherapeut	fizyoterapist
+de spoedeisende hulp	acil servis
+ongezond	sağlıksız
+duizelig	başı dönen
+misselijk	midesi bulanan
+moe	yorgun
+de hoest	öksürük
+de wachtkamer	bekleme odası
+de behandeling	tedavi
+de operatie	ameliyat
+onderzoeken	muayene etmek
+de prik	iğne
+de vaccinatie	aşı
+de dokter	doktor
+de afspraak	randevu
+de verkoudheid	soğuk algınlığı
+verkouden	nezle olmuş
+niezen	hapşırmak
+overgeven	kusmak
+de diarree	ishal
+het zuur	mide yanması
+de bloeddruk	tansiyon
+de suikerziekte	şeker hastalığı
+de pil	hap
+de druppels	damla
+de zalf	merhem
+de thermometer	termometre
+de rolstoel	tekerlekli sandalye
+de kruk	koltuk değneği
+gebroken	kırık
+de gips	alçı
+bloeden	kanamak
+de verwijzing	sevk
+de huisartsenpraktijk	aile hekimi muayenehanesi
+de assistente	doktor asistanı
+de spoed	acil durum
+het ongeluk	kaza
+gewond	yaralı
+de EHBO	ilk yardım
+de psycholoog	psikolog
+de stress	stres
+somber	kederli, karamsar
+genezen	iyileşmek
+het gewicht	kilo, ağırlık
+afvallen	kilo vermek
+de vitamine	vitamin
+de bijwerking	yan etki
+de bijsluiter	prospektüs
+de huisartsenassistente	aile hekimi asistanı
+de kraamzorg	doğum sonrası evde bakım
+ademen	nefes almak
+de verzekeringspas	sigorta kartı
+de baan	iş
+de werkgever	işveren
+de werknemer	çalışan
+de collega	iş arkadaşı
+de baas	patron
+het salaris	maaş
+het contract	sözleşme
+de vacature	iş ilanı
+solliciteren	iş başvurusu yapmak
+het sollicitatiegesprek	iş görüşmesi
+het cv	özgeçmiş
+de ervaring	deneyim
+de opleiding	eğitim
+het diploma	diploma
+parttime	yarı zamanlı
+fulltime	tam zamanlı
+de werktijden	çalışma saatleri
+de pauze	mola
+de vakantiedagen	izin günleri
+het uitzendbureau	geçici iş bulma ajansı
+werkloos	işsiz
+de uitkering	sosyal yardım ödeneği
+het kantoor	ofis
+de vergadering	toplantı
+het rooster	çizelge, program
+de klant	müşteri
+verdienen	kazanmak
+ontslaan	işten çıkarmak
+de stage	staj
+de werkplek	iş yeri
+de afdeling	bölüm
+de overuren	fazla mesai
+het pensioen	emeklilik maaşı
+de vakbond	sendika
+de proeftijd	deneme süresi
+de loonstrook	maaş bordrosu
+het bedrijf	şirket
+de zzp'er	serbest çalışan
+de sollicitatiebrief	başvuru mektubu
+de ploegendienst	vardiyalı çalışma
+de nachtdienst	gece vardiyası
+het uniform	üniforma
+de promotie	terfi
+het ontslag	işten çıkarılma
+ontslag nemen	istifa etmek
+de sollicitatie	iş başvurusu
+de werkervaring	iş deneyimi
+het loon	ücret
+het minimumloon	asgari ücret
+bruto	brüt
+netto	net
+het vakantiegeld	tatil parası
+de cao	toplu iş sözleşmesi
+het tijdelijk contract	geçici sözleşme
+het vast contract	süresiz sözleşme
+zich ziek melden	hastalık bildirmek
+de bedrijfsarts	işyeri hekimi
+de leidinggevende	yönetici
+het team	ekip
+de taak	görev
+de opdracht	görev, iş
+de dienst	vardiya
+de werkweek	çalışma haftası
+het verlof	izin
+het zwangerschapsverlof	doğum izni
+de werkvergunning	çalışma izni
+de arbeidsmarkt	iş piyasası
+de beloning	ödül, karşılık
+de reiskosten	yol masrafı
+de ontslagbrief	işten çıkarma yazısı
+de werkzoekende	iş arayan
+de vaardigheid	beceri
+de cursus	kurs
+het certificaat	sertifika
+de werktijd	çalışma saati
+de lunchpauze	öğle arası
+de kantine	kantin
+het personeel	personel
+de werkloosheid	işsizlik
+de uitzendkracht	geçici işçi
+het arbeidscontract	iş sözleşmesi
+de vrijwilliger	gönüllü
+de ondernemer	girişimci
+de KvK	Ticaret Odası
+de factuur	fatura
+de woning	konut
+het huis	ev
+het appartement	daire
+de huur	kira
+de huurder	kiracı
+de verhuurder	ev sahibi
+de woningcorporatie	konut kooperatifi
+huren	kiralamak
+verhuizen	taşınmak
+de buren	komşular
+de buurt	mahalle
+de verdieping	kat
+de trap	merdiven
+de lift	asansör
+de slaapkamer	yatak odası
+de woonkamer	oturma odası
+de badkamer	banyo
+de keuken	mutfak
+de wc	tuvalet
+de tuin	bahçe
+het balkon	balkon
+de verwarming	ısıtma
+de rekening	fatura
+de stroom	elektrik
+de vuilnisbak	çöp kutusu
+het afval	çöp
+de sleutel	anahtar
+de monteur	tamirci
+kapot	bozuk
+de reparatie	tamir
+de vloer	zemin
+het plafond	tavan
+de muur	duvar
+het raam	pencere
+de deur	kapı
+het dak	çatı
+de kelder	bodrum
+de zolder	tavan arası
+de gang	koridor
+de schuur	kulübe, depo
+de bel	zil
+de brievenbus	posta kutusu
+de borg	depozito
+het huurcontract	kira sözleşmesi
+de schimmel	küf
+de lekkage	sızıntı
+schoonmaken	temizlemek
+opruimen	toplamak, düzenlemek
+het licht	ışık
+de huisbaas	ev sahibi
+de koopwoning	satın alınmış ev
+de huurwoning	kiralık ev
+de hypotheek	konut kredisi
+de makelaar	emlakçı
+de wachtlijst	bekleme listesi
+de inschrijving	kayıt
+de bovenwoning	üst kat dairesi
+de benedenwoning	zemin kat dairesi
+de begane grond	zemin kat
+de voordeur	ön kapı
+de achterdeur	arka kapı
+de kraan	musluk
+de douche	duş
+het bad	küvet
+de wastafel	lavabo
+de cv-ketel	kombi
+de radiator	radyatör
+het gas	doğalgaz
+de meter	sayaç
+de meterstand	sayaç değeri
+de energieleverancier	enerji şirketi
+de servicekosten	aidat
+de huurverhoging	kira artışı
+de opzegging	fesih bildirimi
+het onderhoud	bakım
+de overlast	rahatsızlık
+het lawaai	gürültü
+de verhuizing	taşınma
+de verhuisdoos	taşınma kutusu
+het meubel	mobilya
+gemeubileerd	eşyalı
+de woonruimte	yaşam alanı
+de vierkante meter	metrekare
+de kamer	oda
+de studio	stüdyo daire
+de portiek	apartman girişi
+de flat	apartman
+het rijtjeshuis	sıra ev
+de vensterbank	pencere pervazı
+de klusjesman	tamirci
+de rookmelder	duman dedektörü
+de container	konteyner
+het grofvuil	büyük atık
+scheiden	ayrıştırmak
+de stekker	fiş
+de zekering	sigorta
+het tapijt	halı
+de woonwijk	yerleşim bölgesi
+de buurtbewoner	mahalle sakini
+de trein	tren
+de bus	otobüs
+de tram	tramvay
+de metro	metro
+de fiets	bisiklet
+de auto	araba
+het station	istasyon
+het perron	peron
+de halte	durak
+het kaartje	bilet
+de ov-chipkaart	toplu taşıma kartı
+inchecken	kart okutarak binmek
+uitchecken	kart okutarak inmek
+overstappen	aktarma yapmak
+de vertraging	gecikme
+vertrekken	hareket etmek, ayrılmak
+aankomen	varmak
+de reis	yolculuk
+het rijbewijs	ehliyet
+de file	trafik sıkışıklığı
+parkeren	park etmek
+de weg	yol
+het verkeer	trafik
+het stoplicht	trafik ışığı
+rechtsaf	sağa
+linksaf	sola
+rechtdoor	dümdüz
+de kruising	kavşak
+de fietsenstalling	bisiklet parkı
+de snelweg	otoyol
+de rotonde	göbek, döner kavşak
+het fietspad	bisiklet yolu
+de stoep	kaldırım
+het zebrapad	yaya geçidi
+de parkeerplaats	otopark
+de taxi	taksi
+het vliegtuig	uçak
+het vliegveld	havalimanı
+de boot	tekne
+de pont	feribot, sal
+de conducteur	kondüktör
+de vertrektijd	kalkış saati
+de aankomsttijd	varış saati
+enkele reis	tek yön
+retour	gidiş-dönüş
+de spits	trafiğin yoğun olduğu saat
+de storing	arıza
+de omleiding	yön değiştirme, alternatif yol
+de benzine	benzin
+het tankstation	benzin istasyonu
+de helm	kask
+het slot	kilit
+de band	lastik
+de voorrang	geçiş üstünlüğü
+de bestuurder	sürücü
+de passagier	yolcu
+de dienstregeling	sefer tarifesi
+het spoor	ray; peron numarası
+de intercity	şehirlerarası tren
+de sprinter	banliyö treni
+de NS	Hollanda Demiryolları
+het abonnement	abonman
+het verkeersbord	trafik levhası
+de snelheid	hız
+de flitspaal	radar
+de verkeersboete	trafik cezası
+het rijexamen	ehliyet sınavı
+de rijles	direksiyon dersi
+de APK	araç muayenesi
+het kenteken	plaka
+het parkeerkaartje	park bileti
+de parkeervergunning	park izni
+de bushalte	otobüs durağı
+het knooppunt	otoyol kavşağı
+de afslag	çıkış (otoyol)
+de fietser	bisikletli
+de voetganger	yaya
+de scooter	scooter
+de motor	motosiklet; motor
+de vrachtauto	kamyon
+botsen	çarpışmak
+inhalen	sollamak
+remmen	fren yapmak
+oversteken	karşıdan karşıya geçmek
+de reiziger	yolcu
+de bagage	bagaj
+de koffer	bavul
+de vlucht	uçuş
+de instaptijd	biniş saati
+de grens	sınır
+het visum	vize
+de winkel	dükkan
+de supermarkt	süpermarket
+de markt	pazar
+de kassa	kasa
+de bon	fiş
+de prijs	fiyat
+duur	pahalı
+goedkoop	ucuz
+de korting	indirim
+de aanbieding	kampanya
+betalen	ödemek
+pinnen	kartla ödemek
+contant	nakit
+de pinpas	banka kartı
+het geld	para
+de portemonnee	cüzdan
+de maat	beden
+passen	denemek; uymak
+ruilen	değiştirmek
+terugbrengen	geri götürmek
+de klantenservice	müşteri hizmetleri
+bestellen	sipariş etmek
+het pakket	paket
+bezorgen	teslim etmek
+de bank	banka
+het rekeningnummer	hesap numarası
+sparen	biriktirmek
+lenen	ödünç almak; borç vermek
+de belasting	vergi
+de bakker	fırıncı
+de slager	kasap
+de drogist	kozmetik ve ilaç mağazası
+het warenhuis	büyük mağaza
+het winkelcentrum	alışveriş merkezi
+de openingstijden	açılış saatleri
+open	açık
+gesloten	kapalı
+de uitverkoop	indirim sezonu
+de garantie	garanti
+de boodschappen	alışveriş (gıda)
+het boodschappenlijstje	alışveriş listesi
+het mandje	sepet
+het winkelwagentje	alışveriş arabası
+de verkoper	satıcı
+de munt	bozuk para
+het bankbiljet	banknot
+het wisselgeld	para üstü
+de schuld	borç
+de rente	faiz
+de overschrijving	havale
+het saldo	bakiye
+de pincode	şifre
+de geldautomaat	ATM, bankamatik
+gratis	bedava
+kosten	tutmak, mal olmak
+de klantenkaart	müşteri kartı
+het statiegeld	depozito (şişe)
+inleveren	teslim etmek
+de webwinkel	internet mağazası
+de bezorgkosten	kargo ücreti
+retourneren	iade etmek
+de bedenktijd	cayma süresi
+de aankoop	satın alma
+het koopje	kelepir
+de kwaliteit	kalite
+het merk	marka
+de verpakking	ambalaj
+de houdbaarheidsdatum	son kullanma tarihi
+de kilo	kilo
+de gram	gram
+de liter	litre
+het stuk	parça
+het blik	teneke kutu
+de pot	kavanoz
+de zak	poşet
+het tasje	alışveriş poşeti
+de zelfscan	kendi kendine tarama
+het filiaal	şube
+de etalage	vitrin
+de paskamer	deneme kabini
+het bonnetje	fiş
+de spaarrekening	tasarruf hesabı
+de betaalrekening	vadesiz hesap
+het budget	bütçe
+uitgeven	harcamak
+de inkomsten	gelir
+de uitgaven	giderler
+het inkomen	gelir
+de schuldhulp	borç danışmanlığı
+de betalingsregeling	taksitli ödeme planı
+de incasso	otomatik ödeme talimatı
+de aanmaning	ödeme ihtarı
+de deurwaarder	icra memuru
+de euro	avro
+de cent	sent
+wisselen	bozdurmak, değiştirmek
+de prijslijst	fiyat listesi
+de basisschool	ilkokul
+de middelbare school	ortaokul ve lise
+de groep	grup; sınıf
+de leerkracht	öğretmen
+de juf	kadın öğretmen
+de leerling	öğrenci
+het huiswerk	ödev
+het rapport	karne
+de ouderavond	veli toplantısı
+de kinderopvang	çocuk bakımı
+de oppas	bebek bakıcısı
+het schoolreisje	okul gezisi
+de schoolvakantie	okul tatili
+spijbelen	okul kırmak
+leerplichtig	okula gitmek zorunda
+de gymles	beden eğitimi dersi
+het lokaal	sınıf (oda)
+de les	ders
+leren	öğrenmek; öğretmek
+uitleggen	açıklamak
+het cijfer	not; rakam
+de toets	sınav
+de opvoeding	yetiştirme, terbiye
+het consultatiebureau	bebek sağlığı merkezi
+de schooltas	okul çantası
+het schoolplein	okul bahçesi
+de directeur	müdür
+het vak	ders (konu)
+rekenen	hesap yapmak
+de pen	tükenmez kalem
+het potlood	kurşun kalem
+het schrift	defter
+de gum	silgi
+het woordenboek	sözlük
+de vraag	soru
+het antwoord	cevap
+het examen	sınav
+slagen	sınavı geçmek
+zakken	sınavda kalmak
+de universiteit	üniversite
+het mbo	meslek okulu
+de peuterspeelzaal	oyun grubu (küçük çocuklar)
+de crèche	kreş
+de buitenschoolse opvang	okul sonrası bakım
+de ouderbijdrage	veli katkı payı
+de mentor	danışman öğretmen
+de klas	sınıf
+het schooljaar	öğretim yılı
+de voorschool	okul öncesi
+de kleuter	anaokulu çocuğu
+de peuter	küçük çocuk
+de leerplicht	zorunlu eğitim
+de leerplichtambtenaar	okul devamsızlık memuru
+het schooladvies	okul tavsiyesi
+de doorstroomtoets	ilkokul bitirme sınavı
+het vmbo	meslek öncesi ortaöğretim
+de havo	genel ortaöğretim
+het vwo	üniversiteye hazırlık eğitimi
+het hbo	meslek yüksekokulu
+de studiefinanciering	öğrenim kredisi
+de student	üniversite öğrencisi
+het lesrooster	ders programı
+de rekenmachine	hesap makinesi
+de liniaal	cetvel
+het etui	kalem kutusu
+de spreekbeurt	sözlü sunum
+het werkstuk	ödev projesi
+de leesles	okuma dersi
+de traktatie	doğum günü ikramı
+het schoolfeest	okul şenliği
+de ouderraad	veli komitesi
+het oudergesprek	veli görüşmesi
+de schoolarts	okul doktoru
+pesten	zorbalık yapmak
+het speelgoed	oyuncak
+de luier	bebek bezi
+de kinderwagen	bebek arabası
+het knuffeldier	peluş oyuncak
+opvoeden	yetiştirmek
+de straf	ceza
+het voorbeeld	örnek
+de bijles	özel ders
+het lesgeld	okul ücreti
+de gemeente	belediye
+het gemeentehuis	belediye binası
+het loket	gişe
+het formulier	form
+invullen	doldurmak
+aanvragen	başvurmak
+de aanvraag	başvuru
+het paspoort	pasaport
+de identiteitskaart	kimlik kartı
+geldig	geçerli
+verlopen	süresi dolmak
+de handtekening	imza
+ondertekenen	imzalamak
+het adres	adres
+zich inschrijven	kaydolmak
+de Belastingdienst	vergi dairesi
+de toeslag	devlet yardımı
+het burgerservicenummer	vatandaşlık numarası
+de politie	polis
+de brandweer	itfaiye
+het alarmnummer	acil durum numarası
+de wet	kanun
+de regel	kural
+de boete	ceza
+de verzekering	sigorta
+de brief	mektup
+de postcode	posta kodu
+de geboortedatum	doğum tarihi
+de nationaliteit	uyruk
+de ambtenaar	memur
+de burgemeester	belediye başkanı
+de gemeenteraad	belediye meclisi
+het uittreksel	nüfus kayıt örneği
+de verblijfsvergunning	oturma izni
+de IND	göç ve vatandaşlık dairesi
+de inburgering	uyum süreci
+de naturalisatie	vatandaşlığa geçiş
+de huurtoeslag	kira yardımı
+de zorgtoeslag	sağlık sigortası yardımı
+de kinderbijslag	çocuk parası
+het UWV	işçi sigortaları kurumu
+de bijstand	sosyal yardım
+de DigiD	DigiD (dijital kimlik)
+de belastingaangifte	vergi beyannamesi
+de rechter	hakim
+de advocaat	avukat
+het bezwaar	itiraz
+de klacht	şikayet
+de rechten	haklar
+de plichten	görevler
+de basisregistratie	nüfus kaydı
+de uitschrijving	kayıt silme
+de geboorteakte	doğum belgesi
+de huwelijksakte	evlilik cüzdanı
+de legalisatie	tasdik
+de vertaling	çeviri
+beëdigd	yeminli
+de leges	harç
+het wijkteam	mahalle ekibi
+de Wmo	sosyal destek yasası
+het sociaal loket	sosyal hizmetler masası
+de klantmanager	vaka yöneticisi
+de SVB	Sosyal Sigorta Bankası
+de AOW	devlet emekli maaşı
+DUO	DUO (eğitim kurumu)
+de lening	kredi, borç
+de rechtbank	mahkeme
+de aangifte	suç duyurusu
+de getuige	tanık
+het Juridisch Loket	hukuki danışma bürosu
+de privacy	gizlilik
+de gegevens	bilgiler
+de machtiging	vekaletname
+de termijn	süre
+de beslissing	karar
+de toestemming	izin
+de vergunning	izin belgesi
+de inburgeringsplicht	uyum yükümlülüğü
+de taalcoach	dil koçu
+de verlenging	uzatma
+het bewijs	kanıt, belge
+de kopie	kopya
+de ochtend	sabah
+de middag	öğleden sonra
+de avond	akşam
+de nacht	gece
+vandaag	bugün
+morgen	yarın
+gisteren	dün
+overmorgen	öbür gün
+de week	hafta
+het weekend	hafta sonu
+de maand	ay
+het jaar	yıl
+het uur	saat (süre)
+het kwartier	çeyrek saat
+vroeg	erken
+laat	geç
+op tijd	zamanında
+het weer	hava
+de zon	güneş
+de regen	yağmur
+de wind	rüzgar
+de sneeuw	kar
+de wolk	bulut
+warm	sıcak
+koud	soğuk
+nat	ıslak
+droog	kuru
+de lente	ilkbahar
+de zomer	yaz
+de herfst	sonbahar
+de winter	kış
+de seconde	saniye
+de minuut	dakika
+de dag	gün
+de datum	tarih
+de kalender	takvim
+het seizoen	mevsim
+de feestdag	bayram, resmi tatil
+altijd	her zaman
+nooit	asla
+soms	bazen
+vaak	sık sık
+meestal	genellikle
+straks	birazdan
+meteen	hemen
+nu	şimdi
+het onweer	gök gürültülü fırtına
+de mist	sis
+de temperatuur	sıcaklık
+de graad	derece
+bewolkt	bulutlu
+zonnig	güneşli
+de hagel	dolu
+glad	kaygan
+de weersverwachting	hava tahmini
+de storm	fırtına
+vorige week	geçen hafta
+volgend jaar	gelecek yıl
+maandag	pazartesi
+dinsdag	salı
+woensdag	çarşamba
+donderdag	perşembe
+vrijdag	cuma
+zaterdag	cumartesi
+zondag	pazar
+januari	ocak
+februari	şubat
+maart	mart
+april	nisan
+mei	mayıs
+juni	haziran
+juli	temmuz
+augustus	ağustos
+september	eylül
+oktober	ekim
+november	kasım
+december	aralık
+de eeuw	yüzyıl
+het verleden	geçmiş
+de toekomst	gelecek
+het moment	an
+binnenkort	yakında
+onlangs	geçenlerde
+vroeger	eskiden
+later	daha sonra
+de regenboog	gökkuşağı
+de bliksem	şimşek
+de donder	gök gürültüsü
+de bui	sağanak
+de hittegolf	sıcak hava dalgası
+de ijzel	buzlanma
+vriezen	donmak
+regenen	yağmur yağmak
+sneeuwen	kar yağmak
+waaien	rüzgar esmek
+de familie	akrabalar
+het gezin	aile
+de ouders	anne baba
+de vader	baba
+de moeder	anne
+de zoon	oğul
+de dochter	kız evlat
+de broer	erkek kardeş
+de zus	kız kardeş
+de opa	dede
+de oma	nine
+de man	adam; koca
+de vrouw	kadın; eş
+getrouwd	evli
+gescheiden	boşanmış
+de baby	bebek
+het kind	çocuk
+de vriend	arkadaş; erkek arkadaş
+de vriendin	kız arkadaş
+de buurman	komşu (erkek)
+de buurvrouw	komşu (kadın)
+de verjaardag	doğum günü
+jarig zijn	doğum günü olmak
+feliciteren	tebrik etmek
+trouwen	evlenmek
+oud	yaşlı, eski
+jong	genç
+aardig	nazik
+boos	kızgın
+blij	mutlu
+verdrietig	üzgün
+de grootouders	büyükanne ve büyükbaba
+de kleinkinderen	torunlar
+de oom	amca, dayı
+de tante	hala, teyze
+de neef	erkek yeğen; kuzen
+de nicht	kız yeğen; kuzen
+de schoonmoeder	kaynana
+de zwager	kayınbirader, enişte
+de schoonzus	baldız, görümce, yenge
+de weduwe	dul kadın
+alleenstaand	yalnız yaşayan
+samenwonen	birlikte yaşamak
+de bruiloft	düğün
+het huwelijk	evlilik
+de geboorte	doğum
+overlijden	vefat etmek
+de begrafenis	cenaze
+de tiener	genç, ergen
+de volwassene	yetişkin
+de kennis	tanıdık
+de gast	misafir
+de ex	eski sevgili, eski eş
+de echtgenoot	eş (koca)
+de echtgenote	eş (karı)
+de partner	partner
+de schoonvader	kayınpeder
+de schoonouders	kayınvalide ve kayınpeder
+de kleinzoon	erkek torun
+de kleindochter	kız torun
+de tweeling	ikizler
+het familielid	akraba
+de buurtgenoot	mahalleli
+de vreemde	yabancı
+de jongen	oğlan
+het meisje	kız
+de meneer	bey
+de mevrouw	hanım
+de bejaarde	yaşlı
+de gepensioneerde	emekli
+de nieuwkomer	yeni gelen
+de vluchteling	mülteci
+de migrant	göçmen
+de Nederlander	Hollandalı
+de achternaam	soyadı
+de voornaam	ad
+de leeftijd	yaş
+de zwangerschap	hamilelik
+het ontbijt	kahvaltı
+de lunch	öğle yemeği
+het avondeten	akşam yemeği
+het brood	ekmek
+de boterham	dilim ekmek, sandviç
+de kaas	peynir
+de melk	süt
+het ei	yumurta
+de groente	sebze
+het fruit	meyve
+de appel	elma
+het vlees	et
+de vis	balık
+de kip	tavuk
+de rijst	pirinç
+de aardappel	patates
+de soep	çorba
+de koffie	kahve
+de thee	çay
+de suiker	şeker
+het zout	tuz
+koken	yemek pişirmek; kaynatmak
+bakken	fırında pişirmek; kızartmak
+snijden	kesmek
+de pan	tencere, tava
+het bord	tabak
+het glas	bardak
+het mes	bıçak
+de vork	çatal
+de lepel	kaşık
+lekker	lezzetli
+honger hebben	aç olmak
+dorst hebben	susamak
+de boter	tereyağı
+de olie	yağ
+de jam	reçel
+de pindakaas	fıstık ezmesi
+de hagelslag	çikolata parçacıkları
+de yoghurt	yoğurt
+de pasta	makarna
+de saus	sos
+de sla	marul, salata
+de tomaat	domates
+de ui	soğan
+de wortel	havuç
+de banaan	muz
+de sinaasappel	portakal
+de peer	armut
+de aardbei	çilek
+het toetje	tatlı
+de taart	pasta (tatlı)
+het koekje	bisküvi
+het snoep	şeker (tatlı)
+het sap	meyve suyu
+het bier	bira
+de wijn	şarap
+vegetarisch	vejetaryen
+zoet	tatlı
+zuur	ekşi
+bitter	acı (tat)
+pittig	acı, baharatlı
+de kom	kase
+het kopje	fincan
+het menu	menü
+de ober	garson
+afrekenen	hesabı ödemek
+de fooi	bahşiş
+het broodje	sandviç ekmeği
+de pannenkoek	krep
+de stamppot	sebzeli patates püresi
+de erwtensoep	bezelye çorbası
+de kroket	kroket
+de bitterbal	küçük kroket topu
+de patat	patates kızartması
+de stroopwafel	şuruplu gofret
+de drop	meyankökü şekeri
+het gehakt	kıyma
+het rundvlees	sığır eti
+het varkensvlees	domuz eti
+het lamsvlees	kuzu eti
+halal	helal
+veganistisch	vegan
+de noten	kuruyemiş
+de bonen	fasulye
+de erwten	bezelye
+de paprika	biber
+de komkommer	salatalık
+de champignon	mantar
+de knoflook	sarımsak
+de citroen	limon
+de druif	üzüm
+de meloen	kavun
+de kers	kiraz
+het meel	un
+de peper	karabiber
+het kruid	baharat
+de room	krema
+de slagroom	krem şanti
+het ijs	buz; dondurma
+de chocolade	çikolata
+de frisdrank	gazlı içecek
+de borrel	içki sohbeti
+het hapje	atıştırmalık
+de magnetronmaaltijd	hazır yemek
+de maaltijd	öğün
+het gerecht	yemek
+rauw	çiğ
+gaar	pişmiş
+verbrand	yanmış
+opwarmen	ısıtmak
+proeven	tatmak
+de smaak	tat
+het bestek	çatal bıçak takımı
+het servet	peçete
+de theepot	demlik
+zijn	olmak
+hebben	sahip olmak
+gaan	gitmek
+komen	gelmek
+doen	yapmak
+maken	yapmak
+zeggen	söylemek
+vertellen	anlatmak
+vragen	sormak
+antwoorden	cevap vermek
+praten	konuşmak
+spreken	konuşmak
+weten	bilmek
+kennen	tanımak
+denken	düşünmek
+begrijpen	anlamak
+zien	görmek
+kijken	bakmak, izlemek
+horen	duymak
+luisteren	dinlemek
+lezen	okumak
+schrijven	yazmak
+werken	çalışmak
+wonen	oturmak, ikamet etmek
+leven	yaşamak
+kopen	satın almak
+verkopen	satmak
+geven	vermek
+krijgen	almak
+nemen	almak
+brengen	getirmek
+halen	alıp getirmek
+zetten	koymak
+leggen	koymak (yatırarak)
+staan	ayakta durmak
+zitten	oturmak
+liggen	yatmak
+lopen	yürümek
+rennen	koşmak
+rijden	sürmek
+vliegen	uçmak
+wachten	beklemek
+zoeken	aramak
+vinden	bulmak; düşünmek
+verliezen	kaybetmek
+beginnen	başlamak
+stoppen	durmak
+openmaken	açmak
+dichtdoen	kapatmak
+helpen	yardım etmek
+proberen	denemek
+gebruiken	kullanmak
+betekenen	anlamına gelmek
+herhalen	tekrarlamak
+vergeten	unutmak
+onthouden	aklında tutmak
+willen	istemek
+kunnen	-ebilmek
+moeten	zorunda olmak
+mogen	izinli olmak
+houden van	sevmek
+hopen	ummak
+geloven	inanmak
+spelen	oynamak
+slapen	uyumak
+wakker worden	uyanmak
+opstaan	kalkmak
+zich aankleden	giyinmek
+wassen	yıkamak
+douchen	duş almak
+eten	yemek
+drinken	içmek
+bellen	aramak (telefon)
+sturen	göndermek
+tellen	saymak
+kiezen	seçmek
+beslissen	karar vermek
+veranderen	değiştirmek, değişmek
+blijven	kalmak
+worden	olmak (dönüşmek)
+gebeuren	olmak, meydana gelmek
+lachen	gülmek
+huilen	ağlamak
+aanbieden	teklif etmek
+aannemen	kabul etmek; işe almak
+afmaken	bitirmek
+afzeggen	iptal etmek
+annuleren	iptal etmek
+bedanken	teşekkür etmek
+bedoelen	kastetmek
+beloven	söz vermek
+bereiken	ulaşmak
+beschrijven	tarif etmek
+besteden	harcamak
+bewegen	hareket etmek
+bezoeken	ziyaret etmek
+bijhouden	takip etmek
+controleren	kontrol etmek
+delen	paylaşmak; bölmek
+doorgeven	iletmek
+duren	sürmek
+eindigen	bitmek
+groeten	selamlamak
+herkennen	tanımak
+houden	tutmak; saklamak
+inpakken	paketlemek
+invoeren	girmek (veri)
+kloppen	kapıyı çalmak; doğru olmak
+klagen	şikayet etmek
+lenen van	-den ödünç almak
+letten op	dikkat etmek
+meedoen	katılmak
+meenemen	yanına almak
+melden	bildirmek
+noemen	adlandırmak
+oefenen	alıştırma yapmak
+ontmoeten	tanışmak, buluşmak
+ontvangen	almak
+oplossen	çözmek
+opschrijven	not etmek
+opletten	dikkat etmek
+organiseren	düzenlemek
+plannen	planlamak
+regelen	halletmek
+reizen	seyahat etmek
+roepen	seslenmek
+schrikken	irkilmek
+sluiten	kapatmak
+steunen	desteklemek
+stelen	çalmak
+storen	rahatsız etmek
+studeren	okumak (üniversite)
+toestaan	izin vermek
+uitgaan van	varsaymak
+uitkiezen	seçmek
+uitproberen	denemek
+vallen	düşmek
+verbieden	yasaklamak
+verdwijnen	kaybolmak
+vergelijken	karşılaştırmak
+verhuren	kiraya vermek
+verklaren	açıklamak
+verlengen	uzatmak
+verplaatsen	yerini değiştirmek
+verstaan	anlamak (sesi)
+vertalen	çevirmek
+vertrouwen	güvenmek
+verwachten	beklemek
+voelen	hissetmek
+voorstellen	önermek; tanıtmak
+waarschuwen	uyarmak
+wegen	tartmak
+wennen	alışmak
+winnen	kazanmak
+zorgen voor	bakmak
+zwaaien	el sallamak
+aanzetten	açmak (cihaz)
+uitzetten	kapatmak (cihaz)
+ophalen	almaya gitmek
+wegbrengen	bırakmak, götürmek
+aankondigen	duyurmak
+aanmelden	kaydolmak
+afhalen	teslim almak
+bespreken	görüşmek
+herinneren	hatırlamak; hatırlatmak
+missen	kaçırmak; özlemek
+pakken	almak, kapmak
+passen op	göz kulak olmak
+rusten	dinlenmek
+trouwen met	biriyle evlenmek
+zich voelen	kendini hissetmek
+zich vergissen	yanılmak
+zich zorgen maken	endişelenmek
+zich haasten	acele etmek
+zich schamen	utanmak
+zich vervelen	sıkılmak
+zich herinneren	hatırlamak
+zich voorbereiden	hazırlanmak
+zich voorstellen	kendini tanıtmak; hayal etmek
+aanraken	dokunmak
+bouwen	inşa etmek
+breken	kırmak
+drukken	basmak
+duwen	itmek
+trekken	çekmek
+gooien	atmak
+vangen	yakalamak
+springen	zıplamak
+klimmen	tırmanmak
+vullen	doldurmak
+legen	boşaltmak
+repareren	tamir etmek
+verven	boyamak
+knippen	kesmek (makasla)
+plakken	yapıştırmak
+vouwen	katlamak
+zwijgen	susmak
+fluisteren	fısıldamak
+schreeuwen	bağırmak
+glimlachen	gülümsemek
+knikken	başını sallamak
+wijzen	işaret etmek
+tonen	göstermek
+besparen	tasarruf etmek
+verspillen	israf etmek
+lukken	başarmak
+mislukken	başarısız olmak
+bestaan	var olmak
+ontstaan	ortaya çıkmak
+stijgen	yükselmek
+dalen	düşmek, inmek
+groeien	büyümek
+sterven	ölmek
+geboren worden	doğmak
+zich aanpassen	uyum sağlamak
+integreren	uyum sağlamak, entegre olmak
+groot	büyük
+klein	küçük
+lang	uzun
+kort	kısa
+hoog	yüksek
+laag	alçak
+breed	geniş
+smal	dar
+dik	kalın; şişman
+dun	ince
+zwaar	ağır
+licht	hafif; açık renk
+donker	karanlık, koyu
+nieuw	yeni
+mooi	güzel
+lelijk	çirkin
+schoon	temiz
+vies	kirli
+snel	hızlı
+langzaam	yavaş
+makkelijk	kolay
+moeilijk	zor
+druk	kalabalık, yoğun
+rustig	sakin
+stil	sessiz
+leeg	boş
+vol	dolu
+belangrijk	önemli
+mogelijk	mümkün
+nodig	gerekli
+klaar	hazır, bitti
+bezig	meşgul
+bang	korkmuş
+gelukkig	mutlu; neyse ki
+tevreden	memnun
+vriendelijk	nazik
+beleefd	kibar
+eerlijk	dürüst; adil
+lui	tembel
+slim	zeki
+dom	aptal
+rijk	zengin
+arm	fakir
+eerste	birinci
+laatste	son
+volgende	sonraki
+verschillend	farklı
+hetzelfde	aynı
+anders	farklı; yoksa
+zeker	emin
+beroemd	ünlü
+gevaarlijk	tehlikeli
+veilig	güvenli
+normaal	normal
+speciaal	özel
+leuk	eğlenceli, hoş
+saai	sıkıcı
+gek	deli, tuhaf
+nerveus	gergin
+vrij	serbest; izinli
+handig	kullanışlı, becerikli
+nuttig	faydalı
+duidelijk	açık, net
+ingewikkeld	karmaşık
+eenvoudig	basit
+precies	tam olarak
+juist	doğru
+fout	yanlış
+echt	gerçek; gerçekten
+nep	sahte
+vreemd	tuhaf; yabancı
+bekend	tanınmış
+onbekend	bilinmeyen
+goed	iyi
+slecht	kötü
+prettig	hoş
+vervelend	can sıkıcı
+heerlijk	nefis
+fijn	güzel; ince
+sterk	güçlü
+zwak	zayıf
+zacht	yumuşak; alçak sesle
+hard	sert; yüksek sesle; hızlı
+luid	yüksek sesli
+scherp	keskin
+bot	kör; kaba
+gezellig	samimi, keyifli
+ontspannen	rahat
+gespannen	gergin
+dichtbij	yakın
+ver	uzak
+diep	derin
+ondiep	sığ
+rond	yuvarlak
+vierkant	kare
+recht	düz
+scheef	eğri
+heet	çok sıcak
+lauw	ılık
+fris	serin; taze
+vers	taze
+goedgekeurd	onaylanmış
+verplicht	zorunlu
+verboden	yasak
+toegestaan	izin verilen
+beschikbaar	mevcut
+bezet	dolu, meşgul
+geschikt	uygun
+ongeveer	yaklaşık
+zelfstandig	bağımsız
+serieus	ciddi
+grappig	komik
+bijzonder	özel, olağanüstü
+gewoon	sıradan
+typisch	tipik
+streng	katı
+lief	tatlı
+gemeen	kötü niyetli
+jaloers	kıskanç
+trots	gururlu
+verlegen	utangaç
+geduldig	sabırlı
+ongeduldig	sabırsız
+behulpzaam	yardımsever
+hardwerkend	çalışkan
+en	ve
+maar	ama
+of	veya; -ip -mediği
+want	çünkü
+omdat	çünkü
+dus	yani, bu yüzden
+als	eğer; olarak
+wanneer	ne zaman
+toen	o zaman; -dığında
+dan	o zaman; -den
+eerst	önce
+daarna	sonra
+ook	de, da, ayrıca
+niet	değil
+geen	hiç, yok
+wel	ama (olumlu)
+al	zaten
+nog	hâlâ; daha
+alleen	sadece; yalnız
+samen	birlikte
+heel	çok; bütün
+te	fazla, çok
+veel	çok
+weinig	az
+meer	daha çok
+minder	daha az
+genoeg	yeterli
+bijna	neredeyse
+misschien	belki
+natuurlijk	tabii ki; doğal
+graag	memnuniyetle
+hier	burada
+daar	orada
+overal	her yerde
+binnen	içeride
+buiten	dışarıda
+boven	yukarıda
+beneden	aşağıda
+links	solda
+rechts	sağda
+naast	yanında
+tussen	arasında
+achter	arkasında
+voor	için; önünde
+onder	altında
+op	üstünde
+in	içinde
+bij	yanında, -de
+met	ile
+zonder	-sız, olmadan
+naar	-e, -a (yön)
+van	-in; -den
+uit	-den, -dan
+over	hakkında; üzerinden
+tot	-e kadar
+sinds	-den beri
+tijdens	sırasında
+wie	kim
+wat	ne
+waar	nerede; doğru
+waarom	neden
+hoe	nasıl
+hoeveel	kaç, ne kadar
+welk	hangi
+iemand	birisi
+niemand	hiç kimse
+iets	bir şey
+niets	hiçbir şey
+alles	her şey
+iedereen	herkes
+elke	her
+eigenlijk	aslında
+trouwens	bu arada
+toch	yine de
+zelfs	hatta
+helaas	maalesef
+vooral	özellikle
+daarom	bu yüzden
+hoewel	-e rağmen
+terwijl	-ken
+zodat	böylece
+voordat	-den önce
+nadat	-dikten sonra
+totdat	-e kadar
+ergens	bir yerde
+nergens	hiçbir yerde
+allebei	ikisi de
+sommige	bazı
+andere	diğer
+zo	böyle
+erg	çok; kötü
+steeds	sürekli
+opnieuw	yeniden
+tegen	karşı; -e
+per	başına
+langs	boyunca
+door	içinden; tarafından
+om	etrafında; saat …'de
+tegenover	karşısında
+elf	on bir
+twaalf	on iki
+dertien	on üç
+veertien	on dört
+vijftien	on beş
+zestien	on altı
+zeventien	on yedi
+achttien	on sekiz
+negentien	on dokuz
+twintig	yirmi
+dertig	otuz
+veertig	kırk
+vijftig	elli
+zestig	altmış
+zeventig	yetmiş
+tachtig	seksen
+negentig	doksan
+honderd	yüz
+duizend	bin
+een miljoen	bir milyon
+de helft	yarı
+een kwart	çeyrek
+het nummer	numara
+het bedrag	tutar
+nul	sıfır
+één	bir
+twee	iki
+drie	üç
+vier	dört
+vijf	beş
+zes	altı
+zeven	yedi
+acht	sekiz
+negen	dokuz
+tien	on
+het procent	yüzde
+het paar	çift; birkaç
+het dubbele	iki katı
+het lichaam	vücut
+het hoofd	baş
+het haar	saç
+het gezicht	yüz
+het oog	göz
+het oor	kulak
+de neus	burun
+de mond	ağız
+de tand	diş
+de tong	dil
+de nek	ense
+de schouder	omuz
+de borst	göğüs
+de buik	karın
+de hand	el
+de vinger	parmak
+de knie	diz
+de voet	ayak
+de teen	ayak parmağı
+de huid	cilt
+het hart	kalp
+de longen	akciğerler
+de maag	mide
+de wang	yanak
+de lip	dudak
+de kin	çene
+het voorhoofd	alın
+de wenkbrauw	kaş
+de baard	sakal
+de elleboog	dirsek
+de pols	bilek
+de duim	başparmak
+de nagel	tırnak
+de heup	kalça
+de enkel	ayak bileği
+de hiel	topuk
+het bot	kemik
+de spier	kas
+de hersenen	beyin
+de nier	böbrek
+de lever	karaciğer
+het zweet	ter
+de kleren	giysiler
+de jas	mont, palto
+de trui	kazak
+het overhemd	gömlek
+het T-shirt	tişört
+de broek	pantolon
+de spijkerbroek	kot pantolon
+de rok	etek
+de jurk	elbise
+de schoenen	ayakkabılar
+de laarzen	çizmeler
+de sokken	çoraplar
+het ondergoed	iç çamaşırı
+de muts	bere
+de sjaal	atkı
+de handschoenen	eldivenler
+de pet	şapka (kasket)
+de riem	kemer
+de tas	çanta
+de paraplu	şemsiye
+aantrekken	giymek
+uittrekken	çıkarmak
+dragen	giymek; taşımak
+het pak	takım elbise
+de pyjama	pijama
+de sieraden	takılar
+de ring	yüzük
+het horloge	kol saati
+de bh	sutyen
+de hoofddoek	başörtüsü
+de regenjas	yağmurluk
+de sportschoenen	spor ayakkabısı
+de slippers	terlik
+het vest	hırka
+de knoop	düğme
+de rits	fermuar
+de mouw	kol (giysi)
+de broekzak	cep
+de zonnebril	güneş gözlüğü
+de oorbel	küpe
+de ketting	kolye
+de portefeuille	cüzdan
+de rugzak	sırt çantası
+passend	tam oturan
+wijd	bol
+strak	dar
+de wasmand	çamaşır sepeti
+de tafel	masa
+de stoel	sandalye
+de fauteuil	koltuk
+het bed	yatak
+de kast	dolap
+de lamp	lamba
+het kussen	yastık
+de deken	battaniye
+de spiegel	ayna
+het gordijn	perde
+het vloerkleed	halı
+de wasmachine	çamaşır makinesi
+de koelkast	buzdolabı
+het fornuis	ocak
+de oven	fırın
+de magnetron	mikrodalga fırın
+de stofzuiger	elektrikli süpürge
+de vaatwasser	bulaşık makinesi
+de handdoek	havlu
+de zeep	sabun
+de tandenborstel	diş fırçası
+het toiletpapier	tuvalet kağıdı
+de prullenbak	çöp kutusu
+het stopcontact	priz
+de schaar	makas
+de doos	kutu
+de fles	şişe
+de zitbank	kanepe
+het kussensloop	yastık kılıfı
+het laken	çarşaf
+het dekbed	yorgan
+de wekker	çalar saat
+de klok	saat
+het schilderij	tablo
+de plank	raf
+de la	çekmece
+de vuilniszak	çöp poşeti
+de bezem	süpürge
+de emmer	kova
+de dweil	paspas bezi
+de afwas	bulaşık
+het afwasmiddel	bulaşık deterjanı
+het wasmiddel	çamaşır deterjanı
+de was	çamaşır
+strijken	ütülemek
+het strijkijzer	ütü
+de waterkoker	su ısıtıcısı
+het koffiezetapparaat	kahve makinesi
+de broodrooster	ekmek kızartma makinesi
+de vriezer	dondurucu
+het aanrecht	tezgah
+de gootsteen	eviye
+het snoer	kablo
+de verlichting	aydınlatma
+de gordijnrails	perde rayı
+het bureau	çalışma masası
+de kapstok	portmanto
+de hanger	askı
+de sleutelbos	anahtarlık
+de kaars	mum
+de plant	bitki
+de vaas	vazo
+de ladder	merdiven (portatif)
+de hamer	çekiç
+de schroevendraaier	tornavida
+de boor	matkap
+het gereedschap	alet
+de hobby	hobi
+de sport	spor
+sporten	spor yapmak
+wandelen	yürüyüş yapmak
+fietsen	bisiklete binmek
+zwemmen	yüzmek
+voetballen	futbol oynamak
+de sportschool	spor salonu
+het museum	müze
+de bioscoop	sinema
+de film	film
+het concert	konser
+het theater	tiyatro
+het park	park
+de dierentuin	hayvanat bahçesi
+de vereniging	dernek, kulüp
+het lid	üye
+het feest	parti
+uitgaan	dışarı çıkmak (eğlenmeye)
+de vakantie	tatil
+kamperen	kamp yapmak
+het hotel	otel
+de camping	kamp alanı
+de foto	fotoğraf
+het spel	oyun
+de muziek	müzik
+zingen	şarkı söylemek
+tekenen	resim çizmek
+het vrijwilligerswerk	gönüllü çalışma
+uitnodigen	davet etmek
+afspreken	buluşmak üzere anlaşmak
+de wedstrijd	maç, yarışma
+de voetbalclub	futbol kulübü
+het zwemdiploma	yüzme diploması
+schaatsen	paten kaymak
+de schaatsen	buz pateni
+hardlopen	koşu yapmak
+de fitness	fitness
+de yoga	yoga
+het tennis	tenis
+het basketbal	basketbol
+de bibliotheekpas	kütüphane kartı
+het verhaal	hikaye
+de roman	roman
+het gedicht	şiir
+de tentoonstelling	sergi
+de voorstelling	gösteri
+het festival	festival
+de barbecue	mangal
+de picknick	piknik
+het uitje	gezi
+de dagjesmensen	günübirlikçiler
+de reisgids	seyahat rehberi
+het souvenir	hediyelik eşya
+de camera	kamera
+het speelveld	oyun alanı
+de puzzel	bulmaca, yapboz
+het kaartspel	kağıt oyunu
+de muziekles	müzik dersi
+het instrument	enstrüman
+de gitaar	gitar
+de piano	piyano
+het koor	koro
+dansen	dans etmek
+genieten	keyif almak
+de vrije tijd	boş zaman
+het lidmaatschap	üyelik
+de contributie	aidat
+de natuur	doğa
+het dier	hayvan
+de hond	köpek
+de kat	kedi
+de vogel	kuş
+het paard	at
+de koe	inek
+het schaap	koyun
+het varken	domuz
+de eend	ördek
+de muis	fare
+het konijn	tavşan
+de boom	ağaç
+de bloem	çiçek
+het gras	çimen
+het bos	orman
+de zee	deniz
+het strand	plaj
+de rivier	nehir
+het meer	göl
+de berg	dağ
+het land	ülke; arazi
+de dijk	set, bent
+de polder	polder (denizden kazanılmış arazi)
+de molen	yel değirmeni
+de lucht	hava; gökyüzü
+de grond	toprak, zemin
+de steen	taş
+de paddenstoel	mantar
+het blad	yaprak
+de tak	dal
+het zaad	tohum
+de tulp	lale
+de roos	gül
+de bij	arı
+de vlieg	sinek
+de mug	sivrisinek
+de spin	örümcek
+de vlinder	kelebek
+het insect	böcek
+de mier	karınca
+de rat	sıçan
+de haan	horoz
+de geit	keçi
+de ezel	eşek
+de zwaan	kuğu
+de meeuw	martı
+de reiger	balıkçıl
+de boerderij	çiftlik
+het weiland	otlak
+het veld	tarla
+het duin	kum tepesi
+het eiland	ada
+de heuvel	tepe
+de sloot	hendek
+het milieu	çevre
+het klimaat	iklim
+de vervuiling	kirlilik
+recyclen	geri dönüştürmek
+de zonnepanelen	güneş panelleri
+de windmolen	rüzgar türbini
+het huisdier	evcil hayvan
+uitlaten	köpeği gezdirmek
+de stad	şehir
+het dorp	köy
+het centrum	merkez
+de wijk	semt
+de straat	sokak
+het plein	meydan
+de brug	köprü
+de gracht	kanal
+de hoek	köşe
+het gebouw	bina
+het stadhuis	belediye binası
+de kerk	kilise
+de moskee	cami
+het politiebureau	karakol
+het café	kafe
+de school	okul
+het zwembad	yüzme havuzu
+de speeltuin	oyun parkı
+het buurthuis	mahalle evi
+de ingang	giriş
+de uitgang	çıkış
+de fabriek	fabrika
+de haven	liman
+de bibliotheek	kütüphane
+het postkantoor	postane
+het restaurant	restoran
+de snackbar	büfe
+de begraafplaats	mezarlık
+het monument	anıt
+het standbeeld	heykel
+de toren	kule
+het kasteel	şato
+de vuurtoren	deniz feneri
+de sporthal	spor salonu
+het sportveld	spor sahası
+de rondweg	çevre yolu
+het industrieterrein	sanayi bölgesi
+de binnenstad	şehir merkezi
+de buitenwijk	banliyö
+de hoofdstad	başkent
+de inwoner	sakin
+de toerist	turist
+de VVV	turizm danışma bürosu
+de plattegrond	şehir planı
+het verkeerslicht	trafik ışığı
+de lantaarnpaal	sokak lambası
+het bankje	bank (oturak)
+de fontein	çeşme
+de steeg	dar sokak
+de kade	rıhtım
+de telefoon	telefon
+het telefoonnummer	telefon numarası
+het bericht	mesaj
+de e-mail	e-posta
+de bijlage	ek
+versturen	göndermek
+het internet	internet
+de website	web sitesi
+de computer	bilgisayar
+de app	uygulama
+het wachtwoord	şifre
+inloggen	giriş yapmak
+downloaden	indirmek
+printen	yazdırmak
+de voicemail	sesli mesaj
+terugbellen	geri aramak
+opnemen	telefonu açmak; kaydetmek
+ophangen	telefonu kapatmak
+de krant	gazete
+het nieuws	haberler
+de televisie	televizyon
+de radio	radyo
+het tijdschrift	dergi
+de oplader	şarj aleti
+de batterij	pil, batarya
+het scherm	ekran
+de smartphone	akıllı telefon
+de mobiel	cep telefonu
+het sms'je	kısa mesaj
+appen	mesajlaşmak
+het gesprek	konuşma
+het videogesprek	görüntülü görüşme
+de onderwerpregel	konu satırı
+de afzender	gönderen
+de ontvanger	alıcı
+beantwoorden	yanıtlamak
+doorsturen	iletmek
+het account	hesap
+uitloggen	çıkış yapmak
+de wifi	kablosuz internet
+de link	bağlantı
+klikken	tıklamak
+het bestand	dosya
+opslaan	kaydetmek
+de printer	yazıcı
+het toetsenbord	klavye
+typen	yazmak (klavyede)
+het nieuwsbericht	haber
+sociale media	sosyal medya
+het nepnieuws	sahte haber
+de oplichting	dolandırıcılık
+de postzegel	pul
+de envelop	zarf
+de kaart	kart; harita
+de uitnodiging	davet
+het antwoordapparaat	telesekreter
+de verbinding	bağlantı
+de taal	dil
+de moedertaal	ana dil
+het woord	kelime
+de zin	cümle; istek
+de uitspraak	telaffuz
+het accent	aksan
+de spelling	yazım
+spellen	harf harf söylemek
+de kleur	renk
+rood	kırmızı
+blauw	mavi
+geel	sarı
+groen	yeşil
+zwart	siyah
+wit	beyaz
+grijs	gri
+bruin	kahverengi
+oranje	turuncu
+roze	pembe
+paars	mor
+de koning	kral
+de koningin	kraliçe
+de regering	hükümet
+de minister	bakan
+de minister-president	başbakan
+de Tweede Kamer	Temsilciler Meclisi
+de verkiezingen	seçimler
+stemmen	oy vermek
+de partij	parti
+de democratie	demokrasi
+de Grondwet	anayasa
+de provincie	il
+het waterschap	su kurulu
+de vrijheid	özgürlük
+gelijk	eşit; haklı
+de discriminatie	ayrımcılık
+de godsdienst	din
+de mening	fikir
+de vlag	bayrak
+het Wilhelmus	Hollanda milli marşı
+Koningsdag	Kral Günü (27 Nisan)
+Bevrijdingsdag	Kurtuluş Günü (5 Mayıs)
+Dodenherdenking	Ölüleri Anma Günü (4 Mayıs)
+Sinterklaas	Sinterklaas (5 Aralık)
+de kerst	Noel
+het Koninklijk Huis	Kraliyet ailesi
+de Eerste Kamer	Senato
+het parlement	parlamento
+de politicus	politikacı
+de politiek	siyaset
+het kabinet	kabine
+de staat	devlet
+de rechtsstaat	hukuk devleti
+de grondrechten	temel haklar
+de vrijheid van meningsuiting	ifade özgürlüğü
+de gelijkheid	eşitlik
+de Tweede Wereldoorlog	İkinci Dünya Savaşı
+de bevrijding	kurtuluş
+de Gouden Eeuw	Altın Çağ
+de Deltawerken	Delta Projesi
+de provinciehoofdstad	il merkezi
+de koopzondag	alışveriş pazarı
+de verjaardagskalender	doğum günü takvimi
+het Nieuwjaar	yılbaşı
+het vuurwerk	havai fişek
+de oliebol	kızarmış hamur topu
+Pasen	Paskalya
+het Suikerfeest	Ramazan Bayramı
+de ramadan	Ramazan
+de kok	aşçı
+de kapper	kuaför, berber
+de schoonmaker	temizlikçi
+de chauffeur	şoför
+de vrachtwagen	kamyon
+de bezorger	kurye
+de postbode	postacı
+de timmerman	marangoz
+de loodgieter	tesisatçı
+de elektricien	elektrikçi
+de schilder	boyacı
+de bouwvakker	inşaat işçisi
+de boer	çiftçi
+de tuinman	bahçıvan
+de verkoopmedewerker	satış elemanı
+de caissière	kasiyer
+de magazijnmedewerker	depo çalışanı
+de automonteur	oto tamircisi
+de garage	oto tamirhanesi
+de leraar	öğretmen
+de docent	öğretim görevlisi
+de verzorgende	bakıcı
+de kinderopvangmedewerker	çocuk bakıcısı
+de apotheker	eczacı
+de agent	polis memuru
+de brandweerman	itfaiyeci
+de soldaat	asker
+de journalist	gazeteci
+de programmeur	programcı
+de boekhouder	muhasebeci
+de secretaresse	sekreter
+de receptionist	resepsiyonist
+de tolk	tercüman
+de vertaler	çevirmen
+de bewaker	güvenlik görevlisi
+de kunstenaar	sanatçı
+de ingenieur	mühendis
+de architect	mimar
+de dierenarts	veteriner
+het gevoel	duygu
+de blijdschap	sevinç
+het verdriet	üzüntü
+de angst	korku
+de woede	öfke
+de liefde	aşk, sevgi
+de hoop	umut
+de schaamte	utanç
+de eenzaamheid	yalnızlık
+eenzaam	yalnız
+het heimwee	sıla hasreti
+de spijt	pişmanlık
+spijt hebben	pişman olmak
+opgelucht	rahatlamış
+teleurgesteld	hayal kırıklığına uğramış
+verbaasd	şaşırmış
+bezorgd	endişeli
+geïrriteerd	sinirli
+enthousiast	hevesli
+zenuwachtig	heyecanlı, gergin
+dankbaar	minnettar
+verliefd	âşık
+de ruzie	kavga
+het excuus	özür
+troosten	teselli etmek
+het humeur	ruh hali
+chagrijnig	huysuz
+vrolijk	neşeli
+de vriendschap	arkadaşlık
+het noodgeval	acil durum
+de brand	yangın
+blussen	söndürmek
+de rook	duman
+de inbraak	hırsızlık (ev)
+de dief	hırsız
+de diefstal	hırsızlık
+het slachtoffer	kurban
+de verdachte	şüpheli
+de misdaad	suç
+het geweld	şiddet
+huiselijk geweld	aile içi şiddet
+Veilig Thuis	Güvenli Ev (danışma hattı)
+de wijkagent	mahalle polisi
+het gevaar	tehlike
+de veiligheid	güvenlik
+de hulp	yardım
+de hulpverlener	yardım görevlisi
+de maatschappelijk werker	sosyal hizmet uzmanı
+de huisartsenspoedpost	nöbetçi doktor
+de reanimatie	kalp masajı
+de AED	kalp şok cihazı
+de brandblusser	yangın söndürücü
+de nooduitgang	acil çıkış
+de sirene	siren
+de beveiliging	güvenlik sistemi
+de reden	sebep
+het probleem	sorun
+de oplossing	çözüm
+het idee	fikir
+de keuze	seçim
+de kans	şans, fırsat
+het doel	hedef
+het plan	plan
+de manier	yol, şekil
+de informatie	bilgi
+de mogelijkheid	olasılık
+het verschil	fark
+de fout	hata
+het begin	başlangıç
+het einde	son
+de rij	sıra
+de plek	yer
+de plaats	yer
+het deel	parça, kısım
+het geluid	ses
+de stem	ses; oy
+de naam	ad
+de wereld	dünya
+het leven	hayat
+de dood	ölüm
+de mens	insan
+de oorlog	savaş
+de vrede	barış
+de tijd	zaman
+de keer	kez
+het ding	şey
+het gebied	bölge
+de soort	tür
+het voordeel	avantaj
+het nadeel	dezavantaj
+de toekomstplannen	gelecek planları
+de ontwikkeling	gelişme
+de situatie	durum
+het gedrag	davranış
+de gewoonte	alışkanlık
+de cultuur	kültür
+de traditie	gelenek
+de samenleving	toplum
+de waarde	değer
+de norm	norm
+het respect	saygı

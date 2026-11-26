@@ -34,7 +34,7 @@ async function load(options={}){
     visitor:()=>'visitor-hash',sameOrigin:()=>true,
     useChecks:async(_id,cost)=>{usage.push(cost);return options.left??5},useFree:async(_id,cost)=>{usage.push(cost);return options.free??1},
     useTotal:async cost=>{quotas.push(cost);return 'total' in options?options.total:300},addSpend:options.addSpend|| (async()=>true),bonusFor:async()=>0,
-    PLUS_MONTH:200,PASS_TOTAL:250,TALK_PLUS:3,monthOf:()=>'2026-11-01',amsterdamDay:()=>'2026-11-25',
+    PLUS_MONTH:200,PASS_TOTAL:250,YEAR_TOTAL:600,TALK_PLUS:3,monthOf:()=>'2026-11-01',amsterdamDay:()=>'2026-11-25',
     useGuard:async(k,_d,cost,lim)=>{guards.push([k,cost]);const g=options.guard?.[k[0]];return g??lim-cost},
     plusFor:async()=>options.plan||null,coversLevel:(p,l)=>!!p&&(p.level==='B1'||l==='A2'),
     talkSign:x=>crypto.createHmac('sha256','test-secret').update('bittertalen-talk|'+x).digest('base64url'),
@@ -757,6 +757,6 @@ test('An erased fact does not come back when devices merge, and two devices keep
   assert.match(fs.readFileSync(new URL('oefenen.html',root),'utf8'),/delete retained\.sm/);
 });
 test('The privacy statement describes the memory in every language',()=>{
-  const parts=fs.readFileSync(new URL('privacy.html',root),'utf8').split('<article data-l="').slice(1);assert.equal(parts.length,8);
-  for(const p of parts)assert.equal((p.match(/Supabase[\s\S]{0,900}?Anthropic[\s\S]{0,300}?Google/g)||[]).length>=1&&/Saskia|ساسكيا|Саския/.test(p),true,p.slice(0,2));
+  const parts=fs.readFileSync(new URL('privacy.html',root),'utf8').split('<article data-l="').slice(1);assert.equal(parts.length,9);
+  for(const p of parts)assert.equal((p.match(/Supabase[\s\S]{0,900}?Anthropic[\s\S]{0,300}?Google/g)||[]).length>=1&&/Saskia|ساسكيا|Саския|Саскія/.test(p),true,p.slice(0,2));
 });

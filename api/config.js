@@ -5,7 +5,7 @@
 // Google, Apple, Microsoft (azure) and Facebook show when they are switched on in Supabase (Authentication → Sign In / Providers);
 // the e-mail code only with LOGIN_EMAIL=1, because Supabase's own mail reaches only the project's team
 // (real users need custom SMTP); passkeys (still experimental in Supabase) only with LOGIN_PASSKEY=1.
-import { accounts, supaUrl, anonKey, LIMIT, FREE, plusOn, PLUS, PLUS_MONTH, TALK_PLUS, PLUS_PRICE, PLANS, passOn, PASSES, PASS_TOTAL, PASS_DAYS, yearOn, YEARS, YEAR_DAYS } from "./_supa.js";
+import { accounts, supaUrl, anonKey, LIMIT, FREE, plusOn, PLUS, PLUS_MONTH, TALK_PLUS, PLUS_PRICE, PLANS, passOn, PASSES, PASS_TOTAL, PASS_DAYS, yearOn, YEARS, YEAR_DAYS, YEAR_TOTAL } from "./_supa.js";
 import { eventsOn } from "./event.js";
 
 export default async function handler(req, res) {
@@ -26,7 +26,7 @@ export default async function handler(req, res) {
     // the Examenpas: one payment for PASS_DAYS of Plus at that level, only when its prices are configured
     ...(passOn ? { pass: { days: PASS_DAYS, total: PASS_TOTAL, plans: Object.fromEntries(Object.entries(PASSES).map(([level, p]) => [level, { price: p.price }])) } } : {}),
     // the Jaarpas: the same for YEAR_DAYS, only when its prices are configured
-    ...(yearOn ? { year: { days: YEAR_DAYS, plans: Object.fromEntries(Object.entries(YEARS).map(([level, p]) => [level, { price: p.price }])) } } : {}),
+    ...(yearOn ? { year: { days: YEAR_DAYS, total: YEAR_TOTAL, plans: Object.fromEntries(Object.entries(YEARS).map(([level, p]) => [level, { price: p.price }])) } } : {}),
     ...(eventsOn() ? { events: 1 } : {}),
   });
 }

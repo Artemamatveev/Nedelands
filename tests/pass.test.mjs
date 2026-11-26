@@ -19,7 +19,7 @@ globalThis.fetch=async(url,init={})=>{
   if(url.includes('/rest/v1/exam_pass?user_id')&&url.includes('created_at=gt')){const since=decodeURIComponent(url.match(/created_at=gt\.([^&]+)/)[1]),now=decodeURIComponent(url.match(/until=gt\.([^&]+)/)[1]);
     return J(db.passes.filter(p=>(p.created_at||'')>since&&p.until>now).map(({session,level,created_at})=>({session,level,created_at})))}
   if(url.includes('/rest/v1/exam_pass?session=eq.')&&m==='PATCH'){const id=decodeURIComponent(url.split('session=eq.')[1]);const p=db.passes.find(x=>x.session===id);if(p)p.until=JSON.parse(init.body).until;return new Response(null,{status:204})}
-  if(url.endsWith('/rest/v1/withdrawals')&&m==='POST'){(db.withdrawals||=[]).push(JSON.parse(init.body));return new Response(null,{status:201})}
+  if(url.includes('/rest/v1/withdrawals')&&m==='POST'){const row=JSON.parse(init.body);if(!(db.withdrawals||=[]).some(w=>w.ref===row.ref))db.withdrawals.push(row);return new Response(null,{status:201})}
   if(url.includes('/rest/v1/exam_pass?user_id')){const since=decodeURIComponent(url.match(/until=gt\.([^&]+)/)[1]);
     return J(db.passes.filter(p=>p.until>since).sort((a,b)=>b.until.localeCompare(a.until)).map(({session,level,until})=>({session,level,until})))}
   if(url.endsWith('/rest/v1/exam_pass')&&m==='POST'){if(db.gone)return J({code:'23503'},409);const row=JSON.parse(init.body);
@@ -44,8 +44,8 @@ const last=s=>calls.filter(c=>c.includes(s)).pop();
 
 test('Config offers the Examenpas with its fixed prices and length',async()=>{
   const r=res();await config({method:'GET',headers:H},r);
-  assert.deepEqual(r.body.pass,{days:91,total:250,plans:{A2:{price:'29,99'},B1:{price:'39,99'}}});
-  assert.deepEqual(r.body.year,{days:365,plans:{A2:{price:'79,99'},B1:{price:'119,99'}}});
+  assert.deepEqual(r.body.pass,{days:119,total:250,plans:{A2:{price:'29,99'},B1:{price:'39,99'}}});
+  assert.deepEqual(r.body.year,{days:365,total:600,plans:{A2:{price:'79,99'},B1:{price:'119,99'}}});
 });
 test('Buying a pass opens a one-time Checkout with the consent text and the user in its metadata',async()=>{
   const r=res();await plus({method:'POST',headers:H,body:{go:'pass',start:true,level:'B1'}},r);
@@ -54,18 +54,18 @@ test('Buying a pass opens a one-time Checkout with the consent text and the user
   assert.equal(q.get('mode'),'payment');assert.equal(q.get('line_items[0][price]'),'price_pb1');
   assert.equal(q.get('metadata[uid]'),'u1');assert.equal(q.get('metadata[kind]'),'pass');assert.equal(q.get('client_reference_id'),'u1');
   assert.match(q.get('custom_text[submit][message]'),/herroepen/);assert.ok(q.get('metadata[start_now]'));
-  const unticked=res();await plus({method:'POST',headers:H,body:{go:'pass',level:'B1'}},unticked);assert.equal(unticked.statusCode,400);assert.equal(unticked.body.error,'start');
+  const unticked=res();await plus({method:'POST',headers:H,body:{go:'pass',level:'B1'}},unticked);assert.equal(unticked.body.url,'https://checkout.stripe.test/pass','an app page cached before the switch can still buy');
   const bad=res();await plus({method:'POST',headers:H,body:{go:'pass',start:true,level:'C1'}},bad);assert.equal(bad.statusCode,400);
   const other=res();await plus({method:'POST',headers:{...H,origin:'https://evil.test'},body:{go:'pass',start:true,level:'A2'}},other);assert.equal(other.statusCode,403);
 });
-test('A paid session gives 91 days at its level, once, and a second pass extends a running one',async()=>{
+test('A paid session gives 119 days at its level, once, and a second pass extends a running one',async()=>{
   assert.equal((await send(paid('cs_1','A2'))).statusCode,200);
   assert.equal(db.passes.length,1);const first=Date.parse(db.passes[0].until);
-  assert.ok(Math.abs(first-(Date.now()+91*DAY))<60e3);
+  assert.ok(Math.abs(first-(Date.now()+119*DAY))<60e3);
   await send(paid('cs_1','A2'));assert.equal(db.passes.length,1); // the same event again adds nothing
   const p=await plusFor('u1');assert.equal(p.level,'A2');assert.equal(p.pass,true);assert.ok(coversLevel(p,'A2'));assert.ok(!coversLevel(p,'B1'));
   await send(paid('cs_2','A2'));assert.equal(db.passes.length,2);
-  assert.ok(Math.abs(Date.parse(db.passes[1].until)-(first+91*DAY))<60e3);
+  assert.ok(Math.abs(Date.parse(db.passes[1].until)-(first+119*DAY))<60e3);
   const r=res();await plus({method:'GET',headers:H},r);assert.equal(r.body.plus.pass,true);assert.equal(r.body.plus.level,'A2');
 });
 test('Unpaid, foreign, wrongly priced or tampered sessions give nothing',async()=>{
@@ -136,4 +136,13 @@ test('The withdrawal button ends a pass bought in the last 14 days at once and k
   const again=res();await plus({method:'POST',headers:H,body:{go:'withdraw'}},again);assert.deepEqual(again.body.withdrawn,[]);
   const other=res();await plus({method:'POST',headers:{...H,origin:'https://evil.test'},body:{go:'withdraw'}},other);assert.equal(other.statusCode,403);
   db.passes=[];
+});
+test('A withdrawal that cannot be recorded cancels nothing', async()=>{
+  const now=Date.now();
+  db.passes=[{session:'cs_keep',user_id:'u1',level:'A2',until:new Date(now+80*DAY).toISOString(),created_at:new Date(now-1*DAY).toISOString()}];
+  db.plus=null;const real=globalThis.fetch;
+  globalThis.fetch=async(url,init={})=>String(url).includes('/rest/v1/withdrawals')?new Response('{}',{status:404}):real(url,init);
+  try{const r=res();await plus({method:'POST',headers:H,body:{go:'withdraw'}},r);assert.equal(r.statusCode,502);
+    assert.ok(Date.parse(db.passes[0].until)>Date.now(),'the pass still runs')}
+  finally{globalThis.fetch=real;db.passes=[]}
 });

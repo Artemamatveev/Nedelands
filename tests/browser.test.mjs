@@ -1036,17 +1036,17 @@ test('Monthly A2 and B1 offers fit the homepage and the app sends the selected l
   let browser;
   try{browser=chromium&&await chromium.launch()}catch(e){if(process.env.BROWSER_TESTS)throw e}
   if(!browser){if(process.env.BROWSER_TESTS)assert.fail('Playwright is not installed');return t.skip('no browser here')}
-  const config={url:'https://example.supabase.co',anon:'fixture',login:[],limit:7,period:'once',free:2,freePeriod:'once',events:1,plus:{limit:20,month:200,price:'9,99',plans:{A2:{price:'9,99'},B1:{price:'14,99'}}},pass:{days:91,total:260,plans:{A2:{price:'29,99'},B1:{price:'39,99'}}},year:{days:365,plans:{A2:{price:'79,99'},B1:{price:'119,99'}}}};
+  const config={url:'https://example.supabase.co',anon:'fixture',login:[],limit:7,period:'once',free:2,freePeriod:'once',events:1,plus:{limit:20,month:200,price:'9,99',plans:{A2:{price:'9,99'},B1:{price:'14,99'}}},pass:{days:119,total:260,plans:{A2:{price:'29,99'},B1:{price:'39,99'}}},year:{days:365,total:610,plans:{A2:{price:'79,99'},B1:{price:'119,99'}}}};
   const events=[];
   const server=await serve({config,events}),base=`http://127.0.0.1:${server.address().port}`;
   try{
-    for(const [lang,width] of [['nl',1280],['ru',390],['ar',375],['hi',320]]){
+    for(const [lang,width] of [['nl',1280],['ru',390],['ar',375],['hi',320],['uk',390]]){
       const s=await page(browser,base,{lang,viewport:{width,height:900}});await s.go('/');
       await s.p.waitForFunction(()=>!document.querySelector('#plus-b1-card').hidden);
       assert.match(await s.p.locator('#plus-price').textContent(),/9,99/);
       assert.match(await s.p.locator('#plus-b1-price').textContent(),/14,99/);
       assert.match(await s.p.locator('#pass-total').textContent(),/260/);
-      assert.match(await s.p.locator('#year-checks').textContent(),/200/);
+      assert.match(await s.p.locator('#year-checks').textContent(),/610/);
       assert.match(await s.p.locator('#pass-price').textContent(),/39,99/);
       assert.equal(await overflow(s.p),0);assert.deepEqual(s.errors,[]);await s.ctx.close();
     }
