@@ -37,8 +37,8 @@ const WRAP = { A2: 8, B1: 10 }; // from this turn on the character rounds the co
 // Historical facts in a persona are checked; the model is told to stay vague rather than invent more.
 // The page lists the same ids and names in PEOPLE (oefenen.html), with the avatar.
 const PEOPLE = {
-  saskia: { who: "Bittie", g: "F", open: ["Hoi! Ik ben Bittie. Waar wil je over praten?", "Hoi, ik ben Bittie! Wat heb je vandaag gedaan?", "Hallo! Ik ben Bittie. Waar zullen we het vandaag over hebben?"], again: ["Hoi! Leuk dat je er weer bent. Waar wil je vandaag over praten?", "Hé, daar ben je weer! Wat heb je de laatste tijd gedaan?"],
-    persona: "Bittie, Bittertalen’s friendly AI conversation partner for practising Dutch. Follow the learner’s chosen topic, respond naturally, and ask one accessible follow-up question at a time. Topics can include everyday life, the Netherlands and art. You can offer to role-play a situation such as a shop visit, clearly saying that you are starting a role-play. Introduce yourself only as Bittie. Never claim to be a human, to have a cafe or to know personal facts beyond any supplied context." },
+  saskia: { who: "Bittie", g: "M", voice: "Achird", open: ["Hoi! Ik ben Bittie. Waar wil je over praten?", "Hoi, ik ben Bittie! Wat heb je vandaag gedaan?", "Hallo! Ik ben Bittie. Waar zullen we het vandaag over hebben?"], again: ["Hoi! Leuk dat je er weer bent. Waar wil je vandaag over praten?", "Hé, daar ben je weer! Wat heb je de laatste tijd gedaan?"],
+    persona: "Bittie, Bittertalen’s friendly AI conversation partner for practising Dutch. Speak like a warm, easygoing adult friend. Follow the learner’s chosen topic, respond naturally, and ask one accessible follow-up question at a time. Topics can include everyday life, the Netherlands and art. You can offer to role-play a situation such as a shop visit, clearly saying that you are starting a role-play. Introduce yourself only as Bittie. Never claim to be a human, to have a cafe or to know personal facts beyond any supplied context." },
   jansen: { who: "Mevrouw Jansen", g: "F", open: ["Goedemorgen! Mooi weer vandaag, hè? Woont u hier al lang?", "Hallo buur! Ik ben net mijn tuin aan het doen. Hoe gaat het met u?"],
     persona: "Mevrouw Ria Jansen (72), the friendly, slightly nosy neighbour. Widow, lives in the street for forty years, has a garden with roses, two grandchildren, walks with her dog Bello. Talks about the weather, the neighbourhood, the bins (groene bak on Monday), her grandchildren, and wants to know everything about the learner. Uses u, old-fashioned and kind." },
   slager: { who: "Slager Henk", g: "M", formal: 1, open: ["Goedemiddag! Zegt u het maar, wat mag het zijn?", "Hé, goedemorgen! Wat kan ik voor u snijden vandaag?"],
@@ -160,13 +160,13 @@ function unticket(tok) {
 }
 
 // Google's voice for a reply: base64 MP3, or null (no key, slow, or an error: the page then uses the phone's voice)
-async function speech(text, g) {
+async function speech(text, topic) {
   if (!TTS_KEY || !text) return null;
   try {
     const r = await fetch("https://texttospeech.googleapis.com/v1/text:synthesize", {
       method: "POST", signal: AbortSignal.timeout(2500),
       headers: { "Content-Type": "application/json", "X-Goog-Api-Key": TTS_KEY },
-      body: JSON.stringify({ input: { text: text.slice(0, 900) }, voice: { languageCode: "nl-NL", name: "nl-NL-Chirp3-HD-" + VOICE[g] }, audioConfig: { audioEncoding: "MP3", sampleRateHertz: 24000 } }),
+      body: JSON.stringify({ input: { text: text.slice(0, 900) }, voice: { languageCode: "nl-NL", name: "nl-NL-Chirp3-HD-" + (topic.voice || VOICE[topic.g]) }, audioConfig: { audioEncoding: "MP3", sampleRateHertz: 24000 } }),
     });
     if (!r.ok) { console.error("tts", r.status); return null }
     const j = await r.json();
@@ -283,7 +283,7 @@ export async function talk(req, res) {
     const open = Array.isArray(list) ? list[Math.floor(Math.random() * list.length)] : list;
     const token = ticket({ s, t: req.body.topic, l: level, p: plus ? 1 : 0, x: Date.now() + TTL, i: randomBytes(9).toString("base64url") });
     return res.status(200).json({
-      token, reply: open, audio: await speech(open, T.g),
+      token, reply: open, audio: await speech(open, T),
       left: who ? free : left, limit: who ? FREE : lim, period: who ? "once" : period, checkedAt: at, ...(who ? { free } : {}),
     });
   }
@@ -321,7 +321,7 @@ export async function talk(req, res) {
         } : {}),
       });
     }
-    const say = async (text) => { const a = req.body?.voice === "device" ? null : await speech(text, T.g); time.voice = ms(); return a };
+    const say = async (text) => { const a = req.body?.voice === "device" ? null : await speech(text, T); time.voice = ms(); return a };
     const last = n >= TURNS, parts = [];
     let queue = Promise.resolve(), ended = false;
     const line = (x) => {
