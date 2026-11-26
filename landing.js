@@ -129,7 +129,7 @@ const copy = {
   "Ook Schrijven en Spreken B1, met A2 erbij.": ["Also Writing and Speaking B1, with A2 included.", "يشمل أيضًا الكتابة والتحدث لمستوى B1، مع A2.", "B1 Yazma ve Konuşma da dahil, A2 ile birlikte.", "B1 लेखन और बोलना भी, A2 के साथ।", "还包括 B1 写作和口语，并含 A2。", "También Escritura y Expresión oral B1, con A2 incluido.", "Также письмо и устная речь B1, A2 включён."],
   "Tot 200 nakijkbeurten per maand voor je teksten en gesproken antwoorden": ["Up to 200 checks a month for your writing and spoken answers", "حتى 200 تصحيح شهريًا لنصوصك وإجاباتك الشفهية", "Yazıların ve sözlü yanıtların için ayda 200'e kadar kontrol", "आपके लेखन और बोले गए जवाबों के लिए महीने में 200 तक जाँचें", "每月最多 200 次批改，用于你的写作和口语回答", "Hasta 200 revisiones al mes para tus textos y respuestas orales", "До 200 проверок в месяц для ваших текстов и устных ответов"],
   "per maand": ["per month", "شهريًا", "aylık", "प्रति माह", "每月", "al mes", "в месяц"],
-  "13 weken geldig vanaf je betaling": ["Valid for 13 weeks from payment", "صالح لمدة 13 أسبوعًا من الدفع", "Ödemeden itibaren 13 hafta geçerli", "भुगतान से 13 हफ़्ते तक मान्य", "自付款起 13 周内有效", "Válido 13 semanas desde el pago", "Действует 13 недель с момента оплаты"],
+  "17 weken geldig vanaf je betaling": ["Valid for 17 weeks from payment", "صالح لمدة 17 أسبوعًا من الدفع", "Ödemeden itibaren 17 hafta geçerli", "भुगतान से 17 हफ़्ते तक मान्य", "自付款起 17 周内有效", "Válido 17 semanas desde el pago", "Действует 17 недель с момента оплаты"],
   "Niet tevreden? Binnen 14 dagen na je eerste betaling krijg je je geld terug.": ["Not satisfied? Get your money back within 14 days of your first payment.", "غير راضٍ؟ استرد مالك خلال 14 يومًا من أول دفعة.", "Memnun değil misin? İlk ödemenden sonraki 14 gün içinde paranı geri al.", "संतुष्ट नहीं? पहले भुगतान के 14 दिनों के भीतर पैसे वापस पाएँ।", "不满意？首次付款后 14 天内可退款。", "¿No estás satisfecho? Te devolvemos el dinero en los 14 días siguientes a tu primer pago.", "Не понравилось? Вернём деньги в течение 14 дней после первой оплаты."],
   "Kies Plus A2": ["Choose Plus A2", "اختر Plus A2", "Plus A2 seç", "Plus A2 चुनें", "选择 Plus A2", "Elegir Plus A2", "Выбрать Plus A2"],
   "Examenpas": ["Exam pass", "تصريح الامتحان", "Sınav kartı", "परीक्षा पास", "考试通行证", "Pase de examen", "Экзаменационный пропуск"],
@@ -221,7 +221,7 @@ function render() {
     const eur = p => `€ ${lang === "en" ? String(p).replace(",", ".") : p}`;
     const row = level => { const b = document.createElement("bdi"), sm = document.createElement("small"); b.textContent = eur(pass.plans[level].price); sm.textContent = level; return [b, " ", sm]; };
     $("pass-price").replaceChildren(...row("A2"), document.createElement("br"), ...row("B1"));
-    $("pass-weeks").textContent = passWeeks[lang](Math.round((pass.days || 91) / 7));
+    $("pass-weeks").textContent = passWeeks[lang](Math.round((pass.days || 119) / 7));
   }
   // the Jaarpas, the same way (a year of Plus, one payment)
   const year = config?.year;

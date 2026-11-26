@@ -298,6 +298,9 @@ a.it{text-decoration:none} .it.ext::after{content:none}
    scroll frame and during every page change (the "slightly sticky" scrolling); the computer keeps the glass */
 :root:not([data-desktop]) .tabs{-webkit-backdrop-filter:none;backdrop-filter:none;background:color-mix(in srgb,var(--card) 96%,transparent)}
 .tabs.drag .lens{transition:scale 220ms var(--motion-ease),opacity var(--motion-ui) var(--motion-settle);scale:1.03 1.14;opacity:.85}
+/* on a phone the lens's place is a transform, and the scale property would scale that move too (the lens ran ahead of
+   the finger): there the drag stretch is part of the transform (put() in LENS) */
+:root:not([data-desktop]) .tabs.drag .lens{scale:none}
 .tabs.drag button{color:var(--ink)} .tabs.drag button.on{color:#fff}
 /* scroll down and the bar shrinks to its icons; scroll up and the names come back */
 .tabs.min{width:min(300px,calc(100vw - 24px))}
@@ -563,12 +566,14 @@ body.vfull{overflow:hidden}
 .tl p{margin:0}
 .tl .ask{display:flex;align-items:center;gap:6px;font-size:var(--fs-xs)}
 .tl .say{background:none;border:0;color:var(--blue);font-size:var(--fs-s);padding:2px 6px;margin:-2px 0}
+.tl .rep{margin-inline-start:auto;background:none;border:0;color:var(--soft);font-size:var(--fs-xs);padding:2px 6px}
 .tl.me{padding-left:28px}
 .tl.me .ask{color:var(--soft)}
 .tl.no p:last-child{color:var(--soft)}
 .tl small{display:block;color:var(--bad);font-size:var(--fs-s)}
 #tctl{margin-top:16px}
 #tctl .rec{margin-bottom:10px}
+.recpick{outline:2px solid var(--oranje);outline-offset:-2px}
 #tctl .type{margin-bottom:6px}
 #tctl .type input{font-size:var(--fs-b);font-weight:400}
 #tctl .hint{margin:4px 0 8px}
@@ -1760,8 +1765,11 @@ async function authHead(){
 const canOffer=()=>!NATIVE&&!!(acc.user&&acc.cfg&&(acc.cfg.pass||acc.cfg.plus)&&!isPlus(lvl()));
 const offerBtn=()=>`<button type="button" class="ghost wide" data-offer>${acc.cfg.pass?"Bekijk de Examenpas":"Bekijk Bittertalen Plus"}</button>`;
 const offerHTML=c=>c==="limit"&&canOffer()?"<br>"+offerBtn():"";
-const examOffer=()=>canOffer()?`<div class="offer"><p class="note">${acc.cfg.pass?`Wil je tot je examen elke dag laten nakijken? Met de Examenpas kan dat ${Math.round((acc.cfg.pass.days||91)/7)} weken lang, voor één betaling.`:"Wil je tot je examen elke dag laten nakijken? Met Bittertalen Plus kan dat."}</p>${offerBtn()}</div>`:"";
+const examOffer=()=>canOffer()?`<div class="offer"><p class="note">${acc.cfg.pass?`Wil je tot je examen elke dag laten nakijken? Met de Examenpas kan dat ${Math.round((acc.cfg.pass.days||119)/7)} weken lang, voor één betaling.`:"Wil je tot je examen elke dag laten nakijken? Met Bittertalen Plus kan dat."}</p>${offerBtn()}</div>`:"";
 document.addEventListener("click",e=>{if(e.target.closest("[data-offer]")){stopSpeak();plusScreen()}});
+// Right after a practice text that is not yet voldoende (the moment the feedback is wanted), once a day: the same offer
+// as after a proefexamen, instead of only when the free checks have run out
+const dayOffer=()=>{if(!canOffer())return"";const d=String(today());if(lsGet("ww-offer-day")===d)return"";lsSet("ww-offer-day",d);return examOffer()};
 const noCheck=c=>c==="ai_consent"?"Zonder je akkoord sturen we niets naar de AI. Je kunt gewoon verder oefenen.":c==="quota_unavailable"?"Nakijken is tijdelijk niet beschikbaar. Je kunt verder oefenen.":c==="login"?(acc.free===0?"Je gratis proefbeurten zijn op. Maak een gratis account voor nog 7 gratis nakijkbeurten.":"Log in bij Profiel om dit door Bittertalen te laten nakijken."):c==="limit"?((acc.checkPeriod||myPeriod())!=="day"?(acc.cfg?.plus&&!NATIVE&&!isPlus(lvl())?"Je gratis nakijkbeurten zijn op. Met Plus of de Examenpas kun je verder laten nakijken.":"Je gratis nakijkbeurten zijn op."):"Je dagtegoed is op. Morgen kun je weer laten nakijken."):c==="month"?"Je maandtegoed is op. Volgende maand kun je weer laten nakijken.":c==="pass"?"De nakijkbeurten van je Examenpas zijn op. Je kunt verder oefenen.":c==="timeout"?"Het nakijken duurde te lang. Je beurt is teruggegeven. Probeer het nog een keer.":c==="busy"?"Bittertalen heeft vandaag al heel veel teksten nagekeken. Morgen kan het weer.":null;
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const answer=(v,t)=>t==="past"?v[2]:t==="pastpl"?v[3]:t==="pp"?v[4]:v[5];
@@ -1961,24 +1969,26 @@ function voiceTexts(){
 // plugin the web API is used as before. Results arrive as partial results; the last one is sent again as final at the end.
 const NSR=NATIVE&&window.Capacitor?.Plugins?.SpeechRecognition;
 class NativeSR{
-  constructor(){this.lang="nl-NL";this.continuous=true;this.interimResults=true;this.maxAlternatives=1;this._on=false;this._last=""}
+  constructor(){this.lang="nl-NL";this.continuous=true;this.interimResults=true;this.maxAlternatives=1;this._on=false;this._last="";this._gen=0}
   _ev(t,fin){return{resultIndex:0,results:[Object.assign([{transcript:t,confidence:1}],{isFinal:fin})]}}
   async start(){
+    const g=++this._gen; // a stop() while permission is being asked cancels this start
     try{
       const ok=s=>s&&(s.speechRecognition==="granted"||s.permission===true);
       let perm=await NSR.checkPermissions().catch(()=>null);
       if(!ok(perm))perm=await NSR.requestPermissions().catch(()=>null);
       if(!ok(perm)){this.onerror?.({error:"not-allowed"});this.onend?.();return}
+      if(g!==this._gen){this.onend?.();return}
       this._last="";this._on=true;
       this._h1=await NSR.addListener("partialResults",d=>{const t=String((d&&d.matches||[])[0]||"").trim();if(t&&this._on){this._last=t;this.onresult?.(this._ev(t,false))}});
-      this._h2=await NSR.addListener("listeningState",d=>{if(d&&d.status==="stopped")this._done()});
+      this._h2=await NSR.addListener("listeningState",d=>{if(d&&d.status==="stopped"&&g===this._gen)this._done()});
       this.onstart?.();this.onaudiostart?.();
       await NSR.start({language:this.lang||"nl-NL",maxResults:1,partialResults:true,popup:false});
     }catch(e){this.onerror?.({error:"audio-capture"});this._done()}
   }
   _done(){if(!this._on)return;this._on=false;if(this._last)this.onresult?.(this._ev(this._last,true));
     try{this._h1?.remove?.();this._h2?.remove?.()}catch(e){}this.onend?.()}
-  stop(){Promise.resolve(NSR.stop()).catch(()=>{}).finally(()=>this._done())}
+  stop(){this._gen++;if(!this._on){this.onend?.();return}Promise.resolve(NSR.stop()).catch(()=>{}).finally(()=>this._done())}
   abort(){this._last="";this.stop()}
 }
 let rec=null,recUrl=null;
@@ -2586,7 +2596,7 @@ var LENS=(()=>{
   // compositor, while the separate translate/scale properties were animated on the main thread and stuttered whenever
   // the new tab was being drawn
   const tx=x=>`translateX(${(clamp(x)*sg()*100).toFixed(3)}%)`;
-  const put=x=>{L.style.transform=tx(x)};
+  const put=x=>{L.style.transform=tx(x)+(n.classList.contains("drag")?" scale(1.03,1.14)":"")};
   let st=null; // the running glide: {x0, v0, to, anim}
   const pos=(s,t)=>{const e=s.x0-s.to,a=s.v0+W*e;return s.to+(e+a*t)*Math.exp(-W*t)};
   const vel=(s,t)=>{const e=s.x0-s.to,a=s.v0+W*e;return(a-W*(e+a*t))*Math.exp(-W*t)};
@@ -2628,7 +2638,7 @@ var LENS=(()=>{
   n.addEventListener("pointermove",e=>{
     if(x0==null||e.pointerId!==id)return;
     if(!drag){if(Math.abs(e.clientX-x0)<8)return;drag=true;try{n.setPointerCapture(id)}catch(_){}
-      const h=now();stop();cur=clamp(h.x);dv=h.v;put(cur);n.classList.add("drag")}
+      const h=now();stop();cur=clamp(h.x);dv=h.v;n.classList.add("drag");put(cur)}
     goal=clamp(((e.clientX-left)*sg()-w/2)/w);
     if(still()){cur=goal;put(cur);mark()}
     else if(!raf){t0=0;raf=requestAnimationFrame(step)}
@@ -3059,7 +3069,10 @@ function show(){
     <button class="btn wide" id="recb">${cur.exam?"● Antwoord geven":"● Opnemen"}</button>${cur.exam?`<button class="ghost wide" id="spredo" hidden>↻ Opnieuw opnemen</button>`:""}<p class="note" id="recn" role="status" aria-atomic="true">${q.spk?`${q.prep?`Denk eerst ${q.prep} seconden na. `:""}Je hebt ${q.spk} seconden om te antwoorden, zoals op het Staatsexamen.${cur.exam?" Na de vraag begint de tijd vanzelf.":" Daarna kun je jezelf terugluisteren."}`:cur.exam?"Je hebt één minuut per vraag.":"Je hebt één minuut. Daarna kun je jezelf terugluisteren."}</p></div>
     ${cur.exam?"":`${SR?`<button class="ghost wide" id="spchk" style="margin-bottom:10px">Spreek in en laat nakijken</button>${acc.cfg&&!acc.user?(acc.cfg.free?freeNote():`<p class="note">Nakijken kan als je bent ingelogd (Profiel).</p>`):""}`:""}<button class="ghost wide" id="rev">Toon voorbeeld</button>`}`;
   else if(S.typing&&q.canType)h+=`<div class="type"><input id="inp" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Je antwoord"><button class="btn" id="chk">Controleer</button></div>`;
-  else{const nv=cur.nav&&q.type==="choice";o=nv?cur.op[pos]=cur.op[pos]||q.opts():q.opts();const C=x=>capA(q,x);
+  else{const nv=cur.nav&&q.type==="choice";o=nv?cur.op[pos]=cur.op[pos]||q.opts():q.opts();
+    // a Beginnen "Wat betekent" question shows its English options in the menu language (the answer itself is unchanged)
+    const BW=q.sec==="bg"&&/^Wat betekent/.test(q.big||"")?(window.BGW||{})[LANG]:null;
+    const C=x=>BW&&BW[x]?`<span dir="auto">${esc(BW[x])}</span>`:capA(q,x);
     const one=o.length===3||o.some(x=>x.length>14);
     h+=`<div class="opts${one?" one":""}">${o.map((x,i)=>`<button class="opt${nv&&cur.pick[pos]===x?" sel":""}" data-n="${i}"${nv?` aria-pressed="${cur.pick[pos]===x}"`:""}>${one?optLt(i,C(x)):C(x)}</button>`).join("")}</div>`;
     if(nv)h+=navHTML()}
@@ -3367,7 +3380,7 @@ async function nakijken(tasks,part){
   return out}
 // Apple 5.1.2(i): in the store app, ask once before a text or a spoken answer goes to an AI company (Anthropic). On the
 // website privacy.html says it; the app asks out loud, with a yes that is remembered on this device.
-const AIOK="bt-ai-ok",AIASK="Om na te kijken en te praten stuurt Bittertalen je tekst of je uitgeschreven antwoord naar Anthropic (Claude, in de Verenigde Staten). Je naam en e-mailadres gaan niet mee en Anthropic traint er geen modellen mee. Ga je akkoord?";
+const AIOK="bt-ai-ok",AIASK="Om na te kijken en te praten stuurt Bittertalen je tekst of je uitgeschreven antwoord naar Anthropic (Claude, in de Verenigde Staten). Wat de AI-personages zeggen, wordt door Google voorgelezen. Je naam en e-mailadres gaan niet mee en er worden geen modellen mee getraind. Ga je akkoord?";
 function aiAsk(){
   if(!NATIVE||typeof confirm!=="function")return true;
   try{if(localStorage.getItem(AIOK))return true}catch(e){}
@@ -3516,7 +3529,7 @@ async function check(q){
     keepErrs(errs); record(ok); if(!cur.exam)quickPraise.show(ok);
     $("fb").innerHTML=`<b class="${ok?"good":"bad"}">${ok?"Goed zo! Voldoende":"Nog niet voldoende"}</b>
       <p class="note">${esc(res.verdict)}</p>${scoreHTML(res.scores,q.mx)}
-      ${ownHTML(text,errs)}${errsHTML(errs)}${freeNote()}
+      ${ownHTML(text,errs)}${errsHTML(errs)}${freeNote()}${ok?"":dayOffer()}
       <p class="ask">Verbeterde tekst</p><div class="sample">${esc(res.corrected)}</div>
       <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(q.right)}</div></details>
       ${docBtn}<button class="btn wide" id="next">${RD.length?"Schrijf de verbeteringen":"Verder"}</button>`;
@@ -3982,11 +3995,14 @@ function bgList(){
 }
 function bgLes(i){
   const l=BG[i],V=pairs(l.v),W=pairs(l.w),has=w=>(S.words||[]).some(y=>y.w===w),para=t=>t.split("\n").map(x=>`<p>${x}</p>`).join("");
+  // in the menu language when there is a translation (data/ui.js BGI), else English; the explanation is open at once then
+  const T=(window.BGI||{})[l.id]?.[LANG],TL=T?LANGS[LANG].c:"en",open=!!T||LANG==="en";
+  if(!T&&LANG!=="nl"&&LANG!=="en"&&typeof loadUI==="function")Promise.resolve(loadUI()).then(()=>{if((window.BGI||{})[l.id]?.[LANG]&&$("bgx"))bgLes(i)}).catch(()=>{});
   bgOpen("Beginnen",bgList);
   $("tbody").innerHTML=`<p class="ask">Les ${i+1} van ${BG.length}</p><h2>${l.t}</h2>
-    <div class="bgl" lang="nl">${para(l.x)}</div><button class="hint bgl" id="bge" style="margin-top:0" aria-expanded="${LANG==="en"}">English</button><div id="bgx" lang="en" class="note bgl"${LANG==="en"?"":" hidden"}>${para(l.e)}</div>
-    <h3 class="lh">Voorbeelden</h3><ul class="sw">${V.map((x,j)=>`<li><span class="bgl" lang="nl"><b>${x[0]}</b><small lang="en">${x[1]}</small></span>${canSpeak?`<button class="say" data-v="${j}" aria-label="Luister">▶</button>`:""}</li>`).join("")}</ul>
-    <h3 class="lh">Woorden</h3><ul class="sw">${W.map((x,j)=>`<li><span class="bgl"><b lang="nl">${x[0]}</b> — <span lang="en">${x[1]}</span></span>${canSpeak?`<button class="say" data-w="${j}" aria-label="Luister">▶</button>`:""}</li>`).join("")}</ul>
+    <div class="bgl" lang="nl">${para(l.x)}</div><button class="hint bgl" id="bge" style="margin-top:0" aria-expanded="${open}">${T?LANGS[LANG].n:"English"}</button><div id="bgx" lang="${TL}" dir="auto" class="note bgl"${open?"":" hidden"}>${para(esc(T?T.e:l.e).replace(/\n/g,"\n"))}</div>
+    <h3 class="lh">Voorbeelden</h3><ul class="sw">${V.map((x,j)=>`<li><span class="bgl" lang="nl"><b>${x[0]}</b><small lang="${TL}" dir="auto">${T?esc(T.v[j]):x[1]}</small></span>${canSpeak?`<button class="say" data-v="${j}" aria-label="Luister">▶</button>`:""}</li>`).join("")}</ul>
+    <h3 class="lh">Woorden</h3><ul class="sw">${W.map((x,j)=>`<li><span class="bgl"><b lang="nl">${x[0]}</b> — <span lang="${TL}" dir="auto">${T?esc(T.w[j]):x[1]}</span></span>${canSpeak?`<button class="say" data-w="${j}" aria-label="Luister">▶</button>`:""}</li>`).join("")}</ul>
     <button class="ghost wide" id="bgk" style="margin:12px 0 10px"${W.every(x=>has(x[0]))?" disabled":""}>${W.every(x=>has(x[0]))?"Bewaard in Mijn woorden":"Bewaar in Mijn woorden"}</button>
     <button class="btn wide" id="bgo">Oefenen</button>`;
   $("bge").onclick=()=>{const x=$("bgx");x.hidden=!x.hidden;$("bge").setAttribute("aria-expanded",!x.hidden)};
@@ -4167,12 +4183,12 @@ function remindRow(){
 async function remindPlan(){
   const N=NATIVE&&window.Capacitor?.Plugins?.LocalNotifications,h=lsGet("ww-remind");if(!N)return;
   try{
-    await N.cancel({notifications:[1,2,3,4,5,6,7,8,...EXAMDAY_IDS].map(id=>({id}))});
+    await N.cancel({notifications:[...Array(30).keys()].slice(1).concat(EXAMDAY_IDS).map(id=>({id}))});
     await examDayPlan(N);
     if(!h)return;
     const P=planTasks(),done=S.day&&S.day.d===today()?S.day.done:[],fin=P.T.length>0&&P.T.every(t=>done.includes(t.id));
     const part=P.bg?"":PART[P.k]||"",ex=examDays(),exam=new Set(examsAhead().map(x=>x.n)),L=[];
-    for(let i=0;i<7;i++){
+    for(let i=0;i<REMIND_DAYS;i++){
       const at=new Date();at.setDate(at.getDate()+i);at.setHours(+h,0,0,0);
       if(i===0&&(fin||at<=new Date()))continue;
       if(exam.has(i))continue; // the exam day has its own good-luck message in the morning
@@ -4209,7 +4225,9 @@ function remindAskBind(){
 }
 // The morning of every exam day (the dates in Profiel), at 07:00: good luck and "je kunt dit". Planned whenever
 // notifications are allowed, also without the daily reminder; one message a day, naming the parts of that day.
-const EXAMDAY_IDS=[20,21,22,23,24,25,26,27,28,29],EXAMDAY_H=7;
+// 28 days ahead, one notification each (iOS keeps up to 64 waiting): someone who doesn't open the app for a week still
+// gets reminded (the first version planned 7 and then went quiet); the exam mornings use ids 40–49
+const REMIND_DAYS=28,EXAMDAY_IDS=[40,41,42,43,44,45,46,47,48,49],EXAMDAY_H=7;
 async function examDayPlan(N){
   const perm=await N.checkPermissions().catch(()=>null);
   if(!perm||perm.display!=="granted")return;
@@ -4275,6 +4293,24 @@ function avScreen(){
   $("tbody").innerHTML=`<h2>Kies je avatar</h2><div class="avg">${avatarOrder.map(k=>`<button type="button" data-av="${k}" aria-pressed="${k===cur}"><i>${avSVG(k)}</i><span lang="nl">${AVS[k].n}</span></button>`).join("")}</div>`;
   document.querySelectorAll("#tbody [data-av]").forEach(b=>b.onclick=()=>{S.me={...(S.me||{}),av:b.dataset.av};save();home()});
 }
+// One recommendation first (26 November 2026: six cards with six filled buttons made nobody choose): the Examenpas of the
+// learner's level, until after the exam date when there is one, with what the same months of Plus would cost. The other
+// plans stay below under "Andere opties", with plain buttons.
+let REC=false;
+function recHTML(on,plans){
+  const lv=lvl(),P=acc.cfg.pass;REC=false;
+  if(on||!P||!P.plans?.[lv])return"";
+  REC=true;
+  const days=P.days||119,weeks=Math.round(days/7),months=Math.ceil(days/30.5),n=examLastDays();
+  const eur=v=>Number(String(v).replace(",",".")),fmt=v=>v.toFixed(2).replace(".",",");
+  const monthly=plans[lv]?.price?eur(plans[lv].price):null,save=monthly?monthly*months-eur(P.plans[lv].price):0;
+  return`<section class="list recpick" data-rec="${lv}"><div style="padding:16px"><p class="ask">Aanbevolen voor jou</p><h3>Examenpas ${lv}</h3>
+    <p>${n!=null&&n<=days?`Elke dag feedback op Schrijven en Spreken tot na je examen.`:`${weeks} weken elke dag feedback op Schrijven en Spreken.`}</p>
+    <p><b dir="ltr">€ ${esc(P.plans[lv].price)}</b> <span>eenmalig, geen abonnement</span></p>
+    ${save>1?`<p class="note">Goedkoper dan ${months} maanden Plus (€ ${fmt(monthly*months)}).</p>`:""}
+    <button class="btn wide" id="precbuy" data-level="${lv}">Kies de Examenpas ${lv}</button></div></section>
+    <h3 class="lh">Andere opties</h3>`;
+}
 function plusScreen(){
   if(!acc.cfg||!acc.cfg.plus)return home();
   closePop();hush();TK=null;$("card").innerHTML="";
@@ -4285,30 +4321,31 @@ function plusScreen(){
   $("tbody").innerHTML=`<h2 id="plusS">Bittertalen Plus</h2>`
     +(on?`<p class="sub"><b>${p.group?`<span lang="nl">${esc(p.group)}</span>`:p.pass?(p.year?"Jaarpas":"Examenpas"):"Bittertalen Plus"} ${p.level||""}</b> · ${plusLine()}</p>`:"")
     +`<p class="sub">Met Plus: tot ${c.month||200} nakijkbeurten per maand. Met een gratis account: ${acc.cfg.limit} gratis.</p><p class="sub">Al het andere in Bittertalen blijft gratis.</p>`
-    +(acc.cfg.pass&&!on&&examLastDays()!=null?`<p class="note">${((n,m)=>n<=(acc.cfg.pass.days||91)?(m?`Je laatste examen is over ${n} dagen. De Examenpas loopt tot na je laatste examen.`:`Je examen is over ${n} dagen. De Examenpas loopt tot na je examen.`):(m?`Je laatste examen is over ${n} dagen.`:`Je examen is over ${n} dagen.`))(examLastDays(),examMany())}</p>`:"")
+    +(acc.cfg.pass&&!on&&examLastDays()!=null?`<p class="note">${((n,m)=>n<=(acc.cfg.pass.days||119)?(m?`Je laatste examen is over ${n} dagen. De Examenpas loopt tot na je laatste examen.`:`Je examen is over ${n} dagen. De Examenpas loopt tot na je examen.`):(m?`Je laatste examen is over ${n} dagen.`:`Je examen is over ${n} dagen.`))(examLastDays(),examMany())}</p>`:"")
     +(on&&p.status==="past_due"?`<p class="note">Je laatste betaling is niet gelukt. Stripe probeert het nog een paar keer.</p>`:"")
     +(plusMsg?`<p class="note" role="status">${esc(plusMsg)}</p>`:"")
     +(acc.user?`<section class="list"><label class="prow tog"><span>Laat Plus of de Examenpas meteen beginnen. Binnen 14 dagen kan ik herroepen en krijg ik mijn geld terug.</span><input type="checkbox" switch id="pstart"></label></section>`:"")
+    +recHTML(on,plans)
     +["A2","B1"].filter(level=>plans[level]).map(level=>`<section class="list" data-plus-plan="${level}"><div style="padding:16px"><h3>Bittertalen Plus ${level}</h3>
       <p>${level==="A2"?"Uitgebreide feedback van een sterker AI-model, ook op je proefexamens.":"Ook Schrijven en Spreken B1, met A2 erbij."}</p>
       <p><b dir="ltr">€ ${esc(plans[level].price)}</b> <span>per maand</span></p>
       <p class="note">Je kunt elke maand opzeggen.</p>
-      ${!acc.user?`<button class="btn wide" data-plus-login>${level==="A2"?"Kies Plus A2":"Kies Plus B1"}</button>`
+      ${!acc.user?`<button class="${REC?"ghost":"btn"} wide" data-plus-login>${level==="A2"?"Kies Plus A2":"Kies Plus B1"}</button>`
         :on&&!p.pass?level==="B1"&&p.level==="A2"?`<button class="btn wide" data-plus-buy="B1">Overstappen naar Plus B1</button>`:""
-        :p&&p.status!=="canceled"?"":`<button class="btn wide" data-plus-buy="${level}">${level==="A2"?"Kies Plus A2":"Kies Plus B1"}</button>`}
+        :p&&p.status!=="canceled"?"":`<button class="${REC?"ghost":"btn"} wide" data-plus-buy="${level}">${level==="A2"?"Kies Plus A2":"Kies Plus B1"}</button>`}
       </div></section>`).join("")
     +(acc.cfg.pass&&!(on&&!p.pass&&p.level==="B1")?`<h3 class="lh">Examenpas</h3><p class="sub">Eén keer betalen, geen abonnement.</p>`
       +["A2","B1"].filter(level=>acc.cfg.pass.plans?.[level]&&!(on&&!p.pass&&isPlus(level))).map(level=>`<section class="list" data-pass-plan="${level}"><div style="padding:16px"><h3>Examenpas ${level}</h3>
-      <p>${Math.round((acc.cfg.pass.days||91)/7)} weken dezelfde nakijkbeurten als Plus ${level}.</p>
+      <p>${Math.round((acc.cfg.pass.days||119)/7)} weken dezelfde nakijkbeurten als Plus ${level}.</p>
       <p><b dir="ltr">€ ${esc(acc.cfg.pass.plans[level].price)}</b> <span>eenmalig</span></p>
-      <button class="${on?"ghost":"btn"} wide" ${acc.user?`data-plus-pass="${level}"`:"data-plus-login"}>${level==="A2"?"Kies Examenpas A2":"Kies Examenpas B1"}</button>
+      <button class="${on||REC?"ghost":"btn"} wide" ${acc.user?`data-plus-pass="${level}"`:"data-plus-login"}>${level==="A2"?"Kies Examenpas A2":"Kies Examenpas B1"}</button>
       </div></section>`).join(""):"")
     // the Jaarpas: a year of Plus for one payment, never renewed (api/_supa.js YEARS)
     +(acc.cfg.year&&!(on&&!p.pass&&p.level==="B1")?`<h3 class="lh">Jaarpas</h3><p class="sub">Een jaar Plus voor één betaling. Wordt niet automatisch verlengd.</p>`
       +["A2","B1"].filter(level=>acc.cfg.year.plans?.[level]&&!(on&&!p.pass&&isPlus(level))).map(level=>`<section class="list" data-year-plan="${level}"><div style="padding:16px"><h3>Jaarpas ${level}</h3>
       <p>Een jaar dezelfde nakijkbeurten als Plus ${level}.</p>
       <p><b dir="ltr">€ ${esc(acc.cfg.year.plans[level].price)}</b> <span>eenmalig</span></p>
-      <button class="${on?"ghost":"btn"} wide" ${acc.user?`data-plus-year="${level}"`:"data-plus-login"}>${level==="A2"?"Kies Jaarpas A2":"Kies Jaarpas B1"}</button>
+      <button class="${on||REC?"ghost":"btn"} wide" ${acc.user?`data-plus-year="${level}"`:"data-plus-login"}>${level==="A2"?"Kies Jaarpas A2":"Kies Jaarpas B1"}</button>
       </div></section>`).join(""):"")
     +`<p class="note">Niet tevreden? Binnen 14 dagen na je eerste betaling krijg je je geld terug.</p>`
     +(acc.user&&acc.withdraw?`<button class="ghost wide" id="pwd">Herroepen</button><p class="note">Herroep je aankoop van de laatste 14 dagen. Plus of je Examenpas stopt meteen en je krijgt je geld binnen 14 dagen terug.</p>`:"")
@@ -4317,7 +4354,7 @@ function plusScreen(){
   if(!plusSeen){plusSeen=true;track("plus")}
   const go=async(w,b,level,kind)=>{
     if(w!=="manage"&&!$("pstart")?.checked){plusMsg="Zet eerst aan dat Plus of de Examenpas meteen mag beginnen.";plusScreen();$("pstart")?.focus();return}
-    if(w!=="manage")track(w);b.disabled=true;document.querySelectorAll("[data-plus-buy],[data-plus-pass],[data-plus-year],#pman").forEach(x=>x.disabled=true);plusMsg="";
+    if(w!=="manage")track(w);b.disabled=true;document.querySelectorAll("[data-plus-buy],[data-plus-pass],[data-plus-year],#precbuy,#pman").forEach(x=>x.disabled=true);plusMsg="";
     try{const r=await fetch("/api/plus",{method:"POST",headers:{"Content-Type":"application/json",...await authHead()},body:JSON.stringify({go:w,...(level?{level}:{}),...(kind?{kind}:{}),...(w!=="manage"?{start:true}:{})})});
       const j=await r.json().catch(()=>({}));if(!r.ok||!j.url)throw 0;
       if(pushT)push(); location.href=j.url}
@@ -4325,6 +4362,7 @@ function plusScreen(){
   document.querySelectorAll("[data-plus-buy]").forEach(b=>b.onclick=()=>go("buy",b,b.dataset.plusBuy));
   document.querySelectorAll("[data-plus-pass]").forEach(b=>b.onclick=()=>go("pass",b,b.dataset.plusPass));
   document.querySelectorAll("[data-plus-year]").forEach(b=>b.onclick=()=>go("pass",b,b.dataset.plusYear,"year"));
+  if($("precbuy"))$("precbuy").onclick=()=>acc.user?go("pass",$("precbuy"),$("precbuy").dataset.level):(acc.msg="",welcome());
   if($("pman"))$("pman").onclick=()=>go("manage",$("pman"));
   if($("pwd"))$("pwd").onclick=async()=>{
     if(!confirm("Weet je zeker dat je wilt herroepen? Plus of je Examenpas stopt dan meteen."))return;
@@ -4621,8 +4659,15 @@ function aiDraw(){
   const k=AK; if(!k||!$("tlog"))return;
   $("tlog").innerHTML=k.log.map((l,j)=>l.me
     ?`<div class="tl me"><p class="ask">Jij</p><p>${esc(l.t)}</p>${l.fix?`<p class="aifix"><b>Beter:</b> ${esc(l.fix.right)}${l.fix.why?`<span>${esc(l.fix.why)}</span>`:""}</p>`:""}</div>`
-    :`<div class="tl"><p class="ask">${esc(k.c.who)} <button class="say" data-j="${j}" aria-label="Nog een keer luisteren">▶</button></p><p>${esc(l.t)}</p></div>`).join("");
+    :`<div class="tl"><p class="ask">${esc(k.c.who)} <button class="say" data-j="${j}" aria-label="Nog een keer luisteren">▶</button><button class="rep" data-r="${j}"${l.rep?" disabled":""}>${l.rep?"Gemeld":"Meld"}</button></p><p>${esc(l.t)}</p></div>`).join("");
   document.querySelectorAll("#tlog .say").forEach(b=>b.onclick=()=>{if(rec)recEnd(false);aiReplay(k.log[b.dataset.j])});
+  // Report an AI answer (Google Play's AI-generated content policy): the answer and who said it go to the server's log for
+  // the owner to read; nothing of the learner. Works also when the anonymous counts are off.
+  document.querySelectorAll("#tlog .rep").forEach(b=>b.onclick=()=>{
+    if(typeof confirm==="function"&&!confirm("Is dit antwoord verkeerd, kwetsend of ongepast? Dan sturen we het naar Bittertalen om te bekijken."))return;
+    const l=k.log[b.dataset.r];l.rep=true;aiDraw();
+    try{fetch("/api/event",{method:"POST",keepalive:true,headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({ev:"report",lvl:lvl(),ui:lsGet("ww-ui")||"nl",who:String(k.c.id||k.c.who||"").slice(0,40),m:String(l.t||"").slice(0,600)})}).catch(()=>{})}catch(e){}});
 }
 function aiTurn(note,keep){
   $("tctl").innerHTML=(SR?`<div class="rec" id="rec"><div class="clk"><span class="t" id="rect">0:00</span><div class="m"><i id="recm"></i></div></div><div id="recp"></div>
@@ -5196,9 +5241,9 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="9450786fff";
+const UIV="668bd0439a";
 let uiP=null;
-function uiLoaded(){if(typeof trMemo!=="undefined")trMemo.clear(); // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
+function uiLoaded(){try{trMemo.clear()}catch(e){} // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});
 }
 function loadUI(){

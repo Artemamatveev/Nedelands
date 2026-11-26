@@ -15,7 +15,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { randomBytes, timingSafeEqual } from "node:crypto";
 import { SCENES } from "./_scenes.js";
-import { accounts, caller, useChecks, LIMIT, PLUS, plusOn, plusFor, coversLevel, FREE, visitor, useFree, useTotal, addSpend, bonusFor, talkSign, useGuard, PLUS_MONTH, PASS_TOTAL, TALK_PLUS, monthOf, amsterdamDay } from "./_supa.js";
+import { accounts, caller, useChecks, LIMIT, PLUS, plusOn, plusFor, coversLevel, FREE, visitor, useFree, useTotal, addSpend, bonusFor, talkSign, useGuard, PLUS_MONTH, PASS_TOTAL, YEAR_TOTAL, TALK_PLUS, monthOf, amsterdamDay } from "./_supa.js";
 
 const KEY = (process.env.ANTHROPIC_API_KEY || "").trim();
 // A turn must end well before Vercel's limit: one retry, and SAY_MS for the whole call
@@ -263,9 +263,9 @@ export async function talk(req, res) {
     }
     // Plus: the same allowance as grading (PLUS_MONTH a month; an Examenpas: PASS_TOTAL over its whole term)
     let month = false;
-    const pass = !!(plan?.pass && !plan?.group && !plan?.year && plan?.until); // a Jaarpas counts per month, like Plus
+    const pass = !!(plan?.pass && !plan?.group && plan?.until); // an Examenpas or a Jaarpas counts over its whole term
     const gk = user && (pass ? "p:" : "m:") + user.id, gday = pass ? String(plan.until).slice(0, 10) : monthOf(new Date(at));
-    const glim = pass ? PASS_TOTAL : PLUS_MONTH;
+    const glim = pass ? (plan.year ? YEAR_TOTAL : PASS_TOTAL) : PLUS_MONTH;
     if (plus) {
       const m = await useGuard(gk, gday, cost, glim).catch((e) => { console.error("guard", e.message); return null });
       if (m === -1) { await useChecks(user.id, -cost, lim, period, at).catch(() => {}); return res.status(429).json({ error: pass ? "pass" : "month", limit: glim, checkedAt: at, plus, pass }) }
