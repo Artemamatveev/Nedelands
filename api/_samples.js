@@ -1,5 +1,8 @@
 // Made-up Schrijven A2 answers for the owner's model comparison (api/compare.js): from good to weak, with the kinds of
 // errors learners make (word order, verb forms, de/het, spelling, a missing point, the wrong tone). Not DUO's material.
+// A sample may get `expected: {inhoud, woorden, grammatica, spelling, samenhang, by, date}`: the points a qualified NT2
+// reviewer gave it blind (admin, "Скачать для учителя"); the comparison then reports the models against those points.
+// Never fill these in yourself: a guessed score only trains the prompt towards the guess.
 export const SAMPLES = [
   { id: "buurvrouw", task: "Je gaat een week op vakantie. Schrijf een briefje aan je buurvrouw. Vraag of zij je planten water wil geven en schrijf waar de sleutel ligt.",
     text: "Beste Anja,\nVolgende week ga ik op vakantie naar Spanje. Wil jij mijn planten water geven? De planten staan in de keuken en in de woonkamer. De sleutel ligt onder de mat bij de achterdeur. Zaterdag kom ik terug.\nHeel erg bedankt!\nGroeten,\nSamira" },

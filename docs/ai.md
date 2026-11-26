@@ -174,6 +174,9 @@ For NT2 calibration, ask a qualified reviewer to score the original A2 tasks bef
 the brief asking a neighbour to water the plants and a form. For the brief, compare a complete clear answer, a clear answer
 with small spelling errors, an answer missing the key location, and an off-topic answer. For the form, include a complete
 form and cases missing a required field or giving an unclear open answer. Record criterion-level scores and the reason
-for any disagreement. Check the free and paid models on the same set. Keep these results separate from pass-rate claims.
+for any disagreement. Check the free and paid models on the same set. Keep these results separate from pass-rate claims. In /admin, "Сравнение моделей" has "Скачать для учителя (CSV)": the made-up answers of `api/_samples.js` with an empty
+column per criterion and no model result (`/api/compare` with `{list: true}`, no model call). The reviewer's points go into
+`expected` of that sample, with `by` and `date` (never guessed: `tests/compare.test.mjs`); a run then shows, per model, the share
+within one point of the reviewer, the same voldoende, and exact agreement per criterion (`againstTeacher()`).
 
 A completed Schrijven A2 exam schedules the most frequent supported rule in scored responses for the next study day. The following two sentences test that rule with different wording. A Spreken A2 exam with near-complete answers can schedule a new question that also asks for a reason. The plan only displays successful speaking practice after the new response receives full content points. Only rule labels, question keys, counts and dates go into this follow-up progress.
