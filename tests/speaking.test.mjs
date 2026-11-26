@@ -130,9 +130,11 @@ test('Speaking practice checks only the transcript explicitly confirmed by the l
   native.instances[0].end();
   assert.equal(checks.length,0);
   assert.equal(a.document.getElementById('sptranscript').value,'Te voetje');
-  a.document.getElementById('sptranscript').value='…';
-  a.document.getElementById('spchk').click();
-  assert.equal(checks.length,0);
+  for(const filler of ['…','eh','a','Ehm, hm']){
+    a.document.getElementById('sptranscript').value=filler;
+    a.document.getElementById('spchk').click();
+    assert.equal(checks.length,0,filler);
+  }
   a.document.getElementById('sptranscript').value='Te voet';
   a.document.getElementById('spchk').click();
   await a.flush();

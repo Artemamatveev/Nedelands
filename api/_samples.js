@@ -1,5 +1,8 @@
 // Made-up Schrijven A2 answers for the owner's model comparison (api/compare.js): from good to weak, with the kinds of
 // errors learners make (word order, verb forms, de/het, spelling, a missing point, the wrong tone). Not DUO's material.
+// A sample may get `expected: {inhoud, woorden, grammatica, spelling, samenhang, by, date}`: the points a qualified NT2
+// reviewer gave it blind (admin, "Скачать для учителя"); the comparison then reports the models against those points.
+// Never fill these in yourself: a guessed score only trains the prompt towards the guess.
 export const SAMPLES = [
   { id: "buurvrouw", task: "Je gaat een week op vakantie. Schrijf een briefje aan je buurvrouw. Vraag of zij je planten water wil geven en schrijf waar de sleutel ligt.",
     text: "Beste Anja,\nVolgende week ga ik op vakantie naar Spanje. Wil jij mijn planten water geven? De planten staan in de keuken en in de woonkamer. De sleutel ligt onder de mat bij de achterdeur. Zaterdag kom ik terug.\nHeel erg bedankt!\nGroeten,\nSamira" },
@@ -29,4 +32,70 @@ export const SAMPLES = [
     text: "Hoi buren,\nik ben jullie buurman. Jullie maken altijd lawaai. Ik kan niet slapen. Dat is niet goed." },
   { id: "werk", task: "Je wilt solliciteren als schoonmaker bij een hotel. Schrijf een korte e-mail. Schrijf wie je bent, welke ervaring je hebt en wanneer je kunt werken.",
     text: "Ik heb gisteren naar de markt gegaan en ik heb appels en brood gekocht. Het weer was mooi. Daarna ik ben naar huis gegaan." },
+  // Added 26 November 2026 for the NT2 calibration: more borderline cases, so agreement is measured where it matters
+  // (near voldoende), plus register, copying the task, word order, de/het and spelling, each mostly on its own.
+  { id: "bibliotheek-goed", task: "Je hebt een boek van de bibliotheek, maar je bent het kwijt. Schrijf een e-mail aan de bibliotheek. Schrijf welk boek het is, wat er is gebeurd en vraag wat je nu moet doen.",
+    text: "Beste medewerker,\nIk heb drie weken geleden het boek 'Koken met groente' geleend. Helaas ben ik het boek kwijt. Ik denk dat ik het in de bus heb laten liggen. Wat moet ik nu doen? Moet ik het boek betalen?\nMet vriendelijke groet,\nMaria Santos" },
+  { id: "bibliotheek-grens", task: "Je hebt een boek van de bibliotheek, maar je bent het kwijt. Schrijf een e-mail aan de bibliotheek. Schrijf welk boek het is, wat er is gebeurd en vraag wat je nu moet doen.",
+    text: "Beste bibliotheek,\nIk heb een boek geleend, het heet 'Koken met groente'. Ik ben de boek kwijt in de bus. Wat ik moet nu doen?\nGroeten,\nMaria" },
+  { id: "afspraak-toon", task: "Je wilt een afspraak maken bij de gemeente om een nieuw paspoort aan te vragen. Schrijf een e-mail aan de gemeente. Schrijf wat je wilt, wanneer je kunt komen en vraag wat je mee moet nemen.",
+    text: "Hey!!\nIk wil een nieuw paspoort, die oude is op. Ik kan dinsdag of woensdag na de lunch. Wat moet ik meenemen? Laat maar weten x\nKarim" },
+  { id: "afspraak-goed", task: "Je wilt een afspraak maken bij de gemeente om een nieuw paspoort aan te vragen. Schrijf een e-mail aan de gemeente. Schrijf wat je wilt, wanneer je kunt komen en vraag wat je mee moet nemen.",
+    text: "Geachte heer, mevrouw,\nIk wil graag een afspraak maken voor een nieuw paspoort, want mijn paspoort is volgende maand niet meer geldig. Ik kan op dinsdag of woensdag na twaalf uur komen. Wat moet ik meenemen naar de afspraak?\nMet vriendelijke groet,\nKarim Haddad" },
+  { id: "kopie-opdracht", task: "Je wilt je aanmelden voor een cursus koken in het buurthuis. Schrijf een e-mail. Vraag wanneer de cursus begint, hoeveel hij kost en of je je eigen messen moet meenemen.",
+    text: "Ik wil me aanmelden voor een cursus koken in het buurthuis. Wanneer de cursus begint, hoeveel hij kost en of ik mijn eigen messen moet meenemen." },
+  { id: "woordvolgorde", task: "Je collega Sanne gaat met pensioen. Schrijf een kaartje aan haar. Bedank haar, schrijf wat je gaat missen en wens haar veel plezier.",
+    text: "Lieve Sanne,\nBedankt voor alles. Elke dag jij hebt mij geholpen. Morgen ik ga jouw koffie en jouw grappen missen. Veel plezier wens ik jou met je kleinkinderen en de tuin!\nGroetjes,\nOksana" },
+  { id: "dehet-veel", task: "Je hebt een jas gekocht in een webwinkel, maar hij is te klein. Schrijf een e-mail aan de webwinkel. Schrijf wat je hebt gekocht, wat het probleem is en wat je wilt.",
+    text: "Beste webwinkel,\nIk heb het jas gekocht op de 3 november. De jas is te klein, het mouw is kort en de rits gaat niet dicht. Ik wil de jas ruilen voor het maat L. Kunt u een retourlabel sturen?\nMet vriendelijke groet,\nLi Wei" },
+  { id: "spelling-veel", task: "Je hebt een jas gekocht in een webwinkel, maar hij is te klein. Schrijf een e-mail aan de webwinkel. Schrijf wat je hebt gekocht, wat het probleem is en wat je wilt.",
+    text: "Beste winkel,\nIk heb een jas gekogt op 3 november. De jas is te klijn en de mauwen sijn kort. Ik wil een groter jas of mijn gelt terug. Kunt u mij snel antwoort geven?\nGroet,\nAbdi" },
+  { id: "deel-inhoud", task: "Je dochter heeft een verjaardagsfeestje. Schrijf een uitnodiging aan de ouders van haar vriendinnen. Schrijf wanneer en waar het feestje is, wat de kinderen gaan doen en vraag of ze willen laten weten of hun kind komt.",
+    text: "Beste ouders,\nMijn dochter Amira wordt zeven jaar! Het feestje is op 14 december van twee tot vijf uur bij ons thuis, Lindelaan 8.\nGroeten,\nNadia" },
+  { id: "lijstje", task: "Je gaat verhuizen. Schrijf een e-mail aan je vrienden. Schrijf waar je nieuwe huis is, wanneer je verhuist en vraag of ze kunnen helpen.",
+    text: "Hoi allemaal,\nNieuw huis. Utrecht. 20 januari. Helpen? Auto nodig. Pizza voor iedereen.\nTom" },
+  { id: "verhuizen-goed", task: "Je gaat verhuizen. Schrijf een e-mail aan je vrienden. Schrijf waar je nieuwe huis is, wanneer je verhuist en vraag of ze kunnen helpen.",
+    text: "Hoi allemaal,\nIk heb goed nieuws: ik heb een nieuw huis in Utrecht! Ik verhuis op 20 januari. Kunnen jullie die dag helpen met de dozen? Ik zoek ook iemand met een grote auto. Daarna eten we samen pizza.\nGroetjes,\nTom" },
+  { id: "werkwoorden", task: "Je bent gisteren naar een nieuw restaurant geweest. Schrijf een bericht aan je vriend. Schrijf waar je was, wat je hebt gegeten en of je het restaurant goed vond.",
+    text: "Hoi Bas,\nGisteren ik ga naar het nieuwe restaurant in de Kerkstraat. Ik eet een pizza met kip en mijn vrouw eet pasta. Het eten is lekker en niet duur. Ik vind het restaurant heel goed. Jij moet ook gaan!\nGroet,\nMehmet" },
+  { id: "kort-alles", task: "Je kunt morgen niet naar de Nederlandse les komen. Stuur een berichtje aan je docent. Schrijf waarom je niet komt en vraag wat het huiswerk is.",
+    text: "Hallo juf, morgen kom ik niet naar de les, want mijn zoon is ziek. Wat is het huiswerk? Groetjes, Aliyu" },
+  { id: "kort-zonder-reden", task: "Je kunt morgen niet naar de Nederlandse les komen. Stuur een berichtje aan je docent. Schrijf waarom je niet komt en vraag wat het huiswerk is.",
+    text: "Hallo juf, morgen kom ik niet naar de les. Wat is het huiswerk? Groetjes, Aliyu" },
+  { id: "verkeerde-persoon", task: "Je buurman heeft je pakketje aangenomen. Schrijf een briefje aan hem. Bedank hem en schrijf wanneer je het pakketje komt halen.",
+    text: "Beste buurman,\nIk heb een pakketje voor u aangenomen. Het ligt bij mij in de gang. U kunt het vanavond na zes uur komen halen.\nGroeten,\nEva" },
+  { id: "lang-goed-fouten", task: "Je wilt lid worden van een voetbalclub. Schrijf een e-mail aan de club. Schrijf wie je bent, hoe vaak je wilt trainen en vraag hoeveel het lidmaatschap kost.",
+    text: "Beste voetbalclub,\nMijn naam is Daniel en ik ben 34 jaar. Ik woon sinds een jaar in Almere en ik zoek een club voor mannen boven de dertig. In Brazilie ik speelde elke week voetbal met mijn vrienden. Ik wil graag twee keer in de week trainen, het liefst op de avond omdat ik overdag werk. Hoeveel kost de lidmaatschap per jaar? En moet ik eerst een proeftraining doen?\nMet vriendelijke groet,\nDaniel Souza" },
+  { id: "leeg-bijna", task: "Je bent ziek en kunt morgen niet naar je werk. Schrijf een e-mail aan je leidinggevende, meneer De Vries. Schrijf wat je hebt, hoe lang je denkt thuis te blijven en vraag wat er met je afspraken moet gebeuren.",
+    text: "Meneer De Vries ik ziek." },
+];
+
+// Made-up Spreken A2 answers (the confirmed transcript, as practice grades it) for the same comparison: a question, as
+// the exam asks it (a photo is described in brackets, as spTask() does), and what a learner said. From complete to weak,
+// with short complete answers, missing reasons, the wrong topic and spoken-style errors. Not DUO's material.
+export const SAMPLES_SP = [
+  { id: "sp-werk-goed", task: "Hoe ga je naar je werk? Vertel ook waarom.", text: "Ik ga meestal met de fiets naar mijn werk, want het is niet ver en het is goed voor mijn gezondheid. Als het regent, neem ik de bus." },
+  { id: "sp-werk-kort", task: "Hoe ga je naar je werk?", text: "Met de trein." },
+  { id: "sp-werk-geen-reden", task: "Hoe ga je naar je werk? Vertel ook waarom.", text: "Ik ga met de bus naar mijn werk. De bus is om acht uur." },
+  { id: "sp-weekend-goed", task: "Wat heb je vorig weekend gedaan?", text: "Vorig weekend ben ik met mijn kinderen naar het park gegaan. We hebben gevoetbald en daarna hebben we pannenkoeken gegeten bij mijn zus." },
+  { id: "sp-weekend-tijd", task: "Wat heb je vorig weekend gedaan?", text: "Vorig weekend ik ga naar het park met mijn kinderen. We spelen voetbal en daarna we eten pannenkoeken." },
+  { id: "sp-weekend-fout-onderwerp", task: "Wat heb je vorig weekend gedaan?", text: "Ik werk in een restaurant. Ik ben kok. Ik werk vijf dagen in de week." },
+  { id: "sp-hobby-goed", task: "Wat doe je graag in je vrije tijd?", text: "In mijn vrije tijd kook ik graag. Ik maak vaak eten uit mijn land, uit Eritrea, en dan nodig ik vrienden uit." },
+  { id: "sp-hobby-woorden", task: "Wat doe je graag in je vrije tijd?", text: "Ik doe graag in mijn vrije tijd. Vrije tijd is goed. Ik doe graag dingen." },
+  { id: "sp-foto-goed", task: "Kijk naar de foto. (Een man staat bij de kassa in een supermarkt en betaalt met zijn telefoon.) Wat ziet u? Betaalt u ook vaak met uw telefoon?", text: "Ik zie een man in de supermarkt. Hij staat bij de kassa en hij betaalt met zijn telefoon. Ik betaal meestal met mijn pinpas, niet met mijn telefoon." },
+  { id: "sp-foto-half", task: "Kijk naar de foto. (Een man staat bij de kassa in een supermarkt en betaalt met zijn telefoon.) Wat ziet u? Betaalt u ook vaak met uw telefoon?", text: "Een man in de winkel. Hij betaalt." },
+  { id: "sp-huisarts-goed", task: "U bent ziek. U belt de huisarts. Wat zegt u tegen de assistente?", text: "Goedemorgen, u spreekt met Ahmed Yilmaz. Ik heb sinds drie dagen koorts en veel hoofdpijn. Kan ik vandaag een afspraak maken bij de dokter?" },
+  { id: "sp-huisarts-kort", task: "U bent ziek. U belt de huisarts. Wat zegt u tegen de assistente?", text: "Ik ben ziek. Afspraak alstublieft." },
+  { id: "sp-huisarts-fouten", task: "U bent ziek. U belt de huisarts. Wat zegt u tegen de assistente?", text: "Goedemorgen, ik ben Ahmed. Ik heb drie dag koorts en mijn hoofd doet pijn. Ik wil vandaag de dokter zien, kan dat?" },
+  { id: "sp-mening-goed", task: "Vindt u het belangrijk om Nederlands te leren? Waarom?", text: "Ja, dat vind ik heel belangrijk. Ik woon hier nu en ik wil met mijn buren en met de juf van mijn dochter praten. Ook voor werk is het nodig." },
+  { id: "sp-mening-alleen-ja", task: "Vindt u het belangrijk om Nederlands te leren? Waarom?", text: "Ja, heel belangrijk." },
+  { id: "sp-drie-fotos", task: "Kijk naar de drie foto's. (1: een vrouw doet boodschappen. 2: de vrouw kookt in de keuken. 3: de familie eet samen aan tafel.) Vertel wat er gebeurt.", text: "Eerst doet de vrouw boodschappen in de supermarkt. Daarna kookt ze in de keuken. Op het einde eet de hele familie samen aan tafel." },
+  { id: "sp-drie-fotos-twee", task: "Kijk naar de drie foto's. (1: een vrouw doet boodschappen. 2: de vrouw kookt in de keuken. 3: de familie eet samen aan tafel.) Vertel wat er gebeurt.", text: "De vrouw is in de supermarkt. Ze koopt groente. Dan ze kookt in de keuken." },
+  { id: "sp-vraag-stellen", task: "U wilt een fiets huren. Wat vraagt u aan de medewerker?", text: "Goedemiddag, ik wil graag een fiets huren voor twee dagen. Hoeveel kost dat? En moet ik mijn paspoort laten zien?" },
+  { id: "sp-vraag-geen-vraag", task: "U wilt een fiets huren. Wat vraagt u aan de medewerker?", text: "Ik heb een fiets thuis. Mijn fiets is blauw." },
+  { id: "sp-plan-goed", task: "Wat gaat u morgen doen?", text: "Morgen ga ik eerst naar de Nederlandse les. 's Middags ga ik met mijn vriendin boodschappen doen en 's avonds kijk ik voetbal." },
+  { id: "sp-plan-kort-goed", task: "Hoe laat staat u meestal op?", text: "Om zeven uur." },
+  { id: "sp-plan-kort-zin", task: "Hoe laat staat u meestal op?", text: "Ik sta meestal om zeven uur op, want ik begin om half negen met werken." },
+  { id: "sp-onbegrijpelijk", task: "Wat doet u als u ziek bent?", text: "Ziek ja ik huis dokter misschien nee." },
+  { id: "sp-vakantie-goed", task: "Waar gaat u graag op vakantie? Vertel ook waarom.", text: "Ik ga graag naar de zee, naar Zeeland, want ik hou van het strand en de rust. Mijn kinderen spelen dan de hele dag in het zand." },
 ];

@@ -45,7 +45,7 @@ Spreken uses the same function with `{part:"sp", tasks:[{task, text}]}` (up to 1
 proefexamen); `task` also says what the photos show (`spTask()`, from `FOTO`). Each result also has `scores`
 (inhoud 0–3, woorden 0–2, grammatica 0–2, samenhang 0–1: DUO's criteria as far as a transcript shows them; pronunciation
 and fluency can't be judged), clamped on the server; `passed` is set by the server from the points (inhoud 2+ and 6 of
-the 8 since 25 November 2026, higher than 5 because 4 of DUO's 12 points can't be judged; `spPassed`), not by Claude, as for B1; the Spreken proefexamen score is points of all 16 questions. Speaking never
+the 8 since 25 November 2026, higher than 5 because 4 of DUO's 12 points can't be judged; `spPassed`), not by Claude, as for B1; a complete answer of fewer than 5 words (`SP_SHORT`, "Met de trein") keeps full inhoud, but the server caps woorden and grammatica at 1 and samenhang at 0 and adds a note to say two or three sentences (`capShortSpoken`, 26 November 2026), so two words never reach voldoende; in practice a transcript of only fillers ("eh", "hm") or a single letter is not sent for grading (`spokenTextReady`); the Spreken proefexamen score is points of all 16 questions. Speaking never
 gets "Stabiel oefenresultaat" in Mijn examen (`ready()`), because pronunciation and fluency are not judged.
 The Spreken proefexamen has DUO's four parts of four (since March 2025): a question, one photo (describe and answer),
 two photos (choose and explain), three photos (a story in order, or three separate things to say something about: learners
@@ -174,6 +174,9 @@ For NT2 calibration, ask a qualified reviewer to score the original A2 tasks bef
 the brief asking a neighbour to water the plants and a form. For the brief, compare a complete clear answer, a clear answer
 with small spelling errors, an answer missing the key location, and an off-topic answer. For the form, include a complete
 form and cases missing a required field or giving an unclear open answer. Record criterion-level scores and the reason
-for any disagreement. Check the free and paid models on the same set. Keep these results separate from pass-rate claims.
+for any disagreement. Check the free and paid models on the same set. Keep these results separate from pass-rate claims. In /admin, "Сравнение моделей" has "Скачать для учителя (CSV)", for Schrijven (30 texts) or Spreken (24 transcripts, no spelling column): the made-up answers of `api/_samples.js` with an empty
+column per criterion and no model result (`/api/compare` with `{list: true}`, no model call). The reviewer's points go into
+`expected` of that sample, with `by` and `date` (never guessed: `tests/compare.test.mjs`); a run then shows, per model, the share
+within one point of the reviewer, the same voldoende, and exact agreement per criterion (`againstTeacher()`).
 
 A completed Schrijven A2 exam schedules the most frequent supported rule in scored responses for the next study day. The following two sentences test that rule with different wording. A Spreken A2 exam with near-complete answers can schedule a new question that also asks for a reason. The plan only displays successful speaking practice after the new response receives full content points. Only rule labels, question keys, counts and dates go into this follow-up progress.
