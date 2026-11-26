@@ -8,28 +8,28 @@ as the competitors do ("Inburgering: DUO & NT2 examen", "Swipelijk: Inburgering 
 | Field | Dutch (main) | English |
 | --- | --- | --- |
 | Name (30) | Bittertalen: Inburgering A2 KNM | Bittertalen: Dutch exam A2 KNM |
-| Subtitle (30) | Proefexamen NT2 B1 en DUO A2 | Inburgering & NT2 B1 practice |
-| Keywords (100, App Store) | inburgering,inburgeringsexamen,knm,nt2,staatsexamen,b1,a2,nederlands,duo,naturalisatie,examen | inburgering,dutch,exam,knm,nt2,a2,b1,citizenship,netherlands,naturalisation |
+| Subtitle (30) | Proefexamen A2, KNM en NT2 B1 | Inburgering & NT2 B1 practice |
+| Keywords (100, App Store) | inburgering,inburgeringsexamen,knm,nt2,staatsexamen,b1,a2,nederlands,naturalisatie,examen,oefenen | inburgering,dutch,exam,knm,nt2,a2,b1,citizenship,netherlands,naturalisation |
 | Short description (80, Play) | Oefen gratis voor inburgering A2, KNM en Staatsexamen B1. AI kijkt je tekst na. | Free practice for the Dutch inburgering exam A2, KNM and NT2 B1, with AI feedback. |
 
 Screenshots (6.9" and 6.5" iPhone, Play phone): a sentence of benefit on each, not a feature name.
-1. "Je tekst nagekeken met de criteria van DUO" (a graded Schrijven task with mistakes and why).
+1. "Je tekst nagekeken, met je fouten en waarom" (a graded Schrijven task with mistakes and why).
 2. "Elke dag een les tot je examen" (Mijn dag with the countdown).
 3. "Proefexamens met een timer" (Examen tab).
 4. "400+ KNM-vragen met uitleg" (a KNM question after answering).
 5. "Praat met Saskia en anderen" (a conversation with a fix).
 6. "Menu in 8 talen" (Profiel in Arabic).
 
-Never on a screenshot or in the text: a price, an offer, "koop", "abonnement" (Apple 3.1.1 while there is no in-app purchase).
+Never on a screenshot or in the text: a price, an offer, "koop", "abonnement" (Apple 3.1.1 while there is no in-app purchase), and never "DUO" as a word that suggests a link (5.2.1, Play impersonation). The description says once: "Bittertalen is niet van DUO."
 
 ## Review notes (App Store Connect → App Review Information)
 
 - Demo account: make one with Plus via a group (`/admin` → group with one seat), so the reviewer sees grading.
-- "Bittertalen works offline (open it in flight mode after one visit); speech recognition runs on the device
-  (SFSpeechRecognizer via the speech-recognition plugin); a daily reminder is set in Profiel; Sign in with Apple is offered;
+- "Bittertalen works offline (open it in flight mode after one visit); speech recognition is iOS's own
+  (SFSpeechRecognizer via the speech-recognition plugin, Apple's servers); a daily reminder is set in Profiel; Sign in with Apple is offered;
   accounts are deleted in Profiel → Account verwijderen. Before the first text goes to Anthropic the app asks for
   consent (guideline 5.1.2(i))."
-- Native features to name against 4.2: offline start, on-device speech recognition, local notifications planned per day
+- Native features to name against 4.2: offline start, the system's speech recognition, local notifications planned per day
   with the days until the exam, haptics, Sign in with Apple.
 
 ## Still open before submitting (needs the owner)
@@ -53,3 +53,14 @@ Never on a screenshot or in the text: a price, an offer, "koop", "abonnement" (A
    that explains Profiel → Account verwijderen and offers hallo@bittertalen.nl.
 6. **Seller details (EU DSA trader status).** The name and address in App Store Connect and Play Console are shown
    publicly; use the KvK details once registered. An organisation account needs a D-U-N-S number (1–4 weeks).
+
+## Age rating and AI content (26 November 2026)
+
+- App Store age rating questionnaire: answer that the app has an AI chatbot (unrestricted conversation with AI characters)
+  and set **16+**, as privacy.html says the app is for people of 16 and older. Google Play IARC: declare AI interaction.
+- Google Play AI-generated content policy: every AI character's answer has **Meld** (report) in Gesprekken; the answer
+  and the character go to the server log (`ai_report` in Vercel's logs, api/event.js). Read them weekly.
+- Privacy labels (App Store Connect) and Data safety (Play) say the same as `PrivacyInfo.xcprivacy`: e-mail and name,
+  user content (texts, Saskia's memory; linked), audio (transcribed, not kept), purchase history, product interaction
+  (anonymous counts, not linked), crash data (error messages, not linked). Third parties: Anthropic (AI), Google
+  (voices; on Android also speech recognition), Stripe (payments, website only), Supabase and Vercel (hosting, EU).
