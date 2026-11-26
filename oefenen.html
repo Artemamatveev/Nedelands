@@ -2930,7 +2930,7 @@ function startExamFocus(source){
   build(source.sec,{...SEC.find(x=>x.id===source.sec),t:"Gerichte oefening",n:1,keep:1,pool:()=>[target],
     practiceSource:source.k,back:{t:"Mijn dag",f:openFocusDay}});
 }
-const occurrences=n=>n===1?"1 keer":`${n||1} keer`;
+const occurrences=n=>!Number.isSafeInteger(n)||n===1?"1 keer":`${n||1} keer`;
 const speakingFollowQuestions=state=>ITEMS.filter(q=>q.sec==="sp"&&/waarom/i.test(q.big+" "+q.sub)&&!state.examKeys?.includes(q.k));
 function speakingFollowUp(){
   const state=S.speakFollow;
@@ -2974,7 +2974,7 @@ function planHTML(){
       <button type="button" class="ghost wide" id="dayrule">Oefen met een nieuwe situatie</button></section>`:""}
     ${practised.map(kind=>`<p class="note"><b>${WRITING_RULES[kind].title}</b> · ${occurrences(S.writingRules[kind].hits||1)} goed toegepast in een nieuwe zin.</p>`).join("")}
     ${speakingDue?`<section class="list exam-focus"><h3>Spreken · Geef een volledig antwoord</h3>
-      <p class="note">Een volledig antwoord behandelt alle punten van de opdracht.</p>
+      <p class="note">${occurrences(speaking.count)} was je antwoord bijna volledig in het proefexamen. Oefen nu met een nieuwe vraag.</p>
       <button type="button" class="ghost wide" id="dayspeak">Probeer een nieuwe spreekvraag</button></section>`:""}
     ${speaking?.ok?`<p class="note"><b>Spreken</b> · Alle punten van een nieuwe spreekvraag beantwoord.</p>`:""}
     <ol class="steps">${steps.map((t,i)=>{const ok=done.includes(t.id),nxt=i===nx&&!ok,k=t.id.split(":")[1];
