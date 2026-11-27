@@ -3045,8 +3045,37 @@ function rememberPractice(q,ok){
     if(previous?.source===source)previous.last={ok,day:today()};
   }else if(!ok)S.practiceFocus[level]={source:q.k,at:Date.now()};
 }
+function repeatedA2Focus(resolved){
+  const day=today(), sections=new Set(["lz","ls","knm"].filter(k=>!S.uit?.[k]?.ok));
+  const deadlines=new Map(examsAhead().filter(x=>x.k&&x.n<=14).map(x=>[x.k,x.n]));
+  const groups=new Map();
+  for(const q of ITEMS){
+    const item=S.items[q.k];
+    if(!sections.has(q.sec)||!item?.w||item.b||item.d<day-14||item.d>day)continue;
+    const skill=examSkill(q);
+    if(skill===PART[q.sec]||(resolved?.section===q.sec&&resolved.skill===skill))continue;
+    const key=q.sec+"|"+skill;
+    if(!groups.has(key))groups.set(key,new Map());
+    const sources=groups.get(key),group=q.text||q.say||q.big;
+    if(!sources.has(group)||S.items[sources.get(group).k].d<item.d)sources.set(group,q);
+  }
+  const candidates=[];
+  for(const sources of groups.values()){
+    if(sources.size<2)continue;
+    const source=[...sources.values()].sort((a,b)=>S.items[b.k].d-S.items[a.k].d)[0];
+    const target=freshFocus(source);
+    if(target)candidates.push({source,target,count:sources.size});
+  }
+  return candidates.sort((a,b)=>(deadlines.get(a.source.sec)??15)-(deadlines.get(b.source.sec)??15)||b.count-a.count)[0];
+}
 function dayExamFocus(){
   const focus=S.practiceFocus?.[lvl()];
+  if(focus?.last?.day!==today()&&lvl()==="A2"){
+    const next=repeatedA2Focus(focus?.last?.ok?focus:null);
+    if(next){
+      return {...next,focus:{source:next.source.k,at:Date.now(),count:next.count,skill:examSkill(next.source),section:next.source.sec}};
+    }
+  }
   if(!focus||Date.now()-focus.at>=14*864e5||focus.last?.ok&&focus.last.day!==today())return null;
   const source=ITEMS.find(q=>q.k===focus.source);
   if(!source||!parts().includes(source.sec)||S.uit?.[source.sec]?.ok)return null;
@@ -3111,6 +3140,7 @@ function planHTML(){
   const review=focus&&(focus.target||last?.day===d)?`<section class="list exam-focus" aria-label="Gerichte oefening">
     <h3>Verder met je oefening</h3>
     <p>${esc(PART[focus.source.sec])} · ${esc(examSkill(focus.source))}</p>
+    ${focus.focus.count?`<p class="note">Dit ging mis bij ${focus.focus.count} verschillende teksten, fragmenten of situaties.</p>`:""}
     ${focus.target?`<button type="button" class="btn wide" id="dayfocus">Oefen met een nieuwe vraag</button>`:
       `<p class="note">${last.ok?"De nieuwe vraag ging goed.":"Deze oefening komt morgen terug."}</p>`}
   </section>`:"";
@@ -3257,7 +3287,11 @@ function drawPlan(){
   if($("dayrule"))$("dayrule").onclick=writingRuleScreen;
   if($("dayspeak"))$("dayspeak").onclick=speakingFollowUp;
   const focus=dayExamFocus(),review=$("dayfocus");
-  if(review&&focus?.target)review.onclick=()=>startExamFocus(focus.source);
+  if(review&&focus?.target)review.onclick=()=>{
+    S.practiceFocus ||= {};
+    S.practiceFocus[lvl()]=focus.focus;
+    startExamFocus(focus.source);
+  };
   document.querySelectorAll("#plan [data-p]").forEach(b=>b.onclick=()=>{const id=b.dataset.p,[k,v]=id.split(":");planId=id;
     if(k==="t")return startTest();
     if(k==="mini")build(v,{...SEC.find(x=>x.id===v),n:1,keep:1,pool:()=>wbTasks(1,0)});
