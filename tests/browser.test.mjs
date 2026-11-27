@@ -581,7 +581,8 @@ test('The homepage and the app work in a real browser', async t => {
       assert.equal(await overflow(s.p), 0);
       assert.equal(await s.p.locator('#plus-card').isHidden(), true); // Plus is off without configuration
       // Vraag 2: the KNM question on the homepage marks the answer like the app does
-      await s.p.locator('[aria-controls="product-exam"]').click();
+      await s.p.locator('[data-product-step="-1"]').click(); // the exam card is the last one: one step back from the first
+      await s.p.locator('#module-exam').waitFor();
       await s.p.locator('#probeer > summary').click();
       await s.p.locator('.quiz .choice').first().click();
       assert.equal(await s.p.locator('.quiz .choice.ok').count(), 1);
@@ -591,6 +592,7 @@ test('The homepage and the app work in a real browser', async t => {
     await t.test('learning features: compact headings, touch, hover and keyboard', async () => {
       for (const lang of ['en', 'ru', 'ar']) {
         const s = await page(browser, base, {lang, reducedMotion: 'reduce'}); await s.go('/');
+        await s.p.locator('[data-product-step="-1"]').click(); await s.p.locator('#module-exam').waitFor(); 
         const cards = s.p.locator('.feature-grid details'), descriptions = cards.locator('p');
         assert.equal(await cards.count(), 4);
         assert.equal(await s.p.locator('.feature-grid details[open]').count(), 0);
@@ -611,6 +613,7 @@ test('The homepage and the app work in a real browser', async t => {
       }
       const s = await page(browser, base, {lang: 'en', viewport: {width: 1280, height: 900}, isMobile: false, hasTouch: false, reducedMotion: 'reduce'});
       await s.go('/');
+      await s.p.locator('[data-product-step="-1"]').click(); await s.p.locator('#module-exam').waitFor(); 
       const cards = s.p.locator('.feature-grid details');
       assert.equal(await s.p.locator('.feature-grid details[open]').count(), 0);
       assert.equal(await cards.first().evaluate(e => getComputedStyle(e).borderTopWidth), '1px');
@@ -666,8 +669,7 @@ test('The homepage and the app work in a real browser', async t => {
       assert.equal(await s.p.locator('#book-word').isVisible(), true);
       await s.p.locator('[data-product-step="1"]').tap();
       await s.p.locator('#module-conversation').waitFor();
-      const media = s.p.locator('[aria-controls="product-media"]');
-      await media.focus();
+      await s.p.locator('[data-product-step="1"]').focus();
       await s.p.keyboard.press('ArrowRight');
       await s.p.locator('#module-media').waitFor();
       await s.p.keyboard.press('ArrowRight');
@@ -690,7 +692,9 @@ test('The homepage and the app work in a real browser', async t => {
       for (const [open, seen] of [['books', '#lib'], ['history', '#hist'], ['media', '#media'], ['talk', '#talk']]) {
         const s = await page(browser, base, {lang:'ru'}); await s.go('/ru');
         const section = {books:'books',history:'history',media:'media',talk:'conversation'}[open];
-        await s.p.locator(`[aria-controls="product-${section}"]`).tap();
+        const steps = {history:0, books:1, conversation:2, media:3}[section];
+        for (let i = 0; i < steps; i++) await s.p.locator('[data-product-step="1"]').tap();
+        await s.p.locator(`#module-${section}`).waitFor();
         await s.p.locator(`#module-${section} a[href="/oefenen?open=${open}"]`).tap();
         await s.p.locator(seen).waitFor({state:'visible'});
         assert.equal(await s.p.evaluate(() => tab), 'oefenen');
@@ -700,6 +704,7 @@ test('The homepage and the app work in a real browser', async t => {
     });
     await t.test('learning features: smooth reversal, switching and reduced motion', async () => {
       const s = await page(browser, base, {lang: 'en'}); await s.go('/');
+      await s.p.locator('[data-product-step="-1"]').click(); await s.p.locator('#module-exam').waitFor(); 
       const cards = s.p.locator('.feature-grid details'), first = cards.first(), panel = first.locator('p');
       const settle = () => s.p.waitForFunction(() => [...document.querySelectorAll('.feature-grid p')].every(e => !e.getAnimations().some(a => a.playState === 'running')));
       const collapsed = (await first.boundingBox()).height;
@@ -729,6 +734,7 @@ test('The homepage and the app work in a real browser', async t => {
       assert.equal(await overflow(s.p), 0);
       assert.deepEqual(s.errors, []); await s.ctx.close();
       const d = await page(browser, base, {viewport: {width: 1280, height: 900}, isMobile: false, hasTouch: false}); await d.go('/');
+      await d.p.locator('[data-product-step="-1"]').click(); await d.p.locator('#module-exam').waitFor();
       const heading = d.p.locator('.feature-grid summary').first(), description = d.p.locator('.feature-grid p').first();
       await d.p.evaluate(() => {
         window.featureHoverTrace = [];

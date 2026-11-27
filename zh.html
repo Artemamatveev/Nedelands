@@ -32,7 +32,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=bittie1">
 <link rel="manifest" href="/manifest.json?v=bittie1">
 <script src="/ios-startup-v1.js" defer></script>
-<link rel="stylesheet" href="/landing.css?v=module-detail">
+<link rel="stylesheet" href="/landing.css?v=ways-in-exam">
 <link rel="stylesheet" href="/voice-mark-v1.css">
 <script>
 // Browser visits start with the homepage, including returning learners on phones and tablets.
@@ -54,7 +54,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Bittertalen","url":"https://bittertalen.nl/zh","applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":"zh-Hans","educationalLevel":["A2","B1"],"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}
 </script>
-<script defer src="/landing.js?v=book-demo"></script>
+<script defer src="/landing.js?v=arrows-only"></script>
 <script defer src="/lib/gsap-3.15.1.min.js"></script>
 <script defer src="/lib/ScrollTrigger-3.15.1.min.js"></script>
 <script defer src="/landing-motion-v3.js?v=hero-still"></script>
@@ -156,13 +156,6 @@
     </div>
     <div class="product-controls" role="group" aria-labelledby="products-title" hidden>
       <button class="product-arrow" type="button" data-product-step="-1"><span aria-hidden="true">←</span><span class="product-sr" data-t="Vorige kaart">上一张卡片</span></button>
-      <div class="product-picker">
-        <button type="button" data-product-pick aria-controls="product-history" aria-pressed="true" data-t="Geschiedenis, cultuur en geografie">历史、文化与地理</button>
-        <button type="button" data-product-pick aria-controls="product-books" aria-pressed="false" data-t="Boeken lezen met vertaling">借助翻译读书</button>
-        <button type="button" data-product-pick aria-controls="product-conversation" aria-pressed="false" data-t="Praat met Bittie">和 Bittie 聊天</button>
-        <button type="button" data-product-pick aria-controls="product-media" aria-pressed="false" data-t="Video’s en podcasts">视频与播客</button>
-        <button type="button" data-product-pick aria-controls="product-exam" aria-pressed="false" data-t="Voorbereiden op je examen">准备考试</button>
-      </div>
       <button class="product-arrow" type="button" data-product-step="1"><span aria-hidden="true">→</span><span class="product-sr" data-t="Volgende kaart">下一张卡片</span></button>
     </div>
     <p class="product-sr" role="status"></p>
@@ -218,6 +211,18 @@
       <section id="module-exam" class="module-detail" aria-labelledby="module-heading-exam">
         <h3 id="module-heading-exam" data-t="Voorbereiden op je examen">准备考试</h3>
         <p data-t="Oefen lezen, luisteren, schrijven en spreken op A2 of B1. Op A2 oefen je ook KNM. Maak een proefexamen met een timer en bekijk daarna wat je nog kunt oefenen.">练习 A2 或 B1 的阅读、听力、写作和口语。A2 还包括 KNM。完成计时模拟考试，看看接下来还要练习什么。</p>
+        <ul class="stats" aria-label="Bittertalen">
+        <li><b dir="ltr">6000+</b><span data-t="oefenvragen">道练习题</span></li>
+        <li><b dir="ltr">400+</b><span data-t="KNM-vragen over de 8 thema's">道 KNM 题，覆盖 8 个主题</span></li>
+        <li><b dir="ltr">5</b><span data-t="proefexamens per niveau, met een timer">每个级别的限时模拟考试</span></li>
+        <li><b dir="ltr">30+</b><span data-t="gesprekken om hardop te oefenen">段可大声练习的对话</span></li>
+        </ul>
+        <ul class="ways feature-grid" role="list">
+          <li><details name="learning-feature"><summary><span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18m-13 5 3 3 5-5"/></svg></span><h4 data-t="Een les per dag">每天一课</h4></summary><p data-t="Kies 10, 20 of 40 minuten. Bittertalen stelt je les samen en geeft extra aandacht aan wat je lastig vindt.">选择 10、20 或 40 分钟。Bittertalen 会安排课程，让你多练习觉得困难的内容。</p></details></li>
+          <li><details name="learning-feature"><summary><span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span><h4 data-t="Zelf kiezen">自己选练习</h4></summary><p data-t="Oefen één vaardigheid, herhaal woorden, doe grammatica of lees en luister naar verhalen in het Nederlands.">练习单项技能、复习单词、练习语法，或阅读和收听荷兰语故事。</p></details></li>
+          <li><details name="learning-feature"><summary><span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 9h6m-6 4h3m-3 4h6"/></svg></span><h4 data-t="Een proefexamen maken">做模拟考试</h4></summary><p data-t="Oefen een examenonderdeel met een timer en bekijk je resultaten om te zien wat je nog kunt oefenen.">限时练习一个考试科目，再查看结果，了解还需要练习什么。</p></details></li>
+          <li><details name="learning-feature"><summary><span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7v5h-5M4 17v-5h5M6 7a7 7 0 0 1 12-2l2 2M4 17l2 2a7 7 0 0 0 12-2"/></svg></span><h4 data-t="Leren van je fouten">从错误中学习</h4></summary><p data-t="Herhaal vragen die je eerder fout had en oefen extra met wat nog lastig is.">重做之前答错的题目，重点练习仍然觉得困难的内容。</p></details></li>
+        </ul>
         <details class="product-exam-topic" id="niveaus">
           <summary data-t="Waar oefen je voor?">你在准备哪项考试？</summary>
           <div>
@@ -288,25 +293,6 @@
     </div>
   </section>
 
-  <ul class="stats" aria-label="Bittertalen">
-    <li><b dir="ltr">6000+</b><span data-t="oefenvragen">道练习题</span></li>
-    <li><b dir="ltr">400+</b><span data-t="KNM-vragen over de 8 thema's">道 KNM 题，覆盖 8 个主题</span></li>
-    <li><b dir="ltr">5</b><span data-t="proefexamens per niveau, met een timer">每个级别的限时模拟考试</span></li>
-    <li><b dir="ltr">30+</b><span data-t="gesprekken om hardop te oefenen">段可大声练习的对话</span></li>
-  </ul>
-
-
-
-
-  <section id="oefenvormen" class="block paper">
-    <h2 data-t="Oefen voor je examen">为考试做准备</h2>
-    <ul class="ways feature-grid" role="list">
-      <li><details name="learning-feature"><summary><span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18m-13 5 3 3 5-5"/></svg></span><h3 data-t="Een les per dag">每天一课</h3></summary><p data-t="Kies 10, 20 of 40 minuten. Bittertalen stelt je les samen en geeft extra aandacht aan wat je lastig vindt.">选择 10、20 或 40 分钟。Bittertalen 会安排课程，让你多练习觉得困难的内容。</p></details></li>
-      <li><details name="learning-feature"><summary><span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span><h3 data-t="Zelf kiezen">自己选练习</h3></summary><p data-t="Oefen één vaardigheid, herhaal woorden, doe grammatica of lees en luister naar verhalen in het Nederlands.">练习单项技能、复习单词、练习语法，或阅读和收听荷兰语故事。</p></details></li>
-      <li><details name="learning-feature"><summary><span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 9h6m-6 4h3m-3 4h6"/></svg></span><h3 data-t="Een proefexamen maken">做模拟考试</h3></summary><p data-t="Oefen een examenonderdeel met een timer en bekijk je resultaten om te zien wat je nog kunt oefenen.">限时练习一个考试科目，再查看结果，了解还需要练习什么。</p></details></li>
-      <li><details name="learning-feature"><summary><span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7v5h-5M4 17v-5h5M6 7a7 7 0 0 1 12-2l2 2M4 17l2 2a7 7 0 0 0 12-2"/></svg></span><h3 data-t="Leren van je fouten">从错误中学习</h3></summary><p data-t="Herhaal vragen die je eerder fout had en oefen extra met wat nog lastig is.">重做之前答错的题目，重点练习仍然觉得困难的内容。</p></details></li>
-    </ul>
-  </section>
 
   <!-- The homepage asks like the exam form ("Examenblad", the app's style): lettered answers in square boxes -->
   <section id="prijzen" class="block">

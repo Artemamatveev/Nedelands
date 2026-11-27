@@ -13,7 +13,7 @@ button, "Begin met oefenen" in the bar (`#enter`), opens `/oefenen?open=today`; 
 prompt when available, otherwise links to #install-app with instructions for iOS, Android and desktop (November 2026). The bar: the name (30 px, 28 on a phone), the page's links, the language, Inloggen and the main button;
 on a phone two straight rows, the name with the button, then the links with the language and Inloggen (two wrapping flex
 rows: a grid tied the second row to the button's width; the type follows the screen's width and the narrowest phones leave
-out the middle link; the browser test measures it in the longest languages). The learning features (`#oefenvormen`)
+out the middle link; the browser test measures it in the longest languages). The learning features (the four `.feature-grid` cards, since 27 November 2026 inside the exam card's details `#module-exam` instead of their own section "Oefen voor je examen", at the user's wish)
 start as compact headings in native `details`: tapping or keyboard activation opens one description and colors that
 card blue; a fine mouse pointer also opens it on hover and closes it on leaving. No card starts highlighted. Keep the
 summary's icon and disclosure indicator, all nine languages, and the native fallback without JavaScript.
@@ -22,8 +22,8 @@ interaction. Reduced motion skips the animation; resize settles it. Phone cards 
 Scroll anchoring is paused during disclosure motion, and feature-section entrance motion settles on hover so the heading
 cannot move away from a stationary pointer.
 “Ontdek Bittertalen” (`#ontdek`) sits below the hero. Its five cards cover history and culture, books, AI
-conversations, media and A2/B1 exam practice. Swiping, choosing a topic or using the arrows changes the description
-below the cards. With JavaScript disabled all cards and descriptions stay visible. The description links to
+conversations, media and A2/B1 exam practice. Swiping or the two arrows (no topic buttons under them since 27 November 2026, at the user's wish) change the description
+below the cards; the arrow takes the focus when the card or description that had it goes away. With JavaScript disabled all cards and descriptions stay visible. The description links to
 the corresponding app screen. The history card links directly to Vermeer’s painting and the geography reader.
 The exam card opens its level selector, KNM example and writing example in place. The book demo shows the English
 definition of a Dutch word.
@@ -35,7 +35,7 @@ or migration (`#verhuis=`) callbacks still enter the app directly, preserving th
 so reloading stays on the homepage; ordinary browser visits remove that query. A fresh installed launch still opens practice. The "← Bittertalen" links of /over and /privacy go back to
 /oefenen for someone who came from the app. Arriving from the homepage (`?open=today`, `a2`,
 `b1`, `sample`) marks the login window as seen (`ww-welcome`): the homepage already offers Inloggen, so someone who
-started without an account isn't stopped by it later; `?open=login` opens it. Under the hero four numbers (questions, KNM questions, proefexamens per level,
+started without an account isn't stopped by it later; `?open=login` opens it. In the details of the exam card ("Voorbereiden op je examen", `#module-exam`; moved there from under the cards on 27 November 2026 at the user's wish) four numbers (questions, KNM questions, proefexamens per level,
 conversations), checked against the content by the same test: change them when the content shrinks. The sections are set like questions on the exam
 form, in the app's Examenblad style (the user found icon cards and phone screenshots looked like every competitor):
 "Vraag 1 · Waar oefen je voor?" with A (A2) and B (B1) in square letter boxes that open the app at that level; "Vraag 2
