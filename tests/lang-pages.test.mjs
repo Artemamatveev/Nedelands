@@ -40,3 +40,12 @@ test('The sitemap lists every language with its alternates', () => {
     assert.equal(xml.split(`hreflang="${hreflang(l)}" href="${url(l)}"`).length - 1, ALL.length, l);
   }
 });
+
+test('The book excerpt exposes just one copy of the dictionary word before scripts run', () => {
+  for (const l of ALL) {
+    const paragraph = page(l).match(/<p>Maar Lena[^<]*(?:<[^>]+>[^<]*)*?<\/p>/)?.[0];
+    assert.ok(paragraph, l);
+    assert.equal(paragraph.replace(/<[^>]*>/g, '').match(/woordenboek/g)?.length, 1, l);
+    assert.match(paragraph, /data-book-word disabled>woordenboek<\/button>/, l);
+  }
+});
