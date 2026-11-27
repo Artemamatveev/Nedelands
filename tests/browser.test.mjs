@@ -581,7 +581,8 @@ test('The homepage and the app work in a real browser', async t => {
       assert.equal(await overflow(s.p), 0);
       assert.equal(await s.p.locator('#plus-card').isHidden(), true); // Plus is off without configuration
       // Vraag 2: the KNM question on the homepage marks the answer like the app does
-      await s.p.locator('[aria-controls="product-exam"]').click();
+      await s.p.locator('[data-product-step="-1"]').click(); // the exam card is the last one: one step back from the first
+      await s.p.locator('#module-exam').waitFor();
       await s.p.locator('#probeer > summary').click();
       await s.p.locator('.quiz .choice').first().click();
       assert.equal(await s.p.locator('.quiz .choice.ok').count(), 1);
@@ -666,8 +667,7 @@ test('The homepage and the app work in a real browser', async t => {
       assert.equal(await s.p.locator('#book-word').isVisible(), true);
       await s.p.locator('[data-product-step="1"]').tap();
       await s.p.locator('#module-conversation').waitFor();
-      const media = s.p.locator('[aria-controls="product-media"]');
-      await media.focus();
+      await s.p.locator('[data-product-step="1"]').focus();
       await s.p.keyboard.press('ArrowRight');
       await s.p.locator('#module-media').waitFor();
       await s.p.keyboard.press('ArrowRight');
@@ -690,7 +690,9 @@ test('The homepage and the app work in a real browser', async t => {
       for (const [open, seen] of [['books', '#lib'], ['history', '#hist'], ['media', '#media'], ['talk', '#talk']]) {
         const s = await page(browser, base, {lang:'ru'}); await s.go('/ru');
         const section = {books:'books',history:'history',media:'media',talk:'conversation'}[open];
-        await s.p.locator(`[aria-controls="product-${section}"]`).tap();
+        const steps = {history:0, books:1, conversation:2, media:3}[section];
+        for (let i = 0; i < steps; i++) await s.p.locator('[data-product-step="1"]').tap();
+        await s.p.locator(`#module-${section}`).waitFor();
         await s.p.locator(`#module-${section} a[href="/oefenen?open=${open}"]`).tap();
         await s.p.locator(seen).waitFor({state:'visible'});
         assert.equal(await s.p.evaluate(() => tab), 'oefenen');
