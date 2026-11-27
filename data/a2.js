@@ -306,9 +306,9 @@ const LZ=[
 ["Van: Gemeente Zuidstad\nAan: R. Petrova\nOnderwerp: afspraak paspoort\n\nGeachte mevrouw Petrova,\nU hebt een afspraak gemaakt voor een nieuw paspoort op maandag 9 maart om 11.15 uur in het Stadskantoor, Marktplein 1.\nNeem mee: uw oude paspoort en een goede pasfoto. Betalen kan alleen met uw bankpas.\nUw nieuwe paspoort is na ongeveer een week klaar. U krijgt dan een sms. U haalt het zelf op; dat kan zonder afspraak.\nMet vriendelijke groet,\nGemeente Zuidstad",
  [["Hoe betaalt mevrouw Petrova?","met haar bankpas","contant","met een rekening die ze thuis krijgt"],["Wanneer kan ze het nieuwe paspoort ophalen?","als ze een sms heeft gekregen","op maandag 9 maart","na een nieuwe afspraak"]]],
 ["Gezocht: oppas voor twee kinderen\nWij zoeken een lieve oppas voor onze kinderen (3 en 6 jaar).\nWanneer? Elke woensdagmiddag van 12.00 tot 18.00 uur.\nWat ga je doen? De oudste ophalen van school, samen spelen en eten geven.\nWij betalen € 12 per uur.\nJe bent minimaal 18 jaar en je kunt fietsen.\nBel of app Esther: 06-23456789.",
- [["Wat moet de oppas doen?","een kind van school halen","de kinderen naar bed brengen","het huis schoonmaken"],["Hoeveel verdient de oppas op een woensdag?","€ 72","€ 12","€ 36"]]],
+ [["Wat moet de oppas doen?","een kind van school halen","de kinderen naar bed brengen","het huis schoonmaken"],["Hoeveel verdient de oppas voor de hele woensdagmiddag?","€ 72","€ 12","€ 36"]]],
 ["Werkzaamheden in de Dorpsstraat\nVan 3 tot en met 21 juni werken we aan de riolering in de Dorpsstraat. De straat is dan dicht voor auto's. Fietsers en voetgangers kunnen er wel door.\nBus 7 stopt in deze weken niet bij de halte Dorpsstraat. Stap in of uit bij de halte Kerkplein.\nUw afval halen we op zoals altijd. Zet uw container wel aan het begin van de straat.\nVragen? Bel de gemeente: 14 0123.",
- [["Wie kan in juni niet door de Dorpsstraat?","auto's","fietsers","voetgangers"],["Waar zet u in deze weken uw container?","aan het begin van de straat","bij de halte Kerkplein","voor uw huis, zoals altijd"],["Waar stapt u in de bus?","bij de halte Kerkplein","bij de halte Dorpsstraat","bij het gemeentehuis"]]],
+ [["Wie kan tijdens het werk niet door de Dorpsstraat?","auto's","fietsers","voetgangers"],["Waar zet u in deze weken uw container?","aan het begin van de straat","bij de halte Kerkplein","voor uw huis, zoals altijd"],["Waar stapt u in de bus?","bij de halte Kerkplein","bij de halte Dorpsstraat","bij het gemeentehuis"]]],
 ["Beste ouders,\nOp maandag 2 december komt de schoolarts op school. Zij kijkt naar de ogen, de oren, de lengte en het gewicht van de kinderen van groep 2. U mag erbij zijn. Het onderzoek duurt ongeveer twintig minuten.\nKunt u niet op maandag? Bel dan de GGD voor een andere afspraak: 088-1234567.\nNeem het groene boekje van uw kind mee als u komt.\nMet vriendelijke groet,\nJuf Anouk",
  [["Wat doet de schoolarts?","ze onderzoekt de kinderen van groep 2","ze geeft de kinderen van groep 2 een prik","ze praat met de leraren"],["U kunt op 2 december niet. Wat doet u?","de GGD bellen","juf Anouk mailen","niets; uw kind gaat alleen"]]],
 ["Zwemles voor volwassenen\nKunt u niet zwemmen? Bij Sportcentrum De Hoven kan het nog!\nWanneer: elke zaterdag van 9.00 tot 9.45 uur\nAantal lessen: 12\nPrijs: € 96 voor alle lessen\nAanmelden: aan de balie of via de website. U betaalt bij het aanmelden.\nWij hebben ook een les alleen voor vrouwen, op dinsdagavond.",
@@ -935,6 +935,17 @@ const LZ_EVIDENCE = [
   [["zaterdag: 10.00 – 17.00 uur\nzondag: 12.00 – 17.00 uur", "Als u zaterdag om zes uur klaar bent met werken, is de bibliotheek al dicht. Zondag gaat de bibliotheek om twaalf uur open."],
    ["Oefen gratis Nederlands met een vrijwilliger. U hoeft geen lid te zijn.", "Voor het Taalhuis hoeft u geen abonnement te nemen of te betalen."],
    ["Kinderen tot 18 jaar: gratis", "Uw dochter is twaalf en valt dus onder de gratis regeling voor kinderen."]],
+  // Stable passage indices 13–19 are still awaiting review.
+  [], [], [], [], [], [], [],
+  [["Vrijdag: alleen 's ochtends", "Op vrijdag kunt u alleen in de ochtend bij deze praktijk terecht."],
+   ["Zeg uw afspraak minstens 24 uur van tevoren af. Doet u dat niet, dan betaalt u € 25.", "Eén uur van tevoren is minder dan 24 uur. Daarom betaalt u € 25."]],
+  [["Betalen kan alleen met uw bankpas.", "Alleen geeft aan dat er hier geen andere manier van betalen is."],
+   ["U krijgt dan een sms. U haalt het zelf op; dat kan zonder afspraak.", "De sms laat weten dat het nieuwe paspoort klaar is. U hoeft geen afspraak te maken."]],
+  [["De oudste ophalen van school, samen spelen en eten geven.", "De oppas haalt het oudste kind op. In de advertentie staat ook dat de oppas met de kinderen speelt en hun eten geeft."],
+   ["Elke woensdagmiddag van 12.00 tot 18.00 uur.", "Van twaalf tot zes uur is zes uur. De advertentie zegt € 12 per uur. Zes keer twaalf is € 72."]],
+  [["De straat is dan dicht voor auto's. Fietsers en voetgangers kunnen er wel door.", "Dan verwijst naar de periode waarin de gemeente aan de straat werkt. Alleen auto's kunnen er niet door."],
+   ["Zet uw container wel aan het begin van de straat.", "De ophaaldag blijft hetzelfde. In deze weken verandert de plek voor de container."],
+   ["Stap in of uit bij de halte Kerkplein.", "De bus stopt tijdelijk niet bij de halte Dorpsstraat. U gebruikt daarom Kerkplein."]],
 ];
 
 const LSM_EVIDENCE = [
