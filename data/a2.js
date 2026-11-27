@@ -908,7 +908,7 @@ const LZ_EVIDENCE = [
   [["De grijze bak (restafval) halen wij op dinsdag op, niet meer op vrijdag.", "Voor de grijze bak verandert vrijdag in dinsdag. De groene bak blijft op woensdag."],
    ["Zet uw bak voor 7.30 uur aan de straat.", "7.30 uur is half acht 's ochtends. De bak moet er vóór die tijd staan."]],
   [["Uw kind moet zelf eten en drinken meenemen.", "De school vraagt om eten en drinken voor onderweg."],
-   ["Wilt u dit voor 5 juni betalen?", "5 juni is de betaaldatum. Op 12 juni is het schoolreisje."],
+   ["Wilt u dit voor 5 juni betalen?", "U betaalt vóór 5 juni. Op 12 juni is het schoolreisje."],
    ["We vertrekken om 8.45 uur met de bus en we zijn om 15.30 uur terug op school.", "De kinderen gaan met de bus. De tijd van 15.30 uur gaat over de terugkomst."]],
   [["Uitslagen: bel tussen 14.00 en 15.00 uur.", "Van acht tot tien kunt u bellen voor een afspraak. Voor een uitslag belt u tussen twee en drie uur 's middags."],
    ["U kunt de medicijnen na twee werkdagen ophalen bij de apotheek.", "Na maandag telt u twee werkdagen: dinsdag en woensdag."],
@@ -927,6 +927,14 @@ const LZ_EVIDENCE = [
   [["Maak eerst een afspraak via de website of bel de gemeente.", "Eerst maakt u een afspraak. Op de afgesproken dag zet u het grofvuil buiten."],
    ["Zet het grofvuil op de dag van de afspraak vóór 7.30 uur buiten.", "7.30 uur betekent half acht 's ochtends. Het grofvuil moet er vóór die tijd staan."],
    ["Oude kleren horen niet bij het grofvuil. Die brengt u naar de kledingcontainer.", "Die verwijst naar oude kleren. Die moeten naar de kledingcontainer."]],
+  [["We vertrekken om 13.00 uur met de bus vanaf het kantoor.", "De bus vertrekt vanaf het kantoor. Dat is het vervoer voor het team."],
+   ["Het eten en drinken betaalt het bedrijf. Partners zijn ook welkom, maar zij betalen zelf € 25.", "De € 25 geldt voor partners. Het bedrijf betaalt het eten en drinken voor de medewerkers."],
+   ["Ga je mee? Laat het voor 1 juni weten aan Sandra.", "Je meldt je aan bij Sandra vóór 1 juni. Het uitje zelf is op 14 juni."]],
+  [["Op dinsdag 3 en woensdag 4 maart krijgt de lift onderhoud. Op deze dagen kunt u de lift niet gebruiken van 8.00 tot 16.00 uur.", "Op deze dagen verwijst naar 3 en 4 maart. Van acht tot vier is overdag."],
+   ["Hebt u hulp nodig met uw boodschappen, of zit u in een rolstoel? Bel dan voor 1 maart de huismeester", "Bel de huismeester als u tijdens het onderhoud hulp nodig hebt."]],
+  [["zaterdag: 10.00 – 17.00 uur\nzondag: 12.00 – 17.00 uur", "Als u zaterdag om zes uur klaar bent met werken, is de bibliotheek al dicht. Zondag gaat de bibliotheek om twaalf uur open."],
+   ["Oefen gratis Nederlands met een vrijwilliger. U hoeft geen lid te zijn.", "Voor het Taalhuis hoeft u geen abonnement te nemen of te betalen."],
+   ["Kinderen tot 18 jaar: gratis", "Uw dochter is twaalf en valt dus onder de gratis regeling voor kinderen."]],
 ];
 
 const LSM_EVIDENCE = [

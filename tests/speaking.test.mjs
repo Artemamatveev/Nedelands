@@ -227,3 +227,32 @@ test('A2 speaking recommends separate practice when part of an exam answer was m
   assert.equal(a.run('S.speakFollow.examKeys.includes(queue[0].k)'),false);
   assert.match(a.run('queue[0].big+queue[0].sub'),/waarom/i);
 });
+
+test('A2 speaking compares the second answer without counting the question twice',async()=>{
+  const native=speech(),checks=[];
+  const a=await app({globals:{SpeechRecognition:native.Recognition},fetch:async(url,options)=>{
+    if(url!=='/api/check')return new Response('{}');
+    const {text}=JSON.parse(options.body).tasks[0];
+    checks.push(text);
+    const inhoud=checks.length===1?2:3;
+    return new Response(JSON.stringify({tasks:[{passed:inhoud===3,errors:[],corrected:text,
+      scores:{inhoud,woorden:1,grammatica:2,samenhang:1}}]}));
+  }});
+  a.run('build("sp",{...SEC.find(s=>s.id==="sp"),n:1,keep:1,pool:()=>[ITEMS.find(q=>q.k==="sp|5")]})');
+  const click=id=>a.document.getElementById(id).click();
+  const take=async text=>{
+    await a.flush();
+    const recording=native.instances.at(-1);
+    recording.result(text);click('recb');recording.end();
+  };
+  click('spchk');await take('Ik leer Nederlands.');
+  click('spchk');await a.flush();
+  const progress=a.run('JSON.stringify(S.items["sp|5"])');
+  click('speakAgain');await take('Ik leer Nederlands omdat ik hier werk.');
+  assert.equal(checks.length,1);
+  assert.match(a.document.getElementById('spchk').textContent,/1 nakijkbeurt/);
+  click('spchk');await a.flush();
+  assert.equal(checks.length,2);
+  assert.match(a.document.getElementById('fb').textContent,/eerste antwoord 2\/3 · tweede antwoord 3\/3/);
+  assert.equal(a.run('JSON.stringify(S.items["sp|5"])'),progress);
+});
