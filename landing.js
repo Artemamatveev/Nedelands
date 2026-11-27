@@ -3,6 +3,24 @@ try{const r=new URLSearchParams(location.search).get("ref");if(r&&/^[A-HJ-NP-Z2-
 const languages = ["en", "ar", "tr", "hi", "zh", "es", "ru", "uk"];
 // Dutch copy is also in the HTML so the page is readable without scripts.
 const copy = {
+  "Niveau": ["Level", "المستوى", "Seviye", "स्तर", "级别", "Nivel", "Уровень", "Рівень"],
+  "Looptijd": ["Term", "المدة", "Süre", "अवधि", "期限", "Duración", "Срок", "Термін"],
+  "Account": ["Account", "الحساب", "Hesap", "खाता", "账户", "Cuenta", "Аккаунт", "Акаунт"],
+  "Opzeggen": ["Cancel", "الإلغاء", "İptal", "रद्द करना", "取消", "Cancelar", "Отмена", "Скасування"],
+  "Geldig": ["Valid", "الصلاحية", "Geçerlilik", "मान्य", "有效期", "Válido", "Действует", "Діє"],
+  "Betalen": ["Payment", "الدفع", "Ödeme", "भुगतान", "付款", "Pago", "Оплата", "Оплата"],
+  "Verlengen": ["Renewal", "التجديد", "Yenileme", "नवीनीकरण", "续订", "Renovación", "Продление", "Продовження"],
+  "A2 en B1": ["A2 and B1", "A2 و B1", "A2 ve B1", "A2 और B1", "A2 和 B1", "A2 y B1", "A2 и B1", "A2 і B1"],
+  "A2 of B1": ["A2 or B1", "A2 أو B1", "A2 veya B1", "A2 या B1", "A2 或 B1", "A2 o B1", "A2 или B1", "A2 або B1"],
+  "B1 en A2": ["B1 and A2", "B1 و A2", "B1 ve A2", "B1 और A2", "B1 和 A2", "B1 y A2", "B1 и A2", "B1 і A2"],
+  "A2": ["A2", "A2", "A2", "A2", "A2", "A2", "A2", "A2"],
+  "Onbeperkt": ["Unlimited", "بلا حدود", "Sınırsız", "असीमित", "不限", "Ilimitado", "Без ограничений", "Без обмежень"],
+  "Niet nodig": ["Not needed", "غير مطلوب", "Gerekmez", "ज़रूरी नहीं", "不需要", "No hace falta", "Не нужен", "Не потрібен"],
+  "Per maand": ["Monthly", "شهريًا", "Aylık", "मासिक", "按月", "Mensual", "Помесячно", "Щомісяця"],
+  "Elke maand": ["Any month", "في أي شهر", "Her ay", "किसी भी महीने", "每月均可", "Cualquier mes", "В любой месяц", "Будь-якого місяця"],
+  "Eén keer": ["Once", "مرة واحدة", "Tek sefer", "एक बार", "一次性", "Una vez", "Один раз", "Один раз"],
+  "1 jaar": ["1 year", "سنة واحدة", "1 yıl", "1 साल", "1 年", "1 año", "1 год", "1 рік"],
+  "Niet automatisch": ["Not automatic", "ليس تلقائيًا", "Otomatik değil", "अपने-आप नहीं", "不自动续订", "No automática", "Не автоматически", "Не автоматично"],
   "Sluiten": ["Close", "إغلاق", "Kapat", "बंद करें", "关闭", "Cerrar", "Закрыть", "Закрити"],
   "Inburgeringsexamen A2 en Staatsexamen NT2 B1, met 20 beginnerslessen als je bij nul begint": ["Civic integration exam A2 and Staatsexamen NT2 B1, with 20 beginner lessons if you start from zero", "امتحان الاندماج A2 وامتحان الدولة NT2 B1، مع 20 درسًا للمبتدئين إذا بدأت من الصفر", "Uyum sınavı A2 ve Staatsexamen NT2 B1, sıfırdan başlıyorsan 20 başlangıç dersiyle", "इंटीग्रेशन परीक्षा A2 और Staatsexamen NT2 B1, शून्य से शुरू करने वालों के लिए 20 शुरुआती पाठ", "融入考试 A2 和国家考试 NT2 B1，零基础可先学 20 节入门课", "Examen de integración A2 y Staatsexamen NT2 B1, con 20 lecciones para principiantes si empiezas desde cero", "Экзамен на интеграцию A2 и Staatsexamen NT2 B1, с 20 уроками для тех, кто начинает с нуля", "Іспит з інтеграції A2 і Staatsexamen NT2 B1, з 20 уроками для тих, хто починає з нуля"],
   "oefenvragen voor alle onderdelen": ["practice questions for every part", "سؤال تدريبي لكل الأجزاء", "tüm bölümler için alıştırma sorusu", "सभी हिस्सों के लिए अभ्यास सवाल", "道练习题，覆盖所有部分", "preguntas de práctica para todas las partes", "тренировочных вопросов по всем частям", "тренувальних запитань з усіх частин"],
@@ -209,6 +227,11 @@ const totalCopy = {
   tr:n=>`Tüm dönem için ${n} kontrol`, hi:n=>`पूरी अवधि के लिए ${n} जाँचें`, zh:n=>`整个有效期共 ${n} 次批改`,
   es:n=>`${n} revisiones para todo el periodo`, ru:n=>`${n} проверок на весь срок`, uk:n=>`${n} перевірок на весь період`
 };
+// the Examenpas row "Geldig": just the number of weeks
+const weeksShort = {
+  nl:n=>`${n} weken`, en:n=>`${n} weeks`, ar:n=>`${n} أسبوعًا`, tr:n=>`${n} hafta`, hi:n=>`${n} हफ़्ते`,
+  zh:n=>`${n} 周`, es:n=>`${n} semanas`, ru:n=>`${n} недель`, uk:n=>`${n} тижнів`
+};
 const passWeeks = {
   nl: n => `${n} weken geldig vanaf je betaling`, en: n => `Valid for ${n} weeks from payment`,
   ar: n => `صالح لمدة ${n} أسابيع من الدفع`, tr: n => `Ödemeden itibaren ${n} hafta geçerli`,
@@ -288,7 +311,7 @@ function render() {
     const eur = p => `€ ${lang === "en" ? String(p).replace(",", ".") : p}`;
     const row = level => { const b = document.createElement("bdi"), sm = document.createElement("small"); b.textContent = eur(pass.plans[level].price); sm.textContent = level; return [b, " ", sm]; };
     $("pass-price").replaceChildren(...row("A2"), document.createElement("br"), ...row("B1"));
-    $("pass-weeks").textContent = passWeeks[lang](Math.round((pass.days || 119) / 7));
+    $("pass-span").textContent = weeksShort[lang](Math.round((pass.days || 119) / 7));
   }
   // the Jaarpas, the same way (a year of Plus, one payment)
   const year = config?.year;

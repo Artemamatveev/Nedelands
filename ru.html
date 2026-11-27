@@ -32,7 +32,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=bittie1">
 <link rel="manifest" href="/manifest.json?v=bittie1">
 <script src="/ios-startup-v1.js" defer></script>
-<link rel="stylesheet" href="/landing.css?v=day-wide">
+<link rel="stylesheet" href="/landing.css?v=receipt">
 <link rel="stylesheet" href="/voice-mark-v1.css">
 <script>
 // Browser visits start with the homepage, including returning learners on phones and tablets.
@@ -54,7 +54,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Bittertalen","url":"https://bittertalen.nl/ru","applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":"ru","educationalLevel":["A2","B1"],"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}
 </script>
-<script defer src="/landing.js?v=install-dialog"></script>
+<script defer src="/landing.js?v=receipt"></script>
 <script defer src="/lib/gsap-3.15.1.min.js"></script>
 <script defer src="/lib/ScrollTrigger-3.15.1.min.js"></script>
 <script defer src="/landing-motion-v3.js?v=hero-still"></script>
@@ -349,9 +349,13 @@
       <article class="card">
         <h3 data-t="Gratis">Бесплатно</h3>
         <p class="price">€ 0</p>
-        <ul>
+        <dl class="receipt">
+          <div><dt data-t="Niveau">Уровень</dt><dd data-t="A2 en B1">A2 и B1</dd></div>
+          <div><dt data-t="Looptijd">Срок</dt><dd data-t="Onbeperkt">Без ограничений</dd></div>
+          <div><dt data-t="Account">Аккаунт</dt><dd data-t="Niet nodig">Не нужен</dd></div>
+        </dl>
+        <ul class="incl">
           <li data-t="Alle oefeningen en proefexamens op A2 en B1">Все упражнения и пробные экзамены A2 и B1</li>
-          <li data-t="Oefenen zonder account">Практика без аккаунта</li>
           <li data-t="Met een gratis account: voortgang op al je apparaten">С бесплатным аккаунтом прогресс доступен на всех ваших устройствах</li>
           <li id="free-checks" hidden></li>
           <li id="trial-checks" hidden></li>
@@ -361,32 +365,43 @@
       <article class="card plus" id="plus-card">
         <h3>Bittertalen Plus A2</h3>
         <p class="price" id="plus-price"><bdi>€ 9,99</bdi> <small data-t="per maand">в месяц</small></p>
-        <ul>
+        <dl class="receipt">
+          <div><dt data-t="Niveau">Уровень</dt><dd data-t="A2">A2</dd></div>
+          <div><dt data-t="Looptijd">Срок</dt><dd data-t="Per maand">Помесячно</dd></div>
+          <div><dt data-t="Opzeggen">Отмена</dt><dd data-t="Elke maand">В любой месяц</dd></div>
+        </dl>
+        <ul class="incl">
           <li id="plus-checks" data-t="Tot 200 nakijkbeurten per maand voor je teksten en gesproken antwoorden">До 200 проверок в месяц для ваших текстов и устных ответов</li>
           <li data-t="AI-feedback op Schrijven en Spreken A2, ook bij proefexamens.">ИИ проверяет письмо и устную речь A2, в том числе на пробных экзаменах.</li>
           <li data-t="Handig voor één of twee maanden voorbereiding.">Подходит для одного-двух месяцев подготовки.</li>
-          <li data-t="Elke maand opzegbaar">Можно отменить в любой месяц</li>
         </ul>
         <a class="button outline" href="/oefenen?open=plus&amp;choice=plus-a2" id="plus-link" data-t="Kies Plus A2">Выбрать Plus A2</a>
       </article>
       <article class="card plus" id="plus-b1-card">
         <h3>Bittertalen Plus B1</h3>
         <p class="price" id="plus-b1-price"><bdi>€ 14,99</bdi> <small data-t="per maand">в месяц</small></p>
-        <ul>
+        <dl class="receipt">
+          <div><dt data-t="Niveau">Уровень</dt><dd data-t="B1 en A2">B1 и A2</dd></div>
+          <div><dt data-t="Looptijd">Срок</dt><dd data-t="Per maand">Помесячно</dd></div>
+          <div><dt data-t="Opzeggen">Отмена</dt><dd data-t="Elke maand">В любой месяц</dd></div>
+        </dl>
+        <ul class="incl">
           <li id="plus-b1-checks" data-t="Tot 200 nakijkbeurten per maand voor je teksten en gesproken antwoorden">До 200 проверок в месяц для ваших текстов и устных ответов</li>
           <li data-t="AI-feedback op Schrijven en Spreken B1 én A2 met één tegoed.">ИИ проверяет письмо и устную речь на B1 и A2. Лимит общий.</li>
-          <li data-t="Elke maand opzegbaar">Можно отменить в любой месяц</li>
         </ul>
         <a class="button outline" href="/oefenen?open=plus&amp;choice=plus-b1" data-t="Kies Plus B1">Выбрать Plus B1</a>
       </article>
       <article class="card plus" id="pass-card">
         <h3 data-t="Examenpas">Экзаменационный пропуск</h3>
         <p class="price" id="pass-price"><bdi>€ 29,99</bdi> <small>A2</small><br><bdi>€ 39,99</bdi> <small>B1</small></p>
-        <ul>
-          <li data-t="Eén keer betalen, geen abonnement.">Одна оплата, без подписки.</li>
-          <li id="pass-weeks" data-t="17 weken geldig vanaf je betaling">Действует 17 недель с момента оплаты</li>
-          <li data-t="Eén tegoed voor de hele periode. B1 is inclusief A2.">Один лимит на весь срок. В B1 входит A2.</li>
+        <dl class="receipt">
+          <div><dt data-t="Niveau">Уровень</dt><dd data-t="A2 of B1">A2 или B1</dd></div>
+          <div><dt data-t="Geldig">Действует</dt><dd id="pass-span">17 weken</dd></div>
+          <div><dt data-t="Betalen">Оплата</dt><dd data-t="Eén keer">Один раз</dd></div>
+        </dl>
+        <ul class="incl">
           <li id="pass-total" hidden></li>
+          <li data-t="Eén tegoed voor de hele periode. B1 is inclusief A2.">Один лимит на весь срок. В B1 входит A2.</li>
           <li data-t="Handig als je examendatum vaststaat.">Подходит, если дата экзамена уже известна.</li>
         </ul>
         <a class="button outline" href="/oefenen?open=plus&amp;choice=exam" data-t="Kies de Examenpas">Выбрать пропуск</a>
@@ -394,10 +409,14 @@
       <article class="card plus" id="year-card">
         <h3 data-t="Jaarpas">Годовой пропуск</h3>
         <p class="price" id="year-price"><bdi>€ 79,99</bdi> <small>A2</small><br><bdi>€ 119,99</bdi> <small>B1</small></p>
-        <ul>
-          <li data-t="Een jaar AI-feedback voor één betaling. B1 is inclusief A2.">Год AI-проверок за одну оплату. В B1 входит A2.</li>
-          <li data-t="Wordt niet automatisch verlengd.">Не продлевается автоматически.</li>
+        <dl class="receipt">
+          <div><dt data-t="Niveau">Уровень</dt><dd data-t="A2 of B1">A2 или B1</dd></div>
+          <div><dt data-t="Geldig">Действует</dt><dd data-t="1 jaar">1 год</dd></div>
+          <div><dt data-t="Verlengen">Продление</dt><dd data-t="Niet automatisch">Не автоматически</dd></div>
+        </dl>
+        <ul class="incl">
           <li id="year-checks" hidden></li>
+          <li data-t="Een jaar AI-feedback voor één betaling. B1 is inclusief A2.">Год AI-проверок за одну оплату. В B1 входит A2.</li>
           <li data-t="Voordeliger vanaf negen maanden Plus.">Дешевле девяти и более месячных платежей Plus.</li>
         </ul>
         <a class="button outline" href="/oefenen?open=plus&amp;choice=year" data-t="Kies de Jaarpas">Выбрать годовой пропуск</a>
