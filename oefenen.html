@@ -3817,7 +3817,7 @@ const docBtn=`<button class="ghost wide" id="docx" style="margin-bottom:10px">Do
 // Writing is graded by Claude on the server (api/check.js)
 // Mistakes from the learner's own texts and spoken answers, practised later in "Mijn fouten"
 function keepErrs(errs){
-  errs.forEach(e=>{if(e&&e.wrong&&e.right&&e.wrong!==e.right&&String(e.wrong).length<90&&String(e.right).length<90&&!S.errs.some(x=>x.r===e.right))S.errs.unshift({w:String(e.wrong),r:String(e.right),y:String(e.why||"")})});
+  errs.forEach(e=>{if(e&&e.wrong&&e.right&&e.wrong!==e.right&&String(e.wrong).length<90&&String(e.right).length<90&&!S.errs.some(x=>x.r===e.right))S.errs.unshift({w:String(e.wrong),r:String(e.right),y:String(e.why||""),...(["inversie","meervoud"].includes(e.kind)?{kind:e.kind}:{})})});
   S.errs=S.errs.slice(0,40);
 }
 // A writing text sent again unchanged gets its earlier result, without a new check: sending the same text until the
@@ -5181,8 +5181,18 @@ function aiTalk(id,go){ // go: start at once (a person picked by the learner's t
 }
 // A conversation takes one check; with Plus (the better model) acc.cfg.plus.talk (api/_talk.js TALK_PLUS)
 const talkCost=()=>isPlus(lvl())?Math.max(1,+(acc.cfg&&acc.cfg.plus&&acc.cfg.plus.talk)||3):1;
+function bittiePractice(){
+  const words=[...new Set((S.words||[]).slice(0,24).map(x=>String(x.w||"").toLowerCase().trim())
+    .filter(w=>/^[a-zà-öø-ÿ]+(?:[ '-][a-zà-öø-ÿ]+){0,2}$/u.test(w)&&w.length<=36))];
+  const rule=["inversie","meervoud"].map(id=>({id,n:Math.max(S.writingRules?.[id]?.count||0,(S.errs||[]).filter(e=>e.kind===id).length)}))
+    .filter(x=>x.n).sort((a,b)=>b.n-a.n)[0]?.id;
+  return {word:words[today()%words.length]||"",rule:rule||(S.speakFollow&&!S.speakFollow.ok?"reason":"")};
+}
 function aiReady(msg){
+  const practice=AK?.c.id==="saskia"?bittiePractice():null;
   $("tctl").innerHTML=(msg?`<p class="note">${msg}</p>`:"")+`<button class="btn wide" id="aigo">Begin het gesprek</button>
+    ${practice&&(practice.word||practice.rule)?`<label class="note"><input type="checkbox" id="aipractice"> Oefen met mijn woorden en veelgemaakte fouten</label>
+    <p class="note">Als je dit kiest, stuur je maximaal één bewaard woord en één type fout naar Anthropic voor dit gesprek.</p>`:""}
     <p class="note">${talkCost()>1?`Dit kost ${talkCost()} nakijkbeurten.`:"Dit kost 1 nakijkbeurt."} Zet het geluid aan.</p>${freeNote()}`;
   $("aigo").onclick=aiStart;
 }
@@ -5229,7 +5239,9 @@ async function aiPost(body,onLine){
 }
 const aiWhy=c=>noCheck(c)?noCheck(c)+offerHTML(c):c==="offline"?"Geen verbinding. Probeer het opnieuw.":c==="not_configured"?"Praten met AI is nog niet ingesteld.":c==="rate_limited"?"Te veel verzoeken achter elkaar. Wacht een minuut en probeer het opnieuw.":"Dat lukte niet. Probeer het opnieuw.";
 async function aiStart(){
-  const k=AK; aiUnlock(); $("aigo").disabled=true; $("aigo").textContent="Een moment…";
+  const k=AK;
+  k.practice=k.c.id==="saskia"&&$("aipractice")?.checked?bittiePractice():null;
+  aiUnlock(); $("aigo").disabled=true; $("aigo").textContent="Een moment…";
   const j=await aiPost({go:"start",topic:k.c.id,level:lvl(),...(memOf(k.c).length?{known:true}:{})});
   chkCount(j,lvl());
   if(!aiOn(k))return;
@@ -5397,7 +5409,7 @@ async function aiSend(t){
       l.after=aiListen(k);aiTurn();aiNext(k,l);
     }
   };
-  const mem=memOf(k.c),j=await aiPost({go:"say",stream:2,token:k.tok,voice:k.voice,...(mem.length?{facts:memLines(mem)}:{}),history:k.log.map(l=>({me:!!l.me,t:l.t}))},line);
+  const mem=memOf(k.c),j=await aiPost({go:"say",stream:2,token:k.tok,voice:k.voice,...(k.practice?{practice:k.practice}:{}),...(mem.length?{facts:memLines(mem)}:{}),history:k.log.map(l=>({me:!!l.me,t:l.t}))},line);
   if(j.streamed&&l){
     if(j.fix)mine.fix=j.fix;
     if(aiOn(k)){if(j.fix)aiDraw();

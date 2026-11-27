@@ -759,3 +759,38 @@ test('The privacy statement describes the memory in every language',()=>{
   const parts=fs.readFileSync(new URL('privacy.html',root),'utf8').split('<article data-l="').slice(1);assert.equal(parts.length,9);
   for(const p of parts)assert.equal((p.match(/Supabase[\s\S]{0,900}?Anthropic[\s\S]{0,300}?Google/g)||[]).length>=1&&/Bittie|بيتي|Битти|Бітті/.test(p),true,p.slice(0,2));
 });
+
+test('Bittie can use opt-in saved vocabulary and a known grammar pattern in the same conversation',async()=>{
+  const t=await load();
+  const say=async(topic,practice)=>{
+    const start=await t.call({go:'start',topic,level:'A2'});
+    const result=await t.call({go:'say',token:start.body.token,practice,history:[{t:'Hoi'},{me:true,t:'Ik was onderweg.'}]});
+    assert.equal(result.statusCode,200);
+    return t.bodies.at(-1);
+  };
+  const tailored=await say('saskia',{word:'de afspraak',rule:'inversie',original:'private text'});
+  assert.match(tailored.messages[0].content,/OPTIONELE TAALOEFENING.*de afspraak.*verb-second/);
+  assert.doesNotMatch(tailored.messages[0].content,/private text/);
+  assert.match(tailored.system,/gives the learner a chance to retrieve/);
+  for(const [topic,practice] of [['spreekkamer',{word:'de afspraak',rule:'inversie'}],['saskia',{word:'user@example.com',rule:'made-up'}],['saskia',undefined]]){
+    const ordinary=await say(topic,practice);
+    assert.doesNotMatch(ordinary.messages[0].content,/OPTIONELE TAALOEFENING/);
+  }
+});
+
+test('The Bittie practice switch sends only the selected word and rule for the opted-in conversation',async()=>{
+  const sent=[];
+  const a=await app({fetch:async(url,options)=>{
+    if(url!=='/api/talk')return new Response('{}');
+    const body=JSON.parse(options.body);sent.push(body);
+    return new Response(JSON.stringify(body.go==='start'?{token:'test',reply:'Hoi!'}:{reply:'Leuk!'}));
+  }});
+  a.run('S.words=[{w:"de afspraak",s:"private source",en:"appointment"}]; keepErrs([{wrong:"Morgen ik werk",right:"Morgen werk ik",kind:"inversie"}])');
+  for(const enabled of [true,false]){
+    a.run('aiTalk("saskia")');
+    a.document.getElementById('aipractice').checked=enabled;
+    await a.run('aiStart()');
+    await a.run('aiSend("Hoi Bittie")');
+    assert.deepEqual(sent.at(-1).practice,enabled?{word:'de afspraak',rule:'inversie'}:undefined);
+  }
+});
