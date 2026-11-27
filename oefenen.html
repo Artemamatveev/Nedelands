@@ -1185,6 +1185,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
   <div id="play" lang="nl" hidden>
     <h1 class="sr-only" id="playh"></h1>
     <div class="top"><button class="back x" id="back" aria-label="Stoppen"></button><div class="bar"><i id="bar"></i></div><span id="cnt"></span><span id="timer"></span></div>
+    <section id="exam-exit" class="card" aria-label="Proefexamen verlaten" hidden></section>
     <section class="card" id="card" aria-live="polite"></section>
     <div class="mode"><button id="mode"></button></div>
   </div>
@@ -1210,7 +1211,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
 <script src="/study/progress-v1.js?v=261b0e20d0"></script>
 <script src="/study/writing-v1.js?v=84ca5efa75"></script>
 <script src="/data/knm.js?v=1dc8dbea1e"></script>
-<script src="/data/a2.js?v=35098200cf"></script>
+<script src="/data/a2.js?v=1040e20696"></script>
 <script src="/data/b1.js?v=1c0276cbe5"></script>
 <script src="/data/extra.js?v=e80c7f18b2"></script>
 <script>
@@ -1991,13 +1992,13 @@ WT.forEach(([t,list],ti)=>{const W=list.split("|").map(x=>x.split("="));
 // Betekenis: the Dutch description of a word, for the hint on verbs and de/het words (from WT and VO, plus a few more)
 const BET={};[...VO,...VO1,...WT.flatMap(([t,l])=>l.split("|").map(x=>x.split("="))),..."vallen=naar beneden gaan zonder dat je het wilt|laten=toestaan dat iets gebeurt; ook: iets niet meenemen|houden=iets vasthebben en niet loslaten|roepen=hard iemands naam zeggen|sterven=doodgaan|trekken=iets naar je toe halen|sluiten=dichtdoen|winnen=de beste zijn in een spel of wedstrijd|bieden=iets geven of voorstellen, bijvoorbeeld hulp|breken=iets in stukken laten gaan|reizen=naar andere plaatsen of landen gaan|het boek=daarin lees je een verhaal; het heeft veel bladzijden|het werk=wat je doet om geld te verdienen|het water=dat drink je; het komt uit de kraan|het meisje=een jong kind dat later een vrouw wordt|de kamer=een ruimte in een huis, met muren en een deur|de taal=daarmee praat je, bijvoorbeeld Nederlands of Arabisch|de jongen=een jong kind dat later een man wordt|verbieden=zeggen dat iets niet mag|vertrekken=weggaan, bijvoorbeeld met de trein|ontvangen=iets krijgen, bijvoorbeeld een brief|vriezen=het is zo koud dat water ijs wordt|schijnen=licht geven, zoals de zon|wegen=kijken hoeveel kilo iets is|zwijgen=niets zeggen|blijken=later duidelijk worden|verdwijnen=weggaan zodat je het niet meer ziet|springen=met je benen omhoog of ver weg gaan|stijgen=omhooggaan, bijvoorbeeld een vliegtuig of de prijs|schieten=een kogel of een bal hard wegsturen|genieten=iets heel fijn vinden|wijzen=met je vinger laten zien waar iets is|bewijzen=laten zien dat iets waar is|lijken=bijna hetzelfde zijn als iets anders|glijden=vallen of bewegen over iets dat glad is|schrikken=plotseling bang worden|treffen=iemand toevallig zien; ook: raken|stelen=iets pakken dat niet van jou is|bidden=praten met God|meten=kijken hoe lang of groot iets is|schenken=drinken in een glas doen; ook: geven|vechten=elkaar slaan|hangen=aan iets vastzitten, niet op de grond|vangen=iets pakken dat beweegt, bijvoorbeeld een bal|slaan=iemand hard raken met je hand|varen=met een boot gaan|kruipen=op je handen en knieën gaan, zoals een baby|heten=een naam hebben|vouwen=papier of kleren dubbel doen|raden=een antwoord zeggen als je het niet zeker weet|wandelen=lopen voor je plezier|studeren=leren aan een hogeschool of universiteit|parkeren=je auto ergens neerzetten|dansen=bewegen op muziek|pakken=iets in je hand nemen|missen=te laat zijn voor de bus; ook: iemand niet bij je hebben|rusten=even niets doen|huren=betalen om iets te gebruiken dat niet van jou is|poetsen=schoonmaken met een borstel, bijvoorbeeld je tanden|regenen=er valt water uit de lucht|verdienen=geld krijgen voor je werk|bestellen=vragen of een winkel iets voor je stuurt|trouwen=met iemand een huwelijk sluiten|groeien=groter worden|slagen=een examen halen|zakken=een examen niet halen".split("|").map(x=>x.split("="))]
   .forEach(([w,d])=>{BET[w]=d;const m=w.match(/^(de|het) (.+)$/);if(m&&!BET[m[2]])BET[m[2]]=d});
-LZ.forEach((t,i)=>t[1].forEach((q,j)=>ITEMS.push({sec:"lz",k:"lz|"+i+"."+j,ord:j,type:"choice",label:"Lees de tekst",intro:t[2],text:t[0],big:q[0],sub:"",right:q[1],opts:()=>shuffle(q.slice(1))})));
+LZ.forEach((t,i)=>t[1].forEach((q,j)=>ITEMS.push({sec:"lz",k:"lz|"+i+"."+j,ord:j,type:"choice",label:"Lees de tekst",intro:t[2],text:t[0],big:q[0],sub:"",right:q[1],evidence:LZ_EVIDENCE[i]?.[j],opts:()=>shuffle(q.slice(1))})));
 LZ1.forEach((t,i)=>t[1].forEach((q,j)=>ITEMS.push({sec:"l1",k:"l1|"+i+"."+j,ord:j,type:"choice",label:"Lees de tekst (B1)",intro:t[2],text:t[0],big:q[0],sub:"",right:q[1],opts:()=>shuffle(q.slice(1))})));
 const sayLines=t=>String(t).split("\n").filter(l=>l.trim()).map(l=>l.replace(/^[AB]: /,""));
 const sayHTML=t=>/^[AB]: /.test(t)?"Tekst:<br>"+sayLines(t).map(l=>"– "+l).join("<br>"):"Tekst: "+t;
 // Luisteren: [text, question, right, wrong, wrong, photo?]. A dialogue has one line per turn, "A: …" / "B: …",
 // read with two different voices; the photo (from /foto) sets the scene, like the video on the exam.
-LSM.forEach((p,i)=>p[2].forEach((q,j)=>ITEMS.push({sec:"ls",k:"ls|m"+i+"."+j,ord:j,type:"choice",label:`Luister en kies het goede antwoord (vraag ${j+1} van ${p[2].length} bij dit fragment)`,intro:p[3],say:p[0],big:q[0],sub:"",right:q[1],opts:()=>shuffle(q.slice(1)),pics:p[1]?[p[1]]:null,note:sayHTML(p[0])})));
+LSM.forEach((p,i)=>p[2].forEach((q,j)=>ITEMS.push({sec:"ls",k:"ls|m"+i+"."+j,ord:j,type:"choice",label:`Luister en kies het goede antwoord (vraag ${j+1} van ${p[2].length} bij dit fragment)`,intro:p[3],say:p[0],big:q[0],sub:"",right:q[1],evidence:LSM_EVIDENCE[i]?.[j],opts:()=>shuffle(q.slice(1)),pics:p[1]?[p[1]]:null,note:sayHTML(p[0])})));
 LS.forEach((p,i)=>ITEMS.push({sec:"ls",k:"ls|"+i,ord:i/5|0,type:"choice",label:"Luister en kies het goede antwoord",say:p[0],big:p[1],sub:"",right:p[2],opts:()=>shuffle(p.slice(2,5)),pics:p[5]?[p[5]]:null,note:sayHTML(p[0])}));
 // Luisteren B1: qs = every question of the fragment, shown before listening in the proefexamen (you hear it once)
 LSB.forEach((p,i)=>p[2].forEach((q,j)=>ITEMS.push({sec:"lb",k:"lb|"+i+"."+j,ord:j,type:"choice",label:`Luister en kies het goede antwoord (vraag ${j+1} van ${p[2].length} bij dit fragment)`,intro:p[3],say:p[0],big:q[0],sub:"",right:q[1],opts:()=>shuffle(q.slice(1)),pics:p[1]?[p[1]]:null,note:sayHTML(p[0]),qs:p[2].map(x=>x[0])})));
@@ -2090,8 +2091,8 @@ function utter(l,done,start,bittie=false){const m=l.match(/^([A-C]): (.*)$/),u=n
     u.pitch=maleDutch?1:.92;u.rate=.95
   }
   if(start)u.onstart=u.onboundary=start;if(done)u.onend=u.onerror=done;speechSynthesis.speak(u)}
-function speak(t){stopSpeak();const n=sayN,L=String(t).split("\n").map(l=>l.trim()).filter(Boolean),K=sayKeys(L),has=i=>!!VOICE&&VOICE.has(K[i]);
-  try{if(!L.some((l,i)=>has(i))){if(canSpeak)L.forEach(l=>utter(l));return}}catch(e){return}
+function speak(t,consistentVoice=false){stopSpeak();const n=sayN,L=String(t).split("\n").map(l=>l.trim()).filter(Boolean),K=sayKeys(L),has=i=>!!VOICE&&VOICE.has(K[i]);
+  try{if(!L.some((l,i)=>has(i))||(consistentVoice&&canSpeak&&!L.every((l,i)=>has(i)))){if(canSpeak)L.forEach(l=>utter(l));return}}catch(e){return}
   sayOn=true;
   const next=i=>{
     if(n!==sayN)return;
@@ -2112,15 +2113,15 @@ function speak(t){stopSpeak();const n=sayN,L=String(t).split("\n").map(l=>l.trim
 // which picks the voice: ls a fragment to listen to, q a question or option read aloud, sp a Spreken question,
 // w a word, r reading aloud (a painting's story, a history chapter), gp a line of the other person in a Gesprek
 // (g: who), gpm an example answer of the learner
+function spokenOption(s){const d=document.createElement("div");d.innerHTML=s;return d.textContent}
 function voiceTexts(){
-  const out=[],seen=new Set(),add=(t,k,g)=>{t=String(t||"").trim();if(t&&!seen.has(k+t)){seen.add(k+t);out.push(g?{t,k,g}:{t,k})}},
-    plain=s=>{const d=document.createElement("div");d.innerHTML=s;return d.textContent};
+  const out=[],seen=new Set(),add=(t,k,g)=>{t=String(t||"").trim();if(t&&!seen.has(k+t)){seen.add(k+t);out.push(g?{t,k,g}:{t,k})}};
   ITEMS.forEach(q=>{
     if(q.say)add(q.say,"ls");
     if(q.tts)add(q.tts,"w");
     if(q.hear)add(q.hear,"w");
     if(q.type==="reveal")add(spoken(q.big),"sp");
-    if(["knm","ls","lb"].includes(q.sec)&&q.type==="choice"){add(q.big,"q");q.opts().forEach(o=>add(plain(o),"q"))}});
+    if(["knm","ls","lb"].includes(q.sec)&&q.type==="choice"){add(q.big,"q");q.opts().forEach(o=>add(spokenOption(o),"q"))}});
   ART.forEach(p=>{(p.v||"").split("\n").forEach(l=>add(l,"r"));(p.w||"").split("|").filter(Boolean).forEach(x=>add(x.split("=")[0],"w"))});
   GS.forEach(c=>c.x.split("\n").forEach(l=>add(l,"r")));
   BG.forEach(l=>{pairs(l.v).forEach(x=>add(x[0],"r"));pairs(l.w).forEach(x=>add(x[0],"w"))});
@@ -2352,24 +2353,24 @@ function spokenTextReady(q,text){
   const words=(text.toLowerCase().match(/[\p{L}\p{N}][\p{L}\p{N}'’-]*/gu)||[]).filter(w=>!SP_FILLER.has(w));
   return words.some(w=>w.length>=2||/\p{N}/u.test(w));
 }
-function reviewSpokenAnswer(q,r){
+function reviewSpokenAnswer(q,r,firstGrade){
   if(q!==queue[pos])return;
   const recordButton=$("recb"),checkButton=$("spchk");
   if(!r.text){
     $("recn").textContent=r.note+"Geen spraak herkend. Probeer het nog een keer.";
     recordButton.textContent="● Opnieuw inspreken";
-    recordButton.onclick=()=>listen("say",take=>reviewSpokenAnswer(q,take),r.lim);
+    recordButton.onclick=()=>listen("say",take=>reviewSpokenAnswer(q,take,firstGrade),r.lim);
     checkButton.disabled=false;
     return;
   }
   recordButton.textContent="● Opnieuw inspreken";
   recordButton.className="ghost wide";
-  recordButton.onclick=()=>{checkButton.hidden=true;listen("say",take=>reviewSpokenAnswer(q,take),r.lim)};
+  recordButton.onclick=()=>{checkButton.hidden=true;listen("say",take=>reviewSpokenAnswer(q,take,firstGrade),r.lim)};
   $("recp").innerHTML='<label class="fld"><span>Wat ik heb verstaan</span><textarea id="sptranscript" rows="3" maxlength="1200" spellcheck="false"></textarea></label><p class="note">Verbeter alleen wat je telefoon verkeerd heeft verstaan.</p>';
   const input=$("sptranscript");
   input.value=r.text;
   $("recn").textContent="Controleer de tekst voordat je je antwoord laat nakijken.";
-  checkButton.textContent="Kijk mijn antwoord na";
+  checkButton.textContent=firstGrade?"Kijk opnieuw na · 1 nakijkbeurt":"Kijk mijn antwoord na";
   checkButton.className="btn wide";
   checkButton.hidden=false;
   checkButton.disabled=false;
@@ -2378,7 +2379,7 @@ function reviewSpokenAnswer(q,r){
     if(!spokenTextReady(q,text)){$("recn").textContent=q.sec==="sp"?"Vul in wat je hebt gezegd of spreek opnieuw in.":"Schrijf minstens drie woorden of spreek je antwoord opnieuw in.";input.focus();return}
     input.readOnly=true;
     checkButton.disabled=true;
-    spGrade(q,{...r,text});
+    spGrade(q,{...r,text},firstGrade);
   };
 }
 function spTake(r){
@@ -2388,7 +2389,11 @@ function spTake(r){
   if($("spchk")&&!$("spchk").hidden)$("spchk").className="btn wide"; else if(!$("rev").hidden)$("rev").className="btn wide";
 }
 // Practice: the phone writes the answer down and Claude grades it, like Schrijven
-async function spGrade(q,r){
+function speakingResultLabel(grade){
+  if(grade.limitedLanguageEvidence&&grade.scores?.inhoud===3)return "Vraag beantwoord · te kort voor een volledige beoordeling";
+  return grade.passed?"voldoende":"nog niet voldoende";
+}
+async function spGrade(q,r,firstGrade){
   const attempt=cur,b=$("recb"),c=$("spchk"); b.textContent="● Opnemen";b.className="ghost wide";b.onclick=()=>listen("rec",spTake,r.lim);
   if(!spokenTextReady(q,r.text)){
     if(r.fail)c.hidden=true; else c.disabled=false;
@@ -2403,13 +2408,24 @@ async function spGrade(q,r){
       S.speakFollow={...S.speakFollow,day:today()+1,lastKey:q.k,ok:res.scores.inhoud===3,at:Date.now()};
     }
     if(q.sec==="sp"&&campaignSource()?.source==="a2s")campaignTrack("check");
-    b.disabled=false; $("rev").hidden=true; keepErrs(errs); record(ok); if(!cur.exam)quickPraise.show(ok);
-    $("fb").innerHTML=`<b class="${ok?"good":"bad"}">${ok?"Goed zo! Voldoende":"Nog niet voldoende"}</b>
+    b.disabled=false; $("rev").hidden=true; keepErrs(errs); if(!firstGrade)record(ok); else save(); if(!cur.exam)quickPraise.show(ok);
+    $("fb").innerHTML=`<b class="${ok?"good":"bad"}">${res.limitedLanguageEvidence&&res.scores?.inhoud===3?speakingResultLabel(res):ok?"Goed zo! Voldoende":"Nog niet voldoende"}</b>
       <p class="note">${esc(res.verdict)}</p>${scoreHTML(res.scores,q.mx,errs)}
       ${ownHTML(r.text,errs,"Wat ik heb verstaan")}${errsHTML(errs)}${freeNote()}
       <p class="ask">Zo zeg je het goed</p><div class="sample">${esc(res.corrected)}</div>${echoHTML("de verbeterde zinnen")}
       <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(q.right)}</div></details>
       <button class="btn wide" id="next">Verder</button>`;
+    if(firstGrade&&Number.isInteger(res.scores?.inhoud)){
+      const before=firstGrade.scores.inhoud,after=res.scores.inhoud;
+      $("next").insertAdjacentHTML("beforebegin",`<p class="note"><b>Inhoud</b> · eerste antwoord ${before}/3 · tweede antwoord ${after}/3</p>`);
+    }
+    if(!firstGrade&&!cur.exam&&q.sec==="sp"&&!ok&&Number.isInteger(res.scores?.inhoud)){
+      $("next").insertAdjacentHTML("beforebegin",'<button class="ghost wide" id="speakAgain">Geef opnieuw antwoord</button><p class="note">Opnieuw inspreken is gratis. Opnieuw laten nakijken kost één nakijkbeurt.</p>');
+      $("speakAgain").onclick=()=>{
+        $("speakAgain").disabled=true;
+        listen("say",take=>reviewSpokenAnswer(q,take,res),r.lim);
+      };
+    }
     const target=!ok&&nextPracticeQuestion(q);
     if(target){
       $("next").insertAdjacentHTML("beforebegin",'<button class="ghost wide" id="speakingfollow">Probeer een nieuwe spreekopdracht</button>');
@@ -2420,9 +2436,9 @@ async function spGrade(q,r){
     if(cur!==attempt||q!==queue[pos]||c!==$("spchk")||$("play").hidden)return;
     const k=e&&e.code; b.disabled=false;
     const retry=checkRetry(k);
-    if(retry){b.disabled=true;$("fb").innerHTML=retryCheckHTML(retry);$("retrycheck").onclick=()=>spGrade(q,r);return}
+    if(retry){b.disabled=true;$("fb").innerHTML=retryCheckHTML(retry);$("retrycheck").onclick=()=>spGrade(q,r,firstGrade);return}
     $("rev").hidden=true;
-    selfGrade(q,noCheck(k)?noCheck(k)+" Vergelijk je antwoord nu met het voorbeeld."+offerHTML(k):k==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je antwoord met het voorbeeld.":"Het nakijken is niet gelukt. Vergelijk je antwoord met het voorbeeld.");
+    selfGrade(q,noCheck(k)?noCheck(k)+" Vergelijk je antwoord nu met het voorbeeld."+offerHTML(k):k==="not_configured"?"Automatisch nakijken is nog niet ingesteld. Vergelijk je antwoord met het voorbeeld.":"Het nakijken is niet gelukt. Vergelijk je antwoord met het voorbeeld.",undefined,!!firstGrade);
   }
 }
 // Spreken B1 proefexamen, as on the Staatsexamen: the question is read aloud, then the thinking time runs (15 seconds for a
@@ -2607,7 +2623,7 @@ function home(){
     +itHTML(`data-x="ai"`,"Gesprekken","Praat met Bittie over een onderwerp dat jij kiest.",{n:(n=>n?`${n} van ${aiIds().length}`:null)(aiIds().filter(id=>(S.ai||{})[id]).length),ic:"talk"});
   $("mine").innerHTML=itHTML(`data-x="stats"`,"Kies een lastig onderwerp","Waar je de meeste fouten maakt.",{ic:"stats"})
     +((S.errs||[]).length?itHTML(`data-x="errs"`,"Oefen met je eigen fouten","Kies de juiste versie van zinnen uit je eerdere teksten en antwoorden.",{n:S.errs.length,ic:"errs"}):"")
-    +((S.words||[]).length?itHTML(`data-x="words"`,"Mijn woorden","Die je bij het lezen hebt bewaard.",{n:S.words.length,ic:"words"}):"")
+    +((S.words||[]).length?itHTML(`data-x="words"`,"Mijn woorden","Bekijk of oefen je bewaarde woorden.",{n:S.words.length,ic:"words"}):"")
     +(!(S.errs||[]).length&&!(S.words||[]).length?`<div class="empty"><span><b>Hier komt je herhaling</b>Fouten uit je teksten en woorden die je bij het lezen bewaart, komen hier vanzelf bij.</span></div>`:"");
   document.querySelectorAll("#exam button,#parts button,#gram button,#books button,#mine button").forEach(b=>b.onclick=()=>{const d=b.dataset;
     if(d.knm){knmOpen=!knmOpen;b.setAttribute("aria-expanded",knmOpen);$("knmsub").hidden=!knmOpen}
@@ -2622,7 +2638,7 @@ function home(){
     else if(d.x==="ona")onaScreen();
     else if(d.x==="uit")uitScreen();
     else if(d.x==="bg")bgList();
-    else if(d.x==="words")practiseWords();
+    else if(d.x==="words")wordsScreen();
     else build("custom",{id:"custom",t:"Mijn fouten",n:10,pool:()=>shuffle(errItems())})});
   drawProfile();
   setTab(tab);
@@ -3030,8 +3046,37 @@ function rememberPractice(q,ok){
     if(previous?.source===source)previous.last={ok,day:today()};
   }else if(!ok)S.practiceFocus[level]={source:q.k,at:Date.now()};
 }
+function repeatedA2Focus(resolved){
+  const day=today(), sections=new Set(["lz","ls","knm"].filter(k=>!S.uit?.[k]?.ok));
+  const deadlines=new Map(examsAhead().filter(x=>x.k&&x.n<=14).map(x=>[x.k,x.n]));
+  const groups=new Map();
+  for(const q of ITEMS){
+    const item=S.items[q.k];
+    if(!sections.has(q.sec)||!item?.w||item.b||item.d<day-14||item.d>day)continue;
+    const skill=examSkill(q);
+    if(skill===PART[q.sec]||(resolved?.section===q.sec&&resolved.skill===skill))continue;
+    const key=q.sec+"|"+skill;
+    if(!groups.has(key))groups.set(key,new Map());
+    const sources=groups.get(key),group=q.text||q.say||q.big;
+    if(!sources.has(group)||S.items[sources.get(group).k].d<item.d)sources.set(group,q);
+  }
+  const candidates=[];
+  for(const sources of groups.values()){
+    if(sources.size<2)continue;
+    const source=[...sources.values()].sort((a,b)=>S.items[b.k].d-S.items[a.k].d)[0];
+    const target=freshFocus(source);
+    if(target)candidates.push({source,target,count:sources.size});
+  }
+  return candidates.sort((a,b)=>(deadlines.get(a.source.sec)??15)-(deadlines.get(b.source.sec)??15)||b.count-a.count)[0];
+}
 function dayExamFocus(){
   const focus=S.practiceFocus?.[lvl()];
+  if(focus?.last?.day!==today()&&lvl()==="A2"){
+    const next=repeatedA2Focus(focus?.last?.ok?focus:null);
+    if(next){
+      return {...next,focus:{source:next.source.k,at:Date.now(),count:next.count,skill:examSkill(next.source),section:next.source.sec}};
+    }
+  }
   if(!focus||Date.now()-focus.at>=14*864e5||focus.last?.ok&&focus.last.day!==today())return null;
   const source=ITEMS.find(q=>q.k===focus.source);
   if(!source||!parts().includes(source.sec)||S.uit?.[source.sec]?.ok)return null;
@@ -3049,13 +3094,14 @@ function examFocusHTML(source,pick,target,inline){
   const answer=source.right.trim().replace(/[.!?]$/,"").toLowerCase();
   const lines=transcript.split(/\n|(?<=[.!?])\s+/).filter(line=>line.trim());
   const matches=answer.length>=5?lines.filter(line=>line.toLowerCase().includes(answer)):[];
-  const clue=matches.length===1?matches[0]:"";
+  const clue=source.evidence?.[0]||(matches.length===1?matches[0]:"");
   return `<section class="list exam-focus" aria-labelledby="exam-focus-title">
     <p class="eft" id="exam-focus-title"><span data-ui>Oefen verder</span> · ${esc(examSkill(source))}</p>
     <p>${esc(source.big)}</p>
     ${inline?"":`<p><b data-ui>Jouw antwoord</b> · ${esc(capA(source,pick))}<br><b data-ui>Goed is</b> · ${esc(capA(source,source.right))}</p>`}
     ${source.sec==="knm"&&source.note?noteHTML(source.note):""}
     ${clue?`<p class="note"><b data-ui>Zo staat het in de tekst</b> · ${esc(clue)}</p>`:""}
+    ${source.evidence?.[1]?`<p class="note">${esc(source.evidence[1])}</p>`:""}
     ${transcript?`<details><summary data-ui>${source.say?"Lees het luisterfragment":"Lees de tekst terug"}</summary>${source.say?`<div class="sample">${esc(transcript).replaceAll("\n","<br>")}</div>`:docHTML(transcript)}</details>`:""}
     ${source.say&&canSpeak?`<button type="button" class="hint" id="focuslisten" data-ui>▶ Luister opnieuw</button>`:""}
     ${target?`<button type="button" class="${inline?"ghost":"btn"} wide" id="focuspractice" data-ui>Oefen met een nieuwe vraag</button>`:""}
@@ -3095,6 +3141,7 @@ function planHTML(){
   const review=focus&&(focus.target||last?.day===d)?`<section class="list exam-focus" aria-label="Gerichte oefening">
     <h3>Verder met je oefening</h3>
     <p>${esc(PART[focus.source.sec])} · ${esc(examSkill(focus.source))}</p>
+    ${focus.focus.count?`<p class="note">Dit ging mis bij ${focus.focus.count} verschillende teksten, fragmenten of situaties.</p>`:""}
     ${focus.target?`<button type="button" class="btn wide" id="dayfocus">Oefen met een nieuwe vraag</button>`:
       `<p class="note">${last.ok?"De nieuwe vraag ging goed.":"Deze oefening komt morgen terug."}</p>`}
   </section>`:"";
@@ -3203,7 +3250,7 @@ function drawProfile(){
       h=`<h3 class="lh">Account</h3><div class="pg"><p class="pinfo"><span role="status">${acc.sync||"Wacht op synchronisatie"}</span><br>${myPeriod()==="day"?"Nakijken vandaag:":"Gratis nakijkbeurten:"} ${checksLeft()==null?"…":`nog ${checksLeft()} van de ${myLimit()}`}</p>`
         +(L.includes("passkey")?`<button type="button" class="pact" id="apk">Passkey toevoegen</button>`:"")
         +`<button type="button" class="pact" id="agrp">Code van je school of werk</button><button type="button" class="pact" id="aref">Nodig een vriend uit</button><button type="button" class="pact" id="aout">Uitloggen</button><button type="button" class="pact bad" id="adel">Account verwijderen</button></div>`;
-    }else if(L.length)b=ban("alogin","me","Inloggen of account maken","Bewaar je voortgang en laat je teksten nakijken.");
+    }else if(L.length)b=ban("alogin","me","Inloggen of account maken","Je oefent als gast. Log in om je voortgang op andere apparaten te bewaren.");
     else h=`<p class="note">Inloggen is nog niet ingesteld.</p>`;
     if(acc.msg)h+=`<p class="note">${esc(acc.msg)}</p>`;
   }
@@ -3241,7 +3288,11 @@ function drawPlan(){
   if($("dayrule"))$("dayrule").onclick=writingRuleScreen;
   if($("dayspeak"))$("dayspeak").onclick=speakingFollowUp;
   const focus=dayExamFocus(),review=$("dayfocus");
-  if(review&&focus?.target)review.onclick=()=>startExamFocus(focus.source);
+  if(review&&focus?.target)review.onclick=()=>{
+    S.practiceFocus ||= {};
+    S.practiceFocus[lvl()]=focus.focus;
+    startExamFocus(focus.source);
+  };
   document.querySelectorAll("#plan [data-p]").forEach(b=>b.onclick=()=>{const id=b.dataset.p,[k,v]=id.split(":");planId=id;
     if(k==="t")return startTest();
     if(k==="mini")build(v,{...SEC.find(x=>x.id===v),n:1,keep:1,pool:()=>wbTasks(1,0)});
@@ -3300,6 +3351,7 @@ function persistSpeaking(){
   }));
 }
 function speakingReview(){
+  $("exam-exit").hidden=true;$("back").setAttribute("aria-expanded","false");
   clock(0);hush();pos=queue.length;persistSpeaking();head();
   $("card").innerHTML=`<p class="note">${cur.spDraft.end<=Date.now()?"De tijd is voorbij. ":""}Je kunt je bewaarde antwoorden inleveren.</p><button class="btn wide" id="spdeliver">Antwoorden inleveren</button>`;
   $("spdeliver").onclick=finish;
@@ -3389,10 +3441,23 @@ function build(id,custom){
   cur.expired=!!((draft||choices) && cur.exam && remaining===0);
   clock(cur.exam?remaining:0,savedEnd);
   ["home","stats","lib","read","media","story","hist","talk"].forEach(x=>$(x).hidden=true);closePop();stopMedia();$("play").hidden=false;window.scrollTo(0,0);
-  const b=$("back"),leave=cur.back?cur.back.f:home,x=()=>{clearTimeout(b.t);b.classList.remove("arm");b.innerHTML=XSVG};
-  x(); b.setAttribute("aria-label","Stoppen, terug naar "+(cur.back?cur.back.t:TABN[tab]));
-  b.onclick=()=>{if(cur.exam&&pos<queue.length&&!b.classList.contains("arm")){b.classList.add("arm");b.textContent="Stoppen?";b.t=setTimeout(x,3000);return}
-    x();leave()};
+  const b=$("back"),leave=cur.back?cur.back.f:home,exit=$("exam-exit");
+  const close=()=>{exit.hidden=true;b.setAttribute("aria-expanded","false");b.innerHTML=XSVG};
+  close(); b.setAttribute("aria-label","Stoppen, terug naar "+(cur.back?cur.back.t:TABN[tab]));
+  b.removeAttribute("aria-controls");
+  if(cur.exam){b.setAttribute("aria-controls","exam-exit")}else b.removeAttribute("aria-expanded");
+  b.onclick=()=>{
+    if(!cur.exam||pos>=queue.length){close();leave();return}
+    if(!exit.hidden){close();return}
+    const saved=CHOICE_DRAFT_PARTS.includes(cur.part)||isWr(cur.part)||cur.part==="sp";
+    exit.innerHTML=`<p class="ask" data-ui>Proefexamen verlaten?</p>
+      <p class="note" data-ui>${saved?"Je antwoorden blijven bewaard. De timer loopt door.":"Als je afsluit, raak je deze poging kwijt."}</p>
+      <div class="two"><button type="button" class="ghost" id="exit-yes" data-ui>${saved?"Bewaar en sluit":"Verlaat proefexamen"}</button><button type="button" class="btn" id="exit-no" data-ui>Ga verder met het proefexamen</button></div>`;
+    exit.hidden=false;b.setAttribute("aria-expanded","true");
+    $("exit-no").onclick=()=>{close();b.focus()};
+    $("exit-yes").onclick=()=>{close();leave()};
+    $("exit-no").focus();
+  };
   if(cur.expired)return overview();
   if(cur.spDraft){
     if(!remaining||pos>=queue.length)return speakingReview();
@@ -3448,7 +3513,7 @@ function show(){
     $("say").onclick=()=>{speak(q.say);const n=P[q.say]=(P[q.say]||0)+1;persistChoices();if(cur.exam&&n>=max)done();else $("say").textContent="▶ Nog een keer luisteren"};
     if(cur.exam&&P[q.say]>=max)done();else if(P[q.say])$("say").textContent="▶ Nog een keer luisteren"}
   if($("tts"))$("tts").onclick=()=>speak(q.tts);
-  if($("rd"))$("rd").onclick=()=>speak([q.big,...[...document.querySelectorAll("#card .opt")].map(b=>b.textContent)].join("\n"));
+  if($("rd"))$("rd").onclick=()=>speak([q.big,...o.map(spokenOption)].join("\n"),true);
   if($("hear")){$("hear").onclick=()=>speak(q.hear);speak(q.hear)}
   if($("tr"))$("tr").onclick=()=>{$("tr").textContent=BET[q.big];$("tr").disabled=true};
   if(q.type==="order")return order(q);
@@ -3545,7 +3610,7 @@ function feedback(ok,q,pick){
   }
   // wrong: a short heading, then the right answer in ink (a long red heading was loud)
   $("fb").innerHTML=`<p class="fbh"><i aria-hidden="true">${ok?"✓":"✕"}</i><b class="${ok?"good":"bad"}" data-ui>${ok?"Goed zo!":"Niet goed"}</b></p>${ok?"":`<p class="fbr"><span data-ui>Goed is:</span> <strong>${capA(q,q.right)}</strong></p>`}
-    ${q.note?(q.sec==="verb"?q.note:noteHTML(q.note)):""}${wtNote(q)}
+    ${ok&&!cur.exam&&q.evidence?`<p class="note"><b data-ui>Zo staat het in de tekst</b> · ${esc(q.evidence[0])}</p><p class="note">${esc(q.evidence[1])}</p>`:""}${q.note?(q.sec==="verb"?q.note:noteHTML(q.note)):""}${wtNote(q)}
     <button class="btn wide" id="next" data-ui>Verder</button>`;
   $("next").onclick=()=>{pos++;show()}; $("next").focus();
   if(q.tts&&q.big!==q.tts&&canSpeak)speak(q.tts); // description → word: hear the Dutch word
@@ -3561,7 +3626,7 @@ function examGate(e,preview=false){
   const countPrefix=["lz","l1","ls","lb"].includes(e)?"<span>Maximaal</span> ":"";
   const details=preview?`<h3 class="sr-only" id="exam-preview-title"><span>Proefexamen</span> · <span>${PART[e]}</span></h3>
     <p class="note">${draft?`<span>Je hebt een opgeslagen concept.</span>`:`<span>${exam.min} min</span> · ${countPrefix}${exam.n} <span>${countLabel}</span><br><span>De timer start zodra je begint.</span>`}</p>
-    <p class="note"><span>Stoppen? Kies × en bevestig.</span></p>`:"";
+    <p class="note"><span>Wil je weg? Kies × en daarna de knop om af te sluiten.</span></p>`:"";
   const warning=cost?`<p class="note">${acc.user?`Je hebt nog ${Math.max(0,checksLeft(e))} nakijkbeurten in je tegoed. Dit proefexamen kost ${cost} nakijkbeurten. Zonder nakijken zie je aan het eind alleen de voorbeeldantwoorden.`
     :"Je bent niet ingelogd. Dan kijkt Bittertalen je antwoorden niet na, en zie je aan het eind alleen de voorbeeldantwoorden."}</p>`:"";
   d.innerHTML=`${details}${warning}<div class="two"><button class="ghost" id="gback">Terug</button>
@@ -3642,7 +3707,7 @@ function order(q){
 function reveal(q){
   recEnd(!!rec&&rec.mode==="rec"); $("rev").hidden=true; if($("spchk"))$("spchk").hidden=true;
   $("fb").innerHTML=`<div class="sample">${q.right}</div>${echoHTML("het voorbeeld")}<div class="two"><button class="ghost" id="again">Later herhalen</button><button class="btn" id="got">Gelukt</button></div>`;
-  const go=ok=>{const target=q.type==="reveal"&&!ok&&nextPracticeQuestion(q);record(ok);if(target)return insertPracticeQuestion(q,target);pos++;show()};
+  const go=ok=>{const target=!ok&&nextPracticeQuestion(q);record(ok);if(target)return insertPracticeQuestion(q,target);pos++;show()};
   $("again").onclick=()=>go(false); $("got").onclick=()=>go(true); echoBind(q.right);
 }
 // Zeg het na: free pronunciation practice. The learner reads a model answer aloud, speech recognition writes it down,
@@ -3667,9 +3732,38 @@ function echoDone(target,r){
   for(let i=0,j=0;i<n&&j<m;){if(T[i]===H[j]){ok.add(i);i++;j++}else if(D[i+1][j]>=D[i][j+1])i++;else j++}
   let k=0; const html=P.map((x,i)=>i%2?(ok.has(k++)?esc(x):`<button class="miss" data-w="${esc(x)}">${esc(x)}</button>`):esc(x)).join("");
   $("echor").innerHTML=`<p class="note"><strong class="${ok.size>=n*.9?"good":""}">${ok.size>=n*.9?"Heel duidelijk!":"De telefoon verstond "+ok.size+" van de "+n+" woorden."}</strong>
-    ${ok.size<n?"Tik op een rood woord om het te horen, en zeg het nog eens.":""}</p><div class="sample">${html}</div>
+    ${ok.size<n?"Kies een gemarkeerd woord om het te horen en apart te oefenen.":""}</p><div class="sample">${html}</div>
     <p class="note">De telefoon is geen examinator: soms mist hij een woord dat je goed zegt.</p>`;
-  document.querySelectorAll("#echor .miss").forEach(b=>b.onclick=()=>speak(b.dataset.w));
+  const result=$("echor");
+  result.insertAdjacentHTML("beforeend",'<div id="echoWord"></div>');
+  result.querySelectorAll(".miss").forEach(b=>b.onclick=()=>echoWordPractice(b.dataset.w));
+}
+function echoWordPractice(word){
+  const panel=$("echoWord");
+  panel.innerHTML=`<p class="ask">Oefen dit woord: ${esc(word)}</p>
+    <div class="two"><button class="ghost" id="echoHear">Beluister</button><button class="btn" id="echoRetry">● Zeg dit woord</button></div>
+    <p class="note" id="echoWordStatus" role="status"></p>`;
+  const retry=$("echoRetry"),hear=$("echoHear"),status=$("echoWordStatus");
+  hear.onclick=()=>speak(word);
+  const start=()=>{
+    const controls=[ $("echo"),hear,...$("echor").querySelectorAll(".miss") ];
+    controls.forEach(control=>control.disabled=true);
+    retry.textContent="■ Stop";retry.onclick=()=>recEnd(true);
+    status.textContent="Zeg het woord en tik daarna op Stop.";
+    listen("say",r=>{
+      if(retry!==$("echoRetry"))return;
+      const record=$("recb");
+      record.textContent="● Opnemen";record.className="ghost wide";record.onclick=()=>listen("rec",spTake);
+      $("recn").textContent="";
+      const heard=r.text.split(WTOK).filter((_,i)=>i%2).map(norm);
+      status.textContent=r.fail?"Meeschrijven lukt hier niet.":heard.includes(norm(word))?
+        `De telefoon verstond ‘${word}’.`:heard.length?`De telefoon verstond ‘${r.text}’. Luister en probeer opnieuw.`:
+        "Geen woord herkend. Probeer opnieuw.";
+      controls.forEach(control=>control.disabled=false);retry.textContent="● Nog een keer";retry.onclick=start;
+    },8);
+  };
+  retry.onclick=start;
+  speak(word);
 }
 function photoCreditHTML(key){
   const credit=FOTO_CREDITS[key];
@@ -3738,7 +3832,7 @@ const docBtn=`<button class="ghost wide" id="docx" style="margin-bottom:10px">Do
 // Writing is graded by Claude on the server (api/check.js)
 // Mistakes from the learner's own texts and spoken answers, practised later in "Mijn fouten"
 function keepErrs(errs){
-  errs.forEach(e=>{if(e&&e.wrong&&e.right&&e.wrong!==e.right&&String(e.wrong).length<90&&String(e.right).length<90&&!S.errs.some(x=>x.r===e.right))S.errs.unshift({w:String(e.wrong),r:String(e.right),y:String(e.why||"")})});
+  errs.forEach(e=>{if(e&&e.wrong&&e.right&&e.wrong!==e.right&&String(e.wrong).length<90&&String(e.right).length<90&&!S.errs.some(x=>x.r===e.right))S.errs.unshift({w:String(e.wrong),r:String(e.right),y:String(e.why||""),...(["inversie","meervoud"].includes(e.kind)?{kind:e.kind}:{})})});
   S.errs=S.errs.slice(0,40);
 }
 // A writing text sent again unchanged gets its earlier result, without a new check: sending the same text until the
@@ -3796,10 +3890,10 @@ function chkCount(j,lv){
 }
 // A one-time browser trial, followed by the separate free account allowance.
 const freeNote=()=>acc.cfg&&acc.cfg.free&&!acc.user?`<p class="note"><span>${acc.free==null?`Probeer ${acc.cfg.free} nakijkbeurten gratis in deze browser.`:acc.free>0?`Nog ${acc.free} gratis proefbeurten in deze browser.`:"Je gratis proefbeurten zijn op."}</span> <span>Met een gratis account: ${acc.cfg.limit} gratis nakijkbeurten.</span></p>`:"";
-function selfGrade(q,msg,doc){
+function selfGrade(q,msg,doc,alreadyRecorded=false){
   $("fb").innerHTML=`<p class="note">${msg}</p><p class="ask">Voorbeeld</p><div class="sample">${esc(q.right)}</div>
     ${q.type==="reveal"?echoHTML("het voorbeeld"):""}${doc?docBtn:""}<div class="two"><button class="ghost" id="again">Later herhalen</button><button class="btn" id="got">Gelukt</button></div>`;
-  const go=ok=>{const target=q.type==="reveal"&&!ok&&nextPracticeQuestion(q);record(ok);if(target)return insertPracticeQuestion(q,target);pos++;show()};
+  const go=ok=>{const target=!alreadyRecorded&&q.type==="reveal"&&!ok&&nextPracticeQuestion(q);if(!alreadyRecorded)record(ok);if(target)return insertPracticeQuestion(q,target);pos++;show()};
   $("again").onclick=()=>go(false); $("got").onclick=()=>go(true);
   if(doc)$("docx").onclick=()=>saveDocx([doc]);
   if(q.type==="reveal")echoBind(q.right);
@@ -4181,7 +4275,7 @@ async function examSpeak(){
     if(!active())return;
     let good=0,pts=0,scored=0;
     const body=A.map((a,i)=>{const t=T[i]||{},errs=Array.isArray(t.errors)?t.errors:[],pt=spPts(t);if(t.passed)good++;if(pt!=null){pts+=pt;scored++}keepErrs(errs);
-      return`<h2>Vraag ${i+1}: <span class="${t.passed?"good":"bad"}">${t.passed?"voldoende":"nog niet voldoende"}</span></h2><p class="note">${esc(a.q.label)}</p><p class="note">${a.q.big}</p><p class="note">${esc(t.verdict)}</p>${scoreHTML(t.scores,a.q.mx,errs)}
+      return`<h2>Vraag ${i+1}: <span class="${t.passed?"good":"bad"}">${speakingResultLabel(t)}</span></h2><p class="note">${esc(a.q.label)}</p><p class="note">${a.q.big}</p><p class="note">${esc(t.verdict)}</p>${scoreHTML(t.scores,a.q.mx,errs)}
         ${own(a,errs)}${errs.length?errsHTML(errs):""}${a.text?`<p class="ask">Zo zeg je het goed</p><div class="sample">${esc(t.corrected)}</div>`:""}
         <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(a.q.right)}</div></details>`}).join("");
     // score: points of all 16 questions (an unanswered one counts 0); without points (older server) the share of good answers
@@ -4200,6 +4294,7 @@ async function examSpeak(){
   }
 }
 function finish(){
+  $("exam-exit").hidden=true;$("back").setAttribute("aria-expanded","false");
   if(cur.exam&&!cur.spDraft?.submitted){S.xs=S.xs||{};queue.forEach(q=>S.xs[q.k]=(S.xs[q.k]||0)+1)}
   if(cur.spDraft){cur.spDraft.submitted=true;persistSpeaking()}
   complete();
@@ -4253,13 +4348,19 @@ async function library(){
     delete S.bk[id];save();library()});
   drawWords();
 }
-function drawWords(){
+function wordsScreen(){
+  bgOpen(TABN[tab],home);
+  $("tbody").innerHTML='<h2>Mijn woorden</h2><p class="sub" id="saved-word-summary"></p><div id="saved-word-list"></div>';
+  drawWords($("saved-word-list"),$("saved-word-summary"),{t:"Mijn woorden",f:wordsScreen});
+}
+function drawWords(list=$("wlist"),summary=$("wsub"),back){
   const W=S.words||[];
-  $("wsub").textContent=W.length?`${W.length} ${W.length===1?"woord":"woorden"}. Je oefent ze ook in de Mix van de dag.`:"Nog geen woorden. Tik bij het lezen op een woord en dan op Bewaar.";
-  $("wlist").innerHTML=(W.length?`<button class="btn wide" id="wprac">Oefen mijn woorden</button>`:"")
+  const practiceId=back?"saved-word-practice":"wprac";
+  summary.textContent=W.length?`${W.length} ${W.length===1?"woord":"woorden"}. Je oefent ze ook in de Mix van de dag.`:"Nog geen woorden. Tik bij het lezen op een woord en dan op Bewaar.";
+  list.innerHTML=(W.length?`<button class="btn wide" id="${practiceId}">Oefen mijn woorden</button>`:"")
     +`<ul class="errs">${W.map((x,i)=>`<li><button class="x" data-i="${i}">wis</button><b>${esc(x.w)}</b>${x.en?" — "+esc(x.en):""}<span>${esc(x.s)}</span></li>`).join("")}</ul>`;
-  if(W.length)$("wprac").onclick=practiseWords;
-  document.querySelectorAll("#wlist .x").forEach(b=>b.onclick=()=>{S.words.splice(b.dataset.i,1);save();drawWords()});
+  if(W.length)list.querySelector("#"+practiceId).onclick=()=>practiseWords(back,list);
+  list.querySelectorAll(".x").forEach(b=>b.onclick=()=>{S.words.splice(b.dataset.i,1);save();drawWords(list,summary,back)});
 }
 // Wrong options in the same language as the answer: other saved words first, then common A2 words
 // (English meanings from the dictionary once it is loaded). A few early words were saved with a Russian meaning (ru):
@@ -4283,10 +4384,11 @@ function enWords(){
     delete x.ru;ch=1});
   if(ch)save();
 }
-async function practiseWords(){
+async function practiseWords(back,origin){
   try{await loadDict((S.words||[]).map(x=>x.w.replace(/^(de|het) /,"")));enWords()}catch(e){}
+  if(!origin?.isConnected||origin.closest("[hidden]"))return;
   const d=today(),due=q=>{const it=S.items[q.k];return it?it.d-d:-1};
-  build("custom",{id:"custom",t:"Mijn woorden",n:10,pool:()=>shuffle(wordItems()).sort((a,b)=>due(a)-due(b))});
+  build("custom",{id:"custom",t:"Mijn woorden",n:10,back,pool:()=>shuffle(wordItems()).sort((a,b)=>due(a)-due(b))});
 }
 // Own books: .txt, pasted text or .epub (unzipped here with DecompressionStream)
 const decodeTxt=buf=>{try{return new TextDecoder("utf-8",{fatal:true}).decode(buf)}catch(e){return new TextDecoder("windows-1252").decode(buf)}};
@@ -4513,15 +4615,15 @@ function bgLes(i){
 }
 function startTest(){
   planId=null;
-  let i=0,inRow=0; const miss=[];
+  let i=0,inRow=0,showedInterim=false; const miss=[];
   const end=()=>{const right=i-miss.length,lv=i===START.length && right>=10?2:right>=5?1:0;
     const untested=START.slice(i).map(x=>x[0]);
     S.start={at:Date.now(),lv,miss:[...miss],untested,asked:i}; save(); track("test");
     const f=BG.find(l=>miss.includes(l.id));
-    $("tbody").innerHTML=`<p class="ask">Starttest</p><h2>${right} van ${i} goed</h2>
-      ${untested.length?`<p><span>Nog niet getest</span> · ${untested.length}</p><button class="ghost wide" id="bgcontinue">Ga verder met de test</button>`:""}
+    $("tbody").innerHTML=`<p class="ask">${untested.length?"Tussenstand starttest":"Resultaat starttest"}</p><h2>${right} van ${i} goed</h2>
+      ${untested.length?`<p><span>Nog niet getest</span> · ${untested.length}</p><button class="btn wide" id="bgcontinue">Ga verder met de test</button>`:""}
       <p>${lv===2?"Je kent de basis. Je kunt meteen met de onderdelen van het examen beginnen.":lv===1?"Je kent al veel. Elke dag krijg je een les over wat je nog niet goed weet.":"Je begint bij het begin. Elke dag krijg je één korte les. Daarna ga je verder met de onderdelen van het examen."}</p>
-      ${lv<2?`<button class="btn wide" id="bgf" style="margin-bottom:10px">Naar les ${BG.indexOf(f)+1}: ${f.t}</button>`:`<button class="btn wide" id="bgh" style="margin-bottom:10px">Naar je les van vandaag</button>`}
+      ${lv<2?`<button class="${untested.length?"ghost":"btn"} wide" id="bgf" style="margin-bottom:10px">Naar les ${BG.indexOf(f)+1}: ${f.t}</button>`:`<button class="btn wide" id="bgh" style="margin-bottom:10px">Naar je les van vandaag</button>`}
       <button class="ghost wide" id="bga">Alle lessen</button>${remindAskHTML()}`;
     window.scrollTo(0,0);remindAskBind();
     if($("bgcontinue"))$("bgcontinue").onclick=()=>{inRow=0;draw()};
@@ -4530,7 +4632,7 @@ function startTest(){
   const pick=q=>ok=>{buzz("tick");if(ok)inRow=0;else{inRow++;miss.push(q[0])}
     i++;
     // three wrong in a row: the next ones are harder, so stop here; those not asked count as still to do
-    if(inRow>=3&&i<START.length){return end()}
+    if(!showedInterim&&inRow>=3&&i<START.length){showedInterim=true;return end()}
     i<START.length?draw():end()};
   const draw=()=>{const q=START[i],o=shuffle(q.slice(2,5)),go=pick(q);
     $("tbody").innerHTML=`<p class="ask">Vraag ${i+1} van ${START.length}</p><p class="bgq bgl" lang="nl">${q[1]}</p>
@@ -5102,8 +5204,18 @@ function aiTalk(id,go){ // go: start at once (a person picked by the learner's t
 }
 // A conversation takes one check; with Plus (the better model) acc.cfg.plus.talk (api/_talk.js TALK_PLUS)
 const talkCost=()=>isPlus(lvl())?Math.max(1,+(acc.cfg&&acc.cfg.plus&&acc.cfg.plus.talk)||3):1;
+function bittiePractice(){
+  const words=[...new Set((S.words||[]).slice(0,24).map(x=>String(x.w||"").toLowerCase().trim())
+    .filter(w=>/^[a-zà-öø-ÿ]+(?:[ '-][a-zà-öø-ÿ]+){0,2}$/u.test(w)&&w.length<=36))];
+  const rule=["inversie","meervoud"].map(id=>({id,n:Math.max(S.writingRules?.[id]?.count||0,(S.errs||[]).filter(e=>e.kind===id).length)}))
+    .filter(x=>x.n).sort((a,b)=>b.n-a.n)[0]?.id;
+  return {word:words[today()%words.length]||"",rule:rule||(S.speakFollow&&!S.speakFollow.ok?"reason":"")};
+}
 function aiReady(msg){
+  const practice=AK?.c.id==="saskia"?bittiePractice():null;
   $("tctl").innerHTML=(msg?`<p class="note">${msg}</p>`:"")+`<button class="btn wide" id="aigo">Begin het gesprek</button>
+    ${practice&&(practice.word||practice.rule)?`<label class="note"><input type="checkbox" id="aipractice"> Oefen met mijn woorden en veelgemaakte fouten</label>
+    <p class="note">Als je dit kiest, stuur je maximaal één bewaard woord en één type fout naar Anthropic voor dit gesprek.</p>`:""}
     <p class="note">${talkCost()>1?`Dit kost ${talkCost()} nakijkbeurten.`:"Dit kost 1 nakijkbeurt."} Zet het geluid aan.</p>${freeNote()}`;
   $("aigo").onclick=aiStart;
 }
@@ -5150,7 +5262,9 @@ async function aiPost(body,onLine){
 }
 const aiWhy=c=>noCheck(c)?noCheck(c)+offerHTML(c):c==="offline"?"Geen verbinding. Probeer het opnieuw.":c==="not_configured"?"Praten met AI is nog niet ingesteld.":c==="rate_limited"?"Te veel verzoeken achter elkaar. Wacht een minuut en probeer het opnieuw.":"Dat lukte niet. Probeer het opnieuw.";
 async function aiStart(){
-  const k=AK; aiUnlock(); $("aigo").disabled=true; $("aigo").textContent="Een moment…";
+  const k=AK;
+  k.practice=k.c.id==="saskia"&&$("aipractice")?.checked?bittiePractice():null;
+  aiUnlock(); $("aigo").disabled=true; $("aigo").textContent="Een moment…";
   const j=await aiPost({go:"start",topic:k.c.id,level:lvl(),...(memOf(k.c).length?{known:true}:{})});
   chkCount(j,lvl());
   if(!aiOn(k))return;
@@ -5318,7 +5432,7 @@ async function aiSend(t){
       l.after=aiListen(k);aiTurn();aiNext(k,l);
     }
   };
-  const mem=memOf(k.c),j=await aiPost({go:"say",stream:2,token:k.tok,voice:k.voice,...(mem.length?{facts:memLines(mem)}:{}),history:k.log.map(l=>({me:!!l.me,t:l.t}))},line);
+  const mem=memOf(k.c),j=await aiPost({go:"say",stream:2,token:k.tok,voice:k.voice,...(k.practice?{practice:k.practice}:{}),...(mem.length?{facts:memLines(mem)}:{}),history:k.log.map(l=>({me:!!l.me,t:l.t}))},line);
   if(j.streamed&&l){
     if(j.fix)mine.fix=j.fix;
     if(aiOn(k)){if(j.fix)aiDraw();
@@ -5451,21 +5565,22 @@ function media(){
 }
 async function source(id){
   const m=MEDIA.find(x=>x.id===id);
-  stopMedia();MS={m,items:null,i:-1};window.scrollTo(0,0);
+  stopMedia();const opened=MS={m,items:null,i:-1};window.scrollTo(0,0);
   mBack("Luisteren en kijken",media);
   $("mbody").innerHTML=`<p class="ask">${m.k==="v"?"Video's":"Podcast"} · ${LV[m.lv]}</p><h2>${m.t}</h2><p class="sub">${m.s}</p><div id="mplay"></div><div id="mlist"><p class="note">Laden…</p></div>`;
   let j=FEED[id];
   if(!j)try{const r=await fetch("/api/feed?id="+id);j=await r.json();if(!r.ok||!j.items)throw j;FEED[id]=j}
-    catch(e){if(MS&&MS.m===m)$("mlist").innerHTML=`<p class="note">De lijst kan nu niet worden geladen. Probeer het later opnieuw${e&&e.link?`, of kijk op <a href="${esc(e.link)}" target="_blank" rel="noopener">de website ↗</a>`:""}.</p>`;return}
-  if(!MS||MS.m!==m)return;
+    catch(e){if(MS===opened){$("mlist").innerHTML=`<p class="note">De lijst kan nu niet worden geladen. Probeer het later opnieuw${e&&e.link?`, of kijk op <a href="${esc(e.link)}" target="_blank" rel="noopener">de website ↗</a>`:""}.</p><button id="feed-retry" class="ghost wide">Probeer opnieuw</button>`;
+      $("feed-retry").onclick=()=>source(id)}return}
+  if(MS!==opened)return;
   MS.items=j.items;MS.link=j.link;drawEps();
 }
 function drawEps(){
   const st=mGet(),seen=new Set(st.h||[]),pos=st.p||{};
   $("mlist").innerHTML=(MS.items.length?`<ul class="eps">${MS.items.map((x,i)=>{const k=epKey(x),meta=[when(x.d)];
     if(x.n)meta.push(x.n<60?x.n+" s":Math.round(x.n/60)+" min");
-    if(pos[k])meta.push("verder bij "+mmss(pos[k]));else if(seen.has(k))meta.push("✓");
-    return`<li><button class="ep${i===MS.i?" on":""}" data-i="${i}">${x.v?`<img src="/api/thumb?v=${encodeURIComponent(x.v)}" alt="" loading="lazy">`:""}<span><b>${esc(x.t)}</b><small>${meta.join(" · ")}</small></span></button></li>`}).join("")}</ul>`
+    if(pos[k])meta.push("verder bij "+mmss(pos[k]));else if(seen.has(k))meta.push(trS("Geopend")||"Geopend");
+    return`<li><button class="ep${i===MS.i?" on":""}" data-i="${i}"${i===MS.i?' aria-current="true"':""}>${x.v?`<img src="/api/thumb?v=${encodeURIComponent(x.v)}" alt="" loading="lazy">`:""}<span><b>${esc(x.t)}</b><small>${meta.join(" · ")}</small></span></button></li>`}).join("")}</ul>`
     :`<p class="note">Nog geen afleveringen.</p>`)
     +(MS.link?`<p class="note" style="margin-top:14px">Bron: <a href="${esc(MS.link)}" target="_blank" rel="noopener">${esc(MS.m.t)} ↗</a></p>`:"");
   document.querySelectorAll("#mlist .ep").forEach(b=>b.onclick=()=>playEp(+b.dataset.i));
@@ -5479,12 +5594,12 @@ function playEp(i){
     <button class="hint" id="vfull">Volledig scherm</button>
     <h3 class="mt">${esc(x.t)}</h3><p class="note">Ondertiteling: tik op CC. Langzamer: ⚙ → Afspeelsnelheid. <a href="https://www.youtube.com/watch?v=${encodeURIComponent(x.v)}" target="_blank" rel="noopener">Open in YouTube ↗</a></p>`;
   else h=`<h3 class="mt">${esc(x.t)}</h3><audio id="aud" controls preload="metadata" src="${esc(x.a)}"></audio>
-    <div class="mctl"><button class="ghost" id="aback" aria-label="10 seconden terug">↺ 10 s</button>${[.75,1,1.25].map(r=>`<button class="ghost rate" data-r="${r}" aria-label="Snelheid ${r}">${String(r).replace(".",",")}×</button>`).join("")}</div>`;
+    <div class="mctl"><button class="ghost" id="aback" aria-label="10 seconden terug">↺ 10 s</button>${[.75,1,1.25].map(r=>`<button class="ghost rate" data-r="${r}" aria-pressed="false" aria-label="Snelheid ${r}">${String(r).replace(".",",")}×</button>`).join("")}</div>`;
   if(x.s)h+=`<div class="msum" lang="nl">${x.s.split("\n").map(p=>`<p>${esc(p)}</p>`).join("")}</div>`;
   $("mplay").innerHTML=h;
   if(x.v){$("vfull").onclick=()=>vFull(true);$("vx").onclick=()=>vFull(false)}
   if(x.a){
-    const a=$("aud"),rate=r=>{a.defaultPlaybackRate=a.playbackRate=r;document.querySelectorAll(".rate").forEach(b=>b.classList.toggle("on",+b.dataset.r===r))};
+    const a=$("aud"),rate=r=>{a.defaultPlaybackRate=a.playbackRate=r;document.querySelectorAll(".rate").forEach(b=>{const active=+b.dataset.r===r;b.classList.toggle("on",active);b.setAttribute("aria-pressed",String(active))})};
     rate(st.r||1);
     document.querySelectorAll(".rate").forEach(b=>b.onclick=()=>{const s=mGet();s.r=+b.dataset.r;mSet(s);rate(s.r)});
     $("aback").onclick=()=>{a.currentTime=Math.max(0,a.currentTime-10)};
@@ -5496,6 +5611,13 @@ function playEp(i){
     a.ontimeupdate=()=>{if(Date.now()-last>5000){last=Date.now();keep()}};
     a.onpause=()=>{keep();if(MS&&MS.items)drawEps()};a.onended=()=>{const s=mGet();if(s.p)delete s.p[k];mSet(s);drawEps()};
     const at=(st.p||{})[k];if(at)a.addEventListener("loadedmetadata",()=>{a.currentTime=at},{once:true});
+    a.addEventListener("error",()=>{
+      if($("aud")!==a)return;
+      const note=document.createElement("p");note.className="note";note.setAttribute("role","status");
+      note.textContent="Deze aflevering kan hier niet worden afgespeeld.";
+      if(MS.link){const link=document.createElement("a");link.href=MS.link;link.target="_blank";link.rel="noopener";link.textContent="Open de podcast bij de maker ↗";note.append(" ",link)}
+      a.after(note);
+    },{once:true});
     a.play().catch(()=>{});
     if("mediaSession" in navigator&&window.MediaMetadata)navigator.mediaSession.metadata=new MediaMetadata({title:x.t,artist:MS.m.t});
   }
@@ -5703,7 +5825,7 @@ document.addEventListener("keydown",e=>{
 });
 // Swipe from left to right on any inner screen to go back, like on iPhone: it does what the screen's back button does.
 // In the reader a sideways swipe turns pages, so there only a swipe from the left edge (or on the first page) goes back.
-// In a proefexamen the first swipe only asks "Stoppen?" (like the first tap on ✕); a second swipe or tap stops.
+// In a proefexamen, a swipe opens or dismisses the exit confirmation (like tapping ✕).
 (()=>{
   const SCR=["play","stats","lib","read","media","story","hist","talk"];
   let x0=0,y0=0,el=null,on=false,sg=1,settle=null;
@@ -5721,7 +5843,7 @@ document.addEventListener("keydown",e=>{
     if(!el)return; const t=el,dx=(e.changedTouches[0].clientX-x0)*sg; el=null; if(!on)return;
     const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
     const b=t.querySelector(".back"),go=e.type==="touchend"&&dx>90,
-      ask=go&&t.id==="play"&&cur.exam&&pos<queue.length&&!b.classList.contains("arm");
+      ask=go&&t.id==="play"&&cur.exam&&pos<queue.length;
     if(reduced){reset(t);if(go)b.click();return}
     t.style.transition="transform 300ms cubic-bezier(.22,1,.36,1),opacity 300ms cubic-bezier(.4,0,.2,1)";
     let finished=false,timer;
@@ -5820,7 +5942,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru","uk"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="96c7750ff0";
+const UIV="ca39d185c8";
 let uiP=null;
 function uiLoaded(){try{trMemo.clear()}catch(e){} // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});

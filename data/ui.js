@@ -1147,3 +1147,119 @@ Object.assign(window.UK, {
   "Kies een plek en lees het bijbehorende verhaal.": "Виберіть місце й прочитайте пов’язану з ним історію.",
   "Datum wissen": "Очистити дату"
 });
+
+Object.assign(UI, {
+  "Tussenstand starttest": [
+    "Placement check so far",
+    "النتيجة المؤقتة لاختبار البداية",
+    "Seviye testinin ara sonucu",
+    "शुरुआती जाँच का अब तक का नतीजा",
+    "入门测试阶段结果",
+    "Resultado parcial de la prueba inicial",
+    "Промежуточный результат теста"
+  ],
+  "Resultaat starttest": [
+    "Placement check result",
+    "نتيجة اختبار البداية",
+    "Seviye testi sonucu",
+    "शुरुआती जाँच का नतीजा",
+    "入门测试结果",
+    "Resultado de la prueba inicial",
+    "Результат теста уровня"
+  ],
+  "Proefexamen verlaten?": [
+    "Leave the practice exam?",
+    "هل تريد مغادرة الاختبار التجريبي؟",
+    "Deneme sınavından çıkılsın mı?",
+    "अभ्यास परीक्षा छोड़ें?",
+    "退出模拟考试？",
+    "¿Salir del examen de práctica?",
+    "Выйти из пробного экзамена?"
+  ],
+  "Je antwoorden blijven bewaard. De timer loopt door.": [
+    "Your answers are saved. The timer keeps running.",
+    "ستُحفظ إجاباتك. يستمر المؤقت.",
+    "Yanıtların kaydedilir. Süre işlemeye devam eder.",
+    "आपके उत्तर सहेजे जाएँगे। टाइमर चलता रहेगा।",
+    "答案会保留，计时器会继续运行。",
+    "Se guardan tus respuestas. El temporizador sigue corriendo.",
+    "Ответы сохранятся. Таймер продолжит идти."
+  ],
+  "Als je afsluit, raak je deze poging kwijt.": [
+    "If you leave, you’ll lose this attempt.",
+    "إذا خرجت، ستفقد هذه المحاولة.",
+    "Çıkarsan bu deneme silinir.",
+    "बाहर जाने पर यह प्रयास खो जाएगा।",
+    "退出后，本次作答将丢失。",
+    "Si sales, perderás este intento.",
+    "Если выйдете, эта попытка не сохранится."
+  ],
+  "Bewaar en sluit": [
+    "Save and exit",
+    "احفظ واخرج",
+    "Kaydet ve çık",
+    "सहेजें और बाहर निकलें",
+    "保存并退出",
+    "Guardar y salir",
+    "Сохранить и выйти"
+  ],
+  "Verlaat proefexamen": [
+    "Leave practice exam",
+    "غادر الاختبار التجريبي",
+    "Deneme sınavından çık",
+    "अभ्यास परीक्षा छोड़ें",
+    "退出模拟考试",
+    "Salir del examen de práctica",
+    "Выйти из пробника"
+  ],
+  "Ga verder met het proefexamen": [
+    "Continue the practice exam",
+    "تابع الاختبار التجريبي",
+    "Deneme sınavına devam et",
+    "अभ्यास परीक्षा जारी रखें",
+    "继续模拟考试",
+    "Continuar el examen de práctica",
+    "Продолжить пробник"
+  ],
+  "Geopend": [
+    "Opened",
+    "تم الفتح",
+    "Açıldı",
+    "खोला गया",
+    "已打开",
+    "Abierto",
+    "Открыто"
+  ],
+  "Bekijk of oefen je bewaarde woorden.": [
+    "View or practise your saved words.",
+    "اعرض كلماتك المحفوظة أو تدرّب عليها.",
+    "Kaydettiğin kelimeleri gör veya çalış.",
+    "अपने सहेजे शब्द देखें या उनका अभ्यास करें।",
+    "查看或练习已保存的单词。",
+    "Consulta o practica tus palabras guardadas.",
+    "Посмотрите или потренируйте сохранённые слова."
+  ],
+  "Je oefent als gast. Log in om je voortgang op andere apparaten te bewaren.": [
+    "You’re practising as a guest. Sign in to keep your progress across devices.",
+    "تتدرّب كضيف. سجّل الدخول لحفظ تقدمك عبر الأجهزة.",
+    "Misafir olarak çalışıyorsun. İlerlemeni diğer cihazlarda da görmek için giriş yap.",
+    "आप अतिथि के रूप में अभ्यास कर रहे हैं। दूसरे उपकरणों पर प्रगति सहेजने के लिए लॉग इन करें।",
+    "你正在以访客身份练习。登录后即可在其他设备上保留进度。",
+    "Practicas como invitado. Inicia sesión para guardar tu progreso en otros dispositivos.",
+    "Вы учитесь как гость. Войдите, чтобы сохранить прогресс на других устройствах."
+  ]
+});
+
+Object.assign(window.UK, {
+  "Tussenstand starttest": "Проміжний результат тесту",
+  "Resultaat starttest": "Результат тесту рівня",
+  "Proefexamen verlaten?": "Вийти з пробного іспиту?",
+  "Je antwoorden blijven bewaard. De timer loopt door.": "Відповіді збережуться. Таймер продовжить відлік.",
+  "Als je afsluit, raak je deze poging kwijt.": "Якщо вийдете, цю спробу буде втрачено.",
+  "Bewaar en sluit": "Зберегти й вийти",
+  "Verlaat proefexamen": "Вийти з пробного іспиту",
+  "Ga verder met het proefexamen": "Продовжити пробний іспит",
+  "Geopend": "Відкрито",
+  "Bekijk of oefen je bewaarde woorden.": "Перегляньте або потренуйте збережені слова.",
+  "Je oefent als gast. Log in om je voortgang op andere apparaten te bewaren.": "Ви навчаєтеся як гість. Увійдіть, щоб зберегти прогрес на інших пристроях."
+});

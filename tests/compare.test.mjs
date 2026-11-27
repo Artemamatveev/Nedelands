@@ -97,3 +97,16 @@ test('The Spreken samples are made-up questions with a transcript, ids unique ac
   const ids = [...SAMPLES, ...SAMPLES_SP].map(s => s.id); assert.equal(new Set(ids).size, ids.length);
   for (const s of SAMPLES_SP) { assert.ok(s.task.length > 10); assert.ok(s.text.length > 5); assert.ok(!s.expected || (s.expected.by && s.expected.date)); }
 });
+
+test('The short control run flags a shared error by both speaking models', async () => {
+  const r = await ask({user: owner, body: {part: 'sp', controls: true}});
+  assert.equal(r.calls.length, 10);
+  assert.equal(r.res.body.summary.controls, true);
+  const row = id => r.res.body.rows.find(r => r.id === id);
+  assert.equal(row('sp-weekend-fout-onderwerp').control.free, false);
+  assert.equal(row('sp-weekend-fout-onderwerp').control.paid, false);
+  assert.equal(row('sp-werk-kort').control.free, true);
+  const writing = await ask({user: owner, body: {controls: true}});
+  assert.equal(writing.calls.length, 6);
+  assert.ok(writing.res.body.rows.every(r => r.control.paid));
+});

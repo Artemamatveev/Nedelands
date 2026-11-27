@@ -22,3 +22,22 @@ test('A2 reading, listening and KNM have three distinct nonempty choices', () =>
     assert.ok(choices.every(Boolean) && new Set(choices).size===3, item.set+' '+item.key);
   }
 });
+
+test('Reviewed A2 reading and listening questions quote their own source verbatim', async () => {
+  const fs = await import('node:fs');
+  const vm = await import('node:vm');
+  const source = fs.readFileSync(new URL('../data/a2.js', import.meta.url), 'utf8');
+  const checked = vm.runInNewContext(source + '\n[[LZ_EVIDENCE,LZ,1],[LSM_EVIDENCE,LSM,2]].flatMap(([evidence,passages,index])=>evidence.flatMap((group,i)=>group.map(([quote,why],j)=>({i,j,why,found:passages[i][0].includes(quote)&&!!passages[i][index][j]}))))');
+  assert.equal(checked.length,50);
+  for(const {i,j,why,found} of checked)assert.ok(found&&why,`lz|${i}.${j}`);
+});
+
+test('A2 listening passages have all their prerecorded lines listed and present', async () => {
+  const {app, root} = await import('./app-harness.mjs');
+  const fs = await import('node:fs');
+  const a = await app();
+  const keys = a.run('Array.from(new Set(ITEMS.filter(q=>q.sec==="ls"&&q.say).flatMap(q=>sayKeys(q.say.split("\\n").map(line=>line.trim()).filter(Boolean)))))');
+  const index = new Set(JSON.parse(fs.readFileSync(new URL('audio/index.json', root), 'utf8')));
+  const missing = keys.filter(k => !index.has(k) || !fs.existsSync(new URL(`audio/${k}.mp3`, root)));
+  assert.deepEqual([...missing], []);
+});

@@ -256,3 +256,75 @@ test('Low-quota offers pick a matching level and only promise a pass that covers
   a.run('acc.checkPeriod="day"');
   assert.equal(a.run('offerHTML("limit")'),'');
 });
+
+test('A2 prioritizes a repeated reading or listening skill by exam date and tests it on unseen material',async()=>{
+  const a=await app();
+  a.run(`S.lvl="A2";S.items={};
+    function markSkill(part){
+      const distinct=new Map(ITEMS.filter(q=>q.sec===part&&examSkill(q)==="Tijd en aantallen").map(q=>[q.text||q.say,q]));
+      for(const q of [...distinct.values()].slice(0,2))S.items[q.k]={w:1,b:0,d:today()};
+    }
+    markSkill("lz");markSkill("ls");S.me={exams:{ls:amsDay()}};setTab("vandaag");home()`);
+  assert.equal(a.run('dayExamFocus().source.sec'),'ls');
+  assert.equal(a.run('dayExamFocus().count'),2);
+  assert.match(a.document.querySelector('#plan').textContent,/Dit ging mis bij 2 verschillende/);
+  a.document.querySelector('#dayfocus').click();
+  assert.equal(a.run('examSkill(queue[pos])'),'Tijd en aantallen');
+  assert.equal(a.run('!!S.items[queue[pos].k]'),false);
+  assert.equal(a.run('queue[pos].say===ITEMS.find(q=>q.k===cur.practiceSource).say'),false);
+  a.run('record(true);home()');
+  assert.match(a.document.querySelector('#plan').textContent,/De nieuwe vraag ging goed/);
+});
+
+test('A beginner can finish the diagnostic after a single clearly marked interim result',async()=>{
+  const a=await app();
+  a.run('startTest()');
+  a.document.querySelector('#tgo').click();
+  for(let i=0;i<3;i++)a.document.querySelector('#bgn').click();
+  assert.match(a.document.querySelector('#tbody').textContent,/Tussenstand starttest/);
+  a.document.querySelector('#bgcontinue').click();
+  for(let i=3;i<12;i++)a.document.querySelector('#bgn').click();
+  assert.match(a.document.querySelector('#tbody').textContent,/Resultaat starttest.*0 van 12 goed/s);
+  assert.equal(a.document.querySelector('#bgcontinue'),null);
+});
+test('Leaving a timed A2 exam explicitly preserves the answer and the original deadline',async()=>{
+  const a=await app();a.run('setTab("examen");startExam("lz",1)');
+  a.document.querySelector('#card .opt').click();
+  const before=a.run('JSON.stringify(choiceDraft("lz"))');
+  a.document.querySelector('#back').click();
+  assert.equal(a.document.querySelector('#exam-exit').hidden,false);
+  assert.match(a.document.querySelector('#exam-exit').textContent,/De timer loopt door/);
+  a.document.querySelector('#exit-no').click();
+  assert.equal(a.document.querySelector('#exam-exit').hidden,true);
+  a.document.querySelector('#back').click();
+  a.document.querySelector('#exit-yes').click();
+  assert.equal(a.document.querySelector('#home').hidden,false);
+  assert.equal(a.run('JSON.stringify(choiceDraft("lz"))'),before);
+});
+test('Saved words first opens the list, with the quiz as a separate action',async()=>{
+  const a=await app();a.run('S.words=[{w:"het woordenboek",en:"dictionary"}];setTab("herhalen");home()');
+  a.document.querySelector('[data-x="words"]').click();
+  assert.match(a.document.querySelector('#saved-word-list').textContent,/het woordenboek.*dictionary/);
+  assert.equal(a.document.querySelector('#play').hidden,true);
+  a.document.querySelector('#saved-word-practice').click();
+  await a.flush();
+  assert.equal(a.document.querySelector('#play').hidden,false);
+  a.document.querySelector('#back').click();
+  assert.match(a.document.querySelector('#saved-word-list').textContent,/dictionary/);
+});
+test('An unavailable media feed can be retried and opening an episode is labelled honestly',async()=>{
+  let requests=0;
+  const a=await app({fetch:async url=>{
+    if(url!=='/api/feed?id=ed')return new Response('{}');
+    return ++requests===1?new Response('{}',{status:502}):new Response(JSON.stringify({items:[{t:'Voorbeeldvideo',v:'A2345678901',d:Date.now()}]}));
+  }});
+  a.run('setTab("oefenen");home()');
+  a.document.querySelector('[data-x="media"]').click();
+  a.document.querySelector('[data-m="ed"]').click();await a.flush();
+  a.document.querySelector('#feed-retry').click();await a.flush();
+  const ep=()=>a.document.querySelector('#mlist .ep');
+  ep().click();
+  assert.equal(ep().getAttribute('aria-current'),'true');
+  assert.match(ep().textContent,/Geopend/);
+  assert.doesNotMatch(ep().textContent,/✓/);
+});

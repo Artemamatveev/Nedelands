@@ -214,19 +214,28 @@ function compare() {
   const head = `<h2>Сравнение моделей</h2><p class="sub">Придуманные ответы A2 (${sp ? "24 расшифровки Spreken" : "30 текстов Schrijven"}) проверяются бесплатной моделью (её видят бесплатные пользователи) и платной, а когда есть баллы учителя NT2 — сравниваются с ним. Один запуск — около ${sp ? "$0,50" : "$0,75"}, около минуты.</p>
     <p class="sub"><label>Часть: <select id="cmppart" aria-label="Часть экзамена"${cmpBusy ? " disabled" : ""}><option value="wr"${sp ? "" : " selected"}>Schrijven</option><option value="sp"${sp ? " selected" : ""}>Spreken</option></select></label></p>`;
   const btn = `<button id="cmp" class="btn main"${cmpBusy ? " disabled" : ""}>${cmpBusy ? "Проверяю…" : CMP ? "Запустить ещё раз" : "Запустить сравнение"}</button>`;
+  const controls = `<button id="cmpcontrols" class="btn"${cmpBusy ? " disabled" : ""}>Только контрольные ответы</button>`;
   const blind = `<button id="cmpcsv" class="btn"${cmpBusy ? " disabled" : ""}>Скачать для учителя (CSV)</button>`;
-  if (!CMP) return `<section class="tile">${head}${btn}${blind}</section>`;
-  if (CMP.error) return `<section class="tile">${head}<p class="sub">Не получилось: ${esc(CMP.error)}.</p>${btn}${blind}</section>`;
+  if (!CMP) return `<section class="tile">${head}${btn}${controls}${blind}</section>`;
+  if (CMP.error) return `<section class="tile">${head}<p class="sub">Не получилось: ${esc(CMP.error)}.</p>${btn}${controls}${blind}</section>`;
   const m = CMP.summary.models, short = x => esc(String(x).replace(/^claude-/, ""));
   const cell = g => g.error ? `<td colspan="3" class="muted">${esc(g.error)}</td>` : `<td>${g.total}/${max}</td><td>${g.passed ? "да" : "нет"}</td><td>${g.errors}</td>`;
-  const body = CMP.rows.map(r => `<tr${!r.free.error && !r.paid.error && r.free.passed !== r.paid.passed ? ' class="selected"' : ""}><td title="${esc(r.task)}">${esc(r.id)}</td>${cell(r.free)}${cell(r.paid)}</tr>`).join("");
+  const controlCell = (verdict, result) => verdict === null ? "нет результата" :
+    `${result.scores.inhoud}/3, ${verdict ? "ожидаемо" : "требует проверки"}`;
+  const body = CMP.rows.map(r => {
+    const flagged = r.control?.free === false || r.control?.paid === false;
+    const differs = !r.free.error && !r.paid.error && r.free.passed !== r.paid.passed;
+    return `<tr${flagged || differs ? ' class="selected"' : ""}><td><details><summary>${esc(r.id)}</summary>
+      <p>${esc(r.task)}</p><p>${esc(r.text)}</p>
+      ${r.control ? `<p>${esc(r.control.label)}. Ожидаем за содержание ${r.control.content}/3. Бесплатная модель: ${controlCell(r.control.free, r.free)}. Платная: ${controlCell(r.control.paid, r.paid)}.</p>` : ""}</details></td>${cell(r.free)}${cell(r.paid)}</tr>`;
+  }).join("");
   const S = CMP.summary;
   return `<section class="tile">${head}
     ${S.keyChecks&&!sp?["free","paid"].map(tier=>{const check=S.keyChecks[tier];return `<p class="sub">Письмо про ключ · ${tier==="free"?"бесплатная":"платная"} модель: ${check?`пропуск и две полные версии — ${check.content?"оценены ожидаемо":"проверить баллы за содержание"}; языковые критерии — ${check.language?"стабильны":"различаются, проверить ответы"}`:"нет результата"}</p>`}).join(""):""}
     ${["free","paid"].map(tier=>{const t=S.teacher?.[tier];return `<p class="sub">Против учителя NT2 · ${tier==="free"?"бесплатная":"платная"} модель: ${t?`оценено учителем ${t.n}; сумма в пределах ±1 балла в <b>${t.within1}%</b>, тот же вердикт «сдал / не сдал» в <b>${t.samePass}%</b>; точно те же баллы: ${Object.entries(t.criteria).map(([k,v])=>`${esc(k)} ${v}%`).join(", ")}`:`оценок учителя пока нет. Скачайте CSV, отдайте учителю без результатов моделей и внесите его баллы в <code>expected</code> в api/_samples.js (${sp ? "SAMPLES_SP" : "SAMPLES"})`}</p>`}).join("")}
-    <p class="sub">Сравнено ${S.compared} из ${CMP.rows.length}: одинаковый вердикт «сдал / не сдал» в <b>${S.samePassed}</b>; разница в баллах в среднем <b>${S.meanDiff ?? "—"}</b> из ${max}, максимум <b>${S.maxDiff ?? "—"}</b>. Строки, где вердикты разошлись, выделены.</p>
+    <p class="sub">Сравнено ${S.compared} из ${CMP.rows.length}: одинаковый вердикт «сдал / не сдал» в <b>${S.samePassed}</b>; разница в баллах в среднем <b>${S.meanDiff ?? "—"}</b> из ${max}, максимум <b>${S.maxDiff ?? "—"}</b>. Выделены расхождения между моделями или с ожидаемым результатом контрольного задания.</p>
     <div class="scroll" tabindex="0" role="region" aria-label="Сравнение моделей"><table><thead><tr><th rowspan="2">Ответ</th><th colspan="3">${short(m.free)} (бесплатно)</th><th colspan="3">${short(m.paid)} (платно)</th></tr>
-    <tr><th>Баллы</th><th>Сдал</th><th>Ошибок</th><th>Баллы</th><th>Сдал</th><th>Ошибок</th></tr></thead><tbody>${body}</tbody></table></div>${btn}${blind}</section>`;
+    <tr><th>Баллы</th><th>Сдал</th><th>Ошибок</th><th>Баллы</th><th>Сдал</th><th>Ошибок</th></tr></thead><tbody>${body}</tbody></table></div>${btn}${controls}${blind}</section>`;
 }
 // Groups for schools and employers (api/group.js): the owner makes one and gives the code to the school; the teacher
 // opens /docent with the e-mail given here. Members get the Plus checks of the level until the end date.
@@ -268,9 +277,9 @@ async function blindCsv() {
   const a = Object.assign(document.createElement("a"), {href: URL.createObjectURL(new Blob([csv], {type: "text/csv"})), download: `bittertalen-a2-${sp ? "spreken" : "schrijven"}-blind.csv`});
   document.body.append(a); a.click(); a.remove();
 }
-async function runCompare() {
+async function runCompare(controls = false) {
   cmpBusy = true; draw();
-  const r = await fetch("/api/compare", {method: "POST", headers: {authorization: `Bearer ${TOKEN}`, "content-type": "application/json"}, body: JSON.stringify({part: cmpPart})}).catch(() => null);
+  const r = await fetch("/api/compare", {method: "POST", headers: {authorization: `Bearer ${TOKEN}`, "content-type": "application/json"}, body: JSON.stringify({part: cmpPart, controls})}).catch(() => null);
   CMP = r && r.ok ? await r.json() : {error: r ? `ответ ${r.status}` : "нет связи"};
   cmpBusy = false; draw();
 }
@@ -415,7 +424,8 @@ function draw() {
     ${kpis(DATA.users)}${charts(DATA.users)}${users(DATA.users)}${spend(DATA.spend)}${compare()}${groups()}${counts(DATA.counts)}
     <details class="explanation"><summary>Как считаются показатели</summary><p class="sub">Время — активные минуты в приложении: страница открыта, и человек что-то нажимал за последние 90 секунд (или слушал запись). Время и ответы по дням учитываются с 11 ноября 2026 года и попадают сюда после синхронизации прогресса; «всего» у ответов — за всё время, с первого дня. «Разных вопросов» — сколько разных вопросов человек хоть раз прошёл. Ответы считают и упражнения, и пробные экзамены; повтор вопроса после ошибки в том же раунде не считается.</p></details>`;
   $("re").onclick = load;
-  if ($("cmp")) $("cmp").onclick = runCompare;
+  if ($("cmp")) $("cmp").onclick = () => runCompare();
+  if ($("cmpcontrols")) $("cmpcontrols").onclick = () => runCompare(true);
   if ($("cmpcsv")) $("cmpcsv").onclick = blindCsv;
   if ($("cmppart")) $("cmppart").onchange = e => { cmpPart = e.target.value === "sp" ? "sp" : "wr"; CMP = null; draw(); };
   if ($("gnew")) $("gnew").onsubmit = e => { e.preventDefault(); makeGroup(e.target); };

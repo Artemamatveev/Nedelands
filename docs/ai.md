@@ -180,3 +180,5 @@ column per criterion and no model result (`/api/compare` with `{list: true}`, no
 within one point of the reviewer, the same voldoende, and exact agreement per criterion (`againstTeacher()`).
 
 A completed Schrijven A2 exam schedules the most frequent supported rule in scored responses for the next study day. The following two sentences test that rule with different wording. A Spreken A2 exam with near-complete answers can schedule a new question that also asks for a reason. The plan only displays successful speaking practice after the new response receives full content points. Only rule labels, question keys, counts and dates go into this follow-up progress.
+
+In a Bittie conversation the learner may opt in to practising one saved dictionary headword and one predefined mistake category. The client sends only those targets with the turns. The server turns known category IDs into conversational practice prompts. It does not use the learner’s earlier error text or the word list.

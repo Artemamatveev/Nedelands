@@ -1372,3 +1372,39 @@ test('A2 launch path: guest writing and all five mock exams finish with recovera
     for(const event of ['ads_wr_visit','ads_wr_check'])assert.equal(events.filter(row=>row.ev===event).length,1);
   }finally{await s.ctx.close();await browser.close();server.close()}
 });
+
+test('A new homepage visitor can finish the A2 diagnostic and leave and resume a timed exam',async t=>{
+  let browser;
+  try{browser=chromium&&await chromium.launch()}catch(e){if(process.env.BROWSER_TESTS)throw e}
+  if(!browser)return t.skip('no browser here');
+  const server=await serve(),base=`http://127.0.0.1:${server.address().port}`;
+  try{
+    const ctx=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,serviceWorkers:'block'});
+    const p=await ctx.newPage();
+    await p.goto(base);
+    await p.locator('#enter').click();
+    await p.getByRole('button',{name:'Begin met de korte test'}).click();
+    await p.locator('#tgo').click();
+    for(let i=0;i<3;i++)await p.locator('#bgn').click();
+    await p.getByText('Tussenstand starttest',{exact:true}).waitFor();
+    await p.locator('#bgcontinue').click();
+    for(let i=3;i<12;i++)await p.locator('#bgn').click();
+    await p.getByRole('heading',{name:'0 van 12 goed'}).waitFor();
+    await p.locator('#bgf').click();
+    await p.getByRole('heading',{name:'Jezelf voorstellen'}).waitFor();
+    await p.locator('#tback').click();
+    await p.locator('#tback').click();
+    await p.locator('#tabs [data-t="examen"]').click();
+    await p.locator('[data-e="lz"]').click();
+    await p.locator('#ggo').click();
+    await p.locator('#card .opt').first().click();
+    await p.locator('#back').click();
+    await p.locator('#exit-no').click();
+    await p.locator('#back').click();
+    await p.locator('#exit-yes').click();
+    await p.locator('[data-e="lz"]').click();
+    await p.locator('#ggo').click();
+    assert.equal(await p.locator('#card .opt').first().getAttribute('aria-pressed'),'true');
+    await ctx.close();
+  }finally{await browser.close();await new Promise(ok=>server.close(ok))}
+});
