@@ -509,6 +509,8 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
 .forms b{font-weight:600}
 .forms mark{background:none;color:var(--blue);font-weight:700}
 .echo{border-top:1px solid var(--line);padding-top:12px;margin:4px 0 14px}
+.miss.mid{color:var(--ink);border-bottom-color:var(--oranje)}
+.pron{display:flex;flex-wrap:wrap;gap:6px 18px;margin:2px 0 10px;font-size:var(--fs-s);color:var(--soft)}.pron b{display:block;font-size:var(--fs-l);color:var(--ink);font-variant-numeric:tabular-nums}
 .miss{font:inherit;color:var(--bad);background:none;border:0;border-bottom:2px solid var(--bad);padding:0;margin:0;cursor:pointer}
 .bar.pass{position:relative} .bar.pass::after{content:"";position:absolute;inset-inline-start:var(--pass,70%);top:0;bottom:0;width:2px;background:var(--ink)}
 #stats .back,#lib .back{margin-top:14px}
@@ -3714,17 +3716,98 @@ function reveal(q){
 // and the words it did not catch are marked; tap one to hear it. Recognition is not an examiner, so this is a hint only.
 const NUM="nul een twee drie vier vijf zes zeven acht negen tien elf twaalf dertien veertien vijftien zestien zeventien achttien negentien twintig".split(" ");
 const WTOK=/([\p{L}\d]+(?:['’-][\p{L}\d]+)*)/u, norm=w=>w.toLowerCase().replace(/’/g,"'").replace(/\d+/g,d=>NUM[+d]||d);
-const echoHTML=what=>SR?`<div class="echo"><p class="ask">Uitspraak oefenen</p><p class="note">Lees ${what} hardop. De telefoon luistert mee en laat zien welke woorden hij verstond.</p><button class="ghost wide" id="echo">● Zeg het na</button><div id="echor"></div></div>`:"";
+const echoHTML=what=>SR||pronOn()?`<div class="echo"><p class="ask">Uitspraak oefenen</p><p class="note">${pronOn()?`Lees ${what} hardop. Je krijgt per woord een score voor je uitspraak.`:`Lees ${what} hardop. De telefoon luistert mee en laat zien welke woorden hij verstond.`}</p><button class="ghost wide" id="echo">● Zeg het na</button><div id="echor"></div></div>`:"";
 function echoBind(target){
   const b=$("echo"); if(!b)return;
-  b.onclick=()=>{$("echor").innerHTML="";listen("say",r=>echoDone(target,r));b.textContent="■ Stop";b.onclick=()=>recEnd(true)};
+  b.onclick=()=>{$("echor").innerHTML="";
+    if(pronOn())listen("rec",r=>pronDone(target,r),pronMax());else if(SR)listen("say",r=>echoDone(target,r));else return;
+    b.textContent="■ Stop";b.onclick=()=>recEnd(true)};
+}
+// With Azure's pronunciation assessment (api/_pron.js, cfg.pron): a signed-in learner's phone records the sentence
+// instead of writing it down, the page turns the recording into a 16 kHz WAV and Azure scores the sound of every word
+// against the model text. Without it, after a limit or when the recording can't be converted, the phone's speech
+// recognition does it as before (pronOff, for this visit). Practice scores of a computer, not an examiner.
+let pronOff=false;
+const pronOn=()=>!pronOff&&!!(acc.cfg&&acc.cfg.pron&&acc.user&&canRec&&(window.OfflineAudioContext||window.webkitOfflineAudioContext));
+const pronMax=()=>Math.min(30,acc.cfg?.pron?.seconds||30);
+async function pronWav(blob,max){
+  const AC=window.AudioContext||window.webkitAudioContext,OAC=window.OfflineAudioContext||window.webkitOfflineAudioContext,ctx=new AC();
+  let buf;
+  try{const data=await blob.arrayBuffer();buf=await new Promise((ok,no)=>{const p=ctx.decodeAudioData(data,ok,no);if(p&&p.then)p.then(ok,no)})}
+  finally{try{ctx.close?.()}catch(e){}}
+  const R=16000,len=Math.min(Math.ceil(buf.duration*R),max*R);
+  if(len<R*.3)throw{code:"short"};
+  const off=new OAC(1,len,R),src=off.createBufferSource();src.buffer=buf;src.connect(off.destination);src.start(0);
+  const out=await new Promise((ok,no)=>{off.oncomplete=e=>ok(e.renderedBuffer);const p=off.startRendering();if(p&&p.then)p.then(ok,no)});
+  const pcm=out.getChannelData(0),v=new DataView(new ArrayBuffer(44+len*2)),w=(o,t)=>{for(let i=0;i<t.length;i++)v.setUint8(o+i,t.charCodeAt(i))};
+  w(0,"RIFF");v.setUint32(4,36+len*2,true);w(8,"WAVE");w(12,"fmt ");v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);
+  v.setUint32(24,R,true);v.setUint32(28,R*2,true);v.setUint16(32,2,true);v.setUint16(34,16,true);w(36,"data");v.setUint32(40,len*2,true);
+  for(let i=0;i<len;i++){const x=Math.max(-1,Math.min(1,pcm[i]||0));v.setInt16(44+i*2,x<0?x*0x8000:x*0x7fff,true)}
+  const bytes=new Uint8Array(v.buffer);let bin="";for(let i=0;i<bytes.length;i+=0x8000)bin+=String.fromCharCode.apply(null,bytes.subarray(i,i+0x8000));
+  return btoa(bin);
+}
+// {heard, scores:{accuracy, fluency, completeness, pron}, words:[{w, s, e}]}, or throws {code}
+async function pronCheck(text,r){
+  if(!r.mr)throw{code:"audio"}; // no recorder here (or no microphone permission)
+  if(!r.chunks.length)throw{code:"empty"};
+  let audio;try{audio=await pronWav(new Blob(r.chunks,{type:r.mr&&r.mr.mimeType||""}),pronMax())}catch(e){throw{code:e&&e.code==="short"?"empty":"audio"}}
+  const h=await authHead();
+  let res;try{res=await fetch("/api/pron",{method:"POST",headers:{"Content-Type":"application/json",...h},body:JSON.stringify({text,audio})})}catch(e){throw{code:"offline"}}
+  const j=await res.json().catch(()=>({}));
+  if(!res.ok)throw{code:j.error||"failed"};
+  return j;
+}
+const PRON_MSG={
+  empty:"Er is niets opgenomen. Probeer het nog een keer.",
+  limit:"Je uitspraakcontroles van vandaag zijn op. Morgen kan het weer. Tot dan schrijft de telefoon mee.",
+  busy:"Het is nu te druk voor de uitspraakcontrole. Tot morgen schrijft de telefoon mee.",
+  audio:"Je opname kan hier niet worden beoordeeld. De telefoon schrijft nu mee.",
+  off:"De uitspraakcontrole is nu niet beschikbaar. De telefoon schrijft nu mee.",
+  failed:"Beoordelen lukt nu niet. Probeer het zo nog een keer."};
+// the message for a failed check; a lasting failure sends the rest of this visit back to the phone's recognition
+function pronFail(code){
+  if(code==="empty"||code==="failed"||code==="offline"||code==="quota_unavailable")return code==="empty"?PRON_MSG.empty:PRON_MSG.failed;
+  pronOff=true;return PRON_MSG[code]||PRON_MSG.off;
+}
+function echoReset(target){
+  const rb=$("recb");if(rb){rb.textContent="● Opnemen";rb.className="ghost wide";rb.onclick=()=>listen("rec",spTake)}
+  if($("recn"))$("recn").textContent="";if($("recp"))$("recp").innerHTML="";echoBind(target);if($("echo"))$("echo").textContent="● Nog een keer";
+}
+// Azure's words onto the model text: the same longest common subsequence as below, inserted words left out
+function pronMarks(target,words){
+  const P=String(target).split(WTOK),T=P.filter((x,i)=>i%2).map(norm),A=(words||[]).filter(w=>w.e!=="Insertion"),H=A.map(w=>norm(w.w));
+  const D=lcs(T,H),at=new Map();
+  for(let i=0,j=0;i<T.length&&j<H.length;){if(T[i]===H[j]){at.set(i,A[j]);i++;j++}else if(D[i+1][j]>=D[i][j+1])i++;else j++}
+  return{P,at};
+}
+const PRON_LOW=60,PRON_MID=80;
+async function pronDone(target,r){
+  echoReset(target);
+  const out=$("echor"),b=$("echo");if(!out)return;
+  if(r.url){recUrl=r.url;$("recp").innerHTML=`<audio controls src="${r.url}"></audio>`}
+  out.innerHTML=`<p class="note" role="status">Je uitspraak wordt beoordeeld…</p>`;if(b)b.disabled=true;
+  let j=null,msg="";
+  try{j=await pronCheck(target,r)}catch(e){msg=e&&e.code==="login"?pronFail("off"):pronFail(e&&e.code)}
+  if(out!==$("echor"))return; // the learner went on
+  if(b)b.disabled=false;
+  if(!j){out.innerHTML=`<p class="note">${msg}</p>`;return}
+  if(!j.heard){out.innerHTML=`<p class="note">Ik heb niets verstaan. Spreek wat harder, of dichter bij de telefoon.</p>`;return}
+  const{P,at}=pronMarks(target,j.words),sc=j.scores||{};
+  let k=0,weak=0;
+  const html=P.map((x,i)=>{if(!(i%2))return esc(x);const a=at.get(k++);
+    if(!a||a.e!=="Omission"&&a.s>=PRON_MID)return esc(x);weak++;
+    return`<button class="miss${a.e!=="Omission"&&a.s>=PRON_LOW?" mid":""}" data-w="${esc(x)}">${esc(x)}</button>`}).join("");
+  out.innerHTML=`<p class="note"><strong class="${sc.pron>=90?"good":""}">Uitspraak: ${sc.pron} van 100</strong></p>
+    <div class="pron"><span>Klanken<b>${sc.accuracy}</b></span><span>Vloeiendheid<b>${sc.fluency}</b></span><span>Volledigheid<b>${sc.completeness}</b></span></div>
+    <div class="sample">${html}</div>${weak?`<p class="note">Kies een gemarkeerd woord om het te horen en apart te oefenen.</p>`:""}
+    <p class="note">Een oefenscore van de computer, geen examencijfer. Soms vergist hij zich bij een woord dat je goed zegt.</p><div id="echoWord"></div>`;
+  out.querySelectorAll(".miss").forEach(m=>m.onclick=()=>echoWordPractice(m.dataset.w));
 }
 const lcs=(T,H)=>{const D=Array.from({length:T.length+1},()=>new Uint16Array(H.length+1));
   for(let i=T.length-1;i>=0;i--)for(let j=H.length-1;j>=0;j--)D[i][j]=T[i]===H[j]?D[i+1][j+1]+1:Math.max(D[i+1][j],D[i][j+1]);
   return D};
 function echoDone(target,r){
-  const rb=$("recb"); rb.textContent="● Opnemen";rb.className="ghost wide";rb.onclick=()=>listen("rec",spTake);
-  $("recn").textContent=""; $("recp").innerHTML=""; echoBind(target); if($("echo"))$("echo").textContent="● Nog een keer";
+  echoReset(target);
   const P=String(target).split(WTOK), T=P.filter((x,i)=>i%2).map(norm), H=r.text.split(WTOK).filter((x,i)=>i%2).map(norm), n=T.length, m=H.length;
   if(!m){$("echor").innerHTML=`<p class="note">${r.fail?"Meeschrijven lukt hier niet.":"Ik heb niets verstaan. Spreek wat harder, of dichter bij de telefoon."}</p>`;return}
   // longest common subsequence: which words of the model were heard, in order
@@ -3750,6 +3833,17 @@ function echoWordPractice(word){
     controls.forEach(control=>control.disabled=true);
     retry.textContent="■ Stop";retry.onclick=()=>recEnd(true);
     status.textContent="Zeg het woord en tik daarna op Stop.";
+    const again=()=>{controls.forEach(control=>control.disabled=false);retry.disabled=false;retry.textContent="● Nog een keer";retry.onclick=start};
+    if(pronOn())return listen("rec",async r=>{
+      if(retry!==$("echoRetry"))return;
+      const record=$("recb");record.textContent="● Opnemen";record.className="ghost wide";record.onclick=()=>listen("rec",spTake);$("recn").textContent="";
+      status.textContent="Je uitspraak wordt beoordeeld…";retry.disabled=true;
+      let j=null,msg="";try{j=await pronCheck(word,r)}catch(e){msg=e&&e.code==="login"?pronFail("off"):pronFail(e&&e.code)}
+      if(retry!==$("echoRetry"))return;
+      const a=j&&(j.words||[]).find(w=>w.e!=="Insertion"),s=a&&a.e!=="Omission"?a.s:0;
+      status.textContent=!j?msg:!j.heard||!a?"Geen woord herkend. Probeer opnieuw.":s>=PRON_MID?`Goed gezegd: ${s} van 100.`:`Nog niet duidelijk: ${s} van 100. Luister en probeer opnieuw.`;
+      again();
+    },8);
     listen("say",r=>{
       if(retry!==$("echoRetry"))return;
       const record=$("recb");

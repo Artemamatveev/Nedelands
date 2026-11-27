@@ -1,12 +1,13 @@
 // What the page needs for accounts: GET /api/config -> {url, anon, login:["google","apple","azure","facebook","email","passkey"], limit, free, plus?}
 // (limit: free account checks in all; free: one-time browser trial; Plus keeps daily checks;
-// events: the anonymous usage counts are on, see api/event.js)
+// events: the anonymous usage counts are on, see api/event.js; pron: Zeg het na scores pronunciation, api/_pron.js)
 // or {} when accounts are not set up. The anon key is public by design (row level security protects the data).
 // Google, Apple, Microsoft (azure) and Facebook show when they are switched on in Supabase (Authentication → Sign In / Providers);
 // the e-mail code only with LOGIN_EMAIL=1, because Supabase's own mail reaches only the project's team
 // (real users need custom SMTP); passkeys (still experimental in Supabase) only with LOGIN_PASSKEY=1.
 import { accounts, supaUrl, anonKey, LIMIT, FREE, plusOn, PLUS, PLUS_MONTH, TALK_PLUS, PLUS_PRICE, PLANS, passOn, PASSES, PASS_TOTAL, PASS_DAYS, yearOn, YEARS, YEAR_DAYS, YEAR_TOTAL } from "./_supa.js";
 import { eventsOn } from "./event.js";
+import { pronOn, PRON_DAY, PRON_SECONDS } from "./_pron.js";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") return res.status(405).json({ error: "method_not_allowed" });
@@ -28,5 +29,7 @@ export default async function handler(req, res) {
     // the Jaarpas: the same for YEAR_DAYS, only when its prices are configured
     ...(yearOn ? { year: { days: YEAR_DAYS, total: YEAR_TOTAL, plans: Object.fromEntries(Object.entries(YEARS).map(([level, p]) => [level, { price: p.price }])) } } : {}),
     ...(eventsOn() ? { events: 1 } : {}),
+    // Zeg het na with Azure's pronunciation assessment (api/_pron.js): day takes a day, at most seconds of audio each
+    ...(pronOn ? { pron: { day: PRON_DAY, seconds: PRON_SECONDS } } : {}),
   });
 }

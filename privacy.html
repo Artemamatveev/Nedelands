@@ -164,6 +164,7 @@ aan jou gekoppeld.</p>
 <p>Bij Spreken zet je telefoon of browser je stem om in tekst. Dat doet niet Bittertalen, maar je browser: Safari
 gebruikt daarvoor Apple, Chrome gebruikt Google. Daarvoor gelden hun eigen privacyregels. Bittertalen krijgt alleen de
 tekst.</p>
+<p>Ben je ingelogd, dan kun je bij Zeg het na je uitspraak laten beoordelen. De app neemt dan op hoe je de zin voorleest, en die opname gaat met de zin via onze server naar Microsoft (Azure AI Speech, in een datacenter in de EU). Microsoft geeft per woord een score voor je uitspraak. Je naam en e-mailadres gaan niet mee. Microsoft bewaart de opname niet en gebruikt hem niet om modellen te trainen; wij bewaren hem ook niet. We tellen alleen hoeveel uitspraakcontroles je per dag doet, voor het dagtegoed. We doen dit omdat je er zelf om vraagt (uitvoering van een overeenkomst, artikel 6 lid 1 b AVG).</p>
 
 <h2>De website en bezoekers tellen</h2>
 <p>Bittertalen draait bij Vercel. Onze server staat in Frankfurt (Duitsland). Om de site te leveren en te beveiligen,
@@ -200,6 +201,7 @@ vraagt, zoals het EU-VS Data Privacy Framework of de standaardcontractbepalingen
 <ul>
 <li>Je account en je voortgang: tot je je account verwijdert. Dan wordt alles bij Supabase meteen gewist.</li>
 <li>Anthropic bewaart teksten voor nakijken hooguit 30 dagen (zie boven).</li>
+<li>Opnames voor de uitspraakcontrole: niet bewaard, niet bij ons en niet bij Microsoft. Het aantal controles per dag: hooguit twee maanden.</li>
 <li>Logboeken van Vercel, Supabase en Resend: korte tijd, voor beveiliging en om problemen op te lossen.</li>
 <li>Op je eigen apparaat: tot je de gegevens van de site wist in je browser.</li>
 <li>De cookie en code voor het eenmalige proeftegoed zonder account: hooguit 400 dagen.</li>
@@ -292,6 +294,7 @@ laatst gebeurde.</p>
 
 <h2>Speech recognition</h2>
 <p>In Speaking, your phone or browser turns your voice into text. Bittertalen does not do that, your browser does: Safari uses Apple for it, Chrome uses Google. Their own privacy rules apply. Bittertalen only gets the text.</p>
+<p>If you are logged in, you can have your pronunciation scored in Zeg het na (say it after me). The app then records how you read the sentence aloud, and that recording goes with the sentence through our server to Microsoft (Azure AI Speech, in a data centre in the EU). Microsoft gives a score for the pronunciation of each word. Your name and e-mail address are not sent. Microsoft does not keep the recording and does not use it to train models; we do not keep it either. We only count how many pronunciation checks you do per day, for the daily allowance. We do this because you ask for it yourself (performance of a contract, Article 6(1)(b) GDPR).</p>
 
 <h2>The website and counting visitors</h2>
 <p>Bittertalen runs on Vercel. Our server is in Frankfurt (Germany). To deliver and protect the site, Vercel processes your IP address, your browser and the page you open at every visit, and keeps that in a log for a short time. We also count ourselves how often parts of the app are used: per day only a number per event (for example: the app or the website was opened, the starting test or today's lesson was finished, a practice exam was started or handed in), with the level (A2 or B1) and the language of the menus. We keep no number of your device, no account, no IP address and nothing of your answers. The counts are stored at Supabase in Frankfurt. If something goes wrong in the app, only the technical error message (without your answers, name or email address) goes to Vercel's log, so we can fix the error. To count a device only once a day, your browser remembers only the date. If Global Privacy Control or ‘Do Not Track’ is on in your browser, the app counts nothing. We do this to keep the app safe and working and to see what can be better (legitimate interest, Article 6(1)(f) GDPR).</p>
@@ -312,6 +315,7 @@ laatst gebeurde.</p>
 <ul>
 <li>Your account and your progress: until you delete your account. Then everything at Supabase is erased at once.</li>
 <li>Anthropic keeps texts sent for checking for at most 30 days (see above).</li>
+<li>Recordings for the pronunciation check: not kept, neither by us nor by Microsoft. The number of checks per day: at most two months.</li>
 <li>Logs of Vercel, Supabase and Resend: a short time, for security and to solve problems.</li>
 <li>On your own device: until you clear the site's data in your browser.</li>
 <li>The code for free checks without an account: at most two days.</li>
@@ -397,6 +401,7 @@ laatst gebeurde.</p>
 
 <h2>التعرف على الكلام</h2>
 <p>في قسم المحادثة يحوّل هاتفك أو متصفحك صوتك إلى نص. لا يفعل ذلك Bittertalen بل متصفحك: يستخدم Safari خدمة Apple، ويستخدم Chrome خدمة Google. وتسري قواعد الخصوصية الخاصة بهما. لا يحصل Bittertalen إلا على النص.</p>
+<p>إذا كنت مسجّل الدخول، يمكنك في Zeg het na (كرّر بعدي) أن تطلب تقييم نطقك. عندها يسجّل التطبيق قراءتك للجملة بصوت عالٍ، ويُرسل هذا التسجيل مع الجملة عبر خادمنا إلى Microsoft (Azure AI Speech، في مركز بيانات داخل الاتحاد الأوروبي). تعطي Microsoft درجة لنطق كل كلمة. لا يُرسل اسمك ولا بريدك الإلكتروني. لا تحتفظ Microsoft بالتسجيل ولا تستخدمه لتدريب النماذج، ونحن أيضًا لا نحتفظ به. نعدّ فقط عدد مرات تقييم النطق في اليوم، من أجل الرصيد اليومي. نفعل ذلك لأنك تطلبه بنفسك (تنفيذ عقد، المادة 6 فقرة 1 حرف ب من GDPR).</p>
 
 <h2>الموقع وإحصاء الزوار</h2>
 <p>يعمل Bittertalen على Vercel. خادمنا موجود في فرانكفورت (ألمانيا). لتقديم الموقع وحمايته، تعالج Vercel في كل زيارة عنوان IP الخاص بك ومتصفحك والصفحة التي تفتحها، وتحفظ ذلك في سجل لفترة قصيرة. ونحصي بأنفسنا أيضًا عدد مرات استخدام أجزاء التطبيق: في كل يوم عددًا فقط لكل حدث (مثلًا: فُتح التطبيق أو الموقع، انتهى الاختبار الأولي أو درس اليوم، بدأ امتحان تجريبي أو سُلِّم)، مع المستوى (A2 أو B1) ولغة القوائم. لا نحفظ رقمًا لجهازك ولا حسابًا ولا عنوان IP ولا شيئًا من إجاباتك. تُحفظ الإحصاءات لدى Supabase في فرانكفورت. إذا حدث خطأ في التطبيق، تُرسل رسالة الخطأ التقنية فقط (دون إجاباتك أو اسمك أو بريدك الإلكتروني) إلى سجل Vercel لنتمكن من إصلاحه. ولكي يُحسب الجهاز مرة واحدة فقط في اليوم، يتذكر متصفحك التاريخ فقط. إذا كان Global Privacy Control أو «Do Not Track» مفعّلًا في متصفحك، فلا يحصي التطبيق شيئًا. نفعل ذلك لنُبقي التطبيق آمنًا وعاملًا ولنرى ما يمكن تحسينه (المصلحة المشروعة، المادة 6 الفقرة 1 و من GDPR).</p>
@@ -417,6 +422,7 @@ laatst gebeurde.</p>
 <ul>
 <li>حسابك وتقدّمك: حتى تحذف حسابك. عندها يُمسح كل شيء لدى Supabase فورًا.</li>
 <li>تحتفظ Anthropic بنصوص التصحيح مدة لا تتجاوز 30 يومًا (انظر أعلاه).</li>
+<li>تسجيلات تقييم النطق: لا تُحفظ، لا لدينا ولا لدى Microsoft. عدد مرات التقييم في اليوم: شهران على الأكثر.</li>
 <li>سجلات Vercel وSupabase وResend: لفترة قصيرة، للأمان ولحل المشكلات.</li>
 <li>على جهازك: حتى تمسح بيانات الموقع في متصفحك.</li>
 <li>رمز التصحيح المجاني بدون حساب: يومان كحد أقصى.</li>
@@ -502,6 +508,7 @@ laatst gebeurde.</p>
 
 <h2>Konuşma tanıma</h2>
 <p>Konuşma bölümünde telefonun veya tarayıcın sesini yazıya çevirir. Bunu Bittertalen değil, tarayıcın yapar: Safari bunun için Apple'ı, Chrome ise Google'ı kullanır. Onların kendi gizlilik kuralları geçerlidir. Bittertalen yalnızca metni alır.</p>
+<p>Giriş yaptıysan Zeg het na (tekrar et) bölümünde telaffuzunu puanlatabilirsin. Uygulama o zaman cümleyi sesli okuyuşunu kaydeder ve bu kayıt cümleyle birlikte sunucumuz üzerinden Microsoft'a (Azure AI Speech, AB'deki bir veri merkezinde) gider. Microsoft her kelimenin telaffuzuna bir puan verir. Adın ve e-posta adresin gönderilmez. Microsoft kaydı saklamaz ve modelleri eğitmek için kullanmaz; biz de saklamayız. Yalnızca günlük hak için günde kaç telaffuz kontrolü yaptığını sayarız. Bunu sen istediğin için yaparız (sözleşmenin ifası, GDPR madde 6 fıkra 1 b).</p>
 
 <h2>Web sitesi ve ziyaretçi sayımı</h2>
 <p>Bittertalen, Vercel'de çalışır. Sunucumuz Frankfurt'tadır (Almanya). Siteyi sunmak ve korumak için Vercel her ziyarette IP adresini, tarayıcını ve açtığın sayfayı işler ve bunu kısa süre bir kayıtta tutar. Ayrıca uygulamanın bölümlerinin ne sıklıkla kullanıldığını kendimiz sayarız: her gün yalnızca olay başına bir sayı (örneğin: uygulama veya web sitesi açıldı, başlangıç testi veya bugünkü ders bitti, bir deneme sınavı başladı veya teslim edildi), seviye (A2 veya B1) ve menülerin diliyle birlikte. Cihazına ait bir numara, hesap, IP adresi veya cevaplarından hiçbir şey saklamayız. Sayımlar Frankfurt'ta Supabase'de saklanır. Uygulamada bir sorun olursa, yalnızca teknik hata mesajı (yanıtların, adın veya e-posta adresin olmadan) hatayı düzeltebilmemiz için Vercel'in kaydına gider. Bir cihazı günde yalnızca bir kez saymak için tarayıcın sadece tarihi hatırlar. Tarayıcında Global Privacy Control veya “Do Not Track” açıksa uygulama hiçbir şey saymaz. Bunu, uygulamayı güvenli ve çalışır tutmak ve neyin daha iyi olabileceğini görmek için yaparız (meşru menfaat, GDPR madde 6 fıkra 1 f).</p>
@@ -522,6 +529,7 @@ laatst gebeurde.</p>
 <ul>
 <li>Hesabın ve ilerlemen: hesabını silene kadar. O zaman Supabase'deki her şey hemen silinir.</li>
 <li>Anthropic, kontrol edilen metinleri en fazla 30 gün tutar (yukarıya bak).</li>
+<li>Telaffuz kontrolü kayıtları: saklanmaz, ne bizde ne Microsoft'ta. Günlük kontrol sayısı: en fazla iki ay.</li>
 <li>Vercel, Supabase ve Resend kayıtları: güvenlik ve sorun çözmek için kısa süre.</li>
 <li>Kendi cihazında: tarayıcında sitenin verilerini silene kadar.</li>
 <li>Hesapsız ücretsiz kontrol kodu: en fazla iki gün.</li>
@@ -607,6 +615,7 @@ laatst gebeurde.</p>
 
 <h2>वाक् पहचान</h2>
 <p>बोलने वाले भाग में आपका फ़ोन या ब्राउज़र आपकी आवाज़ को पाठ में बदलता है। यह Bittertalen नहीं, आपका ब्राउज़र करता है: Safari इसके लिए Apple का और Chrome, Google का इस्तेमाल करता है। उनके अपने गोपनीयता नियम लागू होते हैं। Bittertalen को केवल पाठ मिलता है।</p>
+<p>अगर आप लॉग इन हैं, तो Zeg het na (दोहराएँ) में आप अपने उच्चारण का मूल्यांकन करवा सकते हैं। तब ऐप रिकॉर्ड करता है कि आप वाक्य को कैसे बोलकर पढ़ते हैं, और वह रिकॉर्डिंग वाक्य के साथ हमारे सर्वर से होकर Microsoft (Azure AI Speech, EU के एक डेटा सेंटर में) को जाती है। Microsoft हर शब्द के उच्चारण को अंक देता है। आपका नाम और ई-मेल पता नहीं भेजा जाता। Microsoft रिकॉर्डिंग नहीं रखता और उससे मॉडल को प्रशिक्षित नहीं करता; हम भी उसे नहीं रखते। हम केवल यह गिनते हैं कि आप दिन में कितनी बार उच्चारण जाँचते हैं, दैनिक सीमा के लिए। हम ऐसा इसलिए करते हैं क्योंकि आप खुद इसे माँगते हैं (अनुबंध का पालन, GDPR अनुच्छेद 6(1)(b))।</p>
 
 <h2>वेबसाइट और आगंतुकों की गिनती</h2>
 <p>Bittertalen, Vercel पर चलता है। हमारा सर्वर फ़्रैंकफ़र्ट (जर्मनी) में है। साइट उपलब्ध कराने और सुरक्षित रखने के लिए Vercel हर विज़िट पर आपका IP पता, ब्राउज़र और खोला गया पेज प्रोसेस करता है और उसे थोड़े समय के लिए लॉग में रखता है। इसके अलावा हम खुद गिनते हैं कि ऐप के हिस्से कितनी बार इस्तेमाल होते हैं: हर दिन हर घटना के लिए केवल एक संख्या (जैसे: ऐप या वेबसाइट खोली गई, शुरुआती टेस्ट या आज का पाठ पूरा हुआ, कोई अभ्यास परीक्षा शुरू हुई या जमा की गई), स्तर (A2 या B1) और मेन्यू की भाषा के साथ। हम आपके डिवाइस का कोई नंबर, कोई खाता, कोई IP पता या आपके उत्तरों में से कुछ भी नहीं रखते। ये गिनतियाँ फ़्रैंकफ़र्ट में Supabase पर रखी जाती हैं। अगर ऐप में कुछ गड़बड़ होती है, तो केवल तकनीकी त्रुटि संदेश (आपके जवाबों, नाम या ई-मेल पते के बिना) Vercel के लॉग में जाता है, ताकि हम त्रुटि ठीक कर सकें। किसी डिवाइस को दिन में केवल एक बार गिनने के लिए आपका ब्राउज़र सिर्फ़ तारीख याद रखता है। अगर आपके ब्राउज़र में Global Privacy Control या “Do Not Track” चालू है, तो ऐप कुछ नहीं गिनता। हम ऐसा ऐप को सुरक्षित और चालू रखने और यह देखने के लिए करते हैं कि क्या बेहतर हो सकता है (वैध हित, GDPR का अनुच्छेद 6(1)(f))।</p>
@@ -627,6 +636,7 @@ laatst gebeurde.</p>
 <ul>
 <li>आपका खाता और प्रगति: जब तक आप खाता नहीं हटाते। तब Supabase पर सब कुछ तुरंत मिटा दिया जाता है।</li>
 <li>Anthropic जाँच के लिए दिए पाठ अधिकतम 30 दिन रखता है (ऊपर देखें)।</li>
+<li>उच्चारण जाँच की रिकॉर्डिंग: न हमारे पास रखी जाती है, न Microsoft के पास। प्रति दिन जाँचों की संख्या: अधिकतम दो महीने।</li>
 <li>Vercel, Supabase और Resend के लॉग: थोड़े समय के लिए, सुरक्षा और समस्याएँ हल करने के लिए।</li>
 <li>आपके अपने डिवाइस पर: जब तक आप ब्राउज़र में साइट का डेटा नहीं मिटाते।</li>
 <li>बिना खाते की मुफ़्त जाँच का कोड: अधिकतम दो दिन।</li>
@@ -712,6 +722,7 @@ laatst gebeurde.</p>
 
 <h2>语音识别</h2>
 <p>在口语部分，你的手机或浏览器会把语音转成文字。这不是 Bittertalen 做的，而是你的浏览器：Safari 使用 Apple，Chrome 使用 Google。它们适用自己的隐私规则。Bittertalen 只收到文字。</p>
+<p>如果你已登录，可以在 Zeg het na（跟我读）中让系统为你的发音打分。这时应用会录下你朗读句子的声音，录音和句子一起经我们的服务器发送给 Microsoft（Azure AI Speech，位于欧盟的数据中心）。Microsoft 会为每个词的发音打分。你的姓名和电子邮箱不会一起发送。Microsoft 不保存录音，也不用它训练模型；我们也不保存。我们只统计你每天做了多少次发音检查，用于每日额度。我们这样做是因为你自己提出了请求（履行合同，GDPR 第 6 条第 1 款 b 项）。</p>
 
 <h2>网站和访客统计</h2>
 <p>Bittertalen 运行在 Vercel 上。我们的服务器在法兰克福（德国）。为了提供和保护网站，Vercel 在每次访问时都会处理你的 IP 地址、浏览器和打开的页面，并在日志中短期保存。此外，我们自己统计应用各部分的使用次数：每天每种事件只记一个数字（例如：打开了应用或网站，完成了入门测试或今天的课程，开始或提交了模拟考试），以及级别（A2 或 B1）和菜单语言。我们不保存你设备的编号、账户、IP 地址，也不保存你的任何答案。这些统计数据保存在 Supabase 的法兰克福数据中心。如果应用出错，只有技术错误信息（不含你的答案、姓名或邮箱地址）会发送到 Vercel 的日志，以便我们修复错误。为了每台设备每天只计一次，你的浏览器只记住日期。如果你的浏览器开启了 Global Privacy Control 或“Do Not Track”，应用不会统计任何内容。我们这样做是为了让应用保持安全和正常运行，并了解哪些地方可以改进（正当利益，GDPR 第 6 条第 1 款 f 项）。</p>
@@ -732,6 +743,7 @@ laatst gebeurde.</p>
 <ul>
 <li>你的账户和进度：直到你删除账户。届时 Supabase 上的所有内容会立即删除。</li>
 <li>Anthropic 最多保存待批改的文字 30 天（见上文）。</li>
+<li>发音检查的录音：不保存，我们和 Microsoft 都不保存。每天的检查次数：最多两个月。</li>
 <li>Vercel、Supabase 和 Resend 的日志：短期保存，用于安全和解决问题。</li>
 <li>你自己的设备上：直到你在浏览器中清除网站数据。</li>
 <li>无账户免费批改的代码：最多两天。</li>
@@ -818,6 +830,7 @@ laatst gebeurde.</p>
 
 <h2>Reconocimiento de voz</h2>
 <p>En Expresión oral, tu teléfono o navegador convierte la voz en texto. Safari usa el servicio de Apple y Chrome el de Google. Se aplican sus propias políticas de privacidad. Bittertalen solo recibe el texto.</p>
+<p>Si has iniciado sesión, en Zeg het na (repite) puedes pedir que se puntúe tu pronunciación. La app graba entonces cómo lees la frase en voz alta, y esa grabación va con la frase a través de nuestro servidor a Microsoft (Azure AI Speech, en un centro de datos de la UE). Microsoft da una puntuación a la pronunciación de cada palabra. Tu nombre y tu correo no se envían. Microsoft no guarda la grabación ni la usa para entrenar modelos; nosotros tampoco la guardamos. Solo contamos cuántas comprobaciones de pronunciación haces al día, para el límite diario. Lo hacemos porque tú lo pides (ejecución de un contrato, artículo 6.1.b del RGPD).</p>
 
 <h2>El sitio web y las visitas</h2>
 <p>Bittertalen está alojado en Vercel y nuestro servidor está en Fráncfort (Alemania). Para ofrecer y proteger el sitio, Vercel procesa tu dirección IP, tu navegador y la página que abres en cada visita. Los guarda durante un tiempo breve en un registro. Además, contamos nosotros mismos cuántas veces se usan las partes de la aplicación: cada día solo un número por evento (por ejemplo: se abrió la aplicación o el sitio web, se terminó la prueba inicial o la lección del día, se empezó o se entregó un simulacro), con el nivel (A2 o B1) y el idioma de los menús. No guardamos ningún número de tu dispositivo, ni tu cuenta, ni tu dirección IP, ni nada de tus respuestas. Los recuentos se guardan en Supabase, en Fráncfort. Si algo falla en la app, solo el mensaje técnico de error (sin tus respuestas, nombre ni correo) va al registro de Vercel para que podamos corregirlo. Para contar cada dispositivo solo una vez al día, tu navegador guarda únicamente la fecha. Si tienes activado Global Privacy Control o «Do Not Track» en tu navegador, la aplicación no cuenta nada. Lo hacemos para mantener el servicio seguro y operativo y para ver qué podemos mejorar (interés legítimo, artículo 6.1.f del RGPD).</p>
@@ -838,6 +851,7 @@ laatst gebeurde.</p>
 <ul>
 <li>Cuenta y progreso: hasta que elimines la cuenta. En ese momento se borran todos esos datos de Supabase.</li>
 <li>Anthropic conserva los textos enviados a revisión durante un máximo de 30 días (ver arriba).</li>
+<li>Grabaciones para la comprobación de pronunciación: no se guardan, ni nosotros ni Microsoft. El número de comprobaciones al día: como máximo dos meses.</li>
 <li>Registros de Vercel, Supabase y Resend: durante un periodo breve por seguridad y para resolver problemas.</li>
 <li>Datos en tu dispositivo: hasta que borres los datos del sitio en el navegador.</li>
 <li>Código de revisiones gratuitas sin cuenta: hasta dos días.</li>
@@ -923,6 +937,7 @@ laatst gebeurde.</p>
 
 <h2>Распознавание речи</h2>
 <p>В разделе «Устная речь» телефон или браузер преобразует голос в текст. Safari использует сервис Apple, а Chrome — Google. Действуют их собственные политики конфиденциальности. Bittertalen получает только текст.</p>
+<p>Если вы вошли в аккаунт, в Zeg het na («Повторите») можно получить оценку произношения. Тогда приложение записывает, как вы читаете фразу вслух, и эта запись вместе с фразой идёт через наш сервер в Microsoft (Azure AI Speech, в дата-центре в ЕС). Microsoft ставит балл за произношение каждого слова. Ваше имя и e-mail не передаются. Microsoft не хранит запись и не обучает на ней модели; мы её тоже не храним. Мы считаем только, сколько проверок произношения вы делаете в день, для дневного лимита. Мы делаем это, потому что вы сами об этом просите (исполнение договора, статья 6(1)(b) GDPR).</p>
 
 <h2>Сайт и подсчёт посещений</h2>
 <p>Bittertalen работает на Vercel, а наш сервер находится во Франкфурте (Германия). Для работы и защиты сайта Vercel при каждом посещении обрабатывает IP-адрес, сведения о браузере и адрес открытой страницы. Эти данные недолго хранятся в журнале. Кроме того, мы сами считаем, как часто используются разделы приложения: за каждый день — только число по каждому событию (например: открыто приложение или сайт, пройден входной тест или урок дня, начат или сдан пробный экзамен), вместе с уровнем (A2 или B1) и языком меню. Мы не храним ни номера вашего устройства, ни аккаунта, ни IP-адреса, ни ваших ответов. Статистика хранится у Supabase во Франкфурте. Если в приложении происходит сбой, в журнал Vercel отправляется только техническое сообщение об ошибке (без ваших ответов, имени и адреса электронной почты), чтобы мы могли её исправить. Чтобы учитывать устройство только раз в день, браузер запоминает лишь дату. Если в браузере включены Global Privacy Control или «Do Not Track», приложение ничего не считает. Основание — безопасная и стабильная работа сервиса и понимание того, что можно улучшить (законный интерес, статья 6(1)(f) GDPR).</p>
@@ -943,6 +958,7 @@ laatst gebeurde.</p>
 <ul>
 <li>Аккаунт и прогресс хранятся до удаления аккаунта. После этого все эти данные сразу удаляются из Supabase.</li>
 <li>Anthropic хранит тексты, отправленные на проверку, до 30 дней (см. выше).</li>
+<li>Записи для проверки произношения: не хранятся ни у нас, ни у Microsoft. Число проверок в день: не дольше двух месяцев.</li>
 <li>Журналы Vercel, Supabase и Resend хранятся недолго для безопасности и устранения сбоев.</li>
 <li>Данные на устройстве хранятся, пока вы не очистите данные сайта в браузере.</li>
 <li>Код для бесплатных проверок без аккаунта хранится до двух дней.</li>
@@ -1029,6 +1045,7 @@ laatst gebeurde.</p>
 
 <h2>Розпізнавання мовлення</h2>
 <p>У розділі «Усне мовлення» телефон або браузер перетворює голос на текст. Safari використовує сервіс Apple, а Chrome — Google. Діють їхні власні політики конфіденційності. Bittertalen отримує лише текст.</p>
+<p>Якщо ви увійшли в акаунт, у Zeg het na («Повторіть») можна отримати оцінку вимови. Тоді застосунок записує, як ви читаєте речення вголос, і цей запис разом із реченням іде через наш сервер до Microsoft (Azure AI Speech, у дата-центрі в ЄС). Microsoft ставить бал за вимову кожного слова. Ваше ім'я та e-mail не передаються. Microsoft не зберігає запис і не навчає на ньому моделі; ми його теж не зберігаємо. Ми рахуємо лише, скільки перевірок вимови ви робите на день, для денного ліміту. Ми робимо це, бо ви самі про це просите (виконання договору, стаття 6(1)(b) GDPR).</p>
 
 <h2>Сайт і підрахунок відвідувань</h2>
 <p>Bittertalen працює на Vercel, а наш сервер розташований у Франкфурті (Німеччина). Для роботи й захисту сайту Vercel під час кожного відвідування обробляє IP-адресу, відомості про браузер та адресу відкритої сторінки. Ці дані недовго зберігаються в журналі. Крім того, ми самі рахуємо, як часто використовуються розділи застосунку: за кожен день — лише кількість за кожною подією (наприклад: відкрито застосунок чи сайт, пройдено вхідний тест або урок дня, розпочато чи здано пробний іспит), разом із рівнем (A2 або B1) і мовою меню. Ми не зберігаємо ні номера вашого пристрою, ні акаунта, ні IP-адреси, ні ваших відповідей. Статистика зберігається в Supabase у Франкфурті. Якщо в застосунку стається збій, до журналу Vercel надсилається лише технічне повідомлення про помилку (без ваших відповідей, імені й адреси електронної пошти), щоб ми могли її виправити. Щоб ураховувати пристрій лише раз на день, браузер запам'ятовує тільки дату. Якщо в браузері ввімкнено Global Privacy Control або «Do Not Track», застосунок нічого не рахує. Підстава — безпечна й стабільна робота сервісу та розуміння того, що можна покращити (законний інтерес, стаття 6(1)(f) GDPR).</p>
@@ -1048,6 +1065,7 @@ laatst gebeurde.</p>
 <ul>
 <li>Акаунт і прогрес зберігаються до видалення акаунта. Після цього всі ці дані одразу видаляються із Supabase.</li>
 <li>Тексти, надіслані на перевірку, зберігаються в Anthropic до 30 днів (див. вище). Ми їх не зберігаємо.</li>
+<li>Записи для перевірки вимови: не зберігаються ні в нас, ні в Microsoft. Кількість перевірок на день: не довше двох місяців.</li>
 <li>Журнали Vercel, Supabase та Resend зберігаються недовго для безпеки й усунення збоїв.</li>
 <li>Дані на пристрої зберігаються, доки ви не очистите дані сайту в браузері.</li>
 <li>Код для безкоштовних перевірок без акаунта зберігається до двох днів.</li>

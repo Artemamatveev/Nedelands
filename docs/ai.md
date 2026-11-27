@@ -64,6 +64,20 @@ answer. Superseded audio URLs are released. The retry control is hidden while re
 Navigation/late native events cannot complete a different task or append an answer twice. Natural MediaRecorder stop also completes the active take. Recordings stay in memory only. A2 speaking exam transcripts are saved in a local draft until grading succeeds or the learner discards the draft. "Zeg het na" (free, no Claude call):
 the learner reads the example or corrected answer aloud and the words speech recognition missed are marked.
 
+Zeg het na with Azure Speech (27 November 2026, `api/_pron.js`, `/api/pron` → `/api/check?kind=pron`): when
+`/api/config` has `pron` (AZURE_SPEECH_KEY set, accounts on) and the learner is signed in, the phone records the sentence
+(`listen("rec")`, at most 30 s) instead of writing it down; `pronWav()` decodes the recording and renders it to a 16 kHz
+mono WAV, and the server sends it with the model text to Azure's short-audio REST API with a `Pronunciation-Assessment`
+header (scripted, `HundredMark`, word granularity, miscue on; nl-NL, region `AZURE_SPEECH_REGION`, default
+`westeurope`, which must stay an EU region for privacy.html to be true; 15 s timeout). The page shows Uitspraak (PronScore),
+Klanken, Vloeiendheid and Volledigheid out of 100 and marks words below 80 (`.miss`, below 60 or left out) or 60–79
+(`.miss.mid`), aligned with the model text by the same LCS as the phone path; a marked word can be practised alone, also
+scored by Azure. Dutch gets no prosody score (Azure scores intonation for en-US only). A limit, a busy day, a recording
+that can't be converted or a missing service sends the rest of the visit back to the phone's recognition (`pronOff`).
+The scores are a practice hint ("geen examencijfer"); they are not part of Spreken grading and have not been compared
+with an examiner. Guests keep the phone path. Do not switch on audio logging in the Azure resource: privacy.html says
+Microsoft keeps no recording.
+
 When checking fails temporarily, single-task writing practice keeps the text editable and speaking practice retries the same transcript. Writing and speaking exam results offer a retry with the submitted answers, without registering another exam attempt. Speaking practice transcripts remain available in the open exercise only. The local A2 exam draft also restores the original deadline and question order after reopening.
 
 Making new Lezen and Luisteren material with Claude was removed (it cost a call per tap and its

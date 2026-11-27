@@ -7,6 +7,7 @@ The Hobby plan deploys at most 12 functions (files in `api/` not starting with `
 fail at "Deploying outputs" on 19 November 2026. `/api/thumb`, `/api/compare` and `/api/referral` are therefore rewrites
 (`vercel.json`) to `feed.js`, `admin.js` (POST) and `group.js` (`?kind=ref`), with their code in `_thumb.js`,
 `_compare.js` and `_referral.js`. Add a new endpoint the same way, or check the count first (`tests/group.test.mjs`).
+`/api/talk` and `/api/pron` are rewrites to `check.js` (`?kind=talk`, `?kind=pron`), with their code in `_talk.js` and `_pron.js`.
 
 ## Limits on AI spend (25 November 2026)
 
@@ -101,6 +102,13 @@ vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one comin
   Vercel build using its existing database connection, validates the project and schema, verifies quota behavior in a
   rolled-back savepoint, and records the migration checksum transactionally. It prints no credentials. Local tests use
   real Postgres via PGlite; `supabase/verify-weekly-checks.sql` checks limits, Monday resets, refunds and permissions.
+- Pronunciation (Zeg het na, `api/_pron.js`, 27 November 2026): Azure Speech is billed per second of audio (about $1.32
+  an hour pay-as-you-go; the free F0 tier has 5 hours a month of speech to text, but check whether pronunciation assessment
+  counts there). Only signed-in learners, `PRON_DAY` checks a day each (default 30, `ai_guard` key `pron:` + user) and all
+  together `PRON_CAP` seconds of audio a day (default 3600, key `pron:all`); a failed Azure call gives both back. An
+  unreachable counter refuses (503). The spend is in /admin as model `azure-speech-pron`, one input "token" per second
+  (`PRICE` in admin.html). Needs `AZURE_SPEECH_KEY` (and optionally `AZURE_SPEECH_REGION`) in Vercel; the page calls
+  only `/api/pron`, so the CSP needs no new host.
 - A ceiling for everyone: all Claude checks of a day together, logged-in and free, stop at `CHECK_CAP` (default 400,
   `use_total()` and `check_total` in `supabase/schema.sql`), so many new accounts can't run up the bill; then the
   server answers 429 `busy` and the page says "Morgen kan het weer". Without that function, or if its reply is invalid, grading returns 503 `quota_unavailable` before calling the model. `/api/check` also refuses bodies over 200 KB (413).
