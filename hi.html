@@ -32,7 +32,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=bittie1">
 <link rel="manifest" href="/manifest.json?v=bittie1">
 <script src="/ios-startup-v1.js" defer></script>
-<link rel="stylesheet" href="/landing.css?v=price-swipe">
+<link rel="stylesheet" href="/landing.css?v=exam-facts">
 <link rel="stylesheet" href="/voice-mark-v1.css">
 <script>
 // Browser visits start with the homepage, including returning learners on phones and tablets.
@@ -54,7 +54,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Bittertalen","url":"https://bittertalen.nl/hi","applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":"hi","educationalLevel":["A2","B1"],"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}
 </script>
-<script defer src="/landing.js?v=arrows-only"></script>
+<script defer src="/landing.js?v=exam-facts"></script>
 <script defer src="/lib/gsap-3.15.1.min.js"></script>
 <script defer src="/lib/ScrollTrigger-3.15.1.min.js"></script>
 <script defer src="/landing-motion-v3.js?v=hero-still"></script>
@@ -211,46 +211,52 @@
       <section id="module-exam" class="module-detail" aria-labelledby="module-heading-exam">
         <h3 id="module-heading-exam" data-t="Voorbereiden op je examen">परीक्षा की तैयारी करें</h3>
         <p data-t="Oefen lezen, luisteren, schrijven en spreken op A2 of B1. Op A2 oefen je ook KNM. Maak een proefexamen met een timer en bekijk daarna wat je nog kunt oefenen.">A2 या B1 स्तर पर पढ़ने, सुनने, लिखने और बोलने का अभ्यास करें। A2 पर KNM भी करें। समय-सीमा वाली अभ्यास परीक्षा दें और देखें कि आगे क्या अभ्यास करना है।</p>
-        <ul class="stats" aria-label="Bittertalen">
-        <li><b dir="ltr">6000+</b><span data-t="oefenvragen">अभ्यास प्रश्न</span></li>
-        <li><b dir="ltr">400+</b><span data-t="KNM-vragen over de 8 thema's">8 विषयों पर KNM प्रश्न</span></li>
-        <li><b dir="ltr">5</b><span data-t="proefexamens per niveau, met een timer">हर स्तर पर समय सीमा वाली अभ्यास परीक्षाएँ</span></li>
-        <li><b dir="ltr">30+</b><span data-t="gesprekken om hardop te oefenen">ज़ोर से अभ्यास के लिए बातचीत</span></li>
+        <ul class="exam-facts" id="niveaus" aria-label="Bittertalen">
+          <li class="wide"><span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V6M16 20v-8M22 20H2"/></svg></span><b dir="ltr">A2 · B1</b><span data-t="Inburgeringsexamen A2 en Staatsexamen NT2 B1, ook als je bij nul begint">इंटीग्रेशन परीक्षा A2 और Staatsexamen NT2 B1, शून्य से शुरू करें तब भी</span>
+            <span class="exam-levels"><a class="button outline" href="/oefenen?open=a2" data-t="Oefen op A2">A2 का अभ्यास करें</a><a class="button outline" href="/oefenen?open=b1" data-t="Oefen op B1">B1 का अभ्यास करें</a></span></li>
+          <li><span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 9h6m-6 4h6m-6 4h3"/></svg></span><b dir="ltr">6000+</b><span data-t="oefenvragen voor alle onderdelen">सभी हिस्सों के लिए अभ्यास सवाल</span></li>
+          <li><span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2"/></svg></span><b dir="ltr">5</b><span data-t="proefexamens met timer: lezen, luisteren, schrijven, spreken en KNM, steeds met nieuwe vragen">टाइमर वाली मॉक परीक्षाएँ: पढ़ना, सुनना, लिखना, बोलना और KNM, हर बार नए सवालों के साथ</span></li>
+          <li><span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V10l7-5 7 5v11M9 21v-6h6v6"/></svg></span><b dir="ltr">400+</b><span data-t="KNM-vragen over de 8 thema's">8 विषयों पर KNM प्रश्न</span></li>
+          <li><span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg></span><b dir="ltr">30+</b><span data-t="gesprekken om hardop te oefenen">ज़ोर से अभ्यास के लिए बातचीत</span></li>
+          <li><span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18m-13 5 3 3 5-5"/></svg></span><b dir="ltr">1</b><span data-t="les per dag van 10, 20 of 40 minuten, met extra aandacht voor je fouten">रोज़ एक पाठ, 10, 20 या 40 मिनट का, आपकी गलतियों पर खास ध्यान के साथ</span></li>
         </ul>
-        <ul class="ways feature-grid" role="list">
-          <li><details name="learning-feature"><summary><span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18m-13 5 3 3 5-5"/></svg></span><h4 data-t="Een les per dag">रोज़ एक पाठ</h4></summary><p data-t="Kies 10, 20 of 40 minuten. Bittertalen stelt je les samen en geeft extra aandacht aan wat je lastig vindt.">10, 20 या 40 मिनट चुनें। Bittertalen उन विषयों पर ज़्यादा ध्यान देता है जो आपको मुश्किल लगते हैं।</p></details></li>
-          <li><details name="learning-feature"><summary><span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span><h4 data-t="Zelf kiezen">अपना अभ्यास चुनें</h4></summary><p data-t="Oefen één vaardigheid, herhaal woorden, doe grammatica of lees en luister naar verhalen in het Nederlands.">किसी एक कौशल पर काम करें, शब्द दोहराएँ, व्याकरण का अभ्यास करें या डच कहानियाँ पढ़ें और सुनें।</p></details></li>
-          <li><details name="learning-feature"><summary><span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 9h6m-6 4h3m-3 4h6"/></svg></span><h4 data-t="Een proefexamen maken">अभ्यास परीक्षा दें</h4></summary><p data-t="Oefen een examenonderdeel met een timer en bekijk je resultaten om te zien wat je nog kunt oefenen.">समय सीमा में परीक्षा का एक भाग हल करें और नतीजे देखकर तय करें कि किसका और अभ्यास करना है।</p></details></li>
-          <li><details name="learning-feature"><summary><span class="feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7v5h-5M4 17v-5h5M6 7a7 7 0 0 1 12-2l2 2M4 17l2 2a7 7 0 0 0 12-2"/></svg></span><h4 data-t="Leren van je fouten">अपनी गलतियों से सीखें</h4></summary><p data-t="Herhaal vragen die je eerder fout had en oefen extra met wat nog lastig is.">जिन सवालों में पहले गलती हुई थी उन्हें दोहराएँ और मुश्किल विषयों का और अभ्यास करें।</p></details></li>
-        </ul>
-        <details class="product-exam-topic" id="niveaus">
-          <summary data-t="Waar oefen je voor?">आप किस परीक्षा की तैयारी कर रहे हैं?</summary>
+        <h4 class="exam-examples" data-t="Probeer het zelf">खुद आज़माएँ</h4>
+        <details class="product-exam-topic" id="probeer-lezen">
+          <summary data-t="Lezen: probeer een vraag">पढ़ना: एक सवाल आज़माएँ</summary>
           <div>
-            <div class="choices">
-              <a class="choice" href="/oefenen?open=a2"><span class="lt" aria-hidden="true">A</span><span class="tx"><b><span data-t="Inburgeringsexamen">नागरिक एकीकरण परीक्षा</span> <small>A2</small></b><span class="d" data-t="Oefen met Nederlands uit het dagelijks leven: lezen, luisteren, schrijven en spreken. Oefen ook Kennis van de Nederlandse Maatschappij (KNM).">रोज़मर्रा की डच पढ़ने, सुनने, लिखने और बोलने का अभ्यास करें। डच समाज का ज्ञान (KNM) भी सीखें।</span></span><span class="go" data-t="Oefen op A2">A2 का अभ्यास करें</span></a>
-              <a class="choice" href="/oefenen?open=b1"><span class="lt" aria-hidden="true">B</span><span class="tx"><b><span data-t="Staatsexamen NT2 · Programma I">NT2 राज्य परीक्षा · कार्यक्रम I</span> <small>B1</small></b><span class="d" data-t="Bereid je voor op lezen, luisteren, schrijven en spreken op B1, met langere teksten en opdrachten over werk, studie en het dagelijks leven.">काम, पढ़ाई और रोज़मर्रा के जीवन से जुड़े लंबे लेखों और अभ्यासों के साथ B1 स्तर पर पढ़ने, सुनने, लिखने और बोलने की तैयारी करें।</span></span><span class="go" data-t="Oefen op B1">B1 का अभ्यास करें</span></a>
+            <p class="note" data-t="Een echte leesvraag, zoals in de app. Lees de tekst en kies een antwoord.">ऐप जैसा एक असली पढ़ने का सवाल। टेक्स्ट पढ़ें और जवाब चुनें।</p>
+            <div class="quiz" lang="nl" dir="ltr" data-why="In de tekst staat: «Stap in of uit bij de halte Kerkplein.» Bij de halte Dorpsstraat stopt de bus tijdelijk niet.">
+              <div class="doc"><b>Werkzaamheden in de Dorpsstraat</b><p>Van 3 tot en met 21 juni werken we aan de riolering in de Dorpsstraat. De straat is dan dicht voor auto's. Fietsers en voetgangers kunnen er wel door.</p><p>Bus 7 stopt in deze weken niet bij de halte Dorpsstraat. Stap in of uit bij de halte Kerkplein.</p><p>Vragen? Bel de gemeente: 14 0123.</p></div>
+              <p class="qq">Waar stapt u in de bus?</p>
+              <div class="choices" role="group" aria-label="Antwoorden">
+                <button type="button" class="choice" data-ok="0"><span class="lt" aria-hidden="true">A</span><span class="tx">Bij de halte Dorpsstraat</span></button>
+                <button type="button" class="choice" data-ok="1"><span class="lt" aria-hidden="true">B</span><span class="tx">Bij de halte Kerkplein</span></button>
+                <button type="button" class="choice" data-ok="0"><span class="lt" aria-hidden="true">C</span><span class="tx">Bij het gemeentehuis</span></button>
+              </div>
+              <p class="qfb" role="status" hidden></p>
             </div>
-            <p class="note" data-t="Je kunt je niveau later veranderen in je profiel.">आप बाद में अपनी प्रोफ़ाइल में स्तर बदल सकते हैं।</p>
+            <a class="button primary qmore" href="/oefenen?open=today" hidden data-t="Begin gratis">मुफ़्त में शुरू करें</a>
           </div>
         </details>
-        <details class="product-exam-topic" id="probeer">
-          <summary data-t="Probeer een KNM-vraag">KNM का एक सवाल आज़माएँ</summary>
+        <details class="product-exam-topic" id="probeer-luisteren">
+          <summary data-t="Luisteren: probeer een vraag">सुनना: एक सवाल आज़माएँ</summary>
           <div>
-            <p class="note" data-t="Een echte KNM-vraag, zoals in de app. Kies een antwoord.">ऐप जैसा एक असली KNM प्रश्न। एक उत्तर चुनें।</p>
-            <div class="quiz" lang="nl" dir="ltr">
-              <p class="qq">Je verhuist. Waar geef je je nieuwe adres door?</p>
+            <p class="note" data-t="Een echte luistervraag, zoals in de app. Luister en kies een antwoord.">ऐप जैसा एक असली सुनने का सवाल। सुनें और जवाब चुनें।</p>
+            <div class="quiz" lang="nl" dir="ltr" data-why="Mohammed zegt: «Ik heb een nieuw telefoonnummer.» Zijn oude nummer werkt vanaf morgen niet meer.">
+              <audio controls preload="none" src="/audio/1cwuhnrqcze.mp3"></audio>
+              <p class="qq">Waarom belt Mohammed?</p>
               <div class="choices" role="group" aria-label="Antwoorden">
-                <button type="button" class="choice" data-ok="0"><span class="lt" aria-hidden="true">A</span><span class="tx">Bij de woningcorporatie</span></button>
-                <button type="button" class="choice" data-ok="1"><span class="lt" aria-hidden="true">B</span><span class="tx">Bij de gemeente</span></button>
-                <button type="button" class="choice" data-ok="0"><span class="lt" aria-hidden="true">C</span><span class="tx">Bij de Belastingdienst</span></button>
+                <button type="button" class="choice" data-ok="1"><span class="lt" aria-hidden="true">A</span><span class="tx">Hij heeft een nieuw telefoonnummer</span></button>
+                <button type="button" class="choice" data-ok="0"><span class="lt" aria-hidden="true">B</span><span class="tx">Zijn telefoon is kapot en hij leent er een</span></button>
+                <button type="button" class="choice" data-ok="0"><span class="lt" aria-hidden="true">C</span><span class="tx">Hij wil morgen met je afspreken in de stad</span></button>
               </div>
-              <p class="qfb" id="qfb" role="status" hidden></p>
+              <p class="qfb" role="status" hidden></p>
             </div>
-            <a class="button primary" id="qmore" href="/oefenen?open=today" hidden data-t="Begin gratis">मुफ़्त में शुरू करें</a>
+            <a class="button primary qmore" href="/oefenen?open=today" hidden data-t="Begin gratis">मुफ़्त में शुरू करें</a>
           </div>
         </details>
         <details class="product-exam-topic" id="voorbeeld">
-          <summary data-t="Zo wordt je tekst nagekeken">Bittertalen आपके लेखन को ऐसे जाँचता है</summary>
+          <summary data-t="Schrijven: zo wordt je tekst nagekeken">लिखना: आपका टेक्स्ट ऐसे जाँचा जाता है</summary>
           <div>
             <p class="note" data-t="Feedback op je tekst: punten per onderdeel en je fouten in je eigen tekst.">आपके लेखन पर फ़ीडबैक: हर मानदंड के अंक और आपकी गलतियाँ आपके ही पाठ में चिह्नित।</p>
             <div class="specimen" lang="nl" dir="ltr">
@@ -286,6 +292,49 @@
             <p><a class="button primary" href="/oefenen?open=writing" data-t="Oefen met Schrijven A2">A2 लेखन का अभ्यास करें</a></p>
             <p class="try-free" id="try-free" hidden></p>
             <p class="note"><a href="/nakijken" data-t="Zo kijkt Bittertalen na →">Bittertalen कैसे जाँचता है →</a></p>
+          </div>
+        </details>
+        <details class="product-exam-topic" id="voorbeeld-spreken">
+          <summary data-t="Spreken: zo wordt je antwoord nagekeken">बोलना: आपका जवाब ऐसे जाँचा जाता है</summary>
+          <div>
+            <p class="note" data-t="Feedback op je gesproken antwoord: punten per onderdeel. Uitspraak en tempo beoordeelt de app nog niet.">आपके बोले गए जवाब पर फ़ीडबैक: हर हिस्से के अंक। ऐप अभी उच्चारण और रफ़्तार नहीं जाँचता।</p>
+            <div class="specimen" lang="nl" dir="ltr">
+              <p class="task">Hoe ga je naar je werk? Vertel ook waarom.</p>
+              <div class="sp-grid">
+                <div>
+                  <div class="own">Ik ga meestal met de fiets naar mijn werk, want het is niet ver. Als het regent, <mark>ik neem<sup>1</sup></mark> de bus.</div>
+                  <ol class="fixes">
+                    <li><s>Als het regent, ik neem</s> → <b>Als het regent, neem ik</b></li>
+                  </ol>
+                </div>
+                <div>
+                  <p class="verdict"><b>Voldoende</b> 7 van de 8 punten · voldoende vanaf 6</p>
+                  <ul class="ck">
+                    <li class="g"><i aria-hidden="true">✓</i><span><b>Beantwoord je de vraag?</b>Ja, ook waarom · 3 van 3 punten</span></li>
+                    <li class="g"><i aria-hidden="true">✓</i><span><b>Kies je de goede woorden?</b>Ja · 2 van 2 punten</span></li>
+                    <li class="m"><i aria-hidden="true">!</i><span><b>Zijn je zinnen goed gebouwd?</b>1 van 2 punten · Na «als het regent» komt eerst het werkwoord.</span></li>
+                    <li class="g"><i aria-hidden="true">✓</i><span><b>Hangen je zinnen samen?</b>Ja, met «want» · 1 van 1 punt</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <p class="note" data-t="Voorbeeld: het antwoord en de punten zijn verzonnen.">उदाहरण: जवाब और अंक काल्पनिक हैं।</p>
+          </div>
+        </details>
+        <details class="product-exam-topic" id="probeer">
+          <summary data-t="KNM: probeer een vraag">KNM: एक सवाल आज़माएँ</summary>
+          <div>
+            <p class="note" data-t="Een echte KNM-vraag, zoals in de app. Kies een antwoord.">ऐप जैसा एक असली KNM प्रश्न। एक उत्तर चुनें।</p>
+            <div class="quiz" lang="nl" dir="ltr" data-why="Een verhuizing geef je door aan de gemeente.">
+              <p class="qq">Je verhuist. Waar geef je je nieuwe adres door?</p>
+              <div class="choices" role="group" aria-label="Antwoorden">
+                <button type="button" class="choice" data-ok="0"><span class="lt" aria-hidden="true">A</span><span class="tx">Bij de woningcorporatie</span></button>
+                <button type="button" class="choice" data-ok="1"><span class="lt" aria-hidden="true">B</span><span class="tx">Bij de gemeente</span></button>
+                <button type="button" class="choice" data-ok="0"><span class="lt" aria-hidden="true">C</span><span class="tx">Bij de Belastingdienst</span></button>
+              </div>
+              <p class="qfb" id="qfb" role="status" hidden></p>
+            </div>
+            <a class="button primary qmore" id="qmore" href="/oefenen?open=today" hidden data-t="Begin gratis">मुफ़्त में शुरू करें</a>
           </div>
         </details>
         <a class="module-link" href="/oefenen?open=today" data-t="Begin met oefenen">अभ्यास शुरू करें</a>

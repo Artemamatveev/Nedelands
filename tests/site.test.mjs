@@ -40,8 +40,8 @@ test('The numbers on the homepage are true', async () => {
   const n = s => Number(html.match(new RegExp(`<b dir="ltr">(\\d+)\\+?</b><span data-t>${s}`))[1]);
   assert.ok(a.run('ITEMS.length') >= n('oefenvragen'));
   assert.ok(a.run('ITEMS.filter(x=>x.sec==="knm").length') >= n('KNM-vragen'));
-  assert.equal(a.run('S.lvl="A2";parts().length'), n('proefexamens per niveau'));
-  assert.equal(a.run('S.lvl="B1";parts().length'), n('proefexamens per niveau'));
+  assert.equal(a.run('S.lvl="A2";parts().length'), n('proefexamens met timer'));
+  assert.equal(a.run('S.lvl="B1";parts().length'), n('proefexamens met timer'));
   assert.ok(a.run('PEOPLE.length+GP.filter(c=>!c.ona).length') >= n('gesprekken'));
 });
 

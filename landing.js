@@ -3,6 +3,20 @@ try{const r=new URLSearchParams(location.search).get("ref");if(r&&/^[A-HJ-NP-Z2-
 const languages = ["en", "ar", "tr", "hi", "zh", "es", "ru", "uk"];
 // Dutch copy is also in the HTML so the page is readable without scripts.
 const copy = {
+  "Inburgeringsexamen A2 en Staatsexamen NT2 B1, ook als je bij nul begint": ["Civic integration exam A2 and Staatsexamen NT2 B1, even if you start from zero", "امتحان الاندماج A2 وامتحان الدولة NT2 B1، حتى لو بدأت من الصفر", "Uyum sınavı A2 ve Staatsexamen NT2 B1, sıfırdan başlasan bile", "इंटीग्रेशन परीक्षा A2 और Staatsexamen NT2 B1, शून्य से शुरू करें तब भी", "融入考试 A2 和国家考试 NT2 B1，零基础也可以", "Examen de integración A2 y Staatsexamen NT2 B1, aunque empieces desde cero", "Экзамен на интеграцию A2 и Staatsexamen NT2 B1, даже если вы начинаете с нуля", "Іспит з інтеграції A2 і Staatsexamen NT2 B1, навіть якщо ви починаєте з нуля"],
+  "oefenvragen voor alle onderdelen": ["practice questions for every part", "سؤال تدريبي لكل الأجزاء", "tüm bölümler için alıştırma sorusu", "सभी हिस्सों के लिए अभ्यास सवाल", "道练习题，覆盖所有部分", "preguntas de práctica para todas las partes", "тренировочных вопросов по всем частям", "тренувальних запитань з усіх частин"],
+  "proefexamens met timer: lezen, luisteren, schrijven, spreken en KNM, steeds met nieuwe vragen": ["timed mock exams: reading, listening, writing, speaking and KNM, with new questions every time", "امتحانات تجريبية بمؤقت: القراءة والاستماع والكتابة والتحدث والمجتمع الهولندي، بأسئلة جديدة في كل مرة", "süreli deneme sınavı: okuma, dinleme, yazma, konuşma ve KNM, her seferinde yeni sorularla", "टाइमर वाली मॉक परीक्षाएँ: पढ़ना, सुनना, लिखना, बोलना और KNM, हर बार नए सवालों के साथ", "套计时模拟考试：阅读、听力、写作、口语和 KNM，每次都是新题目", "exámenes de prueba con cronómetro: lectura, comprensión auditiva, escritura, expresión oral y KNM, siempre con preguntas nuevas", "пробных экзаменов с таймером: чтение, аудирование, письмо, говорение и KNM, каждый раз с новыми вопросами", "пробних іспитів із таймером: читання, аудіювання, письмо, говоріння і KNM, щоразу з новими запитаннями"],
+  "les per dag van 10, 20 of 40 minuten, met extra aandacht voor je fouten": ["lesson a day of 10, 20 or 40 minutes, with extra attention to your mistakes", "درس يوميًا مدته 10 أو 20 أو 40 دقيقة، مع اهتمام إضافي بأخطائك", "günde 10, 20 veya 40 dakikalık bir ders, hatalarına ekstra dikkatle", "रोज़ एक पाठ, 10, 20 या 40 मिनट का, आपकी गलतियों पर खास ध्यान के साथ", "每天一课，10、20 或 40 分钟，重点关注你的错误", "lección al día de 10, 20 o 40 minutos, con atención extra a tus errores", "урок в день на 10, 20 или 40 минут, с особым вниманием к вашим ошибкам", "урок на день на 10, 20 або 40 хвилин, з особливою увагою до ваших помилок"],
+  "Probeer het zelf": ["Try it yourself", "جرّبه بنفسك", "Kendin dene", "खुद आज़माएँ", "亲自试试", "Pruébalo tú mismo", "Попробуйте сами", "Спробуйте самі"],
+  "Lezen: probeer een vraag": ["Reading: try a question", "القراءة: جرّب سؤالًا", "Okuma: bir soru dene", "पढ़ना: एक सवाल आज़माएँ", "阅读：试一道题", "Lectura: prueba una pregunta", "Чтение: попробуйте вопрос", "Читання: спробуйте запитання"],
+  "Luisteren: probeer een vraag": ["Listening: try a question", "الاستماع: جرّب سؤالًا", "Dinleme: bir soru dene", "सुनना: एक सवाल आज़माएँ", "听力：试一道题", "Comprensión auditiva: prueba una pregunta", "Аудирование: попробуйте вопрос", "Аудіювання: спробуйте запитання"],
+  "Schrijven: zo wordt je tekst nagekeken": ["Writing: how your text is checked", "الكتابة: هكذا يُصحَّح نصك", "Yazma: metnin nasıl kontrol edilir", "लिखना: आपका टेक्स्ट ऐसे जाँचा जाता है", "写作：你的文章这样批改", "Escritura: así se corrige tu texto", "Письмо: как проверяется ваш текст", "Письмо: як перевіряють ваш текст"],
+  "Spreken: zo wordt je antwoord nagekeken": ["Speaking: how your answer is checked", "التحدث: هكذا يُصحَّح جوابك", "Konuşma: cevabın nasıl kontrol edilir", "बोलना: आपका जवाब ऐसे जाँचा जाता है", "口语：你的回答这样批改", "Expresión oral: así se corrige tu respuesta", "Говорение: как проверяется ваш ответ", "Говоріння: як перевіряють вашу відповідь"],
+  "KNM: probeer een vraag": ["KNM: try a question", "المجتمع الهولندي: جرّب سؤالًا", "KNM: bir soru dene", "KNM: एक सवाल आज़माएँ", "KNM：试一道题", "KNM: prueba una pregunta", "KNM: попробуйте вопрос", "KNM: спробуйте запитання"],
+  "Een echte leesvraag, zoals in de app. Lees de tekst en kies een antwoord.": ["A real reading question, as in the app. Read the text and choose an answer.", "سؤال قراءة حقيقي كما في التطبيق. اقرأ النص واختر إجابة.", "Uygulamadaki gibi gerçek bir okuma sorusu. Metni oku ve bir cevap seç.", "ऐप जैसा एक असली पढ़ने का सवाल। टेक्स्ट पढ़ें और जवाब चुनें।", "一道真实的阅读题，和应用中一样。阅读短文并选择答案。", "Una pregunta de lectura real, como en la app. Lee el texto y elige una respuesta.", "Настоящий вопрос на чтение, как в приложении. Прочитайте текст и выберите ответ.", "Справжнє запитання з читання, як у застосунку. Прочитайте текст і виберіть відповідь."],
+  "Een echte luistervraag, zoals in de app. Luister en kies een antwoord.": ["A real listening question, as in the app. Listen and choose an answer.", "سؤال استماع حقيقي كما في التطبيق. استمع واختر إجابة.", "Uygulamadaki gibi gerçek bir dinleme sorusu. Dinle ve bir cevap seç.", "ऐप जैसा एक असली सुनने का सवाल। सुनें और जवाब चुनें।", "一道真实的听力题，和应用中一样。听录音并选择答案。", "Una pregunta de comprensión auditiva real, como en la app. Escucha y elige una respuesta.", "Настоящий вопрос на аудирование, как в приложении. Послушайте и выберите ответ.", "Справжнє запитання з аудіювання, як у застосунку. Послухайте й виберіть відповідь."],
+  "Feedback op je gesproken antwoord: punten per onderdeel. Uitspraak en tempo beoordeelt de app nog niet.": ["Feedback on your spoken answer: points per part. The app does not yet assess pronunciation and pace.", "ملاحظات على جوابك المنطوق: نقاط لكل جزء. لا يقيّم التطبيق النطق والسرعة بعد.", "Sözlü cevabına geri bildirim: her bölüm için puan. Uygulama telaffuz ve hızı henüz değerlendirmiyor.", "आपके बोले गए जवाब पर फ़ीडबैक: हर हिस्से के अंक। ऐप अभी उच्चारण और रफ़्तार नहीं जाँचता।", "对你口语回答的反馈：每个部分的分数。应用暂时还不评估发音和语速。", "Comentarios sobre tu respuesta oral: puntos por apartado. La app todavía no evalúa la pronunciación ni el ritmo.", "Разбор вашего устного ответа: баллы по каждому критерию. Произношение и темп приложение пока не оценивает.", "Відгук на вашу усну відповідь: бали за кожен критерій. Вимову й темп застосунок поки не оцінює."],
+  "Voorbeeld: het antwoord en de punten zijn verzonnen.": ["Example: the answer and the points are made up.", "مثال: الجواب والنقاط مختلقة.", "Örnek: cevap ve puanlar uydurmadır.", "उदाहरण: जवाब और अंक काल्पनिक हैं।", "示例：回答和分数都是虚构的。", "Ejemplo: la respuesta y los puntos son inventados.", "Пример: ответ и баллы придуманы.", "Приклад: відповідь і бали вигадані."],
   "Praat met Bittie": ["Talk with Bittie", "تحدّث مع بيتي", "Bittie ile konuş", "बिट्टी से बात करें", "和 Bittie 聊天", "Habla con Bittie", "Поговорить с Битти", "Поговоріть із Бітті"],
   "Ontdek Bittertalen": ["Explore Bittertalen", "اكتشف Bittertalen", "Bittertalen’i keşfet", "Bittertalen को जानें", "探索 Bittertalen", "Descubre Bittertalen", "Откройте для себя Bittertalen", "Дізнайтеся більше про Bittertalen"],
   "Geschiedenis, cultuur en geografie": ["History, culture and geography", "التاريخ والثقافة والجغرافيا", "Tarih, kültür ve coğrafya", "इतिहास, संस्कृति और भूगोल", "历史、文化与地理", "Historia, cultura y geografía", "История, культура и география", "Історія, культура й географія"],
@@ -325,76 +339,6 @@ render();
   }
 }
 
-// Touch and keyboard use the summary; a mouse can reveal the same information on hover.
-// Native details keep the headings usable even if this script is unavailable.
-{
-  const features = [...document.querySelectorAll(".feature-grid details")];
-  const hover = matchMedia("(hover: hover) and (pointer: fine)");
-  const reduced = matchMedia("(prefers-reduced-motion: reduce)");
-  const states = features.map(card => ({ card, panel: card.querySelector("p"), expanded: card.open, animation: null }));
-  const finish = state => {
-    state.animation?.cancel();
-    state.animation = null;
-    state.card.open = state.expanded;
-    state.card.classList.remove("is-closing", "is-animating");
-    state.panel.style.removeProperty("overflow");
-  };
-  const reveal = (state, open) => {
-    if (state.expanded === open) return;
-    state.expanded = open;
-    const { card, panel } = state;
-    card.classList.add("is-animating");
-    const style = getComputedStyle(panel);
-    // Start from the current frame when a tap or pointer reverses an unfinished animation.
-    const from = card.open ? {
-      height: `${panel.getBoundingClientRect().height}px`, opacity: style.opacity,
-      transform: style.transform, paddingBottom: style.paddingBottom
-    } : { height: "0px", opacity: 0, transform: "translateY(-6px)", paddingBottom: "0px" };
-    state.animation?.cancel();
-    state.animation = null;
-    card.open = true;
-    card.classList.toggle("is-closing", !open);
-    panel.inert = !open;
-    if (reduced.matches || !panel.animate) { finish(state); return; }
-    const to = {
-      height: open ? `${panel.getBoundingClientRect().height}px` : "0px",
-      opacity: open ? 1 : 0, transform: open ? "translateY(0)" : "translateY(-4px)",
-      paddingBottom: open ? getComputedStyle(panel).paddingBottom : "0px"
-    };
-    panel.style.overflow = "hidden";
-    const animation = panel.animate([from, to], {
-      duration: open ? 360 : 280, easing: "cubic-bezier(.22,1,.36,1)", fill: "both"
-    });
-    state.animation = animation;
-    animation.onfinish = () => { if (state.animation === animation) finish(state); };
-  };
-  const expand = (card, open) => {
-    for (const state of states) reveal(state, state.card === card && open);
-  };
-  for (const state of states) {
-    const { card } = state;
-    // The departing card needs to finish closing before its native content is hidden.
-    // Without JavaScript, the HTML name still provides a native exclusive accordion.
-    card.removeAttribute("name");
-    const summary = card.querySelector("summary");
-    summary.addEventListener("click", event => {
-      event.preventDefault();
-      expand(card, !state.expanded);
-    });
-    card.addEventListener("pointerenter", event => {
-      if (event.pointerType === "mouse" && hover.matches) expand(card, true);
-    });
-    card.addEventListener("pointerleave", event => {
-      if (event.pointerType === "mouse" && hover.matches && !summary.matches(":focus-visible")) reveal(state, false);
-    });
-    card.addEventListener("focusout", event => {
-      if (hover.matches && !card.contains(event.relatedTarget) && !card.matches(":hover")) reveal(state, false);
-    });
-  }
-  reduced.addEventListener("change", () => states.forEach(finish));
-  window.addEventListener("resize", () => states.forEach(state => { if (state.animation) finish(state); }));
-}
-
 fetch("/api/config?v=once1").then(r => {
   if (!r.ok) throw new Error("Config unavailable");
   return r.json();
@@ -423,24 +367,24 @@ document.querySelectorAll('a[href^="/oefenen?open="]').forEach(a => {
   if (!/open=(login|plus)/.test(a.getAttribute("href"))) a.addEventListener("click", () => track("begin"));
 });
 
-// Vraag 4: a real KNM question on the homepage, marked like in the app (the box turns green or red); the question and
-// its feedback stay Dutch, as all exercises do
-(() => {
-  const quiz = document.querySelector(".quiz"), fb = $("qfb");
-  if (!quiz) return;
+// The example questions in the exam card (Lezen, Luisteren, KNM): real questions, marked like in the app (the box turns
+// green or red); data-why on the quiz holds the explanation. The questions and their feedback stay Dutch, as all exercises do.
+document.querySelectorAll(".quiz").forEach(quiz => {
+  const fb = quiz.querySelector(".qfb"), more = quiz.parentElement.querySelector(".qmore");
+  const right = quiz.querySelector('[data-ok="1"]');
   quiz.querySelectorAll(".choice").forEach(b => b.addEventListener("click", () => {
     if (quiz.classList.contains("done")) return;
     quiz.classList.add("done");
     track("quiz");
-    const ok = b.dataset.ok === "1";
+    const ok = b === right, esc = t => t.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"})[c]);
     b.classList.add(ok ? "ok" : "no");
-    quiz.querySelector('[data-ok="1"]').classList.add("ok");
+    right.classList.add("ok");
     quiz.querySelectorAll(".choice").forEach(x => x.disabled = true);
-    fb.innerHTML = ok ? "<b class=\"good\">Goed zo!</b> Een verhuizing geef je door aan de gemeente."
-      : "<b class=\"bad\">Niet goed.</b> Goed is: <b>bij de gemeente</b>. Een verhuizing geef je door aan de gemeente.";
-    fb.hidden = false; $("qmore").hidden = false;
+    const why = esc(quiz.dataset.why || ""), goed = esc(right.querySelector(".tx").textContent.trim());
+    fb.innerHTML = ok ? `<b class="good">Goed zo!</b> ${why}` : `<b class="bad">Niet goed.</b> Goed is: <b>${goed.charAt(0).toLowerCase() + goed.slice(1)}</b>. ${why}`;
+    fb.hidden = false; if (more) more.hidden = false;
   }));
-})();
+});
 
 // Keep a user gesture for the browser's native installation prompt. Other browsers use the visible instructions.
 {
