@@ -21,10 +21,15 @@ export default async function handler(req, res) {
   const sp = req.body?.part === "sp", set = sp ? SAMPLES_SP : SAMPLES, grade = sp ? gradeSpeaking : gradeWriting;
   // {list: true}: only the tasks and texts, for a qualified NT2 reviewer to score blind (no model is called)
   if (req.body?.list) return res.status(200).json({ part: sp ? "sp" : "wr", samples: set.map(({ id, task, text }) => ({ id, task, text })) });
+  const controls = req.body?.controls === true;
+  const selected = controls ? set.filter(s => Object.hasOwn(CONTROLS, s.id)) : set;
   const one = (sample, model) => grade(sample, model).catch((e) => ({ error: String(e?.message || "failed").slice(0, 120) }));
-  const rows = await Promise.all(set.map(async (s) => {
+  const rows = await Promise.all(selected.map(async (s) => {
     const [free, paid] = await Promise.all([one(s, MODELS.free), one(s, MODELS.paid)]);
-    return { id: s.id, task: s.task, text: s.text, expected: s.expected || null, free, paid };
+    const control = CONTROLS[s.id];
+    return { id: s.id, task: s.task, text: s.text,
+      ...(control ? { control: { label: control.label, content: control.content, free: checkControl(control, free), paid: checkControl(control, paid) } } : {}),
+      expected: s.expected || null, free, paid };
   }));
   const both = rows.filter((r) => !r.free.error && !r.paid.error);
   const summary = {
@@ -40,6 +45,7 @@ export default async function handler(req, res) {
       }];
     })),
     part: sp ? "sp" : "wr",
+    controls,
     max: sp ? 8 : 10,
     teacher: Object.fromEntries(["free", "paid"].map(tier => [tier, againstTeacher(rows, tier, sp)])),
     models: MODELS,
@@ -49,6 +55,23 @@ export default async function handler(req, res) {
     maxDiff: both.length ? Math.max(...both.map((r) => Math.abs(r.free.total - r.paid.total))) : null,
   };
   return res.status(200).json({ summary, rows });
+}
+
+// These assertions check only what is clear from the task and the answer.
+const CONTROLS = {
+  "sleutel-ontbreekt": { label: "Место ключа пропущено", content: 2 },
+  "sleutel-compleet": { label: "Оба пункта письма выполнены", content: 3 },
+  "sleutel-alternatief": { label: "Оба пункта выполнены другими словами", content: 3 },
+  "sp-werk-kort": { label: "Короткий ответ полностью отвечает на вопрос", content: 3 },
+  "sp-werk-geen-reden": { label: "Назван транспорт, причина пропущена", content: 2 },
+  "sp-werk-goed": { label: "Назван транспорт и объяснена причина", content: 3 },
+  "sp-weekend-fout-onderwerp": { label: "Ответ не связан с вопросом", content: 0, passed: false },
+  "sp-drie-fotos-twee": { label: "Описаны только две из трёх фотографий", content: 2 },
+};
+function checkControl(control, result) {
+  if (result.error || !Number.isInteger(result.scores?.inhoud)) return null;
+  return result.scores.inhoud === control.content &&
+    (control.passed === undefined || result.passed === control.passed);
 }
 
 // Model against the scores of a qualified NT2 reviewer (SAMPLES[].expected, scored blind): how often the total is within
