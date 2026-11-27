@@ -462,7 +462,7 @@ h3 {font-size:22px;letter-spacing:-.02em}
 }
 
 /* The exam card as an infographic (27 November 2026): six tiles in one style, then one example per exam part */
-.exam-facts {list-style:none;margin:30px 0 6px;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:34px 12px}
+.exam-facts {list-style:none;margin:30px 0 6px;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:34px 12px}
 .exam-facts li {position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-width:0;padding:44px 16px 16px;border-radius:18px;background:var(--card)}
 .exam-facts li.wide {grid-column:1/-1}
 /* the icon is a round badge that sits on the tile's top corner, ringed in the panel's colour */
