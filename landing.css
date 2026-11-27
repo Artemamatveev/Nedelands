@@ -467,8 +467,6 @@ h3 {font-size:22px;letter-spacing:-.02em}
 .exam-facts .fi svg {width:21px;height:21px}
 .exam-facts b {font-size:28px;font-weight:650;line-height:1.05;letter-spacing:-.03em;color:var(--ink)}
 .exam-facts span[data-t] {font-size:14.5px;line-height:1.4;color:var(--muted);overflow-wrap:anywhere}
-.exam-levels {display:flex;flex-wrap:wrap;gap:8px;margin-block-start:6px}
-.exam-levels .button {min-height:44px}
 .exam-examples {margin:22px 0 6px;font-size:18px;font-weight:650;letter-spacing:-.02em}
 .quiz .doc {margin:0 0 12px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font-size:15px}
 .quiz .doc p {margin:6px 0 0;color:var(--ink)}

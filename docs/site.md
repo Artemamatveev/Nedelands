@@ -14,7 +14,7 @@ prompt when available, otherwise links to #install-app with instructions for iOS
 on a phone two straight rows, the name with the button, then the links with the language and Inloggen (two wrapping flex
 rows: a grid tied the second row to the button's width; the type follows the screen's width and the narrowest phones leave
 out the middle link; the browser test measures it in the longest languages). The exam card's details (`#module-exam`, 27 November 2026, at the user's wish) are an infographic: six tiles in one
-style (`.exam-facts`, id `niveaus` for the Niveaus link): A2 · B1 with the two level buttons, 6000+ questions, 5 timed
+style (`.exam-facts`, id `niveaus` for the Niveaus link): A2 · B1 (with the 20 Beginnen lessons for who starts from nothing; no level buttons here, the user's wish), 6000+ questions, 5 timed
 proefexamens (one per exam part, new questions each time), 400+ KNM questions, 30+ conversations and one lesson a day.
 Under "Probeer het zelf" one example per exam part in `details`: Lezen and Luisteren (a real question; Luisteren plays
 its recorded fragment) and KNM are marked on the page like in the app by one script for every `.quiz` (`data-why` holds
