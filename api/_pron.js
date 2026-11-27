@@ -3,13 +3,13 @@
 // PRON_SECONDS) -> {heard, scores:{accuracy, fluency, completeness, pron} (0–100), words:[{w, s, e}], left}
 // (e: None, Mispronunciation, Omission or Insertion; s the word's accuracy). Scripted assessment: the reference text is
 // known, so Azure compares the sound with it. nl-NL has no prosody score (Azure gives it for en-US only).
-// Needs AZURE_SPEECH_KEY and AZURE_SPEECH_REGION (default westeurope) in the Vercel project's environment variables.
+// Needs AZURE_SPEECH_KEY and AZURE_SPEECH_REGION (default germanywestcentral) in the Vercel project's environment variables.
 // Only signed-in learners: PRON_DAY takes a day each (default 30) and all of them together PRON_CAP seconds of audio a
 // day (default 3600, about $1.32 at $1.32 an hour). The audio goes to Microsoft for this one request and is not kept here.
 import { accounts, caller, useGuard, addSpend, amsterdamDay } from "./_supa.js";
 
 const KEY = (process.env.AZURE_SPEECH_KEY || "").trim();
-const REGION = ((process.env.AZURE_SPEECH_REGION || "westeurope").trim().toLowerCase().match(/^[a-z0-9]+$/) || ["westeurope"])[0];
+const REGION = ((process.env.AZURE_SPEECH_REGION || "germanywestcentral").trim().toLowerCase().match(/^[a-z0-9]+$/) || ["germanywestcentral"])[0];
 export const PRON_DAY = Math.max(1, parseInt(process.env.PRON_DAY, 10) || 30);
 const PRON_CAP = Math.max(60, parseInt(process.env.PRON_CAP, 10) || 3600);
 export const PRON_SECONDS = 30;

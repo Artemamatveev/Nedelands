@@ -69,7 +69,7 @@ Zeg het na with Azure Speech (27 November 2026, `api/_pron.js`, `/api/pron` → 
 (`listen("rec")`, at most 30 s) instead of writing it down; `pronWav()` decodes the recording and renders it to a 16 kHz
 mono WAV, and the server sends it with the model text to Azure's short-audio REST API with a `Pronunciation-Assessment`
 header (scripted, `HundredMark`, word granularity, miscue on; nl-NL, region `AZURE_SPEECH_REGION`, default
-`westeurope`, which must stay an EU region for privacy.html to be true; 15 s timeout). The page shows Uitspraak (PronScore),
+`germanywestcentral`, which must stay an EU region for privacy.html to be true; 15 s timeout). The page shows Uitspraak (PronScore),
 Klanken, Vloeiendheid and Volledigheid out of 100 and marks words below 80 (`.miss`, below 60 or left out) or 60–79
 (`.miss.mid`), aligned with the model text by the same LCS as the phone path; a marked word can be practised alone, also
 scored by Azure. Dutch gets no prosody score (Azure scores intonation for en-US only). A limit, a busy day, a recording
@@ -112,8 +112,9 @@ conversation. Two menu buttons (aiMenu remembers the choice when returning from 
   `TALK_MODEL` (default Sonnet 5.5, with refusal fallback); effort low, JSON output: `reply`, one `fix` for the
   learner's last line (shown under it as "Beter: …"), `done`. `go:"end"` gives `verdict`, `good` and up to four `tips`,
   which also go to Mijn fouten (`keepErrs()`). Tokens go to `ai_spend`. Nothing of the conversation is stored or logged.
-- The voice: Google Chirp 3 HD (Vindemiatrix for women, Charon for men, like the recordings), synthesised per reply by
-  the server with `GOOGLE_TTS_KEY` (a Vercel env var: the user adds it in the dashboard, never in chat); without it, or
+- The voice: Azure's Dutch voices (Fenna for women, Maarten for men, Bittie Maarten +8%; `api/_azure.js`) when
+  `AZURE_SPEECH_KEY` is set (since 27 November 2026), else Google Chirp 3 HD (Vindemiatrix for women, Charon for men), synthesised per reply by
+  the server with `GOOGLE_TTS_KEY` (Vercel env vars: the user adds them in the dashboard, never in chat); without it, or
   when Google fails, the page uses the phone's voice (a synthesis request times out after 2.5 s). A turn is streamed (`stream:2`; the user found the replies slow, 24 November 2026): Claude writes `reply`, `done`, `fix` in that order, and the server voices each sentence as soon as it is complete (`sentences()`; a short one joins the next) and sends JSON lines: {say, audio} per sentence in order, {reply, done, parts}, {fix}. The page plays them in a row (`aiNext()`), listens only after the last one, and an interruption silences the rest. A sentence once sent stays (a later refusal or cut only loses what follows); a model switch before the first sentence gives one plain answer, as do older pages (`stream:true` or none). `talk_time` in the logs has milliseconds only: `reply` the first sentence written, `sent` its voice on the way. Synthesis runs in parallel with spend accounting. The MP3 comes back as base64 and plays through Web Audio buffer sources;
   `aiUnlock()` unlocks its context with silence inside the tap. Browsers without Web Audio use the shared `sayA` element.
   Each decoded clip plays through a bounded gain (target active-sample RMS .12, maximum 3x, peaks no higher than .9;

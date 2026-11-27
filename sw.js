@@ -8,7 +8,10 @@
 // Paintings, photos and icons: from the cache, refreshed in the background.
 // Recorded voices (audio/): cached on first play. api/ (grading, new texts) always goes to the network.
 // CACHE stays the same when sw.js changes: a new name would throw away every painting, photo and voice people have.
-const APP = "/oefenen", CACHE = "nl-a2-v12", CORE = [APP, "/", "/voorwaarden", "/motion-v1.css", "/ios-startup-v1.js", "/contact", "/landing.css?v=receipt", "/voice-mark-v1.css", "/landing.js?v=receipt", "/lib/gsap-3.15.1.min.js", "/landing-motion-v3.js?v=hero-still", "/lib/ScrollTrigger-3.15.1.min.js", "/shots/app-day-v2.webp", "/shots/app-practice-v2.webp", "/shots/app-exam-v2.webp", "/art/delft.jpg", "/art/bitterbal-nl-v2.jpg", "/art/bitterbal-wave-nl-v1.jpg", "/art/bittie-loading-v1.webp", "/art/bittie-wave-v2.svg", "/manifest.json?v=bittie1", "/apple-touch-icon.png?v=bittie1"];
+// VOICES names the voices the files in audio/ were recorded with: a file's name is the hash of its line, not of the
+// voice, so when the voices change (Google's Chirp to Azure's Dutch voices, 28 November 2026) the saved recordings are
+// dropped once on activate and played again from the network. Change it whenever all of audio/ is recorded anew.
+const VOICES = "azure-1", APP = "/oefenen", CACHE = "nl-a2-v12", CORE = [APP, "/", "/voorwaarden", "/motion-v1.css", "/ios-startup-v1.js", "/contact", "/landing.css?v=receipt", "/voice-mark-v1.css", "/landing.js?v=bittie-only", "/lib/gsap-3.15.1.min.js", "/landing-motion-v3.js?v=hero-still", "/lib/ScrollTrigger-3.15.1.min.js", "/shots/app-day-v2.webp", "/shots/app-practice-v2.webp", "/shots/app-exam-v2.webp", "/art/delft.jpg", "/art/bitterbal-nl-v2.jpg", "/art/bitterbal-wave-nl-v1.jpg", "/art/bittie-loading-v1.webp", "/art/bittie-wave-v2.svg", "/manifest.json?v=bittie1", "/apple-touch-icon.png?v=bittie1"];
 
 // Legacy installations must fetch the migration gate, never reopen cached practice. Keep their data/cache intact.
 const LEGACY_ORIGIN = /^(bittertalen|nedelands)\.vercel\.app$/.test(new URL(location.origin).hostname);
@@ -131,6 +134,11 @@ self.addEventListener("activate", e => {
     await Promise.all(old.map(k => caches.delete(k)));
     await self.clients.claim();
     const c = await caches.open(CACHE), updated = await c.match("/__notify-update");
+    const voices = await c.match("/__voices").then(r => r ? r.text() : "").catch(() => "");
+    if (voices !== VOICES) {
+      for (const r of await c.keys()) if (/^\/audio\/[^/]+\.mp3$/.test(new URL(r.url).pathname)) await c.delete(r);
+      await c.put("/__voices", new Response(VOICES));
+    }
     if (updated) await c.delete("/__notify-update");
     if (!old.length && !updated) return;
     (await self.clients.matchAll({ type: "window", includeUncontrolled: true })).forEach(w => w.postMessage({ fresh: true }));

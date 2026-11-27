@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <!-- Bittertalen's privacy manifest (App Store, required since May 2024). No tracking. What the app collects is what
-     privacy.html says: e-mail and name (from the sign-in), progress and Saskia's memory (user content, linked to the
+     privacy.html says: e-mail and name (from the sign-in), progress and Bittie's memory (user content, linked to the
      account), spoken answers (transcribed, not kept), Plus and passes (purchase history), anonymous counts (not linked)
      and error messages (crash data, not linked). Update with privacy.html. -->
 <plist version="1.0">

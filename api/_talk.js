@@ -1,7 +1,7 @@
 // Gesprekken: a spoken conversation with Claude, like a video call. Served as /api/talk (a rewrite to
 // /api/check?kind=talk, because the Hobby plan allows 12 functions). The learner speaks (the phone writes it down) or
-// types; Claude answers as the character, and Google's Chirp 3 HD voice says it (GOOGLE_TTS_KEY; without it the page
-// uses the phone's own voice).
+// types; Claude answers as the character, and a Dutch Azure voice says it (AZURE_SPEECH_KEY, api/_azure.js); without that
+// key Google's Chirp 3 HD voice (GOOGLE_TTS_KEY), and without either the page uses the phone's own voice.
 // POST {go:"start", topic, level} -> {token, reply, audio, left, limit, period}: takes one check (like one writing task),
 // with Plus TALK_PLUS (default 3), as Plus talks with the better model
 // POST {go:"say", token, history:[{me, t}]} -> {reply, fix:{wrong, right, why}|null, done, audio}
@@ -15,6 +15,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { randomBytes, timingSafeEqual } from "node:crypto";
 import { SCENES } from "./_scenes.js";
+import { azureSay } from "./_azure.js";
 import { accounts, caller, useChecks, LIMIT, PLUS, plusOn, plusFor, coversLevel, FREE, visitor, useFree, useTotal, addSpend, bonusFor, talkSign, useGuard, PLUS_MONTH, PASS_TOTAL, YEAR_TOTAL, TALK_PLUS, monthOf, amsterdamDay } from "./_supa.js";
 
 const KEY = (process.env.ANTHROPIC_API_KEY || "").trim();
@@ -25,7 +26,10 @@ const SAY_MS = 60_000;
 const MODEL_FREE = (process.env.TALK_MODEL_FREE || process.env.GRADING_MODEL_FREE || "claude-haiku-5-5").trim();
 const MODEL_PLUS = (process.env.TALK_MODEL || "claude-sonnet-5-5").trim();
 const TTS_KEY = (process.env.GOOGLE_TTS_KEY || "").trim();
-const VOICE = { F: "Vindemiatrix", M: "Charon" }; // the same voices as the app's recordings (audio/build.mjs)
+const AZ_KEY = (process.env.AZURE_SPEECH_KEY || "").trim(), AZ_REGION = process.env.AZURE_SPEECH_REGION;
+// The same voices as the app's recordings (V in audio/build.mjs): Azure's Dutch voices, or Google's without the Azure key
+const VOICE = { F: "Vindemiatrix", M: "Charon" };
+const AZ_VOICE = { F: "nl-NL-FennaNeural", M: "nl-NL-MaartenNeural" };
 const TTL = 40 * 60e3; // a conversation's token is valid 40 minutes
 export const TURNS = 14; // the learner's turns at most; the character says goodbye before that
 const WRAP = { A2: 8, B1: 10 }; // from this turn on the character rounds the conversation off
@@ -37,7 +41,7 @@ const WRAP = { A2: 8, B1: 10 }; // from this turn on the character rounds the co
 // Historical facts in a persona are checked; the model is told to stay vague rather than invent more.
 // The page lists the same ids and names in PEOPLE (oefenen.html), with the avatar.
 const PEOPLE = {
-  saskia: { who: "Bittie", g: "M", voice: "Achird", open: ["Hoi! Ik ben Bittie. Waar wil je over praten?", "Hoi, ik ben Bittie! Wat heb je vandaag gedaan?", "Hallo! Ik ben Bittie. Waar zullen we het vandaag over hebben?"], again: ["Hoi! Leuk dat je er weer bent. Waar wil je vandaag over praten?", "Hé, daar ben je weer! Wat heb je de laatste tijd gedaan?"],
+  saskia: { who: "Bittie", g: "M", voice: "Achird", az: "nl-NL-MaartenNeural@+8%", open: ["Hoi! Ik ben Bittie. Waar wil je over praten?", "Hoi, ik ben Bittie! Wat heb je vandaag gedaan?", "Hallo! Ik ben Bittie. Waar zullen we het vandaag over hebben?"], again: ["Hoi! Leuk dat je er weer bent. Waar wil je vandaag over praten?", "Hé, daar ben je weer! Wat heb je de laatste tijd gedaan?"],
     persona: "Bittie, Bittertalen’s friendly AI conversation partner for practising Dutch. Speak like a warm, easygoing adult friend. Follow the learner’s chosen topic, respond naturally, and ask one accessible follow-up question at a time. Topics can include everyday life, the Netherlands and art. You can offer to role-play a situation such as a shop visit, clearly saying that you are starting a role-play. Introduce yourself only as Bittie. Never claim to be a human, to have a cafe or to know personal facts beyond any supplied context." },
   jansen: { who: "Mevrouw Jansen", g: "F", open: ["Goedemorgen! Mooi weer vandaag, hè? Woont u hier al lang?", "Hallo buur! Ik ben net mijn tuin aan het doen. Hoe gaat het met u?"],
     persona: "Mevrouw Ria Jansen (72), the friendly, slightly nosy neighbour. Widow, lives in the street for forty years, has a garden with roses, two grandchildren, walks with her dog Bello. Talks about the weather, the neighbourhood, the bins (groene bak on Monday), her grandchildren, and wants to know everything about the learner. Uses u, old-fashioned and kind." },
@@ -153,7 +157,7 @@ Give, in very simple Dutch (A2):
 
 const REMEMBER = () => `
 Also choose what Bittie, who speaks with this learner as a friend, may remember. Today is ${day()}.
-- facts: at most three short sentences in simple Dutch, in the third person without a name (for example "Werkt als kok in Utrecht.", "Heeft op 28 november KNM-examen.", "Dochter Lina zit in groep 3."), at most 100 characters each. Only what the learner clearly said about themselves and what a friend would come back to: work, study, hobbies, taste, family by first name and relation, plans with their date. Nothing that may be misheard, nothing from Saskia's own lines, nothing already in WAT JE WEET. An empty list is fine.
+- facts: at most three short sentences in simple Dutch, in the third person without a name (for example "Werkt als kok in Utrecht.", "Heeft op 28 november KNM-examen.", "Dochter Lina zit in groep 3."), at most 100 characters each. Only what the learner clearly said about themselves and what a friend would come back to: work, study, hobbies, taste, family by first name and relation, plans with their date. Nothing that may be misheard, nothing from Bittie's own lines, nothing already in WAT JE WEET. An empty list is fine.
 - Never in facts: health, religion, ethnicity, politics, sexuality, residence or legal status, money or debts, documents or numbers, addresses, phone or e-mail, passwords, or anything about other people beyond first name and relation.
 - old: the numbers from WAT JE WEET that the learner contradicted, or whose moment has passed and was talked about. Otherwise empty.`;
 const str = (v, n) => String(v ?? "").replace(/\s+/g, " ").trim().slice(0, n);
@@ -173,9 +177,14 @@ function unticket(tok) {
   try { const o = JSON.parse(Buffer.from(m[1], "base64url").toString("utf8")); return o && o.x > Date.now() && TOPICS[o.t] && LEVELS.has(o.l) ? o : null } catch { return null }
 }
 
-// Google's voice for a reply: base64 MP3, or null (no key, slow, or an error: the page then uses the phone's voice)
+// The voice for a reply: base64 MP3, or null (no key, slow, or an error: the page then uses the phone's voice). With the
+// Azure key only Azure: a failed sentence must not switch to another engine's voice in the middle of a conversation.
 async function speech(text, topic) {
-  if (!TTS_KEY || !text) return null;
+  if (!text) return null;
+  if (AZ_KEY) try {
+    return (await azureSay({ key: AZ_KEY, region: AZ_REGION, voice: topic.az || AZ_VOICE[topic.g] || AZ_VOICE.F, text: text.slice(0, 900) })).toString("base64");
+  } catch (e) { console.error("tts azure", e?.status || e?.name || "error"); return null }
+  if (!TTS_KEY) return null;
   try {
     const r = await fetch("https://texttospeech.googleapis.com/v1/text:synthesize", {
       method: "POST", signal: AbortSignal.timeout(2500),

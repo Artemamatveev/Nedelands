@@ -41,13 +41,15 @@ async function load(options={}){
   };
   const context=vm.createContext({process:{env:{ANTHROPIC_API_KEY:'test-only',...(options.env||{})}},Buffer,Date,AbortSignal,
     console:{info:x=>logs.push(x),error:(...x)=>logs.push(x.join(' '))},
-    fetch:async(url,init)=>{fetches.push([url,init]);return {ok:true,json:async()=>({audioContent:'QUJD'})}}});
+    fetch:async(url,init)=>{fetches.push([url,init]);if(options.ttsFail)return {ok:false,status:500};
+      return {ok:true,json:async()=>({audioContent:'QUJD'}),arrayBuffer:async()=>Uint8Array.from([65,66,67]).buffer}}});
   const sdk=new vm.SyntheticModule(['default'],function(){this.setExport('default',Anthropic)},{context});
   const supa=new vm.SyntheticModule(Object.keys(values),function(){for(const [k,v]of Object.entries(values))this.setExport(k,v)},{context});
   const cr=new vm.SyntheticModule(['timingSafeEqual','randomBytes'],function(){this.setExport('timingSafeEqual',crypto.timingSafeEqual);this.setExport('randomBytes',crypto.randomBytes)},{context});
   const mod=new vm.SourceTextModule(fs.readFileSync(new URL('api/_talk.js',root),'utf8'),{context});
   const scenes=new vm.SourceTextModule(fs.readFileSync(new URL('api/_scenes.js',root),'utf8'),{context});
-  await mod.link(n=>n==='@anthropic-ai/sdk'?sdk:n==='node:crypto'?cr:n==='./_scenes.js'?scenes:supa);await mod.evaluate();
+  const azure=new vm.SourceTextModule(fs.readFileSync(new URL('api/_azure.js',root),'utf8'),{context});
+  await mod.link(n=>n==='@anthropic-ai/sdk'?sdk:n==='node:crypto'?cr:n==='./_scenes.js'?scenes:n==='./_azure.js'?azure:supa);await mod.evaluate();
   const call=async body=>{const res={statusCode:200,status(n){this.statusCode=n;return this},json(b){this.body=b;return this},headers:{},headersSent:false,setHeader(k,v){this.headers[k]=v},lines:[],write(x){this.headersSent=true;this.lines.push(...x.trim().split('\n').map(l=>JSON.parse(l)));options.onLine?.(this.lines)},end(){this.ended=true;return this}};
     await mod.namespace.talk({method:'POST',headers:{},body},res);return res};
   return {call,usage,quotas,bodies,fetches,logs,ns:mod.namespace};
@@ -793,4 +795,18 @@ test('The Bittie practice switch sends only the selected word and rule for the o
     await a.run('aiSend("Hoi Bittie")');
     assert.deepEqual(sent.at(-1).practice,enabled?{word:'de afspraak',rule:'inversie'}:undefined);
   }
+});
+
+test('With the Azure key the voice is Azure\'s Dutch one, and a failure never switches to Google mid-conversation', async()=>{
+  const t=await load({env:{GOOGLE_TTS_KEY:'g',AZURE_SPEECH_KEY:'a'}});
+  const r=await t.call({go:'start',topic:'spreekkamer',level:'A2'});
+  assert.equal(r.body.audio,'QUJD');
+  const [url,init]=t.fetches[0];
+  assert.equal(url,'https://germanywestcentral.tts.speech.microsoft.com/cognitiveservices/v1');
+  assert.match(init.body,/<voice name="nl-NL-(Fenna|Maarten)Neural">/);assert.equal(init.headers['X-Microsoft-OutputFormat'],'audio-24khz-48kbitrate-mono-mp3');
+  const b=await load({env:{AZURE_SPEECH_KEY:'a'}});await b.call({go:'start',topic:'saskia',level:'A2'});
+  assert.match(b.fetches[0][1].body,/<voice name="nl-NL-MaartenNeural"><prosody pitch="\+8%">/,'Bittie is Maarten, a little higher');
+  const f=await load({env:{GOOGLE_TTS_KEY:'g',AZURE_SPEECH_KEY:'a'},ttsFail:true});
+  const x=await f.call({go:'start',topic:'saskia',level:'A2'});
+  assert.equal(x.body.audio,null);assert.equal(f.fetches.length,1,'no second engine');assert.match(f.fetches[0][0],/microsoft/);
 });

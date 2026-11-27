@@ -42,7 +42,7 @@ test('A signed-in learner gets Azure scores per word; the model text goes in the
   assert.deepEqual(plain(r.body.words.map(w=>w.e)),['None','None','None','Omission','Insertion','Mispronunciation']);
   assert.deepEqual(t.guards,[['pron:user-1',1],['pron:all',3]],'one check a day and the seconds, rounded up, for everyone');
   const [url,init]=t.fetches[0];
-  assert.match(url,/^https:\/\/westeurope\.stt\.speech\.microsoft\.com\/.*language=nl-NL/);
+  assert.match(url,/^https:\/\/germanywestcentral\.stt\.speech\.microsoft\.com\/.*language=nl-NL/);
   assert.equal(init.headers['Content-Type'],'audio/wav; codecs=audio/pcm; samplerate=16000');
   const pa=JSON.parse(Buffer.from(init.headers['Pronunciation-Assessment'],'base64').toString('utf8'));
   assert.equal(pa.ReferenceText,'Ik ga met de trein.');assert.equal(pa.EnableMiscue,true);
@@ -87,7 +87,8 @@ test('The route is a rewrite to check.js, and config tells the page', ()=>{
   assert.match(fs.readFileSync(new URL('api/check.js',root),'utf8'),/kind === "pron"/);
   assert.match(fs.readFileSync(new URL('api/config.js',root),'utf8'),/pronOn \? \{ pron:/);
   const p=fs.readFileSync(new URL('privacy.html',root),'utf8');
-  assert.equal((p.match(/Azure AI Speech/g)||[]).length,9,'privacy.html names Azure in all nine languages');
+  assert.equal((p.match(/Zeg het na[^<]*Azure AI Speech/g)||[]).length,9,'privacy.html names Azure for Zeg het na in all nine languages');
+  assert.equal((p.match(/Azure AI Speech[^<]*Cloud Text-to-Speech/g)||[]).length,9,'and for the conversation voices, next to Google');
 });
 
 // The page: a recorder instead of the phone's recognition, Azure's words onto the model text

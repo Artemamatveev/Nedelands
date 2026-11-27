@@ -189,6 +189,19 @@ In a cloud session the key is a network secret of the environment `nedelands` (h
 (the page's texts then come through Playwright).
 The whole app is about 240 000 characters, inside Google's free million per month.
 
+Azure (27 November 2026, at the user's wish: the Chirp voices did not sound Dutch enough). Without `AZURE_SPEECH_KEY` the script keeps Google's voices (`V_GOOGLE`, `POOL_GOOGLE`, as before) and records only what is new; with it `V_AZURE` and `POOL_AZURE` name Azure's
+native Dutch voices (`nl-NL-FennaNeural`, `nl-NL-ColetteNeural`, `nl-NL-MaartenNeural`; Azure has only these three,
+so a pitch, `nl-NL-MaartenNeural@-8%`, makes a second man or woman); `api/_azure.js` builds the SSML and calls Azure's
+REST API, and a Chirp name in `V`/`POOL` still records with Google, so the two can be mixed. All 6946 lines were recorded with Azure on 28 November 2026 (region `germanywestcentral`: West Europe took no new
+customers; `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in `~/.config/bittertalen/tts.env`), about 287 000 characters;
+`audio/` grew from 97 MB to 166 MB (48 kbit/s MP3). First `node audio/build.mjs
+--voices` (Azure's Dutch voices, new ones may exist) and `--sample "…"` (every voice of `V`/`POOL` into
+`audio-samples/`, ignored by git and Vercel), to choose by ear. Cost: Azure's free F0 tier has 0.5 million neural
+characters a month but 20 requests a minute (hours for a full run); on S0 about $15–16 per million, so about $4 for the
+whole app. The conversations use Azure when `AZURE_SPEECH_KEY` is set in Vercel (`AZ_VOICE` in `api/_talk.js`, Bittie
+Maarten a little higher), and only Azure then: a failed sentence falls to the phone's voice, never to Google's in the
+middle of a conversation; without the Azure key Google's Chirp as before.
+
 ## Luisteren en kijken (real Dutch)
 
 Real speech from Dutch YouTube channels and podcasts, listed in `MEDIA` in `oefenen.html` (id, name,

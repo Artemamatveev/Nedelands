@@ -1,33 +1,46 @@
-// Records every line the app says itself (audio/<key>.mp3) with Google's Chirp 3 HD voices, and writes
+// Records every line the app says itself (audio/<key>.mp3) with Azure's Dutch voices (Google's Chirp 3 HD before
+// 27 November 2026, still used for any voice in V or POOL that is not an Azure name), and writes
 // audio/index.json (the keys the page has a file for) and audio/lines.json (key → [voice, text], for the next run).
 //
 //   node audio/build.mjs            record what is new or changed, delete files no line uses any more
 //   node audio/build.mjs --dry      only count what would be recorded (--dry --who: and show who says what)
 //   node audio/build.mjs --dry --script   print every Luisteren line as CSV (key, voice, text): the script for people
 //                                    who record lines themselves (see LIVE below)
+//   node audio/build.mjs --voices   list Azure's Dutch voices (to choose by ear)
+//   node audio/build.mjs --sample "Een zin."   say the sentence in every voice of V and POOL, into audio-samples/ (not deployed)
 //
 // The texts come from the page itself: voiceTexts() and sayKeys() in oefenen.html, run in headless Chrome, so a key here is
-// exactly the key speak() looks up. The Google key is read from ~/.config/bittertalen/tts.env (GOOGLE_TTS_KEY=…),
-// never from the repository.
+// exactly the key speak() looks up. The keys are read from ~/.config/bittertalen/tts.env (AZURE_SPEECH_KEY=…,
+// AZURE_SPEECH_REGION=germanywestcentral, GOOGLE_TTS_KEY=… for Google voices), never from the repository. Azure's free F0 tier
+// allows 20 requests a minute: a whole new recording (about 6500 lines) then takes hours; S0 is fast.
 import { createServer } from "node:http";
 import { readFile, writeFile, readdir, unlink, mkdtemp, rm } from "node:fs/promises";
 import { execFile } from "node:child_process";
 import { homedir, tmpdir } from "node:os";
 import { join, extname, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { isAzure, azureSay, region } from "../api/_azure.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), ".."), OUT = join(ROOT, "audio");
 const DRY = process.argv.includes("--dry");
 const CHROME = process.env.CHROME_PATH || "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"; // elsewhere: CHROME_PATH
 
-// The voices (chosen by ear in November 2026). F and M speak; F2 and M2 only when two women or two men talk together.
-const V = { F: "Vindemiatrix", M: "Charon", F2: "Aoede", M2: "Orus" };
+// The voices. F and M speak; F2 and M2 only when two women or two men talk together. Azure's native Dutch voices (27 November
+// 2026, after the user found the Chirp voices not Dutch enough): Fenna and Colette, Maarten; a pitch ("@-8%") gives
+// Maarten a second person. Chirp names (Vindemiatrix, Charon …) are Google's voices.
+// Without AZURE_SPEECH_KEY the script keeps Google's voices (V_GOOGLE, POOL_GOOGLE): the files already made stay as they are
+// and only new or changed lines are recorded.
+const V_AZURE = { F: "nl-NL-FennaNeural", M: "nl-NL-MaartenNeural", F2: "nl-NL-ColetteNeural", M2: "nl-NL-MaartenNeural@-8%" };
+const V_GOOGLE = { F: "Vindemiatrix", M: "Charon", F2: "Aoede", M2: "Orus" };
 const NARRATOR = "M"; // reads the KNM, Luisteren and Spreken questions aloud, as the voice on the exam does
 // The people in the Luisteren fragments: each fragment draws its speakers from these, always the same for the same
 // fragment, so the learner hears many different people and not two voices all the time (the exam has real people).
 // Narrator, words and the Gesprekken keep V. Remove a voice here if it sounds wrong, then run the script again.
-const POOL = { F: ["Vindemiatrix", "Aoede", "Kore", "Leda", "Gacrux", "Sulafat"],
+const POOL_AZURE = { F: ["nl-NL-FennaNeural", "nl-NL-ColetteNeural", "nl-NL-FennaNeural@-6%", "nl-NL-ColetteNeural@+6%"],
+  M: ["nl-NL-MaartenNeural", "nl-NL-MaartenNeural@-8%", "nl-NL-MaartenNeural@+7%"] };
+const POOL_GOOGLE = { F: ["Vindemiatrix", "Aoede", "Kore", "Leda", "Gacrux", "Sulafat"],
   M: ["Charon", "Orus", "Fenrir", "Puck", "Iapetus", "Schedar"] };
+let V = V_GOOGLE, POOL = POOL_GOOGLE; // set below, once the keys are read
 // Lines recorded by people (audio/live.json: key → who recorded it): never recorded over or deleted by this script.
 // Record the line as in --script, save it as audio/<key>.mp3 and add the key to live.json.
 const LIVE = await readFile(join(OUT, "live.json"), "utf8").then(JSON.parse).catch(() => ({}));
@@ -124,8 +137,13 @@ function assign(entries) {
   return out;
 }
 
-async function say(key, voice, text) {
-  const body = JSON.stringify({ input: { text }, voice: { languageCode: "nl-NL", name: "nl-NL-Chirp3-HD-" + voice },
+// Azure for an Azure name, else Google; retried on 429 and server errors
+async function say(keys, voice, text) {
+  if (isAzure(voice)) for (let t = 0; ; t++) {
+    try { return await azureSay({ key: keys.azure, region: keys.region, voice, text, timeout: 30000 }) }
+    catch (e) { if ((e.status === 429 || e.status >= 500 || e.name === "TimeoutError") && t < 8) { await new Promise(s => setTimeout(s, 3000 * 2 ** Math.min(t, 4))); continue } throw e }
+  }
+  const key = keys.google, body = JSON.stringify({ input: { text }, voice: { languageCode: "nl-NL", name: "nl-NL-Chirp3-HD-" + voice },
     audioConfig: { audioEncoding: "MP3", sampleRateHertz: 24000 } });
   for (let t = 0; ; t++) {
     const r = await fetch("https://texttospeech.googleapis.com/v1/text:synthesize", { method: "POST", body,
@@ -136,6 +154,27 @@ async function say(key, voice, text) {
   }
 }
 
+const keyFile = await env().catch(() => ({}));
+// AZURE_SPEECH_KEY / GOOGLE_TTS_KEY in the environment win (a cloud session, where a proxy puts the real key in); else the file
+const keys = { azure: process.env.AZURE_SPEECH_KEY || keyFile.AZURE_SPEECH_KEY, region: region(process.env.AZURE_SPEECH_REGION || keyFile.AZURE_SPEECH_REGION),
+  google: process.env.GOOGLE_TTS_KEY || keyFile.GOOGLE_TTS_KEY };
+if (keys.azure) { V = V_AZURE; POOL = POOL_AZURE }
+console.log(keys.azure ? "voices: Azure" : "voices: Google (no AZURE_SPEECH_KEY)");
+if (process.argv.includes("--voices")) {
+  if (!keys.azure) throw new Error("AZURE_SPEECH_KEY missing in ~/.config/bittertalen/tts.env");
+  const r = await fetch(`https://${keys.region}.tts.speech.microsoft.com/cognitiveservices/voices/list`, { headers: { "Ocp-Apim-Subscription-Key": keys.azure } });
+  if (!r.ok) throw new Error(`Azure ${r.status}`);
+  for (const v of await r.json()) if (/^nl-/.test(v.Locale)) console.log(v.ShortName, v.Gender, v.VoiceType, (v.SecondaryLocaleList || []).length ? "multilingual" : "");
+  process.exit(0);
+}
+const sample = process.argv[process.argv.indexOf("--sample") + 1];
+if (process.argv.includes("--sample")) {
+  const dir = join(ROOT, "audio-samples"); await import("node:fs/promises").then(f => f.mkdir(dir, { recursive: true }));
+  for (const v of new Set([...Object.values(V), ...POOL.F, ...POOL.M])) {
+    await writeFile(join(dir, v.replace(/[^\w-]/g, "_") + ".mp3"), await say(keys, v, sample || "Goedemorgen. Kan ik morgen om half tien bij de huisarts komen?"));
+    console.log(v) }
+  process.exit(0);
+}
 const entries = await pageTexts(), lines = assign(entries);
 const old = await readFile(join(OUT, "lines.json"), "utf8").then(JSON.parse).catch(() => ({}));
 const files = new Set((await readdir(OUT)).filter(f => f.endsWith(".mp3")).map(f => f.slice(0, -4)));
@@ -157,9 +196,8 @@ if (process.argv.includes("--script")) { // the Luisteren lines to record, in th
 }
 if (DRY) process.exit(0);
 
-// GOOGLE_TTS_KEY in the environment wins (a cloud session, where a proxy puts the real key in the header); else the file
-const key = process.env.GOOGLE_TTS_KEY || (await env().catch(() => ({}))).GOOGLE_TTS_KEY;
-if (!key) throw new Error("GOOGLE_TTS_KEY missing in ~/.config/bittertalen/tts.env");
+if (todo.some(([, [v]]) => isAzure(v)) && !keys.azure) throw new Error("AZURE_SPEECH_KEY missing in ~/.config/bittertalen/tts.env");
+if (todo.some(([, [v]]) => !isAzure(v)) && !keys.google) throw new Error("GOOGLE_TTS_KEY missing in ~/.config/bittertalen/tts.env");
 const keep = {}; for (const [k, [v, l]] of lines) if (files.has(k) && (LIVE[k] || (old[k] && old[k][0] === v && old[k][1] === l))) keep[k] = LIVE[k] ? ["live", l] : old[k];
 for (const k in LIVE) if (files.has(k) && !keep[k]) keep[k] = ["live", (old[k] || [])[1] || ""];
 let done = 0, failed = 0;
@@ -168,7 +206,7 @@ const queue = [...todo];
 await Promise.all(Array.from({ length: 8 }, async () => {
   for (let x; (x = queue.shift());) {
     const [k, [v, l]] = x;
-    try { await writeFile(join(OUT, k + ".mp3"), await say(key, v, l)); keep[k] = [v, l]; files.add(k) }
+    try { await writeFile(join(OUT, k + ".mp3"), await say(keys, v, l)); keep[k] = [v, l]; files.add(k) }
     catch (e) { failed++; console.error(`${k}: ${e.message}`) }
     if (++done % 200 === 0) { console.log(`${done}/${todo.length}`); await save() }
   }

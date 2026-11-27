@@ -43,7 +43,9 @@ the cached copy was shown and the network's differs (another ETag), the open pag
 tab bar says "Er is een nieuwe versie van Bittertalen" with "Vernieuwen" (`showFresh()`). So a push shows on the next
 start, or at once after Vernieuwen. Paintings, photos and the dictionary from the cache and never fetched again once
 there (on a slow line every start used to fetch them all again); the rest (manifest, icons, lib, audio/index.json)
-cache first and refreshed in the background. The page sends the list of paintings and photos to keep 10 s after the
+cache first and refreshed in the background. Recordings (`audio/*.mp3`) are kept after their first play under a name that
+is the hash of the line, not of the voice: when all of `audio/` is recorded with other voices, change `VOICES` in sw.js
+(`azure-1` since 28 November 2026), and on activate the saved recordings are dropped once (marker `/__voices`). The page sends the list of paintings and photos to keep 10 s after the
 start, only on a fast connection that is not mobile data and without Save-Data (`bulkOK()`; iPhone has no
 `navigator.connection`, so there pictures are cached when first shown, and Profiel has "Alles downloaden voor offline", `warmAll()`; the dictionary's `warmDict()` follows the same rule), asks for a new sw.js at every start and return (`r.update()`), (Profiel's line with how long the start took was removed at the user's wish). `api/` never cached. Don't change the stored shape without migrating old data.
 Saving progress to a file was removed on purpose. On an iPhone in Safari a tile on Vandaag (`drawA2hs()`)

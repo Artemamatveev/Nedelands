@@ -2046,7 +2046,7 @@ function addGenerated(){
 }
 function errItems(){return(S.errs||[]).map(e=>({sec:"er",k:"er|"+e.r,ord:0,type:"choice",label:"Welke zin is goed?",big:"",sub:"",right:esc(e.r),opts:()=>shuffle([esc(e.r),esc(e.w)]),note:esc(e.y)}))}
 const canSpeak="speechSynthesis" in window&&typeof SpeechSynthesisUtterance!=="undefined";
-// Speech: every line the app says itself is recorded in audio/ (audio/build.mjs, Google's Chirp 3 HD voices), one file
+// Speech: every line the app says itself is recorded in audio/ (audio/build.mjs, Azure's Dutch voices since 28 November 2026), one file
 // per line, named by sayKeys(); audio/index.json lists them. Anything else (own books, Claude's corrections, a
 // word from the dictionary) falls back to the phone's Dutch voice. speak() stays synchronous, so the first line starts
 // inside the tap (iPhone only plays sound from a tap); the next lines follow on the same audio element.
@@ -6036,7 +6036,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru","uk"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="ca39d185c8";
+const UIV="554e350d6e";
 let uiP=null;
 function uiLoaded(){try{trMemo.clear()}catch(e){} // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});

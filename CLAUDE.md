@@ -12,7 +12,7 @@ are in `docs/`, one file per area. Read the one for the area you change, and kee
 | `docs/content.md` | the data files and their shapes, B1, Beginnen, books, history, paintings, photos, voices, media |
 | `docs/progress.md` | progress, account scopes, sync and merges, the service worker and offline |
 | `docs/server.md` | the 12 functions, accounts, free checks, AI spend limits, Plus and the Examenpas, groups, counts, admin |
-| `docs/ai.md` | grading of writing and speaking, conversations with Claude (Saskia and situations) |
+| `docs/ai.md` | grading of writing and speaking, conversations with Claude (Bittie, people and situations) |
 | `docs/native.md` | the Capacitor apps for the App Store and Google Play |
 | `docs/operations.md` | support, refunds, AI complaints, tax, the five weekly numbers, the beta |
 | `docs/store-listing.md` | store name, keywords, screenshots, review notes and what is open before submitting |
@@ -58,17 +58,14 @@ are in `docs/`, one file per area. Read the one for the area you change, and kee
 - **Design**: Delfts blauw tokens only; never cream backgrounds, handwriting fonts, wobbly borders, dashed lines,
   squiggles or emoji as decoration (`docs/design.md`). One `h2` per screen; one filled `.btn` per screen.
 - **Truth on screen**: Bittertalen is not DUO; scores are practice results, never a prediction or a pass guarantee;
-  Saskia is an AI character.
+  Bittie and the people in Gesprekken are AI characters.
 - **Search**: until the public launch every address sends `X-Robots-Tag: noindex` (`vercel.json`). The user decides when
   to lift it; then limit the rule to the old vercel.app hosts (`docs/site.md`).
 
 ## Open items (25 November 2026)
 
 - KVK and BTW numbers are placeholders in voorwaarden.html and the footer until the KvK registration.
-- Luisteren is all Google voices. Real people can record lines: `node audio/build.mjs --dry --script` gives the
+- Luisteren is all Azure voices (Fenna, Colette, Maarten; 28 November 2026). Real people can record lines: `node audio/build.mjs --dry --script` gives the
   script, the file goes to `audio/<key>.mp3` and the key into `audio/live.json` (never recorded over). None yet.
 - The model prices in `admin.html` (`PRICE`) must be checked against Anthropic's price list when they change.
 - Grading has not yet been compared with an NT2 examiner (`supabase/calibration.sql`, `docs/ai.md`).
-- 26 November 2026: wrong options of 8 Luisteren A2 and 3 KNM questions were made longer, so the right answer is never
-  clearly the longest, and 22 KNM wrong options lost their "alleen …" (absolute words now 5% of wrong options, 4% of right
-  ones); run `node audio/build.mjs` on the Mac to record them (until then those options use the phone's voice).
