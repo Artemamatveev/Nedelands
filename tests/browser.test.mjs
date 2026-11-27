@@ -592,6 +592,7 @@ test('The homepage and the app work in a real browser', async t => {
     await t.test('learning features: compact headings, touch, hover and keyboard', async () => {
       for (const lang of ['en', 'ru', 'ar']) {
         const s = await page(browser, base, {lang, reducedMotion: 'reduce'}); await s.go('/');
+        await s.p.locator('[data-product-step="-1"]').click(); await s.p.locator('#module-exam').waitFor(); 
         const cards = s.p.locator('.feature-grid details'), descriptions = cards.locator('p');
         assert.equal(await cards.count(), 4);
         assert.equal(await s.p.locator('.feature-grid details[open]').count(), 0);
@@ -612,6 +613,7 @@ test('The homepage and the app work in a real browser', async t => {
       }
       const s = await page(browser, base, {lang: 'en', viewport: {width: 1280, height: 900}, isMobile: false, hasTouch: false, reducedMotion: 'reduce'});
       await s.go('/');
+      await s.p.locator('[data-product-step="-1"]').click(); await s.p.locator('#module-exam').waitFor(); 
       const cards = s.p.locator('.feature-grid details');
       assert.equal(await s.p.locator('.feature-grid details[open]').count(), 0);
       assert.equal(await cards.first().evaluate(e => getComputedStyle(e).borderTopWidth), '1px');
@@ -702,6 +704,7 @@ test('The homepage and the app work in a real browser', async t => {
     });
     await t.test('learning features: smooth reversal, switching and reduced motion', async () => {
       const s = await page(browser, base, {lang: 'en'}); await s.go('/');
+      await s.p.locator('[data-product-step="-1"]').click(); await s.p.locator('#module-exam').waitFor(); 
       const cards = s.p.locator('.feature-grid details'), first = cards.first(), panel = first.locator('p');
       const settle = () => s.p.waitForFunction(() => [...document.querySelectorAll('.feature-grid p')].every(e => !e.getAnimations().some(a => a.playState === 'running')));
       const collapsed = (await first.boundingBox()).height;
@@ -731,6 +734,7 @@ test('The homepage and the app work in a real browser', async t => {
       assert.equal(await overflow(s.p), 0);
       assert.deepEqual(s.errors, []); await s.ctx.close();
       const d = await page(browser, base, {viewport: {width: 1280, height: 900}, isMobile: false, hasTouch: false}); await d.go('/');
+      await d.p.locator('[data-product-step="-1"]').click(); await d.p.locator('#module-exam').waitFor();
       const heading = d.p.locator('.feature-grid summary').first(), description = d.p.locator('.feature-grid p').first();
       await d.p.evaluate(() => {
         window.featureHoverTrace = [];

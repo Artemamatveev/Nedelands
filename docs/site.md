@@ -13,7 +13,7 @@ button, "Begin met oefenen" in the bar (`#enter`), opens `/oefenen?open=today`; 
 prompt when available, otherwise links to #install-app with instructions for iOS, Android and desktop (November 2026). The bar: the name (30 px, 28 on a phone), the page's links, the language, Inloggen and the main button;
 on a phone two straight rows, the name with the button, then the links with the language and Inloggen (two wrapping flex
 rows: a grid tied the second row to the button's width; the type follows the screen's width and the narrowest phones leave
-out the middle link; the browser test measures it in the longest languages). The learning features (`#oefenvormen`)
+out the middle link; the browser test measures it in the longest languages). The learning features (the four `.feature-grid` cards, since 27 November 2026 inside the exam card's details `#module-exam` instead of their own section "Oefen voor je examen", at the user's wish)
 start as compact headings in native `details`: tapping or keyboard activation opens one description and colors that
 card blue; a fine mouse pointer also opens it on hover and closes it on leaving. No card starts highlighted. Keep the
 summary's icon and disclosure indicator, all nine languages, and the native fallback without JavaScript.
