@@ -35,7 +35,7 @@ or migration (`#verhuis=`) callbacks still enter the app directly, preserving th
 so reloading stays on the homepage; ordinary browser visits remove that query. A fresh installed launch still opens practice. The "← Bittertalen" links of /over and /privacy go back to
 /oefenen for someone who came from the app. Arriving from the homepage (`?open=today`, `a2`,
 `b1`, `sample`) marks the login window as seen (`ww-welcome`): the homepage already offers Inloggen, so someone who
-started without an account isn't stopped by it later; `?open=login` opens it. Under the hero four numbers (questions, KNM questions, proefexamens per level,
+started without an account isn't stopped by it later; `?open=login` opens it. In the details of the exam card ("Voorbereiden op je examen", `#module-exam`; moved there from under the cards on 27 November 2026 at the user's wish) four numbers (questions, KNM questions, proefexamens per level,
 conversations), checked against the content by the same test: change them when the content shrinks. The sections are set like questions on the exam
 form, in the app's Examenblad style (the user found icon cards and phone screenshots looked like every competitor):
 "Vraag 1 · Waar oefen je voor?" with A (A2) and B (B1) in square letter boxes that open the app at that level; "Vraag 2

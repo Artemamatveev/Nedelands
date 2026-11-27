@@ -84,6 +84,8 @@ h3 {font-size:22px;letter-spacing:-.02em}
 .stats li+li {border-inline-start:1px solid var(--line)}
 .stats b {font-size:30px;font-weight:650;letter-spacing:-.03em}
 .stats span {font-size:15px;color:var(--muted)}
+.module-detail .stats {margin:16px 0 18px;padding:16px 4px;box-shadow:none}
+.module-detail .stats b {font-size:26px}
 /* without Plus the free card stands alone */
 .pricing:has(#plus-card[hidden]) {grid-template-columns:minmax(0,560px)}
 /* questions: native details, one line each until opened */
