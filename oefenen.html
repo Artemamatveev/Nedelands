@@ -1185,6 +1185,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
   <div id="play" lang="nl" hidden>
     <h1 class="sr-only" id="playh"></h1>
     <div class="top"><button class="back x" id="back" aria-label="Stoppen"></button><div class="bar"><i id="bar"></i></div><span id="cnt"></span><span id="timer"></span></div>
+    <section id="exam-exit" class="card" aria-label="Proefexamen verlaten" hidden></section>
     <section class="card" id="card" aria-live="polite"></section>
     <div class="mode"><button id="mode"></button></div>
   </div>
@@ -2622,7 +2623,7 @@ function home(){
     +itHTML(`data-x="ai"`,"Gesprekken","Praat met Bittie over een onderwerp dat jij kiest.",{n:(n=>n?`${n} van ${aiIds().length}`:null)(aiIds().filter(id=>(S.ai||{})[id]).length),ic:"talk"});
   $("mine").innerHTML=itHTML(`data-x="stats"`,"Kies een lastig onderwerp","Waar je de meeste fouten maakt.",{ic:"stats"})
     +((S.errs||[]).length?itHTML(`data-x="errs"`,"Oefen met je eigen fouten","Kies de juiste versie van zinnen uit je eerdere teksten en antwoorden.",{n:S.errs.length,ic:"errs"}):"")
-    +((S.words||[]).length?itHTML(`data-x="words"`,"Mijn woorden","Die je bij het lezen hebt bewaard.",{n:S.words.length,ic:"words"}):"")
+    +((S.words||[]).length?itHTML(`data-x="words"`,"Mijn woorden","Bekijk of oefen je bewaarde woorden.",{n:S.words.length,ic:"words"}):"")
     +(!(S.errs||[]).length&&!(S.words||[]).length?`<div class="empty"><span><b>Hier komt je herhaling</b>Fouten uit je teksten en woorden die je bij het lezen bewaart, komen hier vanzelf bij.</span></div>`:"");
   document.querySelectorAll("#exam button,#parts button,#gram button,#books button,#mine button").forEach(b=>b.onclick=()=>{const d=b.dataset;
     if(d.knm){knmOpen=!knmOpen;b.setAttribute("aria-expanded",knmOpen);$("knmsub").hidden=!knmOpen}
@@ -2637,7 +2638,7 @@ function home(){
     else if(d.x==="ona")onaScreen();
     else if(d.x==="uit")uitScreen();
     else if(d.x==="bg")bgList();
-    else if(d.x==="words")practiseWords();
+    else if(d.x==="words")wordsScreen();
     else build("custom",{id:"custom",t:"Mijn fouten",n:10,pool:()=>shuffle(errItems())})});
   drawProfile();
   setTab(tab);
@@ -3249,7 +3250,7 @@ function drawProfile(){
       h=`<h3 class="lh">Account</h3><div class="pg"><p class="pinfo"><span role="status">${acc.sync||"Wacht op synchronisatie"}</span><br>${myPeriod()==="day"?"Nakijken vandaag:":"Gratis nakijkbeurten:"} ${checksLeft()==null?"…":`nog ${checksLeft()} van de ${myLimit()}`}</p>`
         +(L.includes("passkey")?`<button type="button" class="pact" id="apk">Passkey toevoegen</button>`:"")
         +`<button type="button" class="pact" id="agrp">Code van je school of werk</button><button type="button" class="pact" id="aref">Nodig een vriend uit</button><button type="button" class="pact" id="aout">Uitloggen</button><button type="button" class="pact bad" id="adel">Account verwijderen</button></div>`;
-    }else if(L.length)b=ban("alogin","me","Inloggen of account maken","Bewaar je voortgang en laat je teksten nakijken.");
+    }else if(L.length)b=ban("alogin","me","Inloggen of account maken","Je oefent als gast. Log in om je voortgang op andere apparaten te bewaren.");
     else h=`<p class="note">Inloggen is nog niet ingesteld.</p>`;
     if(acc.msg)h+=`<p class="note">${esc(acc.msg)}</p>`;
   }
@@ -3350,6 +3351,7 @@ function persistSpeaking(){
   }));
 }
 function speakingReview(){
+  $("exam-exit").hidden=true;$("back").setAttribute("aria-expanded","false");
   clock(0);hush();pos=queue.length;persistSpeaking();head();
   $("card").innerHTML=`<p class="note">${cur.spDraft.end<=Date.now()?"De tijd is voorbij. ":""}Je kunt je bewaarde antwoorden inleveren.</p><button class="btn wide" id="spdeliver">Antwoorden inleveren</button>`;
   $("spdeliver").onclick=finish;
@@ -3439,10 +3441,23 @@ function build(id,custom){
   cur.expired=!!((draft||choices) && cur.exam && remaining===0);
   clock(cur.exam?remaining:0,savedEnd);
   ["home","stats","lib","read","media","story","hist","talk"].forEach(x=>$(x).hidden=true);closePop();stopMedia();$("play").hidden=false;window.scrollTo(0,0);
-  const b=$("back"),leave=cur.back?cur.back.f:home,x=()=>{clearTimeout(b.t);b.classList.remove("arm");b.innerHTML=XSVG};
-  x(); b.setAttribute("aria-label","Stoppen, terug naar "+(cur.back?cur.back.t:TABN[tab]));
-  b.onclick=()=>{if(cur.exam&&pos<queue.length&&!b.classList.contains("arm")){b.classList.add("arm");b.textContent="Stoppen?";b.t=setTimeout(x,3000);return}
-    x();leave()};
+  const b=$("back"),leave=cur.back?cur.back.f:home,exit=$("exam-exit");
+  const close=()=>{exit.hidden=true;b.setAttribute("aria-expanded","false");b.innerHTML=XSVG};
+  close(); b.setAttribute("aria-label","Stoppen, terug naar "+(cur.back?cur.back.t:TABN[tab]));
+  b.removeAttribute("aria-controls");
+  if(cur.exam){b.setAttribute("aria-controls","exam-exit")}else b.removeAttribute("aria-expanded");
+  b.onclick=()=>{
+    if(!cur.exam||pos>=queue.length){close();leave();return}
+    if(!exit.hidden){close();return}
+    const saved=CHOICE_DRAFT_PARTS.includes(cur.part)||isWr(cur.part)||cur.part==="sp";
+    exit.innerHTML=`<p class="ask" data-ui>Proefexamen verlaten?</p>
+      <p class="note" data-ui>${saved?"Je antwoorden blijven bewaard. De timer loopt door.":"Als je afsluit, raak je deze poging kwijt."}</p>
+      <div class="two"><button type="button" class="ghost" id="exit-yes" data-ui>${saved?"Bewaar en sluit":"Verlaat proefexamen"}</button><button type="button" class="btn" id="exit-no" data-ui>Ga verder met het proefexamen</button></div>`;
+    exit.hidden=false;b.setAttribute("aria-expanded","true");
+    $("exit-no").onclick=()=>{close();b.focus()};
+    $("exit-yes").onclick=()=>{close();leave()};
+    $("exit-no").focus();
+  };
   if(cur.expired)return overview();
   if(cur.spDraft){
     if(!remaining||pos>=queue.length)return speakingReview();
@@ -3611,7 +3626,7 @@ function examGate(e,preview=false){
   const countPrefix=["lz","l1","ls","lb"].includes(e)?"<span>Maximaal</span> ":"";
   const details=preview?`<h3 class="sr-only" id="exam-preview-title"><span>Proefexamen</span> · <span>${PART[e]}</span></h3>
     <p class="note">${draft?`<span>Je hebt een opgeslagen concept.</span>`:`<span>${exam.min} min</span> · ${countPrefix}${exam.n} <span>${countLabel}</span><br><span>De timer start zodra je begint.</span>`}</p>
-    <p class="note"><span>Stoppen? Kies × en bevestig.</span></p>`:"";
+    <p class="note"><span>Wil je weg? Kies × en daarna de knop om af te sluiten.</span></p>`:"";
   const warning=cost?`<p class="note">${acc.user?`Je hebt nog ${Math.max(0,checksLeft(e))} nakijkbeurten in je tegoed. Dit proefexamen kost ${cost} nakijkbeurten. Zonder nakijken zie je aan het eind alleen de voorbeeldantwoorden.`
     :"Je bent niet ingelogd. Dan kijkt Bittertalen je antwoorden niet na, en zie je aan het eind alleen de voorbeeldantwoorden."}</p>`:"";
   d.innerHTML=`${details}${warning}<div class="two"><button class="ghost" id="gback">Terug</button>
@@ -4279,6 +4294,7 @@ async function examSpeak(){
   }
 }
 function finish(){
+  $("exam-exit").hidden=true;$("back").setAttribute("aria-expanded","false");
   if(cur.exam&&!cur.spDraft?.submitted){S.xs=S.xs||{};queue.forEach(q=>S.xs[q.k]=(S.xs[q.k]||0)+1)}
   if(cur.spDraft){cur.spDraft.submitted=true;persistSpeaking()}
   complete();
@@ -4332,13 +4348,19 @@ async function library(){
     delete S.bk[id];save();library()});
   drawWords();
 }
-function drawWords(){
+function wordsScreen(){
+  bgOpen(TABN[tab],home);
+  $("tbody").innerHTML='<h2>Mijn woorden</h2><p class="sub" id="saved-word-summary"></p><div id="saved-word-list"></div>';
+  drawWords($("saved-word-list"),$("saved-word-summary"),{t:"Mijn woorden",f:wordsScreen});
+}
+function drawWords(list=$("wlist"),summary=$("wsub"),back){
   const W=S.words||[];
-  $("wsub").textContent=W.length?`${W.length} ${W.length===1?"woord":"woorden"}. Je oefent ze ook in de Mix van de dag.`:"Nog geen woorden. Tik bij het lezen op een woord en dan op Bewaar.";
-  $("wlist").innerHTML=(W.length?`<button class="btn wide" id="wprac">Oefen mijn woorden</button>`:"")
+  const practiceId=back?"saved-word-practice":"wprac";
+  summary.textContent=W.length?`${W.length} ${W.length===1?"woord":"woorden"}. Je oefent ze ook in de Mix van de dag.`:"Nog geen woorden. Tik bij het lezen op een woord en dan op Bewaar.";
+  list.innerHTML=(W.length?`<button class="btn wide" id="${practiceId}">Oefen mijn woorden</button>`:"")
     +`<ul class="errs">${W.map((x,i)=>`<li><button class="x" data-i="${i}">wis</button><b>${esc(x.w)}</b>${x.en?" — "+esc(x.en):""}<span>${esc(x.s)}</span></li>`).join("")}</ul>`;
-  if(W.length)$("wprac").onclick=practiseWords;
-  document.querySelectorAll("#wlist .x").forEach(b=>b.onclick=()=>{S.words.splice(b.dataset.i,1);save();drawWords()});
+  if(W.length)list.querySelector("#"+practiceId).onclick=()=>practiseWords(back,list);
+  list.querySelectorAll(".x").forEach(b=>b.onclick=()=>{S.words.splice(b.dataset.i,1);save();drawWords(list,summary,back)});
 }
 // Wrong options in the same language as the answer: other saved words first, then common A2 words
 // (English meanings from the dictionary once it is loaded). A few early words were saved with a Russian meaning (ru):
@@ -4362,10 +4384,11 @@ function enWords(){
     delete x.ru;ch=1});
   if(ch)save();
 }
-async function practiseWords(){
+async function practiseWords(back,origin){
   try{await loadDict((S.words||[]).map(x=>x.w.replace(/^(de|het) /,"")));enWords()}catch(e){}
+  if(!origin?.isConnected||origin.closest("[hidden]"))return;
   const d=today(),due=q=>{const it=S.items[q.k];return it?it.d-d:-1};
-  build("custom",{id:"custom",t:"Mijn woorden",n:10,pool:()=>shuffle(wordItems()).sort((a,b)=>due(a)-due(b))});
+  build("custom",{id:"custom",t:"Mijn woorden",n:10,back,pool:()=>shuffle(wordItems()).sort((a,b)=>due(a)-due(b))});
 }
 // Own books: .txt, pasted text or .epub (unzipped here with DecompressionStream)
 const decodeTxt=buf=>{try{return new TextDecoder("utf-8",{fatal:true}).decode(buf)}catch(e){return new TextDecoder("windows-1252").decode(buf)}};
@@ -4592,15 +4615,15 @@ function bgLes(i){
 }
 function startTest(){
   planId=null;
-  let i=0,inRow=0; const miss=[];
+  let i=0,inRow=0,showedInterim=false; const miss=[];
   const end=()=>{const right=i-miss.length,lv=i===START.length && right>=10?2:right>=5?1:0;
     const untested=START.slice(i).map(x=>x[0]);
     S.start={at:Date.now(),lv,miss:[...miss],untested,asked:i}; save(); track("test");
     const f=BG.find(l=>miss.includes(l.id));
-    $("tbody").innerHTML=`<p class="ask">Starttest</p><h2>${right} van ${i} goed</h2>
-      ${untested.length?`<p><span>Nog niet getest</span> · ${untested.length}</p><button class="ghost wide" id="bgcontinue">Ga verder met de test</button>`:""}
+    $("tbody").innerHTML=`<p class="ask">${untested.length?"Tussenstand starttest":"Resultaat starttest"}</p><h2>${right} van ${i} goed</h2>
+      ${untested.length?`<p><span>Nog niet getest</span> · ${untested.length}</p><button class="btn wide" id="bgcontinue">Ga verder met de test</button>`:""}
       <p>${lv===2?"Je kent de basis. Je kunt meteen met de onderdelen van het examen beginnen.":lv===1?"Je kent al veel. Elke dag krijg je een les over wat je nog niet goed weet.":"Je begint bij het begin. Elke dag krijg je één korte les. Daarna ga je verder met de onderdelen van het examen."}</p>
-      ${lv<2?`<button class="btn wide" id="bgf" style="margin-bottom:10px">Naar les ${BG.indexOf(f)+1}: ${f.t}</button>`:`<button class="btn wide" id="bgh" style="margin-bottom:10px">Naar je les van vandaag</button>`}
+      ${lv<2?`<button class="${untested.length?"ghost":"btn"} wide" id="bgf" style="margin-bottom:10px">Naar les ${BG.indexOf(f)+1}: ${f.t}</button>`:`<button class="btn wide" id="bgh" style="margin-bottom:10px">Naar je les van vandaag</button>`}
       <button class="ghost wide" id="bga">Alle lessen</button>${remindAskHTML()}`;
     window.scrollTo(0,0);remindAskBind();
     if($("bgcontinue"))$("bgcontinue").onclick=()=>{inRow=0;draw()};
@@ -4609,7 +4632,7 @@ function startTest(){
   const pick=q=>ok=>{buzz("tick");if(ok)inRow=0;else{inRow++;miss.push(q[0])}
     i++;
     // three wrong in a row: the next ones are harder, so stop here; those not asked count as still to do
-    if(inRow>=3&&i<START.length){return end()}
+    if(!showedInterim&&inRow>=3&&i<START.length){showedInterim=true;return end()}
     i<START.length?draw():end()};
   const draw=()=>{const q=START[i],o=shuffle(q.slice(2,5)),go=pick(q);
     $("tbody").innerHTML=`<p class="ask">Vraag ${i+1} van ${START.length}</p><p class="bgq bgl" lang="nl">${q[1]}</p>
@@ -5542,21 +5565,22 @@ function media(){
 }
 async function source(id){
   const m=MEDIA.find(x=>x.id===id);
-  stopMedia();MS={m,items:null,i:-1};window.scrollTo(0,0);
+  stopMedia();const opened=MS={m,items:null,i:-1};window.scrollTo(0,0);
   mBack("Luisteren en kijken",media);
   $("mbody").innerHTML=`<p class="ask">${m.k==="v"?"Video's":"Podcast"} · ${LV[m.lv]}</p><h2>${m.t}</h2><p class="sub">${m.s}</p><div id="mplay"></div><div id="mlist"><p class="note">Laden…</p></div>`;
   let j=FEED[id];
   if(!j)try{const r=await fetch("/api/feed?id="+id);j=await r.json();if(!r.ok||!j.items)throw j;FEED[id]=j}
-    catch(e){if(MS&&MS.m===m)$("mlist").innerHTML=`<p class="note">De lijst kan nu niet worden geladen. Probeer het later opnieuw${e&&e.link?`, of kijk op <a href="${esc(e.link)}" target="_blank" rel="noopener">de website ↗</a>`:""}.</p>`;return}
-  if(!MS||MS.m!==m)return;
+    catch(e){if(MS===opened){$("mlist").innerHTML=`<p class="note">De lijst kan nu niet worden geladen. Probeer het later opnieuw${e&&e.link?`, of kijk op <a href="${esc(e.link)}" target="_blank" rel="noopener">de website ↗</a>`:""}.</p><button id="feed-retry" class="ghost wide">Probeer opnieuw</button>`;
+      $("feed-retry").onclick=()=>source(id)}return}
+  if(MS!==opened)return;
   MS.items=j.items;MS.link=j.link;drawEps();
 }
 function drawEps(){
   const st=mGet(),seen=new Set(st.h||[]),pos=st.p||{};
   $("mlist").innerHTML=(MS.items.length?`<ul class="eps">${MS.items.map((x,i)=>{const k=epKey(x),meta=[when(x.d)];
     if(x.n)meta.push(x.n<60?x.n+" s":Math.round(x.n/60)+" min");
-    if(pos[k])meta.push("verder bij "+mmss(pos[k]));else if(seen.has(k))meta.push("✓");
-    return`<li><button class="ep${i===MS.i?" on":""}" data-i="${i}">${x.v?`<img src="/api/thumb?v=${encodeURIComponent(x.v)}" alt="" loading="lazy">`:""}<span><b>${esc(x.t)}</b><small>${meta.join(" · ")}</small></span></button></li>`}).join("")}</ul>`
+    if(pos[k])meta.push("verder bij "+mmss(pos[k]));else if(seen.has(k))meta.push(trS("Geopend")||"Geopend");
+    return`<li><button class="ep${i===MS.i?" on":""}" data-i="${i}"${i===MS.i?' aria-current="true"':""}>${x.v?`<img src="/api/thumb?v=${encodeURIComponent(x.v)}" alt="" loading="lazy">`:""}<span><b>${esc(x.t)}</b><small>${meta.join(" · ")}</small></span></button></li>`}).join("")}</ul>`
     :`<p class="note">Nog geen afleveringen.</p>`)
     +(MS.link?`<p class="note" style="margin-top:14px">Bron: <a href="${esc(MS.link)}" target="_blank" rel="noopener">${esc(MS.m.t)} ↗</a></p>`:"");
   document.querySelectorAll("#mlist .ep").forEach(b=>b.onclick=()=>playEp(+b.dataset.i));
@@ -5570,12 +5594,12 @@ function playEp(i){
     <button class="hint" id="vfull">Volledig scherm</button>
     <h3 class="mt">${esc(x.t)}</h3><p class="note">Ondertiteling: tik op CC. Langzamer: ⚙ → Afspeelsnelheid. <a href="https://www.youtube.com/watch?v=${encodeURIComponent(x.v)}" target="_blank" rel="noopener">Open in YouTube ↗</a></p>`;
   else h=`<h3 class="mt">${esc(x.t)}</h3><audio id="aud" controls preload="metadata" src="${esc(x.a)}"></audio>
-    <div class="mctl"><button class="ghost" id="aback" aria-label="10 seconden terug">↺ 10 s</button>${[.75,1,1.25].map(r=>`<button class="ghost rate" data-r="${r}" aria-label="Snelheid ${r}">${String(r).replace(".",",")}×</button>`).join("")}</div>`;
+    <div class="mctl"><button class="ghost" id="aback" aria-label="10 seconden terug">↺ 10 s</button>${[.75,1,1.25].map(r=>`<button class="ghost rate" data-r="${r}" aria-pressed="false" aria-label="Snelheid ${r}">${String(r).replace(".",",")}×</button>`).join("")}</div>`;
   if(x.s)h+=`<div class="msum" lang="nl">${x.s.split("\n").map(p=>`<p>${esc(p)}</p>`).join("")}</div>`;
   $("mplay").innerHTML=h;
   if(x.v){$("vfull").onclick=()=>vFull(true);$("vx").onclick=()=>vFull(false)}
   if(x.a){
-    const a=$("aud"),rate=r=>{a.defaultPlaybackRate=a.playbackRate=r;document.querySelectorAll(".rate").forEach(b=>b.classList.toggle("on",+b.dataset.r===r))};
+    const a=$("aud"),rate=r=>{a.defaultPlaybackRate=a.playbackRate=r;document.querySelectorAll(".rate").forEach(b=>{const active=+b.dataset.r===r;b.classList.toggle("on",active);b.setAttribute("aria-pressed",String(active))})};
     rate(st.r||1);
     document.querySelectorAll(".rate").forEach(b=>b.onclick=()=>{const s=mGet();s.r=+b.dataset.r;mSet(s);rate(s.r)});
     $("aback").onclick=()=>{a.currentTime=Math.max(0,a.currentTime-10)};
@@ -5587,6 +5611,13 @@ function playEp(i){
     a.ontimeupdate=()=>{if(Date.now()-last>5000){last=Date.now();keep()}};
     a.onpause=()=>{keep();if(MS&&MS.items)drawEps()};a.onended=()=>{const s=mGet();if(s.p)delete s.p[k];mSet(s);drawEps()};
     const at=(st.p||{})[k];if(at)a.addEventListener("loadedmetadata",()=>{a.currentTime=at},{once:true});
+    a.addEventListener("error",()=>{
+      if($("aud")!==a)return;
+      const note=document.createElement("p");note.className="note";note.setAttribute("role","status");
+      note.textContent="Deze aflevering kan hier niet worden afgespeeld.";
+      if(MS.link){const link=document.createElement("a");link.href=MS.link;link.target="_blank";link.rel="noopener";link.textContent="Open de podcast bij de maker ↗";note.append(" ",link)}
+      a.after(note);
+    },{once:true});
     a.play().catch(()=>{});
     if("mediaSession" in navigator&&window.MediaMetadata)navigator.mediaSession.metadata=new MediaMetadata({title:x.t,artist:MS.m.t});
   }
@@ -5794,7 +5825,7 @@ document.addEventListener("keydown",e=>{
 });
 // Swipe from left to right on any inner screen to go back, like on iPhone: it does what the screen's back button does.
 // In the reader a sideways swipe turns pages, so there only a swipe from the left edge (or on the first page) goes back.
-// In a proefexamen the first swipe only asks "Stoppen?" (like the first tap on ✕); a second swipe or tap stops.
+// In a proefexamen, a swipe opens or dismisses the exit confirmation (like tapping ✕).
 (()=>{
   const SCR=["play","stats","lib","read","media","story","hist","talk"];
   let x0=0,y0=0,el=null,on=false,sg=1,settle=null;
@@ -5812,7 +5843,7 @@ document.addEventListener("keydown",e=>{
     if(!el)return; const t=el,dx=(e.changedTouches[0].clientX-x0)*sg; el=null; if(!on)return;
     const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
     const b=t.querySelector(".back"),go=e.type==="touchend"&&dx>90,
-      ask=go&&t.id==="play"&&cur.exam&&pos<queue.length&&!b.classList.contains("arm");
+      ask=go&&t.id==="play"&&cur.exam&&pos<queue.length;
     if(reduced){reset(t);if(go)b.click();return}
     t.style.transition="transform 300ms cubic-bezier(.22,1,.36,1),opacity 300ms cubic-bezier(.4,0,.2,1)";
     let finished=false,timer;
@@ -5911,7 +5942,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru","uk"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="96c7750ff0";
+const UIV="ca39d185c8";
 let uiP=null;
 function uiLoaded(){try{trMemo.clear()}catch(e){} // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});
