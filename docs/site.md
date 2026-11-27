@@ -22,8 +22,8 @@ interaction. Reduced motion skips the animation; resize settles it. Phone cards 
 Scroll anchoring is paused during disclosure motion, and feature-section entrance motion settles on hover so the heading
 cannot move away from a stationary pointer.
 “Ontdek Bittertalen” (`#ontdek`) sits below the hero. Its five cards cover history and culture, books, AI
-conversations, media and A2/B1 exam practice. Swiping, choosing a topic or using the arrows changes the description
-below the cards. With JavaScript disabled all cards and descriptions stay visible. The description links to
+conversations, media and A2/B1 exam practice. Swiping or the two arrows (no topic buttons under them since 27 November 2026, at the user's wish) change the description
+below the cards; the arrow takes the focus when the card or description that had it goes away. With JavaScript disabled all cards and descriptions stay visible. The description links to
 the corresponding app screen. The history card links directly to Vermeer’s painting and the geography reader.
 The exam card opens its level selector, KNM example and writing example in place. The book demo shows the English
 definition of a Dutch word.

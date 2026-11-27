@@ -32,7 +32,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=bittie1">
 <link rel="manifest" href="/manifest.json?v=bittie1">
 <script src="/ios-startup-v1.js" defer></script>
-<link rel="stylesheet" href="/landing.css?v=module-detail">
+<link rel="stylesheet" href="/landing.css?v=arrows-only">
 <link rel="stylesheet" href="/voice-mark-v1.css">
 <script>
 // Browser visits start with the homepage, including returning learners on phones and tablets.
@@ -54,7 +54,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Bittertalen","url":"https://bittertalen.nl/en","applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":"en","educationalLevel":["A2","B1"],"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}
 </script>
-<script defer src="/landing.js?v=book-demo"></script>
+<script defer src="/landing.js?v=arrows-only"></script>
 <script defer src="/lib/gsap-3.15.1.min.js"></script>
 <script defer src="/lib/ScrollTrigger-3.15.1.min.js"></script>
 <script defer src="/landing-motion-v3.js?v=hero-still"></script>
@@ -156,13 +156,6 @@
     </div>
     <div class="product-controls" role="group" aria-labelledby="products-title" hidden>
       <button class="product-arrow" type="button" data-product-step="-1"><span aria-hidden="true">←</span><span class="product-sr" data-t="Vorige kaart">Previous card</span></button>
-      <div class="product-picker">
-        <button type="button" data-product-pick aria-controls="product-history" aria-pressed="true" data-t="Geschiedenis, cultuur en geografie">History, culture and geography</button>
-        <button type="button" data-product-pick aria-controls="product-books" aria-pressed="false" data-t="Boeken lezen met vertaling">Read books with translation</button>
-        <button type="button" data-product-pick aria-controls="product-conversation" aria-pressed="false" data-t="Praat met Bittie">Talk with Bittie</button>
-        <button type="button" data-product-pick aria-controls="product-media" aria-pressed="false" data-t="Video’s en podcasts">Videos and podcasts</button>
-        <button type="button" data-product-pick aria-controls="product-exam" aria-pressed="false" data-t="Voorbereiden op je examen">Prepare for your exam</button>
-      </div>
       <button class="product-arrow" type="button" data-product-step="1"><span aria-hidden="true">→</span><span class="product-sr" data-t="Volgende kaart">Next card</span></button>
     </div>
     <p class="product-sr" role="status"></p>

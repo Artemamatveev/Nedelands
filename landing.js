@@ -480,7 +480,8 @@ function initProducts(section) {
   const stage = section.querySelector(".product-stage");
   const cards = [...stage.children];
   const controls = section.querySelector(".product-controls");
-  const picks = [...controls.querySelectorAll("[data-product-pick]")];
+  const next = controls.querySelector("[data-product-step=\"1\"]");
+  const title = i => cards[i].querySelector("h3").textContent.trim();
   const status = section.querySelector("[role=status]");
   const details = section.querySelector(".product-details");
   const panels = [...details.children];
@@ -497,7 +498,7 @@ function initProducts(section) {
     if (expanded === index) return;
     const from = details.getBoundingClientRect().height;
     expansion?.cancel();
-    if (panels[expanded]?.contains(document.activeElement)) picks[index].focus({preventScroll:true});
+    if (panels[expanded]?.contains(document.activeElement)) next.focus({preventScroll:true});
     expanded = index;
     panels.forEach((panel, i) => {
       panel.hidden = i !== index;
@@ -517,7 +518,7 @@ function initProducts(section) {
   function show(index, announce = true) {
     const center = (index + cards.length) % cards.length;
     if (center !== active && cards[active].contains(document.activeElement)) {
-      picks[center].focus({preventScroll:true});
+      next.focus({preventScroll:true});
     }
     active = center;
     cards.forEach((card, i) => {
@@ -525,25 +526,21 @@ function initProducts(section) {
       card.dataset.position = distance === cards.length - 1 ? "left" : (["center", "right"][distance] || "away");
       card.querySelector(".product-copy").inert = i !== active;
       card.setAttribute("aria-hidden", String(i !== active));
-      picks[i].setAttribute("aria-pressed", String(i === active));
     });
     reveal(active, announce);
-    if (announce) status.textContent = picks[active].textContent;
+    if (announce) status.textContent = title(active);
   }
 
   controls.addEventListener("click", event => {
     const button = event.target.closest("button");
     if (!button) return;
-    const direct = button.hasAttribute("data-product-pick");
-    show(direct ? picks.indexOf(button) : active + Number(button.dataset.productStep));
+    show(active + Number(button.dataset.productStep));
   });
   section.addEventListener("keydown", event => {
     if (details.contains(event.target) || event.altKey || event.ctrlKey || event.metaKey) return;
     if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
     event.preventDefault();
-    const fromPicker = picks.includes(document.activeElement);
     show(active + (event.key === "ArrowLeft" ? -1 : 1));
-    if (fromPicker) picks[active].focus();
   });
   stage.addEventListener("dragstart", event => event.preventDefault());
   stage.addEventListener("pointerdown", event => {
