@@ -22,3 +22,12 @@ test('A2 reading, listening and KNM have three distinct nonempty choices', () =>
     assert.ok(choices.every(Boolean) && new Set(choices).size===3, item.set+' '+item.key);
   }
 });
+
+test('Reviewed A2 reading and listening questions quote their own source verbatim', async () => {
+  const fs = await import('node:fs');
+  const vm = await import('node:vm');
+  const source = fs.readFileSync(new URL('../data/a2.js', import.meta.url), 'utf8');
+  const checked = vm.runInNewContext(source + '\n[[LZ_EVIDENCE,LZ,1],[LSM_EVIDENCE,LSM,2]].flatMap(([evidence,passages,index])=>evidence.flatMap((group,i)=>group.map(([quote,why],j)=>({i,j,why,found:passages[i][0].includes(quote)&&!!passages[i][index][j]}))))');
+  assert.equal(checked.length,33);
+  for(const {i,j,why,found} of checked)assert.ok(found&&why,`lz|${i}.${j}`);
+});

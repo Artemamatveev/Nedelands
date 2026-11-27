@@ -1210,7 +1210,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
 <script src="/study/progress-v1.js?v=261b0e20d0"></script>
 <script src="/study/writing-v1.js?v=84ca5efa75"></script>
 <script src="/data/knm.js?v=1dc8dbea1e"></script>
-<script src="/data/a2.js?v=35098200cf"></script>
+<script src="/data/a2.js?v=fc5273d80a"></script>
 <script src="/data/b1.js?v=1c0276cbe5"></script>
 <script src="/data/extra.js?v=e80c7f18b2"></script>
 <script>
@@ -1991,13 +1991,13 @@ WT.forEach(([t,list],ti)=>{const W=list.split("|").map(x=>x.split("="));
 // Betekenis: the Dutch description of a word, for the hint on verbs and de/het words (from WT and VO, plus a few more)
 const BET={};[...VO,...VO1,...WT.flatMap(([t,l])=>l.split("|").map(x=>x.split("="))),..."vallen=naar beneden gaan zonder dat je het wilt|laten=toestaan dat iets gebeurt; ook: iets niet meenemen|houden=iets vasthebben en niet loslaten|roepen=hard iemands naam zeggen|sterven=doodgaan|trekken=iets naar je toe halen|sluiten=dichtdoen|winnen=de beste zijn in een spel of wedstrijd|bieden=iets geven of voorstellen, bijvoorbeeld hulp|breken=iets in stukken laten gaan|reizen=naar andere plaatsen of landen gaan|het boek=daarin lees je een verhaal; het heeft veel bladzijden|het werk=wat je doet om geld te verdienen|het water=dat drink je; het komt uit de kraan|het meisje=een jong kind dat later een vrouw wordt|de kamer=een ruimte in een huis, met muren en een deur|de taal=daarmee praat je, bijvoorbeeld Nederlands of Arabisch|de jongen=een jong kind dat later een man wordt|verbieden=zeggen dat iets niet mag|vertrekken=weggaan, bijvoorbeeld met de trein|ontvangen=iets krijgen, bijvoorbeeld een brief|vriezen=het is zo koud dat water ijs wordt|schijnen=licht geven, zoals de zon|wegen=kijken hoeveel kilo iets is|zwijgen=niets zeggen|blijken=later duidelijk worden|verdwijnen=weggaan zodat je het niet meer ziet|springen=met je benen omhoog of ver weg gaan|stijgen=omhooggaan, bijvoorbeeld een vliegtuig of de prijs|schieten=een kogel of een bal hard wegsturen|genieten=iets heel fijn vinden|wijzen=met je vinger laten zien waar iets is|bewijzen=laten zien dat iets waar is|lijken=bijna hetzelfde zijn als iets anders|glijden=vallen of bewegen over iets dat glad is|schrikken=plotseling bang worden|treffen=iemand toevallig zien; ook: raken|stelen=iets pakken dat niet van jou is|bidden=praten met God|meten=kijken hoe lang of groot iets is|schenken=drinken in een glas doen; ook: geven|vechten=elkaar slaan|hangen=aan iets vastzitten, niet op de grond|vangen=iets pakken dat beweegt, bijvoorbeeld een bal|slaan=iemand hard raken met je hand|varen=met een boot gaan|kruipen=op je handen en knieën gaan, zoals een baby|heten=een naam hebben|vouwen=papier of kleren dubbel doen|raden=een antwoord zeggen als je het niet zeker weet|wandelen=lopen voor je plezier|studeren=leren aan een hogeschool of universiteit|parkeren=je auto ergens neerzetten|dansen=bewegen op muziek|pakken=iets in je hand nemen|missen=te laat zijn voor de bus; ook: iemand niet bij je hebben|rusten=even niets doen|huren=betalen om iets te gebruiken dat niet van jou is|poetsen=schoonmaken met een borstel, bijvoorbeeld je tanden|regenen=er valt water uit de lucht|verdienen=geld krijgen voor je werk|bestellen=vragen of een winkel iets voor je stuurt|trouwen=met iemand een huwelijk sluiten|groeien=groter worden|slagen=een examen halen|zakken=een examen niet halen".split("|").map(x=>x.split("="))]
   .forEach(([w,d])=>{BET[w]=d;const m=w.match(/^(de|het) (.+)$/);if(m&&!BET[m[2]])BET[m[2]]=d});
-LZ.forEach((t,i)=>t[1].forEach((q,j)=>ITEMS.push({sec:"lz",k:"lz|"+i+"."+j,ord:j,type:"choice",label:"Lees de tekst",intro:t[2],text:t[0],big:q[0],sub:"",right:q[1],opts:()=>shuffle(q.slice(1))})));
+LZ.forEach((t,i)=>t[1].forEach((q,j)=>ITEMS.push({sec:"lz",k:"lz|"+i+"."+j,ord:j,type:"choice",label:"Lees de tekst",intro:t[2],text:t[0],big:q[0],sub:"",right:q[1],evidence:LZ_EVIDENCE[i]?.[j],opts:()=>shuffle(q.slice(1))})));
 LZ1.forEach((t,i)=>t[1].forEach((q,j)=>ITEMS.push({sec:"l1",k:"l1|"+i+"."+j,ord:j,type:"choice",label:"Lees de tekst (B1)",intro:t[2],text:t[0],big:q[0],sub:"",right:q[1],opts:()=>shuffle(q.slice(1))})));
 const sayLines=t=>String(t).split("\n").filter(l=>l.trim()).map(l=>l.replace(/^[AB]: /,""));
 const sayHTML=t=>/^[AB]: /.test(t)?"Tekst:<br>"+sayLines(t).map(l=>"– "+l).join("<br>"):"Tekst: "+t;
 // Luisteren: [text, question, right, wrong, wrong, photo?]. A dialogue has one line per turn, "A: …" / "B: …",
 // read with two different voices; the photo (from /foto) sets the scene, like the video on the exam.
-LSM.forEach((p,i)=>p[2].forEach((q,j)=>ITEMS.push({sec:"ls",k:"ls|m"+i+"."+j,ord:j,type:"choice",label:`Luister en kies het goede antwoord (vraag ${j+1} van ${p[2].length} bij dit fragment)`,intro:p[3],say:p[0],big:q[0],sub:"",right:q[1],opts:()=>shuffle(q.slice(1)),pics:p[1]?[p[1]]:null,note:sayHTML(p[0])})));
+LSM.forEach((p,i)=>p[2].forEach((q,j)=>ITEMS.push({sec:"ls",k:"ls|m"+i+"."+j,ord:j,type:"choice",label:`Luister en kies het goede antwoord (vraag ${j+1} van ${p[2].length} bij dit fragment)`,intro:p[3],say:p[0],big:q[0],sub:"",right:q[1],evidence:LSM_EVIDENCE[i]?.[j],opts:()=>shuffle(q.slice(1)),pics:p[1]?[p[1]]:null,note:sayHTML(p[0])})));
 LS.forEach((p,i)=>ITEMS.push({sec:"ls",k:"ls|"+i,ord:i/5|0,type:"choice",label:"Luister en kies het goede antwoord",say:p[0],big:p[1],sub:"",right:p[2],opts:()=>shuffle(p.slice(2,5)),pics:p[5]?[p[5]]:null,note:sayHTML(p[0])}));
 // Luisteren B1: qs = every question of the fragment, shown before listening in the proefexamen (you hear it once)
 LSB.forEach((p,i)=>p[2].forEach((q,j)=>ITEMS.push({sec:"lb",k:"lb|"+i+"."+j,ord:j,type:"choice",label:`Luister en kies het goede antwoord (vraag ${j+1} van ${p[2].length} bij dit fragment)`,intro:p[3],say:p[0],big:q[0],sub:"",right:q[1],opts:()=>shuffle(q.slice(1)),pics:p[1]?[p[1]]:null,note:sayHTML(p[0]),qs:p[2].map(x=>x[0])})));
@@ -2090,8 +2090,8 @@ function utter(l,done,start,bittie=false){const m=l.match(/^([A-C]): (.*)$/),u=n
     u.pitch=maleDutch?1:.92;u.rate=.95
   }
   if(start)u.onstart=u.onboundary=start;if(done)u.onend=u.onerror=done;speechSynthesis.speak(u)}
-function speak(t){stopSpeak();const n=sayN,L=String(t).split("\n").map(l=>l.trim()).filter(Boolean),K=sayKeys(L),has=i=>!!VOICE&&VOICE.has(K[i]);
-  try{if(!L.some((l,i)=>has(i))){if(canSpeak)L.forEach(l=>utter(l));return}}catch(e){return}
+function speak(t,consistentVoice=false){stopSpeak();const n=sayN,L=String(t).split("\n").map(l=>l.trim()).filter(Boolean),K=sayKeys(L),has=i=>!!VOICE&&VOICE.has(K[i]);
+  try{if(!L.some((l,i)=>has(i))||(consistentVoice&&canSpeak&&!L.every((l,i)=>has(i)))){if(canSpeak)L.forEach(l=>utter(l));return}}catch(e){return}
   sayOn=true;
   const next=i=>{
     if(n!==sayN)return;
@@ -2112,15 +2112,15 @@ function speak(t){stopSpeak();const n=sayN,L=String(t).split("\n").map(l=>l.trim
 // which picks the voice: ls a fragment to listen to, q a question or option read aloud, sp a Spreken question,
 // w a word, r reading aloud (a painting's story, a history chapter), gp a line of the other person in a Gesprek
 // (g: who), gpm an example answer of the learner
+function spokenOption(s){const d=document.createElement("div");d.innerHTML=s;return d.textContent}
 function voiceTexts(){
-  const out=[],seen=new Set(),add=(t,k,g)=>{t=String(t||"").trim();if(t&&!seen.has(k+t)){seen.add(k+t);out.push(g?{t,k,g}:{t,k})}},
-    plain=s=>{const d=document.createElement("div");d.innerHTML=s;return d.textContent};
+  const out=[],seen=new Set(),add=(t,k,g)=>{t=String(t||"").trim();if(t&&!seen.has(k+t)){seen.add(k+t);out.push(g?{t,k,g}:{t,k})}};
   ITEMS.forEach(q=>{
     if(q.say)add(q.say,"ls");
     if(q.tts)add(q.tts,"w");
     if(q.hear)add(q.hear,"w");
     if(q.type==="reveal")add(spoken(q.big),"sp");
-    if(["knm","ls","lb"].includes(q.sec)&&q.type==="choice"){add(q.big,"q");q.opts().forEach(o=>add(plain(o),"q"))}});
+    if(["knm","ls","lb"].includes(q.sec)&&q.type==="choice"){add(q.big,"q");q.opts().forEach(o=>add(spokenOption(o),"q"))}});
   ART.forEach(p=>{(p.v||"").split("\n").forEach(l=>add(l,"r"));(p.w||"").split("|").filter(Boolean).forEach(x=>add(x.split("=")[0],"w"))});
   GS.forEach(c=>c.x.split("\n").forEach(l=>add(l,"r")));
   BG.forEach(l=>{pairs(l.v).forEach(x=>add(x[0],"r"));pairs(l.w).forEach(x=>add(x[0],"w"))});
@@ -2388,6 +2388,10 @@ function spTake(r){
   if($("spchk")&&!$("spchk").hidden)$("spchk").className="btn wide"; else if(!$("rev").hidden)$("rev").className="btn wide";
 }
 // Practice: the phone writes the answer down and Claude grades it, like Schrijven
+function speakingResultLabel(grade){
+  if(grade.limitedLanguageEvidence&&grade.scores?.inhoud===3)return "Vraag beantwoord · te kort voor een volledige beoordeling";
+  return grade.passed?"voldoende":"nog niet voldoende";
+}
 async function spGrade(q,r){
   const attempt=cur,b=$("recb"),c=$("spchk"); b.textContent="● Opnemen";b.className="ghost wide";b.onclick=()=>listen("rec",spTake,r.lim);
   if(!spokenTextReady(q,r.text)){
@@ -2404,7 +2408,7 @@ async function spGrade(q,r){
     }
     if(q.sec==="sp"&&campaignSource()?.source==="a2s")campaignTrack("check");
     b.disabled=false; $("rev").hidden=true; keepErrs(errs); record(ok); if(!cur.exam)quickPraise.show(ok);
-    $("fb").innerHTML=`<b class="${ok?"good":"bad"}">${ok?"Goed zo! Voldoende":"Nog niet voldoende"}</b>
+    $("fb").innerHTML=`<b class="${ok?"good":"bad"}">${res.limitedLanguageEvidence&&res.scores?.inhoud===3?speakingResultLabel(res):ok?"Goed zo! Voldoende":"Nog niet voldoende"}</b>
       <p class="note">${esc(res.verdict)}</p>${scoreHTML(res.scores,q.mx,errs)}
       ${ownHTML(r.text,errs,"Wat ik heb verstaan")}${errsHTML(errs)}${freeNote()}
       <p class="ask">Zo zeg je het goed</p><div class="sample">${esc(res.corrected)}</div>${echoHTML("de verbeterde zinnen")}
@@ -3049,13 +3053,14 @@ function examFocusHTML(source,pick,target,inline){
   const answer=source.right.trim().replace(/[.!?]$/,"").toLowerCase();
   const lines=transcript.split(/\n|(?<=[.!?])\s+/).filter(line=>line.trim());
   const matches=answer.length>=5?lines.filter(line=>line.toLowerCase().includes(answer)):[];
-  const clue=matches.length===1?matches[0]:"";
+  const clue=source.evidence?.[0]||(matches.length===1?matches[0]:"");
   return `<section class="list exam-focus" aria-labelledby="exam-focus-title">
     <p class="eft" id="exam-focus-title"><span data-ui>Oefen verder</span> · ${esc(examSkill(source))}</p>
     <p>${esc(source.big)}</p>
     ${inline?"":`<p><b data-ui>Jouw antwoord</b> · ${esc(capA(source,pick))}<br><b data-ui>Goed is</b> · ${esc(capA(source,source.right))}</p>`}
     ${source.sec==="knm"&&source.note?noteHTML(source.note):""}
     ${clue?`<p class="note"><b data-ui>Zo staat het in de tekst</b> · ${esc(clue)}</p>`:""}
+    ${source.evidence?.[1]?`<p class="note">${esc(source.evidence[1])}</p>`:""}
     ${transcript?`<details><summary data-ui>${source.say?"Lees het luisterfragment":"Lees de tekst terug"}</summary>${source.say?`<div class="sample">${esc(transcript).replaceAll("\n","<br>")}</div>`:docHTML(transcript)}</details>`:""}
     ${source.say&&canSpeak?`<button type="button" class="hint" id="focuslisten" data-ui>▶ Luister opnieuw</button>`:""}
     ${target?`<button type="button" class="${inline?"ghost":"btn"} wide" id="focuspractice" data-ui>Oefen met een nieuwe vraag</button>`:""}
@@ -3448,7 +3453,7 @@ function show(){
     $("say").onclick=()=>{speak(q.say);const n=P[q.say]=(P[q.say]||0)+1;persistChoices();if(cur.exam&&n>=max)done();else $("say").textContent="▶ Nog een keer luisteren"};
     if(cur.exam&&P[q.say]>=max)done();else if(P[q.say])$("say").textContent="▶ Nog een keer luisteren"}
   if($("tts"))$("tts").onclick=()=>speak(q.tts);
-  if($("rd"))$("rd").onclick=()=>speak([q.big,...[...document.querySelectorAll("#card .opt")].map(b=>b.textContent)].join("\n"));
+  if($("rd"))$("rd").onclick=()=>speak([q.big,...o.map(spokenOption)].join("\n"),true);
   if($("hear")){$("hear").onclick=()=>speak(q.hear);speak(q.hear)}
   if($("tr"))$("tr").onclick=()=>{$("tr").textContent=BET[q.big];$("tr").disabled=true};
   if(q.type==="order")return order(q);
@@ -3545,7 +3550,7 @@ function feedback(ok,q,pick){
   }
   // wrong: a short heading, then the right answer in ink (a long red heading was loud)
   $("fb").innerHTML=`<p class="fbh"><i aria-hidden="true">${ok?"✓":"✕"}</i><b class="${ok?"good":"bad"}" data-ui>${ok?"Goed zo!":"Niet goed"}</b></p>${ok?"":`<p class="fbr"><span data-ui>Goed is:</span> <strong>${capA(q,q.right)}</strong></p>`}
-    ${q.note?(q.sec==="verb"?q.note:noteHTML(q.note)):""}${wtNote(q)}
+    ${ok&&!cur.exam&&q.evidence?`<p class="note"><b data-ui>Zo staat het in de tekst</b> · ${esc(q.evidence[0])}</p><p class="note">${esc(q.evidence[1])}</p>`:""}${q.note?(q.sec==="verb"?q.note:noteHTML(q.note)):""}${wtNote(q)}
     <button class="btn wide" id="next" data-ui>Verder</button>`;
   $("next").onclick=()=>{pos++;show()}; $("next").focus();
   if(q.tts&&q.big!==q.tts&&canSpeak)speak(q.tts); // description → word: hear the Dutch word
@@ -4181,7 +4186,7 @@ async function examSpeak(){
     if(!active())return;
     let good=0,pts=0,scored=0;
     const body=A.map((a,i)=>{const t=T[i]||{},errs=Array.isArray(t.errors)?t.errors:[],pt=spPts(t);if(t.passed)good++;if(pt!=null){pts+=pt;scored++}keepErrs(errs);
-      return`<h2>Vraag ${i+1}: <span class="${t.passed?"good":"bad"}">${t.passed?"voldoende":"nog niet voldoende"}</span></h2><p class="note">${esc(a.q.label)}</p><p class="note">${a.q.big}</p><p class="note">${esc(t.verdict)}</p>${scoreHTML(t.scores,a.q.mx,errs)}
+      return`<h2>Vraag ${i+1}: <span class="${t.passed?"good":"bad"}">${speakingResultLabel(t)}</span></h2><p class="note">${esc(a.q.label)}</p><p class="note">${a.q.big}</p><p class="note">${esc(t.verdict)}</p>${scoreHTML(t.scores,a.q.mx,errs)}
         ${own(a,errs)}${errs.length?errsHTML(errs):""}${a.text?`<p class="ask">Zo zeg je het goed</p><div class="sample">${esc(t.corrected)}</div>`:""}
         <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(a.q.right)}</div></details>`}).join("");
     // score: points of all 16 questions (an unanswered one counts 0); without points (older server) the share of good answers

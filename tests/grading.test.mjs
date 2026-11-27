@@ -204,6 +204,7 @@ test('Spreken A2: a complete answer of a few words keeps full inhoud but cannot 
   const short=await handler({part:'sp',text:'Met de trein.',scores:full});
   assert.deepEqual({...short.res.body.tasks[0].scores},{inhoud:3,woorden:1,grammatica:1,samenhang:0});
   assert.equal(short.res.body.tasks[0].passed,false);
+  assert.equal(short.res.body.tasks[0].limitedLanguageEvidence,true);
   assert.match(short.res.body.tasks[0].verdict,/Je antwoord is kort/);
   const longer=await handler({part:'sp',text:'Ik ga met de trein, want dat is snel.',scores:full});
   assert.deepEqual({...longer.res.body.tasks[0].scores},full);

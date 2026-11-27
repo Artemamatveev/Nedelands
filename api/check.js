@@ -119,7 +119,7 @@ export function capShortSpoken(scores, text) {
   if (spokenWords(text) >= SP_SHORT) return { scores, short: false };
   return { scores: { ...scores, woorden: Math.min(scores.woorden, 1), grammatica: Math.min(scores.grammatica, 1), samenhang: 0 }, short: true };
 }
-const SHORT_NOTE = "Je antwoord is kort. Zeg op het examen twee of drie zinnen, dan laat je meer van je Nederlands zien.";
+const SHORT_NOTE = "Je antwoord is kort. Geef wat meer informatie om je Nederlands beter te laten zien.";
 // Schrijven B1: the points per kind of task, as on the Staatsexamen (8 zinsopdrachten, a form and three e-mails = 47)
 const SCORES_WB = {
   z: { inhoud: 1, grammatica: 1 },
@@ -445,7 +445,7 @@ async function gradeRequest(req, res, { user, input, sb, sp, wb, t0, save }) {
         const short = sp && !sb ? capShortSpoken(clamped, tasks[i].text) : { scores: clamped, short: false };
         const scores = short.scores;
         if (short.short) t = { ...t, verdict: [str(t.verdict, 400), SHORT_NOTE].filter(Boolean).join(" ") };
-        return { ...t, errors: uniqueCorrections(t.errors), scores, passed: sb ? sbPassed(scores, SC) : sp ? spPassed(scores) : wb ? wbPassed(scores, SC) : form ? wfPassed(scores) : wrPassed(scores) };
+        return { ...t, ...(short.short ? { limitedLanguageEvidence: true } : {}), errors: uniqueCorrections(t.errors), scores, passed: sb ? sbPassed(scores, SC) : sp ? spPassed(scores) : wb ? wbPassed(scores, SC) : form ? wfPassed(scores) : wrPassed(scores) };
       }),
     };
     if (save) await save(payload);

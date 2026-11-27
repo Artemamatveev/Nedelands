@@ -637,7 +637,7 @@ const LS=[
 ];
 // Luisteren, longer fragments with two or three questions each: [text, photo, [[question, right, wrong, wrong], …]]
 const LSM=[
-["A: Huisartsenpraktijk De Linde, goedemorgen.\nB: Goedemorgen, met Samira Benali. Mijn dochter is zes jaar. Ze heeft sinds gisteren oorpijn en vannacht had ze koorts.\nA: Hoe hoog was de koorts?\nB: Achtendertig en een half.\nA: Ze kan vanmiddag om kwart over drie komen. Geef haar tot die tijd paracetamol voor kinderen. Wordt het erger, bel dan meteen terug.\nB: Dank u wel. Moet ik iets meenemen?\nA: Alleen haar zorgpas.","dokter",
+["A: Huisartsenpraktijk De Linde, goedemorgen.\nB: Goedemorgen, met Samira Benali. Mijn dochter is zes jaar. Ze heeft sinds gisteren oorpijn en vannacht had ze koorts.\nA: Hoe hoog was de koorts?\nB: Achtendertig en een half.\nA: Ze kan vanmiddag om kwart over drie komen. Geef haar tot die tijd paracetamol voor kinderen. Wordt het erger, bel dan meteen terug.\nB: Dank u wel. Alleen haar zorgpas.","dokter",
  [["Wat is het probleem van de dochter?","ze heeft oorpijn en koorts","ze heeft buikpijn en koorts","ze is gevallen en heeft pijn"],["Wanneer gaat de dochter naar de huisarts?","vanmiddag om kwart over drie","morgen om kwart over drie","vanavond"],["Wat moet Samira meenemen?","de zorgpas van haar dochter","paracetamol","een brief van de school van haar dochter"]]],
 ["Beste ouders. Volgende week vrijdag is het sportdag. De kinderen moeten om half negen op het sportveld aan de Parklaan zijn, niet op school. Geef uw kind sportkleren, gymschoenen en een fles water mee. Wij zorgen voor fruit en een lunch. Om twee uur is de sportdag afgelopen. U kunt uw kind dan ophalen bij het sportveld. Wilt u helpen bij een spel? Meld u dan aan bij de leerkracht.","voetbal",
  [["Waar moeten de kinderen vrijdag naartoe?","naar het sportveld aan de Parklaan","naar school, net als elke dag","naar het zwembad in de Parklaan"],["Wat hoeft uw kind niet mee te nemen?","een lunch","gymschoenen","een fles water"],["Waar haalt u uw kind om twee uur op?","bij het sportveld","op school","bij de leerkracht thuis"]]],
@@ -899,4 +899,44 @@ const BG=[
  w:"de apotheek=pharmacy|de buurt=neighbourhood|de supermarkt=supermarket|de melk=milk|de vraag=question|veel=many, a lot",
  q:[["Er ___ een bakker in mijn straat.","is","zijn","heeft","Eén bakker: er is."],["Er ___ drie scholen in de buurt.","zijn","is","hebben","Meer scholen: er zijn."],["___ er een apotheek in de buurt?","Is","Zijn","Heeft","Eén apotheek: is er."],
   ["Welke zin is goed?","Er zijn veel fietsen in Nederland.","Er is veel fietsen in Nederland.","Er heeft veel fietsen in Nederland.","Meer fietsen: er zijn."],["Er is geen melk ___.","meer","niet","geen","Geen … meer."],["Wat betekent: de apotheek?","pharmacy","bakery","neighbourhood"]]},
+];
+
+// Evidence for the reviewed reading items, indexed by the stable text and question keys.
+const LZ_EVIDENCE = [
+  [["U kunt de fiets op zaterdag bekijken tussen 10.00 en 12.00 uur.", "Tien tot twaalf uur is op zaterdagochtend."],
+   ["Bel Karin: 06-12345678 (alleen na 18.00 uur).", "Na zes uur 's avonds mag u Karin bellen. De tijd van tien tot twaalf uur is om de fiets te bekijken."]],
+  [["De grijze bak (restafval) halen wij op dinsdag op, niet meer op vrijdag.", "Voor de grijze bak verandert vrijdag in dinsdag. De groene bak blijft op woensdag."],
+   ["Zet uw bak voor 7.30 uur aan de straat.", "7.30 uur is half acht 's ochtends. De bak moet er vóór die tijd staan."]],
+  [["Uw kind moet zelf eten en drinken meenemen.", "De school vraagt om eten en drinken voor onderweg."],
+   ["Wilt u dit voor 5 juni betalen?", "5 juni is de betaaldatum. Op 12 juni is het schoolreisje."],
+   ["We vertrekken om 8.45 uur met de bus en we zijn om 15.30 uur terug op school.", "De kinderen gaan met de bus. De tijd van 15.30 uur gaat over de terugkomst."]],
+  [["Uitslagen: bel tussen 14.00 en 15.00 uur.", "Van acht tot tien kunt u bellen voor een afspraak. Voor een uitslag belt u tussen twee en drie uur 's middags."],
+   ["U kunt de medicijnen na twee werkdagen ophalen bij de apotheek.", "Na maandag telt u twee werkdagen: dinsdag en woensdag."],
+   ["Spoed buiten openingstijden: bel de huisartsenpost.", "De praktijk is zaterdag dicht. Voor spoed belt u dan de huisartsenpost."]],
+  [["Volgende week dinsdag is er geen vergadering, want veel collega's zijn op vakantie.", "Na want staat de reden: veel collega's zijn op vakantie."],
+   ["Wil je iets bespreken? Stuur dan voor vrijdag een mail naar Sandra.", "Sandra krijgt de mail over het onderwerp. Kamer 2.14 is de plek van de volgende vergadering."]],
+  [["Kaas: 25% korting met uw klantenkaart.", "De woorden met uw klantenkaart geven de voorwaarde voor de korting."],
+   ["Brood: 2 halen, 1 betalen.", "U neemt twee broden mee en betaalt er één."],
+   ["De aanbiedingen zijn geldig van maandag tot en met zaterdag.", "Zondag is de winkel wel open. De aanbiedingen gelden tot en met zaterdag."]],
+  [["Er is muziek, dus misschien hoort u wat lawaai.", "Mark vertelt zijn buren van tevoren dat er muziek en misschien lawaai is."],
+   ["Hebt u er last van? Bel dan gerust aan.", "U kunt bij Mark aanbellen. Aanbellen betekent hier bij zijn deur bellen."]],
+  [["Kosten: € 20 voor tien lessen.", "Deel twintig euro door tien lessen: twee euro per les."],
+   ["Aanmelden kan tot 28 augustus bij de balie.", "28 augustus is de laatste datum om u aan te melden. De lessen beginnen op 3 september."]],
+  [["Er wordt gewerkt aan het spoor.", "Het werk aan het spoor is de reden dat de treinen niet rijden."],
+   ["Uw treinkaartje is ook geldig in de bus.", "Ook geldig betekent dat u hetzelfde kaartje voor de bus kunt gebruiken."]],
+  [["Maak eerst een afspraak via de website of bel de gemeente.", "Eerst maakt u een afspraak. Op de afgesproken dag zet u het grofvuil buiten."],
+   ["Zet het grofvuil op de dag van de afspraak vóór 7.30 uur buiten.", "7.30 uur betekent half acht 's ochtends. Het grofvuil moet er vóór die tijd staan."],
+   ["Oude kleren horen niet bij het grofvuil. Die brengt u naar de kledingcontainer.", "Die verwijst naar oude kleren. Die moeten naar de kledingcontainer."]],
+];
+
+const LSM_EVIDENCE = [
+  [["Ze heeft sinds gisteren oorpijn en vannacht had ze koorts.", "De moeder noemt twee klachten: oorpijn en koorts."],
+   ["Ze kan vanmiddag om kwart over drie komen.", "Vanmiddag betekent vandaag in de middag. Kwart over drie is 15.15 uur."],
+   ["Alleen haar zorgpas.", "Alleen haar zorgpas is nodig. De paracetamol wordt genoemd als iets dat ze thuis kan geven."]],
+  [["De kinderen moeten om half negen op het sportveld aan de Parklaan zijn, niet op school.", "De kinderen beginnen de sportdag op het sportveld. De spreker zegt er ook bij dat ze niet naar school moeten."],
+   ["Wij zorgen voor fruit en een lunch.", "De school regelt de lunch. Gymschoenen en water moet uw kind zelf meenemen."],
+   ["U kunt uw kind dan ophalen bij het sportveld.", "Ophalen doet u op dezelfde plek als waar de sportdag begint."]],
+  [["Ik heb een brief gekregen dat ik de huur van maart nog niet heb betaald.", "De brief over de huur van maart is de reden voor het telefoontje."],
+   ["U hebt het geld naar een oud rekeningnummer gestuurd.", "Het probleem is het rekeningnummer. De vrouw zegt dat ze al op twee maart heeft betaald."],
+   ["Wilt u de huur nog een keer betalen, naar het nieuwe nummer?", "Nog een keer betalen betekent opnieuw betalen. Gebruik daarvoor het nieuwe nummer uit de brief."]],
 ];
