@@ -31,3 +31,13 @@ test('Reviewed A2 reading and listening questions quote their own source verbati
   assert.equal(checked.length,50);
   for(const {i,j,why,found} of checked)assert.ok(found&&why,`lz|${i}.${j}`);
 });
+
+test('A2 listening passages have all their prerecorded lines listed and present', async () => {
+  const {app, root} = await import('./app-harness.mjs');
+  const fs = await import('node:fs');
+  const a = await app();
+  const keys = a.run('Array.from(new Set(ITEMS.filter(q=>q.sec==="ls"&&q.say).flatMap(q=>sayKeys(q.say.split("\\n").map(line=>line.trim()).filter(Boolean)))))');
+  const index = new Set(JSON.parse(fs.readFileSync(new URL('audio/index.json', root), 'utf8')));
+  const missing = keys.filter(k => !index.has(k) || !fs.existsSync(new URL(`audio/${k}.mp3`, root)));
+  assert.deepEqual([...missing], []);
+});
