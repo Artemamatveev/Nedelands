@@ -584,8 +584,8 @@ function initProducts(section) {
   const word = section.querySelector("[data-book-word]");
   const definition = $("book-word");
   definition.hidden = true;
-  word.hidden = false;
-  section.querySelector("[data-book-word-fallback]").hidden = true;
+  word.setAttribute("aria-expanded", "false");
+  word.disabled = false;
   word.addEventListener("click", () => {
     definition.hidden = !definition.hidden;
     word.setAttribute("aria-expanded", String(!definition.hidden));
