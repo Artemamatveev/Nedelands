@@ -32,7 +32,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=bittie1">
 <link rel="manifest" href="/manifest.json?v=bittie1">
 <script src="/ios-startup-v1.js" defer></script>
-<link rel="stylesheet" href="/landing.css?v=fact-badges">
+<link rel="stylesheet" href="/landing.css?v=install-dialog">
 <link rel="stylesheet" href="/voice-mark-v1.css">
 <script>
 // Browser visits start with the homepage, including returning learners on phones and tablets.
@@ -54,7 +54,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Bittertalen","url":"https://bittertalen.nl/zh","applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":"zh-Hans","educationalLevel":["A2","B1"],"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}
 </script>
-<script defer src="/landing.js?v=exam-facts"></script>
+<script defer src="/landing.js?v=install-dialog"></script>
 <script defer src="/lib/gsap-3.15.1.min.js"></script>
 <script defer src="/lib/ScrollTrigger-3.15.1.min.js"></script>
 <script defer src="/landing-motion-v3.js?v=hero-still"></script>
@@ -406,13 +406,16 @@
     <p class="guarantee" data-t="Niet tevreden? Binnen 14 dagen na je eerste betaling krijg je je geld terug.">不满意？首次付款后 14 天内可退款。</p>
   </section>
 
-  <section id="install-app" class="block faq" aria-labelledby="install-title">
+  <!-- How to put the app on the home screen: no section on the page any more (the user's wish, 27 November 2026), only
+       this window, opened by "Installeer de app" when the browser has no install prompt of its own -->
+  <dialog id="install-app" class="install-dialog faq" aria-labelledby="install-title">
     <h2 id="install-title" data-t="Download de app">下载应用</h2>
     <p data-t="Zet Bittertalen gratis op je beginscherm. Geen account nodig.">免费将 Bittertalen 添加到主屏幕，无需账号。</p>
     <details><summary>iPhone / iPad</summary><p data-t="Open deze website in Safari. Tik op Deel en daarna op Zet op beginscherm.">在 Safari 中打开此网站。轻点“分享”，然后选择“添加到主屏幕”。</p></details>
     <details><summary>Android</summary><p data-t="Open deze website in Chrome. Tik op het menu ⋮ en kies App installeren of Toevoegen aan startscherm.">在 Chrome 中打开此网站。轻点 ⋮ 菜单，选择“安装应用”或“添加到主屏幕”。</p></details>
     <details><summary data-t="Computer">电脑</summary><p data-t="Open deze website in Chrome of Edge. Klik op het installatiepictogram in de adresbalk of kies Deze pagina als app installeren in het browsermenu.">在 Chrome 或 Edge 中打开此网站。点击地址栏中的安装图标，或在浏览器菜单中选择“将此页面安装为应用”。</p></details>
-  </section>
+    <form method="dialog"><button class="button outline" data-t="Sluiten">关闭</button></form>
+  </dialog>
 
   <section id="vragen" class="block faq">
     <h2 data-t="Veelgestelde vragen">常见问题</h2>

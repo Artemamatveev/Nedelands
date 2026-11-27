@@ -32,7 +32,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=bittie1">
 <link rel="manifest" href="/manifest.json?v=bittie1">
 <script src="/ios-startup-v1.js" defer></script>
-<link rel="stylesheet" href="/landing.css?v=fact-badges">
+<link rel="stylesheet" href="/landing.css?v=install-dialog">
 <link rel="stylesheet" href="/voice-mark-v1.css">
 <script>
 // Browser visits start with the homepage, including returning learners on phones and tablets.
@@ -54,7 +54,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Bittertalen","url":"https://bittertalen.nl/tr","applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":"tr","educationalLevel":["A2","B1"],"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}
 </script>
-<script defer src="/landing.js?v=exam-facts"></script>
+<script defer src="/landing.js?v=install-dialog"></script>
 <script defer src="/lib/gsap-3.15.1.min.js"></script>
 <script defer src="/lib/ScrollTrigger-3.15.1.min.js"></script>
 <script defer src="/landing-motion-v3.js?v=hero-still"></script>
@@ -406,13 +406,16 @@
     <p class="guarantee" data-t="Niet tevreden? Binnen 14 dagen na je eerste betaling krijg je je geld terug.">Memnun değil misin? İlk ödemenden sonraki 14 gün içinde paranı geri al.</p>
   </section>
 
-  <section id="install-app" class="block faq" aria-labelledby="install-title">
+  <!-- How to put the app on the home screen: no section on the page any more (the user's wish, 27 November 2026), only
+       this window, opened by "Installeer de app" when the browser has no install prompt of its own -->
+  <dialog id="install-app" class="install-dialog faq" aria-labelledby="install-title">
     <h2 id="install-title" data-t="Download de app">Uygulamayı indir</h2>
     <p data-t="Zet Bittertalen gratis op je beginscherm. Geen account nodig.">Bittertalen’ı ücretsiz olarak ana ekranına ekle. Hesap gerekmez.</p>
     <details><summary>iPhone / iPad</summary><p data-t="Open deze website in Safari. Tik op Deel en daarna op Zet op beginscherm.">Bu siteyi Safari’de aç. Paylaş’a, ardından Ana Ekrana Ekle’ye dokun.</p></details>
     <details><summary>Android</summary><p data-t="Open deze website in Chrome. Tik op het menu ⋮ en kies App installeren of Toevoegen aan startscherm.">Bu siteyi Chrome’da aç. ⋮ menüsüne dokun ve Uygulamayı yükle veya Ana ekrana ekle’yi seç.</p></details>
     <details><summary data-t="Computer">Bilgisayar</summary><p data-t="Open deze website in Chrome of Edge. Klik op het installatiepictogram in de adresbalk of kies Deze pagina als app installeren in het browsermenu.">Bu siteyi Chrome veya Edge’de aç. Adres çubuğundaki yükleme simgesine tıkla veya tarayıcı menüsünden Bu sayfayı uygulama olarak yükle’yi seç.</p></details>
-  </section>
+    <form method="dialog"><button class="button outline" data-t="Sluiten">Kapat</button></form>
+  </dialog>
 
   <section id="vragen" class="block faq">
     <h2 data-t="Veelgestelde vragen">Sık sorulan sorular</h2>
