@@ -105,7 +105,11 @@ vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one comin
 - Pronunciation (Zeg het na, `api/_pron.js`, 27 November 2026): Azure Speech is billed per second of audio (about $1.32
   an hour pay-as-you-go; the free F0 tier has 5 hours a month of speech to text, but check whether pronunciation assessment
   counts there). Only signed-in learners, `PRON_DAY` checks a day each (default 30, `ai_guard` key `pron:` + user) and all
-  together `PRON_CAP` seconds of audio a day (default 3600, key `pron:all`); a failed Azure call gives both back. An
+  together `PRON_CAP` seconds of audio a day (default 14400 since 28 November 2026, about $5.28, key `pron:all`; a
+  Spreken answer counts its seconds plus up to 30 scored ones); a failed Azure call gives both back. A Spreken answer
+  (`{free:true}`, practice or proefexamen) takes its seconds from `STT_DAY` (default 2700 a day, key `stt:` + user)
+  instead of a check of `PRON_DAY`; `{ask:true}` reads both without using any (a guard with cost 0), before an exam.
+  An A2 proefexamen with sixteen 30 s answers is about 960 s, about $0.35. An
   unreachable counter refuses (503). The spend is in /admin as model `azure-speech-pron`, one input "token" per second
   (`PRICE` in admin.html). Needs `AZURE_SPEECH_KEY` (and optionally `AZURE_SPEECH_REGION`) in Vercel; the page calls
   only `/api/pron`, so the CSP needs no new host.

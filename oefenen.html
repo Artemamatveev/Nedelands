@@ -2359,16 +2359,17 @@ function reviewSpokenAnswer(q,r,firstGrade){
   if(q!==queue[pos])return;
   const recordButton=$("recb"),checkButton=$("spchk");
   if(!r.text){
-    $("recn").textContent=r.note+"Geen spraak herkend. Probeer het nog een keer.";
+    $("recn").textContent=r.note+(r.pronFail?"Probeer het nog een keer.":"Geen spraak herkend. Probeer het nog een keer.");
     recordButton.textContent="● Opnieuw inspreken";
-    recordButton.onclick=()=>listen("say",take=>reviewSpokenAnswer(q,take,firstGrade),r.lim);
+    recordButton.onclick=()=>spListen(take=>reviewSpokenAnswer(q,take,firstGrade),r.lim);
     checkButton.disabled=false;
     return;
   }
   recordButton.textContent="● Opnieuw inspreken";
   recordButton.className="ghost wide";
-  recordButton.onclick=()=>{checkButton.hidden=true;listen("say",take=>reviewSpokenAnswer(q,take,firstGrade),r.lim)};
-  $("recp").innerHTML='<label class="fld"><span>Wat ik heb verstaan</span><textarea id="sptranscript" rows="3" maxlength="1200" spellcheck="false"></textarea></label><p class="note">Verbeter alleen wat je telefoon verkeerd heeft verstaan.</p>';
+  recordButton.onclick=()=>{checkButton.hidden=true;spListen(take=>reviewSpokenAnswer(q,take,firstGrade),r.lim)};
+  if(r.pron&&r.url)recUrl=r.url;
+  $("recp").innerHTML=(r.pron&&r.url?`<audio controls src="${r.url}"></audio>`:"")+'<label class="fld"><span>Wat ik heb verstaan</span><textarea id="sptranscript" rows="3" maxlength="1200" spellcheck="false"></textarea></label><p class="note">'+(r.pron?"Verbeter alleen wat verkeerd is verstaan.":"Verbeter alleen wat je telefoon verkeerd heeft verstaan.")+'</p>'+pronSummaryHTML(r.pron);
   const input=$("sptranscript");
   input.value=r.text;
   $("recn").textContent="Controleer de tekst voordat je je antwoord laat nakijken.";
@@ -2413,7 +2414,7 @@ async function spGrade(q,r,firstGrade){
     b.disabled=false; $("rev").hidden=true; keepErrs(errs); if(!firstGrade)record(ok); else save(); if(!cur.exam)quickPraise.show(ok);
     $("fb").innerHTML=`<b class="${ok?"good":"bad"}">${res.limitedLanguageEvidence&&res.scores?.inhoud===3?speakingResultLabel(res):ok?"Goed zo! Voldoende":"Nog niet voldoende"}</b>
       <p class="note">${esc(res.verdict)}</p>${scoreHTML(res.scores,q.mx,errs)}
-      ${ownHTML(r.text,errs,"Wat ik heb verstaan")}${errsHTML(errs)}${freeNote()}
+      ${pronSummaryHTML(r.pron)}${ownHTML(r.text,errs,"Wat ik heb verstaan")}${errsHTML(errs)}${freeNote()}
       <p class="ask">Zo zeg je het goed</p><div class="sample">${esc(res.corrected)}</div>${echoHTML("de verbeterde zinnen")}
       <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(q.right)}</div></details>
       <button class="btn wide" id="next">Verder</button>`;
@@ -2425,7 +2426,7 @@ async function spGrade(q,r,firstGrade){
       $("next").insertAdjacentHTML("beforebegin",'<button class="ghost wide" id="speakAgain">Geef opnieuw antwoord</button><p class="note">Opnieuw inspreken is gratis. Opnieuw laten nakijken kost één nakijkbeurt.</p>');
       $("speakAgain").onclick=()=>{
         $("speakAgain").disabled=true;
-        listen("say",take=>reviewSpokenAnswer(q,take,res),r.lim);
+        spListen(take=>reviewSpokenAnswer(q,take,res),r.lim);
       };
     }
     const target=!ok&&nextPracticeQuestion(q);
@@ -2460,6 +2461,28 @@ function prepThen(q,go){
     if(P){$("rect").textContent=mmss(Math.ceil(ms/1e3));$("recm").style.width=ms/P/10+"%";$("recn").textContent="Denk na. Daarna begint je antwoord vanzelf."}
     if(!ms){stopPrep();$("rect").textContent=mmss(q.spk);$("recm").style.width="100%";auto()}
   },250);
+}
+// Proefexamen with Azure (cur.stt): asked once when the exam starts (sttExam): only when the learner's seconds and
+// everyone's left today cover the whole exam (an answer takes its seconds plus up to 30 scored ones), so an exam never
+// runs out halfway; else, or while the answer is still on its way (cur.stt null), the phone's recognition as before.
+async function sttExam(exam){
+  exam.stt=null;
+  if(!pronOn())return exam.stt=false;
+  const need=queue.reduce((n,q)=>{const t=q.spk||SPK;return n+t+Math.min(t,30)},0);
+  try{const h=await authHead(),r=await fetch("/api/pron",{method:"POST",headers:{"Content-Type":"application/json",...h},body:JSON.stringify({ask:true})}),j=await r.json();
+    exam.stt=r.ok&&j.left>=need&&j.all>=need}catch(e){exam.stt=false}
+}
+// An answer is kept as a recording at once and Azure writes it down while the learner goes on; the grading waits for it
+// (examSpeak). A failed call is tried once more; a lasting failure (limit, busy) sends the rest of the exam to the phone.
+function spExamTake(q,r){
+  if(q!==queue[pos]||!cur.exam||!cur.speak)return;
+  const exam=cur;spNext(q,{...r,text:""});
+  const a=exam.ans[pos];if(!r.url||!a||a.url!==r.url)return;
+  const once=()=>pronCheck(null,r);
+  a.job=once().catch(e=>/^(failed|offline|quota_unavailable)$/.test(e?.code)?once():Promise.reject(e))
+    .then(j=>{if(!exam.ans.includes(a))return;a.text=j.text||"";a.pron=j.scores?{...j.scores,part:!!j.part,words:j.words||[]}:null;if(cur===exam)persistSpeaking()})
+    .catch(e=>{a.fail=e?.code||"failed";if(/^(limit|busy|audio|not_configured|login)$/.test(a.fail))exam.stt=false})
+    .finally(()=>{a.job=null});
 }
 // Proefexamen: keep one answer per question; a retake replaces it before moving on. Grade together at the end.
 function spNext(q,r){
@@ -3437,6 +3460,7 @@ function build(id,custom){
     cur.nw=spokenDraft.nw;pos=spokenDraft.pos;
   }
   if(cur.exam&&cur.write)cur.gradeId||=crypto.randomUUID();
+  if(cur.exam&&cur.speak)sttExam(cur);
   total=queue.length;
   const savedEnd=cur.spDraft?.end||choices?.end||draft?.end;
   const remaining=savedEnd?Math.max(0,(savedEnd-Date.now())/60000):cur.min;
@@ -3498,7 +3522,7 @@ function show(){
   else if(q.type==="reveal")h+=(canSpeak?`<button class="hint" id="sayq">▶ Luister naar de vraag</button>`:"")
     +`<div class="rec" id="rec"><div class="clk"><span class="t" id="rect">${mmss(q.spk||SPK)}</span><div class="m"><i id="recm"></i></div></div><div id="recp"></div>
     <button class="btn wide" id="recb">${cur.exam?"● Antwoord geven":"● Opnemen"}</button>${cur.exam?`<button class="ghost wide" id="spredo" hidden>↻ Opnieuw opnemen</button>`:""}<p class="note" id="recn" role="status" aria-atomic="true">${q.spk?`${q.prep?`Denk eerst ${q.prep} seconden na. `:""}Je hebt ${q.spk} seconden om te antwoorden, zoals op het Staatsexamen.${cur.exam?" Na de vraag begint de tijd vanzelf.":" Daarna kun je jezelf terugluisteren."}`:cur.exam?"Je hebt één minuut per vraag.":"Je hebt één minuut. Daarna kun je jezelf terugluisteren."}</p></div>
-    ${cur.exam?"":`${SR?`<button class="ghost wide" id="spchk" style="margin-bottom:10px">Spreek in en laat nakijken</button>${acc.cfg&&!acc.user?(acc.cfg.free?freeNote():`<p class="note">Nakijken kan als je bent ingelogd (Profiel).</p>`):""}`:""}<button class="ghost wide" id="rev">Toon voorbeeld</button>`}`;
+    ${cur.exam?"":`${SR||pronOn()?`<button class="ghost wide" id="spchk" style="margin-bottom:10px">Spreek in en laat nakijken</button>${acc.cfg&&!acc.user?(acc.cfg.free?freeNote():`<p class="note">Nakijken kan als je bent ingelogd (Profiel).</p>`):""}`:""}<button class="ghost wide" id="rev">Toon voorbeeld</button>`}`;
   else if(S.typing&&q.canType)h+=`<div class="type"><input id="inp" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Je antwoord"><button class="btn" id="chk">Controleer</button></div>`;
   else{const nv=cur.nav&&q.type==="choice";o=nv?cur.op[pos]=cur.op[pos]||q.opts():q.opts();
     // a Beginnen "Wat betekent" question shows its English options in the menu language (the answer itself is unchanged)
@@ -3531,7 +3555,7 @@ function show(){
   if(q.type==="write"){$("chk").onclick=()=>{if(cur.exam){cur.ans.push(grab(q));pos++;show()}else if(q.kind==="z")checkZ(q);else check(q)};return}
   if(q.type==="reveal"){
     if($("sayq"))$("sayq").onclick=()=>speak(spoken(q.big));
-    if(cur.exam){const go=()=>{$("spredo").hidden=true;return listen(SR?"say":"rec",r=>spNext(q,r),q.spk)};
+    if(cur.exam){const go=()=>{$("spredo").hidden=true;return cur.stt?listen("rec",r=>spExamTake(q,r),q.spk):listen(SR?"say":"rec",r=>spNext(q,r),q.spk)};
       const begin=()=>{stopPrep();return go()};$("recb").onclick=begin;$("spredo").onclick=begin;
       if(cur.part==="sp"&&cur.ans[pos]?.text){
         const text=cur.ans[pos].text;
@@ -3541,7 +3565,7 @@ function show(){
       if(canSpeak)speak(spoken(q.big)); // the exam asks the question aloud
       if(q.sec==="sb")prepThen(q,go);return}
     $("recb").onclick=()=>listen("rec",spTake,q.spk); $("rev").onclick=()=>reveal(q);
-    if($("spchk"))$("spchk").onclick=()=>{$("spchk").disabled=true;listen("say",r=>reviewSpokenAnswer(q,r),q.spk)};
+    if($("spchk"))$("spchk").onclick=()=>{$("spchk").disabled=true;spListen(r=>reviewSpokenAnswer(q,r),q.spk)};
     return}
   if(cur.nav&&q.type==="choice"){
     // in a proefexamen an answer is only chosen (marked at the end), so one light tap that says nothing about right or wrong
@@ -3747,12 +3771,14 @@ async function pronWav(blob,max){
   return btoa(bin);
 }
 // {heard, scores:{accuracy, fluency, completeness, pron}, words:[{w, s, e}]}, or throws {code}
+// text null: a free answer (Spreken), written down by Azure -> {heard, text, scores:{accuracy, fluency, pron}, words, part}
 async function pronCheck(text,r){
   if(!r.mr)throw{code:"audio"}; // no recorder here (or no microphone permission)
   if(!r.chunks.length)throw{code:"empty"};
-  let audio;try{audio=await pronWav(new Blob(r.chunks,{type:r.mr&&r.mr.mimeType||""}),pronMax())}catch(e){throw{code:e&&e.code==="short"?"empty":"audio"}}
+  const free=text==null,max=free?Math.min(60,acc.cfg?.pron?.free||60):pronMax();
+  let audio;try{audio=await pronWav(new Blob(r.chunks,{type:r.mr&&r.mr.mimeType||""}),max)}catch(e){throw{code:e&&e.code==="short"?"empty":"audio"}}
   const h=await authHead();
-  let res;try{res=await fetch("/api/pron",{method:"POST",headers:{"Content-Type":"application/json",...h},body:JSON.stringify({text,audio})})}catch(e){throw{code:"offline"}}
+  let res;try{res=await fetch("/api/pron",{method:"POST",headers:{"Content-Type":"application/json",...h},body:JSON.stringify(free?{free:true,audio}:{text,audio})})}catch(e){throw{code:"offline"}}
   const j=await res.json().catch(()=>({}));
   if(!res.ok)throw{code:j.error||"failed"};
   return j;
@@ -3781,6 +3807,28 @@ function pronMarks(target,words){
   return{P,at};
 }
 const PRON_LOW=60,PRON_MID=80;
+// Spreken practice with Azure (pronOn()): the phone records the answer, Azure writes it down and scores its sound. The
+// take that reaches done() looks like one from the phone's recognition (text, note, lim) and also has pron. A failure
+// gives an empty text with the reason in the note (the learner can speak again, then with the phone if pronOff).
+function spListen(done,lim){
+  if(!pronOn())return listen("say",done,lim);
+  listen("rec",async r=>{
+    const b=$("recb");if(b)b.disabled=true;if($("recn"))$("recn").textContent=r.note+"Je antwoord wordt uitgeschreven…";
+    let j=null,msg="";
+    try{j=await pronCheck(null,r)}catch(e){msg=e&&e.code==="login"?pronFail("off"):pronFail(e&&e.code)}
+    if(b&&b===$("recb"))b.disabled=false;
+    if(!j)return done({...r,text:"",note:r.note+msg+" ",pronFail:true});
+    done({...r,text:j.text||"",pron:j.scores?{...j.scores,part:!!j.part,words:j.words||[]}:null});
+  },lim);
+}
+// The sound of a spoken answer: three scores out of 100 and the words that sounded least clear
+function pronSummaryHTML(p){
+  if(!p)return"";
+  const weak=[...new Set((p.words||[]).filter(w=>w.e!=="Insertion"&&w.e!=="Omission"&&w.s<PRON_MID).sort((a,b)=>a.s-b.s).map(w=>w.w))].slice(0,6);
+  return`<p class="ask">Uitspraak</p><div class="pron"><span>Uitspraak<b>${p.pron}</b></span><span>Klanken<b>${p.accuracy}</b></span><span>Vloeiendheid<b>${p.fluency}</b></span></div>
+    ${weak.length?`<p class="note">Minder duidelijk: <span lang="nl">${weak.map(esc).join(", ")}</span></p>`:""}
+    <p class="note">${p.part?"Alleen de eerste 30 seconden. ":""}Een oefenscore van de computer, geen examencijfer.</p>`;
+}
 async function pronDone(target,r){
   echoReset(target);
   const out=$("echor"),b=$("echo");if(!out)return;
@@ -4357,8 +4405,14 @@ async function examSpeak(){
     if(readLocal(key)?.id===exam.spDraft.id)lsSet(key,null);
   };
   const bind=()=>{$("more").onclick=()=>{clear();build(exam.id,exam)};$("tohome").onclick=home};
-  const own=(a,errs)=>`<p class="ask">Jouw antwoord</p>${a.url?`<audio controls src="${a.url}"></audio>`:""}${a.text||!a.url?`<div class="sample own">${markErrs(a.text,errs)||"(niets verstaan)"}</div>`:""}`;
+  const own=(a,errs)=>`<p class="ask">Jouw antwoord</p>${a.url?`<audio controls src="${a.url}"></audio>`:""}${a.text||!a.url||a.fail?`<div class="sample own">${markErrs(a.text,errs)||"(niets verstaan)"}</div>`:""}${pronSummaryHTML(a.pron)}`;
   const plain=(msg,retry=false)=>{card.innerHTML=(retry?retryCheckHTML(msg):`<p class="note">${msg}</p>`)+A.map((a,i)=>`<h2>Vraag ${i+1}</h2><p class="note">${a.q.big}</p>${own(a)}<p class="ask">Voorbeeld</p><div class="sample">${esc(a.q.right)}</div>`).join("")+foot;bind();if(retry)$("retrycheck").onclick=examSpeak};
+  const jobs=A.map(a=>a?.job).filter(Boolean);
+  if(jobs.length){
+    card.innerHTML=`<p class="note">Je antwoorden worden uitgeschreven…</p>`;
+    await Promise.race([Promise.allSettled(jobs),new Promise(ok=>setTimeout(ok,60000))]);
+    if(cur!==exam||$("play").hidden)return;
+  }
   if(!A.length){clear();card.innerHTML=`<p class="note">Je hebt geen vraag beantwoord.</p>`+foot;return bind()}
   if(!A.some(a=>a.text)){clear();return plain("Luister naar je antwoorden en vergelijk ze met de voorbeelden.")}
   card.innerHTML=`<p class="note">Ik kijk je ${A.length} antwoorden na… Dit duurt een of twee minuten.</p>`;
@@ -4379,7 +4433,7 @@ async function examSpeak(){
     keepRes(cur.part,pc,undefined,exam.spDraft?.id);clear();
     card.innerHTML=`<div class="done"><p class="ask">${cur.t}: uitslag</p><div class="big">${pc}%</div><p class="ru">${scored?`${pts} van ${max} punten, `:""}${good} van ${queue.length} antwoorden voldoende${A.length<queue.length?`; ${queue.length-A.length} ${queue.length-A.length===1?"vraag":"vragen"} niet beantwoord`:""}</p></div>
       <p><b class="${pass?"good":"bad"}">${pass?"Oefendoel bereikt":"Meer oefenen"}</b></p>
-      <p class="note">Het oefendoel is ${passPc(cur.part)}%. Deze score gaat over je uitgeschreven antwoorden. Uitspraak en vloeiendheid zijn niet beoordeeld.</p>`+(incomplete?`<p class="note"><b>Volgende stap:</b> oefen morgen in Mijn dag met een nieuwe vraag waarop je elk deel moet beantwoorden.</p>`:"")+(pass?"":examOffer())+body+foot; bind();
+      <p class="note">Het oefendoel is ${passPc(cur.part)}%. Deze score gaat over je uitgeschreven antwoorden. ${A.some(a=>a?.pron)?"Je uitspraak staat per vraag; die telt niet mee in deze score.":"Uitspraak en vloeiendheid zijn niet beoordeeld."}</p>`+(incomplete?`<p class="note"><b>Volgende stap:</b> oefen morgen in Mijn dag met een nieuwe vraag waarop je elk deel moet beantwoorden.</p>`:"")+(pass?"":examOffer())+body+foot; bind();
   }catch(e){
     if(!active())return;
     const c=e&&e.code,retry=checkRetry(c);

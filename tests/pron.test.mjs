@@ -127,3 +127,104 @@ test('A used-up day sends the rest of the visit back to the phone\'s recognition
   assert.match(item('echor').textContent,/uitspraakcontroles van vandaag zijn op/);
   assert.equal(a.run('pronOn()'),false);
 });
+
+test('A free Spreken answer is written down whole and its first 30 seconds are scored', async()=>{
+  const t=await load({azure:{RecognitionStatus:'Success',NBest:[{Display:'Ik woon in Utrecht.',PronunciationAssessment:{AccuracyScore:80,FluencyScore:70,CompletenessScore:100,PronScore:75},
+    Words:[{Word:'ik',PronunciationAssessment:{AccuracyScore:90,ErrorType:'None'}}]}]}});
+  const r=await t.call({free:true,audio:wav(45).toString('base64')});
+  assert.equal(r.statusCode,200);
+  assert.equal(r.body.text,'Ik woon in Utrecht.');assert.equal(r.body.heard,true);assert.equal(r.body.part,true);
+  assert.deepEqual(plain(r.body.scores),{accuracy:80,fluency:70,pron:75});
+  assert.deepEqual(t.guards,[['stt:user-1',75],['pron:all',75]],'the whole answer plus the scored part, in seconds of the learner\'s day');
+  assert.equal(t.fetches.length,2);
+  const [said,judged]=t.fetches;
+  assert.equal(said[1].headers['Pronunciation-Assessment'],undefined,'the text comes from plain speech to text');
+  assert.equal(JSON.parse(Buffer.from(judged[1].headers['Pronunciation-Assessment'],'base64').toString()).ReferenceText,undefined,'unscripted');
+  assert.equal(t.ns.wavSeconds(judged[1].body),30);assert.equal(t.ns.wavSeconds(said[1].body),45);
+  assert.equal((await t.call({free:true,audio:wav(61).toString('base64')})).statusCode,400,'longer than a minute is refused');
+});
+
+test('Before an exam the page asks for the seconds left without using any', async()=>{
+  const t=await load();
+  const r=await t.call({ask:true});
+  assert.equal(r.statusCode,200);assert.deepEqual(plain(r.body),{left:2700,all:14400});
+  assert.deepEqual(t.guards,[['stt:user-1',0],['pron:all',0]]);assert.equal(t.fetches.length,0);
+  assert.equal((await (await load({guest:true})).call({ask:true})).statusCode,401);
+});
+
+// Spreken practice on the page: the recorder instead of the phone's recognition, Azure's text in the review
+test('Spreken practice records the answer and reviews Azure\'s text with the pronunciation scores', async()=>{
+  const posts=[];
+  class MediaRecorder{constructor(){this.state='inactive';this.mimeType='audio/mp4'}
+    start(){this.state='recording'} stop(){this.state='inactive';this.ondataavailable?.({data:{size:10}});this.onstop?.()}}
+  const a=await app({globals:{
+    navigator:{userAgent:'test',platform:'test',storage:{persist:async()=>false},onLine:true,mediaDevices:{getUserMedia:async()=>({getTracks:()=>[{stop(){}}]})}},
+    MediaRecorder,OfflineAudioContext:class{},
+    fetch:async(url,init)=>{if(url==='/api/pron'){posts.push(JSON.parse(init.body));return new Response(JSON.stringify({heard:true,text:'Ik ga met de trein.',part:false,left:29,
+      scores:{accuracy:72,fluency:64,pron:70},words:[{w:'trein',s:41,e:'None'},{w:'ga',s:95,e:'None'}]}))}
+      return new Response(JSON.stringify(url==='/api/config'?{}:[]))},
+  }});
+  a.run(`acc.cfg={pron:{day:30,seconds:30,free:60}};acc.user={id:'u'};acc.sb={auth:{getSession:async()=>({data:{session:{access_token:'t'}}})}};
+    pronWav=async()=>'UklGRg==';URL.createObjectURL=()=>'blob:x';URL.revokeObjectURL=()=>{}`);
+  a.run('build("sp",{...SEC.find(s=>s.id==="sp"),n:1,keep:1,pool:()=>[ITEMS.find(q=>q.k==="sp|3")]})');
+  const item=id=>a.document.getElementById(id);
+  assert.ok(item('spchk'),'the check button is there even without the phone\'s recognition');
+  item('spchk').click();await a.flush();
+  item('recb').click();await a.flush();
+  assert.deepEqual(posts,[{free:true,audio:'UklGRg=='}]);
+  assert.equal(item('sptranscript').value,'Ik ga met de trein.');
+  const p=item('recp').textContent;
+  assert.match(p,/Uitspraak/);assert.match(p,/Klanken72/);assert.match(p,/Minder duidelijk: trein/);assert.match(p,/geen examencijfer/);
+  assert.ok(item('recp').querySelector('audio'),'the learner can listen to the recording');
+});
+
+// The proefexamen: asked once whether Azure covers the whole exam, answers written down in the background
+async function examPage({left=5000,fail=null}={}){
+  const posts=[],checks=[];
+  class MediaRecorder{constructor(){this.state='inactive';this.mimeType='audio/mp4'}
+    start(){this.state='recording'} stop(){this.state='inactive';this.ondataavailable?.({data:{size:10}});this.onstop?.()}}
+  let n=0;
+  const a=await app({globals:{
+    navigator:{userAgent:'test',platform:'test',storage:{persist:async()=>false},onLine:true,mediaDevices:{getUserMedia:async()=>({getTracks:()=>[{stop(){}}]})}},
+    MediaRecorder,OfflineAudioContext:class{},SpeechRecognition:class{start(){}stop(){}abort(){}},
+    fetch:async(url,init)=>{
+      if(url==='/api/pron'){const b=JSON.parse(init.body);posts.push(b);
+        if(b.ask)return new Response(JSON.stringify({left,all:50000}));
+        if(fail)return new Response(JSON.stringify({error:fail}),{status:429});
+        n++;return new Response(JSON.stringify({heard:true,text:'Antwoord '+n+'.',part:false,left:2000,scores:{accuracy:80,fluency:75,pron:78},words:[]}))}
+      if(url==='/api/check'){const b=JSON.parse(init.body);checks.push(b.tasks.map(t=>t.text));
+        return new Response(JSON.stringify({tasks:b.tasks.map(()=>({passed:true,verdict:'Goed.',corrected:'Goed.',errors:[],scores:{inhoud:3,woorden:2,grammatica:2,samenhang:1}}))}))}
+      return new Response(JSON.stringify(url==='/api/config'?{}:[]))},
+  }});
+  a.run(`acc.cfg={pron:{day:30,seconds:30,free:60,stt:2700}};acc.user={id:'u'};acc.sb={auth:{getSession:async()=>({data:{session:{access_token:'t'}}})}};
+    pronWav=async()=>'UklGRg==';URL.createObjectURL=()=>'blob:'+Math.random();URL.revokeObjectURL=()=>{};lsSet(speakingDraftKey(),null)`);
+  a.run('startExam("sp",true)');await a.flush();
+  return {a,posts,checks};
+}
+
+test('A speaking exam on Azure keeps each answer as a recording and grades Azure\'s texts at the end', async()=>{
+  const {a,posts,checks}=await examPage();
+  assert.equal(posts[0].ask,true);assert.equal(a.run('cur.stt'),true,'16 answers fit in the seconds left');
+  const b=()=>a.document.getElementById('recb');
+  b().click();await a.flush();b().click();await a.flush();   // answer the first question
+  assert.match(a.document.getElementById('recn').textContent,/Antwoord klaar/);
+  assert.equal(posts[1].free,true);
+  a.run('pos=queue.length;finish()');await a.flush();await a.flush();
+  assert.deepEqual(checks,[['Antwoord 1.']],'the grading gets the text Azure wrote down');
+  const card=a.document.getElementById('card').textContent;
+  assert.match(card,/Antwoord 1\./);assert.match(card,/Klanken80/);assert.match(card,/telt niet mee in deze score/);
+});
+
+test('Too few seconds left today: the whole exam uses the phone\'s recognition', async()=>{
+  const {a,posts}=await examPage({left:100});
+  assert.equal(a.run('cur.stt'),false);
+  a.document.getElementById('recb').click();await a.flush();
+  assert.equal(posts.length,1,'only the question, no recording sent');
+});
+
+test('A limit reached during the exam sends the rest of it to the phone', async()=>{
+  const {a}=await examPage({fail:'limit'});
+  const b=()=>a.document.getElementById('recb');
+  b().click();await a.flush();b().click();await a.flush();await a.flush();
+  assert.equal(a.run('cur.stt'),false);assert.equal(a.run('cur.ans[0].fail'),'limit');
+});

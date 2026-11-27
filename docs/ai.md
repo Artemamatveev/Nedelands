@@ -78,6 +78,29 @@ The scores are a practice hint ("geen examencijfer"); they are not part of Sprek
 with an examiner. Guests keep the phone path. Do not switch on audio logging in the Azure resource: privacy.html says
 Microsoft keeps no recording.
 
+Spreken practice with Azure (28 November 2026): with `pron` on and a signed-in learner, a practice answer (Spreek in en
+laat nakijken, Opnieuw inspreken, Geef opnieuw antwoord) is recorded instead of written down by the phone (`spListen()`;
+`listen("rec")`, then `pronCheck(null, r)`). `/api/pron` with `{free:true, audio}` (at most `FREE_SECONDS`, 60 s, Azure's
+limit for short audio) sends the whole answer to plain speech to text (`Display`, the text) and, at the same time, its
+first 30 s (`wavHead()`, Azure's limit for an assessment) to an unscripted pronunciation assessment (no reference text,
+no miscue): Uitspraak, Klanken and Vloeiendheid out of 100 and up to six words below 80 ("Minder duidelijk"), shown in the
+review (`pronSummaryHTML()`, with the recording to play back) and again with Claude's grade; "Alleen de eerste 30
+seconden" when the answer was longer. The text then goes through the same review and grading as the phone's. A failure
+says why and lets the learner speak again; a lasting one (limit, busy, no recorder) falls back to the phone (`pronOff`).
+About 10 s for a 60 s answer. The pronunciation scores are not part of Claude's points.
+
+The proefexamen Spreken (A2 and B1) with Azure (28 November 2026): when the exam starts, `sttExam()` asks `/api/pron`
+`{ask:true}` for the learner's seconds left today (`STT_DAY`) and everyone's (`PRON_CAP`), and uses Azure for the whole
+exam only when both cover it (each question its seconds plus up to 30 scored); else, or while that answer is on its way
+(`cur.stt` null), the phone's recognition as before, so an exam never switches halfway on a full allowance. With Azure
+each take is a recording (`spExamTake()`): kept at once as the answer (Volgende vraag right away), written down in the
+background (one retry), the text saved into the draft when it arrives; a retake replaces it and its late text is
+ignored. A lasting failure (limit, busy) sends the rest of the exam to the phone (`cur.stt=false`). `examSpeak()` waits
+for the texts ("Je antwoorden worden uitgeschreven…", at most 60 s) before Claude grades; an answer without text shows
+its recording and "(niets verstaan)". Each answer in the result shows its pronunciation, and the score note says it does
+not count. Recordings stay in memory, so after reopening an unfinished exam only the answers already written down are
+there (as before with recordings).
+
 When checking fails temporarily, single-task writing practice keeps the text editable and speaking practice retries the same transcript. Writing and speaking exam results offer a retry with the submitted answers, without registering another exam attempt. Speaking practice transcripts remain available in the open exercise only. The local A2 exam draft also restores the original deadline and question order after reopening.
 
 Making new Lezen and Luisteren material with Claude was removed (it cost a call per tap and its
