@@ -69,8 +69,18 @@ h3 {font-size:22px;letter-spacing:-.02em}
 [dir=rtl] .arrow {transform:scaleX(-1)}
 .pricing .price {font-size:30px;font-weight:650;color:var(--ink)}
 .pricing .price small {font-size:15px;font-weight:400;color:var(--muted)}
-.pricing ul {margin:16px 0 22px;padding-inline-start:20px;color:var(--muted)}
-.pricing li+li {margin-top:7px}
+/* A price card reads like a receipt (27 November 2026): what you get in rows, label left and value right, then what is
+   included with a tick. Solid hairlines only (no dashed or dotted lines, docs/design.md). */
+.pricing .receipt {width:100%;margin:16px 0 0;padding:0;border-block:1px solid var(--line)}
+.pricing .receipt div {display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:9px 0}
+.pricing .receipt div+div {border-top:1px solid var(--line)}
+.pricing .receipt dt {color:var(--muted);font-size:15px}
+.pricing .receipt dd {margin:0;font-weight:650;color:var(--ink);text-align:end}
+.pricing ul.incl {width:100%;margin:14px 0 22px;padding:0;list-style:none;color:var(--ink)}
+.pricing ul.incl li {position:relative;padding-inline-start:28px;font-size:15px;line-height:1.45}
+.pricing ul.incl li+li {margin-top:8px}
+.pricing ul.incl li::before {content:"";position:absolute;inset-inline-start:2px;top:.28em;width:15px;height:15px;border-radius:50%;background:var(--wash)}
+.pricing ul.incl li::after {content:"";position:absolute;inset-inline-start:7px;top:.42em;width:4px;height:8px;border:solid var(--blue);border-width:0 2px 2px 0;transform:rotate(45deg)}
 .pricing .button {margin-block-start:auto}
 .plus {background:var(--card);outline:2px solid var(--fill);outline-offset:-2px}
 .closing {display:flex;align-items:center;justify-content:space-between;gap:20px;background:var(--card);box-shadow:var(--shadow);border-radius:20px;padding:22px 30px;margin-block-end:32px}
@@ -462,7 +472,7 @@ h3 {font-size:22px;letter-spacing:-.02em}
 }
 
 /* The exam card as an infographic (27 November 2026): six tiles in one style, then one example per exam part */
-.exam-facts {list-style:none;margin:30px 0 6px;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:34px 12px}
+.exam-facts {list-style:none;margin:30px 0 6px;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:34px 12px}
 .exam-facts li {position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-width:0;padding:44px 16px 16px;border-radius:18px;background:var(--card)}
 .exam-facts li.wide {grid-column:1/-1}
 /* the icon is a round badge that sits on the tile's top corner, ringed in the panel's colour */

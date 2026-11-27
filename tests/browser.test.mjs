@@ -207,7 +207,7 @@ test('The homepage restores history links and inline exam examples, and the prof
   const server=await serve(),base=`http://127.0.0.1:${server.address().port}`,s=await page(browser,base,{});
   try {
     await s.go('/#niveaus');
-    await s.p.locator('#niveaus li.wide').waitFor();
+    await s.p.locator('#niveaus li.wide').first().waitFor();
     assert.equal(await s.p.locator('#niveaus li').count(),6);
     assert.equal(await s.p.locator('#module-exam .product-exam-topic').count(),5);
     // one example per exam part: reading and listening are marked like KNM, with the explanation

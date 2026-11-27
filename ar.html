@@ -32,7 +32,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=bittie1">
 <link rel="manifest" href="/manifest.json?v=bittie1">
 <script src="/ios-startup-v1.js" defer></script>
-<link rel="stylesheet" href="/landing.css?v=install-dialog">
+<link rel="stylesheet" href="/landing.css?v=receipt">
 <link rel="stylesheet" href="/voice-mark-v1.css">
 <script>
 // Browser visits start with the homepage, including returning learners on phones and tablets.
@@ -54,7 +54,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Bittertalen","url":"https://bittertalen.nl/ar","applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":"ar","educationalLevel":["A2","B1"],"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}
 </script>
-<script defer src="/landing.js?v=install-dialog"></script>
+<script defer src="/landing.js?v=receipt"></script>
 <script defer src="/lib/gsap-3.15.1.min.js"></script>
 <script defer src="/lib/ScrollTrigger-3.15.1.min.js"></script>
 <script defer src="/landing-motion-v3.js?v=hero-still"></script>
@@ -217,7 +217,7 @@
           <li><span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2"/></svg></span><b dir="ltr">5</b><span data-t="proefexamens met timer: lezen, luisteren, schrijven, spreken en KNM, steeds met nieuwe vragen">امتحانات تجريبية بمؤقت: القراءة والاستماع والكتابة والتحدث والمجتمع الهولندي، بأسئلة جديدة في كل مرة</span></li>
           <li><span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V10l7-5 7 5v11M9 21v-6h6v6"/></svg></span><b dir="ltr">400+</b><span data-t="KNM-vragen over de 8 thema's">سؤال KNM عن المواضيع الثمانية</span></li>
           <li><span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg></span><b dir="ltr">30+</b><span data-t="gesprekken om hardop te oefenen">محادثة للتدرّب بصوت عالٍ</span></li>
-          <li><span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18m-13 5 3 3 5-5"/></svg></span><b dir="ltr">1</b><span data-t="les per dag van 10, 20 of 40 minuten, met extra aandacht voor je fouten">درس يوميًا مدته 10 أو 20 أو 40 دقيقة، مع اهتمام إضافي بأخطائك</span></li>
+          <li class="wide"><span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18m-13 5 3 3 5-5"/></svg></span><b dir="ltr">1</b><span data-t="les per dag van 10, 20 of 40 minuten, met extra aandacht voor je fouten">درس يوميًا مدته 10 أو 20 أو 40 دقيقة، مع اهتمام إضافي بأخطائك</span></li>
         </ul>
         <h4 class="exam-examples" data-t="Probeer het zelf">جرّب بنفسك</h4>
         <details class="product-exam-topic" id="probeer-lezen">
@@ -349,9 +349,13 @@
       <article class="card">
         <h3 data-t="Gratis">مجاني</h3>
         <p class="price">€ 0</p>
-        <ul>
+        <dl class="receipt">
+          <div><dt data-t="Niveau">المستوى</dt><dd data-t="A2 en B1">A2 و B1</dd></div>
+          <div><dt data-t="Looptijd">المدة</dt><dd data-t="Onbeperkt">بلا حدود</dd></div>
+          <div><dt data-t="Account">الحساب</dt><dd data-t="Niet nodig">غير مطلوب</dd></div>
+        </dl>
+        <ul class="incl">
           <li data-t="Alle oefeningen en proefexamens op A2 en B1">كل تمارين واختبارات A2 وB1 التجريبية</li>
-          <li data-t="Oefenen zonder account">تدرّب دون حساب</li>
           <li data-t="Met een gratis account: voortgang op al je apparaten">بحساب مجاني: احفظ تقدمك على جميع أجهزتك</li>
           <li id="free-checks" hidden></li>
           <li id="trial-checks" hidden></li>
@@ -361,32 +365,43 @@
       <article class="card plus" id="plus-card">
         <h3>Bittertalen Plus A2</h3>
         <p class="price" id="plus-price"><bdi>€ 9,99</bdi> <small data-t="per maand">شهريًا</small></p>
-        <ul>
+        <dl class="receipt">
+          <div><dt data-t="Niveau">المستوى</dt><dd data-t="A2">A2</dd></div>
+          <div><dt data-t="Looptijd">المدة</dt><dd data-t="Per maand">شهريًا</dd></div>
+          <div><dt data-t="Opzeggen">الإلغاء</dt><dd data-t="Elke maand">في أي شهر</dd></div>
+        </dl>
+        <ul class="incl">
           <li id="plus-checks" data-t="Tot 200 nakijkbeurten per maand voor je teksten en gesproken antwoorden">حتى 200 تصحيح شهريًا لنصوصك وإجاباتك الشفهية</li>
           <li data-t="AI-feedback op Schrijven en Spreken A2, ook bij proefexamens.">ملاحظات بالذكاء الاصطناعي على الكتابة والتحدث A2، بما في ذلك الامتحانات التجريبية.</li>
           <li data-t="Handig voor één of twee maanden voorbereiding.">مناسب للتحضير لمدة شهر أو شهرين.</li>
-          <li data-t="Elke maand opzegbaar">يمكن الإلغاء كل شهر</li>
         </ul>
         <a class="button outline" href="/oefenen?open=plus&amp;choice=plus-a2" id="plus-link" data-t="Kies Plus A2">اختر Plus A2</a>
       </article>
       <article class="card plus" id="plus-b1-card">
         <h3>Bittertalen Plus B1</h3>
         <p class="price" id="plus-b1-price"><bdi>€ 14,99</bdi> <small data-t="per maand">شهريًا</small></p>
-        <ul>
+        <dl class="receipt">
+          <div><dt data-t="Niveau">المستوى</dt><dd data-t="B1 en A2">B1 و A2</dd></div>
+          <div><dt data-t="Looptijd">المدة</dt><dd data-t="Per maand">شهريًا</dd></div>
+          <div><dt data-t="Opzeggen">الإلغاء</dt><dd data-t="Elke maand">في أي شهر</dd></div>
+        </dl>
+        <ul class="incl">
           <li id="plus-b1-checks" data-t="Tot 200 nakijkbeurten per maand voor je teksten en gesproken antwoorden">حتى 200 تصحيح شهريًا لنصوصك وإجاباتك الشفهية</li>
           <li data-t="AI-feedback op Schrijven en Spreken B1 én A2 met één tegoed.">ملاحظات بالذكاء الاصطناعي على الكتابة والتحدث في B1 وA2 برصيد مشترك.</li>
-          <li data-t="Elke maand opzegbaar">يمكن الإلغاء كل شهر</li>
         </ul>
         <a class="button outline" href="/oefenen?open=plus&amp;choice=plus-b1" data-t="Kies Plus B1">اختر Plus B1</a>
       </article>
       <article class="card plus" id="pass-card">
         <h3 data-t="Examenpas">تصريح الامتحان</h3>
         <p class="price" id="pass-price"><bdi>€ 29,99</bdi> <small>A2</small><br><bdi>€ 39,99</bdi> <small>B1</small></p>
-        <ul>
-          <li data-t="Eén keer betalen, geen abonnement.">ادفع مرة واحدة، دون اشتراك.</li>
-          <li id="pass-weeks" data-t="17 weken geldig vanaf je betaling">صالح لمدة 17 أسبوعًا من الدفع</li>
-          <li data-t="Eén tegoed voor de hele periode. B1 is inclusief A2.">رصيد واحد للفترة كلها. تشمل B1 مستوى A2.</li>
+        <dl class="receipt">
+          <div><dt data-t="Niveau">المستوى</dt><dd data-t="A2 of B1">A2 أو B1</dd></div>
+          <div><dt data-t="Geldig">الصلاحية</dt><dd id="pass-span">17 weken</dd></div>
+          <div><dt data-t="Betalen">الدفع</dt><dd data-t="Eén keer">مرة واحدة</dd></div>
+        </dl>
+        <ul class="incl">
           <li id="pass-total" hidden></li>
+          <li data-t="Eén tegoed voor de hele periode. B1 is inclusief A2.">رصيد واحد للفترة كلها. تشمل B1 مستوى A2.</li>
           <li data-t="Handig als je examendatum vaststaat.">مناسب إذا كان موعد امتحانك محددًا.</li>
         </ul>
         <a class="button outline" href="/oefenen?open=plus&amp;choice=exam" data-t="Kies de Examenpas">اختر تصريح الامتحان</a>
@@ -394,10 +409,14 @@
       <article class="card plus" id="year-card">
         <h3 data-t="Jaarpas">تصريح السنة</h3>
         <p class="price" id="year-price"><bdi>€ 79,99</bdi> <small>A2</small><br><bdi>€ 119,99</bdi> <small>B1</small></p>
-        <ul>
-          <li data-t="Een jaar AI-feedback voor één betaling. B1 is inclusief A2.">عام من ملاحظات الذكاء الاصطناعي بدفعة واحدة. تشمل B1 مستوى A2.</li>
-          <li data-t="Wordt niet automatisch verlengd.">لا يتجدد تلقائيًا.</li>
+        <dl class="receipt">
+          <div><dt data-t="Niveau">المستوى</dt><dd data-t="A2 of B1">A2 أو B1</dd></div>
+          <div><dt data-t="Geldig">الصلاحية</dt><dd data-t="1 jaar">سنة واحدة</dd></div>
+          <div><dt data-t="Verlengen">التجديد</dt><dd data-t="Niet automatisch">ليس تلقائيًا</dd></div>
+        </dl>
+        <ul class="incl">
           <li id="year-checks" hidden></li>
+          <li data-t="Een jaar AI-feedback voor één betaling. B1 is inclusief A2.">عام من ملاحظات الذكاء الاصطناعي بدفعة واحدة. تشمل B1 مستوى A2.</li>
           <li data-t="Voordeliger vanaf negen maanden Plus.">أوفر من تسعة أقساط شهرية أو أكثر من Plus.</li>
         </ul>
         <a class="button outline" href="/oefenen?open=plus&amp;choice=year" data-t="Kies de Jaarpas">اختر تصريح السنة</a>
