@@ -32,7 +32,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=bittie1">
 <link rel="manifest" href="/manifest.json?v=bittie1">
 <script src="/ios-startup-v1.js" defer></script>
-<link rel="stylesheet" href="/landing.css?v=exam-facts">
+<link rel="stylesheet" href="/landing.css?v=install-dialog">
 <link rel="stylesheet" href="/voice-mark-v1.css">
 <script>
 // Browser visits start with the homepage, including returning learners on phones and tablets.
@@ -54,7 +54,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Bittertalen","url":"https://bittertalen.nl/zh","applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":"zh-Hans","educationalLevel":["A2","B1"],"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}
 </script>
-<script defer src="/landing.js?v=exam-facts"></script>
+<script defer src="/landing.js?v=install-dialog"></script>
 <script defer src="/lib/gsap-3.15.1.min.js"></script>
 <script defer src="/lib/ScrollTrigger-3.15.1.min.js"></script>
 <script defer src="/landing-motion-v3.js?v=hero-still"></script>
@@ -212,7 +212,7 @@
         <h3 id="module-heading-exam" data-t="Voorbereiden op je examen">准备考试</h3>
         <p data-t="Oefen lezen, luisteren, schrijven en spreken op A2 of B1. Op A2 oefen je ook KNM. Maak een proefexamen met een timer en bekijk daarna wat je nog kunt oefenen.">练习 A2 或 B1 的阅读、听力、写作和口语。A2 还包括 KNM。完成计时模拟考试，看看接下来还要练习什么。</p>
         <ul class="exam-facts" id="niveaus" aria-label="Bittertalen">
-          <li class="wide"><span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V6M16 20v-8M22 20H2"/></svg></span><b dir="ltr">A2 · B1</b><span data-t="Inburgeringsexamen A2 en Staatsexamen NT2 B1, met 20 beginnerslessen als je bij nul begint">融入考试 A2 和国家考试 NT2 B1，零基础可先学 20 节入门课</span></li>
+          <li class="wide"><span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg></span><b dir="ltr">A2 · B1</b><span data-t="Inburgeringsexamen A2 en Staatsexamen NT2 B1, met 20 beginnerslessen als je bij nul begint">融入考试 A2 和国家考试 NT2 B1，零基础可先学 20 节入门课</span></li>
           <li><span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 9h6m-6 4h6m-6 4h3"/></svg></span><b dir="ltr">6000+</b><span data-t="oefenvragen voor alle onderdelen">道练习题，覆盖所有部分</span></li>
           <li><span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2"/></svg></span><b dir="ltr">5</b><span data-t="proefexamens met timer: lezen, luisteren, schrijven, spreken en KNM, steeds met nieuwe vragen">套计时模拟考试：阅读、听力、写作、口语和 KNM，每次都是新题目</span></li>
           <li><span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V10l7-5 7 5v11M9 21v-6h6v6"/></svg></span><b dir="ltr">400+</b><span data-t="KNM-vragen over de 8 thema's">道 KNM 题，覆盖 8 个主题</span></li>
@@ -406,13 +406,16 @@
     <p class="guarantee" data-t="Niet tevreden? Binnen 14 dagen na je eerste betaling krijg je je geld terug.">不满意？首次付款后 14 天内可退款。</p>
   </section>
 
-  <section id="install-app" class="block faq" aria-labelledby="install-title">
+  <!-- How to put the app on the home screen: no section on the page any more (the user's wish, 27 November 2026), only
+       this window, opened by "Installeer de app" when the browser has no install prompt of its own -->
+  <dialog id="install-app" class="install-dialog faq" aria-labelledby="install-title">
     <h2 id="install-title" data-t="Download de app">下载应用</h2>
     <p data-t="Zet Bittertalen gratis op je beginscherm. Geen account nodig.">免费将 Bittertalen 添加到主屏幕，无需账号。</p>
     <details><summary>iPhone / iPad</summary><p data-t="Open deze website in Safari. Tik op Deel en daarna op Zet op beginscherm.">在 Safari 中打开此网站。轻点“分享”，然后选择“添加到主屏幕”。</p></details>
     <details><summary>Android</summary><p data-t="Open deze website in Chrome. Tik op het menu ⋮ en kies App installeren of Toevoegen aan startscherm.">在 Chrome 中打开此网站。轻点 ⋮ 菜单，选择“安装应用”或“添加到主屏幕”。</p></details>
     <details><summary data-t="Computer">电脑</summary><p data-t="Open deze website in Chrome of Edge. Klik op het installatiepictogram in de adresbalk of kies Deze pagina als app installeren in het browsermenu.">在 Chrome 或 Edge 中打开此网站。点击地址栏中的安装图标，或在浏览器菜单中选择“将此页面安装为应用”。</p></details>
-  </section>
+    <form method="dialog"><button class="button outline" data-t="Sluiten">关闭</button></form>
+  </dialog>
 
   <section id="vragen" class="block faq">
     <h2 data-t="Veelgestelde vragen">常见问题</h2>

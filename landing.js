@@ -3,6 +3,7 @@ try{const r=new URLSearchParams(location.search).get("ref");if(r&&/^[A-HJ-NP-Z2-
 const languages = ["en", "ar", "tr", "hi", "zh", "es", "ru", "uk"];
 // Dutch copy is also in the HTML so the page is readable without scripts.
 const copy = {
+  "Sluiten": ["Close", "إغلاق", "Kapat", "बंद करें", "关闭", "Cerrar", "Закрыть", "Закрити"],
   "Inburgeringsexamen A2 en Staatsexamen NT2 B1, met 20 beginnerslessen als je bij nul begint": ["Civic integration exam A2 and Staatsexamen NT2 B1, with 20 beginner lessons if you start from zero", "امتحان الاندماج A2 وامتحان الدولة NT2 B1، مع 20 درسًا للمبتدئين إذا بدأت من الصفر", "Uyum sınavı A2 ve Staatsexamen NT2 B1, sıfırdan başlıyorsan 20 başlangıç dersiyle", "इंटीग्रेशन परीक्षा A2 और Staatsexamen NT2 B1, शून्य से शुरू करने वालों के लिए 20 शुरुआती पाठ", "融入考试 A2 和国家考试 NT2 B1，零基础可先学 20 节入门课", "Examen de integración A2 y Staatsexamen NT2 B1, con 20 lecciones para principiantes si empiezas desde cero", "Экзамен на интеграцию A2 и Staatsexamen NT2 B1, с 20 уроками для тех, кто начинает с нуля", "Іспит з інтеграції A2 і Staatsexamen NT2 B1, з 20 уроками для тих, хто починає з нуля"],
   "oefenvragen voor alle onderdelen": ["practice questions for every part", "سؤال تدريبي لكل الأجزاء", "tüm bölümler için alıştırma sorusu", "सभी हिस्सों के लिए अभ्यास सवाल", "道练习题，覆盖所有部分", "preguntas de práctica para todas las partes", "тренировочных вопросов по всем частям", "тренувальних запитань з усіх частин"],
   "proefexamens met timer: lezen, luisteren, schrijven, spreken en KNM, steeds met nieuwe vragen": ["timed mock exams: reading, listening, writing, speaking and KNM, with new questions every time", "امتحانات تجريبية بمؤقت: القراءة والاستماع والكتابة والتحدث والمجتمع الهولندي، بأسئلة جديدة في كل مرة", "süreli deneme sınavı: okuma, dinleme, yazma, konuşma ve KNM, her seferinde yeni sorularla", "टाइमर वाली मॉक परीक्षाएँ: पढ़ना, सुनना, लिखना, बोलना और KNM, हर बार नए सवालों के साथ", "套计时模拟考试：阅读、听力、写作、口语和 KNM，每次都是新题目", "exámenes de prueba con cronómetro: lectura, comprensión auditiva, escritura, expresión oral y KNM, siempre con preguntas nuevas", "пробных экзаменов с таймером: чтение, аудирование, письмо, говорение и KNM, каждый раз с новыми вопросами", "пробних іспитів із таймером: читання, аудіювання, письмо, говоріння і KNM, щоразу з новими запитаннями"],
@@ -394,7 +395,6 @@ document.querySelectorAll(".quiz").forEach(quiz => {
     /[?&]native=1(?:&|$)/.test(location.search) || window.Capacitor?.isNativePlatform?.();
   const update = () => {
     button.hidden = !!installed();
-    $("install-app").hidden = !!installed();
   };
   window.addEventListener("beforeinstallprompt", event => {
     event.preventDefault();
@@ -403,15 +403,16 @@ document.querySelectorAll(".quiz").forEach(quiz => {
   window.addEventListener("appinstalled", () => {
     installPrompt = null;
     button.hidden = true;
-    $("install-app").hidden = true;
   });
+  const dialog = $("install-app");
+  const instructions = () => { if (dialog?.showModal && !dialog.open) dialog.showModal(); };
   button.addEventListener("click", async event => {
-    if (!installPrompt) return;
     event.preventDefault();
+    if (!installPrompt) { instructions(); return; }
     const prompt = installPrompt;
     installPrompt = null;
     try { await prompt.prompt(); await prompt.userChoice; }
-    catch { location.hash = "install-app"; }
+    catch { instructions(); }
   });
   matchMedia("(display-mode: standalone)").addEventListener("change", update);
   update();

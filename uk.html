@@ -32,7 +32,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=bittie1">
 <link rel="manifest" href="/manifest.json?v=bittie1">
 <script src="/ios-startup-v1.js" defer></script>
-<link rel="stylesheet" href="/landing.css?v=exam-facts">
+<link rel="stylesheet" href="/landing.css?v=install-dialog">
 <link rel="stylesheet" href="/voice-mark-v1.css">
 <script>
 // Browser visits start with the homepage, including returning learners on phones and tablets.
@@ -54,7 +54,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Bittertalen","url":"https://bittertalen.nl/uk","applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":"uk","educationalLevel":["A2","B1"],"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}
 </script>
-<script defer src="/landing.js?v=exam-facts"></script>
+<script defer src="/landing.js?v=install-dialog"></script>
 <script defer src="/lib/gsap-3.15.1.min.js"></script>
 <script defer src="/lib/ScrollTrigger-3.15.1.min.js"></script>
 <script defer src="/landing-motion-v3.js?v=hero-still"></script>
@@ -212,7 +212,7 @@
         <h3 id="module-heading-exam" data-t="Voorbereiden op je examen">Підготовка до іспиту</h3>
         <p data-t="Oefen lezen, luisteren, schrijven en spreken op A2 of B1. Op A2 oefen je ook KNM. Maak een proefexamen met een timer en bekijk daarna wat je nog kunt oefenen.">Практикуйте читання, аудіювання, письмо й говоріння на рівні A2 або B1. На A2 також вивчайте KNM. Пройдіть пробний іспит із таймером та дізнайтеся, над чим ще попрацювати.</p>
         <ul class="exam-facts" id="niveaus" aria-label="Bittertalen">
-          <li class="wide"><span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V6M16 20v-8M22 20H2"/></svg></span><b dir="ltr">A2 · B1</b><span data-t="Inburgeringsexamen A2 en Staatsexamen NT2 B1, met 20 beginnerslessen als je bij nul begint">Іспит з інтеграції A2 і Staatsexamen NT2 B1, з 20 уроками для тих, хто починає з нуля</span></li>
+          <li class="wide"><span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg></span><b dir="ltr">A2 · B1</b><span data-t="Inburgeringsexamen A2 en Staatsexamen NT2 B1, met 20 beginnerslessen als je bij nul begint">Іспит з інтеграції A2 і Staatsexamen NT2 B1, з 20 уроками для тих, хто починає з нуля</span></li>
           <li><span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 9h6m-6 4h6m-6 4h3"/></svg></span><b dir="ltr">6000+</b><span data-t="oefenvragen voor alle onderdelen">тренувальних запитань з усіх частин</span></li>
           <li><span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2"/></svg></span><b dir="ltr">5</b><span data-t="proefexamens met timer: lezen, luisteren, schrijven, spreken en KNM, steeds met nieuwe vragen">пробних іспитів із таймером: читання, аудіювання, письмо, говоріння і KNM, щоразу з новими запитаннями</span></li>
           <li><span class="fi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V10l7-5 7 5v11M9 21v-6h6v6"/></svg></span><b dir="ltr">400+</b><span data-t="KNM-vragen over de 8 thema's">питань KNM за 8 темами</span></li>
@@ -406,13 +406,16 @@
     <p class="guarantee" data-t="Niet tevreden? Binnen 14 dagen na je eerste betaling krijg je je geld terug.">Не сподобалося? Повернемо гроші протягом 14 днів після першої оплати.</p>
   </section>
 
-  <section id="install-app" class="block faq" aria-labelledby="install-title">
+  <!-- How to put the app on the home screen: no section on the page any more (the user's wish, 27 November 2026), only
+       this window, opened by "Installeer de app" when the browser has no install prompt of its own -->
+  <dialog id="install-app" class="install-dialog faq" aria-labelledby="install-title">
     <h2 id="install-title" data-t="Download de app">Завантажити застосунок</h2>
     <p data-t="Zet Bittertalen gratis op je beginscherm. Geen account nodig.">Безкоштовно додайте Bittertalen на головний екран. Акаунт не потрібен.</p>
     <details><summary>iPhone / iPad</summary><p data-t="Open deze website in Safari. Tik op Deel en daarna op Zet op beginscherm.">Відкрийте цей сайт у Safari. Натисніть «Поділитися», потім «На початковий екран».</p></details>
     <details><summary>Android</summary><p data-t="Open deze website in Chrome. Tik op het menu ⋮ en kies App installeren of Toevoegen aan startscherm.">Відкрийте цей сайт у Chrome. У меню ⋮ виберіть «Установити застосунок» або «Додати на головний екран».</p></details>
     <details><summary data-t="Computer">Комп'ютер</summary><p data-t="Open deze website in Chrome of Edge. Klik op het installatiepictogram in de adresbalk of kies Deze pagina als app installeren in het browsermenu.">Відкрийте цей сайт у Chrome або Edge. Натисніть значок установлення в адресному рядку або виберіть «Установити цю сторінку як застосунок» у меню браузера.</p></details>
-  </section>
+    <form method="dialog"><button class="button outline" data-t="Sluiten">Закрити</button></form>
+  </dialog>
 
   <section id="vragen" class="block faq">
     <h2 data-t="Veelgestelde vragen">Часті запитання</h2>

@@ -699,6 +699,10 @@ test('The homepage and the app work in a real browser', async t => {
       await s.go('/'); await s.p.waitForSelector('.hero');
       // The hero offers installation; the bar opens practice without the login window.
       assert.equal(await s.p.locator('#download-app').getAttribute('href'), '#install-app');
+      // without the browser's own install prompt the button opens the instructions in a window, not a section on the page
+      await s.p.click('#download-app'); await s.p.locator('#install-app[open]').waitFor();
+      await s.p.locator('#install-app form button').click();
+      assert.equal(await s.p.locator('#install-app').evaluate(d => d.open), false);
       await s.p.click('#enter'); await s.p.waitForSelector('#plan .step'); await s.p.waitForTimeout(800);
       assert.equal(await s.p.locator('#welcome').isHidden(), true);
       assert.equal(new URL(s.p.url()).search, '');
