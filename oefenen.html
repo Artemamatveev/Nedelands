@@ -3658,7 +3658,7 @@ function order(q){
 function reveal(q){
   recEnd(!!rec&&rec.mode==="rec"); $("rev").hidden=true; if($("spchk"))$("spchk").hidden=true;
   $("fb").innerHTML=`<div class="sample">${q.right}</div>${echoHTML("het voorbeeld")}<div class="two"><button class="ghost" id="again">Later herhalen</button><button class="btn" id="got">Gelukt</button></div>`;
-  const go=ok=>{const target=!alreadyRecorded&&q.type==="reveal"&&!ok&&nextPracticeQuestion(q);if(!alreadyRecorded)record(ok);if(target)return insertPracticeQuestion(q,target);pos++;show()};
+  const go=ok=>{const target=!ok&&nextPracticeQuestion(q);record(ok);if(target)return insertPracticeQuestion(q,target);pos++;show()};
   $("again").onclick=()=>go(false); $("got").onclick=()=>go(true); echoBind(q.right);
 }
 // Zeg het na: free pronunciation practice. The learner reads a model answer aloud, speech recognition writes it down,
@@ -3683,9 +3683,38 @@ function echoDone(target,r){
   for(let i=0,j=0;i<n&&j<m;){if(T[i]===H[j]){ok.add(i);i++;j++}else if(D[i+1][j]>=D[i][j+1])i++;else j++}
   let k=0; const html=P.map((x,i)=>i%2?(ok.has(k++)?esc(x):`<button class="miss" data-w="${esc(x)}">${esc(x)}</button>`):esc(x)).join("");
   $("echor").innerHTML=`<p class="note"><strong class="${ok.size>=n*.9?"good":""}">${ok.size>=n*.9?"Heel duidelijk!":"De telefoon verstond "+ok.size+" van de "+n+" woorden."}</strong>
-    ${ok.size<n?"Tik op een rood woord om het te horen, en zeg het nog eens.":""}</p><div class="sample">${html}</div>
+    ${ok.size<n?"Kies een gemarkeerd woord om het te horen en apart te oefenen.":""}</p><div class="sample">${html}</div>
     <p class="note">De telefoon is geen examinator: soms mist hij een woord dat je goed zegt.</p>`;
-  document.querySelectorAll("#echor .miss").forEach(b=>b.onclick=()=>speak(b.dataset.w));
+  const result=$("echor");
+  result.insertAdjacentHTML("beforeend",'<div id="echoWord"></div>');
+  result.querySelectorAll(".miss").forEach(b=>b.onclick=()=>echoWordPractice(b.dataset.w));
+}
+function echoWordPractice(word){
+  const panel=$("echoWord");
+  panel.innerHTML=`<p class="ask">Oefen dit woord: ${esc(word)}</p>
+    <div class="two"><button class="ghost" id="echoHear">Beluister</button><button class="btn" id="echoRetry">● Zeg dit woord</button></div>
+    <p class="note" id="echoWordStatus" role="status"></p>`;
+  const retry=$("echoRetry"),hear=$("echoHear"),status=$("echoWordStatus");
+  hear.onclick=()=>speak(word);
+  const start=()=>{
+    const controls=[ $("echo"),hear,...$("echor").querySelectorAll(".miss") ];
+    controls.forEach(control=>control.disabled=true);
+    retry.textContent="■ Stop";retry.onclick=()=>recEnd(true);
+    status.textContent="Zeg het woord en tik daarna op Stop.";
+    listen("say",r=>{
+      if(retry!==$("echoRetry"))return;
+      const record=$("recb");
+      record.textContent="● Opnemen";record.className="ghost wide";record.onclick=()=>listen("rec",spTake);
+      $("recn").textContent="";
+      const heard=r.text.split(WTOK).filter((_,i)=>i%2).map(norm);
+      status.textContent=r.fail?"Meeschrijven lukt hier niet.":heard.includes(norm(word))?
+        `De telefoon verstond ‘${word}’.`:heard.length?`De telefoon verstond ‘${r.text}’. Luister en probeer opnieuw.`:
+        "Geen woord herkend. Probeer opnieuw.";
+      controls.forEach(control=>control.disabled=false);retry.textContent="● Nog een keer";retry.onclick=start;
+    },8);
+  };
+  retry.onclick=start;
+  speak(word);
 }
 function photoCreditHTML(key){
   const credit=FOTO_CREDITS[key];

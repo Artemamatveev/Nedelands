@@ -256,3 +256,26 @@ test('A2 speaking compares the second answer without counting the question twice
   assert.match(a.document.getElementById('fb').textContent,/eerste antwoord 2\/3 · tweede antwoord 3\/3/);
   assert.equal(a.run('JSON.stringify(S.items["sp|5"])'),progress);
 });
+
+test('A missed word can be recorded again without discarding the full speaking comparison',async()=>{
+  const native=speech(),a=await app({globals:{SpeechRecognition:native.Recognition}});
+  a.run('build("sp",{...SEC.find(s=>s.id==="sp"),n:1,keep:1,pool:()=>[{...ITEMS.find(q=>q.k==="sp|3"),right:"Ik ga met de trein."}]});reveal(queue[pos])');
+  const item=id=>a.document.getElementById(id);
+  item('echo').click();
+  await a.flush();
+  native.instances.at(-1).result('Ik ga met de');
+  item('echo').click();
+  native.instances.at(-1).end();
+  const missed=a.document.querySelector('#echor .miss');
+  assert.equal(missed.textContent,'trein');
+  missed.click();
+  item('echoRetry').click();
+  await a.flush();
+  native.instances.at(-1).result('trein');
+  item('echoRetry').click();
+  native.instances.at(-1).end();
+  assert.match(item('echoWordStatus').textContent,/verstond ‘trein’/);
+  assert.equal(a.document.querySelector('#echor .miss'),missed);
+  item('got').click();
+  assert.equal(a.run('S.items["sp|3"].r'),1);
+});
