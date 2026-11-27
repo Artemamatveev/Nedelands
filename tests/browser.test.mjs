@@ -1293,8 +1293,7 @@ test('A2 launch path: guest writing and all five mock exams finish with recovera
         errors:body.requestId?[]:[{wrong:'volgende week ik ga',right:'volgende week ga ik',why:'Het werkwoord komt op plaats twee.',kind:'inversie'}]
       }))}});
     });
-    await s.go('/');
-    await s.p.locator('.hero a[href*="open=writing"]').click();
+    await s.go('/oefenen?open=writing');
     await s.p.locator('#txt').fill(text);
     await s.p.locator('#chk').click();
     await s.p.getByRole('button',{name:'Verbeter je fout'}).click();
