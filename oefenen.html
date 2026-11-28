@@ -1660,6 +1660,8 @@ function mergeS(a,b){
   o.errs=uni(a.errs,b.errs,e=>e.r); o.words=uni(a.words,b.words,w=>w.w);
   const ga=a.gen||{},gb=b.gen||{}; o.gen={lz:uni(ga.lz,gb.lz,JSON.stringify),ls:uni(ga.ls,gb.ls,JSON.stringify)};
   const[p,q]=(a.last||0)>=(b.last||0)?[a,b]:[b,a]; o.last=p.last||0; o.streak=p.last===q.last?Math.max(p.streak||0,q.streak||0):p.streak||0; if(a.frz||b.frz)o.frz=Math.max(a.frz||0,b.frz||0);
+  // the streak's way back (complete()): the newer device's, and a revival used on either counts
+  delete o.lost;if(p.lost)o.lost=p.lost; if(a.revAt||b.revAt)o.revAt=Math.max(a.revAt||0,b.revAt||0); delete o.revived;if(p.revived)o.revived=p.revived;
   o.day=a.day&&b.day&&a.day.d===b.day.d?{d:a.day.d,done:uni(a.day.done,b.day.done,x=>x)}:a.day&&b.day?(a.day.d>b.day.d?a.day:b.day):a.day||b.day;
   const ma=a.me||{},mb=b.me||{}; const ea=ma.exams||{},eb=mb.exams||{};
   o.me={name:ma.name||mb.name||"",last:ma.last||mb.last||"",exam:ma.exam||mb.exam||"",av:ma.av||mb.av||"",
@@ -2049,6 +2051,9 @@ function addGenerated(){
   });
   return n;
 }
+// Own mistakes come back by themselves on Mijn dag: from the day after they were made, then as their spaced repetition
+// (S.items "er|…", GAP: 1, 2, 4, 7 days) says, until one was right four times in a row (older ones without a day: due)
+function dueErrs(){const d=today(),E=S.errs||[];return errItems().filter((q,i)=>{const it=S.items[q.k];return it?it.d<=d&&(it.b||0)<4:!(E[i].d>=d)})}
 function errItems(){return(S.errs||[]).map(e=>({sec:"er",k:"er|"+e.r,ord:0,type:"choice",label:"Welke zin is goed?",big:"",sub:"",right:esc(e.r),opts:()=>shuffle([esc(e.r),esc(e.w)]),note:esc(e.y)}))}
 const canSpeak="speechSynthesis" in window&&typeof SpeechSynthesisUtterance!=="undefined";
 // Speech: every line the app says itself is recorded in audio/ (audio/build.mjs, Azure's Dutch voices since 28 November 2026), one file
@@ -2694,7 +2699,8 @@ function home(){
     <div class="list">${parts().map(part).join("")}</div>`+officialExam+onaRow+uitRow;
   $("parts").innerHTML=`${levelLabel}<h2>Oefenen zonder timer</h2>
     <p class="sub">Korte oefeningen met feedback tijdens het oefenen.</p>
-    <div class="list">${parts().map(k=>k==="knm"?knmRow():row(k)).join("")}</div>`;
+    <div class="list">${parts().map(k=>k==="knm"?knmRow():row(k)).join("")}</div>`
+    +(hfOK()?`<div class="list">${itHTML(`data-x="hf"`,"Oefenen zonder handen","KNM en Luisteren: je hoort de vraag en zegt A, B of C.",{ic:"ls"})}</div>`:"");
   $("gram").innerHTML=`<h2>Grammatica en woorden</h2><p class="sub">Rondes van 10 vragen.</p>`+(lvl()==="B1"
     ?`<div class="list">${["g1","w1","v1"].map(row).join("")}</div><h3 class="lh">Herhalen op A2-niveau</h3><div class="list">${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`
     :`<div class="list">${itHTML(`data-x="bg"`,"Beginnen","Twintig korte lessen, voor als je net begint.",{ic:"bg",n:(n=>n?`${n} van ${BG.length}`:null)(BG.filter(bgDone).length)})}${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`);
@@ -2718,6 +2724,7 @@ function home(){
     else if(d.x==="ai")aiList();
     else if(d.x==="ona")onaScreen();
     else if(d.x==="uit")uitScreen();
+    else if(d.x==="hf")hfScreen();
     else if(d.x==="bg")bgList();
     else if(d.x==="words")wordsScreen();
     else build("custom",{id:"custom",t:"Mijn fouten",n:10,pool:()=>shuffle(errItems())})});
@@ -3230,6 +3237,12 @@ function planHTML(){
     ${focus.target?`<button type="button" class="btn wide" id="dayfocus">Oefen met een nieuwe vraag</button>`:
       `<p class="note">${last.ok?"De nieuwe vraag ging goed.":"Deze oefening komt morgen terug."}</p>`}
   </section>`:"";
+  const lost=S.lost&&d-S.lost.d<=7?S.lost:null,lc=lost&&lost.cd===d?lost.c:0;
+  const comeback=lost?`<section class="list exam-focus"><h3>Haal je reeks terug</h3><p>Je reeks van ${lost.n} dagen is gestopt. Maak vandaag 3 oefenrondes af, dan krijg je hem terug.</p>
+      <div class="dayp"><span aria-hidden="true">${[0,1,2].map(i=>`<i${i<lc?' class="on"':""}></i>`).join("")}</span><small>${lc} van 3 klaar</small></div></section>`
+    :S.revived===d?`<p class="note" role="status"><b>Je reeks is terug: ${S.streak} dagen op rij!</b></p>`:"";
+  const ED=dueErrs();
+  const errsRow=ED.length?`<div class="list">${itHTML(`id="dayerrs"`,"Oefen met je eigen fouten","Ze komen terug na 1, 2, 4 en 7 dagen, tot je ze kent.",{n:ED.length,ic:"errs"})}</div>`:"";
   const date=new Date().toLocaleDateString("nl-NL",{weekday:"long",day:"numeric",month:"long"});
   // the countdown to the exam on Mijn dag too (it gives the day its point); without a date, one line asks for it
   const when=examsAhead().length?examLine():`<button class="hint" type="button" id="dayexam">Wanneer is je examen? Zet de datum in Profiel.</button>`;
@@ -3239,7 +3252,8 @@ function planHTML(){
     <p class="note"><span>Geschatte duur</span> · ${P.minutes||steps.length*5} min</p>
     <div class="dayp"><span aria-hidden="true">${steps.map(t=>`<i${done.includes(t.id)?' class="on"':""}></i>`).join("")}</span><small>${nd} van ${steps.length} klaar</small></div>
     <p class="sub">${intro}</p>
-    ${review}
+    ${comeback}${nx<0&&(S.streak||0)>=3&&S.last===d&&freezeOk(d+2)?`<p class="note">Morgen geen tijd? Eén dag per week overslaan mag: je reeks blijft dan staan.</p>`:""}
+    ${review}${errsRow}
     ${rule?`<section class="list exam-focus"><h3>Pas de regel toe in een nieuwe zin</h3><p>${WRITING_RULES[rule].title}</p>
       ${S.writingRules[rule].source==="exam"?`<p class="note">Dit ging ${occurrences(S.writingRules[rule].count)} mis in je schrijfproefexamen.</p>`:""}
       <button type="button" class="ghost wide" id="dayrule">Oefen met een nieuwe situatie</button></section>`:""}
@@ -3371,6 +3385,7 @@ function drawPlan(){
     const st=$("streak");st.classList.remove("stamp");void st.offsetWidth;st.classList.add("stamp");buzz("good");remindPlan()}
   if($("dayexam"))$("dayexam").onclick=()=>{setTab("profiel");setTimeout(()=>{const f=$("pexams");if(f){f.scrollIntoView({block:"center"});f.querySelector("input")?.focus()}},120)};
   if($("dayrule"))$("dayrule").onclick=writingRuleScreen;
+  if($("dayerrs"))$("dayerrs").onclick=()=>{const L=dueErrs();if(L.length)build("custom",{id:"custom",t:"Mijn fouten",n:Math.min(8,L.length),pool:()=>shuffle(L)})};
   if($("dayspeak"))$("dayspeak").onclick=speakingFollowUp;
   const focus=dayExamFocus(),review=$("dayfocus");
   if(review&&focus?.target)review.onclick=()=>{
@@ -3653,7 +3668,12 @@ function record(ok,q=queue[pos]){
 }
 function complete(){
   const d=today();
-  if(S.last!==d){const gap=S.last===d-2&&freezeOk(d);S.streak=S.last===d-1||gap?S.streak+1:1;if(gap)S.frz=d-1;S.last=d}
+  if(S.last!==d){const gap=S.last===d-2&&freezeOk(d),cont=S.last===d-1||gap;
+    // a lost streak of three days or more can be won back, once a month: three rounds on one day within a week (S.lost)
+    if(!cont&&S.last&&(S.streak||0)>=3&&(!S.revAt||d-S.revAt>=30))S.lost={n:S.streak,d,c:0,cd:0};
+    S.streak=cont?S.streak+1:1;if(gap)S.frz=d-1;S.last=d}
+  if(S.lost){if(d-S.lost.d>7)delete S.lost;else{S.lost.c=(S.lost.cd===d?S.lost.c:0)+1;S.lost.cd=d;
+    if(S.lost.c>=3){S.streak=S.lost.n+S.streak;S.revAt=d;S.revived=d;delete S.lost;buzz("good")}}}
   if(planId){if(!S.day||S.day.d!==d)S.day={d,done:[]};if(!S.day.done.includes(planId))S.day.done.push(planId);planId=null}
   save();
 }
@@ -4035,7 +4055,7 @@ const docBtn=`<button class="ghost wide" id="docx" style="margin-bottom:10px">Do
 // Writing is graded by Claude on the server (api/check.js)
 // Mistakes from the learner's own texts and spoken answers, practised later in "Mijn fouten"
 function keepErrs(errs){
-  errs.forEach(e=>{if(e&&e.wrong&&e.right&&e.wrong!==e.right&&String(e.wrong).length<90&&String(e.right).length<90&&!S.errs.some(x=>x.r===e.right))S.errs.unshift({w:String(e.wrong),r:String(e.right),y:String(e.why||""),...(["inversie","meervoud"].includes(e.kind)?{kind:e.kind}:{})})});
+  errs.forEach(e=>{if(e&&e.wrong&&e.right&&e.wrong!==e.right&&String(e.wrong).length<90&&String(e.right).length<90&&!S.errs.some(x=>x.r===e.right))S.errs.unshift({w:String(e.wrong),r:String(e.right),y:String(e.why||""),d:today(),...(["inversie","meervoud"].includes(e.kind)?{kind:e.kind}:{})})});
   S.errs=S.errs.slice(0,40);
 }
 // A writing text sent again unchanged gets its earlier result, without a new check: sending the same text until the
@@ -5323,6 +5343,88 @@ function plusScreen(choice){
     acc.msg="";lsSet(WEL,"1");welcome();
   });
 }
+// Oefenen zonder handen (28 November 2026): KNM and Luisteren by ear, for the bike, the car or the kitchen. The question
+// and its three answers are said (the recordings, Azure or the phone), the learner says A, B or C (or one, two, three,
+// or words of the answer), hears whether it was right, and the next comes, for ten minutes. "Herhaal" says it again,
+// "stop" stops. Answers count like any practice (S.items) and the round counts for the streak. Needs the phone's speech
+// recognition (SR) and a voice; the questions on the screen stay Dutch.
+const HF_MS=10*60e3;
+const hfOK=()=>!!SR&&(canSpeak||cloudOn()||!!VOICE);
+let hf=null;
+// speak() and then, once nothing is said any more, done (speak() has no end of its own)
+function speakThen(t,done){const n=sayN+1;speak(t);const until=Date.now()+String(t).length*110+9000;
+  const tick=()=>{if(!hf)return;if(sayN!==n)return; if(Date.now()>until||!speaking())return done();setTimeout(tick,250)};setTimeout(tick,700)}
+// one answer heard: its text, or "" after a silence of a few seconds
+function hearOnce(done){
+  if(!sr)sr=new SR();const r=sr;let said="",fin=false;const end=()=>{if(fin)return;fin=true;clearTimeout(t);try{r.onresult=r.onend=r.onerror=null;r.stop()}catch(e){}done(said)};
+  r.lang="nl-NL";r.continuous=false;r.interimResults=true;
+  r.onresult=e=>{said=[...e.results].map(x=>x[0].transcript).join(" ").trim();if([...e.results].some(x=>x.isFinal))setTimeout(end,300)};
+  r.onend=end;r.onerror=end;const t=setTimeout(end,7000);
+  try{r.start()}catch(e){end()}
+}
+// A, B or C from what was heard: the letter, one/two/three, first/second/third, or the most words of an answer
+function hfPick(said,opts){
+  const w=String(said).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9 ]/g," ").split(/\s+/).filter(Boolean);
+  if(w.some(x=>["herhaal","herhalen","nog","opnieuw","repeat"].includes(x)))return"again";
+  if(w.some(x=>["stop","stoppen","klaar"].includes(x)))return"stop";
+  const L=[["a","aa","ah","een","1","eerste","eerst"],["b","be","bee","twee","2","tweede"],["c","ce","cee","se","see","zee","drie","3","derde"]];
+  for(const x of w.slice(-3).reverse()){const i=L.findIndex(l=>l.includes(x));if(i>=0&&i<opts.length)return i}
+  const sc=opts.map(o=>{const ow=spokenOption(o).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9 ]/g," ").split(/\s+/).filter(x=>x.length>2);return ow.filter(x=>w.includes(x)).length});
+  const best=Math.max(...sc);return best>=2&&sc.filter(x=>x===best).length===1?sc.indexOf(best):-1;
+}
+function hfRecord(q,ok){const d=today(),it=S.items[q.k]||{b:ok?2:0,d};
+  if(ok){it.d=d+GAP[it.b];it.b=Math.min(GAP.length-1,it.b+1);it.r=(it.r||0)+1}else{it.b=0;it.d=d;it.w=(it.w||0)+1}
+  S.items[q.k]=it;const dk=String(d);S.qd=S.qd||{};S.qd[dk]=(S.qd[dk]||0)+1;if(ok){S.qr=S.qr||{};S.qr[dk]=(S.qr[dk]||0)+1}save()}
+function hfScreen(){
+  closePop();hush();TK=null;$("card").innerHTML="";hf=null;
+  $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;window.scrollTo(0,0);
+  tBack(TABN[tab],()=>{hfStop();home()});
+  const lsk=lvl()==="B1"?"lb":"ls",ch=S.hfp||"knm";
+  $("tbody").innerHTML=`<h2 id="hfS">Oefenen zonder handen</h2>
+    <p class="sub">Voor op de fiets, in de auto of in de keuken. Je hoort een vraag met drie antwoorden en zegt A, B of C. Zeg ‘herhaal’ om het nog een keer te horen, of ‘stop’ om te stoppen.</p>
+    ${hfOK()?`<p class="ask">Wat wil je oefenen?</p><div class="seg" role="group" aria-label="Wat wil je oefenen?">${[["knm","KNM"],[lsk,"Luisteren"],["mix","Allebei"]].map(([k,t])=>`<button data-hfp="${k}" aria-pressed="${k===ch||ch==="ls"&&k==="lb"||ch==="lb"&&k==="ls"}">${t}</button>`).join("")}</div>
+    <p class="note">Tien minuten. Houd je telefoon aan en het geluid aan.</p><button class="btn wide" id="hfgo">Begin met oefenen</button>`
+    :`<p class="note">Op dit apparaat kan Bittertalen niet luisteren. Probeer het in de app of in Chrome.</p>`}
+    <div id="hfbox" lang="nl" aria-live="polite"></div>`;
+  document.querySelectorAll("[data-hfp]").forEach(b=>b.onclick=()=>{S.hfp=b.dataset.hfp;save();document.querySelectorAll("[data-hfp]").forEach(x=>x.setAttribute("aria-pressed",x===b))});
+  if($("hfgo"))$("hfgo").onclick=()=>hfStart(S.hfp==="ls"||S.hfp==="lb"?lsk:S.hfp||"knm");
+}
+function hfStop(){if(!hf)return;const h=hf;hf=null;try{sr&&sr.stop()}catch(e){}stopSpeak();if(h.n)complete()}
+function hfStart(part){
+  const secs=part==="mix"?["knm",lvl()==="B1"?"lb":"ls"]:[part];
+  const pool=ITEMS.filter(q=>secs.includes(q.sec)&&q.type==="choice"&&!q.pics&&typeof q.opts==="function");
+  // due ones first, then new, then the rest; mixed
+  const d=today(),it=q=>S.items[q.k],rank=q=>it(q)?it(q).d<=d?0:2:1,L=shuffle(pool.slice()).sort((a,b)=>rank(a)-rank(b));
+  hf={L,i:0,n:0,ok:0,at:Date.now()};
+  if($("hfgo"))$("hfgo").hidden=true;document.querySelectorAll("[data-hfp]").forEach(b=>b.disabled=true);
+  hfNext(true);
+}
+function hfNext(first){
+  const h=hf;if(!h||!$("hfS"))return hfStop();
+  if(Date.now()-h.at>HF_MS||h.i>=h.L.length)return hfDone();
+  const q=h.L[h.i++],o=q.opts(),right=o.indexOf(q.right),box=$("hfbox");
+  box.innerHTML=`<section class="list"><div style="padding:16px">${q.say?`<p class="note">Luister eerst naar het fragment.</p>`:""}<p><b>${esc(spokenOption(q.big))}</b></p>
+    <ol type="A">${o.map(x=>`<li>${x}</li>`).join("")}</ol><p class="note" id="hfst" role="status">Luister…</p></div></section>
+    <p class="note">${h.n} vragen · ${h.ok} goed</p><button class="ghost wide" id="hfstop">Stoppen</button>`;
+  $("hfstop").onclick=hfDone;
+  const ask=()=>speakThen([q.big,"A.",spokenOption(o[0]),"B.",spokenOption(o[1]),"C.",spokenOption(o[2]||"")].filter(Boolean).join("\n"),()=>listenFor(0));
+  const listenFor=tries=>{if(hf!==h)return;if($("hfst"))$("hfst").textContent="Zeg A, B of C";buzz("tick");
+    hearOnce(said=>{if(hf!==h)return;const k=hfPick(said,o);
+      if(k==="stop")return hfDone();
+      if(k==="again")return ask();
+      if(k<0){if(tries>=1){if($("hfst"))$("hfst").textContent="Geen antwoord gehoord. De volgende vraag.";return speakThen("We gaan door.",()=>hfNext())}
+        return speakThen("Ik heb je niet goed gehoord. Zeg A, B of C.",()=>listenFor(tries+1))}
+      const ok=k===right;h.n++;if(ok)h.ok++;hfRecord(q,ok);buzz(ok?"good":"bad");
+      if($("hfst"))$("hfst").innerHTML=ok?`<b class="good">Goed!</b>`:`<b class="bad">Niet goed.</b> Het goede antwoord is ${"ABC"[right]}: ${o[right]}`;
+      speakThen(ok?"Goed!":`Niet goed. Het goede antwoord is ${"ABC"[right]}. ${spokenOption(o[right])}`,()=>hfNext())})};
+  if(q.say)speakThen(q.say,ask);else if(first)ask();else setTimeout(ask,300);
+}
+function hfDone(){
+  const h=hf;hfStop();if(!h||!$("hfbox"))return;
+  $("hfbox").innerHTML=`<p class="sub"><b>Klaar!</b> ${h.n} ${h.n===1?"vraag":"vragen"}, ${h.ok} goed.</p>`;
+  if($("hfgo")){$("hfgo").hidden=false;$("hfgo").textContent="Nog een keer"}document.querySelectorAll("[data-hfp]").forEach(b=>b.disabled=false);
+  if(h.n)speak(`Klaar! ${h.ok} van de ${h.n} goed.`);
+}
 function onaScreen(){
   closePop();hush();TK=null;$("card").innerHTML="";
   $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;window.scrollTo(0,0);
@@ -6256,7 +6358,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru","uk"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="e9e615006b";
+const UIV="4d53604a3b";
 let uiP=null;
 function uiLoaded(){try{trMemo.clear()}catch(e){} // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});

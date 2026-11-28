@@ -182,3 +182,22 @@ check is free to have (`canCheck` in `planHTML()`: the browser's trial `acc.cfg.
 `checksLeft("wr")`): one line, "Schrijf je eerste tekst" (the screen's one filled button, `data-p="first:wr"`, the count
 `first`) opens the short note to the neighbour (`wr|0`, the homepage's example task), and the starttest stays under it as
 a row. Without a free check the starttest comes first, as before.
+
+## Coming back (28 November 2026)
+
+Three things taken from the big language apps, all in `oefenen.html`:
+
+- **Streak.** One missed day a week still keeps it (`freezeOk()`, `S.frz`); Mijn dag says so once the day's lesson is done
+  and the streak is 3+. A streak of 3+ that is lost anyway can be won back once in 30 days (Duolingo's revival):
+  `complete()` keeps `S.lost` `{n, d, c, cd}`; three finished rounds on one day within a week of the loss add the old
+  days back (`S.revAt`, `S.revived` for the line "Je reeks is terug"). Mijn dag shows "Haal je reeks terug" with three
+  dots. `mergeS()` takes the newer device's `lost` and the latest `revAt`.
+- **Own mistakes come back.** `keepErrs()` stores the day (`d`); `dueErrs()` is every mistake from the day after it was
+  made, then as its own spaced repetition says (`S.items["er|…"]`, `GAP`), until it was right four times in a row.
+  Mijn dag shows "Oefen met je eigen fouten" with the number (`#dayerrs`, at most 8 a round).
+- **Oefenen zonder handen** (`hfScreen()`, a row under Oefenen zonder timer when `hfOK()`: speech recognition and a
+  voice). KNM, Luisteren (B1: lb) or both, ten minutes (`HF_MS`): the fragment, the question and "A. … B. … C. …" are
+  said (`speakThen()` over `speak()`), `hearOnce()` listens up to 7 s, `hfPick()` takes A/B/C, een/twee/drie,
+  eerste/tweede/derde or the words of one answer; "herhaal" repeats, "stop" stops; no answer twice moves on. Answers
+  count in `S.items` (`hfRecord()`) and the round in the streak. Questions with a picture are left out. The question
+  area is Dutch (`lang="nl"`).
