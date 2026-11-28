@@ -15,18 +15,19 @@ test('The report: share right, numbers, per part, strong and weak groups, kinds 
     ITEMS.filter(q=>q.sec==="knm").slice(0,6).forEach(q=>S.items[q.k]={b:3,d:d+4,r:5,w:0});
     ITEMS.filter(q=>q.sec==="lz").slice(0,4).forEach(q=>S.items[q.k]={b:0,d,r:1,w:3});
     S.res={lz:[{at:Date.now(),pc:88}]};
-    keepErrs([{wrong:"ik ga",right:"ga ik",kind:"inversie",why:"x"},{wrong:"ligd",right:"ligt",kind:"spelling",why:"x"},{wrong:"De boeken ligt",right:"De boeken liggen",kind:"meervoud",why:"x"},{wrong:"hij lopen",right:"hij loopt",kind:"spelling",why:"y"}]);
+    keepErrs([{wrong:"ik ga",right:"ga ik",kind:"inversie",why:"x"},{wrong:"geeven",right:"geven",kind:"spelling",why:"x"},{wrong:"De boeken ligt",right:"De boeken liggen",kind:"meervoud",why:"x"},{wrong:"hij lopen",right:"hij loopt",kind:"spelling",why:"y"},{wrong:"het tafel",right:"de tafel",kind:"grammatica",why:"z"}]);
+    ITEMS.filter(q=>q.sec==="gs").slice(0,5).forEach(q=>S.items[q.k]={b:0,d,r:0,w:4});
     setTab("herhalen");home()`);
   const m=a.document.querySelector('#mine'),t=m.textContent;
   assert.match(m.querySelector('.ring').textContent,/80%/,'40 of 50 right');
   assert.match(t,/Dagen geoefend/);assert.match(t,/1,5/,'hours');
   assert.match(t,/Per onderdeel/);assert.match(m.querySelector('[data-vp="lz"]').textContent,/8\/10/,'the last proefexamen as an oefencijfer');
   assert.match(t,/Hier ben je goed in/);assert.match(t,/Hier maak je de meeste fouten/);
-  assert.match(t,/Soorten fouten in je teksten en antwoorden/);
+  assert.match(t,/Grammatica/);assert.doesNotMatch(t,/Geschiedenis/,'history is not an exam topic');
   const kinds=[...m.querySelectorAll('[data-vc]')].map(b=>b.dataset.vc);
-  assert.equal(kinds[0],'spelling','the most frequent kind first');
+  assert.equal(kinds[0],'sp','the rule with the most own mistakes first');assert.ok(kinds.includes('wo')&&kinds.includes('dh')&&kinds.includes('mv'));
   assert.equal(a.run('S.errs.every(e=>e.c)'),true);
-  m.querySelector('[data-vc="spelling"]').click();
+  m.querySelector('[data-vc="sp"]').click();
   assert.equal(a.document.querySelector('#play').hidden,false);
   assert.equal(a.run('queue.every(q=>q.sec==="er")&&queue.length'),2);
   a.run('setTab("herhalen");home()');
@@ -52,7 +53,7 @@ test('Growth: a line of the share right per week, practice minutes per week, the
 
 test('One place for the weak topics: the weakest five, the rest under Meer onderwerpen, no separate screen', async()=>{
   const a=await app();
-  a.run(`const d=today();["knm","lz","ls","verb","wo","pr","dh"].forEach((sec,j)=>ITEMS.filter(q=>q.sec===sec).slice(0,3).forEach(q=>S.items[q.k]={b:0,d,r:j,w:6-j}));
+  a.run(`const d=today();[...new Set(ITEMS.filter(q=>q.sec==="knm").map(q=>q.label))].slice(0,8).forEach((l,j)=>ITEMS.filter(q=>q.label===l).slice(0,3).forEach(q=>S.items[q.k]={b:0,d,r:j,w:7-j}));
     S.qd={[d]:60};S.qr={[d]:20};setTab("herhalen");home()`);
   const m=a.document.querySelector('#mine');
   assert.equal(a.document.querySelector('#stats'),null);assert.equal(m.querySelector('[data-x="stats"]'),null);
@@ -60,4 +61,13 @@ test('One place for the weak topics: the weakest five, the rest under Meer onder
   assert.ok(top<=5&&top>0);assert.ok(rest>0,'the other topics under Meer onderwerpen');
   m.querySelector('.vmore [data-vw]').click();
   assert.equal(a.document.querySelector('#play').hidden,false);
+});
+
+test('Own mistakes are sorted into grammar rules from the words themselves', async()=>{
+  const a=await app();
+  const c=(w,r,k='grammatica')=>a.run(`grammarCat(${JSON.stringify({w,r,c:k})})`);
+  assert.equal(c('ik ga morgen','morgen ga ik'),'wo');assert.equal(c('het tafel','de tafel'),'dh');assert.equal(c('ik ga naar winkel','ik ga naar de winkel'),'dh');
+  assert.equal(c('een mooi fiets','een mooie fiets'),'bn');assert.equal(c('hij word','hij wordt'),'ww');assert.equal(c('ik heb gewerkd','ik heb gewerkt'),'ww');
+  assert.equal(c('geeven','geven','spelling'),'sp');assert.equal(c('De boeken ligt','De boeken liggen','meervoud'),'mv');
+  assert.equal(c('ik ben blij','ik voel me blij','woorden'),'wd');assert.equal(c('x','y','inhoud'),null);
 });
