@@ -3,6 +3,7 @@ try{const r=new URLSearchParams(location.search).get("ref");if(r&&/^[A-HJ-NP-Z2-
 const languages = ["en", "ar", "tr", "hi", "zh", "es", "ru", "uk"];
 // Dutch copy is also in the HTML so the page is readable without scripts.
 const copy = {
+  "Oefeningen en proefexamens zijn gratis. Wil je weten wat je beter kunt zeggen of schrijven? Met Plus krijg je elke maand nieuwe AI-feedback op je antwoorden. Zo kun je je fouten verbeteren en het opnieuw proberen.": ["Exercises and mock exams are free. Want to know how to improve a spoken or written answer? Plus gives you fresh AI feedback credits each month so you can correct mistakes and try again.", "التمارين والامتحانات التجريبية مجانية. هل تريد تحسين إجاباتك الشفهية والكتابية؟ يمنحك Plus كل شهر رصيدًا جديدًا لمراجعة إجاباتك بالذكاء الاصطناعي، حتى تصحح أخطاءك وتحاول مجددًا.", "Alıştırmalar ve deneme sınavları ücretsiz. Sözlü veya yazılı yanıtını nasıl geliştirebileceğini öğrenmek ister misin? Plus ile her ay yenilenen haklarını kullanarak yapay zekâdan geri bildirim alabilir, hatalarını düzeltip yeniden deneyebilirsin.", "अभ्यास और मॉक परीक्षाएँ मुफ़्त हैं। अपने बोलने या लिखने में सुधार करना चाहते हैं? Plus में हर महीने AI से अपने जवाब जँचवाने के लिए नए क्रेडिट मिलते हैं। गलतियाँ सुधारें और फिर कोशिश करें।", "练习和模拟考试免费。想知道口语或写作回答可以怎样改进？Plus 每月提供新的 AI 批改额度，帮你发现错误、修改答案，再试一次。", "Los ejercicios y simulacros son gratis. ¿Quieres saber cómo mejorar una respuesta oral o escrita? Con Plus recibes créditos cada mes para que la IA revise tus respuestas. Así puedes corregir errores y volver a intentarlo.", "Упражнения и пробные экзамены бесплатны. Хочешь понять, как лучше ответить устно или письменно? С Plus каждый месяц ты получаешь новые ИИ-проверки. Разбери ошибки, исправь ответ и попробуй ещё раз.", "Вправи та пробні іспити безкоштовні. Хочеш зрозуміти, як краще відповісти усно чи письмово? З Plus щомісяця ти отримуєш нові ШІ-перевірки. Розбери помилки, виправ відповідь і спробуй ще раз."],
   "Niveau": ["Level", "المستوى", "Seviye", "स्तर", "级别", "Nivel", "Уровень", "Рівень"],
   "Looptijd": ["Term", "المدة", "Süre", "अवधि", "期限", "Duración", "Срок", "Термін"],
   "Account": ["Account", "الحساب", "Hesap", "खाता", "账户", "Cuenta", "Аккаунт", "Акаунт"],
@@ -298,6 +299,10 @@ function render() {
   $("try-free").hidden = !(config?.free && config?.limit);
   if (config?.free && config?.limit) $("try-free").textContent = tryCopy[lang](config.free, config.limit);
   const allowance = plus?.month && plus?.limit ? `${checks(plus.month)} · ${dailyCopy[lang](plus.limit)}` : "";
+  $("pricing-intro").hidden = !active;
+  const comparison = $("pricing-comparison");
+  comparison.hidden = !(active && config?.limit && allowance);
+  if (!comparison.hidden) comparison.textContent = free(config.limit) + ". Plus: " + allowance + ".";
   const pass = config?.pass;
   $("pass-total").hidden = !pass?.total;
   if (pass?.total && plus?.limit) $("pass-total").textContent = `${totalCopy[lang](pass.total)} · ${dailyCopy[lang](plus.limit)}`;
