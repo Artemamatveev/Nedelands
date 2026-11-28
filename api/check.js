@@ -15,7 +15,7 @@
 // the answer then also has `left`, the checks left today. With Bittertalen Plus (api/plus.js) PLUS_LIMIT a day.
 import Anthropic from "@anthropic-ai/sdk";
 import { unknownWords, spellingPoints } from "./_spell.js";
-import { accounts, caller, checkCost, useChecks, LIMIT, PLUS, plusOn, plusFor, coversLevel, sameOrigin, FREE, visitor, useFree, useTotal, addSpend, bonusFor, useGuard, PLUS_MONTH, OPUS_MONTH, PASS_TOTAL, PASS_OPUS, YEAR_TOTAL, YEAR_OPUS, TRIAL_TOTAL, TRIAL_OPUS, monthOf, amsterdamDay, gradingDigest, gradingReceipt } from "./_supa.js";
+import { accounts, caller, checkCost, useChecks, LIMIT, PLUS, plusOn, plusFor, coversLevel, sameOrigin, FREE, visitor, useFree, useTotal, addSpend, bonusFor, useGuard, PLUS_MONTH, OPUS_MONTH, PASS_TOTAL, PASS_OPUS, YEAR_TOTAL, YEAR_OPUS, TRIAL_TOTAL, TRIAL_OPUS, monthOf, amsterdamDay, gradingDigest, gradingReceipt, soundOpen } from "./_supa.js";
 
 // Created only when the key is set, so a missing key gives a clear error instead of a crash
 // (trimmed: a key pasted into the dashboard with a trailing newline breaks the request header)
@@ -33,6 +33,17 @@ const MODEL_FREE = (process.env.GRADING_MODEL_FREE || "claude-haiku-5-5").trim()
 const FREE_STRONG = Math.max(0, parseInt(process.env.FREE_STRONG ?? "2", 10) || 0);
 
 const ERROR_KINDS = ["inhoud", "woorden", "grammatica", "spelling", "samenhang", "inversie", "meervoud"];
+// Zo haal je meer punten: what to add or change for the points that were lost (inhoud first: what the task asks for)
+const MEER_KINDS = ["inhoud", "woorden", "grammatica", "spelling", "samenhang"];
+// At most three, only for a criterion that lost points, none when every point was earned
+export function cleanMeer(list, SC, sc) {
+  const total = (o) => Object.values(o).reduce((a, b) => a + b, 0);
+  if (total(sc) >= total(SC)) return [];
+  const s = (v, n) => (typeof v === "string" ? v.replace(/\s+/g, " ").trim().slice(0, n) : "");
+  return (Array.isArray(list) ? list : [])
+    .filter((m) => m && MEER_KINDS.includes(m.kind) && Object.hasOwn(SC, m.kind) && sc[m.kind] < SC[m.kind] && s(m.tip, 300))
+    .slice(0, 3).map((m) => ({ kind: m.kind, tip: s(m.tip, 300), voorbeeld: s(m.voorbeeld, 300) }));
+}
 const RESULT = {
   type: "object",
   properties: {
@@ -48,8 +59,17 @@ const RESULT = {
         additionalProperties: false,
       },
     },
+    meer: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: { kind: { type: "string", enum: MEER_KINDS }, tip: { type: "string" }, voorbeeld: { type: "string" } },
+        required: ["kind", "tip", "voorbeeld"],
+        additionalProperties: false,
+      },
+    },
   },
-  required: ["passed", "verdict", "corrected", "errors"],
+  required: ["passed", "verdict", "corrected", "errors", "meer"],
   additionalProperties: false,
 };
 const SCHEMA = {
@@ -85,6 +105,25 @@ const withCount = (schema) => {
     required: [...item.required, "spelfouten"] } } } };
 };
 const SCHEMA_SP = withScores(SCORES_SP), SCHEMA_WR = withCount(withScores(SCORES_WR));
+// Near the line (28 November 2026, writing and speaking): the same text can get 6 one time and 7 the next. A task where
+// one point either way on a criterion the model judges would change voldoende is graded once more by the same model
+// (Azure's sound points are fixed, so they never trigger it); when the two disagree, a third time, and each
+// criterion gets the middle of the three (the median). The corrections and the verdict stay those of the first grading.
+// Only the points of the extra gradings are used; their tokens go to ai_spend like any call, and the learner pays no
+// extra check. RECHECK=0 in the Vercel environment switches it off. B1 zinsopdrachten (2 points) are left out.
+const RECHECK = String(process.env.RECHECK ?? "1").trim() !== "0";
+const RECHECK_MS = 25_000; // an extra grading starts only with this much of the function's time left
+// sc and SC are the model's own criteria; pass judges them as the final result would (with a short-answer cap or sound)
+export function nearLine(sc, SC, pass) {
+  if (!sc.inhoud) return false;
+  const now = pass(sc);
+  return Object.keys(SC).some((k) => [-1, 1].some((d) => {
+    const v = sc[k] + d;
+    return v >= 0 && v <= SC[k] && pass(clampScores({ ...sc, [k]: v }, SC)) !== now;
+  }));
+}
+export const medianScores = (runs, SC) =>
+  clampScores(Object.fromEntries(Object.keys(SC).map((k) => [k, runs.map((r) => r[k]).sort((a, b) => a - b)[Math.floor(runs.length / 2)]])), SC);
 const clampScores = (sc, SC) => {
   const o = Object.fromEntries(Object.entries(SC).map(([k, max]) => [k, Math.max(0, Math.min(max, Math.round(Number(sc?.[k]) || 0)))]));
   return o.inhoud ? o : Object.fromEntries(Object.keys(SC).map((k) => [k, 0])); // no answer to the question: no points at all
@@ -104,7 +143,10 @@ export function uniqueCorrections(errors) {
     return true;
   });
 }
-const ERROR_NOTE = `
+const MEER_NOTE = `
+- meer: wat de cursist of kandidaat kan doen om meer punten te halen, alleen voor onderdelen waar punten verloren gaan; hoogstens 3, de meeste punten eerst. Vooral wat de opdracht vraagt en wat ontbreekt of onduidelijk is (inhoud: welk punt van de opdracht), daarna wat het antwoord rijker maakt (samenhang: zinnen verbinden met want, omdat, maar of daarna; woorden: eigen, preciezere woorden in plaats van woorden uit de opdracht). kind = het onderdeel; tip = wat je moet doen, kort en concreet, in eenvoudige woorden; voorbeeld = één goede zin die de cursist zelf kan schrijven of zeggen, op het niveau van het examen, passend bij de opdracht en zonder fouten (verzin geen persoonlijke gegevens: gebruik een duidelijk voorbeeld zoals "om tien uur"). Herhaal geen correctie die al bij errors staat. Alle punten gehaald: lege lijst.
+`;
+const ERROR_NOTE = MEER_NOTE + `
 - Noem een ontbrekende of verkeerde punt, komma of vraagteken niet als aparte fout. Zet de leestekens wel goed in corrected.
 - Geef elke correctie één keer. Gebruik het kortste fragment dat de fout duidelijk laat zien, eventueel met een paar woorden context. Geef dezelfde wijziging niet ook in een langere zin.
 - Geef elke fout één kind: inhoud, woorden, grammatica, spelling, samenhang. Gebruik inversie alleen als na een tijd- of plaatsbepaling vooraan het onderwerp en de persoonsvorm verkeerd staan in een hoofdzin. Gebruik meervoud alleen als bij een meervoudig onderwerp de persoonsvorm ten onrechte in het enkelvoud staat. Beide tellen bij grammatica. Een verkeerd gespelde werkwoordsvorm met de juiste persoon en het juiste getal (zoals ligd → ligt) is spelling.
@@ -119,6 +161,21 @@ const wfPassed = (sc) => sc.inhoud >= 2 && sum(sc) >= 5;
 // pronunciation, no fluency), so the bar is higher than a share of 12 would be: inhoud 2 and 6 of those 8, else a
 // learner who would lose points on sound sees "voldoende" too easily.
 const spPassed = (sc) => sc.inhoud >= 2 && sum(sc) >= 6;
+// Spreken A2 with the sound (28 November 2026): when Azure scored the answer's sound (a seal from api/_pron.js), DUO's
+// last 4 points count too, so an answer gets all 12: uitspraak 0–2 from Klanken (Azure's AccuracyScore), vloeiendheid
+// 0–2 from Vloeiendheid (FluencyScore), 2 from SOUND_GOOD, 1 from SOUND_SOME, the same lines the page marks words at.
+// Voldoende is then inhoud 2 and SP_SOUND_LINE of 12: two thirds, as the sound no longer has to be guessed. Not yet
+// compared with an examiner (docs/ai.md).
+const SCORES_SPS = { ...SCORES_SP, uitspraak: 2, vloeiendheid: 2 };
+const SOUND_GOOD = 80, SOUND_SOME = 60, SP_SOUND_LINE = 8;
+const spsPassed = (sc) => sc.inhoud >= 2 && sum(sc) >= SP_SOUND_LINE;
+const soundPt = (v) => (v >= SOUND_GOOD ? 2 : v >= SOUND_SOME ? 1 : 0);
+export function withSound(scores, sound, short) {
+  if (!sound) return scores;
+  if (!scores.inhoud) return { ...scores, uitspraak: 0, vloeiendheid: 0 };
+  // a few words show little of how fluently someone speaks
+  return { ...scores, uitspraak: soundPt(sound.a), vloeiendheid: short ? Math.min(1, soundPt(sound.f)) : soundPt(sound.f) };
+}
 // A complete but very short spoken answer ("Met de trein") earns full inhoud, but a few words show little of the language
 // points: below SP_SHORT words woorden and grammatica count at most 1 and samenhang 0, so two words can't reach voldoende.
 const SP_SHORT = 5;
@@ -403,15 +460,16 @@ async function gradeRequest(req, res, { user, input, sb, sp, wb, t0, save }) {
   const tasks = input.map((t) => ({
     kind: wb ? (SCORES_WB[t?.kind] ? t.kind : "m") : sb ? (SCORES_SB[t?.kind] ? t.kind : "m") : !sp && t?.kind === "f" ? "f" : "",
     task: str(t?.task, wb ? 2000 : 1200), form: sp ? "" : str(t?.form, 1500), text: str(t?.text, 2500),
+    // Spreken A2: Azure's scores of the answer's sound, only from a seal this learner got from /api/pron
+    sound: sp && !sb && uid ? soundOpen(t?.sound, uid) : null,
   }));
   const max = !sp ? 8 : tasks.length === 1 ? 8 : tasks.length <= 4 ? 5 : 3;
-  const n = nonce();
-  const prompt = sb
-    ? tasks
+  const promptFor = (list, n = nonce()) => sb
+    ? list
         .map((t, i) => `OPDRACHT ${i + 1} (${KIND_SB[t.kind]}, ${sum(SCORES_SB[t.kind])} punten):\n${fence("opdracht", n, t.task)}\nANTWOORD VAN DE KANDIDAAT ${i + 1}:\n${fence("tekst", n, t.text || "(niets gezegd)")}`)
         .join("\n\n") + `\n\nNoem per antwoord maximaal ${max} fouten.`
     : wb
-    ? tasks
+    ? list
         .map(
           (t, i) =>
             `OPDRACHT ${i + 1} (${KIND_WB[t.kind]}, ${sum(SCORES_WB[t.kind])} punten):\n${fence("opdracht", n, t.task)}` +
@@ -420,13 +478,41 @@ async function gradeRequest(req, res, { user, input, sb, sp, wb, t0, save }) {
         )
         .join("\n\n") + `\n\nNoem per zinsopdracht maximaal 2 fouten, per formulier of e-mail maximaal 6.`
     : sp
-    ? promptSP(tasks, max, n)
-    : promptWR(tasks, max, n);
+    ? promptSP(list, max, n)
+    : promptWR(list, max, n);
+  const prompt = promptFor(tasks);
 
-  // The learner's menu language (en, ar, …): the explanation of each mistake comes in that language, so a beginner
-  // understands the rule; the corrections and the verdict stay Dutch
+  // The learner's menu language (en, ar, …): the explanation of each mistake and each tip comes in that language, so a
+  // beginner understands the rule; the corrections, the examples and the verdict stay Dutch
   const ui = Object.hasOwn(UI_LANG, String(req.body?.ui)) ? UI_LANG[req.body.ui] : null;
-  const content = ui ? prompt + `\n\nSchrijf "why" bij elke fout in het ${ui}, met eenvoudige woorden, zodat de cursist de regel begrijpt. Al het andere blijft in het Nederlands.` : prompt;
+  const content = ui ? prompt + `\n\nSchrijf "why" bij elke fout en "tip" bij meer in het ${ui}, met eenvoudige woorden, zodat de cursist de regel begrijpt. Al het andere blijft in het Nederlands.` : prompt;
+  const system = (sb ? SYSTEM_SB : sp ? SYSTEM_SP : wb ? SYSTEM_WB : SYSTEM) + ERROR_NOTE + FENCE_NOTE;
+  const schema = sp ? SCHEMA_SP : SCHEMA_WR;
+  // Per task: its points, the rule for voldoende, and whether it may be graded again near the line
+  const SCs = tasks.map((t) => wb ? SCORES_WB[t.kind] : sb ? SCORES_SB[t.kind] : sp ? SCORES_SP : t.kind === "f" ? SCORES_WF : SCORES_WR);
+  const passFor = (i) => wb ? (sc) => wbPassed(sc, SCs[i]) : sb ? (sc) => sbPassed(sc, SCs[i]) : sp ? spPassed : tasks[i].kind === "f" ? wfPassed : wrPassed;
+  const scoreOf = (t, i) => {
+    const c = clampScores(t?.scores, SCs[i]);
+    // Schrijven A2: spelling points by DUO's count rule, never more than Claude gave (api/_spell.js)
+    return !sp && !wb && c.inhoud ? { ...c, spelling: spellingPoints(uniqueCorrections(t.errors), c.spelling, t.spelfouten) } : c;
+  };
+  // One more grading of some tasks, points only: [scores] in their order, or null (no time, a refusal, an error)
+  const regrade = async (idx) => {
+    const ms = DEADLINE - (Date.now() - t0) - 5_000;
+    if (ms < RECHECK_MS) return null;
+    try {
+      const list = idx.map((i) => tasks[i]);
+      const r = await client.beta.messages.create({
+        model, max_tokens: Math.min(12000, 4000 * list.length), betas: ["server-side-fallback-2026-07-01"], fallbacks: "default",
+        output_config: { effort: "low", format: { type: "json_schema", schema } },
+        system, messages: [{ role: "user", content: promptFor(list) }],
+      }, { signal: AbortSignal.timeout(ms), maxRetries: 0 });
+      await addSpend(r.model, r.usage).catch(() => {});
+      if (r.stop_reason === "refusal" || r.stop_reason === "max_tokens") return null;
+      const got = JSON.parse(r.content.find((b) => b.type === "text")?.text || "{}").tasks;
+      return Array.isArray(got) && got.length === list.length ? got.map((t, j) => scoreOf(t, idx[j])) : null;
+    } catch (e) { console.error("grading_recheck", e?.name || typeof e); return null; }
+  };
   try {
     providerStarted = true;
     const response = await client.beta.messages.create({
@@ -436,8 +522,8 @@ async function gradeRequest(req, res, { user, input, sb, sp, wb, t0, save }) {
       max_tokens: exam ? 12000 : tasks.length === 1 ? 4000 : 8000,
       betas: ["server-side-fallback-2026-07-01"],
       fallbacks: "default",
-      output_config: { effort: exam || tasks.length > 1 ? "medium" : "low", format: { type: "json_schema", schema: sp ? SCHEMA_SP : SCHEMA_WR } },
-      system: (sb ? SYSTEM_SB : sp ? SYSTEM_SP : wb ? SYSTEM_WB : SYSTEM) + ERROR_NOTE + FENCE_NOTE,
+      output_config: { effort: exam || tasks.length > 1 ? "medium" : "low", format: { type: "json_schema", schema } },
+      system,
       messages: [{ role: "user", content }],
     }, { signal: AbortSignal.timeout(left_ms), maxRetries: exam ? 0 : 1 });
     console.info(JSON.stringify({ event: "grading_usage", model: response.model, usage: response.usage, units: cost }));
@@ -452,6 +538,28 @@ async function gradeRequest(req, res, { user, input, sb, sp, wb, t0, save }) {
       return res.status(502).json({ error: "failed" });
     }
     const out = result.tasks;
+    const points = out.map(scoreOf), checks = out.map(() => 1), unsure = new Set();
+    // Claude's points of a task -> its final points: Spreken A2 caps a very short answer and adds the sealed sound
+    const finalOf = (i, base) => {
+      if (!sp || sb) return { scores: base, short: false };
+      const short = capShortSpoken(base, tasks[i].text);
+      return { scores: withSound(short.scores, tasks[i].sound, short.short), short: short.short };
+    };
+    const judge = (i) => (base) => { const f = finalOf(i, base).scores; return tasks[i].sound ? spsPassed(f) : passFor(i)(f); };
+    // Near the line (writing and speaking): a second grading, and a third where the first two disagree on voldoende
+    const near = RECHECK ? tasks.map((t, i) => i).filter((i) => !(wb && tasks[i].kind === "z") && nearLine(points[i], SCs[i], judge(i))) : [];
+    if (near.length) {
+      const second = await regrade(near);
+      if (second) {
+        const split = [];
+        near.forEach((i, j) => { checks[i] = 2; if (judge(i)(second[j]) !== judge(i)(points[i])) split.push([i, second[j]]); });
+        const third = split.length ? await regrade(split.map(([i]) => i)) : null;
+        split.forEach(([i, two], j) => {
+          if (third) { points[i] = medianScores([points[i], two, third[j]], SCs[i]); checks[i] = 3; }
+          else unsure.add(i); // no time for a third: the first points, marked as on the line
+        });
+      }
+    }
     const payload = {
       left: who ? free : left,
       limit: who ? FREE : lim,
@@ -459,15 +567,15 @@ async function gradeRequest(req, res, { user, input, sb, sp, wb, t0, save }) {
       checkedAt,
       ...(who ? { free } : {}),
       tasks: out.map((t, i) => {
-        const form = !sp && !wb && tasks[i].kind === "f";
-        const SC = wb ? SCORES_WB[tasks[i].kind] : sb ? SCORES_SB[tasks[i].kind] : sp ? SCORES_SP : form ? SCORES_WF : SCORES_WR;
-        let clamped = clampScores(t.scores, SC);
-        // Schrijven A2: spelling points by DUO's count rule, never more than Claude gave (api/_spell.js)
-        if (!sp && !wb && clamped.inhoud) clamped = { ...clamped, spelling: spellingPoints(uniqueCorrections(t.errors), clamped.spelling, t.spelfouten) };
-        const short = sp && !sb ? capShortSpoken(clamped, tasks[i].text) : { scores: clamped, short: false };
-        const scores = short.scores;
+        const short = finalOf(i, points[i]), sound = tasks[i].sound, scores = short.scores;
         if (short.short) t = { ...t, verdict: [str(t.verdict, 400), SHORT_NOTE].filter(Boolean).join(" ") };
-        return { ...t, ...(short.short ? { limitedLanguageEvidence: true } : {}), errors: uniqueCorrections(t.errors), scores, passed: sb ? sbPassed(scores, SC) : sp ? spPassed(scores) : wb ? wbPassed(scores, SC) : form ? wfPassed(scores) : wrPassed(scores) };
+        const SC = sound ? SCORES_SPS : SCs[i];
+        return {
+          ...t, ...(short.short ? { limitedLanguageEvidence: true } : {}), errors: uniqueCorrections(t.errors), scores,
+          meer: cleanMeer(t.meer, SC, scores),
+          ...(checks[i] > 1 ? { checks: checks[i] } : {}), ...(unsure.has(i) ? { nearLine: true } : {}),
+          passed: judge(i)(points[i]),
+        };
       }),
     };
     if (save) await save(payload);

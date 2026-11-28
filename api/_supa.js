@@ -103,6 +103,27 @@ export const visitor = (req, res) => {
 // A conversation with Claude (api/_talk.js) is paid once, at its start; the signed ticket it gets then lets the next
 // turns through without taking another check. The secret never leaves the server.
 export const talkSign = s => createHmac("sha256", SERVICE).update("bittertalen-talk|" + s).digest("base64url");
+// The sound of a spoken answer (api/_pron.js): Azure's Klanken and Vloeiendheid, sealed for this learner for a day, so
+// Spreken grading (api/check.js) can count them as DUO's uitspraak and vloeiendheid points without trusting the page.
+const soundSign = s => createHmac("sha256", SERVICE).update("bittertalen-sound|" + s).digest("base64url");
+export const SOUND_HOURS = 24;
+export function soundSeal(uid, accuracy, fluency, now = Date.now()) {
+  if (!SERVICE || !uid) return null;
+  const p = Buffer.from(JSON.stringify({ u: String(uid), a: accuracy, f: fluency, x: now + SOUND_HOURS * 36e5 })).toString("base64url");
+  return p + "." + soundSign(p);
+}
+// {a, f} (0–100) when the seal is this learner's, unchanged and not too old; else null
+export function soundOpen(seal, uid, now = Date.now()) {
+  const m = /^([A-Za-z0-9_-]{10,300})\.([A-Za-z0-9_-]{43})$/.exec(String(seal || ""));
+  if (!m || !SERVICE || !uid) return null;
+  const a = Buffer.from(m[2]), b = Buffer.from(soundSign(m[1]));
+  if (a.length !== b.length || !timingSafeEqual(a, b)) return null;
+  try {
+    const o = JSON.parse(Buffer.from(m[1], "base64url").toString("utf8"));
+    const ok = (v) => Number.isInteger(v) && v >= 0 && v <= 100;
+    return o && o.u === String(uid) && o.x > now && ok(o.a) && ok(o.f) ? { a: o.a, f: o.f } : null;
+  } catch { return null }
+}
 // A zero-cost lookup does not create a usage row. No new allowance on the next day.
 export async function useFree(who, cost, checkedAt = new Date().toISOString()) {
   const r = await fetch(`${URL_}/rest/v1/rpc/use_trial_checks`, {

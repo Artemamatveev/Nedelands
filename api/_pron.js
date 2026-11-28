@@ -19,7 +19,7 @@
 // Only signed-in learners: PRON_DAY takes a day each (default 30) and all of them together PRON_CAP seconds of audio a
 // day (default 14400, about $5.28 at $1.32 an hour; a free answer counts its seconds plus the scored part). The audio
 // goes to Microsoft (and a free answer to Groq) for this one request and is not kept here.
-import { accounts, caller, useGuard, addSpend, amsterdamDay } from "./_supa.js";
+import { accounts, caller, useGuard, addSpend, amsterdamDay, soundSeal } from "./_supa.js";
 
 const KEY = (process.env.AZURE_SPEECH_KEY || "").trim();
 const REGION = ((process.env.AZURE_SPEECH_REGION || "germanywestcentral").trim().toLowerCase().match(/^[a-z0-9]+$/) || ["germanywestcentral"])[0];
@@ -146,6 +146,8 @@ export async function pron(req, res) {
   if (t && (PHANTOM.test(t) || (judged && !a.heard && secs <= PRON_SECONDS))) t = "";
   return res.status(200).json({
     heard: !!t, text: t, left, part: secs > PRON_SECONDS + 0.5,
+    // seal: the two scores signed for this learner, for DUO's uitspraak and vloeiendheid points in Spreken grading
     ...(a.heard ? { scores: { accuracy: a.scores.accuracy, fluency: a.scores.fluency, pron: a.scores.pron }, words: a.words } : {}),
+    ...(a.heard && t ? { seal: soundSeal(user.id, a.scores.accuracy, a.scores.fluency) } : {}),
   });
 }

@@ -294,3 +294,113 @@ test('A missed word can be recorded again without discarding the full speaking c
   item('got').click();
   assert.equal(a.run('S.items["sp|3"].r'),1);
 });
+
+test('A2 speaking exam sends the sealed sound, counts 12 points per answer and offers the right answer to hear',async()=>{
+  const requests=[];
+  const a=await app({fetch:async (url,options)=>{
+    if(url!=='/api/check')return new Response('{}');
+    const request=JSON.parse(options.body);requests.push(request);
+    const result={passed:true,verdict:'Goed.',corrected:'Ik woon in Nederland.',errors:[],
+      scores:{inhoud:3,woorden:2,grammatica:2,samenhang:0,uitspraak:2,vloeiendheid:1},
+      meer:[{kind:'samenhang',tip:'Verbind je zinnen.',voorbeeld:'Ik woon in Nederland, want mijn man werkt hier.'}]};
+    return new Response(JSON.stringify({tasks:request.tasks.map(()=>result)}));
+  }});
+  a.run('startExam("sp",true);cur.ans=[{q:queue[0],text:"Ik woon in Nederland",sound:"seal-1"}];pos=queue.length;finish()');
+  await a.flush();
+  assert.equal(requests[0].tasks[0].sound,'seal-1');
+  const card=a.document.querySelector('#card').textContent;
+  assert.match(card,/Samen 10 van 12 punten/);
+  assert.match(card,/10 van 192 punten/,'unanswered questions count 12 when the exam counted sound');
+  assert.match(card,/Is je uitspraak duidelijk\?/);
+  assert.match(card,/Voldoende is 8 punten/);
+  assert.match(card,/Zo haal je meer punten/);
+  assert.match(card,/Ik woon in Nederland, want mijn man werkt hier\./);
+  assert.match(card,/Vloeiendheid/,'a lost fluency point gets the computer\'s own tip');
+  assert.ok(a.document.querySelector('#card [data-say="0"]'),'▶ Luister naar het goede antwoord');
+});
+test('Without a seal a spoken answer keeps the 8 points of a transcript',async()=>{
+  const a=await app();
+  const html=a.run('scoreHTML({inhoud:3,woorden:2,grammatica:1,samenhang:1},undefined,[])');
+  assert.match(html,/Samen <b>7 van 8 punten/);assert.match(html,/Voldoende is 6 punten/);
+  const near=a.run('lineNote({checks:3})+lineNote({nearLine:true,checks:2})');
+  assert.match(near,/drie keer nagekeken/);assert.match(near,/precies op de grens/);
+  assert.equal(a.run('meerHTML({meer:[]})'),'');
+});
+test('Mijn examen says whether the last Spreken proefexamen counted the sound; the line note fits an answer',async()=>{
+  const a=await app();
+  a.run('S.res={sp:[{id:"a",at:Date.now(),pc:70,nw:100,snd:1}]};home()');
+  assert.match(a.document.querySelector('#exam').textContent,/Uitspraak en vloeiendheid zijn door de computer gemeten/);
+  a.run('S.res.sp.push({id:"b",at:Date.now(),pc:60,nw:100});home()');
+  assert.match(a.document.querySelector('#exam').textContent,/Uitspraak en tempo zijn niet beoordeeld/);
+  assert.match(a.run('lineNote({checks:2},false)'),/Je antwoord zat .* Daarom is het twee keer/);
+});
+test('A2 speaking exam: skip, go back, keep a recorded answer, and hand in from the overview after a confirmation',async()=>{
+  const requests=[];
+  const a=await app({fetch:async (url,options)=>{
+    if(url!=='/api/check')return new Response('{}');
+    const request=JSON.parse(options.body);requests.push(request);
+    return new Response(JSON.stringify({tasks:request.tasks.map(()=>({passed:true,verdict:'Goed.',corrected:'Ja.',errors:[],scores:{inhoud:3,woorden:2,grammatica:2,samenhang:1}}))}));
+  }});
+  a.run('startExam("sp",true)');
+  const $=id=>a.document.getElementById(id);
+  assert.match(a.document.querySelector('#card .intro').textContent,/vier vragen/,'part 1 starts with what to do');
+  assert.equal($('prv').disabled,true);
+  $('spskip').click();
+  assert.equal(a.run('pos'),1,'a question can be skipped');
+  a.run('cur.ans[1]={q:queue[1],text:"Ik werk in een winkel",url:"blob:take",sound:"seal-2"}');
+  $('prv').click();$('spskip').click();
+  assert.equal(a.run('pos'),1);
+  assert.match($('recp').textContent,/Ik werk in een winkel/);
+  assert.equal(a.run('cur.ans[1].sound'),'seal-2','looking at a saved answer again keeps its recording and sound');
+  assert.equal($('spskip').hidden,true);
+  assert.match($('recb').textContent,/Volgende vraag/);
+  $('ovw').click();
+  const card=a.document.querySelector('#card').textContent;
+  assert.match(card,/1 van 16 vragen beantwoord/);assert.match(card,/Je hebt nog \d+ minuten/);assert.match(card,/zonder antwoord: 1, 3, 4/);
+  $('lever').click();
+  assert.equal($('lever').textContent,'Toch inleveren','open questions: a second tap hands in');
+  assert.equal(requests.length,0);
+  $('lever').click();await a.flush();
+  assert.equal(requests.length,1);
+  assert.deepEqual(requests[0].tasks.map(t=>t.text),['Ik werk in een winkel'],'a skipped question costs no model call');
+  assert.equal(requests[0].tasks[0].sound,'seal-2');
+  const result=a.document.querySelector('#card').textContent;
+  assert.match(result,/Vraag 1: nog niet voldoende/);assert.match(result,/Vraag 2: voldoende/);assert.match(result,/8 van 128 punten/);
+});
+test('Luisteren A2 proefexamen: a fragment plays as often as you like, as in DUO\'s oefenexamen; B1 plays once',async()=>{
+  class SpeechSynthesisUtterance{constructor(text){this.text=text}}
+  const a=await app({globals:{speechSynthesis:{speak(){},cancel(){},getVoices:()=>[],speaking:false,pending:false},SpeechSynthesisUtterance}});
+  a.run('startExam("ls",true)');
+  const say=a.document.getElementById('say');
+  for(let i=0;i<4;i++)say.click();
+  assert.equal(say.disabled,false);assert.match(say.textContent,/Nog een keer luisteren/);
+  assert.match(a.document.querySelector('#card').textContent,/zo vaak beluisteren als je wilt/);
+  a.run('S.lvl="B1";startExam("lb",true)');
+  const once=a.document.getElementById('say');once.click();
+  assert.equal(once.disabled,true);
+});
+test('Lezen A2: the question comes before the text, as DUO says: lees eerst de vraag, lees daarna de tekst',async()=>{
+  const a=await app();
+  a.run('startExam("lz",true)');
+  const card=a.document.querySelector('#card'),html=card.innerHTML,q=a.run('queue[0].big');
+  assert.match(card.textContent,/Lees eerst de vraag\. Lees daarna de tekst\./);
+  const at=html.indexOf('class="verb long"'),doc=html.indexOf('class="doc');
+  assert.ok(at>0&&doc>at,'the question is above the text');
+  assert.equal(card.querySelectorAll('.verb').length,1,'the question is shown once');
+  assert.ok(card.textContent.includes(q.replace(/<[^>]+>/g,'').slice(0,20)));
+});
+test('KNM proefexamen: each theme starts with a line, and the question is read aloud as it appears',async()=>{
+  const said=[];class SpeechSynthesisUtterance{constructor(text){this.text=text}}
+  const a=await app({globals:{speechSynthesis:{speak:u=>said.push(u.text),cancel(){},getVoices:()=>[],speaking:false,pending:false},SpeechSynthesisUtterance}});
+  a.run('startExam("knm",true)');
+  assert.match(a.document.querySelector('#card .intro').textContent,/De volgende vragen gaan over het thema ‘/);
+  assert.equal(a.run('queue.filter((q,i)=>i&&q.label!==queue[i-1].label).length'),7,'eight themes, each in one block (they were shuffled apart)');
+  const first=a.run('queue.findIndex((q,i)=>i>0&&q.label!==queue[i-1].label)');
+  a.run('pos=1;show()');
+  assert.equal(a.run('queue[1].label===queue[0].label'),true);
+  assert.equal(a.document.querySelector('#card .intro'),null,'not above every question');
+  a.run(`pos=${first};show()`);
+  assert.ok(a.document.querySelector('#card .intro'));
+  await a.flush();
+  assert.ok(a.run('cur.exam&&queue[pos].sec==="knm"'));
+});

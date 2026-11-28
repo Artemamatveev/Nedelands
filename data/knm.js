@@ -419,3 +419,7 @@ const KNM=[
 ["Geschiedenis en geografie", "De oma van Daan betaalde vroeger met guldens. Sinds wanneer betalen we in Nederland met de euro?", "sinds 2002", "sinds 1945", "sinds 2015", "Op 1 januari 2002 kwam de euro. Nederland betaalt nu met hetzelfde geld als veel andere landen in de EU.", "knm-416"],
 ["Geschiedenis en geografie", "Ilse wil wandelen op het hoogste punt van Nederland. Waar ligt dat?", "in Zuid-Limburg, bij Vaals", "op de Veluwe, bij Arnhem", "in de duinen bij Den Haag", "De Vaalserberg is 322 meter hoog. Daar komen Nederland, België en Duitsland bij elkaar.", "knm-417"]
 ];
+// Photos that give the answer away (a sign, a logo, the object itself: "112" on an ambulance, "IND-Loket", a glass container
+// for jam jars). Checked one by one on 28 November 2026, 44 of 417. All other KNM photos show with the question, as in
+// DUO's voorbeeldexamen KNM; these only after the answer. A replaced photo that no longer gives it away leaves the list.
+const KNM_LATE=new Set(["ambulance","knm-005","baby","knm-015","knm-016","gemeentehuis","knm-037","knm-041","knm-042","knm-049","bevrijding","knm-060","knm-076","knm-091","knm-092","knm-103","knm-104","knm-107","knm-108","knm-116","knm-117","knm-131","knm-136","knm-143","knm-183","apotheek","knm-222","knm-245","knm-276","rotterdam1940","knm-312","knm-316","knm-335","knm-343","knm-347","knm-367","knm-368","knm-370","knm-376","knm-380","knm-384","eten","knm-394","knm-401"]);

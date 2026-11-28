@@ -7,7 +7,7 @@ Lezen texts (`LZ`: `[text, questions, intro?]`) are plain strings rendered as do
 (unless it is a letter or an e-mail), `label: value` lines become a table, `Van:` starts an
 e-mail header. Luisteren items in `LS` are `[text, question, right, wrong, wrong, photo?]`; a dialogue has one line per
 turn (`A: …` / `B: …`), read with two pitches, and the optional photo from `foto/` sets the scene. In the
-proefexamen a fragment can be played twice (counted per fragment). `LSM` holds longer fragments with two or three
+proefexamen a fragment can be played as often as the learner likes, as in DUO's oefenexamen (28 November 2026; it was twice before). `LSM` holds longer fragments with two or three
 questions (`[text, photo, [[q, right, wrong, wrong], …], intro?]`, keys `ls|m<i>.<j>`); each Luisteren proefexamen takes up to
 eight of them, questions kept together, as DUO's oefenexamens are almost all long fragments with two or three questions.
 The intro (who reads or hears what, e.g. 'Yusuf belt de woningcorporatie.') is shown above, as on the exam. In the Lezen, Luisteren, KNM and Schrijven proefexamens you can go back: an answer is only
@@ -53,7 +53,7 @@ A2-niveau", and today's grammar step helps with a B1 round. The page title, desc
 - Luisteren B1: `LSB` (`[text, photo|null, [[q, right, wrong, wrong], …], intro]`, like `LSM`), section `lb`, keys
   `lb|<fragment>.<question>`. Radio, news, podcasts, voicemail, phone calls, talks and conversations of about 140–210
   words, three or four questions each (main point, details, an opinion, what to do). The proefexamen (`EX.lb`) takes
-  whole fragments up to 39 questions in 90 minutes, with Overzicht; each fragment is heard once (A2: twice), and before
+  whole fragments up to 39 questions in 90 minutes, with Overzicht; each fragment is heard once (A2: as often as you like), and before
   listening the screen lists every question of the fragment (`qs`), like the reading time on the exam. Practice takes
   two whole fragments (`someTexts()`) and may replay. Pass line the default 70%.
 - Schrijven B1: `WRB` (objects: `k` kind, `t` task, `m` example; `c` the sentence to finish (ends with …) or a text with
@@ -238,8 +238,15 @@ for writing/speaking/B1 sentence groups select the matching outcome. Existing sc
 
 ## KNM photos and absolute words (25 November 2026)
 
-A KNM question's photo is shown only after the answer (and never in a proefexamen): signs in the photos (IND-Loket,
-CJIB, Juridisch Loket) gave the answer away in about a fifth of the questions. `node tools/answer-length.mjs` also reports
+A KNM question's photo is shown with the question, as in DUO's voorbeeldexamen KNM (28 November 2026), without alt
+text until the answer (a description could name it, "het Binnenhof in Den Haag"). The exception is `KNM_LATE` in
+`data/knm.js`: 44 of the 417 photos, checked one by one that day, give the answer away (a sign or logo: "112" on an
+ambulance, "IND-Loket", "Dienst Uitvoering Onderwijs", "Het Juridisch Loket", the RDW building, an "AZC Ter Apel" sign; or
+the object itself: a glass container for jam jars, a reverse vending machine for deposit bottles, an energy label, a car
+seat, a family at dinner at six). Those come after the answer and never in a proefexamen, as all photos did before. A
+photo replaced by one that doesn't give the answer away leaves the list (`tests/knm-photos.test.mjs` counts 44). Not
+giveaways but odd for a Dutch exam, worth replacing: knm-018 (a Russian payslip), knm-286 (a Russian chart),
+knm-255 (almost empty). `node tools/answer-length.mjs` also reports
 absolute words (altijd, nooit, alleen, moet …) in wrong and right options; in KNM situaties they are in 22% of the wrong
 options and 8% of the right ones, so "skip the absolute option" still helps. Rewrite those options together with their
 recordings (`audio/build.mjs`), set by set.

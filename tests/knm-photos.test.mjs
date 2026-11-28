@@ -17,3 +17,18 @@ test('every KNM question has a separate local JPEG', () => {
     used.set(hash, question);
   }
 });
+
+test('KNM photos come with the question as on DUO\'s exam, except the ones that give the answer away',async()=>{
+  const {app}=await import('./app-harness.mjs');
+  const a=await app();
+  assert.equal(a.run('ITEMS.filter(q=>q.sec==="knm"&&q.late).length'),44);
+  a.run('build("knm",{...SEC.find(s=>s.id==="knm"),n:1,keep:1,pool:()=>[ITEMS.find(q=>q.sec==="knm"&&q.pics&&!q.late&&FOTO[q.pics[0]])]})');
+  const img=a.document.querySelector('#card .pics img');
+  assert.ok(img,'an ordinary photo shows before the answer');
+  assert.equal(img.getAttribute('alt'),'','without a description that could name the answer');
+  a.run('build("knm",{...SEC.find(s=>s.id==="knm"),n:1,keep:1,pool:()=>[ITEMS.find(q=>q.sec==="knm"&&q.pics?.[0]==="ambulance")]})');
+  assert.equal(a.document.querySelector('#knmpic').hidden,true,'"112" on the ambulance waits until the answer');
+  a.run('startExam("knm",true)');
+  const lateInExam=a.run('queue.findIndex(q=>q.late)');
+  if(lateInExam>=0){a.run(`pos=${lateInExam};show()`);assert.equal(a.document.querySelector('#card .pics'),null)}
+});

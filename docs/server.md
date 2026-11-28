@@ -19,7 +19,9 @@ the month, as it runs on the better model; a free one takes 1; the page shows it
 more than the plan earns). An Examenpas counts over its whole term instead of per month: `PASS_TOTAL` (default 250)
 checks and `PASS_OPUS` (default 15) exams on the exam model, keyed `p:`/`q:` + user with the pass's end date; when they are
 used up the answer is 429 `pass`. A single practice task is graded with effort low and `max_tokens` 4000; two or more
-and proefexamens with effort medium. Guests (trial checks) don't count towards `CHECK_CAP`: they have their own
+and proefexamens with effort medium. A writing or speaking task near the line of voldoende is graded once or twice more inside the
+same check, effort low, only within the function's time (`RECHECK`, default on; `RECHECK=0` switches it off; docs/ai.md):
+up to three model calls for one check, all in `ai_spend`, no extra check for the learner. Guests (trial checks) don't count towards `CHECK_CAP`: they have their own
 `FREE_CAP` a day, so a flood of trial checks can't block accounts. A conversation ticket allows `TURNS + 2` calls (say and end),
 counted on the server, because the history comes from the page. All three are counters in table `ai_guard`
 (`use_guard()`, migration `20261125090000_ai_guard.sql`, also in `schema.sql`, applied 25 November 2026); an unreachable
