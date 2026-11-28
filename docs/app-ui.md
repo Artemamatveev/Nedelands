@@ -201,3 +201,11 @@ Three things taken from the big language apps, all in `oefenen.html`:
   eerste/tweede/derde or the words of one answer; "herhaal" repeats, "stop" stops; no answer twice moves on. Answers
   count in `S.items` (`hfRecord()`) and the round in the streak. Questions with a picture are left out. The question
   area is Dutch (`lang="nl"`).
+
+## Oefencijfer (28 November 2026)
+
+A proefexamen result of an inburgering part (Lezen, Luisteren, Schrijven, Spreken A2 and KNM) also shows "Oefencijfer N
+van 10 · een 6 is voldoende" (`oefenCijfer()`, `cijferHTML()`), as DUO shows a "Cijfer" in Mijn Inburgering: the
+oefendoel (`passPc()`) is a 6, everything right a 10, nothing a 1, straight lines in between, rounded, and under the
+oefendoel at most a 5, so it never says voldoende when the result is "Meer oefenen". The note says it is Bittertalen's
+own conversion: DUO doesn't publish its own. Not for the Staatsexamen (B1), which has scores.

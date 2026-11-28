@@ -27,6 +27,18 @@ export const PASS_OPUS = Math.max(0, parseInt(process.env.PASS_OPUS ?? "15", 10)
 // The Jaarpas over its whole year (26 November 2026): counted per month like Plus it could cost far more than it earns
 export const YEAR_TOTAL = Math.max(1, parseInt(process.env.YEAR_TOTAL, 10) || 600);
 export const YEAR_OPUS = Math.max(0, parseInt(process.env.YEAR_OPUS ?? "30", 10) || 0);
+// Plus free for a new account (28 November 2026): TRIAL_DAYS (default 7; 0 = off) from the account's creation, at B1 (so
+// A2 too), with TRIAL_TOTAL checks (default 30) and TRIAL_OPUS proefexamens on the exam model (default 2) over the whole
+// trial. Trial checks count against CHECK_CAP like free ones. Ends by itself; nothing is bought or renewed.
+export const TRIAL_DAYS = Math.max(0, parseInt(process.env.TRIAL_DAYS ?? "7", 10) || 0);
+export const TRIAL_TOTAL = Math.max(1, parseInt(process.env.TRIAL_TOTAL, 10) || 30);
+export const TRIAL_OPUS = Math.max(0, parseInt(process.env.TRIAL_OPUS ?? "2", 10) || 0);
+export const trialOf = (user, now = Date.now()) => {
+  const at = Date.parse(user?.created_at || "");
+  if (!TRIAL_DAYS || !at) return null;
+  const until = at + TRIAL_DAYS * 864e5;
+  return until > now ? { status: "active", until: new Date(until).toISOString(), ends: true, level: "B1", pass: true, trial: true } : null;
+};
 // A counter of table ai_guard (use_guard() in schema.sql): what is left, -1 when over; throws when unavailable
 export async function useGuard(k, day, cost, lim) {
   const r = await fetch(`${URL_}/rest/v1/rpc/use_guard`, {
@@ -408,7 +420,7 @@ const storePlan = (st) => ({ status: "active", until: st.until, ends: st.kind !=
   ...(st.kind !== "sub" ? { pass: true } : {}), ...(st.kind === "year" ? { year: true } : {}) });
 // What the user may use now: the subscription, or a running Examenpas when it covers more
 // cached: a check or a conversation may use Stripe's answer of the last few minutes (SUB_MS); the Plus screen never does
-export async function plusFor(uid, cached = false) {
+export async function plusFor(uid, cached = false, user = null) {
   const sub = await subscriptionFor(uid, cached);
   const pass = passOn ? await passOf(uid).catch(() => null) : null;
   const subLevel = isPlus(sub) ? sub.level : null;
@@ -424,6 +436,8 @@ export async function plusFor(uid, cached = false) {
   const bestLevel = isPlus(best) ? best.level : null;
   if (group && bestLevel !== "B1" && bestLevel !== group.level)
     best = { ...(best || {}), status: "active", until: `${group.until}T23:59:59+01:00`, ends: true, level: group.level, pass: true, group: group.name };
+  // nothing paid and no group: a new account's free days of Plus (trialOf; the caller passes the user)
+  if (!isPlus(best) && user) { const t = trialOf(user); if (t) best = t; }
   return best;
 }
 // Stripe's answer is kept a few minutes per warm function (SUB_MS), so a check doesn't wait for Stripe every time. If Stripe

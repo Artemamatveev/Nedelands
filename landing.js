@@ -250,6 +250,18 @@ const trialCopy = {
   ru: n => `${n} пробные проверки однократно без аккаунта в этом браузере`,
   uk: n => `${n} пробні перевірки одноразово без акаунта в цьому браузері`,
 };
+// A new account's free days of Plus (api/_supa.js trialOf), from /api/config plus.trial
+const plusTrialCopy = {
+  nl: (d, n) => `Met een nieuw account ${d} dagen Plus gratis: tot ${n} keer nakijken, stopt vanzelf`,
+  en: (d, n) => `With a new account, ${d} days of Plus free: up to ${n} checks, ends by itself`,
+  ar: (d, n) => `مع حساب جديد ${d} أيام من Plus مجانًا: حتى ${n} تصحيحًا، وينتهي تلقائيًا`,
+  tr: (d, n) => `Yeni hesapla ${d} gün ücretsiz Plus: ${n} kontrole kadar, kendiliğinden biter`,
+  hi: (d, n) => `नए खाते के साथ ${d} दिन Plus मुफ़्त: ${n} जाँचों तक, अपने आप खत्म`,
+  zh: (d, n) => `新账号免费享受 ${d} 天 Plus：最多批改 ${n} 次，到期自动结束`,
+  es: (d, n) => `Con una cuenta nueva, ${d} días de Plus gratis: hasta ${n} revisiones, termina solo`,
+  ru: (d, n) => `С новым аккаунтом ${d} дней Plus бесплатно: до ${n} проверок, заканчивается само`,
+  uk: (d, n) => `З новим акаунтом ${d} днів Plus безкоштовно: до ${n} перевірок, закінчується саме`,
+};
 // Under the writing example (Vraag 5): the check itself can be tried for free, with the real numbers from /api/config
 const tryCopy = {
   nl: (n, w) => `Probeer het zelf: ${n} teksten of antwoorden gratis nagekeken, zonder account. Daarna nog ${w} gratis met een gratis account.`,
@@ -296,6 +308,9 @@ function render() {
   if (config?.limit) $("free-checks").textContent = free(config.limit);
   $("trial-checks").hidden = !config?.free;
   if (config?.free) $("trial-checks").textContent = trialCopy[lang](config.free);
+  const pt = config?.plus?.trial;
+  $("plus-trial").hidden = !pt;
+  if (pt) $("plus-trial").textContent = (plusTrialCopy[lang] || plusTrialCopy.nl)(pt.days, pt.total);
   $("try-free").hidden = !(config?.free && config?.limit);
   if (config?.free && config?.limit) $("try-free").textContent = tryCopy[lang](config.free, config.limit);
   const allowance = plus?.month && plus?.limit ? `${checks(plus.month)} · ${dailyCopy[lang](plus.limit)}` : "";

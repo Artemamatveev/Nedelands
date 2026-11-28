@@ -27,7 +27,7 @@ const recentSub = async (p) => {
 
 // What the page sees of the access: never Stripe's ids. store: "app_store" or "play_store" for a purchase in the apps.
 const shown = (p) => p ? { status: p.status, until: p.until, ends: p.ends, level: p.level, ...(p.pass ? { pass: true } : {}),
-  ...(p.year ? { year: true } : {}), ...(p.store ? { store: p.store } : {}) } : null;
+  ...(p.year ? { year: true } : {}), ...(p.store ? { store: p.store } : {}), ...(p.trial ? { trial: true } : {}) } : null;
 // After buying or restoring in the app: at most STORE_SYNC a day per learner, each a read of RevenueCat's record
 const STORE_SYNC = 40;
 async function store(res, user) {
@@ -36,7 +36,7 @@ async function store(res, user) {
   if (left != null && left < 0) return res.status(429).json({ error: "limit" });
   try {
     await syncStore(user.id);
-    return res.status(200).json({ plus: shown(await plusFor(user.id)) });
+    return res.status(200).json({ plus: shown(await plusFor(user.id, false, user)) });
   } catch (e) {
     console.error("store_sync", e?.message);
     return res.status(502).json({ error: "failed" });
@@ -52,7 +52,7 @@ export default async function handler(req, res) {
   if (!user) return res.status(401).json({ error: "login" });
   if (req.method === "GET") {
     try {
-      const p = await plusFor(user.id);
+      const p = await plusFor(user.id, false, user);
       // whether the withdrawal button applies (best effort: a lookup that fails only hides the button's hint)
       const [sub, passes] = await Promise.all([recentSub(await plusOf(user.id)).catch(() => null), recentPasses(user.id).catch(() => [])]);
       const withdraw = !!sub || passes.length > 0;
@@ -79,7 +79,7 @@ export default async function handler(req, res) {
       const extra = {};
       // The user confirms this on Stripe's page. No subscription update/charge occurs in this endpoint.
       if (go === "buy" && level === "B1" && isPlus(p)) {
-        const current = await plusFor(user.id);
+        const current = await plusFor(user.id, false, user);
         if (current.level === "A2") {
           const sub = await stripe(`subscriptions/${encodeURIComponent(p.sub)}`), price = await priceFor("B1");
           extra.configuration = await tierPortal();
@@ -121,7 +121,7 @@ async function pass(req, res, user) {
   const level = req.body.level;
   if (level !== "A2" && level !== "B1") return res.status(400).json({ error: "invalid_plan" });
   try {
-    const now = await plusFor(user.id);
+    const now = await plusFor(user.id, false, user);
     if (now && !now.pass && coversLevel(now, level)) return res.status(409).json({ error: "already" });
     const p = await plusOf(user.id);
     const price = await passPrice(level, kind);

@@ -188,6 +188,19 @@ There is no trial or yearly price. Videos and podcasts remain free.
   money: KVK (within a week of the start), Stripe's account verification, live keys, algemene voorwaarden and the right
   of withdrawal for digital services.
 
+## Free Plus for a new account (28 November 2026)
+
+`trialOf(user)` in `_supa.js`: `TRIAL_DAYS` (default 7; `0` turns it off) from the account's `created_at`, Plus at B1 (so
+A2 too), shaped like a pass (`pass: true, trial: true`) so it counts over its whole term: `TRIAL_TOTAL` checks (default
+30) and `TRIAL_OPUS` proefexamens on the exam model (default 2), keys `p:`/`q:` with the trial's end day. `plusFor(uid,
+cached, user)` adds it last, only when nothing paid and no group runs, and only when the caller passes the user
+(`api/check.js`, `api/_talk.js`, `api/plus.js`). Unlike paid Plus, trial checks count against `CHECK_CAP` (`useTotal`).
+`/api/config` sends `plus.trial: {days, total}`; GET `/api/plus` says `trial: true`. The app calls it "Gratis
+proefperiode" (Plus screen, Profiel via "Geldig tot …", a line on Mijn dag), the homepage's Gratis card says it
+(`#plus-trial`, `plusTrialCopy` in `landing.js`), voorwaarden.html in nine languages. Nothing is bought or renewed; after
+it the account's own free checks (`FREE_ACCOUNT_CHECKS`) are still there. A new account each week gets a new trial: the
+cost is capped by `TRIAL_TOTAL` and `CHECK_CAP`; lower them in Vercel if that is abused.
+
 ## Purchases in the store apps (RevenueCat, 28 November 2026)
 
 - `api/_store.js`: the app buys with RevenueCat's plugin under the learner's account id; the server never trusts the app

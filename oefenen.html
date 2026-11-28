@@ -328,7 +328,7 @@ main:has(#home:not([hidden])){padding-bottom:116px}
 .ask{color:var(--blue);font-size:var(--fs-m);font-weight:600;margin:0}
 .verb{font-size:44px;font-weight:700;letter-spacing:-.02em;line-height:1.08;margin:6px 0 2px;word-break:break-word}
 .verb.long{font-size:var(--fs-l);font-weight:600;line-height:1.35;letter-spacing:-.01em;margin:8px 0 12px}
-.ru{color:var(--soft);margin:0 0 18px}
+.ru{color:var(--soft);margin:0 0 18px} .ru.cijfer{margin:-10px 0 6px;color:var(--ink)} .ru.cijfer b{font-size:1.35em;color:var(--blue)}
 .hint{display:block;background:none;border:0;color:var(--soft);text-decoration:underline;font-size:var(--fs-m);padding:11px 0;margin:-19px 0 5px;text-align:var(--ta)}
 .hint:disabled{text-decoration:none;color:var(--ink);font-size:var(--fs-m)}
 .opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -3034,6 +3034,13 @@ function startExam(e,go){
 const PASS=.7;
 // Lezen and Luisteren: most sources give 19 of 25 (DUO puts the line on the result, not on a public page); KNM 28 of 40
 const PASSP={lz:19/25,ls:19/25,knm:28/40,wb:25/47}, passOf=k=>PASSP[k]||PASS, passPc=k=>Math.round(passOf(k)*100);
+// An oefencijfer from 1 to 10 for the inburgering parts (A2 and KNM; 28 November 2026), as DUO shows a "Cijfer" in Mijn
+// Inburgering: the oefendoel is a 6, everything right a 10, nothing a 1, straight lines in between, rounded (under the
+// oefendoel at most a 5). Bittertalen's own conversion: DUO doesn't publish its own. The Staatsexamen (B1) has scores.
+const CIJFER_PARTS=new Set(["lz","ls","wr","sp","knm"]);
+const oefenCijfer=(k,pc)=>{if(!CIJFER_PARTS.has(k)||pc==null)return null;const P=passPc(k);
+  return pc>=P?Math.max(6,Math.min(10,Math.round(6+4*(pc-P)/Math.max(1,100-P)))):Math.max(1,Math.min(5,Math.round(1+5*pc/Math.max(1,P))))};
+const cijferHTML=(k,pc)=>{const c=oefenCijfer(k,pc);return c==null?"":`<p class="ru cijfer">Oefencijfer <b>${c}</b> van 10 · een 6 is voldoende</p><p class="note">Omgerekend door Bittertalen, zoals het cijfer in Mijn Inburgering. DUO maakt zijn eigen omrekening niet bekend.</p>`};
 // All completed proefexamen results per part (S.res): {at, pc, nw}, nw = % of the questions that were new (missing in older results).
 // The displayed percentage averages all saved attempts; readiness still uses the last three fresh attempts.
 function keepRes(k,pc,writing,id){
@@ -3249,6 +3256,8 @@ function planHTML(){
   const comeback=lost?`<section class="list exam-focus"><h3>Haal je reeks terug</h3><p>Je reeks van ${lost.n} dagen is gestopt. Maak vandaag 3 oefenrondes af, dan krijg je hem terug.</p>
       <div class="dayp"><span aria-hidden="true">${[0,1,2].map(i=>`<i${i<lc?' class="on"':""}></i>`).join("")}</span><small>${lc} van 3 klaar</small></div></section>`
     :S.revived===d?`<p class="note" role="status"><b>Je reeks is terug: ${S.streak} dagen op rij!</b></p>`:"";
+  // a new account's free days of Plus (api/_supa.js trialOf): once it is known, at the top of Mijn dag
+  const trialNote=acc.plus?.trial&&isPlus()?`<p class="note">Plus gratis tot ${plusDay(acc.plus.until)}: tot ${acc.cfg.plus?.trial?.total||30} keer nakijken met het sterkere AI-model.</p>`:"";
   const ED=dueErrs();
   const errsRow=ED.length?`<div class="list">${itHTML(`id="dayerrs"`,"Oefen met je eigen fouten","Ze komen terug na 1, 2, 4 en 7 dagen, tot je ze kent.",{n:ED.length,ic:"errs"})}</div>`:"";
   const date=new Date().toLocaleDateString("nl-NL",{weekday:"long",day:"numeric",month:"long"});
@@ -3257,7 +3266,7 @@ function planHTML(){
   return`<p class="ask"><span>${date}</span> · <span>${LVL[lvl()]}</span></p><h2>Je les van vandaag</h2>
     ${writeTarget?`<section class="list exam-focus"><h3>Schrijven · Geef een volledig antwoord</h3><p>Bij de nieuwe spreekvraag heb je alle punten genoemd. Lukt dat ook in een bericht?</p><button type="button" class="btn wide" id="daytransfer">Schrijf een bericht</button></section>`:""}
     ${speaking?.writeDone?'<p class="note">Je hebt alle punten beantwoord in een nieuwe spreekvraag en een schrijfopdracht.</p>':""}
-    ${when}${first}${writingDrafts().map(x=>`<button class="ghost wide" data-draft="${x.section}" data-exam="${Number(x.exam)}" data-draft-slot="${esc(x.slot)}"><span>Verder met je concept</span> · ${x.exam?EX[x.section].t:PART[x.section]}${x.slot?" · <span>Gerichte oefening</span>":""}</button>`).join("")}
+    ${when}${trialNote}${first}${writingDrafts().map(x=>`<button class="ghost wide" data-draft="${x.section}" data-exam="${Number(x.exam)}" data-draft-slot="${esc(x.slot)}"><span>Verder met je concept</span> · ${x.exam?EX[x.section].t:PART[x.section]}${x.slot?" · <span>Gerichte oefening</span>":""}</button>`).join("")}
     <span>Hoeveel tijd heb je?</span><div class="seg minutes" role="group" aria-label="Hoeveel tijd heb je?">${[10,20,40].map(n=>`<button data-budget="${n}" aria-pressed="${n===(S.minutes||20)}">${n} min</button>`).join("")}</div>
     <p class="note"><span>Geschatte duur</span> · ${P.minutes||steps.length*5} min</p>
     <div class="dayp"><span aria-hidden="true">${steps.map(t=>`<i${done.includes(t.id)?' class="on"':""}></i>`).join("")}</span><small>${nd} van ${steps.length} klaar</small></div>
@@ -4464,7 +4473,7 @@ async function examWrite(){
     else save();
     const passed=review.complete && review.percent>=passPc(exam.part);
     card.innerHTML=`<div class="done"><p class="ask">${exam.t}: uitslag</p><div class="big">${review.percent==null?"–":review.percent+"%"}</div>
-      <p class="ru">${review.complete?`${review.earned} van ${review.max} punten, `:""}${good} van ${tasks.length} opdrachten voldoende${review.unfinished?`; ${review.unfinished} niet gemaakt`:""}</p></div>
+      <p class="ru">${review.complete?`${review.earned} van ${review.max} punten, `:""}${good} van ${tasks.length} opdrachten voldoende${review.unfinished?`; ${review.unfinished} niet gemaakt`:""}</p>${review.complete?cijferHTML(exam.part,review.percent):""}</div>
       <p><b class="${review.complete?(passed?"good":"bad"):""}">${!review.complete?"Onvolledige beoordeling":passed?"Oefendoel bereikt":"Meer oefenen"}</b></p>
       <p class="note">Het oefendoel is ${passPc(exam.part)}% van de punten. Dit is een oefenresultaat. De officiële uitslag wordt door DUO bepaald.</p>
       ${rule?`<p class="note"><b>Volgende stap:</b> ${WRITING_RULES[rule.kind].title} ging ${occurrences(rule.count)} mis. Morgen krijg je in Mijn dag een nieuwe zin over deze regel.</p>`:""}
@@ -4531,7 +4540,7 @@ async function examSpeak(){
     const incomplete=exam.part==="sp"?T.filter((grade,i)=>A[i]?.text&&grade?.scores?.inhoud===2).length:0;
     if(incomplete)S.speakFollow={day:today()+1,ok:false,count:incomplete,at:Date.now(),examKeys:queue.map(q=>q.k)};
     keepRes(cur.part,pc,undefined,exam.spDraft?.id);clear();
-    card.innerHTML=`<div class="done"><p class="ask">${cur.t}: uitslag</p><div class="big">${pc}%</div><p class="ru">${scored?`${pts} van ${max} punten, `:""}${good} van ${queue.length} antwoorden voldoende${A.length<queue.length?`; ${queue.length-A.length} ${queue.length-A.length===1?"vraag":"vragen"} niet beantwoord`:""}</p></div>
+    card.innerHTML=`<div class="done"><p class="ask">${cur.t}: uitslag</p><div class="big">${pc}%</div><p class="ru">${scored?`${pts} van ${max} punten, `:""}${good} van ${queue.length} antwoorden voldoende${A.length<queue.length?`; ${queue.length-A.length} ${queue.length-A.length===1?"vraag":"vragen"} niet beantwoord`:""}</p>${cijferHTML(cur.part,pc)}</div>
       <p><b class="${pass?"good":"bad"}">${pass?"Oefendoel bereikt":"Meer oefenen"}</b></p>
       <p class="note">Het oefendoel is ${passPc(cur.part)}%. Deze score gaat over je uitgeschreven antwoorden. ${A.some(a=>a?.pron)?"Je uitspraak staat per vraag; die telt niet mee in deze score.":"Uitspraak en vloeiendheid zijn niet beoordeeld."}</p>`+(incomplete?`<p class="note"><b>Volgende stap:</b> oefen morgen in Mijn dag met een nieuwe vraag waarop je elk deel moet beantwoorden.</p>`:"")+(pass?"":examOffer())+body+foot; bind();
   }catch(e){
@@ -4556,7 +4565,7 @@ function finish(){
     cur.log.forEach(x=>{const t=x.l.replace(/^KNM: /,""),o=by[t]||(by[t]={r:0,n:0});o.n++;if(x.ok)o.r++});
     const themes=cur.part==="knm"&&Object.keys(by).length>1?Object.keys(by).sort((a,b)=>by[a].r/by[a].n-by[b].r/by[b].n)
       .map(t=>`<li>${t}<span>${by[t].r} van ${by[t].n} goed</span></li>`).join(""):"";
-    $("card").innerHTML=`<div class="done"><p class="ask">${cur.t}: uitslag</p><div class="big">${pc}%</div><p class="ru">${right} van ${total} goed</p></div>
+    $("card").innerHTML=`<div class="done"><p class="ask">${cur.t}: uitslag</p><div class="big">${pc}%</div><p class="ru">${right} van ${total} goed</p>${cijferHTML(cur.part,pc)}</div>
       <p><b class="${pass?"good":"bad"}">${pass?"Oefendoel bereikt":"Meer oefenen"}</b></p>
       <p class="note">${cur.part==="l1"||cur.part==="lb"?"Bij het Staatsexamen heb je een score van 500 nodig. Hoeveel vragen dat zijn, maakt DUO niet bekend: mik op 7 van de 10.":cur.part==="lz"||cur.part==="ls"?"Op het examen heb je waarschijnlijk 19 van de 25 vragen goed nodig. DUO zet de grens op je uitslag.":cur.part==="knm"?"Op het examen heb je 28 van de 40 vragen goed nodig.":"Op het examen heb je ongeveer 7 van de 10 vragen goed nodig."} Hier is dat ${need} van ${total}.</p>
       ${themes?`<p class="ask">Per thema</p><ul class="errs">${themes}</ul>`:""}
@@ -5232,7 +5241,7 @@ async function storeScreen(choice){
     pick=(lv,k)=>"Kies "+({sub:"Plus",pass:"Examenpas",year:"Jaarpas"})[k]+" "+lv,
     thanks={sub:"Bedankt! Je hebt nu Bittertalen Plus.",pass:"Bedankt! Je hebt nu de Examenpas.",year:"Bedankt! Je hebt nu de Jaarpas."};
   const head=`<h2 id="plusS">Bittertalen Plus</h2>`
-    +(on?`<p class="sub"><b>${p.group?`<span lang="nl">${esc(p.group)}</span>`:p.pass?(p.year?"Jaarpas":"Examenpas"):"Bittertalen Plus"} ${p.level||""}</b> · ${plusLine()}</p>`:"")
+    +(on?`<p class="sub"><b>${p.group?`<span lang="nl">${esc(p.group)}</span>`:p.trial?"Gratis proefperiode":p.pass?(p.year?"Jaarpas":"Examenpas"):"Bittertalen Plus"} ${p.level||""}</b> · ${plusLine()}</p>`:"")
     +`<p class="sub">Met Plus: tot ${c.month||200} nakijkbeurten per maand. Met een gratis account: ${acc.cfg.limit} gratis.</p><p class="sub">Al het andere in Bittertalen blijft gratis.</p>`
     +(plusMsg?`<p class="note" role="status">${esc(plusMsg)}</p>`:"");
   if(!acc.user){
@@ -5287,13 +5296,14 @@ function plusScreen(choice){
   const c=acc.cfg.plus,p=acc.plus,on=isPlus(),plans=c.plans||{A2:{price:c.price}};
   const dateOffer=offerChoice();
   if(NATIVE&&storeOK())return storeScreen(choice);
-  if(NATIVE){$("tbody").innerHTML=`<h2 id="plusS">Bittertalen Plus</h2>`+(on?`<p class="sub"><b>${p.group?`<span lang="nl">${esc(p.group)}</span>`:p.pass?(p.year?"Jaarpas":"Examenpas"):"Bittertalen Plus"} ${p.level||""}</b> · ${plusLine()}</p>`:`<p class="sub">Bittertalen Plus is niet beschikbaar in deze app.</p>`)+`<p class="sub">Al het andere in Bittertalen blijft gratis.</p>`;return}
+  if(NATIVE){$("tbody").innerHTML=`<h2 id="plusS">Bittertalen Plus</h2>`+(on?`<p class="sub"><b>${p.group?`<span lang="nl">${esc(p.group)}</span>`:p.trial?"Gratis proefperiode":p.pass?(p.year?"Jaarpas":"Examenpas"):"Bittertalen Plus"} ${p.level||""}</b> · ${plusLine()}</p>`:`<p class="sub">Bittertalen Plus is niet beschikbaar in deze app.</p>`)+`<p class="sub">Al het andere in Bittertalen blijft gratis.</p>`;return}
   $("tbody").innerHTML=`<h2 id="plusS">Bittertalen Plus</h2>`
-    +(on?`<p class="sub"><b>${p.group?`<span lang="nl">${esc(p.group)}</span>`:p.pass?(p.year?"Jaarpas":"Examenpas"):"Bittertalen Plus"} ${p.level||""}</b> · ${plusLine()}</p>`:"")
+    +(on?`<p class="sub"><b>${p.group?`<span lang="nl">${esc(p.group)}</span>`:p.trial?"Gratis proefperiode":p.pass?(p.year?"Jaarpas":"Examenpas"):"Bittertalen Plus"} ${p.level||""}</b> · ${plusLine()}</p>`:"")
     +`<p class="sub">Met Plus: tot ${c.month||200} nakijkbeurten per maand. Met een gratis account: ${acc.cfg.limit} gratis.</p><p class="sub">Al het andere in Bittertalen blijft gratis.</p>`
     +(dateOffer.pass&&!on&&dateOffer.days!=null?`<p class="note">${dateOffer.fits?"De Examenpas loopt tot na je laatste geplande examendatum.":"De Examenpas stopt vóór of op je laatste geplande examendatum."}</p>`:"")
     +(on&&p.status==="past_due"?`<p class="note">Je laatste betaling is niet gelukt. Stripe probeert het nog een paar keer.</p>`:"")
     +(plusMsg?`<p class="note" role="status">${esc(plusMsg)}</p>`:"")
+    +(on&&p.trial?`<p class="note">Je proefperiode stopt vanzelf. Je betaalt niets en er wordt niets verlengd.</p>`:"")
     +(acc.user?`<section class="list"><label class="prow tog"><span>Laat Plus of de Examenpas meteen beginnen. Binnen 14 dagen kan ik herroepen en krijg ik mijn geld terug.</span><input type="checkbox" switch id="pstart"></label></section>`:"")
     +recHTML(on,plans)
     +["A2","B1"].filter(level=>plans[level]).map(level=>`<section class="list" data-plus-plan="${level}"><div style="padding:16px"><h3>Bittertalen Plus ${level}</h3>
@@ -6376,7 +6386,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru","uk"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="4272d7bf8d";
+const UIV="6c9fb9a50a";
 let uiP=null;
 function uiLoaded(){try{trMemo.clear()}catch(e){} // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});
