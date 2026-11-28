@@ -31,7 +31,11 @@ screen the situation ("Dina gaat verhuizen. Ze belt met een vriend."), "Lees eer
 tekst" (or "Kijk daarna naar de video"), the question with its own ▶, three or four options A–D, Vorige, Volgende, an
 overview and handing in with the time left and the questions without an answer. Ours has all of that except video and
 four options. DUO lets a fragment be played as often as you like (the user checked) and asks two or three questions
-about one fragment, as ours does, so since 28 November 2026 our A2 proefexamen has no limit on plays either (B1 keeps one). DUO's result gives chances by score (19–21 "kans"): that is the source of our 19 of 25 line,
+about one fragment, as ours does, so since 28 November 2026 our A2 proefexamen has no limit on plays either (B1 keeps one).
+DUO's player can pause and jump 10 seconds; ours too, under ▶ Luister in Luisteren A2 (`sayPause()`, `sayResume()`,
+`saySkip()`: a fragment is a row of recorded lines, `sayCur` says which one plays; a jump stays in the line and past its
+edge goes to the line before or after; the phone's own voice can only pause). Luisteren options stay three: they are
+recorded, and a fourth needs new recordings (`audio/build.mjs`). DUO's result gives chances by score (19–21 "kans"): that is the source of our 19 of 25 line,
 which stays a practice target.
 
 Lezen A2 next to DUO's oefenexamen Lezen A2 2 (screenshots, 28 November 2026): 25 questions, 65 minutes, two or three
@@ -40,7 +44,9 @@ e-mails) beside the question, three or four options, Vorige/Volgende, an overvie
 it all except the order: since that day a Lezen A2 question stands above its text with that sentence (`qFirst` in
 `show()`), as a phone has no room beside it. DUO's bands differ per oefenexamen (Lezen 2: 17–22 "redelijke kans",
 Luisteren 1: 19–21 "kans"), so the result no longer says 19 is "probably" needed: DUO does not publish the line and it
-differs per exam; 19 of 25 stays the target. KNM has not been compared yet.
+differs per exam; 19 of 25 stays the target. DUO gives three or four options; since that day one question per Lezen A2
+text (82 of 225) has a fourth, a detail from the same text that does not answer the question (another day, time, price
+or place), and `tools/answer-length.mjs` counts all wrong options.
 
 KNM next to DUO's voorbeeldexamen KNM 1 2025 (screenshots, 28 November 2026): 40 questions, 45 minutes, grouped by
 theme with a page "De volgende vragen gaan over het thema 'wonen'" before each, every question with a photo and read
@@ -58,8 +64,11 @@ e-mail's greeting and closing; ours come from the task's example answer (`wrFram
 example starts with a greeting and ends with a usual closing and [naam]), shown above and below the text box, and
 `wrFull()` puts them around the learner's text for grading (not twice when typed too); the task tells Claude they were
 given. The proefexamen has DUO's mix in DUO's order: a formal e-mail, a short text, a form, a message
-(`writingTaskType()`). Not taken over yet: DUO's form also has a choice (one of three groups) and two open questions;
-ours has text fields and one open question.
+(`writingTaskType()`). DUO's form also has a choice of one ("Ik wil meedoen met de volgende groep"); since 28 November
+2026 each of our nine A2 forms has one too, with options of our own: a field written `Label|option|option|option` in
+`data/a2.js` becomes `q.fields` (the label, which grading, drafts and the Word file use) and `q.choices` (the options,
+shown as radio buttons that fill a hidden field, so the form text reads "Ik kies de groep op: Woensdagmiddag"). DUO's two
+open questions are one open question with two or three sub-questions in ours.
 
 `api/check.js` is a Vercel function that grades writing with Claude (free checks, a guest's trial and a free account's,
 practice or proefexamen: `GRADING_MODEL_FREE`, default `claude-haiku-5-5`; paid practice, 1 to 3 tasks: `GRADING_MODEL`,

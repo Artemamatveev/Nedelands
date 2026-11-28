@@ -341,3 +341,15 @@ test('Schrijven A2 tasks are shown as DUO shows them: situation, points, given g
   assert.match(a.document.querySelector('#card').textContent,/Schrijf in hele zinnen/);
   assert.equal(a.document.querySelectorAll('#card .mailx').length,a.run('wrFrame(queue[0])?2:0'),'greeting and closing when the task has them (wr|15 ends with a job title)');
 });
+
+test('A2 forms have a choice of one, as DUO\'s forms do, read like any other field',async()=>{
+  const a=await app();
+  assert.equal(a.run('ITEMS.filter(q=>q.sec==="wr"&&q.fields).every(q=>q.choices&&q.choices.filter(Boolean).length===1&&q.fields.every(f=>!f.includes("|")))'),true);
+  a.run('build("wr",{...SEC.find(s=>s.id==="wr"),n:1,keep:1,pool:()=>[ITEMS.find(q=>q.k==="wr|17")]})');
+  const radios=a.document.querySelectorAll('#card input[type=radio]');
+  assert.equal(radios.length,3);
+  radios[1].checked=true;radios[1].onchange();
+  const i=a.run('queue[0].choices.findIndex(Boolean)');
+  assert.equal(a.document.getElementById('f'+i).value,'Woensdagmiddag');
+  assert.match(a.run(`grab(queue[0]).form`),/Ik kies de groep op: Woensdagmiddag/);
+});

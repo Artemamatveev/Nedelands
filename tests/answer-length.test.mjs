@@ -19,7 +19,9 @@ test('KNMS here is where the KNM situations start in the app', async () => {
 test('A2 reading, listening and KNM have three distinct nonempty choices', () => {
   for (const item of questions().filter(q=>!q.set.includes('B1'))) {
     const choices=[item.right,...item.wrong].map(s=>s.normalize('NFKC').trim().toLowerCase().replace(/[.!?]+$/,'').trim());
-    assert.ok(choices.every(Boolean) && new Set(choices).size===3, item.set+' '+item.key);
+    // three options; Lezen A2 sometimes four, as in DUO's oefenexamen Lezen (28 November 2026)
+    const n=item.set==='Lezen A2'?[3,4]:[3];
+    assert.ok(choices.every(Boolean) && n.includes(choices.length) && new Set(choices).size===choices.length, item.set+' '+item.key);
   }
 });
 
