@@ -4920,7 +4920,7 @@ function uitScreen(y=0){
   $("tbody").innerHTML=`<h2>Mijn examen</h2><p class="sub">Echt examen gedaan? Tik per onderdeel op je uitslag.</p>`
     +ks.map(k=>`<h3 class="lh">${PART[k]}</h3><div class="seg uit" role="group" aria-label="${PART[k]}">${[1,0].map(o=>`<button data-k="${k}" data-ok="${o}" aria-pressed="${!!U[k]&&U[k].ok===!!o}">${o?"Geslaagd":"Niet geslaagd"}</button>`).join("")}</div>`
       +(U[k]?`<section class="list"><label class="prow"><span>${NT2PART.has(k)?"Je score":"Je cijfer"}</span><input type="text" inputmode="decimal" dir="ltr" maxlength="5" autocomplete="off" data-sc="${k}" id="sc-${k}" value="${esc(scText(k,U[k].sc))}" placeholder="${NT2PART.has(k)?"520":"7,5"}" aria-describedby="scn-${k}"></label></section>
-        <p class="note" id="scn-${k}">${NT2PART.has(k)?"Staat er een score in je uitslag? Vul hem in. 500 of meer is geslaagd. Dat hoeft niet.":"Staat er een cijfer in je uitslag? Vul het in (1 tot 10). Dat hoeft niet."}</p>`:"")).join("")
+        <p class="note" id="scn-${k}">${NT2PART.has(k)?"Staat er een score in je uitslag? Vul hem in. 500 of meer is geslaagd. Dat hoeft niet.":"Je cijfer (1 tot 10) staat in Mijn Inburgering bij Details examen. Vul het in als je wilt."}</p>`:"")).join("")
     +`<p class="note">Je uitslag telt mee in onze cijfers, zonder je naam of e-mailadres. Zo zien we of de proefexamens kloppen.</p><p class="note">Tik nog een keer op je uitslag om hem weg te halen.</p><p class="note"><a href="/privacy">Privacyverklaring</a></p>`;
   document.querySelectorAll("#tbody .uit button").forEach(b=>b.onclick=()=>setUit(b.dataset.k,b.dataset.ok==="1"));
   document.querySelectorAll("#tbody [data-sc]").forEach(i=>i.onchange=()=>{const k=i.dataset.sc,ok=setScore(k,i.value),n=$("scn-"+k);
@@ -6230,7 +6230,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru","uk"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="75dcce9f47";
+const UIV="e9e615006b";
 let uiP=null;
 function uiLoaded(){try{trMemo.clear()}catch(e){} // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});

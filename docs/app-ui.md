@@ -49,7 +49,8 @@ examiner "Mevrouw Bakker"), still scripts with keyword checks (`talk()`, `gpFits
 Last on both level tabs, "Mijn examen" (`uitScreen()`, in `#talk`): per part the learner taps Geslaagd or Niet geslaagd for
 the real exam (tap again to take it back), and after that, if they want, the grade from DUO's letter: 1 to 10 for an A2
 part and KNM, a score up to 1000 for a Staatsexamen NT2 part (500 or more is a pass; `NT2PART`, `scParse()`, `setScore()`,
-since 28 November 2026). Their own record is `S.uit` `{part: {ok, at, sc?}}`;
+since 28 November 2026; DUO shows it as "Cijfer" under Details examen in Mijn Inburgering, a whole number in the
+examples the owner saw). Their own record is `S.uit` `{part: {ok, at, sc?}}`;
 a copy goes to `/api/outcome` (`api/outcome.js`, table `exam_outcomes` and `put_outcome()` in `supabase/schema.sql`, run it
 in the SQL editor) to see whether the proefexamens and "Stabiel oefenresultaat" predict the result: part, ok, `pc` the last
 proefexamen score, `rd` the status then (0 nog niet, 1 bijna, 2 klaar), `sc` the grade or score or null (column and
