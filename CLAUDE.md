@@ -54,7 +54,8 @@ are in `docs/`, one file per area. Read the one for the area you change, and kee
 - **Functions**: at most 12 deployed files in `api/` (Hobby plan); add endpoints as rewrites (`docs/server.md`).
 - **AI cost**: every model call goes through the allowances in `docs/server.md` (free total, `PLUS_LIMIT` a day,
   `PLUS_MONTH` a month, `OPUS_MONTH`, `PASS_TOTAL`/`PASS_OPUS` per Examenpas, `CHECK_CAP`) and has a timeout. Prompts are built on the server only.
-- **Store apps**: no prices, offers or links to buying inside the native apps (Apple 3.1.1).
+- **Store apps**: inside the native apps only the store's own purchase (App Store / Google Play through RevenueCat:
+  `storeScreen()`, `api/_store.js`); never a website price, Stripe, an offer banner or a link to buying (Apple 3.1.1).
 - **Design**: Delfts blauw tokens only; never cream backgrounds, handwriting fonts, wobbly borders, dashed lines,
   squiggles or emoji as decoration (`docs/design.md`). One `h2` per screen; one filled `.btn` per screen.
 - **Truth on screen**: Bittertalen is not DUO; scores are practice results, never a prediction or a pass guarantee;

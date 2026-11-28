@@ -2,13 +2,16 @@
 // POST {go:"buy",level:"A2"|"B1"} -> {url}: Checkout, or a confirmed upgrade of the existing subscription.
 // GET -> {plus:{status,until,ends,level}|null}: current entitlement, checked against Stripe's actual monthly price.
 // POST {go:"manage"} -> {url}: Stripe's customer portal (cancel, payment method, invoices)
+// POST {go:"store"} -> {plus}: after a purchase or a restore in the store apps, reads RevenueCat's record now (the
+//   webhook may come later) and answers like GET (api/_store.js). Purchases in the stores are managed there, not here.
 // POST {go:"withdraw"} -> {withdrawn:[…], at}: the withdrawal button (herroeping, art. 11a of the consumer rights
 //   directive): within 14 days of buying, ends the subscription and the pass at once, keeps the statement and shows its
 //   confirmation; the money comes back within 14 days (the owner refunds in Stripe). GET also says what can be withdrawn.
 // Buying (buy, pass) needs {start:true}: the learner ticked that access may start at once (needed before the 14 days end).
 // Both pages are Stripe's own; the page only goes there and back (/?plus=ok, stop or back). Stripe tells api/stripe.js
 // when the subscription starts, renews or ends, and the page reads its own row of `plus`.
-import { caller, sameOrigin, plusOn, plusOf, plusFor, isPlus, stripe, priceFor, tierPortal, PORTAL, PLANS, PASS_KINDS, passPrice, coversLevel, WITHDRAW_DAYS, recentPasses, recordWithdrawal, endPass } from "./_supa.js";
+import { syncStore } from "./_store.js";
+import { storeOn, useGuard, amsterdamDay, caller, sameOrigin, plusOn, plusOf, plusFor, isPlus, stripe, priceFor, tierPortal, PORTAL, PLANS, PASS_KINDS, passPrice, coversLevel, WITHDRAW_DAYS, recentPasses, recordWithdrawal, endPass } from "./_supa.js";
 
 // Shown on Stripe's page above the pay button: access starts at once, so the right of withdrawal ends (EU rules for
 // digital content need this consent before payment). Dutch and English, as Stripe shows one text for every language.
@@ -21,6 +24,24 @@ const recentSub = async (p) => {
   const start = (sub.start_date || sub.created || 0) * 1000;
   return sub.status !== "canceled" && Date.now() - start < WITHDRAW_DAYS * 864e5 ? sub : null;
 };
+
+// What the page sees of the access: never Stripe's ids. store: "app_store" or "play_store" for a purchase in the apps.
+const shown = (p) => p ? { status: p.status, until: p.until, ends: p.ends, level: p.level, ...(p.pass ? { pass: true } : {}),
+  ...(p.year ? { year: true } : {}), ...(p.store ? { store: p.store } : {}) } : null;
+// After buying or restoring in the app: at most STORE_SYNC a day per learner, each a read of RevenueCat's record
+const STORE_SYNC = 40;
+async function store(res, user) {
+  if (!storeOn) return res.status(503).json({ error: "not_configured" });
+  const left = await useGuard("rc:" + user.id, amsterdamDay(), 1, STORE_SYNC).catch(() => null);
+  if (left != null && left < 0) return res.status(429).json({ error: "limit" });
+  try {
+    await syncStore(user.id);
+    return res.status(200).json({ plus: shown(await plusFor(user.id)) });
+  } catch (e) {
+    console.error("store_sync", e?.message);
+    return res.status(502).json({ error: "failed" });
+  }
+}
 
 export default async function handler(req, res) {
   res.setHeader("Cache-Control", "no-store");
@@ -35,10 +56,11 @@ export default async function handler(req, res) {
       // whether the withdrawal button applies (best effort: a lookup that fails only hides the button's hint)
       const [sub, passes] = await Promise.all([recentSub(await plusOf(user.id)).catch(() => null), recentPasses(user.id).catch(() => [])]);
       const withdraw = !!sub || passes.length > 0;
-      return res.status(200).json({ plus: p ? { status: p.status, until: p.until, ends: p.ends, level: p.level, ...(p.pass ? { pass: true } : {}), ...(p.year ? { year: true } : {}) } : null, withdraw });
+      return res.status(200).json({ plus: shown(p), withdraw });
     } catch { return res.status(502).json({ error: "failed" }); }
   }
   const go = req.body && req.body.go;
+  if (go === "store") return store(res, user);
   if (go !== "buy" && go !== "manage" && go !== "pass" && go !== "withdraw") return res.status(400).json({ error: "bad_request" });
   if (go === "withdraw") return withdraw(res, user);
   // The learner must have asked for access to start at once (a ticked box on the page), else no Checkout

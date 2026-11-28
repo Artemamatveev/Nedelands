@@ -34,12 +34,12 @@ Never on a screenshot or in the text: a price, an offer, "koop", "abonnement" (A
 
 ## Still open before submitting (needs the owner)
 
-1. **Buying inside the app (Apple 3.1.1 / 3.1.3(b)).** Plus bought on the website unlocks the app, so Apple expects the
-   same subscriptions as in-app purchases. Choose: (a) StoreKit / RevenueCat in-app subscriptions at the Small Business
-   rate (15%), app prices A2 €10,99, B1 €16,99; server webhook that writes the `plus` row; then drop the rule "no prices in
-   the native apps" in CLAUDE.md for the IAP screen only. Or (b) the EU external purchase link entitlement (link to the
-   website, Apple's commission on the link-out). Until one is in place, expect a rejection; argue in Resolution Center only
-   as a last resort.
+1. **Buying inside the app (Apple 3.1.1 / 3.1.3(b)).** Chosen 28 November 2026: In-App Purchase through RevenueCat
+   (`docs/native.md` "Purchases in the apps", `docs/server.md`). Still to do by the owner: App Store Connect → Agreements
+   (Paid Apps), the Small Business Program, the six products and a subscription group; Play Console → payments profile
+   and the six products; a RevenueCat project with both apps, the webhook and the keys in Vercel (`REVENUECAT_SECRET`,
+   `REVENUECAT_WEBHOOK_AUTH`, `REVENUECAT_IOS_KEY`, `REVENUECAT_ANDROID_KEY`); run the `store_plus` migration; a new build
+   with the plugin. The review note: purchases are In-App Purchase; Plus bought on the website also unlocks the app (3.1.3(b)).
 2. **Android.** `cd native && npm install && npx cap add android && npx cap sync`, then target SDK 36, permissions
    `RECORD_AUDIO` and `POST_NOTIFICATIONS`, a monochrome notification icon. A new personal Play account needs a closed test
    with 12 testers for 14 days in a row: start it as soon as the build runs. Data safety: e-mail, user content (texts and
