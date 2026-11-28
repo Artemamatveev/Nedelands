@@ -273,6 +273,8 @@ export default async function handler(req, res) {
   if (req.query?.kind === "talk") return (await import("./_talk.js")).talk(req, res);
   // /api/pron (a rewrite): Zeg het na with Azure Speech pronunciation assessment, in api/_pron.js
   if (req.query?.kind === "pron") return (await import("./_pron.js")).pron(req, res);
+  // /api/say (a rewrite): a line without a recording, said by Azure, in api/_say.js
+  if (req.query?.kind === "say") return (await import("./_say.js")).say(req, res);
   if (!client || !accounts) return res.status(503).json({ error: "not_configured" });
 
   // A real request is at most ~80 KB (16 answers or 12 texts, each cut below); refuse anything far bigger

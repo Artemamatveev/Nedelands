@@ -113,6 +113,11 @@ vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one comin
   unreachable counter refuses (503). The spend is in /admin as model `azure-speech-pron`, one input "token" per second
   (`PRICE` in admin.html). Needs `AZURE_SPEECH_KEY` (and optionally `AZURE_SPEECH_REGION`) in Vercel; the page calls
   only `/api/pron`, so the CSP needs no new host.
+- Read aloud (`/api/say`, `api/_say.js`, 28 November 2026): lines without a recording, said by Azure (about $16 a
+  million characters), for guests too. Counted per 100 characters: `SAY_DAY` a day per signed-in learner (default 300,
+  30 000 characters), `SAY_GUEST` for all guests together (600), `SAY_CAP` for everyone (3000, 300 000 characters, about
+  $4.80); no cookie. In /admin as `azure-speech-say`, one input "token" a character. When a pool is full the page uses
+  the phone's voice.
 - A ceiling for everyone: all Claude checks of a day together, logged-in and free, stop at `CHECK_CAP` (default 400,
   `use_total()` and `check_total` in `supabase/schema.sql`), so many new accounts can't run up the bill; then the
   server answers 429 `busy` and the page says "Morgen kan het weer". Without that function, or if its reply is invalid, grading returns 503 `quota_unavailable` before calling the model. `/api/check` also refuses bodies over 200 KB (413).

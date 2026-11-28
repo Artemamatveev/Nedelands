@@ -191,7 +191,7 @@ function kpis(users) {
 
 // What grading costs: tokens per day and model (table ai_spend), priced in USD per million tokens
 // [input, output, cache read]; cache writes at 1.25 x input. Prices from Anthropic's pricing page, 18 November 2026.
-const PRICE = {"claude-fable-5-2": [8, 40, .2], "claude-opus-5-5": [4, 20, .2], "claude-sonnet-5-5": [2, 10, .1], "claude-haiku-5-5": [.1, .5, .01], "azure-speech-pron": [1.32 / 3600 * 1e6, 0, 0]};
+const PRICE = {"claude-fable-5-2": [8, 40, .2], "claude-opus-5-5": [4, 20, .2], "claude-sonnet-5-5": [2, 10, .1], "claude-haiku-5-5": [.1, .5, .01], "azure-speech-pron": [1.32 / 3600 * 1e6, 0, 0], "azure-speech-say": [16, 0, 0]};
 const usd = r => { const p = PRICE[Object.keys(PRICE).find(k => String(r.model).startsWith(k))]; return p ? (r.input * p[0] + r.output * p[1] + r.cache_read * p[2] + r.cache_write * p[0] * 1.25) / 1e6 : null; };
 function spend(rows) {
   if (!rows) return `<section class="tile"><h2>Расход на ИИ</h2><p class="sub" style="overflow-wrap:anywhere">Таблицы <code>ai_spend</code> нет в базе: выполните в SQL Editor миграцию <code>20261118230000_ai_spend.sql</code> из папки <code>supabase/migrations</code>.</p></section>`;

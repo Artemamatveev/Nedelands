@@ -2048,7 +2048,7 @@ function errItems(){return(S.errs||[]).map(e=>({sec:"er",k:"er|"+e.r,ord:0,type:
 const canSpeak="speechSynthesis" in window&&typeof SpeechSynthesisUtterance!=="undefined";
 // Speech: every line the app says itself is recorded in audio/ (audio/build.mjs, Azure's Dutch voices since 28 November 2026), one file
 // per line, named by sayKeys(); audio/index.json lists them. Anything else (own books, Claude's corrections, a
-// word from the dictionary) falls back to the phone's Dutch voice. speak() stays synchronous, so the first line starts
+// word from the dictionary) is said by Azure through /api/say (cloudLine()); the phone's Dutch voice only without that. speak() stays synchronous, so the first line starts
 // inside the tap (iPhone only plays sound from a tap); the next lines follow on the same audio element.
 let VOICE=null,sayN=0,sayOn=false,aiCtx=null,aiSource=null,aiGain=null;const sayA=new Audio();
 fetch("/audio/index.json").then(r=>r.ok?r.json():[]).then(a=>{VOICE=new Set(a)}).catch(()=>{});
@@ -2093,9 +2093,39 @@ function utter(l,done,start,bittie=false){const m=l.match(/^([A-C]): (.*)$/),u=n
     u.pitch=maleDutch?1:.92;u.rate=.95
   }
   if(start)u.onstart=u.onboundary=start;if(done)u.onend=u.onerror=done;speechSynthesis.speak(u)}
-function speak(t,consistentVoice=false){stopSpeak();const n=sayN,L=String(t).split("\n").map(l=>l.trim()).filter(Boolean),K=sayKeys(L),has=i=>!!VOICE&&VOICE.has(K[i]);
-  try{if(!L.some((l,i)=>has(i))||(consistentVoice&&canSpeak&&!L.every((l,i)=>has(i)))){if(canSpeak)L.forEach(l=>utter(l));return}}catch(e){return}
+// Lines without a recording (Claude's corrections, a dictionary word, own books, a line changed since the last
+// recording) are said by Azure through /api/say (cfg.say, api/_say.js) in the recordings' voices, so the phone's own
+// voice is only heard without a connection or when that fails. iPhone plays sound only from a tap: the audio element is
+// started on a moment of silence inside the tap, so it may play the line that arrives a moment later.
+let silentWav="";const SILENT=()=>silentWav||(silentWav=(()=>{const n=400,b=new Uint8Array(44+n),v=new DataView(b.buffer),w=(o,x)=>{for(let i=0;i<x.length;i++)b[o+i]=x.charCodeAt(i)};
+  w(0,"RIFF");v.setUint32(4,36+n,true);w(8,"WAVE");w(12,"fmt ");v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);
+  v.setUint32(24,8000,true);v.setUint32(28,8000,true);v.setUint16(32,1,true);v.setUint16(34,8,true);w(36,"data");v.setUint32(40,n,true);b.fill(128,44);
+  let t="";b.forEach(x=>t+=String.fromCharCode(x));return"data:audio/wav;base64,"+btoa(t)})());
+const cloudOn=()=>!!(acc.cfg&&acc.cfg.say)&&navigator.onLine!==false;
+const cloudVoice=l=>{const m=/^([A-C]): /.exec(l);return m?{A:"M",B:"F",C:"M2"}[m[1]]:"F"};
+const cloudCache=new Map(); // voice|text -> a promise of the line's blob URL, kept for this visit (the last 80)
+function cloudLine(l){
+  const t=l.replace(/^[A-C]: /,""),v=cloudVoice(l),k=v+"|"+t;
+  if(cloudCache.has(k))return cloudCache.get(k);
+  const p=(async()=>{
+    const h=await authHead().catch(()=>({}));
+    const r=await fetch("/api/say",{method:"POST",headers:{"Content-Type":"application/json",...h},body:JSON.stringify({t,v})});
+    if(!r.ok)throw Error("say "+r.status);
+    return URL.createObjectURL(await r.blob());
+  })();
+  cloudCache.set(k,p);p.catch(()=>cloudCache.delete(k));
+  if(cloudCache.size>80)cloudCache.delete(cloudCache.keys().next().value);
+  return p;
+}
+function speak(t,consistentVoice=false){stopSpeak();const n=sayN,L=String(t).split("\n").map(l=>l.trim()).filter(Boolean),K=sayKeys(L),has=i=>!!VOICE&&VOICE.has(K[i]),cloud=cloudOn();
+  // a dialogue only partly recorded: all of it from one source, so each person keeps one voice
+  const whole=consistentVoice&&!L.every((l,i)=>has(i)),rec=i=>!whole&&has(i);
+  try{if(!cloud&&!L.some((l,i)=>rec(i))){if(canSpeak)L.forEach(l=>utter(l));return}}catch(e){return}
   sayOn=true;
+  if(cloud&&!L.every((l,i)=>rec(i))){
+    L.forEach((l,i)=>{if(!rec(i))cloudLine(l).catch(()=>{})}); // ask for every line at once
+    if(!rec(0)){sayA.onended=sayA.onerror=null;sayA.src=SILENT();sayA.play().catch(()=>{})} // still inside the tap
+  }
   const next=i=>{
     if(n!==sayN)return;
     if(i>=L.length){sayOn=false;return}
@@ -2106,9 +2136,10 @@ function speak(t,consistentVoice=false){stopSpeak();const n=sayN,L=String(t).spl
       fellBack=true;
       try{canSpeak?utter(L[i],go):go()}catch(e){go()}
     };
-    if(!has(i))return miss();
-    sayA.onended=()=>{if(!fellBack)setTimeout(go,250)};
-    sayA.onerror=miss;sayA.src="/audio/"+K[i]+".mp3";sayA.play().catch(miss)
+    const play=src=>{if(n!==sayN||advanced||fellBack)return;sayA.onended=()=>{if(!fellBack)setTimeout(go,250)};sayA.onerror=miss;sayA.src=src;sayA.play().catch(miss)};
+    if(rec(i))return play("/audio/"+K[i]+".mp3");
+    if(!cloud)return miss();
+    cloudLine(L[i]).then(play,miss);
   };
   next(0)}
 // Every text speak() gets from the app's own material, for audio/build.mjs: {t, k} with k the kind of speech,

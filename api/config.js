@@ -8,6 +8,7 @@
 import { accounts, supaUrl, anonKey, LIMIT, FREE, plusOn, PLUS, PLUS_MONTH, TALK_PLUS, PLUS_PRICE, PLANS, passOn, PASSES, PASS_TOTAL, PASS_DAYS, yearOn, YEARS, YEAR_DAYS, YEAR_TOTAL } from "./_supa.js";
 import { eventsOn } from "./event.js";
 import { pronOn, PRON_DAY, PRON_SECONDS, FREE_SECONDS, STT_DAY } from "./_pron.js";
+import { sayOn } from "./_say.js";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") return res.status(405).json({ error: "method_not_allowed" });
@@ -31,5 +32,7 @@ export default async function handler(req, res) {
     ...(eventsOn() ? { events: 1 } : {}),
     // Azure Speech (api/_pron.js): Zeg het na and Spreken practice; day takes a day, seconds of audio for Zeg het na, free for an answer
     ...(pronOn ? { pron: { day: PRON_DAY, seconds: PRON_SECONDS, free: FREE_SECONDS, stt: STT_DAY } } : {}),
+    // Azure says the lines the app has no recording of (api/_say.js), so the phone's voice is only a fallback
+    ...(sayOn ? { say: 1 } : {}),
   });
 }

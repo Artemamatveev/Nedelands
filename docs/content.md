@@ -171,8 +171,12 @@ so the learner hears many people, as on the exam (25 November 2026, after the cr
 Lines recorded by real people are listed in `audio/live.json` (key → who recorded it): the script never records over
 or deletes them, and says when such a line's text has changed. `--dry --script` prints the Luisteren lines to record. `speak(t)` keeps its old interface (lines split by `\n`, `A: …` / `B: …` /
 `C: …` for a dialogue) and plays each line's file if `audio/index.json` lists its key (`sayKeys()`: a dialogue's lines
-are keyed by the whole dialogue, other lines on their own), else the phone's Dutch voice (`utter()`), as for own books,
-Claude's corrections and dictionary words. The first line starts inside the tap, the rest follow on the same audio
+are keyed by the whole dialogue, other lines on their own), else (own books, Claude's corrections, dictionary words, a
+line changed since the last recording) Azure says it through `/api/say` (`api/_say.js`, `cloudLine()`, since 28 November
+2026, when `/api/config` has `say`): F for a plain line, A M, B F and C M2 in a dialogue, the recordings' voices; a
+partly recorded dialogue (`speak(t, true)`) comes wholly from Azure so each person keeps one voice. Inside the tap the
+audio element starts a moment of silence (`SILENT()`), so iPhone lets it play the line that arrives later. The phone's
+voice (`utter()`) only without a connection or when Azure fails. The first line starts inside the tap, the rest follow on the same audio
 element (iPhone only plays sound from a tap). `stopSpeak()` stops both; `speaking()` says whether either still runs.
 `sw.js` keeps each file after its first play and answers the byte ranges Safari asks for.
 
