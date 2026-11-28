@@ -480,6 +480,11 @@ main:has(#play:not([hidden])) header{display:none}
 .diff s{color:var(--bad)} .diff ins{color:var(--good);font-weight:600}
 mark.err{background:color-mix(in srgb,var(--bad) 16%,transparent);color:inherit;border-radius:4px;padding:0 2px;box-shadow:inset 0 -2px 0 color-mix(in srgb,var(--bad) 55%,transparent)}
 mark.err sup{font-size:11px;font-weight:700;color:var(--bad);margin-left:1px}
+/* Was → Zo schrijf je het goed: the learner's text with its marked mistakes beside the corrected text, the changed words
+   underlined in green; one column on a phone, two side by side on a wider screen */
+.wdiff{display:grid;gap:0 14px;margin:6px 0 2px} .wdiff .sample{margin:4px 0 10px}
+@media(min-width:700px){.wdiff{grid-template-columns:1fr 1fr}}
+.wdiff ins{text-decoration:none;background:color-mix(in srgb,var(--good) 16%,transparent);border-radius:4px;padding:0 2px;box-shadow:inset 0 -2px 0 color-mix(in srgb,var(--good) 55%,transparent)}
 .errs.fixes{counter-reset:fx} .errs.fixes li{counter-increment:fx;position:relative;padding-left:28px}
 .errs.fixes li::before{content:counter(fx);position:absolute;left:0;top:9px;width:20px;height:20px;border-radius:50%;background:color-mix(in srgb,var(--bad) 14%,transparent);color:var(--bad);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
 .errs.fixes s+strong::before{content:"→ ";color:var(--soft);font-weight:400}
@@ -2236,6 +2241,26 @@ function markErrs(text,errs){
   return out+esc(text.slice(p));
 }
 const ownHTML=(text,errs,label="Jouw tekst")=>`<p class="ask">${label}</p><div class="sample own">${markErrs(text,errs)||"(niets)"}</div>`;
+// The corrected text with every word that differs from the learner's underlined: a word diff (the longest common run of
+// words stays plain), plus each correction's own words where they stand (so "ik ga" → "ga ik" marks both words, which a
+// diff alone would not); capitals and punctuation count, as in DUO's spelling
+function insHTML(text,fixed,errs=[]){
+  fixed=String(fixed||"");const b=fixed.match(/\s+|[^\s]+/g)||[],a=(String(text||"").match(/[^\s]+/g)||[]);
+  const at=[];let pos=0;b.forEach(w=>{at.push(pos);pos+=w.length});
+  const W=b.map((w,i)=>/\S/.test(w)?i:-1).filter(i=>i>=0),n=a.length,m=W.length,mark=new Set();
+  if(n*m<=250000){
+    const L=Array.from({length:n+1},()=>new Uint16Array(m+1));
+    for(let x=n-1;x>=0;x--)for(let y=m-1;y>=0;y--)L[x][y]=a[x]===b[W[y]]?L[x+1][y+1]+1:Math.max(L[x+1][y],L[x][y+1]);
+    const keep=new Set();for(let x=0,y=0;x<n&&y<m;){if(a[x]===b[W[y]]){keep.add(y);x++;y++}else if(L[x+1][y]>=L[x][y+1])x++;else y++}
+    W.forEach((t,y)=>{if(!keep.has(y))mark.add(t)});
+  }
+  let from=0;(errs||[]).forEach(e=>{const r=String(e&&e.right||"").trim();if(!r)return;let k=fixed.indexOf(r,from);if(k<0)k=fixed.indexOf(r);if(k<0)return;
+    from=k+r.length;W.forEach(t=>{if(at[t]<k+r.length&&at[t]+b[t].length>k)mark.add(t)})});
+  return b.map((w,t)=>mark.has(t)?`<ins>${esc(w)}</ins>`:esc(w)).join("").replace(/<\/ins>(\s+)<ins>/g,"$1");
+}
+// Was → Zo schrijf je het goed, with the corrected text to listen to (speak(): the recordings, Azure or the phone)
+const wrDiffHTML=(text,errs,fixed)=>`<div class="wdiff"><div>${ownHTML(text,errs)}</div><div><p class="ask">Zo schrijf je het goed</p><div class="sample" lang="nl">${insHTML(text,fixed,errs)}</div>
+  <button type="button" class="hint" id="wlisten">▶ Luister naar de verbeterde tekst</button></div></div>`;
 const ERROR_LABELS={inhoud:"Inhoud",woorden:"Woorden",grammatica:"Grammatica",inversie:"Grammatica · Woordvolgorde",meervoud:"Grammatica · Meervoud",spelling:"Spelling",samenhang:"Samenhang"};
 const errsHTML=errs=>errs.length?`<p class="ask">Fouten: ${errs.length}</p><ol class="errs fixes">${errs.map(e=>`<li><s>${esc(e.wrong)}</s> <strong>${esc(e.right)}</strong><span dir="auto">${Object.hasOwn(ERROR_LABELS,e.kind)?`<b>${ERROR_LABELS[e.kind]}</b> · `:""}${esc(e.why)}</span></li>`).join("")}</ol>`:`<p class="note">Geen fouten gevonden.</p>`;
 const spoken=t=>String(t).replace(/[\p{Extended_Pictographic}←-⇿️‍]/gu,"").replace(/\s+/g," ").trim();
@@ -4252,14 +4277,15 @@ async function check(q){
     keepErrs(errs); record(ok); if(!cur.exam)quickPraise.show(ok);
     $("fb").innerHTML=`<b class="${ok?"good":"bad"}">${ok?"Goed zo! Voldoende":"Nog niet voldoende"}</b>
       <p class="note">${esc(res.verdict)}</p>
-      ${RD.length?`<p class="note"><b>${RD.length>1?"Begin met deze verbetering":"Verbeter dit"}:</b> ${esc(RD[0].why||RD[0].wrong)}</p><button class="btn wide" id="next">${Math.min(RD.length,FIX_MAX)>1?`Verbeter je ${Math.min(RD.length,FIX_MAX)} belangrijkste fouten`:"Verbeter je fout"}</button>`:""}
-      ${scoreHTML(res.scores,q.mx,errs)}
-      ${ownHTML(text,errs)}${a2Practice&&!errs.length?'<p class="note">Geen taalcorrecties in je tekst.</p>':errsHTML(errs)}${q.sec==="wr"&&errs.some(e=>Object.hasOwn(WRITING_RULES,e.kind))?`<p class="note">In Mijn dag kun je deze regel morgen oefenen in een nieuwe zin.</p>`:""}${freeNote()}
-      ${!a2Practice||changed?`<p class="ask">Verbeterde tekst</p><div class="sample">${esc(res.corrected)}</div>`:""}
+      ${RD.length?`<p class="note"><b>Het belangrijkste om te verbeteren:</b> ${esc(RD[0].why||RD[0].wrong)}</p><button class="btn wide" id="next">${Math.min(RD.length,FIX_MAX)>1?`Verbeter je ${Math.min(RD.length,FIX_MAX)} belangrijkste fouten`:"Verbeter je fout"}</button>`:""}
+      ${changed?wrDiffHTML(text,errs,res.corrected):ownHTML(text,errs)}
+      ${scoreHTML(res.scores,q.mx,errs)}${a2Practice&&!errs.length?'<p class="note">Geen taalcorrecties in je tekst.</p>':errsHTML(errs)}${q.sec==="wr"&&errs.some(e=>Object.hasOwn(WRITING_RULES,e.kind))?`<p class="note">In Mijn dag kun je deze regel morgen oefenen in een nieuwe zin.</p>`:""}${freeNote()}
+      ${!a2Practice&&!changed&&res.corrected?.trim()?`<p class="ask">Verbeterde tekst</p><div class="sample">${esc(res.corrected)}</div>`:""}
       ${reviseContent?'<button class="btn wide" id="reviseContent">Vul je antwoord aan</button>':""}
       <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(q.right)}</div></details>
       ${docBtn}${RD.length?"":`<button class="btn wide" id="next">Verder</button>`}`;
     $("next").onclick=()=>{pos++;show()};
+    if($("wlisten"))$("wlisten").onclick=()=>speak(res.corrected);
     if(reviseContent)$("reviseContent").onclick=()=>reviseWritingContent(q,text,res.verdict);
     if(RD.length)$("next").onclick=()=>practiseCorrections(RD);
     $("docx").onclick=()=>saveDocx([{task,form,text}]);
