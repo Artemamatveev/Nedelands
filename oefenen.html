@@ -2468,8 +2468,11 @@ async function spGrade(q,r,firstGrade){
     const res=(await nakijken([{kind:q.kind,task:spTask(q),text:r.text}],q.sec==="sb"?"sb":"sp"))[0];
     if(cur!==attempt||q!==queue[pos]||c!==$("spchk")||$("play").hidden)return;
     const errs=Array.isArray(res.errors)?res.errors:[], ok=!!res.passed;
-    if(q.sec==="sp"&&S.speakFollow&&cur.followSpeaking===S.speakFollow.at&&[0,1,2,3].includes(res.scores?.inhoud)){
-      S.speakFollow={...S.speakFollow,day:today()+1,lastKey:q.k,ok:res.scores.inhoud===3,at:Date.now()};
+    if(!firstGrade&&q.sec==="sp"&&S.speakFollow&&cur.followSpeaking===S.speakFollow.at&&[0,1,2,3].includes(res.scores?.inhoud)){
+      S.speakFollow={...S.speakFollow,day:today()+2,lastKey:q.k,ok:res.scores.inhoud===3,writePending:res.scores.inhoud===3,at:Date.now()};
+    }
+    if(!cur.exam&&!firstGrade&&!cur.followSpeaking&&q.sec==="sp"&&res.scores?.inhoud===2&&(!S.speakFollow||S.speakFollow.ok&&!S.speakFollow.writePending)){
+      S.speakFollow={source:"practice",day:today()+2,ok:false,count:1,at:Date.now(),examKeys:[q.k]};
     }
     if(q.sec==="sp"&&campaignSource()?.source==="a2s")campaignTrack("check");
     b.disabled=false; $("rev").hidden=true; keepErrs(errs); if(!firstGrade)record(ok); else save(); if(!cur.exam)quickPraise.show(ok);
@@ -2483,7 +2486,7 @@ async function spGrade(q,r,firstGrade){
       const before=firstGrade.scores.inhoud,after=res.scores.inhoud;
       $("next").insertAdjacentHTML("beforebegin",`<p class="note"><b>Inhoud</b> · eerste antwoord ${before}/3 · tweede antwoord ${after}/3</p>`);
     }
-    if(!firstGrade&&!cur.exam&&q.sec==="sp"&&!ok&&Number.isInteger(res.scores?.inhoud)){
+    if(!firstGrade&&!cur.exam&&q.sec==="sp"&&(!ok||res.scores?.inhoud===2)&&Number.isInteger(res.scores?.inhoud)){
       $("next").insertAdjacentHTML("beforebegin",'<button class="ghost wide" id="speakAgain">Geef opnieuw antwoord</button><p class="note">Opnieuw inspreken is gratis. Opnieuw laten nakijken kost één nakijkbeurt.</p>');
       $("speakAgain").onclick=()=>{
         $("speakAgain").disabled=true;
@@ -3188,7 +3191,7 @@ function examFocusHTML(source,pick,target,inline){
     <p>${esc(source.big)}</p>
     ${inline?"":`<p><b data-ui>Jouw antwoord</b> · ${esc(capA(source,pick))}<br><b data-ui>Goed is</b> · ${esc(capA(source,source.right))}</p>`}
     ${source.sec==="knm"&&source.note?noteHTML(source.note):""}
-    ${clue?`<p class="note"><b data-ui>Zo staat het in de tekst</b> · ${esc(clue)}</p>`:""}
+    ${clue?`<p class="note"><b data-ui>${source.say?"Dit hoor je in het fragment":"Zo staat het in de tekst"}</b> · ${esc(clue)}</p>`:""}
     ${source.evidence?.[1]?`<p class="note">${esc(source.evidence[1])}</p>`:""}
     ${transcript?`<details><summary data-ui>${source.say?"Lees het luisterfragment":"Lees de tekst terug"}</summary>${source.say?`<div class="sample">${esc(transcript).replaceAll("\n","<br>")}</div>`:docHTML(transcript)}</details>`:""}
     ${source.say&&canSpeak?`<button type="button" class="hint" id="focuslisten" data-ui>▶ Luister opnieuw</button>`:""}
@@ -3205,12 +3208,16 @@ function startExamFocus(source){
 }
 const occurrences=n=>!Number.isSafeInteger(n)||n===1?"1 keer":`${n||1} keer`;
 const speakingFollowQuestions=state=>ITEMS.filter(q=>q.sec==="sp"&&/waarom/i.test(q.big+" "+q.sub)&&!state.examKeys?.includes(q.k));
+function transferWritingQuestion(){
+  return ITEMS.find(q=>q.sec==="wr"&&!q.fields&&!seenN(q)&&/waarom/i.test(q.big));
+}
 function speakingFollowUp(){
   const state=S.speakFollow;
   if(!state||state.ok||state.day>today())return;
   const questions=speakingFollowQuestions(state);
   if(!questions.length)return;
-  const target=questions.find(q=>q.k!==state.lastKey)||questions[0];
+  const target=questions.find(q=>!seenN(q)&&q.k!==state.lastKey);
+  if(!target)return;
   build("sp",{...SEC.find(x=>x.id==="sp"),n:1,keep:1,pool:()=>[target],followSpeaking:state.at});
 }
 function planHTML(){
@@ -3219,7 +3226,8 @@ function planHTML(){
   const rule=lvl()==="A2"&&dueWritingRule(S.writingRules,d);
   const practised=lvl()==="A2"?Object.keys(WRITING_RULES).filter(kind=>S.writingRules?.[kind]?.ok):[];
   const speaking=lvl()==="A2"?S.speakFollow:null;
-  const speakingDue=speaking&&!speaking.ok&&speaking.day<=d&&speakingFollowQuestions(speaking).length;
+  const speakingDue=speaking&&!speaking.ok&&speaking.day<=d&&speakingFollowQuestions(speaking).some(q=>!seenN(q)&&q.k!==speaking.lastKey);
+  const writeTarget=speaking?.writePending&&speaking.day<=d?transferWritingQuestion():null;
   const intro=nx<0?"Alles is klaar. Tot morgen!":P.bg?"Eerst de basis: elke dag één les.":P.pc!=null?`Vooral ${PART[P.k]}: daar scoor je nu het laagst.`:"Je oefent vandaag de onderdelen hieronder.";
   const focus=dayExamFocus(),last=focus?.focus.last;
   // new here at A2: where to begin, right under the heading, so it is seen above the tab bar on a phone. Gone after the
@@ -3247,6 +3255,8 @@ function planHTML(){
   // the countdown to the exam on Mijn dag too (it gives the day its point); without a date, one line asks for it
   const when=examsAhead().length?examLine():`<button class="hint" type="button" id="dayexam">Wanneer is je examen? Zet de datum in Profiel.</button>`;
   return`<p class="ask"><span>${date}</span> · <span>${LVL[lvl()]}</span></p><h2>Je les van vandaag</h2>
+    ${writeTarget?`<section class="list exam-focus"><h3>Schrijven · Geef een volledig antwoord</h3><p>Bij de nieuwe spreekvraag heb je alle punten genoemd. Lukt dat ook in een bericht?</p><button type="button" class="btn wide" id="daytransfer">Schrijf een bericht</button></section>`:""}
+    ${speaking?.writeDone?'<p class="note">Je hebt alle punten beantwoord in een nieuwe spreekvraag en een schrijfopdracht.</p>':""}
     ${when}${first}${writingDrafts().map(x=>`<button class="ghost wide" data-draft="${x.section}" data-exam="${Number(x.exam)}" data-draft-slot="${esc(x.slot)}"><span>Verder met je concept</span> · ${x.exam?EX[x.section].t:PART[x.section]}${x.slot?" · <span>Gerichte oefening</span>":""}</button>`).join("")}
     <span>Hoeveel tijd heb je?</span><div class="seg minutes" role="group" aria-label="Hoeveel tijd heb je?">${[10,20,40].map(n=>`<button data-budget="${n}" aria-pressed="${n===(S.minutes||20)}">${n} min</button>`).join("")}</div>
     <p class="note"><span>Geschatte duur</span> · ${P.minutes||steps.length*5} min</p>
@@ -3259,7 +3269,7 @@ function planHTML(){
       <button type="button" class="ghost wide" id="dayrule">Oefen met een nieuwe situatie</button></section>`:""}
     ${practised.map(kind=>`<p class="note"><b>${WRITING_RULES[kind].title}</b> · ${occurrences(S.writingRules[kind].hits||1)} goed toegepast in een nieuwe zin.</p>`).join("")}
     ${speakingDue?`<section class="list exam-focus"><h3>Spreken · Geef een volledig antwoord</h3>
-      <p class="note">${occurrences(speaking.count)} was je antwoord bijna volledig in het proefexamen. Oefen nu met een nieuwe vraag.</p>
+      <p class="note">${speaking.source==="practice"?"Bij het oefenen was je antwoord bijna volledig.":occurrences(speaking.count)+" was je antwoord bijna volledig in het proefexamen."} Oefen nu met een nieuwe vraag.</p>
       <button type="button" class="ghost wide" id="dayspeak">Probeer een nieuwe spreekvraag</button></section>`:""}
     ${speaking?.ok?`<p class="note"><b>Spreken</b> · Alle punten van een nieuwe spreekvraag beantwoord.</p>`:""}
     <ol class="steps">${steps.map((t,i)=>{const ok=done.includes(t.id),nxt=i===nx&&!ok,k=t.id.split(":")[1];
@@ -3386,6 +3396,10 @@ function drawPlan(){
   if($("dayexam"))$("dayexam").onclick=()=>{setTab("profiel");setTimeout(()=>{const f=$("pexams");if(f){f.scrollIntoView({block:"center"});f.querySelector("input")?.focus()}},120)};
   if($("dayrule"))$("dayrule").onclick=writingRuleScreen;
   if($("dayerrs"))$("dayerrs").onclick=()=>{const L=dueErrs();if(L.length)build("custom",{id:"custom",t:"Mijn fouten",n:Math.min(8,L.length),pool:()=>shuffle(L)})};
+  if($("daytransfer"))$("daytransfer").onclick=()=>{
+    const q=transferWritingQuestion();
+    if(q)build("wr",{...SEC.find(s=>s.id==="wr"),n:1,keep:1,draftSlot:"focus/transfer-"+S.speakFollow.at,pool:()=>[q]});
+  };
   if($("dayspeak"))$("dayspeak").onclick=speakingFollowUp;
   const focus=dayExamFocus(),review=$("dayfocus");
   if(review&&focus?.target)review.onclick=()=>{
@@ -3717,7 +3731,7 @@ function feedback(ok,q,pick){
   }
   // wrong: a short heading, then the right answer in ink (a long red heading was loud)
   $("fb").innerHTML=`<p class="fbh"><i aria-hidden="true">${ok?"✓":"✕"}</i><b class="${ok?"good":"bad"}" data-ui>${ok?"Goed zo!":"Niet goed"}</b></p>${ok?"":`<p class="fbr"><span data-ui>Goed is:</span> <strong>${capA(q,q.right)}</strong></p>`}
-    ${ok&&!cur.exam&&q.evidence?`<p class="note"><b data-ui>Zo staat het in de tekst</b> · ${esc(q.evidence[0])}</p><p class="note">${esc(q.evidence[1])}</p>`:""}${q.note?(q.sec==="verb"?q.note:noteHTML(q.note)):""}${wtNote(q)}
+    ${ok&&!cur.exam&&q.evidence?`<p class="note"><b data-ui>${q.say?"Dit hoor je in het fragment":"Zo staat het in de tekst"}</b> · ${esc(q.evidence[0])}</p><p class="note">${esc(q.evidence[1])}</p>`:""}${q.note?(q.sec==="verb"?q.note:noteHTML(q.note)):""}${wtNote(q)}
     <button class="btn wide" id="next" data-ui>Verder</button>`;
   $("next").onclick=()=>{pos++;show()}; $("next").focus();
   if(q.tts&&q.big!==q.tts&&canSpeak)speak(q.tts); // description → word: hear the Dutch word
@@ -4291,6 +4305,10 @@ async function check(q){
     const RD=correctionPrompts(q,form,text,res);
     const a2Practice=q.sec==="wr"&&!cur.exam;
     const reviseContent=a2Practice&&!q.fields&&Number.isInteger(res.scores?.inhoud)&&res.scores.inhoud<3;
+    if(a2Practice&&S.speakFollow?.writePending&&cur.draftSlot==="focus/transfer-"+S.speakFollow.at&&!res.same&&[0,1,2,3].includes(res.scores?.inhoud)){
+      const complete=res.scores.inhoud===3;
+      S.speakFollow={...S.speakFollow,writePending:!complete,writeDone:complete,day:today()+2,at:Date.now()};
+    }
     const changed=res.corrected?.trim()&&res.corrected.trim()!==text;
     if(q.sec==="wr"&&campaignSource()?.source==="a2w")campaignTrack("check");
     if(q.sec==="wr"&&!cur.exam&&!res.same)S.writingRules=scheduleWritingRules(S.writingRules,errs,today(),Date.now());
@@ -6358,7 +6376,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru","uk"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="4d53604a3b";
+const UIV="4272d7bf8d";
 let uiP=null;
 function uiLoaded(){try{trMemo.clear()}catch(e){} // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});
