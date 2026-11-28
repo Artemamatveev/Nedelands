@@ -164,7 +164,7 @@ aan jou gekoppeld.</p>
 <p>Bij Spreken zet je telefoon of browser je stem om in tekst. Dat doet niet Bittertalen, maar je browser: Safari
 gebruikt daarvoor Apple, Chrome gebruikt Google. Daarvoor gelden hun eigen privacyregels. Bittertalen krijgt alleen de
 tekst.</p>
-<p>Ben je ingelogd, dan gaat het bij Spreken (oefenen en proefexamen) en bij Zeg het na anders: de app neemt op wat je zegt, en die opname gaat via onze server naar Microsoft (Azure AI Speech, in een datacenter in de EU). Microsoft zet je antwoord om in tekst en geeft een score voor je uitspraak; bij Zeg het na gaat ook de zin mee die je voorleest. Je naam en e-mailadres gaan niet mee. Microsoft bewaart de opname niet en gebruikt hem niet om modellen te trainen; wij bewaren hem ook niet. De tekst gaat daarna, als je laat nakijken, naar Anthropic zoals hierboven. We tellen alleen hoeveel opnames je per dag laat uitschrijven of beoordelen, voor het dagtegoed. We doen dit omdat je er zelf om vraagt (uitvoering van een overeenkomst, artikel 6 lid 1 b AVG).</p>
+<p>Ben je ingelogd, dan gaat het bij Spreken (oefenen en proefexamen) en bij Zeg het na anders: de app neemt op wat je zegt, en die opname gaat via onze server naar Microsoft (Azure AI Speech, in een datacenter in de EU). Microsoft geeft een score voor je uitspraak. Bij Spreken zet Groq (Verenigde Staten) je antwoord om in tekst, met het spraakmodel Whisper, omdat dat je fouten beter laat staan; lukt dat niet, dan doet Microsoft het. Groq bewaart de opname niet; bij Zeg het na gaat ook de zin mee die je voorleest. Je naam en e-mailadres gaan niet mee. Microsoft bewaart de opname niet en gebruikt hem niet om modellen te trainen; wij bewaren hem ook niet. De tekst gaat daarna, als je laat nakijken, naar Anthropic zoals hierboven. We tellen alleen hoeveel opnames je per dag laat uitschrijven of beoordelen, voor het dagtegoed. We doen dit omdat je er zelf om vraagt (uitvoering van een overeenkomst, artikel 6 lid 1 b AVG).</p>
 <p>Zinnen die de app niet vooraf heeft opgenomen, zoals de verbeterde zinnen na het nakijken, woorden uit het woordenboek en je eigen boeken, laat de app voorlezen door Microsoft (Azure AI Speech, in de EU). Dan gaat alleen die tekst erheen, ook zonder account, zonder je naam of e-mailadres; Microsoft bewaart hem niet. Zonder verbinding leest je telefoon of browser ze zelf voor. We tellen alleen hoeveel tekens per dag worden voorgelezen, om de kosten te begrenzen (gerechtvaardigd belang, artikel 6 lid 1 f AVG).</p>
 
 <h2>De website en bezoekers tellen</h2>
@@ -195,7 +195,7 @@ De video's en podcasts zijn van hun makers; Bittertalen laat ze alleen zien en v
 <p>Bij zoekadvertenties tellen we anoniem het begin, de eerste controle, het openen van de betaalpagina en bevestigde toegang per advertentiegroep. De groep en de stappen staan alleen in het browsertabblad.</p>
 
 <h2>Buiten de EU</h2>
-<p>Vercel, Anthropic, Google en Apple zitten in de Verenigde Staten. Stripe kan gegevens ook in de Verenigde Staten verwerken. Daar gaan gegevens alleen heen met de waarborgen die de AVG
+<p>Vercel, Anthropic, Google, Groq en Apple zitten in de Verenigde Staten. Stripe kan gegevens ook in de Verenigde Staten verwerken. Daar gaan gegevens alleen heen met de waarborgen die de AVG
 vraagt, zoals het EU-VS Data Privacy Framework of de standaardcontractbepalingen van de Europese Commissie.</p>
 
 <h2>Hoe lang</h2>
@@ -203,6 +203,7 @@ vraagt, zoals het EU-VS Data Privacy Framework of de standaardcontractbepalingen
 <li>Je account en je voortgang: tot je je account verwijdert. Dan wordt alles bij Supabase meteen gewist.</li>
 <li>Anthropic bewaart teksten voor nakijken hooguit 30 dagen (zie boven).</li>
 <li>Opnames voor de uitspraakcontrole: niet bewaard, niet bij ons en niet bij Microsoft. Het aantal controles per dag: hooguit twee maanden.</li>
+<li>Opnames van Spreken bij Groq: niet bewaard.</li>
 <li>Logboeken van Vercel, Supabase en Resend: korte tijd, voor beveiliging en om problemen op te lossen.</li>
 <li>Op je eigen apparaat: tot je de gegevens van de site wist in je browser.</li>
 <li>De cookie en code voor het eenmalige proeftegoed zonder account: hooguit 400 dagen.</li>
@@ -295,7 +296,7 @@ laatst gebeurde.</p>
 
 <h2>Speech recognition</h2>
 <p>In Speaking, your phone or browser turns your voice into text. Bittertalen does not do that, your browser does: Safari uses Apple for it, Chrome uses Google. Their own privacy rules apply. Bittertalen only gets the text.</p>
-<p>If you are logged in, Speaking (practice and practice exams) and Zeg het na (say it after me) work differently: the app records what you say, and that recording goes through our server to Microsoft (Azure AI Speech, in a data centre in the EU). Microsoft turns your answer into text and scores your pronunciation; in Zeg het na the sentence you read aloud goes along too. Your name and e-mail address are not sent. Microsoft does not keep the recording and does not use it to train models; we do not keep it either. If you then have your answer checked, the text goes to Anthropic as described above. We only count how many recordings you have written down or scored per day, for the daily allowance. We do this because you ask for it yourself (performance of a contract, Article 6(1)(b) GDPR).</p>
+<p>If you are logged in, Speaking (practice and practice exams) and Zeg het na (say it after me) work differently: the app records what you say, and that recording goes through our server to Microsoft (Azure AI Speech, in a data centre in the EU). Microsoft scores your pronunciation. In Speaking, Groq (United States) turns your answer into text with the speech model Whisper, because it leaves your mistakes as they are; if that fails, Microsoft does it. Groq does not keep the recording; in Zeg het na the sentence you read aloud goes along too. Your name and e-mail address are not sent. Microsoft does not keep the recording and does not use it to train models; we do not keep it either. If you then have your answer checked, the text goes to Anthropic as described above. We only count how many recordings you have written down or scored per day, for the daily allowance. We do this because you ask for it yourself (performance of a contract, Article 6(1)(b) GDPR).</p>
 <p>Sentences the app has not recorded in advance, such as the corrected sentences after checking, words from the dictionary and your own books, are read aloud by Microsoft (Azure AI Speech, in the EU). Only that text goes there, also without an account, without your name or e-mail address; Microsoft does not keep it. Without a connection your phone or browser reads them itself. We only count how many characters are read aloud per day, to limit the costs (legitimate interest, Article 6(1)(f) GDPR).</p>
 
 <h2>The website and counting visitors</h2>
@@ -311,13 +312,14 @@ laatst gebeurde.</p>
 <p>For search ads we anonymously count starts, first checks, checkout opens and confirmed access by ad group. The group and steps stay in the browser tab.</p>
 
 <h2>Outside the EU</h2>
-<p>Vercel, Anthropic, Google and Apple are in the United States. Stripe may also process data in the United States. Data only goes there with the safeguards the GDPR requires, such as the EU-US Data Privacy Framework or the European Commission's standard contractual clauses.</p>
+<p>Vercel, Anthropic, Google, Groq and Apple are in the United States. Stripe may also process data in the United States. Data only goes there with the safeguards the GDPR requires, such as the EU-US Data Privacy Framework or the European Commission's standard contractual clauses.</p>
 
 <h2>How long</h2>
 <ul>
 <li>Your account and your progress: until you delete your account. Then everything at Supabase is erased at once.</li>
 <li>Anthropic keeps texts sent for checking for at most 30 days (see above).</li>
 <li>Recordings for the pronunciation check: not kept, neither by us nor by Microsoft. The number of checks per day: at most two months.</li>
+<li>Speaking recordings at Groq: not kept.</li>
 <li>Logs of Vercel, Supabase and Resend: a short time, for security and to solve problems.</li>
 <li>On your own device: until you clear the site's data in your browser.</li>
 <li>The code for free checks without an account: at most two days.</li>
@@ -403,7 +405,7 @@ laatst gebeurde.</p>
 
 <h2>التعرف على الكلام</h2>
 <p>في قسم المحادثة يحوّل هاتفك أو متصفحك صوتك إلى نص. لا يفعل ذلك Bittertalen بل متصفحك: يستخدم Safari خدمة Apple، ويستخدم Chrome خدمة Google. وتسري قواعد الخصوصية الخاصة بهما. لا يحصل Bittertalen إلا على النص.</p>
-<p>إذا كنت مسجّل الدخول، يختلف الأمر في قسم المحادثة (التدريب والامتحان التجريبي) وفي Zeg het na (كرّر بعدي): يسجّل التطبيق ما تقوله، ويُرسل هذا التسجيل عبر خادمنا إلى Microsoft (Azure AI Speech، في مركز بيانات داخل الاتحاد الأوروبي). تحوّل Microsoft إجابتك إلى نص وتعطي درجة لنطقك؛ وفي Zeg het na تُرسل معه أيضًا الجملة التي تقرؤها. لا يُرسل اسمك ولا بريدك الإلكتروني. لا تحتفظ Microsoft بالتسجيل ولا تستخدمه لتدريب النماذج، ونحن أيضًا لا نحتفظ به. إذا طلبت بعد ذلك تصحيح إجابتك، يُرسل النص إلى Anthropic كما هو موضّح أعلاه. نعدّ فقط عدد التسجيلات التي تُحوَّل إلى نص أو تُقيَّم في اليوم، من أجل الرصيد اليومي. نفعل ذلك لأنك تطلبه بنفسك (تنفيذ عقد، المادة 6 فقرة 1 حرف ب من GDPR).</p>
+<p>إذا كنت مسجّل الدخول، يختلف الأمر في قسم المحادثة (التدريب والامتحان التجريبي) وفي Zeg het na (كرّر بعدي): يسجّل التطبيق ما تقوله، ويُرسل هذا التسجيل عبر خادمنا إلى Microsoft (Azure AI Speech، في مركز بيانات داخل الاتحاد الأوروبي). تعطي Microsoft درجة لنطقك. وفي قسم المحادثة تحوّل Groq (الولايات المتحدة) إجابتك إلى نص بنموذج الكلام Whisper، لأنه يترك أخطاءك كما هي؛ وإذا لم ينجح ذلك تقوم به Microsoft. لا تحتفظ Groq بالتسجيل؛ وفي Zeg het na تُرسل معه أيضًا الجملة التي تقرؤها. لا يُرسل اسمك ولا بريدك الإلكتروني. لا تحتفظ Microsoft بالتسجيل ولا تستخدمه لتدريب النماذج، ونحن أيضًا لا نحتفظ به. إذا طلبت بعد ذلك تصحيح إجابتك، يُرسل النص إلى Anthropic كما هو موضّح أعلاه. نعدّ فقط عدد التسجيلات التي تُحوَّل إلى نص أو تُقيَّم في اليوم، من أجل الرصيد اليومي. نفعل ذلك لأنك تطلبه بنفسك (تنفيذ عقد، المادة 6 فقرة 1 حرف ب من GDPR).</p>
 <p>الجمل التي لم يسجّلها التطبيق مسبقًا، مثل الجمل المصحّحة بعد التصحيح وكلمات القاموس وكتبك الخاصة، يقرؤها بصوت عالٍ Microsoft (Azure AI Speech، داخل الاتحاد الأوروبي). لا يُرسل إلا ذلك النص، حتى من دون حساب، ومن دون اسمك أو بريدك الإلكتروني؛ ولا تحتفظ به Microsoft. ومن دون اتصال يقرؤها هاتفك أو متصفحك بنفسه. نعدّ فقط عدد الأحرف التي تُقرأ في اليوم، للحدّ من التكاليف (مصلحة مشروعة، المادة 6 فقرة 1 حرف و من GDPR).</p>
 
 <h2>الموقع وإحصاء الزوار</h2>
@@ -419,13 +421,14 @@ laatst gebeurde.</p>
 <p>نحصي بشكل مجهول بدء التمرين وأول تصحيح وفتح صفحة الدفع وتأكيد الوصول لكل مجموعة إعلانات بحث. تبقى المجموعة والخطوات في علامة تبويب المتصفح.</p>
 
 <h2>خارج الاتحاد الأوروبي</h2>
-<p>توجد Vercel وAnthropic وGoogle وApple في الولايات المتحدة. وقد تعالج Stripe البيانات أيضًا في الولايات المتحدة. لا تُرسل البيانات إلى هناك إلا بالضمانات التي تطلبها GDPR، مثل إطار خصوصية البيانات بين الاتحاد الأوروبي والولايات المتحدة أو البنود التعاقدية القياسية للمفوضية الأوروبية.</p>
+<p>توجد Vercel وAnthropic وGoogle وGroq وApple في الولايات المتحدة. وقد تعالج Stripe البيانات أيضًا في الولايات المتحدة. لا تُرسل البيانات إلى هناك إلا بالضمانات التي تطلبها GDPR، مثل إطار خصوصية البيانات بين الاتحاد الأوروبي والولايات المتحدة أو البنود التعاقدية القياسية للمفوضية الأوروبية.</p>
 
 <h2>إلى متى</h2>
 <ul>
 <li>حسابك وتقدّمك: حتى تحذف حسابك. عندها يُمسح كل شيء لدى Supabase فورًا.</li>
 <li>تحتفظ Anthropic بنصوص التصحيح مدة لا تتجاوز 30 يومًا (انظر أعلاه).</li>
 <li>تسجيلات تقييم النطق: لا تُحفظ، لا لدينا ولا لدى Microsoft. عدد مرات التقييم في اليوم: شهران على الأكثر.</li>
+<li>تسجيلات المحادثة لدى Groq: لا تُحفظ.</li>
 <li>سجلات Vercel وSupabase وResend: لفترة قصيرة، للأمان ولحل المشكلات.</li>
 <li>على جهازك: حتى تمسح بيانات الموقع في متصفحك.</li>
 <li>رمز التصحيح المجاني بدون حساب: يومان كحد أقصى.</li>
@@ -511,7 +514,7 @@ laatst gebeurde.</p>
 
 <h2>Konuşma tanıma</h2>
 <p>Konuşma bölümünde telefonun veya tarayıcın sesini yazıya çevirir. Bunu Bittertalen değil, tarayıcın yapar: Safari bunun için Apple'ı, Chrome ise Google'ı kullanır. Onların kendi gizlilik kuralları geçerlidir. Bittertalen yalnızca metni alır.</p>
-<p>Giriş yaptıysan Konuşma bölümünde (alıştırma ve deneme sınavı) ve Zeg het na (tekrar et) bölümünde işler farklıdır: uygulama söylediklerini kaydeder ve bu kayıt sunucumuz üzerinden Microsoft'a (Azure AI Speech, AB'deki bir veri merkezinde) gider. Microsoft cevabını yazıya çevirir ve telaffuzuna puan verir; Zeg het na'da sesli okuduğun cümle de gönderilir. Adın ve e-posta adresin gönderilmez. Microsoft kaydı saklamaz ve modelleri eğitmek için kullanmaz; biz de saklamayız. Sonra cevabını kontrol ettirirsen metin yukarıda anlatıldığı gibi Anthropic'e gider. Yalnızca günlük hak için günde kaç kaydı yazıya döktürdüğünü veya puanlattığını sayarız. Bunu sen istediğin için yaparız (sözleşmenin ifası, GDPR madde 6 fıkra 1 b).</p>
+<p>Giriş yaptıysan Konuşma bölümünde (alıştırma ve deneme sınavı) ve Zeg het na (tekrar et) bölümünde işler farklıdır: uygulama söylediklerini kaydeder ve bu kayıt sunucumuz üzerinden Microsoft'a (Azure AI Speech, AB'deki bir veri merkezinde) gider. Microsoft telaffuzuna puan verir. Konuşma bölümünde cevabını Groq (ABD) Whisper konuşma modeliyle yazıya çevirir, çünkü hatalarını olduğu gibi bırakır; bu olmazsa Microsoft yapar. Groq kaydı saklamaz; Zeg het na'da sesli okuduğun cümle de gönderilir. Adın ve e-posta adresin gönderilmez. Microsoft kaydı saklamaz ve modelleri eğitmek için kullanmaz; biz de saklamayız. Sonra cevabını kontrol ettirirsen metin yukarıda anlatıldığı gibi Anthropic'e gider. Yalnızca günlük hak için günde kaç kaydı yazıya döktürdüğünü veya puanlattığını sayarız. Bunu sen istediğin için yaparız (sözleşmenin ifası, GDPR madde 6 fıkra 1 b).</p>
 <p>Uygulamanın önceden kaydetmediği cümleleri, örneğin kontrolden sonraki düzeltilmiş cümleleri, sözlükteki kelimeleri ve kendi kitaplarını Microsoft (Azure AI Speech, AB'de) sesli okur. Oraya yalnızca o metin gider, hesapsız da olsa, adın veya e-posta adresin olmadan; Microsoft onu saklamaz. Bağlantı yoksa telefonun veya tarayıcın onları kendisi okur. Maliyetleri sınırlamak için yalnızca günde kaç karakter okunduğunu sayarız (meşru menfaat, GDPR madde 6 fıkra 1 f).</p>
 
 <h2>Web sitesi ve ziyaretçi sayımı</h2>
@@ -527,13 +530,14 @@ laatst gebeurde.</p>
 <p>Arama reklamlarında alıştırma başlangıcını, ilk kontrolü, ödeme sayfasını ve erişim onayını reklam grubuna göre anonim sayarız. Grup ve adımlar tarayıcı sekmesinde kalır.</p>
 
 <h2>AB dışında</h2>
-<p>Vercel, Anthropic, Google ve Apple Amerika Birleşik Devletleri'ndedir. Stripe da verileri Amerika Birleşik Devletleri'nde işleyebilir. Veriler oraya yalnızca GDPR'ın istediği güvencelerle gider; örneğin AB-ABD Veri Gizliliği Çerçevesi veya Avrupa Komisyonu'nun standart sözleşme maddeleri.</p>
+<p>Vercel, Anthropic, Google, Groq ve Apple Amerika Birleşik Devletleri'ndedir. Stripe da verileri Amerika Birleşik Devletleri'nde işleyebilir. Veriler oraya yalnızca GDPR'ın istediği güvencelerle gider; örneğin AB-ABD Veri Gizliliği Çerçevesi veya Avrupa Komisyonu'nun standart sözleşme maddeleri.</p>
 
 <h2>Ne kadar süre</h2>
 <ul>
 <li>Hesabın ve ilerlemen: hesabını silene kadar. O zaman Supabase'deki her şey hemen silinir.</li>
 <li>Anthropic, kontrol edilen metinleri en fazla 30 gün tutar (yukarıya bak).</li>
 <li>Telaffuz kontrolü kayıtları: saklanmaz, ne bizde ne Microsoft'ta. Günlük kontrol sayısı: en fazla iki ay.</li>
+<li>Groq'taki Konuşma kayıtları: saklanmaz.</li>
 <li>Vercel, Supabase ve Resend kayıtları: güvenlik ve sorun çözmek için kısa süre.</li>
 <li>Kendi cihazında: tarayıcında sitenin verilerini silene kadar.</li>
 <li>Hesapsız ücretsiz kontrol kodu: en fazla iki gün.</li>
@@ -619,7 +623,7 @@ laatst gebeurde.</p>
 
 <h2>वाक् पहचान</h2>
 <p>बोलने वाले भाग में आपका फ़ोन या ब्राउज़र आपकी आवाज़ को पाठ में बदलता है। यह Bittertalen नहीं, आपका ब्राउज़र करता है: Safari इसके लिए Apple का और Chrome, Google का इस्तेमाल करता है। उनके अपने गोपनीयता नियम लागू होते हैं। Bittertalen को केवल पाठ मिलता है।</p>
-<p>अगर आप लॉग इन हैं, तो बोलने वाले भाग (अभ्यास और अभ्यास परीक्षा) और Zeg het na (दोहराएँ) में तरीका अलग है: ऐप रिकॉर्ड करता है कि आप क्या कहते हैं, और वह रिकॉर्डिंग हमारे सर्वर से होकर Microsoft (Azure AI Speech, EU के एक डेटा सेंटर में) को जाती है। Microsoft आपके जवाब को पाठ में बदलता है और आपके उच्चारण को अंक देता है; Zeg het na में वह वाक्य भी साथ जाता है जिसे आप पढ़ते हैं। आपका नाम और ई-मेल पता नहीं भेजा जाता। Microsoft रिकॉर्डिंग नहीं रखता और उससे मॉडल को प्रशिक्षित नहीं करता; हम भी उसे नहीं रखते। अगर आप फिर अपना जवाब जँचवाते हैं, तो पाठ ऊपर बताए अनुसार Anthropic को जाता है। हम केवल यह गिनते हैं कि आप दिन में कितनी रिकॉर्डिंग पाठ में बदलवाते या जँचवाते हैं, दैनिक सीमा के लिए। हम ऐसा इसलिए करते हैं क्योंकि आप खुद इसे माँगते हैं (अनुबंध का पालन, GDPR अनुच्छेद 6(1)(b))।</p>
+<p>अगर आप लॉग इन हैं, तो बोलने वाले भाग (अभ्यास और अभ्यास परीक्षा) और Zeg het na (दोहराएँ) में तरीका अलग है: ऐप रिकॉर्ड करता है कि आप क्या कहते हैं, और वह रिकॉर्डिंग हमारे सर्वर से होकर Microsoft (Azure AI Speech, EU के एक डेटा सेंटर में) को जाती है। Microsoft आपके उच्चारण को अंक देता है। बोलने वाले भाग में Groq (संयुक्त राज्य अमेरिका) Whisper भाषण मॉडल से आपके जवाब को पाठ में बदलता है, क्योंकि वह आपकी गलतियों को वैसा ही रहने देता है; ऐसा न हो पाने पर Microsoft यह करता है। Groq रिकॉर्डिंग नहीं रखता; Zeg het na में वह वाक्य भी साथ जाता है जिसे आप पढ़ते हैं। आपका नाम और ई-मेल पता नहीं भेजा जाता। Microsoft रिकॉर्डिंग नहीं रखता और उससे मॉडल को प्रशिक्षित नहीं करता; हम भी उसे नहीं रखते। अगर आप फिर अपना जवाब जँचवाते हैं, तो पाठ ऊपर बताए अनुसार Anthropic को जाता है। हम केवल यह गिनते हैं कि आप दिन में कितनी रिकॉर्डिंग पाठ में बदलवाते या जँचवाते हैं, दैनिक सीमा के लिए। हम ऐसा इसलिए करते हैं क्योंकि आप खुद इसे माँगते हैं (अनुबंध का पालन, GDPR अनुच्छेद 6(1)(b))।</p>
 <p>जो वाक्य ऐप ने पहले से रिकॉर्ड नहीं किए हैं, जैसे जाँच के बाद सुधारे गए वाक्य, शब्दकोश के शब्द और आपकी अपनी किताबें, उन्हें Microsoft (Azure AI Speech, EU में) पढ़कर सुनाता है। वहाँ केवल वह पाठ जाता है, खाते के बिना भी, आपके नाम या ई-मेल पते के बिना; Microsoft उसे नहीं रखता। कनेक्शन न होने पर आपका फ़ोन या ब्राउज़र उन्हें खुद पढ़ता है। लागत सीमित रखने के लिए हम केवल यह गिनते हैं कि दिन में कितने अक्षर पढ़े गए (वैध हित, GDPR अनुच्छेद 6(1)(f))।</p>
 
 <h2>वेबसाइट और आगंतुकों की गिनती</h2>
@@ -635,13 +639,14 @@ laatst gebeurde.</p>
 <p>खोज विज्ञापनों के लिए हम शुरुआत, पहली जाँच, भुगतान पेज और पुष्टि किए गए ऐक्सेस को समूह के हिसाब से गुमनाम रूप से गिनते हैं। समूह और चरण ब्राउज़र टैब में रहते हैं।</p>
 
 <h2>EU के बाहर</h2>
-<p>Vercel, Anthropic, Google और Apple संयुक्त राज्य अमेरिका में हैं। Stripe भी संयुक्त राज्य अमेरिका में डेटा प्रोसेस कर सकता है। डेटा वहाँ केवल उन सुरक्षा उपायों के साथ जाता है जो GDPR माँगता है, जैसे EU-US Data Privacy Framework या यूरोपीय आयोग के मानक संविदात्मक खंड।</p>
+<p>Vercel, Anthropic, Google, Groq और Apple संयुक्त राज्य अमेरिका में हैं। Stripe भी संयुक्त राज्य अमेरिका में डेटा प्रोसेस कर सकता है। डेटा वहाँ केवल उन सुरक्षा उपायों के साथ जाता है जो GDPR माँगता है, जैसे EU-US Data Privacy Framework या यूरोपीय आयोग के मानक संविदात्मक खंड।</p>
 
 <h2>कितने समय तक</h2>
 <ul>
 <li>आपका खाता और प्रगति: जब तक आप खाता नहीं हटाते। तब Supabase पर सब कुछ तुरंत मिटा दिया जाता है।</li>
 <li>Anthropic जाँच के लिए दिए पाठ अधिकतम 30 दिन रखता है (ऊपर देखें)।</li>
 <li>उच्चारण जाँच की रिकॉर्डिंग: न हमारे पास रखी जाती है, न Microsoft के पास। प्रति दिन जाँचों की संख्या: अधिकतम दो महीने।</li>
+<li>Groq के पास बोलने की रिकॉर्डिंग: नहीं रखी जाती।</li>
 <li>Vercel, Supabase और Resend के लॉग: थोड़े समय के लिए, सुरक्षा और समस्याएँ हल करने के लिए।</li>
 <li>आपके अपने डिवाइस पर: जब तक आप ब्राउज़र में साइट का डेटा नहीं मिटाते।</li>
 <li>बिना खाते की मुफ़्त जाँच का कोड: अधिकतम दो दिन।</li>
@@ -727,7 +732,7 @@ laatst gebeurde.</p>
 
 <h2>语音识别</h2>
 <p>在口语部分，你的手机或浏览器会把语音转成文字。这不是 Bittertalen 做的，而是你的浏览器：Safari 使用 Apple，Chrome 使用 Google。它们适用自己的隐私规则。Bittertalen 只收到文字。</p>
-<p>如果你已登录，口语部分（练习和模拟考试）和 Zeg het na（跟我读）的方式有所不同：应用会录下你说的话，录音经我们的服务器发送给 Microsoft（Azure AI Speech，位于欧盟的数据中心）。Microsoft 会把你的回答转成文字，并为你的发音打分；在 Zeg het na 中，你朗读的句子也会一起发送。你的姓名和电子邮箱不会一起发送。Microsoft 不保存录音，也不用它训练模型；我们也不保存。如果你随后让系统批改回答，文字会按上文所述发送给 Anthropic。我们只统计你每天有多少条录音被转写或打分，用于每日额度。我们这样做是因为你自己提出了请求（履行合同，GDPR 第 6 条第 1 款 b 项）。</p>
+<p>如果你已登录，口语部分（练习和模拟考试）和 Zeg het na（跟我读）的方式有所不同：应用会录下你说的话，录音经我们的服务器发送给 Microsoft（Azure AI Speech，位于欧盟的数据中心）。Microsoft 为你的发音打分。在口语部分，Groq（美国）用语音模型 Whisper 把你的回答转成文字，因为它会保留你的错误；如果失败，则由 Microsoft 转写。Groq 不保存录音；在 Zeg het na 中，你朗读的句子也会一起发送。你的姓名和电子邮箱不会一起发送。Microsoft 不保存录音，也不用它训练模型；我们也不保存。如果你随后让系统批改回答，文字会按上文所述发送给 Anthropic。我们只统计你每天有多少条录音被转写或打分，用于每日额度。我们这样做是因为你自己提出了请求（履行合同，GDPR 第 6 条第 1 款 b 项）。</p>
 <p>应用没有预先录制的句子，例如批改后的修改句、词典中的单词和你自己的书，会由 Microsoft（Azure AI Speech，位于欧盟）朗读。发送的只有这段文字，即使没有账户也是如此，不包含你的姓名或电子邮箱；Microsoft 不会保存。没有网络时，由你的手机或浏览器自己朗读。我们只统计每天朗读了多少字符，以控制费用（正当利益，GDPR 第 6 条第 1 款 f 项）。</p>
 
 <h2>网站和访客统计</h2>
@@ -743,13 +748,14 @@ laatst gebeurde.</p>
 <p>我们按搜索广告组匿名统计开始练习、首次批改、打开付款页和确认访问。广告组和步骤仅存于浏览器标签页。</p>
 
 <h2>欧盟以外</h2>
-<p>Vercel、Anthropic、Google 和 Apple 位于美国。Stripe 也可能在美国处理数据。数据只有在具备 GDPR 要求的保障措施时才会传送到那里，例如欧盟-美国数据隐私框架或欧盟委员会的标准合同条款。</p>
+<p>Vercel、Anthropic、Google、Groq 和 Apple 位于美国。Stripe 也可能在美国处理数据。数据只有在具备 GDPR 要求的保障措施时才会传送到那里，例如欧盟-美国数据隐私框架或欧盟委员会的标准合同条款。</p>
 
 <h2>保存多久</h2>
 <ul>
 <li>你的账户和进度：直到你删除账户。届时 Supabase 上的所有内容会立即删除。</li>
 <li>Anthropic 最多保存待批改的文字 30 天（见上文）。</li>
 <li>发音检查的录音：不保存，我们和 Microsoft 都不保存。每天的检查次数：最多两个月。</li>
+<li>Groq 处的口语录音：不保存。</li>
 <li>Vercel、Supabase 和 Resend 的日志：短期保存，用于安全和解决问题。</li>
 <li>你自己的设备上：直到你在浏览器中清除网站数据。</li>
 <li>无账户免费批改的代码：最多两天。</li>
@@ -836,7 +842,7 @@ laatst gebeurde.</p>
 
 <h2>Reconocimiento de voz</h2>
 <p>En Expresión oral, tu teléfono o navegador convierte la voz en texto. Safari usa el servicio de Apple y Chrome el de Google. Se aplican sus propias políticas de privacidad. Bittertalen solo recibe el texto.</p>
-<p>Si has iniciado sesión, en Expresión oral (práctica y examen de prueba) y en Zeg het na (repite) funciona de otra manera: la app graba lo que dices y esa grabación va a través de nuestro servidor a Microsoft (Azure AI Speech, en un centro de datos de la UE). Microsoft convierte tu respuesta en texto y puntúa tu pronunciación; en Zeg het na también se envía la frase que lees en voz alta. Tu nombre y tu correo no se envían. Microsoft no guarda la grabación ni la usa para entrenar modelos; nosotros tampoco la guardamos. Si después pides que revisen tu respuesta, el texto va a Anthropic como se explica arriba. Solo contamos cuántas grabaciones se transcriben o puntúan al día, para el límite diario. Lo hacemos porque tú lo pides (ejecución de un contrato, artículo 6.1.b del RGPD).</p>
+<p>Si has iniciado sesión, en Expresión oral (práctica y examen de prueba) y en Zeg het na (repite) funciona de otra manera: la app graba lo que dices y esa grabación va a través de nuestro servidor a Microsoft (Azure AI Speech, en un centro de datos de la UE). Microsoft puntúa tu pronunciación. En Expresión oral, Groq (Estados Unidos) convierte tu respuesta en texto con el modelo de voz Whisper, porque deja tus errores tal como son; si falla, lo hace Microsoft. Groq no guarda la grabación; en Zeg het na también se envía la frase que lees en voz alta. Tu nombre y tu correo no se envían. Microsoft no guarda la grabación ni la usa para entrenar modelos; nosotros tampoco la guardamos. Si después pides que revisen tu respuesta, el texto va a Anthropic como se explica arriba. Solo contamos cuántas grabaciones se transcriben o puntúan al día, para el límite diario. Lo hacemos porque tú lo pides (ejecución de un contrato, artículo 6.1.b del RGPD).</p>
 <p>Las frases que la app no ha grabado de antemano, como las frases corregidas tras la revisión, las palabras del diccionario y tus propios libros, las lee en voz alta Microsoft (Azure AI Speech, en la UE). Solo se envía ese texto, también sin cuenta, sin tu nombre ni tu correo; Microsoft no lo guarda. Sin conexión, las lee tu teléfono o navegador. Solo contamos cuántos caracteres se leen al día, para limitar los costes (interés legítimo, artículo 6.1.f del RGPD).</p>
 
 <h2>El sitio web y las visitas</h2>
@@ -852,13 +858,14 @@ laatst gebeurde.</p>
 <p>Contamos de forma anónima el inicio, la primera revisión, la apertura de la página de pago y el acceso confirmado por grupo de anuncios de búsqueda. El grupo y los pasos quedan en la pestaña.</p>
 
 <h2>Fuera de la UE</h2>
-<p>Vercel, Anthropic, Google y Apple están en Estados Unidos. Stripe también puede tratar datos allí. Solo se transfieren datos con las garantías exigidas por el RGPD, como el Marco de Privacidad de Datos UE-EE. UU. o las cláusulas contractuales tipo de la Comisión Europea.</p>
+<p>Vercel, Anthropic, Google, Groq y Apple están en Estados Unidos. Stripe también puede tratar datos allí. Solo se transfieren datos con las garantías exigidas por el RGPD, como el Marco de Privacidad de Datos UE-EE. UU. o las cláusulas contractuales tipo de la Comisión Europea.</p>
 
 <h2>Plazos de conservación</h2>
 <ul>
 <li>Cuenta y progreso: hasta que elimines la cuenta. En ese momento se borran todos esos datos de Supabase.</li>
 <li>Anthropic conserva los textos enviados a revisión durante un máximo de 30 días (ver arriba).</li>
 <li>Grabaciones para la comprobación de pronunciación: no se guardan, ni nosotros ni Microsoft. El número de comprobaciones al día: como máximo dos meses.</li>
+<li>Grabaciones de Expresión oral en Groq: no se guardan.</li>
 <li>Registros de Vercel, Supabase y Resend: durante un periodo breve por seguridad y para resolver problemas.</li>
 <li>Datos en tu dispositivo: hasta que borres los datos del sitio en el navegador.</li>
 <li>Código de revisiones gratuitas sin cuenta: hasta dos días.</li>
@@ -944,7 +951,7 @@ laatst gebeurde.</p>
 
 <h2>Распознавание речи</h2>
 <p>В разделе «Устная речь» телефон или браузер преобразует голос в текст. Safari использует сервис Apple, а Chrome — Google. Действуют их собственные политики конфиденциальности. Bittertalen получает только текст.</p>
-<p>Если вы вошли в аккаунт, в устной речи (тренировка и пробный экзамен) и в Zeg het na («Повторите») всё устроено иначе: приложение записывает то, что вы говорите, и эта запись идёт через наш сервер в Microsoft (Azure AI Speech, в дата-центре в ЕС). Microsoft превращает ваш ответ в текст и ставит балл за произношение; в Zeg het na вместе с записью передаётся фраза, которую вы читаете. Ваше имя и e-mail не передаются. Microsoft не хранит запись и не обучает на ней модели; мы её тоже не храним. Если вы затем отправляете ответ на проверку, текст уходит в Anthropic, как описано выше. Мы считаем только, сколько записей в день переводится в текст или оценивается, для дневного лимита. Мы делаем это, потому что вы сами об этом просите (исполнение договора, статья 6(1)(b) GDPR).</p>
+<p>Если вы вошли в аккаунт, в устной речи (тренировка и пробный экзамен) и в Zeg het na («Повторите») всё устроено иначе: приложение записывает то, что вы говорите, и эта запись идёт через наш сервер в Microsoft (Azure AI Speech, в дата-центре в ЕС). Microsoft ставит балл за произношение. В устной речи ваш ответ в текст превращает Groq (США) с помощью речевой модели Whisper, потому что она оставляет ваши ошибки как есть; если это не удаётся, это делает Microsoft. Groq не хранит запись; в Zeg het na вместе с записью передаётся фраза, которую вы читаете. Ваше имя и e-mail не передаются. Microsoft не хранит запись и не обучает на ней модели; мы её тоже не храним. Если вы затем отправляете ответ на проверку, текст уходит в Anthropic, как описано выше. Мы считаем только, сколько записей в день переводится в текст или оценивается, для дневного лимита. Мы делаем это, потому что вы сами об этом просите (исполнение договора, статья 6(1)(b) GDPR).</p>
 <p>Фразы, которые приложение не записало заранее (исправленные фразы после проверки, слова из словаря и ваши собственные книги), озвучивает Microsoft (Azure AI Speech, в ЕС). Туда уходит только этот текст, в том числе без аккаунта, без вашего имени и e-mail; Microsoft его не хранит. Без интернета их читает сам телефон или браузер. Мы считаем только, сколько символов в день озвучено, чтобы ограничить расходы (законный интерес, статья 6(1)(f) GDPR).</p>
 
 <h2>Сайт и подсчёт посещений</h2>
@@ -960,13 +967,14 @@ laatst gebeurde.</p>
 <p>Для поисковой рекламы мы анонимно считаем по группе объявлений вход, первую проверку, переход к оплате и подтверждённый доступ. Группа и шаги сохраняются во вкладке.</p>
 
 <h2>За пределами ЕС</h2>
-<p>Vercel, Anthropic, Google и Apple находятся в США. Stripe также может обрабатывать данные в США. Данные передаются только с гарантиями, предусмотренными GDPR, например в рамках EU–US Data Privacy Framework или на основании стандартных договорных положений Европейской комиссии.</p>
+<p>Vercel, Anthropic, Google, Groq и Apple находятся в США. Stripe также может обрабатывать данные в США. Данные передаются только с гарантиями, предусмотренными GDPR, например в рамках EU–US Data Privacy Framework или на основании стандартных договорных положений Европейской комиссии.</p>
 
 <h2>Сроки хранения</h2>
 <ul>
 <li>Аккаунт и прогресс хранятся до удаления аккаунта. После этого все эти данные сразу удаляются из Supabase.</li>
 <li>Anthropic хранит тексты, отправленные на проверку, до 30 дней (см. выше).</li>
 <li>Записи для проверки произношения: не хранятся ни у нас, ни у Microsoft. Число проверок в день: не дольше двух месяцев.</li>
+<li>Записи устной речи у Groq: не хранятся.</li>
 <li>Журналы Vercel, Supabase и Resend хранятся недолго для безопасности и устранения сбоев.</li>
 <li>Данные на устройстве хранятся, пока вы не очистите данные сайта в браузере.</li>
 <li>Код для бесплатных проверок без аккаунта хранится до двух дней.</li>
@@ -1053,7 +1061,7 @@ laatst gebeurde.</p>
 
 <h2>Розпізнавання мовлення</h2>
 <p>У розділі «Усне мовлення» телефон або браузер перетворює голос на текст. Safari використовує сервіс Apple, а Chrome — Google. Діють їхні власні політики конфіденційності. Bittertalen отримує лише текст.</p>
-<p>Якщо ви увійшли в акаунт, в усному мовленні (тренування та пробний іспит) і в Zeg het na («Повторіть») усе влаштовано інакше: застосунок записує те, що ви кажете, і цей запис іде через наш сервер до Microsoft (Azure AI Speech, у дата-центрі в ЄС). Microsoft перетворює вашу відповідь на текст і ставить бал за вимову; у Zeg het na разом із записом передається речення, яке ви читаєте. Ваше ім'я та e-mail не передаються. Microsoft не зберігає запис і не навчає на ньому моделі; ми його теж не зберігаємо. Якщо ви потім надсилаєте відповідь на перевірку, текст іде до Anthropic, як описано вище. Ми рахуємо лише, скільки записів на день перетворюється на текст або оцінюється, для денного ліміту. Ми робимо це, бо ви самі про це просите (виконання договору, стаття 6(1)(b) GDPR).</p>
+<p>Якщо ви увійшли в акаунт, в усному мовленні (тренування та пробний іспит) і в Zeg het na («Повторіть») усе влаштовано інакше: застосунок записує те, що ви кажете, і цей запис іде через наш сервер до Microsoft (Azure AI Speech, у дата-центрі в ЄС). Microsoft ставить бал за вимову. В усному мовленні вашу відповідь на текст перетворює Groq (США) за допомогою мовленнєвої моделі Whisper, бо вона залишає ваші помилки як є; якщо це не вдається, це робить Microsoft. Groq не зберігає запис; у Zeg het na разом із записом передається речення, яке ви читаєте. Ваше ім'я та e-mail не передаються. Microsoft не зберігає запис і не навчає на ньому моделі; ми його теж не зберігаємо. Якщо ви потім надсилаєте відповідь на перевірку, текст іде до Anthropic, як описано вище. Ми рахуємо лише, скільки записів на день перетворюється на текст або оцінюється, для денного ліміту. Ми робимо це, бо ви самі про це просите (виконання договору, стаття 6(1)(b) GDPR).</p>
 <p>Речення, які застосунок не записав заздалегідь (виправлені речення після перевірки, слова зі словника і ваші власні книжки), озвучує Microsoft (Azure AI Speech, в ЄС). Туди йде лише цей текст, зокрема без акаунта, без вашого імені та e-mail; Microsoft його не зберігає. Без інтернету їх читає сам телефон або браузер. Ми рахуємо лише, скільки символів на день озвучено, щоб обмежити витрати (законний інтерес, стаття 6(1)(f) GDPR).</p>
 
 <h2>Сайт і підрахунок відвідувань</h2>
@@ -1068,13 +1076,14 @@ laatst gebeurde.</p>
 <p>Bittertalen використовує один необхідний файл cookie, <code>bt_trial</code>, лише без акаунта й лише для двох пробних перевірок (див. вище), і не відстежує вашої активності на інших сайтах. Для роботи застосунок зберігає в браузері (у local storage та IndexedDB) ваш прогрес, налаштування, статус входу, дату, коли пристрій востаннє враховувався в статистиці, і код запрошення друга, якщо ви прийшли за його посиланням.</p>
 
 <h2>За межами ЄС</h2>
-<p>Vercel, Anthropic, Google і Apple розташовані в США. Stripe також може обробляти дані в США. Дані передаються лише з гарантіями, передбаченими GDPR, наприклад у межах EU–US Data Privacy Framework або на підставі стандартних договірних положень Європейської комісії.</p>
+<p>Vercel, Anthropic, Google, Groq і Apple розташовані в США. Stripe також може обробляти дані в США. Дані передаються лише з гарантіями, передбаченими GDPR, наприклад у межах EU–US Data Privacy Framework або на підставі стандартних договірних положень Європейської комісії.</p>
 
 <h2>Строки зберігання</h2>
 <ul>
 <li>Акаунт і прогрес зберігаються до видалення акаунта. Після цього всі ці дані одразу видаляються із Supabase.</li>
 <li>Тексти, надіслані на перевірку, зберігаються в Anthropic до 30 днів (див. вище). Ми їх не зберігаємо.</li>
 <li>Записи для перевірки вимови: не зберігаються ні в нас, ні в Microsoft. Кількість перевірок на день: не довше двох місяців.</li>
+<li>Записи усного мовлення у Groq: не зберігаються.</li>
 <li>Журнали Vercel, Supabase та Resend зберігаються недовго для безпеки й усунення збоїв.</li>
 <li>Дані на пристрої зберігаються, доки ви не очистите дані сайту в браузері.</li>
 <li>Код для безкоштовних перевірок без акаунта зберігається до двох днів.</li>

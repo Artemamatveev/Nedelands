@@ -109,7 +109,13 @@ vendored, MIT, `lib/supabase-LICENSE`) only when there is a session or one comin
   Spreken answer counts its seconds plus up to 30 scored ones); a failed Azure call gives both back. A Spreken answer
   (`{free:true}`, practice or proefexamen) takes its seconds from `STT_DAY` (default 2700 a day, key `stt:` + user)
   instead of a check of `PRON_DAY`; `{ask:true}` reads both without using any (a guard with cost 0), before an exam.
-  An A2 proefexamen with sixteen 30 s answers is about 960 s, about $0.35. An
+  An A2 proefexamen with sixteen 30 s answers is about 960 s, about $0.35. With `GROQ_API_KEY` set (Vercel; Groq's
+  console → Data Controls → Global ZDR is on since 28 November 2026, which privacy.html relies on: "Groq does not keep
+  the recording") the text of a Spreken answer comes from Whisper at Groq
+  (`WHISPER_MODEL`, default whisper-large-v3-turbo, $0.04 an hour, at least 10 s a request; in /admin as
+  `groq-whisper`), so Azure only scores it: about $0.20 for that exam. Groq's free tier allows about 20 transcriptions a
+  minute (429 after that); a refused or failed call falls back to Azure's text, so a busy minute costs fidelity, not
+  answers. Move to Groq's paid tier when Spreken gets busy. An
   unreachable counter refuses (503). The spend is in /admin as model `azure-speech-pron`, one input "token" per second
   (`PRICE` in admin.html). Needs `AZURE_SPEECH_KEY` (and optionally `AZURE_SPEECH_REGION`) in Vercel; the page calls
   only `/api/pron`, so the CSP needs no new host.

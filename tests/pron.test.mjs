@@ -20,8 +20,10 @@ async function load(options={}){
   const values={accounts:true,caller:async()=>options.guest?null:{id:'user-1'},addSpend:async(m,u)=>{spend.push([m,u.input_tokens]);return true},
     amsterdamDay:()=>'2026-11-27',
     useGuard:async(k,_d,cost,lim)=>{guards.push([k,cost]);const g=options.guard?.[k.split(':')[1]==='all'?'all':'user'];return g??lim-cost}};
-  const context=vm.createContext({process:{env:{AZURE_SPEECH_KEY:'test-only',...(options.env||{})}},Buffer,AbortSignal,console:{error(){}},
-    fetch:async(url,init)=>{fetches.push([url,init]);if(options.fail)return {ok:false,status:500,json:async()=>({})};
+  const context=vm.createContext({process:{env:{AZURE_SPEECH_KEY:'test-only',...(options.env||{})}},Buffer,AbortSignal,FormData,Blob,console:{error(){}},
+    fetch:async(url,init)=>{fetches.push([url,init]);
+      if(url.includes('groq.com'))return options.groq?{ok:true,json:async()=>options.groq}:{ok:false,status:503,json:async()=>({})};
+      if(options.fail)return {ok:false,status:500,json:async()=>({})};
       return {ok:true,json:async()=>options.azure||AZURE}}});
   const supa=new vm.SyntheticModule(Object.keys(values),function(){for(const [k,v]of Object.entries(values))this.setExport(k,v)},{context});
   const mod=new vm.SourceTextModule(fs.readFileSync(new URL('api/_pron.js',root),'utf8'),{context});
@@ -137,7 +139,7 @@ test('A free Spreken answer is written down whole and its first 30 seconds are s
   assert.deepEqual(plain(r.body.scores),{accuracy:80,fluency:70,pron:75});
   assert.deepEqual(t.guards,[['stt:user-1',75],['pron:all',75]],'the whole answer plus the scored part, in seconds of the learner\'s day');
   assert.equal(t.fetches.length,2);
-  const [said,judged]=t.fetches;
+  const said=t.fetches.find(f=>!f[1].headers['Pronunciation-Assessment']),judged=t.fetches.find(f=>f[1].headers['Pronunciation-Assessment']);
   assert.equal(said[1].headers['Pronunciation-Assessment'],undefined,'the text comes from plain speech to text');
   assert.equal(JSON.parse(Buffer.from(judged[1].headers['Pronunciation-Assessment'],'base64').toString()).ReferenceText,undefined,'unscripted');
   assert.equal(t.ns.wavSeconds(judged[1].body),30);assert.equal(t.ns.wavSeconds(said[1].body),45);
@@ -227,4 +229,30 @@ test('A limit reached during the exam sends the rest of it to the phone', async(
   const b=()=>a.document.getElementById('recb');
   b().click();await a.flush();b().click();await a.flush();await a.flush();
   assert.equal(a.run('cur.stt'),false);assert.equal(a.run('cur.ans[0].fail'),'limit');
+});
+
+test('With a Groq key, Whisper writes the answer and Azure only scores it', async()=>{
+  const t=await load({env:{GROQ_API_KEY:'g'},groq:{text:' Ik heb gisteren een brief  geschrijft. '}});
+  const r=await t.call({free:true,audio:wav(4).toString('base64')});
+  assert.equal(r.statusCode,200);assert.equal(r.body.text,'Ik heb gisteren een brief geschrijft.','the learner\'s mistake stays');
+  assert.deepEqual(plain(r.body.scores),{accuracy:71,fluency:88,pron:76});
+  const [g]=t.fetches.filter(f=>f[0].includes('groq.com'));
+  assert.equal(g[0],'https://api.groq.com/openai/v1/audio/transcriptions');assert.equal(g[1].headers.Authorization,'Bearer g');
+  assert.equal(g[1].body.get('model'),'whisper-large-v3-turbo');assert.equal(g[1].body.get('language'),'nl');assert.equal(g[1].body.get('prompt'),null,'no prompt: it made Whisper worse');
+  assert.equal(t.fetches.filter(f=>f[0].includes('microsoft')).length,1,'Azure only for the scores');
+  assert.deepEqual(t.spend.sort(),[['azure-speech-pron',4],['groq-whisper',10]]);
+});
+
+test('When Groq fails, Azure writes the answer down as before', async()=>{
+  const t=await load({env:{GROQ_API_KEY:'g'},azure:{RecognitionStatus:'Success',NBest:[{Display:'Ik woon in Utrecht.',PronunciationAssessment:{AccuracyScore:80,FluencyScore:70,PronScore:75},Words:[{Word:'ik',AccuracyScore:90,ErrorType:'None'}]}]}});
+  const r=await t.call({free:true,audio:wav(4).toString('base64')});
+  assert.equal(r.body.text,'Ik woon in Utrecht.');assert.equal(t.fetches.filter(f=>f[0].includes('microsoft')).length,2);
+});
+
+test('A subtitle line Whisper invents on silence is never taken as the answer', async()=>{
+  for(const groq of [{text:'Ondertiteling ingediend door de Amara.org gemeenschap'},{text:'Ik ben thuis.'}]){
+    const t=await load({env:{GROQ_API_KEY:'g'},groq,azure:{RecognitionStatus:'NoMatch'}});
+    const r=await t.call({free:true,audio:wav(3).toString('base64')});
+    assert.equal(r.body.text,'',groq.text);assert.equal(r.body.heard,false);
+  }
 });

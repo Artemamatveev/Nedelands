@@ -81,13 +81,24 @@ Microsoft keeps no recording.
 Spreken practice with Azure (28 November 2026): with `pron` on and a signed-in learner, a practice answer (Spreek in en
 laat nakijken, Opnieuw inspreken, Geef opnieuw antwoord) is recorded instead of written down by the phone (`spListen()`;
 `listen("rec")`, then `pronCheck(null, r)`). `/api/pron` with `{free:true, audio}` (at most `FREE_SECONDS`, 60 s, Azure's
-limit for short audio) sends the whole answer to plain speech to text (`Display`, the text) and, at the same time, its
+limit for short audio) sends the whole answer to Whisper large-v3-turbo at Groq for the text (`whisper()`, since
+28 November 2026, `GROQ_API_KEY`; Azure's plain speech to text, `Display`, when the key is missing or Groq fails) and, at
+the same time, its
 first 30 s (`wavHead()`, Azure's limit for an assessment) to an unscripted pronunciation assessment (no reference text,
 no miscue): Uitspraak, Klanken and Vloeiendheid out of 100 and up to six words below 80 ("Minder duidelijk"), shown in the
 review (`pronSummaryHTML()`, with the recording to play back) and again with Claude's grade; "Alleen de eerste 30
 seconden" when the answer was longer. The text then goes through the same review and grading as the phone's. A failure
 says why and lets the learner speak again; a lasting one (limit, busy, no recorder) falls back to the phone (`pronOff`).
 About 10 s for a 60 s answer. The pronunciation scores are not part of Claude's points.
+
+Why Whisper writes the text (28 November 2026): a recognizer that "corrects" a learner hides the very mistakes Claude
+should grade. Fifteen A2 sentences, twelve with typical mistakes (geschrijft, geholpt, de brood, hij hebben, Ik vind
+leuk, Gisteren ik ben…), were spoken with four accents (Azure's multilingual en, es, zh and fr voices speaking Dutch)
+and written down: Azure kept 36 of the 48 mistakes (it wrote geschreven, geholpen, het brood), Whisper large-v3-turbo
+(whisper.cpp on the Mac) 43; Whisper with a prompt asking for a verbatim learner transcript only 35 (it reordered
+words), so it gets no prompt. Whisper still adds "het" to "Ik vind leuk". Synthetic accents, not real learners: test
+again with real recordings. Through Groq with the app's own `whisper()` the same 60 gave 51 exact and 44 of 48 kept. Whisper may write a subtitle line for silence ("Ondertiteling …"): such text (`PHANTOM`), or
+any text when Azure's assessment heard no word in an answer of at most 30 s, counts as nothing heard.
 
 The proefexamen Spreken (A2 and B1) with Azure (28 November 2026): when the exam starts, `sttExam()` asks `/api/pron`
 `{ask:true}` for the learner's seconds left today (`STT_DAY`) and everyone's (`PRON_CAP`), and uses Azure for the whole

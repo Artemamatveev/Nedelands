@@ -5,8 +5,11 @@
 // or Insertion; s the word's accuracy). Scripted assessment: the reference text is known, so Azure compares the sound
 // with it.
 // Spreken practice: POST {free:true, audio} (an answer of at most FREE_SECONDS) -> {heard, text, scores:{accuracy,
-// fluency, pron}, words, part, left}: Azure writes the answer down (speech to text, the whole answer), and scores the
-// pronunciation of its first PRON_SECONDS without a reference text (unscripted; Azure's limit for an assessment);
+// fluency, pron}, words, part, left}: Whisper large-v3-turbo at Groq writes the whole answer down (GROQ_API_KEY; Azure's
+// speech to text when that key is missing or Groq fails), and Azure scores the pronunciation of its first PRON_SECONDS
+// without a reference text (unscripted; Azure's limit for an assessment). Whisper because it keeps a learner's mistakes:
+// on 60 accented A2 sentences (28 November 2026) it kept 43 of 48 (geschrijft, de brood, hij hebben), Azure 36;
+// a prompt asking for a verbatim transcript made Whisper worse (35), so it gets none;
 // part is true when only that first part was scored. A free answer takes its seconds plus the scored ones from the
 // learner's STT_DAY seconds a day (default 2700) instead of a check of PRON_DAY.
 // Before a proefexamen: POST {ask:true} -> {left, all}: the learner's seconds left today and everyone's, without using
@@ -15,7 +18,7 @@
 // Needs AZURE_SPEECH_KEY and AZURE_SPEECH_REGION (default germanywestcentral) in the Vercel project's environment variables.
 // Only signed-in learners: PRON_DAY takes a day each (default 30) and all of them together PRON_CAP seconds of audio a
 // day (default 14400, about $5.28 at $1.32 an hour; a free answer counts its seconds plus the scored part). The audio
-// goes to Microsoft for this one request and is not kept here.
+// goes to Microsoft (and a free answer to Groq) for this one request and is not kept here.
 import { accounts, caller, useGuard, addSpend, amsterdamDay } from "./_supa.js";
 
 const KEY = (process.env.AZURE_SPEECH_KEY || "").trim();
@@ -27,6 +30,9 @@ export const PRON_SECONDS = 30, FREE_SECONDS = 60;
 export const pronOn = !!(KEY && accounts);
 const RATE = 16000, AZURE_MS = 20_000, TEXT_MAX = 400;
 const ERRORS = new Set(["None", "Mispronunciation", "Omission", "Insertion"]);
+const GROQ = (process.env.GROQ_API_KEY || "").trim(), WHISPER = (process.env.WHISPER_MODEL || "whisper-large-v3-turbo").trim();
+// What Whisper writes for silence or noise (it was trained on subtitles): never taken as the learner's answer
+const PHANTOM = /ondertitel|ondertiteling|bedankt voor het kijken|bedankt voor het luisteren|abonneer|amara\.org|tv gelderland|www\./i;
 const STT = `https://${REGION}.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1?language=nl-NL&format=detailed`;
 
 // A WAV of the shape the page makes: RIFF, PCM, mono, 16 kHz, 16-bit; its length in seconds, or 0
@@ -68,6 +74,20 @@ async function azure(audio, settings) {
     if (r.ok) return await r.json().catch(() => null);
     console.error("pron azure", r.status);
   } catch (e) { console.error("pron azure", e.name); }
+  return null;
+}
+
+// Whisper at Groq: the text of a WAV, or null (no key, an error, a timeout)
+export async function whisper(audio) {
+  if (!GROQ) return null;
+  const form = new FormData();
+  form.append("file", new Blob([audio], { type: "audio/wav" }), "answer.wav");
+  form.append("model", WHISPER); form.append("language", "nl"); form.append("temperature", "0"); form.append("response_format", "json");
+  try {
+    const r = await fetch("https://api.groq.com/openai/v1/audio/transcriptions", { method: "POST", signal: AbortSignal.timeout(AZURE_MS), headers: { Authorization: `Bearer ${GROQ}` }, body: form });
+    if (r.ok) { const j = await r.json().catch(() => null); if (typeof j?.text === "string") return j.text.replace(/\s+/g, " ").trim().slice(0, 1200); }
+    else console.error("whisper", r.status);
+  } catch (e) { console.error("whisper", e.name); }
   return null;
 }
 
@@ -113,11 +133,17 @@ export async function pron(req, res) {
     spent();
     return res.status(200).json({ ...readAssessment(j), left });
   }
-  // A free answer: the text of the whole answer and the scores of its first part, at the same time
-  const [said, judged] = await Promise.all([azure(audio), azure(secs > PRON_SECONDS ? wavHead(audio, PRON_SECONDS) : audio, settings)]);
-  if (!said) return fail();
-  spent();
-  const a = readAssessment(judged), t = readText(said);
+  // A free answer: Whisper's text of the whole answer and Azure's scores of its first part, at the same time; Azure's
+  // text only when Whisper gives none
+  const [heardW, judged] = await Promise.all([whisper(audio), azure(secs > PRON_SECONDS ? wavHead(audio, PRON_SECONDS) : audio, settings)]);
+  let t = heardW;
+  if (t == null) { const said = await azure(audio); if (!said) return fail(); t = readText(said); }
+  else addSpend("groq-whisper", { input_tokens: Math.max(10, Math.ceil(secs)) }).catch(() => null); // Groq bills at least 10 s
+  // Azure's seconds: the scored part, and the whole answer when it also wrote the text
+  addSpend("azure-speech-pron", { input_tokens: Math.ceil(scored + (heardW == null ? secs : 0)) }).catch(() => null);
+  const a = readAssessment(judged);
+  // Silence or noise: Whisper may still write a subtitle line; Azure heard no word in it
+  if (t && (PHANTOM.test(t) || (judged && !a.heard && secs <= PRON_SECONDS))) t = "";
   return res.status(200).json({
     heard: !!t, text: t, left, part: secs > PRON_SECONDS + 0.5,
     ...(a.heard ? { scores: { accuracy: a.scores.accuracy, fluency: a.scores.fluency, pron: a.scores.pron }, words: a.words } : {}),
