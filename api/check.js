@@ -15,7 +15,7 @@
 // the answer then also has `left`, the checks left today. With Bittertalen Plus (api/plus.js) PLUS_LIMIT a day.
 import Anthropic from "@anthropic-ai/sdk";
 import { unknownWords, spellingPoints } from "./_spell.js";
-import { accounts, caller, checkCost, useChecks, LIMIT, PLUS, plusOn, plusFor, coversLevel, sameOrigin, FREE, visitor, useFree, useTotal, addSpend, bonusFor, useGuard, PLUS_MONTH, OPUS_MONTH, PASS_TOTAL, PASS_OPUS, YEAR_TOTAL, YEAR_OPUS, monthOf, amsterdamDay, gradingDigest, gradingReceipt } from "./_supa.js";
+import { accounts, caller, checkCost, useChecks, LIMIT, PLUS, plusOn, plusFor, coversLevel, sameOrigin, FREE, visitor, useFree, useTotal, addSpend, bonusFor, useGuard, PLUS_MONTH, OPUS_MONTH, PASS_TOTAL, PASS_OPUS, YEAR_TOTAL, YEAR_OPUS, TRIAL_TOTAL, TRIAL_OPUS, monthOf, amsterdamDay, gradingDigest, gradingReceipt } from "./_supa.js";
 
 // Created only when the key is set, so a missing key gives a clear error instead of a crash
 // (trimmed: a key pasted into the dashboard with a trailing newline breaks the request header)
@@ -344,7 +344,7 @@ async function gradeRequest(req, res, { user, input, sb, sp, wb, t0, save }) {
       if (free < 0) return res.status(401).json({ error: "login", free: 0 });
     } else {
       uid = user.id;
-      plan = plusOn ? await plusFor(uid, true).catch(() => null) : null;
+      plan = plusOn ? await plusFor(uid, true, user).catch(() => null) : null;
       plus = plusOn && coversLevel(plan, wb || sb ? "B1" : "A2");
       if (plus) { lim = PLUS; period = "day"; }
       else lim = LIMIT + (await bonusFor(uid).catch(() => 0)); // invited friends: extra free checks (api/referral.js)
@@ -357,7 +357,7 @@ async function gradeRequest(req, res, { user, input, sb, sp, wb, t0, save }) {
   // Everyone's checks of today together: when the day is full, give this one back and ask to come back tomorrow.
   // Plus checks are paid for, so they neither count nor stop at that ceiling. Guests have their own ceiling (FREE_CAP in
   // use_trial_checks), so a flood of trial checks can't use up the day of everyone with an account.
-  const total = plus || who ? 0 : await useTotal(cost).catch(() => null);
+  const total = plus && !plan?.trial || who ? 0 : await useTotal(cost).catch(() => null); // a free trial counts like free checks
   if (!Number.isSafeInteger(total)) {
     await mine();
     console.error("grading_quota_unavailable");
@@ -371,7 +371,7 @@ async function gradeRequest(req, res, { user, input, sb, sp, wb, t0, save }) {
   const exam = input.length >= 4;
   const pass = !!(plan?.pass && !plan?.group && plan?.until); // an Examenpas or a Jaarpas counts over its whole term
   const gk = pass ? "p:" + uid : "m:" + uid, gday = pass ? String(plan.until).slice(0, 10) : monthOf(new Date(checkedAt));
-  const glim = pass ? (plan.year ? YEAR_TOTAL : PASS_TOTAL) : PLUS_MONTH, olim = pass ? (plan.year ? YEAR_OPUS : PASS_OPUS) : OPUS_MONTH;
+  const glim = pass ? (plan.trial ? TRIAL_TOTAL : plan.year ? YEAR_TOTAL : PASS_TOTAL) : PLUS_MONTH, olim = pass ? (plan.trial ? TRIAL_OPUS : plan.year ? YEAR_OPUS : PASS_OPUS) : OPUS_MONTH;
   const ok = pass ? "q:" + uid : "o:" + uid;
   let month = false, opus = false, guardO = false;
   if (plus) {

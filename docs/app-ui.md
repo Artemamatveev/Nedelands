@@ -64,8 +64,21 @@ can only be taken back on the device that sent it. `OUTCOME_CAP` new rows a mont
 The KNM row opens a list under it (`knmRow()`, `aria-expanded`, the chevron turns down): "Alle thema's" (the usual mixed
 round) and the eight themes (`KNMT`), each with its own count; a theme round is `build("knm", {theme})` and "Nog een
 ronde" keeps the theme. The theme names' translations come from the `"KNM: <theme>"` entries in `UI`.
-- **Herhalen**: Mijn zwakke punten, Mijn fouten and Mijn woorden (the last two once there is something in them); with
-neither, a short empty state says what will come there (`.empty`).
+- **Voortgang** (the tab key stays `herhalen`; "Herhalen" before 28 November 2026): a report from the progress only, so
+  the same on every device (`progressHTML()`). A ring with the share answered right (`S.qd`/`S.qr`, else the answers in
+  `S.items`) beside six numbers (questions, days practised, hours from `S.tm`, proefexamens, the streak, saved words);
+  "Per onderdeel": every exam part of the level with its practice share and bar, and the last proefexamen as an
+  oefencijfer (A2, KNM) or a percentage, a tap practises it; "Hier ben je goed in" (80% or more, 5+ answers, top 3);
+  "Hier maak je de meeste fouten" (under 80%, the weakest 5, a tap practises that group; every other topic with 3+
+  answers, the most mistakes first, under "Meer onderwerpen": this replaced the separate Mijn zwakke punten screen);
+  "Soorten fouten in je teksten en antwoorden" (the learner's own mistakes by kind: `ERRCAT`, kept by `keepErrs()` as
+  `c` since 28 November 2026, a tap practises those mistakes); "Werk aan je fouten": Mijn fouten (the due ones first) and Mijn woorden. With nothing practised yet, a short empty state.
+  Under the numbers, "Zo ga je vooruit" (`growthHTML()`): the last 7 days against the 7 before ("N% beter dan vorige week",
+  from 10 answers each), a line of the share right per week (the last eight Monday-to-Sunday weeks, `weeks()`; a point
+  only for a week with 5+ answers) and bars of practice minutes per week, and per exam part with two or more
+  proefexamens a small line of the last ten with the oefendoel as an oranje line. Plain SVG (`lineSVG()`, `barSVG()`):
+  one series per chart, so the caption names it, a `<title>` tooltip on every point and bar, the newest value written
+  beside it and the numbers in `aria-label`. Shown from two active weeks or two proefexamens of a part.
 - **On a computer** (`data-desktop`), like a glass dashboard (the user's examples, November 2026): the painting of the
 day, strongly blurred, fills the screen (`--paint-bg`, set by `paint()`); the app sits in one big window of frosted glass
 with round corners (the glass on `main::before`: a backdrop filter on `<main>` would pin its fixed children inside it;
@@ -201,3 +214,11 @@ Three things taken from the big language apps, all in `oefenen.html`:
   eerste/tweede/derde or the words of one answer; "herhaal" repeats, "stop" stops; no answer twice moves on. Answers
   count in `S.items` (`hfRecord()`) and the round in the streak. Questions with a picture are left out. The question
   area is Dutch (`lang="nl"`).
+
+## Oefencijfer (28 November 2026)
+
+A proefexamen result of an inburgering part (Lezen, Luisteren, Schrijven, Spreken A2 and KNM) also shows "Oefencijfer N
+van 10 · een 6 is voldoende" (`oefenCijfer()`, `cijferHTML()`), as DUO shows a "Cijfer" in Mijn Inburgering: the
+oefendoel (`passPc()`) is a 6, everything right a 10, nothing a 1, straight lines in between, rounded, and under the
+oefendoel at most a 5, so it never says voldoende when the result is "Meer oefenen". The note says it is Bittertalen's
+own conversion: DUO doesn't publish its own. Not for the Staatsexamen (B1), which has scores.

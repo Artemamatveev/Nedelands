@@ -5,7 +5,7 @@
 // Google, Apple, Microsoft (azure) and Facebook show when they are switched on in Supabase (Authentication → Sign In / Providers);
 // the e-mail code only with LOGIN_EMAIL=1, because Supabase's own mail reaches only the project's team
 // (real users need custom SMTP); passkeys (still experimental in Supabase) only with LOGIN_PASSKEY=1.
-import { accounts, supaUrl, anonKey, LIMIT, FREE, plusOn, PLUS, PLUS_MONTH, TALK_PLUS, PLUS_PRICE, PLANS, passOn, PASSES, PASS_TOTAL, PASS_DAYS, yearOn, YEARS, YEAR_DAYS, YEAR_TOTAL, storeOn } from "./_supa.js";
+import { accounts, supaUrl, anonKey, LIMIT, FREE, plusOn, PLUS, PLUS_MONTH, TALK_PLUS, PLUS_PRICE, PLANS, passOn, PASSES, PASS_TOTAL, PASS_DAYS, yearOn, YEARS, YEAR_DAYS, YEAR_TOTAL, storeOn, TRIAL_DAYS, TRIAL_TOTAL } from "./_supa.js";
 import { eventsOn } from "./event.js";
 import { STORE_KEYS, STORE_PRODUCTS } from "./_store.js";
 import { pronOn, PRON_DAY, PRON_SECONDS, FREE_SECONDS, STT_DAY } from "./_pron.js";
@@ -25,7 +25,7 @@ export default async function handler(req, res) {
   if (process.env.LOGIN_PASSKEY === "1") login.push("passkey");
   return res.status(200).json({
     url: supaUrl, anon: anonKey, login, limit: LIMIT, period: "once", free: FREE, freePeriod: "once",
-    ...(plusOn ? { plus: { limit: PLUS, month: PLUS_MONTH, talk: TALK_PLUS, price: PLUS_PRICE, plans: Object.fromEntries(Object.entries(PLANS).map(([level, p]) => [level, { price: p.price }])) } } : {}),
+    ...(plusOn ? { plus: { limit: PLUS, month: PLUS_MONTH, talk: TALK_PLUS, ...(TRIAL_DAYS ? { trial: { days: TRIAL_DAYS, total: TRIAL_TOTAL } } : {}), price: PLUS_PRICE, plans: Object.fromEntries(Object.entries(PLANS).map(([level, p]) => [level, { price: p.price }])) } } : {}),
     // the Examenpas: one payment for PASS_DAYS of Plus at that level, only when its prices are configured
     ...(passOn ? { pass: { days: PASS_DAYS, total: PASS_TOTAL, plans: Object.fromEntries(Object.entries(PASSES).map(([level, p]) => [level, { price: p.price }])) } } : {}),
     // the Jaarpas: the same for YEAR_DAYS, only when its prices are configured

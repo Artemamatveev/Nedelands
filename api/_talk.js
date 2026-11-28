@@ -16,7 +16,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { randomBytes, timingSafeEqual } from "node:crypto";
 import { SCENES } from "./_scenes.js";
 import { azureSay } from "./_azure.js";
-import { accounts, caller, useChecks, LIMIT, PLUS, plusOn, plusFor, coversLevel, FREE, visitor, useFree, useTotal, addSpend, bonusFor, talkSign, useGuard, PLUS_MONTH, PASS_TOTAL, YEAR_TOTAL, TALK_PLUS, monthOf, amsterdamDay } from "./_supa.js";
+import { accounts, caller, useChecks, LIMIT, PLUS, plusOn, plusFor, coversLevel, FREE, visitor, useFree, useTotal, addSpend, bonusFor, talkSign, useGuard, PLUS_MONTH, PASS_TOTAL, YEAR_TOTAL, TRIAL_TOTAL, TALK_PLUS, monthOf, amsterdamDay } from "./_supa.js";
 
 const KEY = (process.env.ANTHROPIC_API_KEY || "").trim();
 // A turn must end well before Vercel's limit: one retry, and SAY_MS for the whole call
@@ -276,7 +276,7 @@ export async function talk(req, res) {
       if (free < 0) return res.status(401).json({ error: "login", free: 0 });
       s = "v:" + who;
     } else {
-      plan = plusOn ? await plusFor(user.id, true).catch(() => null) : null;
+      plan = plusOn ? await plusFor(user.id, true, user).catch(() => null) : null;
       plus = plusOn && coversLevel(plan, level);
       if (plus) { lim = PLUS; period = "day"; cost = TALK_PLUS } else lim = LIMIT + (await bonusFor(user.id).catch(() => 0));
       left = await useChecks(user.id, cost, lim, period, at).catch(() => null);
@@ -288,7 +288,7 @@ export async function talk(req, res) {
     let month = false;
     const pass = !!(plan?.pass && !plan?.group && plan?.until); // an Examenpas or a Jaarpas counts over its whole term
     const gk = user && (pass ? "p:" : "m:") + user.id, gday = pass ? String(plan.until).slice(0, 10) : monthOf(new Date(at));
-    const glim = pass ? (plan.year ? YEAR_TOTAL : PASS_TOTAL) : PLUS_MONTH;
+    const glim = pass ? (plan.trial ? TRIAL_TOTAL : plan.year ? YEAR_TOTAL : PASS_TOTAL) : PLUS_MONTH;
     if (plus) {
       const m = await useGuard(gk, gday, cost, glim).catch((e) => { console.error("guard", e.message); return null });
       if (m === -1) { await useChecks(user.id, -cost, lim, period, at).catch(() => {}); return res.status(429).json({ error: pass ? "pass" : "month", limit: glim, checkedAt: at, plus, pass }) }
@@ -299,7 +299,7 @@ export async function talk(req, res) {
       month ? useGuard(gk, gday, -cost, glim).catch(() => {}) : null,
     ]);
     // Guests have their own ceiling (FREE_CAP), so they don't use up the day of everyone with an account
-    const total = plus || who ? 0 : await useTotal(1).catch(() => null);
+    const total = plus && !plan?.trial || who ? 0 : await useTotal(1).catch(() => null); // a free trial counts like free checks
     if (!Number.isSafeInteger(total)) { await mine(); return res.status(503).json({ error: "quota_unavailable" }) }
     if (total < 0) { await mine(); return res.status(429).json({ error: "busy" }) }
     const list = req.body?.known === true && T.again ? T.again : T.open;
