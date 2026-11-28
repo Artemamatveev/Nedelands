@@ -328,7 +328,15 @@ main:has(#home:not([hidden])){padding-bottom:116px}
 .ask{color:var(--blue);font-size:var(--fs-m);font-weight:600;margin:0}
 .verb{font-size:44px;font-weight:700;letter-spacing:-.02em;line-height:1.08;margin:6px 0 2px;word-break:break-word}
 .verb.long{font-size:var(--fs-l);font-weight:600;line-height:1.35;letter-spacing:-.01em;margin:8px 0 12px}
-.ru{color:var(--soft);margin:0 0 18px} .ru.cijfer{margin:-10px 0 6px;color:var(--ink)} .ru.cijfer b{font-size:1.35em;color:var(--blue)}
+.ru{color:var(--soft);margin:0 0 18px}
+/* Voortgang: a ring with the share answered right beside six numbers, then the lists */
+.vg{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center;margin:4px 0 8px}
+.ring{width:104px;height:104px;border-radius:50%;background:conic-gradient(var(--good) calc(var(--p)*1%),color-mix(in srgb,var(--blue) 14%,transparent) 0);display:grid;place-items:center}
+.ring>span{width:80px;height:80px;border-radius:50%;background:var(--surface);display:grid;place-items:center;font-size:22px;font-weight:700;font-variant-numeric:tabular-nums}
+.vtiles{display:grid;grid-template-columns:repeat(3,1fr);gap:6px} .vtiles div{background:var(--surface);border-radius:var(--rs);padding:8px 10px;min-width:0}
+.vtiles b{display:block;font-size:18px;font-variant-numeric:tabular-nums} .vtiles small{display:block;color:var(--soft);font-size:12px;line-height:1.25}
+@media(max-width:420px){.vg{grid-template-columns:1fr;justify-items:center}.vg>div:last-child{width:100%}.vtiles{grid-template-columns:repeat(2,1fr)}}
+ .ru.cijfer{margin:-10px 0 6px;color:var(--ink)} .ru.cijfer b{font-size:1.35em;color:var(--blue)}
 .hint{display:block;background:none;border:0;color:var(--soft);text-decoration:underline;font-size:var(--fs-m);padding:11px 0;margin:-19px 0 5px;text-align:var(--ta)}
 .hint:disabled{text-decoration:none;color:var(--ink);font-size:var(--fs-m)}
 .opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -1140,7 +1148,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
       <div id="acct"></div>
       <footer class="site-footer" id="site-footer"></footer>
     </section>
-    <section class="tile" data-tab="herhalen"><h2>Herhalen</h2><div class="list" id="mine"></div></section>
+    <section class="tile" data-tab="herhalen"><h2>Voortgang</h2><div id="mine"></div></section>
   </div>
   <div id="welcome" hidden></div>
   <div id="move" hidden></div>
@@ -1207,7 +1215,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
   <button data-t="vandaag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16V20H4z"/><path d="M4 10h16M8 3v4M16 3v4"/></svg><span>Mijn dag</span></button>
   <button data-t="examen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h12v17H6z"/><path d="M9.5 4V2.8h5V4M9 12.5l2.2 2.2L15.5 10"/></svg><span>Examen</span></button>
   <button data-t="oefenen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5.5c2.6-1 5.6-.8 9 1.3v13c-3.4-2.1-6.4-2.3-9-1.3zM21 5.5c-2.6-1-5.6-.8-9 1.3v13c3.4-2.1 6.4-2.3 9-1.3z"/></svg><span>Oefenen</span></button>
-  <button data-t="herhalen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12V9.5A3.5 3.5 0 0 1 7.5 6H19M16 3l3 3-3 3M20 12v2.5a3.5 3.5 0 0 1-3.5 3.5H5M8 21l-3-3 3-3"/></svg><span>Herhalen</span></button>
+  <button data-t="herhalen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16M7 16.5v-5M12 16.5V7M17 16.5v-8"/></svg><span>Voortgang</span></button>
   <button data-t="profiel"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c1.2-3.6 4-5.5 7.5-5.5s6.3 1.9 7.5 5.5"/></svg><span>Profiel</span></button>
 </nav>
 <div class="quick-praise" id="quick-praise" lang="nl" aria-hidden="true" hidden></div>
@@ -2656,6 +2664,48 @@ ona:'<path d="M9 3.5h6A1.5 1.5 0 0 1 16.5 5v1.5h3.5A2 2 0 0 1 22 8.5V12H2V8.5a2 
   duo:'<path fill-rule="evenodd" d="M6.5 2h7.8L19.5 7.2v13.3A1.5 1.5 0 0 1 18 22H6.5A1.5 1.5 0 0 1 5 20.5v-17A1.5 1.5 0 0 1 6.5 2zM8.4 14.2l2.7 2.7 4.9-4.9-1.4-1.4-3.5 3.5-1.3-1.3z"/>'};
 IC.l1=IC.lz;IC.lb=IC.ls;IC.wb=IC.wr;IC.sb=IC.sp;IC.g1=IC.pr;IC.w1=IC.wo;IC.v1=IC.vo;
 const icHTML=k=>`<i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC[k]||""}</svg></i>`;
+// Voortgang (the fourth tab, 28 November 2026; before: Herhalen): a report of everything practised, from the progress
+// only (so the same on every device): how much, how well per exam part, what goes well, where the most mistakes are,
+// which kinds of mistakes are in the learner's own texts and answers, and buttons to work on them.
+const ERRCAT={inversie:"Woordvolgorde",meervoud:"Meervoud",grammatica:"Grammatica",spelling:"Spelling",woorden:"Woorden",samenhang:"Samenhang",inhoud:"Inhoud"};
+let VP={weak:[]};
+// the answers per group of questions (as Mijn zwakke punten): {sec, label, name, r, w, items}
+function answerGroups(){
+  const g={};
+  ITEMS.forEach(q=>{if(q.type==="reveal")return;const k=q.sec+"|"+q.label,o=g[k]||(g[k]={sec:q.sec,label:q.label,r:0,w:0,items:[]}),it=S.items[q.k];o.items.push(q);if(it){o.r+=it.r||0;o.w+=it.w||0}});
+  const all=Object.values(g),multi={};all.forEach(o=>multi[o.sec]=(multi[o.sec]||0)+1);
+  all.forEach(o=>{const t=SEC.find(x=>x.id===o.sec)?.t||o.sec;o.name=multi[o.sec]<2?t:o.sec==="knm"||o.sec==="gs"?o.label:t+": "+o.label});
+  return all;
+}
+function progressHTML(){
+  const qd=Object.values(S.qd||{}).reduce((a,b)=>a+b,0),qr=Object.values(S.qr||{}).reduce((a,b)=>a+b,0);
+  const G=answerGroups(),tr=G.reduce((a,o)=>a+o.r,0),tw=G.reduce((a,o)=>a+o.w,0);
+  const answered=Math.max(qd,tr+tw),good=qd?qr/qd:tr+tw?tr/(tr+tw):0,pc=Math.round(good*100);
+  const days=new Set([...Object.keys(S.qd||{}),...Object.entries(S.tm||{}).filter(([,v])=>v>=60).map(([k])=>k)]).size;
+  const hours=Object.values(S.tm||{}).reduce((a,b)=>a+b,0)/3600,exams=Object.values(S.res||{}).reduce((a,r)=>a+r.length,0);
+  const d=today(),alive=S.last>=d-1||S.last===d-2&&freezeOk(d)?S.streak||0:0;
+  const E=S.errs||[],due=dueErrs().length;
+  if(!answered&&!exams&&!E.length&&!(S.words||[]).length)
+    return`<div class="empty"><span><b>Hier komt je voortgang</b>Maak een paar oefeningen: dan zie je wat je al kunt en waar je de meeste fouten maakt.</span></div>`;
+  const tile=(v,t)=>`<div><b>${v}</b><small>${t}</small></div>`;
+  // per exam part of this level: practice answers right, and the last proefexamen (an oefencijfer where there is one)
+  const ps=parts().map(k=>{let r=0,w=0;G.filter(o=>o.sec===k).forEach(o=>{r+=o.r;w+=o.w});const R=(S.res||{})[k]||[],last=R.length?R[R.length-1].pc:null,c=oefenCijfer(k,last);
+    return itHTML(`data-vp="${k}"`,PART[k],r+w?`${Math.round(r/(r+w)*100)}% goed, ${r+w} antwoorden`:"Nog niet geoefend",{ic:k,n:last==null?null:c!=null?`${c}/10`:last+"%",bar:r+w?Math.round(r/(r+w)*100):null,pass:r+w&&r/(r+w)>=passOf(k)})}).join("");
+  const seen=G.filter(o=>o.r+o.w>=3),rate=o=>o.r/(o.r+o.w);
+  const strong=seen.filter(o=>o.r+o.w>=5&&rate(o)>=.8).sort((a,b)=>rate(b)-rate(a)||(b.r+b.w)-(a.r+a.w)).slice(0,3);
+  const weakG=seen.filter(o=>rate(o)<.8).sort((a,b)=>rate(a)-rate(b)).slice(0,5);VP={weak:weakG};
+  const cats={};E.forEach(e=>{const c=e.c||e.kind;if(Object.hasOwn(ERRCAT,c))cats[c]=(cats[c]||0)+1});
+  const catL=Object.entries(cats).sort((a,b)=>b[1]-a[1]);
+  return`<div class="vg"><div class="ring" style="--p:${pc}" role="img" aria-label="${pc}%"><span>${pc}%</span></div>
+      <div><p class="ask">Goed beantwoord</p><div class="vtiles">${tile(answered,"Vragen geoefend")}${tile(days,"Dagen geoefend")}${tile(String(Math.round(hours*10)/10).replace(".",","),"Uur geoefend")}${tile(exams,"Proefexamens")}${tile(alive,"Dagen op rij")}${tile((S.words||[]).length,"Bewaarde woorden")}</div></div></div>
+    <h3 class="lh">Per onderdeel</h3><div class="list">${ps}</div>
+    ${strong.length?`<h3 class="lh">Hier ben je goed in</h3><div class="list">${strong.map(o=>itHTML(`data-vp="${o.sec}"`,o.name,`${Math.round(rate(o)*100)}% goed, ${o.r+o.w} antwoorden`,{bar:Math.round(rate(o)*100),pass:true})).join("")}</div>`:""}
+    ${weakG.length?`<h3 class="lh">Hier maak je de meeste fouten</h3><div class="list">${weakG.map((o,i)=>itHTML(`data-vw="${i}"`,o.name,`${Math.round(rate(o)*100)}% goed, ${o.r+o.w} antwoorden`,{bar:Math.round(rate(o)*100)})).join("")}</div>`:""}
+    ${catL.length?`<h3 class="lh">Soorten fouten in je teksten en antwoorden</h3><div class="list">${catL.map(([c,n])=>itHTML(`data-vc="${c}"`,ERRCAT[c],"Oefen deze fouten",{n})).join("")}</div>`:""}
+    <h3 class="lh">Werk aan je fouten</h3><div class="list">${E.length?itHTML(`data-x="errs"`,"Oefen met je eigen fouten","Kies de juiste versie van zinnen uit je eerdere teksten en antwoorden.",{n:due||E.length,ic:"errs"}):""}
+      ${itHTML(`data-x="stats"`,"Kies een lastig onderwerp","Waar je de meeste fouten maakt.",{ic:"stats"})}
+      ${(S.words||[]).length?itHTML(`data-x="words"`,"Mijn woorden","Bekijk of oefen je bewaarde woorden.",{n:S.words.length,ic:"words"}):""}</div>`;
+}
 function itHTML(attr,t,d,o={}){
   return`<button class="it" ${attr}>${o.ic?icHTML(o.ic):""}<span><span class="th"><b>${t}</b>${o.n!=null?`<small>${o.n}</small>`:""}</span>${d?`<span class="d">${d}</span>`:""}${o.bar!=null?`<span class="bar${o.pass?" pass":""}"><i style="width:${o.bar}%"></i></span>`:""}</span></button>`;
 }
@@ -2711,10 +2761,7 @@ function home(){
     +itHTML(`data-x="hist"`,"Geschiedenis van Nederland",lh?`Je was bij: ${lh.t}`:"Van de hunebedden tot nu.",{n:gsDone?`${gsDone} van ${GS.length}`:null,ic:"hist"})
     +itHTML(`data-x="media"`,"Luisteren en kijken","Nieuws, video's en podcasts.",{ic:"media"})
     +itHTML(`data-x="ai"`,"Gesprekken","Praat met Bittie over een onderwerp dat jij kiest.",{n:(n=>n?`${n} van ${aiIds().length}`:null)(aiIds().filter(id=>(S.ai||{})[id]).length),ic:"talk"});
-  $("mine").innerHTML=itHTML(`data-x="stats"`,"Kies een lastig onderwerp","Waar je de meeste fouten maakt.",{ic:"stats"})
-    +((S.errs||[]).length?itHTML(`data-x="errs"`,"Oefen met je eigen fouten","Kies de juiste versie van zinnen uit je eerdere teksten en antwoorden.",{n:S.errs.length,ic:"errs"}):"")
-    +((S.words||[]).length?itHTML(`data-x="words"`,"Mijn woorden","Bekijk of oefen je bewaarde woorden.",{n:S.words.length,ic:"words"}):"")
-    +(!(S.errs||[]).length&&!(S.words||[]).length?`<div class="empty"><span><b>Hier komt je herhaling</b>Fouten uit je teksten en woorden die je bij het lezen bewaart, komen hier vanzelf bij.</span></div>`:"");
+  $("mine").innerHTML=progressHTML();
   document.querySelectorAll("#exam button,#parts button,#gram button,#books button,#mine button").forEach(b=>b.onclick=()=>{const d=b.dataset;
     if(d.knm){knmOpen=!knmOpen;b.setAttribute("aria-expanded",knmOpen);$("knmsub").hidden=!knmOpen}
     else if(d.kt)build("knm",d.kt==="all"?null:{...SEC.find(x=>x.id==="knm"),t:"KNM: "+KNMT[d.kt],theme:KNMT[d.kt]});
@@ -2728,9 +2775,12 @@ function home(){
     else if(d.x==="ona")onaScreen();
     else if(d.x==="uit")uitScreen();
     else if(d.x==="hf")hfScreen();
+    else if(d.vp)build(d.vp);
+    else if(d.vw!=null){const o=VP.weak[+d.vw];if(o)build("custom",{id:"custom",t:o.name,n:10,pool:()=>o.items.slice().sort((a,b)=>weak(b)-weak(a))})}
+    else if(d.vc){const L=errItems().filter((q,i)=>(S.errs[i].c||S.errs[i].kind)===d.vc);if(L.length)build("custom",{id:"custom",t:ERRCAT[d.vc],n:Math.min(10,L.length),pool:()=>shuffle(L)})}
     else if(d.x==="bg")bgList();
     else if(d.x==="words")wordsScreen();
-    else build("custom",{id:"custom",t:"Mijn fouten",n:10,pool:()=>shuffle(errItems())})});
+    else if(d.x==="errs"){const L=dueErrs();build("custom",{id:"custom",t:"Mijn fouten",n:10,pool:()=>L.length?shuffle(L):shuffle(errItems())})}});
   drawProfile();
   setTab(tab);
 }
@@ -2888,7 +2938,7 @@ function avSVG(id){
   const portrait=avatarPortraits[key]||`/art/avatars/${key}.jpg`;
   return `<svg viewBox="0 0 100 100" aria-hidden="true">${AVS[key].s}<image href="${portrait}" width="100" height="100" preserveAspectRatio="none"/></svg>`;
 }
-const TABN={vandaag:"Mijn dag",examen:"Examen",oefenen:"Oefenen",herhalen:"Herhalen",profiel:"Profiel"};
+const TABN={vandaag:"Mijn dag",examen:"Examen",oefenen:"Oefenen",herhalen:"Voortgang",profiel:"Profiel"};
 const backHTML=()=>`<span aria-hidden="true">←</span>${TABN[tab]}`;
 const TABS=Object.keys(TABN);
 function setTab(t,top=true,moved=false){
@@ -4078,7 +4128,7 @@ const docBtn=`<button class="ghost wide" id="docx" style="margin-bottom:10px">Do
 // Writing is graded by Claude on the server (api/check.js)
 // Mistakes from the learner's own texts and spoken answers, practised later in "Mijn fouten"
 function keepErrs(errs){
-  errs.forEach(e=>{if(e&&e.wrong&&e.right&&e.wrong!==e.right&&String(e.wrong).length<90&&String(e.right).length<90&&!S.errs.some(x=>x.r===e.right))S.errs.unshift({w:String(e.wrong),r:String(e.right),y:String(e.why||""),d:today(),...(["inversie","meervoud"].includes(e.kind)?{kind:e.kind}:{})})});
+  errs.forEach(e=>{if(e&&e.wrong&&e.right&&e.wrong!==e.right&&String(e.wrong).length<90&&String(e.right).length<90&&!S.errs.some(x=>x.r===e.right))S.errs.unshift({w:String(e.wrong),r:String(e.right),y:String(e.why||""),d:today(),...(["inversie","meervoud"].includes(e.kind)?{kind:e.kind}:{}),...(Object.hasOwn(ERRCAT,e.kind)?{c:e.kind}:{})})});
   S.errs=S.errs.slice(0,40);
 }
 // A writing text sent again unchanged gets its earlier result, without a new check: sending the same text until the
@@ -6386,7 +6436,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru","uk"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="6c9fb9a50a";
+const UIV="ef7774509b";
 let uiP=null;
 function uiLoaded(){try{trMemo.clear()}catch(e){} // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});

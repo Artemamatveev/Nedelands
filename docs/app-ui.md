@@ -64,8 +64,15 @@ can only be taken back on the device that sent it. `OUTCOME_CAP` new rows a mont
 The KNM row opens a list under it (`knmRow()`, `aria-expanded`, the chevron turns down): "Alle thema's" (the usual mixed
 round) and the eight themes (`KNMT`), each with its own count; a theme round is `build("knm", {theme})` and "Nog een
 ronde" keeps the theme. The theme names' translations come from the `"KNM: <theme>"` entries in `UI`.
-- **Herhalen**: Mijn zwakke punten, Mijn fouten and Mijn woorden (the last two once there is something in them); with
-neither, a short empty state says what will come there (`.empty`).
+- **Voortgang** (the tab key stays `herhalen`; "Herhalen" before 28 November 2026): a report from the progress only, so
+  the same on every device (`progressHTML()`). A ring with the share answered right (`S.qd`/`S.qr`, else the answers in
+  `S.items`) beside six numbers (questions, days practised, hours from `S.tm`, proefexamens, the streak, saved words);
+  "Per onderdeel": every exam part of the level with its practice share and bar, and the last proefexamen as an
+  oefencijfer (A2, KNM) or a percentage, a tap practises it; "Hier ben je goed in" (80% or more, 5+ answers, top 3);
+  "Hier maak je de meeste fouten" (under 80%, the weakest 5, a tap practises that group, as Mijn zwakke punten);
+  "Soorten fouten in je teksten en antwoorden" (the learner's own mistakes by kind: `ERRCAT`, kept by `keepErrs()` as
+  `c` since 28 November 2026, a tap practises those mistakes); "Werk aan je fouten": Mijn fouten (the due ones first),
+  Kies een lastig onderwerp and Mijn woorden. With nothing practised yet, a short empty state.
 - **On a computer** (`data-desktop`), like a glass dashboard (the user's examples, November 2026): the painting of the
 day, strongly blurred, fills the screen (`--paint-bg`, set by `paint()`); the app sits in one big window of frosted glass
 with round corners (the glass on `main::before`: a backdrop filter on `<main>` would pin its fixed children inside it;
