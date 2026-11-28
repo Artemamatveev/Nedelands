@@ -49,3 +49,15 @@ test('Growth: a line of the share right per week, practice minutes per week, the
   assert.ok(charts[2].querySelector('.cgoal'),'the oefendoel line on the proefexamen chart');
   assert.match(charts[2].getAttribute('aria-label'),/60%, 72%, 84%/);
 });
+
+test('One place for the weak topics: the weakest five, the rest under Meer onderwerpen, no separate screen', async()=>{
+  const a=await app();
+  a.run(`const d=today();["knm","lz","ls","verb","wo","pr","dh"].forEach((sec,j)=>ITEMS.filter(q=>q.sec===sec).slice(0,3).forEach(q=>S.items[q.k]={b:0,d,r:j,w:6-j}));
+    S.qd={[d]:60};S.qr={[d]:20};setTab("herhalen");home()`);
+  const m=a.document.querySelector('#mine');
+  assert.equal(a.document.querySelector('#stats'),null);assert.equal(m.querySelector('[data-x="stats"]'),null);
+  const top=m.querySelectorAll('h3+.list [data-vw]').length,rest=m.querySelectorAll('.vmore [data-vw]').length;
+  assert.ok(top<=5&&top>0);assert.ok(rest>0,'the other topics under Meer onderwerpen');
+  m.querySelector('.vmore [data-vw]').click();
+  assert.equal(a.document.querySelector('#play').hidden,false);
+});

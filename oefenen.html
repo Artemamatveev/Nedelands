@@ -141,7 +141,7 @@ body::after{content:"";position:fixed;inset:0;z-index:-1;background:var(--glass)
    keeps scrolled content from showing behind the clock */
 :root[data-native] #sbar{position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:90;pointer-events:none;
   background:var(--glass);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4)}
-.tile,#play,#stats,#lib,#read,#media,#story,#hist,#talk,#move{background:var(--card);border-radius:var(--r);box-shadow:var(--lift);margin-top:16px;padding:4px 16px 20px}
+.tile,#play,#lib,#read,#media,#story,#hist,#talk,#move{background:var(--card);border-radius:var(--r);box-shadow:var(--lift);margin-top:16px;padding:4px 16px 20px}
 button{font:inherit;color:inherit;cursor:pointer}
 a{color:var(--blue)}
 button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid var(--oranje);outline-offset:2px}
@@ -531,8 +531,8 @@ details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:70
 .pron{display:flex;flex-wrap:wrap;gap:6px 18px;margin:2px 0 10px;font-size:var(--fs-s);color:var(--soft)}.pron b{display:block;font-size:var(--fs-l);color:var(--ink);font-variant-numeric:tabular-nums}
 .miss{font:inherit;color:var(--bad);background:none;border:0;border-bottom:2px solid var(--bad);padding:0;margin:0;cursor:pointer}
 .bar.pass{position:relative} .bar.pass::after{content:"";position:absolute;inset-inline-start:var(--pass,70%);top:0;bottom:0;width:2px;background:var(--ink)}
-#stats .back,#lib .back{margin-top:14px}
-#stats h2,#lib h2,#move h2{margin-top:18px}
+#lib .back{margin-top:14px}
+#lib h2,#move h2{margin-top:18px}
 /* boekenkast */
 .file{display:flex;align-items:center;justify-content:center;text-align:center;cursor:pointer}
 .file:focus-within{outline:3px solid var(--oranje);outline-offset:2px}
@@ -762,12 +762,12 @@ html:has(#talk:not([hidden]) .bittie-call){overflow:hidden}
   #label{display:flex;align-items:baseline;gap:40px}
   #label{flex-wrap:wrap} #label .lab{flex:0 0 340px} #label .nl{flex:1;margin:0} #label .it{flex:0 0 100%}
   #home .tile{padding:24px 28px 20px}
-  .tile,#play,#stats,#lib,#read,#media,#story,#hist,#talk,#move{padding-left:28px;padding-right:28px}
+  .tile,#play,#lib,#read,#media,#story,#hist,#talk,#move{padding-left:28px;padding-right:28px}
   #card>.act,#card>.exnav,#card>.fb.sheet{margin-left:-28px;margin-right:-28px;padding-left:28px;padding-right:28px}
   .steps{grid-template-columns:none}
   #exam .list{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));column-gap:40px}
   .duo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:16px;align-items:start}
-  #play,#stats,#lib,#read,#media,#story,#hist,#talk,#move{max-width:720px;margin:16px auto 0}
+  #play,#lib,#read,#media,#story,#hist,#talk,#move{max-width:720px;margin:16px auto 0}
   .book{font-size:20px}
 }
 /* motion: short and quiet, like iOS */
@@ -778,7 +778,7 @@ html:has(#talk:not([hidden]) .bittie-call){overflow:hidden}
 @keyframes sheet{from{transform:translateY(18px);opacity:.3}to{transform:none;opacity:1}}
 @keyframes stamp{0%{transform:translateY(-100%)}78%{transform:translateY(2px)}100%{transform:none}}
 #card.in{animation:rise 360ms var(--motion-ease)}
-#home.tab-in,main>:is(#stats,#lib,#read,#media,#hist,#talk,#story,#move):not([hidden]),
+#home.tab-in,main>:is(#lib,#read,#media,#hist,#talk,#story,#move):not([hidden]),
 #welcome:not([hidden]) .wcard{animation:page-in var(--motion-page) var(--motion-ease)}
 .opt.ok{animation:pop 360ms var(--motion-settle)} .opt.no{animation:shake 380ms var(--motion-settle)}
 #card>.fb.sheet{animation:sheet 380ms var(--motion-ease)}
@@ -1161,11 +1161,6 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
     <button class="back" id="vback"><span aria-hidden="true">←</span>Mijn dag</button>
     <div id="vbody"></div>
   </div>
-  <div id="stats" hidden>
-    <button class="back" id="sback"><span aria-hidden="true">←</span>Mijn dag</button>
-    <h2>Mijn zwakke punten</h2>
-    <p class="sub">De onderdelen met de meeste fouten staan bovenaan.</p>
-    <div id="statlist"></div>
   </div>
   <div id="lib" hidden>
     <button class="back" id="lback"><span aria-hidden="true">←</span>Mijn dag</button>
@@ -2748,7 +2743,9 @@ function progressHTML(){
     return itHTML(`data-vp="${k}"`,PART[k],r+w?`${Math.round(r/(r+w)*100)}% goed, ${r+w} antwoorden`:"Nog niet geoefend",{ic:k,n:last==null?null:c!=null?`${c}/10`:last+"%",bar:r+w?Math.round(r/(r+w)*100):null,pass:r+w&&r/(r+w)>=passOf(k)})}).join("");
   const seen=G.filter(o=>o.r+o.w>=3),rate=o=>o.r/(o.r+o.w);
   const strong=seen.filter(o=>o.r+o.w>=5&&rate(o)>=.8).sort((a,b)=>rate(b)-rate(a)||(b.r+b.w)-(a.r+a.w)).slice(0,3);
-  const weakG=seen.filter(o=>rate(o)<.8).sort((a,b)=>rate(a)-rate(b)).slice(0,5);VP={weak:weakG};
+  // every group with 3+ answers, the most mistakes first (what Mijn zwakke punten was): the weakest five shown, the rest
+  // under "Meer onderwerpen"
+  const ranked=seen.slice().sort((a,b)=>rate(a)-rate(b)),weakG=ranked.filter(o=>rate(o)<.8).slice(0,5),more=ranked.slice(weakG.length).filter(o=>!strong.includes(o));VP={weak:ranked};
   const cats={};E.forEach(e=>{const c=e.c||e.kind;if(Object.hasOwn(ERRCAT,c))cats[c]=(cats[c]||0)+1});
   const catL=Object.entries(cats).sort((a,b)=>b[1]-a[1]);
   return`<div class="vg"><div class="ring" style="--p:${pc}" role="img" aria-label="${pc}%"><span>${pc}%</span></div>
@@ -2756,11 +2753,11 @@ function progressHTML(){
     ${growthHTML()}
     <h3 class="lh">Per onderdeel</h3><div class="list">${ps}</div>
     ${strong.length?`<h3 class="lh">Hier ben je goed in</h3><div class="list">${strong.map(o=>itHTML(`data-vp="${o.sec}"`,o.name,`${Math.round(rate(o)*100)}% goed, ${o.r+o.w} antwoorden`,{bar:Math.round(rate(o)*100),pass:true})).join("")}</div>`:""}
-    ${weakG.length?`<h3 class="lh">Hier maak je de meeste fouten</h3><div class="list">${weakG.map((o,i)=>itHTML(`data-vw="${i}"`,o.name,`${Math.round(rate(o)*100)}% goed, ${o.r+o.w} antwoorden`,{bar:Math.round(rate(o)*100)})).join("")}</div>`:""}
+    ${ranked.length?`<h3 class="lh">Hier maak je de meeste fouten</h3>${weakG.length?`<div class="list">${weakG.map((o,i)=>itHTML(`data-vw="${i}"`,o.name,`${Math.round(rate(o)*100)}% goed, ${o.r+o.w} antwoorden`,{bar:Math.round(rate(o)*100)})).join("")}</div>`:""}
+      ${more.length?`<details class="vmore"><summary>Meer onderwerpen</summary><div class="list">${more.map(o=>itHTML(`data-vw="${ranked.indexOf(o)}"`,o.name,`${Math.round(rate(o)*100)}% goed, ${o.r+o.w} antwoorden`,{bar:Math.round(rate(o)*100),pass:rate(o)>=.8})).join("")}</div></details>`:""}`:""}
     ${catL.length?`<h3 class="lh">Soorten fouten in je teksten en antwoorden</h3><div class="list">${catL.map(([c,n])=>itHTML(`data-vc="${c}"`,ERRCAT[c],"Oefen deze fouten",{n})).join("")}</div>`:""}
-    <h3 class="lh">Werk aan je fouten</h3><div class="list">${E.length?itHTML(`data-x="errs"`,"Oefen met je eigen fouten","Kies de juiste versie van zinnen uit je eerdere teksten en antwoorden.",{n:due||E.length,ic:"errs"}):""}
-      ${itHTML(`data-x="stats"`,"Kies een lastig onderwerp","Waar je de meeste fouten maakt.",{ic:"stats"})}
-      ${(S.words||[]).length?itHTML(`data-x="words"`,"Mijn woorden","Bekijk of oefen je bewaarde woorden.",{n:S.words.length,ic:"words"}):""}</div>`;
+    ${E.length||(S.words||[]).length?`<h3 class="lh">Werk aan je fouten</h3><div class="list">`:""}${E.length?itHTML(`data-x="errs"`,"Oefen met je eigen fouten","Kies de juiste versie van zinnen uit je eerdere teksten en antwoorden.",{n:due||E.length,ic:"errs"}):""}
+      ${(S.words||[]).length?itHTML(`data-x="words"`,"Mijn woorden","Bekijk of oefen je bewaarde woorden.",{n:S.words.length,ic:"words"}):""}${E.length||(S.words||[]).length?"</div>":""}`;
 }
 function itHTML(attr,t,d,o={}){
   return`<button class="it" ${attr}>${o.ic?icHTML(o.ic):""}<span><span class="th"><b>${t}</b>${o.n!=null?`<small>${o.n}</small>`:""}</span>${d?`<span class="d">${d}</span>`:""}${o.bar!=null?`<span class="bar${o.pass?" pass":""}"><i style="width:${o.bar}%"></i></span>`:""}</span></button>`;
@@ -2770,7 +2767,7 @@ function home(){
   if(legacyOrigin())return legacyReady?moveScreen():moveShow();
   quickPraise.hide();
   paint();
-  $("play").hidden=true;$("welcome").hidden=true;$("move").hidden=true;$("stats").hidden=true;$("lib").hidden=true;$("read").hidden=true;$("media").hidden=true;$("story").hidden=true;$("hist").hidden=true;$("talk").hidden=true;stopMedia();closePop();$("home").hidden=false;head();clock(0);hush();planId=null;drawPlan();
+  $("play").hidden=true;$("welcome").hidden=true;$("move").hidden=true;$("lib").hidden=true;$("read").hidden=true;$("media").hidden=true;$("story").hidden=true;$("hist").hidden=true;$("talk").hidden=true;stopMedia();closePop();$("home").hidden=false;head();clock(0);hush();planId=null;drawPlan();
   const sec=id=>SEC.find(x=>x.id===id);
   const row=id=>{const s=sec(id),p=ITEMS.filter(x=>x.sec===id),n=p.filter(x=>S.items[x.k]).length;
     return itHTML(`data-s="${id}"`,s.t,s.s,{n:n?n+" van "+p.length:null,bar:n?n/p.length*100:null,ic:id})};
@@ -2823,7 +2820,6 @@ function home(){
     else if(d.kt)build("knm",d.kt==="all"?null:{...SEC.find(x=>x.id==="knm"),t:"KNM: "+KNMT[d.kt],theme:KNMT[d.kt]});
     else if(d.s)build(d.s);
     else if(d.e)examGate(d.e,true);
-    else if(d.x==="stats")stats();
     else if(d.x==="books")library();
     else if(d.x==="media")media();
     else if(d.x==="hist")hist();
@@ -3008,7 +3004,7 @@ function setTab(t,top=true,moved=false){
   panel.classList.remove("tab-in");
   requestAnimationFrame(()=>panel.classList.add("tab-in"));
   document.querySelectorAll("#tabs button").forEach(b=>b.toggleAttribute("aria-current",b.dataset.t===t));
-  ["sback","vback","lback"].forEach(id=>$(id).innerHTML=backHTML());
+  ["vback","lback"].forEach(id=>$(id).innerHTML=backHTML());
   $("tabs").classList.remove("min"); if(top)window.scrollTo(0,0);
 }
 let tabSkip=0;
@@ -3531,19 +3527,6 @@ function drawPlan(){
     });
 }
 const weak=q=>{const it=S.items[q.k];return it?(it.w||0)-(it.r||0):0};
-function stats(){
-  $("home").hidden=true;$("stats").hidden=false;window.scrollTo(0,0);
-  const g={};
-  ITEMS.forEach(q=>{if(q.type==="reveal")return;const k=q.sec+"|"+q.label,o=g[k]||(g[k]={sec:q.sec,label:q.label,r:0,w:0,items:[]}),it=S.items[q.k];o.items.push(q);if(it){o.r+=it.r||0;o.w+=it.w||0}});
-  const all=Object.values(g),multi={}; all.forEach(o=>multi[o.sec]=(multi[o.sec]||0)+1);
-  const gs=all.filter(o=>o.r+o.w>=3).sort((a,b)=>b.w/(b.r+b.w)-a.w/(a.r+a.w));
-  gs.forEach(o=>{const t=SEC.find(x=>x.id===o.sec).t;o.name=multi[o.sec]<2?t:o.sec==="knm"||o.sec==="gs"?o.label:t+": "+o.label});
-  $("statlist").innerHTML=gs.length?`<div class="list">${gs.map((o,i)=>{const pc=Math.round(o.r/(o.r+o.w)*100);
-    return itHTML(`data-i="${i}"`,o.name,`${pc}% goed, ${o.r+o.w} antwoorden`,{bar:pc})}).join("")}</div>`
-    :`<p class="note">Nog te weinig antwoorden. Maak eerst een paar rondes; daarna zie je hier je zwakke punten.</p>`;
-  document.querySelectorAll("#statlist button").forEach(b=>b.onclick=()=>{const o=gs[b.dataset.i];
-    build("custom",{id:"custom",t:o.name,n:10,pool:()=>o.items.slice().sort((a,b)=>weak(b)-weak(a))})});
-}
 const CHOICE_DRAFT_PARTS=["lz","ls","knm"];
 const choiceDraftKey=part=>"ww-choice:"+progressOwner+":exam:"+part;
 function choiceDraft(part){
@@ -3671,7 +3654,7 @@ function build(id,custom){
   const remaining=savedEnd?Math.max(0,(savedEnd-Date.now())/60000):cur.min;
   cur.expired=!!((draft||choices) && cur.exam && remaining===0);
   clock(cur.exam?remaining:0,savedEnd);
-  ["home","stats","lib","read","media","story","hist","talk"].forEach(x=>$(x).hidden=true);closePop();stopMedia();$("play").hidden=false;window.scrollTo(0,0);
+  ["home","lib","read","media","story","hist","talk"].forEach(x=>$(x).hidden=true);closePop();stopMedia();$("play").hidden=false;window.scrollTo(0,0);
   const b=$("back"),leave=cur.back?cur.back.f:home,exit=$("exam-exit");
   const close=()=>{exit.hidden=true;b.setAttribute("aria-expanded","false");b.innerHTML=XSVG};
   close(); b.setAttribute("aria-label","Stoppen, terug naar "+(cur.back?cur.back.t:TABN[tab]));
@@ -4588,7 +4571,7 @@ async function examWrite(){
     const html=card.innerHTML, state={cur:exam,queue:tasks,pos,total,right,answered,planId}, backAction=$("back").onclick, backLabel=$("back").getAttribute("aria-label");
     const restoreResult=()=>{
       ({cur,queue,pos,total,right,answered,planId}=state);
-      ["home","stats","lib","read","media","story","hist","talk","welcome","move"].forEach(id=>$(id).hidden=true);
+      ["home","lib","read","media","story","hist","talk","welcome","move"].forEach(id=>$(id).hidden=true);
       closePop();stopMedia();$("play").hidden=false;clock(0);head();$("bar").style.width="100%";$("mode").hidden=true;
       card.innerHTML=html;wire();window.scrollTo(0,0);
       $("back").onclick=backAction;$("back").setAttribute("aria-label",backLabel);
@@ -6363,7 +6346,7 @@ document.addEventListener("keydown",e=>{
     if(x0<=40&&dx>0||Math.abs(dx)<70||Math.abs(dy)>50||Date.now()-t0>700)return;
     if(dx<0&&R.p<R.pages.length-1)turn(1);else if(dx>0&&R.p>0)turn(-1)});
 })();
-$("back").onclick=home; $("sback").onclick=home; $("vback").onclick=home; $("lback").onclick=home;
+$("back").onclick=home; $("vback").onclick=home; $("lback").onclick=home;
 $("zoom").onclick=()=>{$("zoom").hidden=true};
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("zoom").hidden)$("zoom").onclick()});
 // Generating new texts needs Claude; hide the button where it can't work
@@ -6377,7 +6360,7 @@ document.addEventListener("keydown",e=>{
 // In the reader a sideways swipe turns pages, so there only a swipe from the left edge (or on the first page) goes back.
 // In a proefexamen, a swipe opens or dismisses the exit confirmation (like tapping ✕).
 (()=>{
-  const SCR=["play","stats","lib","read","media","story","hist","talk"];
+  const SCR=["play","lib","read","media","story","hist","talk"];
   let x0=0,y0=0,el=null,on=false,sg=1,settle=null;
   const reset=t=>{t.style.transition=t.style.transform=t.style.opacity=""};
   document.addEventListener("touchstart",e=>{
@@ -6435,7 +6418,7 @@ async function unpackProgress(txt){
   const u=unb64(m[2]),d=JSON.parse(m[1]==="z"?await new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream("gzip"))).text():new TextDecoder().decode(u));
   if(!d||!d.s||!d.s.items)throw"kapot"; return d;
 }
-function moveShow(){paint();["home","stats","lib","read","media","story","hist","talk","play","welcome"].forEach(x=>$(x).hidden=true);closePop();stopMedia();hush();clock(0);$("move").hidden=false;window.scrollTo(0,0)}
+function moveShow(){paint();["home","lib","read","media","story","hist","talk","play","welcome"].forEach(x=>$(x).hidden=true);closePop();stopMedia();hush();clock(0);$("move").hidden=false;window.scrollTo(0,0)}
 async function moveScreen(){
   moveShow(); $("move").innerHTML=`<h2>Bittertalen verhuist</h2><p class="note">Even wachten…</p>`;
   await within(ready$,4000);
@@ -6492,7 +6475,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru","uk"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="58b14bf5b7";
+const UIV="4f2fc39a44";
 let uiP=null;
 function uiLoaded(){try{trMemo.clear()}catch(e){} // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});
