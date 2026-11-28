@@ -3192,7 +3192,11 @@ function planHTML(){
   const focus=dayExamFocus(),last=focus?.focus.last;
   // new here at A2: where to begin, right under the heading, so it is seen above the tab bar on a phone. Gone after the
   // test, or once someone has clearly been practising
-  const first=lvl()==="A2"&&!S.start&&!Object.keys(S.items).length&&!focus?`<p class="sub">Nieuw hier? Begin met twaalf korte vragen. Dan weet Bittertalen waar je begint, ook als je nog bijna geen Nederlands kent.</p><button class="btn wide" data-p="t:start">Begin met de korte test</button>`
+  // new here: the first thing is Bittertalen's own grading of a short note (wr|0), while a check is free to have (the
+  // browser's trial or the account's), with the starttest under it; otherwise the starttest first, as before
+  const canCheck=!!acc.cfg&&(acc.user?checksLeft("wr")!==0:!!acc.cfg.free&&acc.free!==0);
+  const first=lvl()==="A2"&&!S.start&&!Object.keys(S.items).length&&!focus&&canCheck?`<p class="sub">Nieuw hier? Schrijf een kort briefje van een paar zinnen. Bittertalen kijkt het meteen na: je punten en je fouten, met uitleg.</p>${acc.user?"":`<p class="note">Gratis, ook zonder account.</p>`}<button class="btn wide" data-p="first:wr">Schrijf je eerste tekst</button><div class="list">${itHTML(`data-p="t:start"`,"Waar begin ik?","Twaalf vragen: zo weet je waar je begint.",{ic:"bg"})}</div>`
+    :lvl()==="A2"&&!S.start&&!Object.keys(S.items).length&&!focus?`<p class="sub">Nieuw hier? Begin met twaalf korte vragen. Dan weet Bittertalen waar je begint, ook als je nog bijna geen Nederlands kent.</p><button class="btn wide" data-p="t:start">Begin met de korte test</button>`
     :lvl()==="A2"&&!S.start&&Object.keys(S.items).length<30?`<div class="list">${itHTML(`data-p="t:start"`,"Waar begin ik?","Twaalf vragen: zo weet je waar je begint.",{ic:"bg"})}</div>`:"";
   const review=focus&&(focus.target||last?.day===d)?`<section class="list exam-focus" aria-label="Gerichte oefening">
     <h3>Verder met je oefening</h3>
@@ -3351,6 +3355,7 @@ function drawPlan(){
   };
   document.querySelectorAll("#plan [data-p]").forEach(b=>b.onclick=()=>{const id=b.dataset.p,[k,v]=id.split(":");planId=id;
     if(k==="t")return startTest();
+    if(k==="first"){track("first");return build("wr",{...SEC.find(x=>x.id==="wr"),n:1,keep:1,pool:()=>[ITEMS.find(x=>x.k==="wr|0")],draftSlot:"landing"})}
     if(k==="mini")build(v,{...SEC.find(x=>x.id===v),n:1,keep:1,pool:()=>wbTasks(1,0)});
     else if(k==="b")bgLes(BG.findIndex(l=>l.id===id.split(":")[2]));
     else if(k==="s")build(v);else if(k==="q")build(v,{...SEC.find(x=>x.id===v),...SHORT[v]});else startExam(v);
@@ -4834,7 +4839,7 @@ function startTest(){
   bgOpen(TABN[tab],home);
   intro();
 }
-// Mijn examen: the result of the real exam, per part, as the learner tells it. Their own record is S.uit {part: {ok, at}};
+// Mijn examen: the result of the real exam, per part, as the learner tells it. Their own record is S.uit {part: {ok, at, sc?}};
 // a copy goes to /api/outcome (table exam_outcomes) to see whether the proefexamens and "Klaar voor het examen" predict the
 // real result: the part, passed or not, the last proefexamen score, the status then, and the month the server adds. No
 // name, e-mail or account. The row's random id stays on this device (ww-uit), never in S, so it can't be tied to an account;
@@ -4844,9 +4849,9 @@ const uuid=()=>crypto.randomUUID?crypto.randomUUID():"10000000-1000-4000-8000-10
 async function uitSend(){
   const Q=uitQ();
   for(const k of Object.keys(Q)){const e=Q[k]; if(e.sent)continue;
-    try{const r=await fetch("/api/outcome",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:e.id,part:k,ok:e.ok,pc:e.pc,rd:e.rd})});
+    try{const r=await fetch("/api/outcome",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:e.id,part:k,ok:e.ok,pc:e.pc,rd:e.rd,sc:e.sc??null})});
       if(!r.ok)continue;
-      const q=uitQ(),n=q[k]; if(!n||n.id!==e.id||n.ok!==e.ok)continue; // changed while sending: it goes next time
+      const q=uitQ(),n=q[k]; if(!n||n.id!==e.id||n.ok!==e.ok||(n.sc??null)!==(e.sc??null))continue; // changed while sending: it goes next time
       if(n.ok==null)delete q[k]; else n.sent=1;
       lsSet("ww-uit",JSON.stringify(q));
     }catch(err){}}
@@ -4860,8 +4865,8 @@ function setUit(k,ok){
   else{
     // changing it within a day is a correction; later it is a new attempt, so a new row
     const R=(S.res||{})[k]||[],r=ready(k),same=e&&e.ok!=null&&old&&Date.now()-old.at<864e5;
-    Q[k]={id:same?e.id:uuid(),ok,pc:R.length?R[R.length-1].pc:null,rd:R.length?r.cls==="good"?2:r.cls==="bad"?0:1:null};
-    U[k]={ok,at:Date.now()};
+    Q[k]={id:same?e.id:uuid(),ok,pc:R.length?R[R.length-1].pc:null,rd:R.length?r.cls==="good"?2:r.cls==="bad"?0:1:null,sc:same?e.sc??null:null};
+    U[k]={ok,at:Date.now(),...(same&&old.sc!=null?{sc:old.sc}:{})};
     if(ok)buzz("good");
   }
   lsSet("ww-uit",JSON.stringify(Q)); save(); uitSend();
@@ -4893,15 +4898,35 @@ function wonScreen(k){
       if(acc.ref)url=location.origin+"/?ref="+acc.ref.code}}catch{}
     track("won");navigator.share({title:"Bittertalen",text,url}).catch(()=>{})};
 }
+// The grade or score from DUO's letter, if the learner wants to add it: 1 to 10 (one decimal) for an A2 part and KNM,
+// a whole number up to 1000 for a Staatsexamen NT2 part, where 500 or more is a pass. "" clears it.
+const NT2PART=new Set(["l1","lb","wb","sb"]);
+const scParse=(k,v)=>{const t=String(v).trim().replace(/[,٫]/,".");if(!t)return null;const n=Number(t);
+  if(!Number.isFinite(n))return undefined;
+  if(NT2PART.has(k))return Number.isInteger(n)&&n>=0&&n<=1000?n:undefined;
+  return n>=1&&n<=10&&Math.abs(n*10-Math.round(n*10))<1e-9?Math.round(n*10)/10:undefined};
+const scText=(k,n)=>n==null?"":NT2PART.has(k)?String(n):String(n).replace(".",",");
+function setScore(k,v){
+  const U=S.uit||{},Q=uitQ(),n=scParse(k,v);
+  if(n===undefined||!U[k]||!Q[k])return false;
+  if(n==null)delete U[k].sc;else U[k].sc=n;
+  Q[k].sc=n;Q[k].sent=0;lsSet("ww-uit",JSON.stringify(Q));save();uitSend();return true;
+}
 function uitScreen(y=0){
   closePop();hush();TK=null;$("card").innerHTML="";
   $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;
   tBack(TABN[tab],home);
   const U=S.uit||{},ks=lvl()==="B1"?["l1","lb","wb","sb","knm"]:["lz","ls","wr","sp","knm"];
   $("tbody").innerHTML=`<h2>Mijn examen</h2><p class="sub">Echt examen gedaan? Tik per onderdeel op je uitslag.</p>`
-    +ks.map(k=>`<h3 class="lh">${PART[k]}</h3><div class="seg uit" role="group" aria-label="${PART[k]}">${[1,0].map(o=>`<button data-k="${k}" data-ok="${o}" aria-pressed="${!!U[k]&&U[k].ok===!!o}">${o?"Geslaagd":"Niet geslaagd"}</button>`).join("")}</div>`).join("")
+    +ks.map(k=>`<h3 class="lh">${PART[k]}</h3><div class="seg uit" role="group" aria-label="${PART[k]}">${[1,0].map(o=>`<button data-k="${k}" data-ok="${o}" aria-pressed="${!!U[k]&&U[k].ok===!!o}">${o?"Geslaagd":"Niet geslaagd"}</button>`).join("")}</div>`
+      +(U[k]?`<section class="list"><label class="prow"><span>${NT2PART.has(k)?"Je score":"Je cijfer"}</span><input type="text" inputmode="decimal" dir="ltr" maxlength="5" autocomplete="off" data-sc="${k}" id="sc-${k}" value="${esc(scText(k,U[k].sc))}" placeholder="${NT2PART.has(k)?"520":"7,5"}" aria-describedby="scn-${k}"></label></section>
+        <p class="note" id="scn-${k}">${NT2PART.has(k)?"Staat er een score in je uitslag? Vul hem in. 500 of meer is geslaagd. Dat hoeft niet.":"Staat er een cijfer in je uitslag? Vul het in (1 tot 10). Dat hoeft niet."}</p>`:"")).join("")
     +`<p class="note">Je uitslag telt mee in onze cijfers, zonder je naam of e-mailadres. Zo zien we of de proefexamens kloppen.</p><p class="note">Tik nog een keer op je uitslag om hem weg te halen.</p><p class="note"><a href="/privacy">Privacyverklaring</a></p>`;
   document.querySelectorAll("#tbody .uit button").forEach(b=>b.onclick=()=>setUit(b.dataset.k,b.dataset.ok==="1"));
+  document.querySelectorAll("#tbody [data-sc]").forEach(i=>i.onchange=()=>{const k=i.dataset.sc,ok=setScore(k,i.value),n=$("scn-"+k);
+    i.setAttribute("aria-invalid",ok?"false":"true");
+    if(!ok&&n)n.textContent=NT2PART.has(k)?"Deze score klopt niet. Vul een getal van 0 tot 1000 in.":"Dit cijfer klopt niet. Vul een getal van 1 tot 10 in.";
+    else if(ok)uitScreen(scrollY)});
   window.scrollTo(0,y);
 }
 // Bittertalen Plus: what it gives, and the way to Stripe's own pages (Checkout to start, the portal to cancel or change)
@@ -6205,7 +6230,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru","uk"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="8f2d65f460";
+const UIV="75dcce9f47";
 let uiP=null;
 function uiLoaded(){try{trMemo.clear()}catch(e){} // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});

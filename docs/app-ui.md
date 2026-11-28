@@ -47,10 +47,13 @@ eindgesprek or a 64-hour course with the Blik op Werk keurmerk; the PVT with the
 inburgeren.nl ↗, and the eindgesprek to practise as four conversations (`GP` items with `ona:1`, the learner is a kok,
 examiner "Mevrouw Bakker"), still scripts with keyword checks (`talk()`, `gpFits()`, `S.gp`), not AI conversations. Check these rules when DUO changes them. Practising a part is on Oefenen.
 Last on both level tabs, "Mijn examen" (`uitScreen()`, in `#talk`): per part the learner taps Geslaagd or Niet geslaagd for
-the real exam (tap again to take it back). Their own record is `S.uit` `{part: {ok, at}}`;
+the real exam (tap again to take it back), and after that, if they want, the grade from DUO's letter: 1 to 10 for an A2
+part and KNM, a score up to 1000 for a Staatsexamen NT2 part (500 or more is a pass; `NT2PART`, `scParse()`, `setScore()`,
+since 28 November 2026). Their own record is `S.uit` `{part: {ok, at, sc?}}`;
 a copy goes to `/api/outcome` (`api/outcome.js`, table `exam_outcomes` and `put_outcome()` in `supabase/schema.sql`, run it
 in the SQL editor) to see whether the proefexamens and "Stabiel oefenresultaat" predict the result: part, ok, `pc` the last
-proefexamen score, `rd` the status then (0 nog niet, 1 bijna, 2 klaar), the month. No name, e-mail, account or IP. The row's
+proefexamen score, `rd` the status then (0 nog niet, 1 bijna, 2 klaar), `sc` the grade or score or null (column and
+`put_outcome_sc()` from migration `20261128140000_outcome_score.sql`; until it has run, `put_outcome()` keeps the rest), the month. No name, e-mail, account or IP. The row's
 random id stays on the device (`ww-uit`, also what is still unsent; it goes at the next start) and never in `S`, so a row
 can't be tied to an account: a correction within a day changes the row, later it is a new attempt with a new row, and a row
 can only be taken back on the device that sent it. `OUTCOME_CAP` new rows a month (default 2000); rows go after three years
@@ -170,3 +173,11 @@ the notification permission, not the daily reminder, and is planned again when a
 
 After the first start test the store app shows Bittie's question "Mag Bittie je meldingen sturen?" (yes: the reminder at 19:00, the time in Profiel). Only after "Ja, dat mag" does iOS/Android show its own permission prompt, so a "no" never
 spends that one-time prompt. Asked once per device (`ww-notif-asked`); Profiel → Herinnering changes it later.
+
+## First check for a new learner (28 November 2026)
+
+Mijn dag for someone new at A2 (no starttest, no answers yet) opens with Bittertalen's grading, the "wow" moment, while a
+check is free to have (`canCheck` in `planHTML()`: the browser's trial `acc.cfg.free` without an account, else
+`checksLeft("wr")`): one line, "Schrijf je eerste tekst" (the screen's one filled button, `data-p="first:wr"`, the count
+`first`) opens the short note to the neighbour (`wr|0`, the homepage's example task), and the starttest stays under it as
+a row. Without a free check the starttest comes first, as before.
