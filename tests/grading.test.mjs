@@ -15,7 +15,7 @@ async function handler(options={}){
     beta={messages:{create:async(body)=>{
       modelCalls++;models.push(body.model);prompts.push(body.messages[0].content);
       if(options.providerFailure)throw Error('connection interrupted');
-      return {stop_reason:options.stopReason||'end_turn',model:'test-model',usage:{input_tokens:100,output_tokens:30},content:[{type:'text',text:JSON.stringify({tasks:Array.from({length:options.taskOutputs??options.tasksCount??1},()=>({passed:options.claimPassed??true,verdict:'Goed',corrected:'Ik kom later.',errors:options.errors||[],scores:options.scores||{inhoud:3,woorden:2,grammatica:2,spelling:2,samenhang:1},...('spelfouten' in options?{spelfouten:options.spelfouten}:{})}))})}]};
+      return {stop_reason:options.stopReason||'end_turn',model:'test-model',usage:{input_tokens:100,output_tokens:30},content:[{type:'text',text:JSON.stringify({tasks:Array.from({length:options.taskOutputs??options.tasksCount??1},()=>({passed:options.claimPassed??true,verdict:'Goed',corrected:'Ik kom later.',errors:options.errors||[],scores:(options.scoresSeq?options.scoresSeq[Math.min(modelCalls,options.scoresSeq.length)-1]:options.scores)||{inhoud:3,woorden:2,grammatica:2,spelling:2,samenhang:1},...(options.meer?{meer:options.meer}:{}),...('spelfouten' in options?{spelfouten:options.spelfouten}:{})}))})}]};
     }}};
   }
   const values={
@@ -29,6 +29,7 @@ async function handler(options={}){
     PLUS:60,plusOn:!!options.pay,
     PLUS_MONTH:200,OPUS_MONTH:8,PASS_TOTAL:250,PASS_OPUS:15,YEAR_TOTAL:600,YEAR_OPUS:30,TRIAL_TOTAL:30,TRIAL_OPUS:2,monthOf:()=>'2026-11-01',amsterdamDay:()=>'2026-11-25',
     gradingDigest:JSON.stringify,gradingReceipt:options.receipt||(()=>{throw Error("unexpected receipt")}),
+    soundOpen:(seal,uid)=>seal==='good'&&uid==='test-user'?{a:85,f:70}:seal==='weak'&&uid==='test-user'?{a:50,f:90}:null,
     useGuard:async(k,_d,cost,lim)=>{guards.push([k,cost]);if(options.guardFails)throw Error('down');const g=options.guard?.[k[0]];return g??lim-cost},
 
     plusFor:async()=>{if(options.plusFails)throw Error('down');return options.plan??null},
@@ -40,7 +41,7 @@ async function handler(options={}){
   const module=new vm.SourceTextModule(fs.readFileSync(new URL('api/check.js',root),'utf8'),{context});
   const spellMod=new vm.SyntheticModule(Object.keys(spell),function(){for(const [key,value]of Object.entries(spell))this.setExport(key,value)},{context});
   await module.link(name=>name==='@anthropic-ai/sdk'?sdk:name==='./_spell.js'?spellMod:supa);await module.evaluate();
-  const req={method:'POST',headers:{host:'example.test',origin:'https://example.test'},body:{...(options.requestId?{requestId:options.requestId}:{}),...(options.part?{part:options.part}:{}),tasks:Array.from({length:options.tasksCount||1},()=>({...(options.part||options.kind?{kind:options.kind||'z'}:{}),task:'Stuur een bericht',text:options.text??'Ik kom later. Personal test content.'}))}};
+  const req={method:'POST',headers:{host:'example.test',origin:'https://example.test'},body:{...(options.requestId?{requestId:options.requestId}:{}),...(options.part?{part:options.part}:{}),tasks:Array.from({length:options.tasksCount||1},()=>({...(options.part||options.kind?{kind:options.kind||'z'}:{}),task:'Stuur een bericht',text:options.text??'Ik kom later. Personal test content.',...(options.sound?{sound:options.sound}:{})}))}};
   const response=()=>({statusCode:200,setHeader(){},status(n){this.statusCode=n;return this},json(body){this.body=body;return this}});
   const res=response();
   await module.namespace.default(req,res);
@@ -269,4 +270,66 @@ test('Schrijven A2 spelling points follow DUO\'s count, never above the model; t
   assert.equal(lower.res.body.tasks[0].scores.spelling,1,'the model may still take a point (a misspelled name, unreadable words)');
   const clean=await handler({text:'Beste Anna,\nIk kom morgen met de fiets naar je huisje.\nGroeten,\nFatima'});
   assert.doesNotMatch(clean.prompts[0],/woordenlijst/,'names, greetings and diminutives are no hints');
+});
+
+test('Writing near the line is graded again; a split decision gets a third grading and the median per criterion',async()=>{
+  const far=await handler({scores:{inhoud:3,woorden:2,grammatica:2,spelling:2,samenhang:1}});
+  assert.equal(far.modelCalls,1,'far from the line: one grading');assert.equal(far.res.body.tasks[0].checks,undefined);
+  const agree=await handler({scores:{inhoud:2,woorden:2,grammatica:1,spelling:1,samenhang:1}});
+  assert.equal(agree.modelCalls,2);assert.equal(agree.res.body.tasks[0].checks,2);assert.equal(agree.res.body.tasks[0].passed,true);
+  const split=await handler({scoresSeq:[
+    {inhoud:2,woorden:2,grammatica:1,spelling:1,samenhang:1}, // 7: voldoende
+    {inhoud:2,woorden:1,grammatica:1,spelling:1,samenhang:1}, // 6: not
+    {inhoud:2,woorden:1,grammatica:2,spelling:1,samenhang:0}]}); // 6: not
+  assert.equal(split.modelCalls,3);
+  assert.deepEqual({...split.res.body.tasks[0].scores},{inhoud:2,woorden:1,grammatica:1,spelling:1,samenhang:1});
+  assert.equal(split.res.body.tasks[0].passed,false);assert.equal(split.res.body.tasks[0].checks,3);
+  assert.deepEqual(split.usage,[1],'the extra gradings take no extra check');assert.equal(split.spends.length,3);
+  const off=await handler({env:{RECHECK:'0'},scores:{inhoud:2,woorden:2,grammatica:1,spelling:1,samenhang:1}});
+  assert.equal(off.modelCalls,1);
+  const sentence=await handler({part:'wb',kind:'z',scores:{inhoud:1,grammatica:0}});
+  assert.equal(sentence.modelCalls,1,'B1 sentence tasks are not graded again');
+  const spoken=await handler({part:'sp',scores:{inhoud:2,woorden:2,grammatica:1,samenhang:1},text:'Ik ga met de trein, want dat is snel.'});
+  assert.equal(spoken.modelCalls,2,'a spoken answer at 6 of 8 is graded again');
+  const spokenFar=await handler({part:'sp',scores:{inhoud:3,woorden:2,grammatica:2,samenhang:1},text:'Ik ga met de trein, want dat is snel.'});
+  assert.equal(spokenFar.modelCalls,1);
+  // with sound the line is 8 of 12: 3+2+2+1 plus 2+1 = 11 is far from it; 2+1+1+1 plus 2+1 = 8 is on it
+  const soundFar=await handler({part:'sp',sound:'good',scores:{inhoud:3,woorden:2,grammatica:2,samenhang:1},text:'Ik ga met de trein, want dat is snel.'});
+  assert.equal(soundFar.modelCalls,1);
+  const soundSplit=await handler({part:'sp',sound:'good',text:'Ik ga met de trein, want dat is snel.',scoresSeq:[
+    {inhoud:2,woorden:1,grammatica:1,samenhang:1},{inhoud:2,woorden:1,grammatica:0,samenhang:1},{inhoud:2,woorden:1,grammatica:0,samenhang:1}]});
+  assert.equal(soundSplit.modelCalls,3);
+  assert.deepEqual({...soundSplit.res.body.tasks[0].scores},{inhoud:2,woorden:1,grammatica:0,samenhang:1,uitspraak:2,vloeiendheid:1});
+  assert.equal(soundSplit.res.body.tasks[0].passed,false);
+  // a two-word answer is capped, so a point more from the model would change nothing: no extra grading
+  const short=await handler({part:'sp',text:'Met de trein.',scores:{inhoud:3,woorden:2,grammatica:2,samenhang:1}});
+  assert.equal(short.modelCalls,1);
+});
+test('Spreken A2 with a sealed sound counts uitspraak and vloeiendheid: 12 points, voldoende at 8',async()=>{
+  const lang={inhoud:2,woorden:1,grammatica:1,samenhang:1};
+  const good=await handler({part:'sp',sound:'good',scores:lang,text:'Ik ga met de trein, want dat is snel.'});
+  assert.deepEqual({...good.res.body.tasks[0].scores},{...lang,uitspraak:2,vloeiendheid:1});
+  assert.equal(good.res.body.tasks[0].passed,true); // 8 of 12
+  const weak=await handler({part:'sp',sound:'weak',scores:{inhoud:2,woorden:1,grammatica:1,samenhang:0},text:'Ik ga met de trein, want dat is snel.'});
+  assert.deepEqual({...weak.res.body.tasks[0].scores},{inhoud:2,woorden:1,grammatica:1,samenhang:0,uitspraak:0,vloeiendheid:2});
+  assert.equal(weak.res.body.tasks[0].passed,false); // 6 of 12
+  const forged=await handler({part:'sp',sound:'made-up',scores:lang,text:'Ik ga met de trein, want dat is snel.'});
+  assert.equal('uitspraak' in forged.res.body.tasks[0].scores,false,'a seal that does not open counts nothing');
+  const guest=await handler({part:'sp',guest:true,sound:'good',scores:lang});
+  assert.equal('uitspraak' in guest.res.body.tasks[0].scores,false);
+  const zero=await handler({part:'sp',sound:'good',scores:{inhoud:0,woorden:2,grammatica:2,samenhang:1}});
+  assert.deepEqual({...zero.res.body.tasks[0].scores},{inhoud:0,woorden:0,grammatica:0,samenhang:0,uitspraak:0,vloeiendheid:0});
+  const short=await handler({part:'sp',sound:'weak',text:'Met de trein.',scores:{inhoud:3,woorden:2,grammatica:2,samenhang:1}});
+  assert.equal(short.res.body.tasks[0].scores.vloeiendheid,1,'a few words show little fluency');
+  const b1=await handler({part:'sb',kind:'m',sound:'good'});
+  assert.equal('uitspraak' in b1.res.body.tasks[0].scores,false,'B1 keeps its own criteria');
+});
+test('Zo haal je meer punten: at most three tips, only for criteria that lost points',async()=>{
+  const meer=[{kind:'inhoud',tip:'Schrijf ook hoe laat je komt.',voorbeeld:'Ik kom om tien uur.'},{kind:'spelling',tip:'Let op je spelling.',voorbeeld:'misschien'},
+    {kind:'samenhang',tip:'Verbind je zinnen.',voorbeeld:'Ik kom later, want de trein is laat.'},{kind:'woorden',tip:'  '},{kind:'punten',tip:'x',voorbeeld:''}];
+  const r=await handler({scores:{inhoud:2,woorden:2,grammatica:2,spelling:2,samenhang:0},meer});
+  assert.deepEqual([...r.res.body.tasks[0].meer].map(m=>m.kind),['inhoud','samenhang']);
+  assert.equal(r.res.body.tasks[0].meer[0].voorbeeld,'Ik kom om tien uur.');
+  const full=await handler({meer});assert.deepEqual([...full.res.body.tasks[0].meer],[]);
+  const none=await handler({scores:{inhoud:2,woorden:2,grammatica:2,spelling:2,samenhang:0}});assert.deepEqual([...none.res.body.tasks[0].meer],[]);
 });

@@ -18,7 +18,7 @@ const AZURE={RecognitionStatus:'Success',NBest:[{PronunciationAssessment:{Accura
 async function load(options={}){
   const guards=[],spend=[],fetches=[];
   const values={accounts:true,caller:async()=>options.guest?null:{id:'user-1'},addSpend:async(m,u)=>{spend.push([m,u.input_tokens]);return true},
-    amsterdamDay:()=>'2026-11-27',
+    amsterdamDay:()=>'2026-11-27',soundSeal:(u,a,f)=>`seal:${u}:${a}:${f}`,
     useGuard:async(k,_d,cost,lim)=>{guards.push([k,cost]);const g=options.guard?.[k.split(':')[1]==='all'?'all':'user'];return g??lim-cost}};
   const context=vm.createContext({process:{env:{AZURE_SPEECH_KEY:'test-only',...(options.env||{})}},Buffer,AbortSignal,FormData,Blob,console:{error(){}},
     fetch:async(url,init)=>{fetches.push([url,init]);

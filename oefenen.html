@@ -210,6 +210,7 @@ h2{display:flex;align-items:center;gap:10px;font-size:var(--fs-xl);font-weight:6
 .today>.ghost{margin-top:14px}
 .intro{margin:6px 0 12px;font-weight:600}
 .pts{margin:0 0 14px;padding-left:22px} .pts li{margin:0 0 4px} .gapw{color:var(--blue)}
+.mailx{margin:8px 2px;font-size:var(--fs-b)} /* an e-mail's given greeting and closing, around the learner's text */
 .qs{margin:0 0 14px;padding-left:22px;color:var(--soft)} .qs li{margin:0 0 4px} .qs li.on{color:var(--ink);font-weight:600}
 #hear{margin:10px 0 4px}
 .steps{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:0;border-top:1px solid var(--line)}
@@ -511,6 +512,8 @@ mark.err sup{font-size:11px;font-weight:700;color:var(--bad);margin-left:1px}
 .dpts small{display:block;color:var(--soft);margin-top:4px}
 .dpts b{display:block;font-weight:600;font-size:var(--fs-b)} .dpts li>span>span{color:var(--soft);font-size:var(--fs-m)}
 .ptt{margin:10px 0 0;font-size:var(--fs-m);color:var(--soft)} .ptt b{color:var(--ink)}
+/* Zo haal je meer punten: per criterion that lost points, what to do (in the menu language) and a sentence to use */
+.errs.meer b{display:block;font-weight:600} .errs.meer span{color:var(--ink);font-size:var(--fs-b)} .errs.meer .sample{margin:6px 0 2px}
 .errs.kv li{display:flex;justify-content:space-between;gap:12px} .errs.kv span{display:inline;color:var(--ink);font-size:inherit;font-weight:600}
 .errs.kv span.good{color:var(--good)} .errs.kv span.bad{color:var(--bad)}
 details{margin:0 0 14px} summary{cursor:pointer;color:var(--blue);font-weight:700;padding:6px 0}
@@ -1225,7 +1228,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
 <script src="/study/language-v1.js?v=e94426af48"></script>
 <script src="/study/progress-v1.js?v=261b0e20d0"></script>
 <script src="/study/writing-v1.js?v=84ca5efa75"></script>
-<script src="/data/knm.js?v=1dc8dbea1e"></script>
+<script src="/data/knm.js?v=ca582b4bf8"></script>
 <script src="/data/a2.js?v=1040e20696"></script>
 <script src="/data/b1.js?v=1c0276cbe5"></script>
 <script src="/data/extra.js?v=e80c7f18b2"></script>
@@ -1993,7 +1996,7 @@ VO1.forEach(([w,d],i)=>{const o=x=>shuffle(VO1.filter(y=>y[0]!==w)).slice(0,3).m
 // KNM from index KNMS on: situations with a person in them, as on the exam since July 2025 (harder than the short questions)
 // The order of new questions (ord) counts the short questions and the situations apart, so practice mixes them from
 // the start instead of keeping the situations until all 235 short questions were met.
-const KNMS=235,kc={};KNM.forEach((p,i)=>{const g=p[0]+(i>=KNMS?"|s":"");kc[g]=(kc[g]||0)+1;ch("knm",i,kc[g]/2|0,"KNM: "+p[0],p[1],"",p[2],[p[3],p[4]],p[5]);const it=ITEMS[ITEMS.length-1];if(i>=KNMS)it.sit=1;if(p[6])it.pics=[p[6]]});
+const KNMS=235,kc={};KNM.forEach((p,i)=>{const g=p[0]+(i>=KNMS?"|s":"");kc[g]=(kc[g]||0)+1;ch("knm",i,kc[g]/2|0,"KNM: "+p[0],p[1],"",p[2],[p[3],p[4]],p[5]);const it=ITEMS[ITEMS.length-1];if(i>=KNMS)it.sit=1;if(p[6]){it.pics=[p[6]];if(typeof KNM_LATE!=="undefined"&&KNM_LATE.has(p[6]))it.late=1}});
 const KNMT=[...new Set(KNM.map(p=>p[0]))]; // the eight themes, in the order of KNM
 VO.forEach((p,i)=>ITEMS.push({sec:"vo",k:"vo|"+p[0],ord:i/6|0,type:"choice",label:"Wat betekent dit woord?",big:p[0],sub:"",right:p[1],
   opts:()=>shuffle([p[1],...shuffle(VO.filter(x=>x!==p)).slice(0,3).map(x=>x[1])])}));
@@ -2223,12 +2226,13 @@ const mmss=s=>Math.floor(s/60)+":"+String(s%60).padStart(2,"0");
 // The question as it is read aloud and sent for grading: without the picture emoji
 // What Claude gets for a Spreken task: the question, and what the photos show (it can't see them)
 const spTask=q=>spoken(q.big)+(q.text?` (Tekst bij de opdracht: ${q.text.replace(/\n/g," · ")})`:"")+(q.pics?` (Op de foto${q.pics.length>1?"'s":""}: ${q.pics.map((f,i)=>(q.pics.length>1?i+1+". ":"")+(FOTO[f]||f)).join("; ")})`:"");
-// Points as in DUO's Spreken criteria, as far as a transcript shows them (max 8 of DUO's 12: pronunciation and fluency need sound);
+// Points as in DUO's Spreken criteria: 8 of DUO's 12 from a transcript, all 12 when Azure scored the recording too
+// (uitspraak and vloeiendheid, api/check.js withSound(); voldoende then 8 of 12);
 // Schrijven has DUO's criteria with spelling (max 10; voldoende: inhoud 2 or more and 7 points, decided by api/check.js)
-const SCMAX={inhoud:3,woorden:2,grammatica:2,spelling:2,samenhang:1}, SPMAX=8, WRMAX=10, spPts=t=>t&&t.scores?Object.values(t.scores).reduce((a,b)=>a+(+b||0),0):null;
+const SCMAX={inhoud:3,woorden:2,grammatica:2,spelling:2,uitspraak:2,vloeiendheid:2,samenhang:1}, SPMAX=8, SPSMAX=12, WRMAX=10, spPts=t=>t&&t.scores?Object.values(t.scores).reduce((a,b)=>a+(+b||0),0):null;
 const mxPts=M=>Object.values(M).reduce((a,b)=>a+b,0);
 // DUO's points as bars: one per criterion (full green, some oranje, none red), then the total and what is voldoende
-const scoreHTML=(sc,M,errors=[])=>{if(!sc)return""; const wr="spelling" in sc,X=M||SCMAX,n=M?mxPts(M):wr?WRMAX:SPMAX;
+const scoreHTML=(sc,M,errors=[],res=null,extra=[])=>{if(!sc)return""; const wr="spelling" in sc,snd="uitspraak" in sc,X=M||SCMAX,n=M?mxPts(M):wr?WRMAX:snd?SPSMAX:SPMAX;
   // a checklist (the user's choice, November 2026): each criterion as a plain question with Ja, Bijna or Nee and its
   // points, so it is clear what is good and what is not (coloured bars and boxes of numbers were unclear or looked
   // generated); the questions follow DUO's criteria
@@ -2237,10 +2241,26 @@ const scoreHTML=(sc,M,errors=[])=>{if(!sc)return""; const wr="spelling" in sc,X=
   const spellExplain=written&&sc.spelling===X.spelling&&notes
     ?"De spelling is begrijpelijk. Kleine spelfouten kunnen bij deze score wel voorkomen.": "";
   const Q={inhoud:written?"Heb je geschreven wat de opdracht vraagt?":"Heb je gezegd wat de opdracht vraagt?",
-    woorden:"Kies je de goede woorden?",grammatica:"Zijn je zinnen goed gebouwd?",spelling:"Is je spelling goed?",samenhang:"Is het één duidelijk geheel?"};
+    woorden:"Kies je de goede woorden?",grammatica:"Zijn je zinnen goed gebouwd?",spelling:"Is je spelling goed?",
+    uitspraak:"Is je uitspraak duidelijk?",vloeiendheid:"Spreek je vloeiend, zonder lange pauzes?",samenhang:"Is het één duidelijk geheel?"};
   return`<ul class="dpts">${Object.keys(X).filter(k=>k in sc).map(k=>{const v=Math.max(0,Math.min(X[k],+sc[k]||0)),m=X[k],c=v>=m?"g":v>0?"m":"n";
       return`<li class="${c}"><i aria-hidden="true">${c==="g"?"✓":c==="m"?"!":"✕"}</i><span><b>${Q[k]||k}</b><span>${k==="spelling"&&spellExplain?"":(c==="g"?"Ja":c==="m"?"Bijna":"Nee")+" · "}${v} van ${m} ${m===1?"punt":"punten"}</span>${k==="spelling"&&spellExplain?`<small>${spellExplain}</small>`:""}</span></li>`}).join("")}</ul>
-    <p class="ptt">Samen <b>${spPts({scores:sc})} van ${n} punten</b></p><p class="note">${M?M.spelling?`Voldoende is ${Math.ceil(n*.7)} punten, met inhoud minstens 2.`:M===WBMAX.z?"Eén punt voor de inhoud, één voor de grammatica. Past de inhoud niet, dan telt de grammatica ook niet.":`Voldoende is ${Math.ceil(n*.6)} punten, met inhoud minstens 2. Uitspraak en spreektempo kan ik niet horen: oefen die met Zeg het na.`:wr?"Voldoende is 7 punten, met inhoud minstens 2.":"Voldoende is 6 punten, met inhoud minstens 2. Uitspraak en vloeiendheid kan ik niet horen: oefen die met Zeg het na."}</p>`};
+    <p class="ptt">Samen <b>${spPts({scores:sc})} van ${n} punten</b></p><p class="note">${M?M.spelling?`Voldoende is ${Math.ceil(n*.7)} punten, met inhoud minstens 2.`:M===WBMAX.z?"Eén punt voor de inhoud, één voor de grammatica. Past de inhoud niet, dan telt de grammatica ook niet.":`Voldoende is ${Math.ceil(n*.6)} punten, met inhoud minstens 2. Uitspraak en spreektempo kan ik niet horen: oefen die met Zeg het na.`:wr?"Voldoende is 7 punten, met inhoud minstens 2.":snd?"Voldoende is 8 punten, met inhoud minstens 2. Uitspraak en vloeiendheid meet de computer aan je opname: een oefenscore, geen examencijfer.":"Voldoende is 6 punten, met inhoud minstens 2. Uitspraak en vloeiendheid kan ik niet horen: oefen die met Zeg het na."}</p>${lineNote(res,written)}${meerHTML(res,extra)}`};
+// A writing task near the line of voldoende is graded two or three times (api/check.js): say so, so the points are trusted
+const lineNote=(res,written=true)=>{const w=written?"Je tekst":"Je antwoord",h=written?"hij":"het"; // de tekst, het antwoord
+  return res?.nearLine?`<p class="note">${w} zit precies op de grens van voldoende: twee beoordelingen gaven een andere uitslag. Verbeter één fout en je zit er zeker boven.</p>`
+  :res?.checks===3?`<p class="note">${w} zat dicht bij de grens van voldoende. Daarom is ${h} drie keer nagekeken. Je ziet per onderdeel de middelste score.</p>`
+  :res?.checks===2?`<p class="note">${w} zat dicht bij de grens van voldoende. Daarom is ${h} twee keer nagekeken, met dezelfde uitslag.</p>`:""};
+// Zo haal je meer punten: Claude's tips per criterion that lost points (in the menu language, with a Dutch sentence to
+// use), and for a recorded answer the computer's own tips on sound (extra)
+const meerHTML=(res,extra=[])=>{const L=(Array.isArray(res?.meer)?res.meer:[]).filter(m=>m&&m.tip).concat(extra);if(!L.length)return"";
+  return`<p class="ask">Zo haal je meer punten</p><ol class="errs meer">${L.map(m=>`<li><b>${ERROR_LABELS[m.kind]||m.label||""}</b><span dir="auto">${esc(m.tip)}</span>${m.voorbeeld?`<div class="sample" lang="nl">${esc(m.voorbeeld)}</div>`:""}</li>`).join("")}</ol>`};
+// The sound tips for a spoken answer whose recording lost uitspraak or vloeiendheid points
+const soundTips=(sc,p)=>{if(!sc||!("uitspraak" in sc))return[];const out=[];
+  const weak=[...new Set((p?.words||[]).filter(w=>w.e!=="Insertion"&&w.e!=="Omission"&&w.s<PRON_MID).sort((a,b)=>a.s-b.s).map(w=>w.w))].slice(0,4);
+  if(sc.uitspraak<2)out.push({label:"Uitspraak",tip:"Spreek elk woord helemaal uit, ook het eind. Oefen de woorden die minder duidelijk waren met Zeg het na.",voorbeeld:weak.join(", ")});
+  if(sc.vloeiendheid<2)out.push({label:"Vloeiendheid",tip:"Spreek in hele zinnen, in een rustig tempo en zonder lange pauzes. Luister naar het goede antwoord en zeg het een paar keer na."});
+  return out};
 // The learner's own text with each error marked where it is (numbered like the list under it). Claude returns the
 // wrong words as they stand in the text; one that can't be found (a missing word) is only in the list.
 function markErrs(text,errs){
@@ -2274,6 +2294,14 @@ function insHTML(text,fixed,errs=[]){
 // Was → Zo schrijf je het goed, with the corrected text to listen to (speak(): the recordings, Azure or the phone)
 const wrDiffHTML=(text,errs,fixed)=>`<div class="wdiff"><div>${ownHTML(text,errs)}</div><div><p class="ask">Zo schrijf je het goed</p><div class="sample" lang="nl">${insHTML(text,fixed,errs)}</div>
   <button type="button" class="hint" id="wlisten">▶ Luister naar de verbeterde tekst</button></div></div>`;
+// Spreken: hear yourself and the right answer. Your recording (with Azure) and what was heard, with the mistakes
+// numbered, beside the corrected answer with every changed word marked and ▶ to hear it said well (speak()). The
+// button carries the answer's index (data-say), bound by sayBind() after the result is drawn.
+const sayDiffHTML=(text,errs,fixed,url,i=0)=>{const f=String(fixed||"").trim()||String(text||"").trim();
+  return`<div class="wdiff"><div><p class="ask">Jouw antwoord</p>${url?`<audio controls src="${url}"></audio>`:""}<div class="sample own">${markErrs(text,errs)||"(niets verstaan)"}</div></div>
+  <div><p class="ask">Zo zeg je het goed</p><div class="sample" lang="nl">${f===String(text||"").trim()?esc(f):insHTML(text,f,errs)}</div>
+  <button type="button" class="hint" data-say="${i}">▶ Luister naar het goede antwoord</button></div></div>`};
+const sayBind=(root,list)=>root.querySelectorAll("[data-say]").forEach(b=>{const t=list[+b.dataset.say];if(t)b.onclick=()=>speak(t)});
 const ERROR_LABELS={inhoud:"Inhoud",woorden:"Woorden",grammatica:"Grammatica",inversie:"Grammatica · Woordvolgorde",meervoud:"Grammatica · Meervoud",spelling:"Spelling",samenhang:"Samenhang"};
 const errsHTML=errs=>errs.length?`<p class="ask">Fouten: ${errs.length}</p><ol class="errs fixes">${errs.map(e=>`<li><s>${esc(e.wrong)}</s> <strong>${esc(e.right)}</strong><span dir="auto">${Object.hasOwn(ERROR_LABELS,e.kind)?`<b>${ERROR_LABELS[e.kind]}</b> · `:""}${esc(e.why)}</span></li>`).join("")}</ol>`:`<p class="note">Geen fouten gevonden.</p>`;
 const spoken=t=>String(t).replace(/[\p{Extended_Pictographic}←-⇿️‍]/gu,"").replace(/\s+/g," ").trim();
@@ -2473,7 +2501,8 @@ async function spGrade(q,r,firstGrade){
   $("recn").textContent=r.note; c.hidden=true; b.disabled=true;
   $("fb").innerHTML=`<p class="note">Ik kijk je antwoord na… Dit duurt meestal minder dan een minuut.</p>`;
   try{
-    const res=(await nakijken([{kind:q.kind,task:spTask(q),text:r.text}],q.sec==="sb"?"sb":"sp"))[0];
+    // the sealed sound of an Azure recording: uitspraak and vloeiendheid count (A2), so all 12 of DUO's points
+    const res=(await nakijken([{kind:q.kind,task:spTask(q),text:r.text,...(r.sound&&q.sec==="sp"?{sound:r.sound}:{})}],q.sec==="sb"?"sb":"sp"))[0];
     if(cur!==attempt||q!==queue[pos]||c!==$("spchk")||$("play").hidden)return;
     const errs=Array.isArray(res.errors)?res.errors:[], ok=!!res.passed;
     if(!firstGrade&&q.sec==="sp"&&S.speakFollow&&cur.followSpeaking===S.speakFollow.at&&[0,1,2,3].includes(res.scores?.inhoud)){
@@ -2483,11 +2512,11 @@ async function spGrade(q,r,firstGrade){
       S.speakFollow={source:"practice",day:today()+2,ok:false,count:1,at:Date.now(),examKeys:[q.k]};
     }
     if(q.sec==="sp"&&campaignSource()?.source==="a2s")campaignTrack("check");
-    b.disabled=false; $("rev").hidden=true; keepErrs(errs); if(!firstGrade)record(ok); else save(); if(!cur.exam)quickPraise.show(ok);
+    b.disabled=false; $("rev").hidden=true; $("recp").innerHTML=""; keepErrs(errs); if(!firstGrade)record(ok); else save(); if(!cur.exam)quickPraise.show(ok);
     $("fb").innerHTML=`<b class="${ok?"good":"bad"}">${res.limitedLanguageEvidence&&res.scores?.inhoud===3?speakingResultLabel(res):ok?"Goed zo! Voldoende":"Nog niet voldoende"}</b>
-      <p class="note">${esc(res.verdict)}</p>${scoreHTML(res.scores,q.mx,errs)}
-      ${pronSummaryHTML(r.pron)}${ownHTML(r.text,errs,"Wat ik heb verstaan")}${errsHTML(errs)}${freeNote()}
-      <p class="ask">Zo zeg je het goed</p><div class="sample">${esc(res.corrected)}</div>${echoHTML("de verbeterde zinnen")}
+      <p class="note">${esc(res.verdict)}</p>${sayDiffHTML(r.text,errs,res.corrected,r.url)}
+      ${scoreHTML(res.scores,q.mx,errs,res,soundTips(res.scores,r.pron))}
+      ${pronSummaryHTML(r.pron)}${errsHTML(errs)}${freeNote()}${echoHTML("de verbeterde zinnen")}
       <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(q.right)}</div></details>
       <button class="btn wide" id="next">Verder</button>`;
     if(firstGrade&&Number.isInteger(res.scores?.inhoud)){
@@ -2506,7 +2535,7 @@ async function spGrade(q,r,firstGrade){
       $("next").insertAdjacentHTML("beforebegin",'<button class="ghost wide" id="speakingfollow">Probeer een nieuwe spreekopdracht</button>');
       $("speakingfollow").onclick=()=>insertPracticeQuestion(q,target);
     }
-    $("next").onclick=()=>{pos++;show()}; echoBind(res.corrected);
+    $("next").onclick=()=>{pos++;show()}; echoBind(res.corrected); sayBind($("fb"),[res.corrected||r.text]);
   }catch(e){
     if(cur!==attempt||q!==queue[pos]||c!==$("spchk")||$("play").hidden)return;
     const k=e&&e.code; b.disabled=false;
@@ -2552,7 +2581,7 @@ function spExamTake(q,r){
   const a=exam.ans[pos];if(!r.url||!a||a.url!==r.url)return;
   const once=()=>pronCheck(null,r);
   a.job=once().catch(e=>/^(failed|offline|quota_unavailable)$/.test(e?.code)?once():Promise.reject(e))
-    .then(j=>{if(!exam.ans.includes(a))return;a.text=j.text||"";a.pron=j.scores?{...j.scores,part:!!j.part,words:j.words||[]}:null;if(cur===exam)persistSpeaking()})
+    .then(j=>{if(!exam.ans.includes(a))return;a.text=j.text||"";a.pron=j.scores?{...j.scores,part:!!j.part,words:j.words||[]}:null;a.sound=typeof j.seal==="string"?j.seal:"";if(cur===exam)persistSpeaking()})
     .catch(e=>{a.fail=e?.code||"failed";if(/^(limit|busy|audio|not_configured|login)$/.test(a.fail))exam.stt=false})
     .finally(()=>{a.job=null});
 }
@@ -2565,10 +2594,24 @@ function spNext(q,r){
     if(previous?.url&&previous.url!==r.url)URL.revokeObjectURL(previous.url);
   }else $("recp").innerHTML=`<p class="ask">Je vorige antwoord</p>${previous.url?`<audio controls src="${previous.url}"></audio>`:`<div class="sample">${esc(previous.text)}</div>`}`;
   persistSpeaking();
-  $("rect").textContent="Klaar";$("recm").style.width="0%";
-  $("recn").innerHTML=`<b>${has?"✓ Antwoord klaar":"Geen spraak herkend"}</b><br>${esc(r.note||"")}${kept?"Je vorige antwoord is bewaard. Probeer opnieuw of ga verder.":has?"Je antwoord is bewaard voor dit proefexamen.":"Er is geen tekst voor de beoordeling. Neem opnieuw op of ga verder."}`;
-  $("spredo").hidden=false;
-  const b=$("recb"); b.textContent=pos<queue.length-1?"Volgende vraag →":"Antwoorden inleveren";b.className="btn wide";b.disabled=false;b.onclick=()=>{b.disabled=true;pos++;persistSpeaking();show()};
+  spReady(`<b>${has?"✓ Antwoord klaar":"Geen spraak herkend"}</b><br>${esc(r.note||"")}${kept?"Je vorige antwoord is bewaard. Probeer opnieuw of ga verder.":has?"Je antwoord is bewaard voor dit proefexamen.":"Er is geen tekst voor de beoordeling. Neem opnieuw op of ga verder."}`);
+}
+// Spreken A2 proefexamen, as on DUO's computer exam: go back to any question (Vorige, Overzicht), skip one and answer
+// it later, record it again; handing in asks first, with the time left and the questions without an answer
+const spNav=()=>!!(cur&&cur.exam&&cur.part==="sp");
+const SPINTRO=["Iemand stelt je vier vragen. Luister naar de vraag en geef antwoord. Je hebt per vraag één minuut. Je kunt teruggaan naar een vraag, een vraag overslaan en opnieuw opnemen.",
+  "Je ziet vier keer een foto. Vertel wat je ziet en beantwoord de vraag.","Je ziet vier keer twee foto's. Kies een foto en vertel waarom.",
+  "Je ziet vier keer drie foto's. Luister naar de vraag: vertel wat er gebeurt of zeg iets over elke foto."];
+const spNavHTML=()=>`<div class="exnav"><button class="ghost" id="prv"${pos?"":" disabled"}>← Vorige</button><button class="ghost" id="ovw">Overzicht</button><button class="ghost" id="spskip">${pos<queue.length-1?"Sla over →":"Inleveren"}</button></div>`;
+function spNavBind(){
+  $("prv").onclick=()=>{pos--;persistSpeaking();show()};$("ovw").onclick=overview;
+  $("spskip").onclick=()=>{if(pos>=queue.length-1)return overview();pos++;persistSpeaking();show()};
+}
+// An answer is kept: the clock stops, Opnieuw opnemen shows, and the main button goes on (the last one asks to hand in)
+function spReady(note){
+  $("rect").textContent="Klaar";$("recm").style.width="0%";$("recn").innerHTML=note;$("spredo").hidden=false;if($("spskip"))$("spskip").hidden=true;
+  const b=$("recb"); b.textContent=pos<queue.length-1?"Volgende vraag →":"Antwoorden inleveren";b.className="btn wide";b.disabled=false;
+  b.onclick=()=>{b.disabled=true;if(spNav()&&pos>=queue.length-1)return overview();pos++;persistSpeaking();show()};
 }
 let tmr=null,tEnd=0;
 function tick(){const s=Math.max(0,Math.round((tEnd-Date.now())/1000));$("timer").textContent=tEnd?Math.floor(s/60)+":"+String(s%60).padStart(2,"0"):"";if(tEnd&&s<=0&&cur&&cur.exam){if(cur.part==="sp")return speakingReview();if(cur.nav)return submitExam();const q=queue[pos];if(q&&q.type==="write"&&cur.ans.length===pos)cur.ans.push(grab(q));pos=queue.length;finish()}}
@@ -2583,9 +2626,41 @@ WRB.forEach((p,i)=>ITEMS.push({sec:"wb",k:"wb|"+i,ord:p.k==="z"?0:1,type:"write"
 const SBMAX={k:{inhoud:2,grammatica:1},m:{inhoud:3,woorden:1,grammatica:2,samenhang:1}};
 SPB.forEach((p,i)=>ITEMS.push({sec:"sb",k:"sb|"+i,ord:p.k==="k"?0:1,type:"reveal",kind:p.k,label:p.k==="k"?"Korte opdracht (B1): 20 seconden":"Middellange opdracht (B1): 30 seconden",big:p.t,sub:"",right:p.m,pics:p.f,text:p.d,spk:p.k==="k"?20:30,prep:p.k==="m"?15:p.f?5:0,mx:SBMAX[p.k]}));
 // the whole task as Claude needs it, with the sentence to finish, the points, the information and the photos
-const wrTask=q=>q.big+(q.open?" "+q.open:"")+(q.ctx?(/___/.test(q.ctx)?"\nTekst met een open plek (___); de cursist schrijft alleen wat op de open plek komt:\n":"\nDe cursist maakt deze zin af: ")+q.ctx:"")
+const wrTask=q=>q.big+(wrFrame(q)?` (Zoals op het examen staan de aanhef "${wrFrame(q).open}" en de groet "${wrFrame(q).close}" al klaar; de cursist schrijft de rest.)`:"")+(q.open?" "+q.open:"")+(q.ctx?(/___/.test(q.ctx)?"\nTekst met een open plek (___); de cursist schrijft alleen wat op de open plek komt:\n":"\nDe cursist maakt deze zin af: ")+q.ctx:"")
   +(q.pts?"\n"+q.pts.map(x=>"– "+x).join("\n"):"")+(q.text?"\nInformatie bij de opdracht:\n"+q.text:"")
   +(q.pics&&q.sec==="wb"?"\nDe foto's (die gaan niet mee met de e-mail): "+q.pics.map((f,i)=>i+1+". "+(FOTO[f]||f)).join("; "):"")+(q.intro?"\nSituatie: "+q.intro:"");
+// Schrijven A2 as DUO's oefenexamen Schrijven 1 shows a task (the user shared it, 28 November 2026; only the form is
+// taken): the situation, then the points to write about as a list, then "Schrijf in hele zinnen.". Our tasks are one
+// paragraph, so wrBrief() splits it at the sentences: a sentence that asks for something (Schrijf, Vraag, Vertel…) or a
+// question becomes a point, "Schrijf een e-mail aan …" and "Schrijf over …" stay in the situation, "Schrijf minimaal
+// drie zinnen" goes under the list. Fewer than two points: null, and the task stays one paragraph. The task text that
+// goes to Claude does not change.
+const WR_ASK=/^(Schrijf|Vraag|Vertel|Stel|Zeg|Leg|Bedank|Nodig|Geef|Noem|Bied|Beschrijf|Meld|Kies|Wens|Feliciteer|Verzin|Bedenk)\b/,
+  WR_WRITE=/^Schrijf (?:hem |haar |ze |de buren )?(?:(?:een|de) (?:e-mail|bericht|briefje|brief|kaart|kaartje|mail|tekst)\b|over\b)/;
+function wrBrief(t){
+  const sit=[],pts=[],tail=[];
+  String(t||"").split(/(?<=[.?!])\s+(?=[A-Z'"‘])/).map(x=>x.trim()).filter(Boolean).forEach(x=>{
+    if(/^Schrijf (minimaal|ten minste|in hele|drie|twee|vier)\b/.test(x))return tail.push(x);
+    if(WR_WRITE.test(x)&&!pts.length)return sit.push(x);
+    if(/\?$/.test(x)&&(pts.length||sit.length))return pts.push(x);
+    if(WR_ASK.test(x))return x.split(/,? en (?=(?:schrijf|vraag|vertel|stel|zeg|leg|bedank|geef|noem)\b)/i).forEach(y=>pts.push(y.replace(/^./,c=>c.toUpperCase()).replace(/[.!]?$/,".")));
+    (pts.length?pts:sit).push(x)});
+  return pts.length>=2?{sit:sit.join(" "),pts,tail:tail.join(" "),think:pts.every(x=>/\?$/.test(x))}:null;
+}
+// DUO prints an e-mail's greeting and closing ("Beste mevrouw de Groot," … "Vriendelijke groet,"); the learner writes
+// what comes between. Ours come from the task's own example answer, only for a message or an e-mail whose first line is
+// a greeting and whose last line is a usual closing with the name; otherwise null and the learner writes it all.
+function wrFrame(q){
+  if(q.sec!=="wr"||q.fields||!["message","formal"].includes(typeof writingTaskType==="function"?writingTaskType(q):""))return null;
+  const L=String(q.right||"").split("\n").map(x=>x.trim()),open=L[0],m=L.at(-1).match(/^(Met vriendelijke groet|Vriendelijke groet|Hartelijke groet|Groeten|Groetjes|Tot straks|Tot ziens|Liefs),\s*\[naam\]$/);
+  return L.length>2&&/^(Beste|Geachte|Hallo|Hoi|Lieve)\b[^,]{0,40},$/.test(open)&&m?{open,close:m[1]+","}:null;
+}
+// The whole e-mail for grading: the given greeting, what the learner wrote, the given closing (not twice when typed too)
+function wrFull(q,body){
+  const f=wrFrame(q),t=String(body||"").trim();if(!f||!t)return t;
+  const first=t.split("\n")[0].trim().toLowerCase(),last=t.split("\n").at(-1).trim().toLowerCase(),c=f.close.slice(0,-1).toLowerCase();
+  return(/^(beste|geachte|hallo|hoi|lieve)\b/.test(first)?"":f.open+"\n")+t+(last.startsWith(c)?"":"\n"+f.close);
+}
 SP.forEach((p,i)=>ITEMS.push({sec:"sp",k:"sp|"+i,ord:i/5|0,type:"reveal",label:"Antwoord hardop in twee of drie zinnen",big:p[0],sub:p[1],right:p[2],pics:p[3]}));
 
 let cur,queue=[],pos=0,total=0,right=0,answered=false;
@@ -2821,7 +2896,8 @@ function home(){
     // the number is the share right (all proefexamens, else practice); the line says where it comes from and what you need
     const need=`oefendoel: ${passPc(k)}%`;
     // only beside a score: without one there is nothing that could seem to include pronunciation
-    const speech=["sp","sb"].includes(k)&&r.pc!=null?'<span class="st">Uitspraak en tempo zijn niet beoordeeld.</span>':"";
+    // a Spreken A2 proefexamen with recordings counted uitspraak and vloeiendheid (snd, examSpeak()); say which the last one did
+    const speech=["sp","sb"].includes(k)&&r.pc!=null?`<span class="st">${((S.res||{})[k]||[]).at(-1)?.snd?"Uitspraak en vloeiendheid zijn door de computer gemeten.":"Uitspraak en tempo zijn niet beoordeeld."}</span>`:"";
     const st=ex?`<span class="st ${r.cls==="good"?"good":r.cls===""?"near":""}"><i></i>${r.st} · ${need}${/kende/.test(r.t)?" · je kende de meeste vragen al":""}</span>`
       :`<span class="st">${r.pc!=null?need:"Nog niet geoefend · "+need}</span>`;
     const scoreSource=ex?"Gemiddeld · alle examens":"Oefeningen";
@@ -3145,7 +3221,7 @@ function startExam(e,go){
   if(legacyOrigin())return moveScreen();
   if(!go&&examCheckLimit(e))return examGate(e);
   track("exam_"+e);
-  build("exam",{id:"exam",exam:1,part:e,keep:["lz","l1","ls","lb","sp","wb","sb"].includes(e),write:isWr(e),speak:e==="sp"||e==="sb",...EX[e],pool:()=>{if(e==="wb")return wbTasks(8,3);if(e==="sb")return sbTasks(8,8);const a=byFresh(shuffle(ITEMS.filter(x=>x.sec===e)));
+  build("exam",{id:"exam",exam:1,part:e,keep:["lz","l1","ls","lb","sp","wb","sb","wr","knm"].includes(e),write:isWr(e),speak:e==="sp"||e==="sb",...EX[e],pool:()=>{if(e==="wb")return wbTasks(8,3);if(e==="sb")return sbTasks(8,8);const a=byFresh(shuffle(ITEMS.filter(x=>x.sec===e)));
     if(["lz","l1","ls","lb"].includes(e)){const g={};a.forEach(q=>{const t=q.text||q.say;(g[t]=g[t]||[]).push(q)}); // whole texts and fragments, as on the exam; the least-seen first
       let T=shuffle(Object.values(g)).map(x=>[x.sort((p,q)=>p.k<q.k?-1:1),x.reduce((s,q)=>s+seenN(q),0)/x.length]).sort((x,y)=>x[1]-y[1]).map(x=>x[0]);
       if(e==="ls"){const M=T.filter(x=>x.length>1).slice(0,8);T=M.concat(T.filter(x=>!M.includes(x)))} // mostly longer fragments with two or three questions, as on the exam
@@ -3169,11 +3245,17 @@ function startExam(e,go){
       G=Object.values(g).map(x=>{const t=x.filter(q=>q.sit).slice(0,3);return t.concat(x.filter(q=>!t.includes(q)))});
       for(let i=0;o.length<a.length;i++)G.forEach(x=>{if(x[i])o.push(x[i])});const sel=o.slice(0,EX.knm.n); // then grouped by theme, as on the exam
       return shuffle(G).flatMap(x=>x.filter(q=>sel.includes(q)))}
-    return e==="wr"?a.filter(q=>q.fields).slice(0,1).concat(a.filter(q=>!q.fields).slice(0,3)):a}});
+    // Schrijven A2 as DUO's oefenexamen: a formal e-mail, a short text, a form, a message to someone you know
+    if(e==="wr"){const T=t=>a.filter(q=>writingTaskType(q)===t),one=[T("formal")[0],T("text")[0],T("form")[0],T("message")[0]].filter(Boolean);
+      return one.length===4?one:a.filter(q=>q.fields).slice(0,1).concat(a.filter(q=>!q.fields).slice(0,3))}
+    return a}});
 }
 // Pass mark for the computer-marked parts: about 7 in 10 (e.g. 18 of 25 for Lezen, 28 of 40 for KNM); DUO sets it per exam version
 const PASS=.7;
-// Lezen and Luisteren: most sources give 19 of 25 (DUO puts the line on the result, not on a public page); KNM 28 of 40
+// Lezen and Luisteren: 19 of 25. DUO's own oefenexamens (seen 28 November 2026) end with bands that differ per exam:
+// Luisteren A2 1: 0–15 good "geen kans", 16–18 "weinig kans", 19–21 "kans", 22–25 "veel kans"; Lezen A2 2: 0–12 "geen
+// kans", 13–16 "kleine kans", 17–22 "redelijke kans", 23–25 "grote kans". 19 sits inside both "kans" bands, so it stays
+// the practice target for both. Bittertalen shows the line as a practice target, never DUO's chances (CLAUDE.md, truth on screen). KNM 28 of 40
 const PASSP={lz:19/25,ls:19/25,knm:28/40,wb:25/47}, passOf=k=>PASSP[k]||PASS, passPc=k=>Math.round(passOf(k)*100);
 // An oefencijfer from 1 to 10 for the inburgering parts (A2 and KNM; 28 November 2026), as DUO shows a "Cijfer" in Mijn
 // Inburgering: the oefendoel is a 6, everything right a 10, nothing a 1, straight lines in between, rounded (under the
@@ -3599,7 +3681,9 @@ function persistSpeaking(){
   const {owner,id,end,submitted}=cur.spDraft;
   lsSet(speakingDraftKey(owner),JSON.stringify({
     id,end,submitted,pos,nw:cur.nw,keys:queue.map(q=>q.k),
-    texts:cur.ans.map(answer=>answer?.text||null)
+    texts:cur.ans.map(answer=>answer?.text||null),
+    // the sealed sound per answer (two scores, no recording), so a reopened exam still counts uitspraak and vloeiendheid
+    sounds:cur.ans.map(answer=>answer?.sound||null)
   }));
 }
 function speakingReview(){
@@ -3683,7 +3767,7 @@ function build(id,custom){
   }
   if(spokenDraft){
     queue=spokenDraft.keys.map((key,i)=>({...ITEMS.find(q=>q.k===key),retry:false,label:`Deel ${Math.floor(i/4)+1} van 4: ${SPDEEL[Math.floor(i/4)]}`}));
-    cur.ans=spokenDraft.texts.map((text,i)=>({q:queue[i],text:text||"",url:""}));
+    cur.ans=spokenDraft.texts.map((text,i)=>({q:queue[i],text:text||"",url:"",sound:typeof spokenDraft.sounds?.[i]==="string"?spokenDraft.sounds[i]:""}));
     cur.nw=spokenDraft.nw;pos=spokenDraft.pos;
   }
   if(cur.exam&&cur.write)cur.gradeId||=crypto.randomUUID();
@@ -3727,15 +3811,25 @@ function show(){
   if(pos>=queue.length)return finish();
   const q=queue[pos]; answered=false; $("mode").hidden=!q.canType; hush();
   let h=`<p class="ask">${q.label}</p>`;
+  if(spNav()&&q.type==="reveal"&&pos%4===0)h+=`<p class="intro">${SPINTRO[pos/4]||""}</p>`; // the start of a part, as on the exam
+  // KNM proefexamen: DUO's voorbeeldexamen KNM opens each theme with "De volgende vragen gaan over het thema …" (seen
+  // 28 November 2026); ours says it above the theme's first question
+  if(cur.exam&&q.sec==="knm"&&(!pos||queue[pos-1]?.label!==q.label))h+=`<p class="intro">De volgende vragen gaan over het thema ‘${esc(q.label.replace(/^KNM: /,"").replace(/^./,c=>c.toLowerCase()))}’.</p>`;
   if(q.intro)h+=`<p class="intro">${q.intro}</p>`; // as on the exam: who reads or hears what
+  // Lezen A2 as DUO's oefenexamen Lezen shows it: "Lees eerst de vraag. Lees daarna de tekst." with the question beside
+  // the text; on a phone the question comes first, then the text, then the options
+  const qFirst=q.sec==="lz"&&!!q.text&&!!q.big;
+  if(qFirst)h+=`<p class="note">Lees eerst de vraag. Lees daarna de tekst.</p><div class="verb long">${q.big}</div>`;
   if(q.text)h+=docHTML(q.text);
-  // KNM: the photo comes after the answer. Before it, a sign in the photo (IND-Loket, CJIB, Juridisch Loket) often gave
-  // the answer away, and the exam has no such photos; its text alternative named the answer too.
-  if(q.pics)h+=q.sec==="knm"?(cur.exam?"":`<div id="knmpic" hidden>${picsHTML(q.pics)}</div>`):picsHTML(q.pics);
+  // KNM: the photo comes with the question, as in DUO's voorbeeldexamen KNM (28 November 2026), except the 44 photos that
+  // give the answer away (KNM_LATE in data/knm.js: "112" on an ambulance, "IND-Loket", a glass container): those come
+  // after the answer, and never in a proefexamen
+  if(q.pics)h+=q.sec==="knm"&&q.late?(cur.exam?"":`<div id="knmpic" hidden>${picsHTML(q.pics)}</div>`):picsHTML(q.pics,q.sec==="knm");
   if(q.qs&&cur.exam)h+=`<p class="note">Lees eerst de vragen bij dit fragment:</p><ol class="qs">${q.qs.map(x=>`<li${x===q.big?' class="on"':""}>${x}</li>`).join("")}</ol>`;
-  if(q.say)h+=canSpeak?`<button class="btn wide" id="say">▶ Luister</button><p class="note">${q.sec==="lb"?cur.exam?"Je hoort het fragment één keer, zoals op het Staatsexamen.":"Op het Staatsexamen hoor je het fragment maar één keer.":cur.exam?"Je mag twee keer luisteren.":"Luister twee keer, zoals op het examen."}</p>` :cur.exam?`<p class="note" role="alert">Audio is hier niet beschikbaar. Open dit proefexamen op een apparaat met geluid.</p>`:`<p class="note">Audio werkt hier niet. Lees de tekst.</p><div class="sample">${esc(sayLines(q.say).map(l=>/^[AB]: /.test(q.say)?"– "+l:l).join("\n"))}</div>`;
+  if(q.say)h+=canSpeak?`<button class="btn wide" id="say">▶ Luister</button><p class="note">${q.sec==="lb"?cur.exam?"Je hoort het fragment één keer, zoals op het Staatsexamen.":"Op het Staatsexamen hoor je het fragment maar één keer.":"Je mag het fragment zo vaak beluisteren als je wilt, zoals op het examen."}</p>` :cur.exam?`<p class="note" role="alert">Audio is hier niet beschikbaar. Open dit proefexamen op een apparaat met geluid.</p>`:`<p class="note">Audio werkt hier niet. Lees de tekst.</p><div class="sample">${esc(sayLines(q.say).map(l=>/^[AB]: /.test(q.say)?"– "+l:l).join("\n"))}</div>`;
   if(q.hear)h+=canSpeak?`<button class="btn wide" id="hear">▶ Luister</button>`:`<div class="verb">${q.hear}</div>`;
-  if(q.big)h+=`<div class="verb${q.big.length>22?" long":""}">${q.big}</div>`;
+  const B=q.type==="write"&&q.sec==="wr"&&!q.fields?wrBrief(q.big):null,big=B?B.sit:q.big;
+  if(big&&!qFirst)h+=`<div class="verb${big.length>22?" long":""}">${big}</div>`;
   h+=`<p class="ru">${q.sub||""}</p>`;
   if(q.tts&&canSpeak&&q.big===q.tts)h+=`<button class="hint" id="tts">▶ Uitspraak</button>`;
   else if(["knm","ls","lb"].includes(q.sec)&&canSpeak)h+=`<button class="hint" id="rd">▶ Lees voor</button>`; // the exam reads every question aloud
@@ -3743,13 +3837,15 @@ function show(){
   let o;
   if(q.type==="order")h+=`<p class="note">Maak een zin. Je kunt beginnen met <b>${esc(q.right.split(" ")[0])}</b>.</p>`+`<div class="line" id="line"></div><div class="pool" id="pool"></div><div class="act"><button class="btn wide" id="chk" disabled>Controleer</button></div>`;
   else if(q.type==="write")h+=(q.pts?`<ul class="pts">${q.pts.map(x=>`<li>${x}</li>`).join("")}</ul>`:"")
-    +(q.ctx?`<div class="sample">${esc(q.ctx).replace("___",'<b class="gapw">______</b>')}</div>`:"")+(q.fields?q.fields.map((f,i)=>`<label class="fld"><span>${f}</span><input id="f${i}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></label>`).join("")+`<p class="ask">${q.open}</p>`:"")+`<textarea id="txt" rows="${q.kind==="z"?3:7}" placeholder="${q.kind==="z"?q.ctx&&!/___/.test(q.ctx)?"Schrijf hier het einde van de zin…":"Schrijf hier je zin…":"Schrijf hier je tekst…"}" aria-label="Je tekst" spellcheck="false" autocorrect="off" autocapitalize="off"></textarea>`
+    +(B?`${B.think?'<p class="note">Denk aan:</p>':""}<ul class="pts">${B.pts.map(x=>`<li>${x}</li>`).join("")}</ul><p class="note">${B.tail?B.tail+" ":""}Schrijf in hele zinnen.</p>`
+      :q.sec==="wr"&&!q.fields&&!/hele zinnen/.test(q.big)?'<p class="note">Schrijf in hele zinnen.</p>':"") // DUO says it under every task
+    +(q.ctx?`<div class="sample">${esc(q.ctx).replace("___",'<b class="gapw">______</b>')}</div>`:"")+(q.fields?q.fields.map((f,i)=>`<label class="fld"><span>${f}</span><input id="f${i}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></label>`).join("")+`<p class="ask">${q.open}</p>`:"")+(wrFrame(q)?`<p class="mailx" lang="nl">${esc(wrFrame(q).open)}</p>`:"")+`<textarea id="txt" rows="${q.kind==="z"?3:7}" placeholder="${q.kind==="z"?q.ctx&&!/___/.test(q.ctx)?"Schrijf hier het einde van de zin…":"Schrijf hier je zin…":"Schrijf hier je tekst…"}" aria-label="Je tekst" spellcheck="false" autocorrect="off" autocapitalize="off"></textarea>`+(wrFrame(q)?`<p class="mailx" lang="nl">${esc(wrFrame(q).close)}</p>`:"")
     +(!cur.exam&&acc.cfg&&!acc.user?(acc.cfg.free?freeNote():`<p class="note">Bittertalen kijkt je tekst na als je bent ingelogd (Profiel).</p>`):"")
     +(cur.nav?navHTML():`<div class="act"><button class="btn wide" id="chk">${cur.exam?"Volgende opdracht":zNext(q)?"Volgende zin":q.kind==="z"&&(cur.zs||[]).length?"Controleer mijn zinnen":"Controleer mijn tekst"}</button></div>`);
   else if(q.type==="reveal")h+=(canSpeak?`<button class="hint" id="sayq">▶ Luister naar de vraag</button>`:"")
     +`<div class="rec" id="rec"><div class="clk"><span class="t" id="rect">${mmss(q.spk||SPK)}</span><div class="m"><i id="recm"></i></div></div><div id="recp"></div>
     <button class="btn wide" id="recb">${cur.exam?"● Antwoord geven":"● Opnemen"}</button>${cur.exam?`<button class="ghost wide" id="spredo" hidden>↻ Opnieuw opnemen</button>`:""}<p class="note" id="recn" role="status" aria-atomic="true">${q.spk?`${q.prep?`Denk eerst ${q.prep} seconden na. `:""}Je hebt ${q.spk} seconden om te antwoorden, zoals op het Staatsexamen.${cur.exam?" Na de vraag begint de tijd vanzelf.":" Daarna kun je jezelf terugluisteren."}`:cur.exam?"Je hebt één minuut per vraag.":"Je hebt één minuut. Daarna kun je jezelf terugluisteren."}</p></div>
-    ${cur.exam?"":`${SR||pronOn()?`<button class="ghost wide" id="spchk" style="margin-bottom:10px">Spreek in en laat nakijken</button>${acc.cfg&&!acc.user?(acc.cfg.free?freeNote():`<p class="note">Nakijken kan als je bent ingelogd (Profiel).</p>`):""}`:""}<button class="ghost wide" id="rev">Toon voorbeeld</button>`}`;
+    ${spNav()?spNavHTML():""}${cur.exam?"":`${SR||pronOn()?`<button class="ghost wide" id="spchk" style="margin-bottom:10px">Spreek in en laat nakijken</button>${acc.cfg&&!acc.user?(acc.cfg.free?freeNote():`<p class="note">Nakijken kan als je bent ingelogd (Profiel).</p>`):""}`:""}<button class="ghost wide" id="rev">Toon voorbeeld</button>`}`;
   else if(S.typing&&q.canType)h+=`<div class="type"><input id="inp" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Je antwoord"><button class="btn" id="chk">Controleer</button></div>`;
   else{const nv=cur.nav&&q.type==="choice";o=nv?cur.op[pos]=cur.op[pos]||q.opts():q.opts();
     // a Beginnen "Wat betekent" question shows its English options in the menu language (the answer itself is unchanged)
@@ -3761,12 +3857,15 @@ function show(){
   h+=`<div class="fb" id="fb"></div>`;
   $("card").innerHTML=h; const cd=$("card");cd.classList.remove("in");void cd.offsetWidth;cd.classList.add("in");
   document.querySelectorAll("#card [data-pic]").forEach(b=>b.onclick=()=>zoomPic(b.dataset.pic));
-  // Proefexamen: two plays at A2, one at B1 (Staatsexamen), counted per fragment; when practising you may listen as often as you like
-  if($("say")){const P=cur.plays=cur.plays||{},max=q.sec==="lb"?1:2,done=()=>{$("say").disabled=true;$("say").textContent=max>1?"Je hebt twee keer geluisterd":"Je hebt het fragment gehoord"};
+  // Proefexamen B1: one play (Staatsexamen), counted per fragment. A2: as often as you like, as in DUO's oefenexamen Luisteren
+  // (the user checked on 28 November 2026: its player plays again after the end, with pause and ±10 s); still counted
+  if($("say")){const P=cur.plays=cur.plays||{},max=q.sec==="lb"?1:Infinity,done=()=>{$("say").disabled=true;$("say").textContent="Je hebt het fragment gehoord"};
     $("say").onclick=()=>{speak(q.say);const n=P[q.say]=(P[q.say]||0)+1;persistChoices();if(cur.exam&&n>=max)done();else $("say").textContent="▶ Nog een keer luisteren"};
     if(cur.exam&&P[q.say]>=max)done();else if(P[q.say])$("say").textContent="▶ Nog een keer luisteren"}
   if($("tts"))$("tts").onclick=()=>speak(q.tts);
   if($("rd"))$("rd").onclick=()=>speak([q.big,...o.map(spokenOption)].join("\n"),true);
+  // KNM proefexamen: as in DUO's voorbeeldexamen the question is read aloud as it appears (not again once answered)
+  if($("rd")&&cur.exam&&q.sec==="knm"&&cur.nav&&cur.pick[pos]==null)speak(q.big,true);
   if($("hear")){$("hear").onclick=()=>speak(q.hear);speak(q.hear)}
   if($("tr"))$("tr").onclick=()=>{$("tr").textContent=BET[q.big];$("tr").disabled=true};
   if(q.type==="order")return order(q);
@@ -3784,10 +3883,11 @@ function show(){
     if($("sayq"))$("sayq").onclick=()=>speak(spoken(q.big));
     if(cur.exam){const go=()=>{$("spredo").hidden=true;return cur.stt?listen("rec",r=>spExamTake(q,r),q.spk):listen(SR?"say":"rec",r=>spNext(q,r),q.spk)};
       const begin=()=>{stopPrep();return go()};$("recb").onclick=begin;$("spredo").onclick=begin;
-      if(cur.part==="sp"&&cur.ans[pos]?.text){
-        const text=cur.ans[pos].text;
-        $("recp").innerHTML=`<p class="ask">Je bewaarde antwoord</p><div class="sample">${esc(text)}</div>`;
-        spNext(q,{text,url:""});return;
+      if(spNav())spNavBind();
+      const saved=cur.part==="sp"&&cur.ans[pos];
+      if(saved&&(saved.text||saved.url)){
+        $("recp").innerHTML=`<p class="ask">Je bewaarde antwoord</p>${saved.url?`<audio controls src="${saved.url}"></audio>`:""}${saved.text?`<div class="sample">${esc(saved.text)}</div>`:saved.job?'<p class="note">Je antwoord wordt uitgeschreven…</p>':""}`;
+        spReady("<b>✓ Antwoord klaar</b><br>Je kunt opnieuw opnemen of verder gaan.");return;
       }
       if(canSpeak)speak(spoken(q.big)); // the exam asks the question aloud
       if(q.sec==="sb")prepThen(q,go);return}
@@ -3904,23 +4004,26 @@ function examGate(e,preview=false){
   };
 }
 // Proefexamen Lezen, Luisteren, KNM and Schrijven: go back to any question or task, as on the exam; marked when handed in
-const picked=i=>{const p=cur.pick[i];return p!=null&&(typeof p!=="object"||!!(p.t.trim()||p.f.some(x=>x.trim())))};
+const picked=i=>{if(cur.part==="sp"){const a=cur.ans[i];return !!(a&&(a.text||a.url))}const p=cur.pick[i];return p!=null&&(typeof p!=="object"||!!(p.t.trim()||p.f.some(x=>x.trim())))};
 const navHTML=()=>`<div class="exnav"><button class="ghost" id="prv"${pos?"":" disabled"}>← Vorige</button><button class="ghost" id="ovw">Overzicht</button><button class="btn" id="nxt">${pos<queue.length-1?"Volgende →":"Klaar"}</button></div>`;
 function navBind(){$("prv").onclick=()=>{pos--;show()}; $("ovw").onclick=overview; $("nxt").onclick=()=>{if(pos<queue.length-1){pos++;show()}else overview()}}
 function overview(){
   hush(); const n=queue.length,open=queue.filter((q,i)=>!picked(i)).length,wr=isWr(cur.part),V=wr?["opdracht","opdrachten"]:["vraag","vragen"]; head();
-  $("card").innerHTML=`<p class="ask">Overzicht</p>${cur.expired?`<p class="note">De tijd is voorbij. Bekijk je antwoorden en lever in.</p>`:""}<p class="note">${n-open} van ${n} ${V[1]} ${wr?"gemaakt":"beantwoord"}. Tik op een nummer om naar die ${V[0]} te gaan.</p>
+  const sec=tEnd?Math.max(0,Math.round((tEnd-Date.now())/1000)):0,mins=Math.floor(sec/60);
+  const time=sec&&!cur.expired?`<p class="note">Je hebt nog ${mins} ${mins===1?"minuut":"minuten"} en ${sec%60} seconden.</p>`:"";
+  $("card").innerHTML=`<p class="ask">Overzicht</p>${cur.expired?`<p class="note">De tijd is voorbij. Bekijk je antwoorden en lever in.</p>`:""}${time}<p class="note">${n-open} van ${n} ${V[1]} ${wr?"gemaakt":"beantwoord"}. Tik op een nummer om naar die ${V[0]} te gaan.</p>
     <div class="ovw">${queue.map((q,i)=>`<button class="${picked(i)?"done":""}${i===pos?" now":""}" data-i="${i}" aria-label="${wr?"Opdracht":"Vraag"} ${i+1}${picked(i)?", klaar":""}">${i+1}</button>`).join("")}</div>
-    ${open?`<p class="note">Nog ${open} ${open===1?V[0]:V[1]} zonder antwoord. ${wr?"Een lege opdracht is onvoldoende.":"Een open vraag telt als fout."}</p>`:""}
+    ${open?`<p class="note">Nog ${open} ${open===1?V[0]:V[1]} zonder antwoord${open<n?": "+queue.map((q,i)=>picked(i)?"":i+1).filter(Boolean).join(", "):""}. ${wr?"Een lege opdracht is onvoldoende.":cur.part==="sp"?"Een vraag zonder antwoord krijgt 0 punten.":"Een open vraag telt als fout."}</p>`:""}
     <div class="two"><button class="ghost" id="bk">← ${wr?"Opdracht":"Vraag"} ${pos+1}</button><button class="btn" id="lever">Inleveren</button></div>`;
   document.querySelectorAll(".ovw button").forEach(b=>b.onclick=()=>{pos=+b.dataset.i;show()});
   $("bk").onclick=show;
-  $("lever").onclick=()=>{if(open&&!$("lever").dataset.ok){$("lever").dataset.ok=1;$("lever").textContent="Toch inleveren";return}submitExam()};
+  $("lever").onclick=()=>{if(open&&!$("lever").dataset.ok){$("lever").dataset.ok=1;$("lever").textContent="Toch inleveren";return}
+    if(cur.part==="sp"){pos=queue.length;persistSpeaking();return finish()}submitExam()};
 }
 function submitExam(){
   if(cur.sent)return; cur.sent=true;
   // Schrijven: the written tasks go to Claude; an empty task is not sent and counts as not passed
-  if(isWr(cur.part)){cur.ans=queue.map((q,i)=>{const w=cur.pick[i]||{f:[],t:""};return{q,form:q.fields?q.fields.map((f,j)=>f+": "+(w.f[j]||"").trim()).join("\n"):"",text:w.t.trim()}}).filter((a,i)=>picked(i));pos=queue.length;return finish()}
+  if(isWr(cur.part)){cur.ans=queue.map((q,i)=>{const w=cur.pick[i]||{f:[],t:""};return{q,form:q.fields?q.fields.map((f,j)=>f+": "+(w.f[j]||"").trim()).join("\n"):"",text:wrFull(q,w.t)}}).filter((a,i)=>picked(i));pos=queue.length;return finish()}
   queue.forEach((q,i)=>{const ok=cur.pick[i]===q.right;record(ok,q);cur.log.push({l:q.label,ok});if(!ok)cur.miss.push({q:q.big,r:capA(q,q.right)})});
   if(CHOICE_DRAFT_PARTS.includes(cur.part))lsSet(choiceDraftKey(cur.part),null);
   pos=queue.length; finish();
@@ -4050,7 +4153,7 @@ function spListen(done,lim){
     try{j=await pronCheck(null,r)}catch(e){msg=e&&e.code==="login"?pronFail("off"):pronFail(e&&e.code)}
     if(b&&b===$("recb"))b.disabled=false;
     if(!j)return done({...r,text:"",note:r.note+msg+" ",pronFail:true});
-    done({...r,text:j.text||"",pron:j.scores?{...j.scores,part:!!j.part,words:j.words||[]}:null});
+    done({...r,text:j.text||"",pron:j.scores?{...j.scores,part:!!j.part,words:j.words||[]}:null,sound:typeof j.seal==="string"?j.seal:""});
   },lim);
 }
 // The sound of a spoken answer: three scores out of 100 and the words that sounded least clear
@@ -4143,8 +4246,9 @@ function photoCreditHTML(key){
   const credit=FOTO_CREDITS[key];
   return credit?`<small class="photo-credit" lang="nl"><a href="${esc(credit.source)}" target="_blank" rel="noopener">${esc(credit.author)}</a> · <a href="${esc(credit.url||'https://creativecommons.org/licenses/by/2.0/')}" target="_blank" rel="noopener">${esc(credit.license||'CC BY 2.0')}</a> · verkleind</small>`:"";
 }
-function picsHTML(P){
-  return`<div class="pics n${P.length}">${P.map((f,i)=>`<figure${FOTO_CREDITS[f]?' class="credited"':""}><button data-pic="foto/${f}.jpg" aria-label="Plaatje ${i+1} groot bekijken"><img src="foto/${f}.jpg" alt="${FOTO[f]||""}" loading="lazy"></button>${P.length===3?`<span>${i+1}</span>`:""}${FOTO_CREDITS[f]?`<figcaption>${photoCreditHTML(f)}</figcaption>`:""}</figure>`).join("")}</div>`;
+// noAlt: a KNM photo before the answer, whose description could name it ("het Binnenhof in Den Haag")
+function picsHTML(P,noAlt=false){
+  return`<div class="pics n${P.length}">${P.map((f,i)=>`<figure${FOTO_CREDITS[f]?' class="credited"':""}><button data-pic="foto/${f}.jpg" aria-label="Plaatje ${i+1} groot bekijken"><img src="foto/${f}.jpg" alt="${noAlt?"":FOTO[f]||""}" loading="lazy"></button>${P.length===3?`<span>${i+1}</span>`:""}${FOTO_CREDITS[f]?`<figcaption>${photoCreditHTML(f)}</figcaption>`:""}</figure>`).join("")}</div>`;
 }
 // A photo full screen in the painting viewer; closing puts the painting back
 function zoomPic(src,caption){
@@ -4429,8 +4533,8 @@ function reviseWritingContent(q,text,verdict){
   $("revisionNext").onclick=()=>{pos++;show()};
 }
 async function check(q){
-  const text=$("txt").value.trim();
-  if(text.split(/\s+/).length<(q.kind==="z"||q.sec!=="wb"?3:5)){$("fb").innerHTML=`<p class="note">${q.kind==="z"?"Schrijf een hele zin.":"Schrijf minimaal een paar zinnen."}</p>`;return}
+  const body=$("txt").value.trim(),text=wrFull(q,body);
+  if(body.split(/\s+/).length<(q.kind==="z"||q.sec!=="wb"?3:5)){$("fb").innerHTML=`<p class="note">${q.kind==="z"?"Schrijf een hele zin.":"Schrijf minimaal een paar zinnen."}</p>`;return}
   const form=q.fields?q.fields.map((f,i)=>f+": "+$("f"+i).value.trim()).join("\n"):"";
   const attempt=cur,task=wrTask(q),btn=$("chk"),input=$("txt"); btn.disabled=true; input.readOnly=true;
   $("fb").innerHTML=`<p class="note">Ik kijk je tekst na… Dit duurt meestal minder dan een minuut.</p>`;
@@ -4454,14 +4558,14 @@ async function check(q){
       <p class="note">${esc(res.verdict)}</p>
       ${RD.length?`<p class="note"><b>Het belangrijkste om te verbeteren:</b> ${esc(RD[0].why||RD[0].wrong)}</p><button class="btn wide" id="next">${Math.min(RD.length,FIX_MAX)>1?`Verbeter je ${Math.min(RD.length,FIX_MAX)} belangrijkste fouten`:"Verbeter je fout"}</button>`:""}
       ${changed?wrDiffHTML(text,errs,res.corrected):ownHTML(text,errs)}
-      ${scoreHTML(res.scores,q.mx,errs)}${a2Practice&&!errs.length?'<p class="note">Geen taalcorrecties in je tekst.</p>':errsHTML(errs)}${q.sec==="wr"&&errs.some(e=>Object.hasOwn(WRITING_RULES,e.kind))?`<p class="note">In Mijn dag kun je deze regel morgen oefenen in een nieuwe zin.</p>`:""}${freeNote()}
+      ${scoreHTML(res.scores,q.mx,errs,res)}${a2Practice&&!errs.length?'<p class="note">Geen taalcorrecties in je tekst.</p>':errsHTML(errs)}${q.sec==="wr"&&errs.some(e=>Object.hasOwn(WRITING_RULES,e.kind))?`<p class="note">In Mijn dag kun je deze regel morgen oefenen in een nieuwe zin.</p>`:""}${freeNote()}
       ${!a2Practice&&!changed&&res.corrected?.trim()?`<p class="ask">Verbeterde tekst</p><div class="sample">${esc(res.corrected)}</div>`:""}
       ${reviseContent?'<button class="btn wide" id="reviseContent">Vul je antwoord aan</button>':""}
       <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(q.right)}</div></details>
       ${docBtn}${RD.length?"":`<button class="btn wide" id="next">Verder</button>`}`;
     $("next").onclick=()=>{pos++;show()};
     if($("wlisten"))$("wlisten").onclick=()=>speak(res.corrected);
-    if(reviseContent)$("reviseContent").onclick=()=>reviseWritingContent(q,text,res.verdict);
+    if(reviseContent)$("reviseContent").onclick=()=>reviseWritingContent(q,body,res.verdict);
     if(RD.length)$("next").onclick=()=>practiseCorrections(RD);
     $("docx").onclick=()=>saveDocx([{task,form,text}]);
   }catch(e){
@@ -4489,7 +4593,7 @@ async function checkZ(q){
     const RD=Z.flatMap((z,i)=>correctionPrompts(z.q,"",z.text,T[i]||{}));
     $("fb").innerHTML=Z.map((z,i)=>{const t=T[i]||{},errs=Array.isArray(t.errors)?t.errors:[],ok=!!t.passed; keepErrs(errs); record(ok,z.q);
       return`<p class="ask">${Z.length>1?`Zin ${i+1}: `:""}<span class="${ok?"good":"bad"}">${ok?"voldoende":"nog niet voldoende"}</span></p>${Z.length>1?`<p class="note">${z.q.big}</p>`:""}
-        <p class="note">${esc(t.verdict)}</p>${scoreHTML(t.scores,z.q.mx,errs)}
+        <p class="note">${esc(t.verdict)}</p>${scoreHTML(t.scores,z.q.mx,errs,t)}
         ${ownHTML(z.text,errs,"Jouw zin")}${errs.length?errsHTML(errs):""}
         <p class="ask">Verbeterd</p><div class="sample">${esc(t.corrected||z.text)}</div><details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(z.q.right)}</div></details>`}).join("")
       +`${freeNote()}${docBtn}<button class="btn wide" id="next">${RD.length?"Schrijf de verbeteringen":"Verder"}</button>`;
@@ -4509,7 +4613,7 @@ async function checkZ(q){
 }
 function grab(q){
   const form=q.fields?q.fields.map((f,i)=>f+": "+$("f"+i).value.trim()).join("\n"):"";
-  return{q,form,text:$("txt").value.trim()};
+  return{q,form,text:wrFull(q,$("txt").value)};
 }
 function writingBarsHTML(rows, labels) {
   return `<div class="dpts">${rows.filter(row=>row.max).map(row=>{
@@ -4589,7 +4693,7 @@ async function examWrite(){
       redoByTask[i]=redoItems(task,answer.form,answer.text,grade.corrected,errors);
       const label=typeof grade.passed==="boolean"?(grade.passed?"voldoende":"nog niet voldoende"):"nog niet beoordeeld";
       return `<h2>Opdracht ${i+1} · <span class="${typeof grade.passed==="boolean"?(grade.passed?"good":"bad"):""}">${label}</span></h2>
-        <p class="note">${task.big}</p><p class="note">${esc(grade.verdict)}</p>${row.status==="scored"?scoreHTML(grade.scores,task.mx,errors):""}
+        <p class="note">${task.big}</p><p class="note">${esc(grade.verdict)}</p>${row.status==="scored"?scoreHTML(grade.scores,task.mx,errors,grade):""}
         ${own(answer,errors)}${errors.length?errsHTML(errors):""}
         ${grade.corrected?`<p class="ask">Verbeterde tekst</p><div class="sample">${esc(grade.corrected)}</div>`:""}
         <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(task.right)}</div></details>
@@ -4635,6 +4739,7 @@ async function examWrite(){
 }
 async function examSpeak(){
   const exam=cur,A=exam.ans,card=$("card");
+  for(let i=0;i<A.length;i++)if(!A[i])A[i]={q:queue[i],text:"",url:""}; // a question skipped on the way
   const foot=`<div class="two"><button class="ghost" id="tohome">Alle onderdelen</button><button class="btn" id="more">Nog een keer</button></div>`;
   const clear=()=>{
     if(!exam.spDraft)return;
@@ -4656,21 +4761,28 @@ async function examSpeak(){
   const pending=card.firstElementChild;
   const active=()=>cur===exam&&(!exam.spDraft||exam.spDraft.owner===progressOwner)&&!$("play").hidden&&card.firstElementChild===pending;
   try{
-    const T=await nakijken(A.map(a=>({kind:a.q.kind,task:spTask(a.q),text:a.text})),cur.part==="sb"?"sb":"sp",exam.spDraft?.id||(exam.gradeId||=crypto.randomUUID()));
+    // only answers with words go to Claude; a skipped or silent one gets 0 points here, without a model call
+    const said=A.map((a,i)=>a.text?i:-1).filter(i=>i>=0);
+    const G=await nakijken(said.map(i=>A[i]).map(a=>({kind:a.q.kind,task:spTask(a.q),text:a.text,...(a.sound&&cur.part==="sp"?{sound:a.sound}:{})})),cur.part==="sb"?"sb":"sp",exam.spDraft?.id||(exam.gradeId||=crypto.randomUUID()));
+    const zero=q=>Object.fromEntries(Object.keys(q.mx||{inhoud:3,woorden:2,grammatica:2,samenhang:1}).map(k=>[k,0]));
+    const T=A.map((a,i)=>said.includes(i)?G[said.indexOf(i)]:{passed:false,verdict:"Geen antwoord.",corrected:"",errors:[],scores:zero(a.q)});
     if(!active())return;
     let good=0,pts=0,scored=0;
     const body=A.map((a,i)=>{const t=T[i]||{},errs=Array.isArray(t.errors)?t.errors:[],pt=spPts(t);if(t.passed)good++;if(pt!=null){pts+=pt;scored++}keepErrs(errs);
-      return`<h2>Vraag ${i+1}: <span class="${t.passed?"good":"bad"}">${speakingResultLabel(t)}</span></h2><p class="note">${esc(a.q.label)}</p><p class="note">${a.q.big}</p><p class="note">${esc(t.verdict)}</p>${scoreHTML(t.scores,a.q.mx,errs)}
-        ${own(a,errs)}${errs.length?errsHTML(errs):""}${a.text?`<p class="ask">Zo zeg je het goed</p><div class="sample">${esc(t.corrected)}</div>`:""}
+      return`<h2>Vraag ${i+1}: <span class="${t.passed?"good":"bad"}">${speakingResultLabel(t)}</span></h2><p class="note">${esc(a.q.label)}</p><p class="note">${a.q.big}</p><p class="note">${esc(t.verdict)}</p>${scoreHTML(t.scores,a.q.mx,errs,t,soundTips(t.scores,a.pron))}
+        ${a.text?sayDiffHTML(a.text,errs,t.corrected,a.url,i)+pronSummaryHTML(a.pron):own(a,errs)}${errs.length?errsHTML(errs):""}
         <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(a.q.right)}</div></details>`}).join("");
     // score: points of all 16 questions (an unanswered one counts 0); without points (older server) the share of good answers
-    const max=queue.reduce((s,q)=>s+(q.mx?mxPts(q.mx):SPMAX),0), pc=scored?Math.round(pts/max*100):Math.round(good/queue.length*100), pass=pc>=passPc(cur.part);
+    // with Azure an answer counts all 12 of DUO's points; one written down by the phone 8; a silent or missing answer 12
+    // when the exam counted sound elsewhere
+    const snd=T.some(t=>t?.scores&&"uitspraak" in t.scores);
+    const max=queue.reduce((s,q,i)=>s+(q.mx?mxPts(q.mx):T[i]?.scores&&"uitspraak" in T[i].scores?SPSMAX:A[i]?.text&&!A[i]?.sound?SPMAX:snd?SPSMAX:SPMAX),0), pc=scored?Math.round(pts/max*100):Math.round(good/queue.length*100), pass=pc>=passPc(cur.part);
     const incomplete=exam.part==="sp"?T.filter((grade,i)=>A[i]?.text&&grade?.scores?.inhoud===2).length:0;
     if(incomplete)S.speakFollow={day:today()+1,ok:false,count:incomplete,at:Date.now(),examKeys:queue.map(q=>q.k)};
-    keepRes(cur.part,pc,undefined,exam.spDraft?.id);clear();
+    const kept=keepRes(cur.part,pc,undefined,exam.spDraft?.id);if(snd&&kept){kept.snd=1;save()}clear();
     card.innerHTML=`<div class="done"><p class="ask">${cur.t}: uitslag</p><div class="big">${pc}%</div><p class="ru">${scored?`${pts} van ${max} punten, `:""}${good} van ${queue.length} antwoorden voldoende${A.length<queue.length?`; ${queue.length-A.length} ${queue.length-A.length===1?"vraag":"vragen"} niet beantwoord`:""}</p>${cijferHTML(cur.part,pc)}</div>
       <p><b class="${pass?"good":"bad"}">${pass?"Oefendoel bereikt":"Meer oefenen"}</b></p>
-      <p class="note">Het oefendoel is ${passPc(cur.part)}%. Deze score gaat over je uitgeschreven antwoorden. ${A.some(a=>a?.pron)?"Je uitspraak staat per vraag; die telt niet mee in deze score.":"Uitspraak en vloeiendheid zijn niet beoordeeld."}</p>`+(incomplete?`<p class="note"><b>Volgende stap:</b> oefen morgen in Mijn dag met een nieuwe vraag waarop je elk deel moet beantwoorden.</p>`:"")+(pass?"":examOffer())+body+foot; bind();
+      <p class="note">Het oefendoel is ${passPc(cur.part)}%. ${snd?"Deze score gaat over je antwoorden en je opnames: uitspraak en vloeiendheid heeft de computer gemeten, een oefenscore.":`Deze score gaat over je uitgeschreven antwoorden. ${A.some(a=>a?.pron)?"Je uitspraak staat per vraag; die telt niet mee in deze score.":"Uitspraak en vloeiendheid zijn niet beoordeeld."}`}</p>`+(incomplete?`<p class="note"><b>Volgende stap:</b> oefen morgen in Mijn dag met een nieuwe vraag waarop je elk deel moet beantwoorden.</p>`:"")+(pass?"":examOffer())+body+foot; bind(); sayBind(card,A.map((a,i)=>T[i]?.corrected||a.text));
   }catch(e){
     if(!active())return;
     const c=e&&e.code,retry=checkRetry(c);
@@ -4695,7 +4807,7 @@ function finish(){
       .map(t=>`<li>${t}<span>${by[t].r} van ${by[t].n} goed</span></li>`).join(""):"";
     $("card").innerHTML=`<div class="done"><p class="ask">${cur.t}: uitslag</p><div class="big">${pc}%</div><p class="ru">${right} van ${total} goed</p>${cijferHTML(cur.part,pc)}</div>
       <p><b class="${pass?"good":"bad"}">${pass?"Oefendoel bereikt":"Meer oefenen"}</b></p>
-      <p class="note">${cur.part==="l1"||cur.part==="lb"?"Bij het Staatsexamen heb je een score van 500 nodig. Hoeveel vragen dat zijn, maakt DUO niet bekend: mik op 7 van de 10.":cur.part==="lz"||cur.part==="ls"?"Op het examen heb je waarschijnlijk 19 van de 25 vragen goed nodig. DUO zet de grens op je uitslag.":cur.part==="knm"?"Op het examen heb je 28 van de 40 vragen goed nodig.":"Op het examen heb je ongeveer 7 van de 10 vragen goed nodig."} Hier is dat ${need} van ${total}.</p>
+      <p class="note">${cur.part==="l1"||cur.part==="lb"?"Bij het Staatsexamen heb je een score van 500 nodig. Hoeveel vragen dat zijn, maakt DUO niet bekend: mik op 7 van de 10.":cur.part==="lz"||cur.part==="ls"?"Hoeveel vragen je goed moet hebben, maakt DUO niet bekend: het verschilt per examen. Mik op 19 van de 25.":cur.part==="knm"?"Op het examen heb je 28 van de 40 vragen goed nodig.":"Op het examen heb je ongeveer 7 van de 10 vragen goed nodig."} Hier is dat ${need} van ${total}.</p>
       ${themes?`<p class="ask">Per thema</p><ul class="errs">${themes}</ul>`:""}
       ${cur.miss.length?`<p class="ask">Fout beantwoord</p><ul class="errs">${cur.miss.slice(0,20).map(m=>`<li>${m.q}<span>Goed is: ${m.r}</span></li>`).join("")}</ul>`:""}
       <div class="two"><button class="ghost" id="tohome">Alle onderdelen</button><button class="btn" id="more">Nog een keer</button></div>`;
@@ -6514,7 +6626,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru","uk"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="43c4416b95";
+const UIV="866be25cfc";
 let uiP=null;
 function uiLoaded(){try{trMemo.clear()}catch(e){} // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});
@@ -6635,6 +6747,13 @@ Object.assign(UI,{
     "उच्चारण और बोलने की गति का मूल्यांकन नहीं हुआ है।",
     "尚未评估发音和语速。"
   ,"La pronunciación y el ritmo no se han evaluado.","Произношение и темп речи не оценивались."],
+  "Uitspraak en vloeiendheid zijn door de computer gemeten.": [
+    "Pronunciation and fluency were measured by the computer.",
+    "قاس الحاسوب النطق والطلاقة.",
+    "Telaffuz ve akıcılık bilgisayar tarafından ölçüldü.",
+    "उच्चारण और धाराप्रवाह बोलने को कंप्यूटर ने मापा है।",
+    "发音和流利度由电脑测量。"
+  ,"La pronunciación y la fluidez las ha medido el ordenador.","Произношение и беглость измерил компьютер."],
   "Je score is het percentage goede antwoorden of punten. Het streepje is je oefendoel.": [
     "Your score is the percentage of correct answers or points. The line is your practice target.",
     "درجتك هي نسبة الإجابات الصحيحة أو النقاط. الخط هو هدف التدريب.",

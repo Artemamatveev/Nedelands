@@ -13,7 +13,7 @@ questions over and over). `GAP` is `[1,2,4,7,14,30,60]` days per box (`S.items .
 starts in box 2 (back in four days, not tomorrow); a wrong answer goes back to box 0. New KNM questions mix the short
 ones and the situations (their `ord` is counted apart), so the exam's format is not kept until last.
 
-`S.res` keeps the last 10 practice-exam scores per part. A stable practice result requires three recent results averaging at least 80%, each above the practice target, with at least two mostly new attempts. This describes practice performance. Speaking explicitly leaves pronunciation and pace unassessed. The score thresholds are practice targets.
+`S.res` keeps the last 10 practice-exam scores per part. A stable practice result requires three recent results averaging at least 80%, each above the practice target, with at least two mostly new attempts. This describes practice performance. Speaking never reaches it; a Spreken A2 result with `snd: 1` counted pronunciation and fluency from recordings (docs/ai.md), one without leaves them unassessed. The score thresholds are practice targets.
 
 New A2/B1 writing results also have an optional `writing` v1 snapshot: task-type and criterion point totals, task counts and the number left blank. It contains no answer text or error fragments. The current report separates types absent from that exam from types that scored zero; Profile combines up to five recent detailed attempts with their task/attempt counts. Legacy results retain their scores without invented breakdowns. Missing or malformed grades preserve the draft and do not create a total. A submitted blank exam scores zero without a model request.
 

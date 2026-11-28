@@ -26,6 +26,41 @@ same result, not marked again. A sentence to finish comes back whole (`zWhole()`
 A B1 form gets one box per answer that differs: `SYSTEM_WB` asks for one line per form answer with the open answer last, and
 another shape gives no button. An A2 form's `corrected` is the open answer only, so only that comes back.
 
+Luisteren A2 next to DUO's oefenexamen Luisteren A2 1 (screenshots, 28 November 2026): 25 questions, 45 minutes, per
+screen the situation ("Dina gaat verhuizen. Ze belt met een vriend."), "Lees eerst de vraag. Luister daarna naar de
+tekst" (or "Kijk daarna naar de video"), the question with its own ▶, three or four options A–D, Vorige, Volgende, an
+overview and handing in with the time left and the questions without an answer. Ours has all of that except video and
+four options. DUO lets a fragment be played as often as you like (the user checked) and asks two or three questions
+about one fragment, as ours does, so since 28 November 2026 our A2 proefexamen has no limit on plays either (B1 keeps one). DUO's result gives chances by score (19–21 "kans"): that is the source of our 19 of 25 line,
+which stays a practice target.
+
+Lezen A2 next to DUO's oefenexamen Lezen A2 2 (screenshots, 28 November 2026): 25 questions, 65 minutes, two or three
+questions per text, per screen the situation, "Lees eerst de vraag. Lees daarna de tekst.", the text (folders, tables,
+e-mails) beside the question, three or four options, Vorige/Volgende, an overview and handing in with time left. Ours had
+it all except the order: since that day a Lezen A2 question stands above its text with that sentence (`qFirst` in
+`show()`), as a phone has no room beside it. DUO's bands differ per oefenexamen (Lezen 2: 17–22 "redelijke kans",
+Luisteren 1: 19–21 "kans"), so the result no longer says 19 is "probably" needed: DUO does not publish the line and it
+differs per exam; 19 of 25 stays the target. KNM has not been compared yet.
+
+KNM next to DUO's voorbeeldexamen KNM 1 2025 (screenshots, 28 November 2026): 40 questions, 45 minutes, grouped by
+theme with a page "De volgende vragen gaan over het thema 'wonen'" before each, every question with a photo and read
+aloud as it appears (pause, ±10 s), three options (some with a map), and the result "U moet minstens 28 vragen goed
+hebben", our line too. Since that day ours keeps the themes together (the pool grouped them but the exam shuffled them
+again: `knm` was missing from `keep`), says the theme above its first question, and reads each new question aloud. The photo
+now comes with the question too, except 44 photos that give the answer away (docs/content.md, KNM photos).
+
+How a Schrijven A2 task looks, as in DUO's oefenexamen Schrijven 1 (the user shared the PDF on 28 November 2026; only
+the form is taken, never DUO's tasks): the situation, the points to write about as a list ("Denk aan:" when they are
+questions), "Schrijf in hele zinnen.". Our tasks are one paragraph in `data/a2.js`; `wrBrief()` splits them on screen
+(a sentence that asks for something or a question is a point; "Schrijf een e-mail aan …" and "Schrijf over …" stay in
+the situation; under two points the task stays one paragraph) and the task text for Claude is unchanged. DUO prints an
+e-mail's greeting and closing; ours come from the task's example answer (`wrFrame()`, a message or formal e-mail whose
+example starts with a greeting and ends with a usual closing and [naam]), shown above and below the text box, and
+`wrFull()` puts them around the learner's text for grading (not twice when typed too); the task tells Claude they were
+given. The proefexamen has DUO's mix in DUO's order: a formal e-mail, a short text, a form, a message
+(`writingTaskType()`). Not taken over yet: DUO's form also has a choice (one of three groups) and two open questions;
+ours has text fields and one open question.
+
 `api/check.js` is a Vercel function that grades writing with Claude (free checks, a guest's trial and a free account's,
 practice or proefexamen: `GRADING_MODEL_FREE`, default `claude-haiku-5-5`; paid practice, 1 to 3 tasks: `GRADING_MODEL`,
 default `claude-sonnet-5-5`; a paid proefexamen, 4 or more tasks: `GRADING_MODEL_EXAM`, default `claude-opus-5-5`; all Vercel env vars,
@@ -39,6 +74,25 @@ beoordelingsmodel: inhoud 0–3, woorden 0–2, grammatica 0–2, spelling 0–2
 the prompt counts errors: 0–2 = 2, 3–5 = 1, 6+ = 0; for spelling the server applies that count itself since 28 November
 2026, see below). `passed` is set by the server from the points (inhoud 2+ and 7 of 10),
 not by Claude, and the Schrijven proefexamen score is points of all 4 tasks against the 70% line.
+
+Grading again near the line (28 November 2026): the same text could get 6 one time and 7 the next, which matters only at
+voldoende. A task (writing: A2 text or form, B1 form or e-mail, not a B1 zinsopdracht; speaking: A2 and B1, practice and
+proefexamen) where one point either way on a criterion Claude judges would change voldoende (`nearLine()`, judged on the
+final points: a short spoken answer's cap and the sealed sound included, so Azure's fixed points never trigger it) is
+graded once more, by the same model with the same prompt, effort low,
+for the points only. When both say the same, the first grading stays (`checks: 2`); when they disagree, a third grading
+decides, each criterion taking the middle of the three (`medianScores()`, `checks: 3`). The corrections and the verdict
+always stay those of the first. With no time left for the third (an extra call starts only with 25 s of the function's
+110 s left) the first points stay, marked `nearLine`. The page says it under the points (`lineNote()`, "Je tekst" or "Je antwoord"). The learner pays no
+extra check; the tokens go to `ai_spend` like every call; `RECHECK=0` in Vercel switches it off. In a proefexamen all
+tasks near the line go into one extra call (and the split ones into one more), so an exam costs at most three calls.
+
+Zo haal je meer punten (28 November 2026): every result also has `meer`, at most three steps for the criteria that lost
+points, the most points first: `kind` (a criterion), `tip` (what to do, in the menu language like `why`) and `voorbeeld`
+(one good Dutch sentence for this task). The server keeps only tips for a criterion below its maximum and none when every
+point was earned (`cleanMeer()`). The page shows them under the points (`meerHTML()`), in practice, after a proefexamen and
+in Spreken; for a recorded answer that lost uitspraak or vloeiendheid points the page adds its own tip, with the words
+that sounded least clear (`soundTips()`).
 
 Spelling without AI (`api/_spell.js`, 28 November 2026), so a text's spelling points don't depend on how Claude counts
 that day. `unknownWords()` lists the words of the text and the form that are not in `dict/nl-en.txt` (every headword,
@@ -65,10 +119,43 @@ the key in chat). Without it the page falls back to showing the example answer.
 
 Spreken uses the same function with `{part:"sp", tasks:[{task, text}]}` (up to 16, for the
 proefexamen); `task` also says what the photos show (`spTask()`, from `FOTO`). Each result also has `scores`
-(inhoud 0–3, woorden 0–2, grammatica 0–2, samenhang 0–1: DUO's criteria as far as a transcript shows them; pronunciation
-and fluency can't be judged), clamped on the server; `passed` is set by the server from the points (inhoud 2+ and 6 of
+(inhoud 0–3, woorden 0–2, grammatica 0–2, samenhang 0–1: DUO's criteria as far as a transcript shows them; with a
+recording scored by Azure also uitspraak and vloeiendheid, see "All 12 points" below), clamped on the server; `passed` is set by the server from the points (inhoud 2+ and 6 of
 the 8 since 25 November 2026, higher than 5 because 4 of DUO's 12 points can't be judged; `spPassed`), not by Claude, as for B1; a complete answer of fewer than 5 words (`SP_SHORT`, "Met de trein") keeps full inhoud, but the server caps woorden and grammatica at 1 and samenhang at 0 and adds a note to say two or three sentences (`capShortSpoken`, 26 November 2026), so two words never reach voldoende; in practice a transcript of only fillers ("eh", "hm") or a single letter is not sent for grading (`spokenTextReady`); the Spreken proefexamen score is points of all 16 questions. Speaking never
-gets "Stabiel oefenresultaat" in Mijn examen (`ready()`), because pronunciation and fluency are not judged.
+gets "Stabiel oefenresultaat" in Mijn examen (`ready()`): the phone's transcripts have no sound, and the 12-point score
+from recordings has not been compared with an examiner. Under a Spreken score Mijn examen says
+"Uitspraak en vloeiendheid zijn door de computer gemeten." when the last proefexamen counted sound (`snd: 1` on its
+`S.res` entry, set by `examSpeak()`), else "Uitspraak en tempo zijn niet beoordeeld."
+
+All 12 points (28 November 2026): DUO's Spreken A2 has 12 points a question; a transcript shows 8. When Azure scored the
+recording (Spreken practice and proefexamen, signed in, `pron` on), `/api/pron` returns `seal` with the answer: Klanken
+(Azure's AccuracyScore) and Vloeiendheid (FluencyScore), signed with the service key for this learner for 24 hours
+(`soundSeal()`/`soundOpen()` in `_supa.js`), so the page can't send its own. The page sends it as `sound` with the
+answer; `check.js` adds uitspraak 0–2 and vloeiendheid 0–2 (`withSound()`: 80 or more is 2, 60–79 is 1, the lines at
+which the page marks a word; inhoud 0 makes them 0 too; an answer under 5 words gets vloeiendheid at most 1), and
+voldoende is then inhoud 2+ and 8 of 12 (`spsPassed`). A seal that doesn't open, a guest or B1 (the Staatsexamen has its
+own criteria) keeps the 8 points and 6 of 8. In the proefexamen each recorded answer counts 12, one the phone wrote down
+8, a silent or missing one 12 when the exam counted sound elsewhere; the exam draft keeps the seals (`sounds`), so a
+reopened exam still counts them. Claude never sees the sound scores. The lines 80 and 60 are a first choice: Azure's
+scores are made for native speakers, and neither they nor the 8 of 12 have been compared with an examiner.
+
+Hear yourself and the right answer (28 November 2026): a Spreken result (practice and each proefexamen question) shows
+"Jouw antwoord" (the recording, when there is one, and what was heard with the mistakes numbered) beside "Zo zeg je het
+goed" (the corrected answer with every changed word marked, `insHTML()`), and "▶ Luister naar het goede antwoord"
+(`sayDiffHTML()`, `sayBind()`, `speak()`), as Schrijven has "Was → Zo schrijf je het goed".
+How the Spreken A2 proefexamen moves, as DUO's own oefenexamen does (the user went through DUO's oefenexamen Spreken A2 1
+on 28 November 2026 and shared screenshots; only the procedure is taken, never DUO's design, logo, questions or video):
+16 questions in four parts, 35 minutes on one clock, the question played at once and playable again, recording started by
+a tap, at most one minute, a recording that can be made again. Since that day, like DUO's: ← Vorige and "Sla over →" go to
+any question (`spNav()`, `spNavHTML()`), an answered one shows its saved answer (recording and text, its seal kept) without
+being replaced, Overzicht shows which questions have an answer, and handing in (from the last question or Overzicht) goes
+through Overzicht with the time left and the numbers of the questions without an answer; with any open, a second tap
+("Toch inleveren") hands in. Each part starts with one line on what to do (`SPINTRO`, on the part's first question; DUO
+shows it on a page of its own). A skipped or silent answer gets 0 points without a model call. Not taken over: DUO's
+sound test page (our question is read aloud and can be replayed), bookmarks, and video (Bittertalen reads the question).
+DUO's practice exam ends with "het echte examen wordt nagekeken door mensen": our grading by Claude stays a practice score.
+B1 Spreken keeps the Staatsexamen's fixed order and timing.
+
 The Spreken proefexamen has DUO's four parts of four (since March 2025): a question, one photo (describe and answer),
 two photos (choose and explain), three photos (a story in order, or three separate things to say something about: learners
 remembered both kinds from the real exam, so the part's label leaves the order to the question); the proefexamen reads each question aloud, like the
@@ -111,7 +198,8 @@ no miscue): Uitspraak, Klanken and Vloeiendheid out of 100 and up to six words b
 review (`pronSummaryHTML()`, with the recording to play back) and again with Claude's grade; "Alleen de eerste 30
 seconden" when the answer was longer. The text then goes through the same review and grading as the phone's. A failure
 says why and lets the learner speak again; a lasting one (limit, busy, no recorder) falls back to the phone (`pronOff`).
-About 10 s for a 60 s answer. The pronunciation scores are not part of Claude's points.
+About 10 s for a 60 s answer. Claude never sees the pronunciation scores; with the seal they count as uitspraak and
+vloeiendheid (All 12 points, above).
 
 Why Whisper writes the text (28 November 2026): a recognizer that "corrects" a learner hides the very mistakes Claude
 should grade. Fifteen A2 sentences, twelve with typical mistakes (geschrijft, geholpt, de brood, hij hebben, Ik vind
@@ -130,8 +218,8 @@ each take is a recording (`spExamTake()`): kept at once as the answer (Volgende 
 background (one retry), the text saved into the draft when it arrives; a retake replaces it and its late text is
 ignored. A lasting failure (limit, busy) sends the rest of the exam to the phone (`cur.stt=false`). `examSpeak()` waits
 for the texts ("Je antwoorden worden uitgeschreven…", at most 60 s) before Claude grades; an answer without text shows
-its recording and "(niets verstaan)". Each answer in the result shows its pronunciation, and the score note says it does
-not count. Recordings stay in memory, so after reopening an unfinished exam only the answers already written down are
+its recording and "(niets verstaan)". Each answer in the result shows its pronunciation, and its uitspraak and vloeiendheid count in
+the points (All 12 points, above). Recordings stay in memory, so after reopening an unfinished exam only the answers already written down are
 there (as before with recordings).
 
 When checking fails temporarily, single-task writing practice keeps the text editable and speaking practice retries the same transcript. Writing and speaking exam results offer a retry with the submitted answers, without registering another exam attempt. Speaking practice transcripts remain available in the open exercise only. The local A2 exam draft also restores the original deadline and question order after reopening.

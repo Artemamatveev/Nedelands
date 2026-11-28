@@ -315,3 +315,29 @@ test('A2 practice shows the learner\'s text beside the corrected one, the change
   assert.ok(fb.innerHTML.indexOf('wdiff')<fb.innerHTML.indexOf('class="dpts"'),'before the points');
   assert.match(fb.textContent,/Het belangrijkste om te verbeteren:/);
 });
+
+test('Schrijven A2 tasks are shown as DUO shows them: situation, points, given greeting and closing; nothing of a task is lost',async()=>{
+  const a=await app();
+  const out=a.run(`ITEMS.filter(q=>q.sec==="wr").map(q=>{const b=q.fields?null:wrBrief(q.big),f=wrFrame(q);return{k:q.k,big:q.big,b,f,type:writingTaskType(q)}})`);
+  const words=t=>(t.toLowerCase().match(/[\\p{L}\\d']+/gu)||[]).filter(w=>w!=='en');
+  for(const t of out){
+    if(!t.b)continue;
+    const shown=new Set(words([t.b.sit,...t.b.pts,t.b.tail].join(' ')));
+    assert.deepEqual(words(t.big).filter(w=>!shown.has(w)),[],t.k);
+  }
+  assert.ok(out.filter(t=>t.b).length>=40,'most tasks get a list of points');
+  const framed=out.filter(t=>t.f);
+  assert.ok(framed.every(t=>['message','formal'].includes(t.type)));
+  assert.ok(framed.length>=20);
+  const brief=out.find(t=>t.k==='wr|0');
+  assert.deepEqual({...brief.f},{open:'Beste buurvrouw,',close:'Groeten,'});
+  assert.equal(a.run('wrFull(ITEMS.find(q=>q.k==="wr|0"),"Ik ga op vakantie.")'),'Beste buurvrouw,\nIk ga op vakantie.\nGroeten,');
+  assert.equal(a.run('wrFull(ITEMS.find(q=>q.k==="wr|0"),"Beste buurvrouw,\\nIk ga op vakantie.\\nGroeten, Sara")'),'Beste buurvrouw,\nIk ga op vakantie.\nGroeten, Sara','typed by the learner too: not twice');
+  assert.match(a.run('wrTask(ITEMS.find(q=>q.k==="wr|0"))'),/aanhef "Beste buurvrouw," en de groet "Groeten," al klaar/);
+  // the proefexamen: a formal e-mail, a short text, a form, a message
+  a.run('startExam("wr",true)');
+  assert.deepEqual([...a.run('queue.map(q=>writingTaskType(q))')],['formal','text','form','message']);
+  a.run('pos=0;show()');
+  assert.match(a.document.querySelector('#card').textContent,/Schrijf in hele zinnen/);
+  assert.equal(a.document.querySelectorAll('#card .mailx').length,a.run('wrFrame(queue[0])?2:0'),'greeting and closing when the task has them (wr|15 ends with a job title)');
+});
