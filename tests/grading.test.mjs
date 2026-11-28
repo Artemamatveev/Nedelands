@@ -1,20 +1,21 @@
 import test from 'node:test';
+import * as spell from '../api/_spell.js';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import fs from 'node:fs';
 import {root} from './app-harness.mjs';
 
 async function handler(options={}){
-  const guards=[],usage=[],quotas=[],logs=[],lims=[],periods=[],stamps=[],models=[],spends=[];let modelCalls=0;
+  const guards=[],usage=[],quotas=[],logs=[],lims=[],periods=[],stamps=[],models=[],spends=[],prompts=[];let modelCalls=0;
   class APIError extends Error{}
   class AuthenticationError extends APIError{}
   class RateLimitError extends APIError{}
   class Anthropic {
     static APIError=APIError;static AuthenticationError=AuthenticationError;static RateLimitError=RateLimitError;
     beta={messages:{create:async(body)=>{
-      modelCalls++;models.push(body.model);
+      modelCalls++;models.push(body.model);prompts.push(body.messages[0].content);
       if(options.providerFailure)throw Error('connection interrupted');
-      return {stop_reason:options.stopReason||'end_turn',model:'test-model',usage:{input_tokens:100,output_tokens:30},content:[{type:'text',text:JSON.stringify({tasks:Array.from({length:options.taskOutputs??options.tasksCount??1},()=>({passed:options.claimPassed??true,verdict:'Goed',corrected:'Ik kom later.',errors:options.errors||[],scores:options.scores||{inhoud:3,woorden:2,grammatica:2,spelling:2,samenhang:1}}))})}]};
+      return {stop_reason:options.stopReason||'end_turn',model:'test-model',usage:{input_tokens:100,output_tokens:30},content:[{type:'text',text:JSON.stringify({tasks:Array.from({length:options.taskOutputs??options.tasksCount??1},()=>({passed:options.claimPassed??true,verdict:'Goed',corrected:'Ik kom later.',errors:options.errors||[],scores:options.scores||{inhoud:3,woorden:2,grammatica:2,spelling:2,samenhang:1},...('spelfouten' in options?{spelfouten:options.spelfouten}:{})}))})}]};
     }}};
   }
   const values={
@@ -37,14 +38,15 @@ async function handler(options={}){
   const sdk=new vm.SyntheticModule(['default'],function(){this.setExport('default',Anthropic)},{context});
   const supa=new vm.SyntheticModule(Object.keys(values),function(){for(const [key,value]of Object.entries(values))this.setExport(key,value)},{context});
   const module=new vm.SourceTextModule(fs.readFileSync(new URL('api/check.js',root),'utf8'),{context});
-  await module.link(name=>name==='@anthropic-ai/sdk'?sdk:supa);await module.evaluate();
+  const spellMod=new vm.SyntheticModule(Object.keys(spell),function(){for(const [key,value]of Object.entries(spell))this.setExport(key,value)},{context});
+  await module.link(name=>name==='@anthropic-ai/sdk'?sdk:name==='./_spell.js'?spellMod:supa);await module.evaluate();
   const req={method:'POST',headers:{host:'example.test',origin:'https://example.test'},body:{...(options.requestId?{requestId:options.requestId}:{}),...(options.part?{part:options.part}:{}),tasks:Array.from({length:options.tasksCount||1},()=>({...(options.part||options.kind?{kind:options.kind||'z'}:{}),task:'Stuur een bericht',text:options.text??'Ik kom later. Personal test content.'}))}};
   const response=()=>({statusCode:200,setHeader(){},status(n){this.statusCode=n;return this},json(body){this.body=body;return this}});
   const res=response();
   await module.namespace.default(req,res);
   const retry=options.repeat?response():null;
   if(retry)await module.namespace.default(req,retry);
-  return {res,retry,usage,quotas,logs,lims,periods,stamps,modelCalls,models,spends};
+  return {res,retry,usage,quotas,logs,lims,periods,stamps,modelCalls,models,spends,prompts};
 }
 
 test('Missing account configuration blocks the paid provider',async()=>{
@@ -254,4 +256,17 @@ test('A partial model response is retryable and cannot become a permanent exam r
     receipt:async(_owner,_id,_digest,action)=>{actions.push(action);return {state:'new'}}});
   assert.equal(result.res.statusCode,502);
   assert.deepEqual(actions,['claim','discard']);
+});
+
+test('Schrijven A2 spelling points follow DUO\'s count, never above the model; the word list gives hints',async()=>{
+  const sp=(n)=>Array.from({length:n},(_,i)=>({wrong:'fout'+i,right:'goed'+i,why:'Spelling.',kind:'spelling'}));
+  const listed=await handler({errors:sp(4),text:'Ik heb gisteren een brief geschrijft. Mischien kom ik.'});
+  assert.equal(listed.res.body.tasks[0].scores.spelling,1,'four spelling mistakes listed: 1 point, though the model gave 2');
+  assert.match(listed.prompts[0],/niet in onze Nederlandse woordenlijst staan[^\n]*geschrijft, Mischien/);
+  const counted=await handler({errors:sp(1),spelfouten:7});
+  assert.equal(counted.res.body.tasks[0].scores.spelling,0,'its own count of all spelling mistakes counts too');
+  const lower=await handler({errors:[],spelfouten:0,scores:{inhoud:3,woorden:2,grammatica:2,spelling:1,samenhang:1}});
+  assert.equal(lower.res.body.tasks[0].scores.spelling,1,'the model may still take a point (a misspelled name, unreadable words)');
+  const clean=await handler({text:'Beste Anna,\nIk kom morgen met de fiets naar je huisje.\nGroeten,\nFatima'});
+  assert.doesNotMatch(clean.prompts[0],/woordenlijst/,'names, greetings and diminutives are no hints');
 });

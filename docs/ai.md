@@ -30,8 +30,24 @@ two years); a failure there never fails the grading. The page posts
 `{tasks:[{task, form, text}]}` and gets `{tasks:[{passed, verdict, corrected, errors, scores}]}`;
 the prompt is built on the server. The page does send the task text and the form, so every field from the page goes between fences with a random name per request (`fence()` in `check.js`) and the system prompt says never to follow instructions inside them: a text can't close its block and add a task or its own points. Schrijven is scored on DUO's
 beoordelingsmodel: inhoud 0–3, woorden 0–2, grammatica 0–2, spelling 0–2, samenhang 0–1 (inhoud 0 makes everything 0;
-the prompt counts errors: 0–2 = 2, 3–5 = 1, 6+ = 0). `passed` is set by the server from the points (inhoud 2+ and 7 of 10),
-not by Claude, and the Schrijven proefexamen score is points of all 4 tasks against the 70% line. A form (A2 items with
+the prompt counts errors: 0–2 = 2, 3–5 = 1, 6+ = 0; for spelling the server applies that count itself since 28 November
+2026, see below). `passed` is set by the server from the points (inhoud 2+ and 7 of 10),
+not by Claude, and the Schrijven proefexamen score is points of all 4 tasks against the 70% line.
+
+Spelling without AI (`api/_spell.js`, 28 November 2026), so a text's spelling points don't depend on how Claude counts
+that day. `unknownWords()` lists the words of the text and the form that are not in `dict/nl-en.txt` (every headword,
+and a form only of a verb, noun, adjective or name, or a pronoun, article or numeral that adds an ending: Wiktionary
+also lists misspellings as "forms" of words that don't inflect, mischien → misschien, tog → toch); compounds of two
+known parts (with s, e or en between), diminutives and -s plurals count as known, and so do the task's own words, names
+(a capital inside a sentence, after a greeting, or closing a line), numbers, e-mail addresses and links. Up to 15 go
+under the text in the prompt as a plain list ("often a spelling mistake, sometimes a name or a rare word"). Claude also
+returns `spelfouten`, its count of all spelling mistakes (`withCount()`), and the server sets spelling to
+`min(Claude's points, DUO's count rule on max(listed spelling errors, spelfouten))` (`spellingPoints()`): Claude can
+still take a point (a misspelled personal detail, unreadable words) but never gives 2 while it lists four spelling
+mistakes. A2 only (practice, proefexamen and the owner's comparison); B1 Schrijven gets the count field but keeps its
+own points. On the made-up samples the list catches gekoopt, gekogt, klijn, mauwen, sijn, gelt, antwoort and flags no
+correct word; it has not been run against Claude's own counting on real texts. `vercel.json` bundles the dictionary
+with `check.js` and `admin.js` (`includeFiles`). A form (A2 items with
 fields get `kind:"f"` and `mx: WFMAX`) is scored as DUO's beoordelingsmodel Formulier: inhoud 0–3, woorden 0–2, spelling
 0–2, 7 points, voldoende with inhoud 2+ and 5 (`SCORES_WF`, `wfPassed`). As in DUO's models, woorden is 0 when the text
 or answer is almost only words from the task. A writing text sent again unchanged gets its earlier result without a new

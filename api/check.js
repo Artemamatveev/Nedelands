@@ -14,6 +14,7 @@
 // With accounts set up (Supabase, see _supa.js) only a signed-in user may grade, CHECK_LIMIT checks a day;
 // the answer then also has `left`, the checks left today. With Bittertalen Plus (api/plus.js) PLUS_LIMIT a day.
 import Anthropic from "@anthropic-ai/sdk";
+import { unknownWords, spellingPoints } from "./_spell.js";
 import { accounts, caller, checkCost, useChecks, LIMIT, PLUS, plusOn, plusFor, coversLevel, sameOrigin, FREE, visitor, useFree, useTotal, addSpend, bonusFor, useGuard, PLUS_MONTH, OPUS_MONTH, PASS_TOTAL, PASS_OPUS, YEAR_TOTAL, YEAR_OPUS, monthOf, amsterdamDay, gradingDigest, gradingReceipt } from "./_supa.js";
 
 // Created only when the key is set, so a missing key gives a clear error instead of a crash
@@ -76,7 +77,14 @@ const withScores = (SC) => {
   };
   return { ...SCHEMA, properties: { tasks: { type: "array", items: result } } };
 };
-const SCHEMA_SP = withScores(SCORES_SP), SCHEMA_WR = withScores(SCORES_WR);
+// Schrijven also counts its spelling mistakes (spelfouten), for the spelling points by DUO's rule (api/_spell.js)
+const withCount = (schema) => {
+  const item = schema.properties.tasks.items;
+  return { ...schema, properties: { tasks: { type: "array", items: { ...item,
+    properties: { ...item.properties, spelfouten: { type: "integer", description: "Het aantal spelfouten in de hele tekst: elk fout gespeld woord één keer, ook als het niet bij errors staat. Hoofdletters tellen mee, leestekens niet." } },
+    required: [...item.required, "spelfouten"] } } } };
+};
+const SCHEMA_SP = withScores(SCORES_SP), SCHEMA_WR = withCount(withScores(SCORES_WR));
 const clampScores = (sc, SC) => {
   const o = Object.fromEntries(Object.entries(SC).map(([k, max]) => [k, Math.max(0, Math.min(max, Math.round(Number(sc?.[k]) || 0)))]));
   return o.inhoud ? o : Object.fromEntries(Object.keys(SC).map((k) => [k, 0])); // no answer to the question: no points at all
@@ -140,6 +148,7 @@ Geef voor elke opdracht, in dezelfde volgorde:
 - verdict: één of twee korte zinnen in eenvoudig Nederlands (A2): algemene beoordeling, of alle punten van de opdracht zijn gedaan en waar de punten verloren gaan.
 - corrected: de volledige tekst van de cursist, gecorrigeerd, in het Nederlands; verander alleen wat fout is. Bij een formulier: alleen het verbeterde antwoord op de open vraag; corrigeer de persoonlijke gegevens niet.
 - errors: de fouten, de belangrijkste eerst (woordvolgorde, werkwoordsvormen, de/het, spelling). wrong = het foute fragment uit de tekst, right = de juiste versie, why = korte uitleg van de regel in eenvoudig Nederlands (A2). Geen fouten: lege lijst.
+- spelfouten: tel alle spelfouten in de tekst (elk fout gespeld woord één keer), ook die je niet bij errors noemt. De woorden die niet in onze woordenlijst staan, worden onder de tekst genoemd: kijk of het spelfouten zijn (een naam of een bestaand woord is geen fout).
 - scores: punten volgens het beoordelingsmodel Schrijven van DUO. Wees streng zoals een examinator: tel voor de punten alle fouten in de tekst, ook als je ze niet allemaal noemt.
   inhoud (adequaatheid en begrijpelijkheid, 0–3): 3 = alle punten van de opdracht gedaan, goed begrijpelijk en passend (ook de toon, bijvoorbeeld een aanhef en een groet in een e-mail); 2 = bijna alles gedaan, één punt ontbreekt of is onduidelijk; 1 = maar een deel van de opdracht gedaan of moeilijk te begrijpen; 0 = onleesbaar, leeg of geen antwoord op de opdracht. Bij een formulier hoort bij inhoud ook of alle velden ingevuld en logisch zijn.
   woorden (woordenschat, 0–2): 2 = genoeg en passende woorden voor het onderwerp; 1 = weinig woorden of soms een verkeerd woord, maar begrijpelijk; 0 = de tekst bestaat bijna alleen uit woorden uit de opdracht (overgeschreven), of zo weinig of zulke verkeerde woorden dat de tekst moeilijk te begrijpen is.
@@ -213,9 +222,15 @@ const promptWR = (tasks, max, n = nonce()) =>
       (t, i) =>
         `OPDRACHT ${i + 1}${t.kind === "f" ? " (FORMULIER, 7 punten)" : ""}:\n${fence("opdracht", n, t.task)}` +
         (t.form ? `\nIngevuld formulier (controleer of alle velden zijn ingevuld en logisch zijn):\n${fence("formulier", n, t.form)}` : "") +
-        `\nTEKST VAN DE CURSIST ${i + 1}:\n${fence("tekst", n, t.text || "(leeg)")}`,
+        `\nTEKST VAN DE CURSIST ${i + 1}:\n${fence("tekst", n, t.text || "(leeg)")}` + spellHint(t, i),
     )
     .join("\n\n") + `\n\nNoem per opdracht maximaal ${max} fouten.`;
+// The words of a text (and a form) that are not in the app's Dutch word list: likely spelling mistakes, or a name or a
+// rare word; Claude decides. Never instructions: only words, shown as a plain list.
+const spellHint = (t, i) => {
+  const u = [...new Set([...unknownWords(t.text, t.task), ...unknownWords(t.form, t.task)])].slice(0, 15);
+  return u.length ? `\nWoorden uit tekst ${i + 1} die niet in onze Nederlandse woordenlijst staan (vaak een spelfout, soms een naam of een zeldzaam woord): ${u.join(", ")}` : "";
+};
 
 // Spreken A2: the prompt for 1 to 16 answers {task, text}, the text being the transcript the learner confirmed
 const promptSP = (tasks, max, n = nonce()) =>
@@ -240,7 +255,8 @@ export async function gradeWriting(task, model) {
   await addSpend(response.model, response.usage).catch(() => {});
   if (response.stop_reason === "refusal" || response.stop_reason === "max_tokens") throw new Error(response.stop_reason);
   const t = JSON.parse(response.content.find((b) => b.type === "text")?.text || "{}").tasks?.[0] || {};
-  const scores = clampScores(t.scores, SCORES_WR);
+  let scores = clampScores(t.scores, SCORES_WR);
+  if (scores.inhoud) scores = { ...scores, spelling: spellingPoints(uniqueCorrections(t.errors), scores.spelling, t.spelfouten) };
   return { model: response.model, scores, total: sum(scores), passed: wrPassed(scores), errors: uniqueCorrections(t.errors).length, verdict: str(t.verdict, 400) };
 }
 
@@ -445,7 +461,9 @@ async function gradeRequest(req, res, { user, input, sb, sp, wb, t0, save }) {
       tasks: out.map((t, i) => {
         const form = !sp && !wb && tasks[i].kind === "f";
         const SC = wb ? SCORES_WB[tasks[i].kind] : sb ? SCORES_SB[tasks[i].kind] : sp ? SCORES_SP : form ? SCORES_WF : SCORES_WR;
-        const clamped = clampScores(t.scores, SC);
+        let clamped = clampScores(t.scores, SC);
+        // Schrijven A2: spelling points by DUO's count rule, never more than Claude gave (api/_spell.js)
+        if (!sp && !wb && clamped.inhoud) clamped = { ...clamped, spelling: spellingPoints(uniqueCorrections(t.errors), clamped.spelling, t.spelfouten) };
         const short = sp && !sb ? capShortSpoken(clamped, tasks[i].text) : { scores: clamped, short: false };
         const scores = short.scores;
         if (short.short) t = { ...t, verdict: [str(t.verdict, 400), SHORT_NOTE].filter(Boolean).join(" ") };

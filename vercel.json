@@ -11,10 +11,12 @@
   ],
   "functions": {
     "api/check.js": {
-      "maxDuration": 120
+      "maxDuration": 120,
+      "includeFiles": "dict/nl-en.txt"
     },
     "api/admin.js": {
-      "maxDuration": 120
+      "maxDuration": 120,
+      "includeFiles": "dict/nl-en.txt"
     }
   },
   "headers": [
