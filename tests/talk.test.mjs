@@ -34,7 +34,7 @@ async function load(options={}){
     visitor:()=>'visitor-hash',sameOrigin:()=>true,
     useChecks:async(_id,cost)=>{usage.push(cost);return options.left??5},useFree:async(_id,cost)=>{usage.push(cost);return options.free??1},
     useTotal:async cost=>{quotas.push(cost);return 'total' in options?options.total:300},addSpend:options.addSpend|| (async()=>true),bonusFor:async()=>0,
-    PLUS_MONTH:200,PASS_TOTAL:250,YEAR_TOTAL:600,TALK_PLUS:3,monthOf:()=>'2026-11-01',amsterdamDay:()=>'2026-11-25',
+    PLUS_MONTH:200,PASS_TOTAL:250,YEAR_TOTAL:600,TRIAL_TOTAL:30,TALK_PLUS:3,monthOf:()=>'2026-11-01',amsterdamDay:()=>'2026-11-25',
     useGuard:async(k,_d,cost,lim)=>{guards.push([k,cost]);const g=options.guard?.[k[0]];return g??lim-cost},
     plusFor:async()=>options.plan||null,coversLevel:(p,l)=>!!p&&(p.level==='B1'||l==='A2'),
     talkSign:x=>crypto.createHmac('sha256','test-secret').update('bittertalen-talk|'+x).digest('base64url'),
