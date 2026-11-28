@@ -5,8 +5,9 @@
 // Google, Apple, Microsoft (azure) and Facebook show when they are switched on in Supabase (Authentication → Sign In / Providers);
 // the e-mail code only with LOGIN_EMAIL=1, because Supabase's own mail reaches only the project's team
 // (real users need custom SMTP); passkeys (still experimental in Supabase) only with LOGIN_PASSKEY=1.
-import { accounts, supaUrl, anonKey, LIMIT, FREE, plusOn, PLUS, PLUS_MONTH, TALK_PLUS, PLUS_PRICE, PLANS, passOn, PASSES, PASS_TOTAL, PASS_DAYS, yearOn, YEARS, YEAR_DAYS, YEAR_TOTAL } from "./_supa.js";
+import { accounts, supaUrl, anonKey, LIMIT, FREE, plusOn, PLUS, PLUS_MONTH, TALK_PLUS, PLUS_PRICE, PLANS, passOn, PASSES, PASS_TOTAL, PASS_DAYS, yearOn, YEARS, YEAR_DAYS, YEAR_TOTAL, storeOn } from "./_supa.js";
 import { eventsOn } from "./event.js";
+import { STORE_KEYS, STORE_PRODUCTS } from "./_store.js";
 import { pronOn, PRON_DAY, PRON_SECONDS, FREE_SECONDS, STT_DAY } from "./_pron.js";
 import { sayOn } from "./_say.js";
 
@@ -29,6 +30,8 @@ export default async function handler(req, res) {
     ...(passOn ? { pass: { days: PASS_DAYS, total: PASS_TOTAL, plans: Object.fromEntries(Object.entries(PASSES).map(([level, p]) => [level, { price: p.price }])) } } : {}),
     // the Jaarpas: the same for YEAR_DAYS, only when its prices are configured
     ...(yearOn ? { year: { days: YEAR_DAYS, total: YEAR_TOTAL, plans: Object.fromEntries(Object.entries(YEARS).map(([level, p]) => [level, { price: p.price }])) } } : {}),
+    // purchases in the store apps (api/_store.js): RevenueCat's public app keys and the product identifiers
+    ...(storeOn && (STORE_KEYS.ios || STORE_KEYS.android) ? { store: { ...STORE_KEYS, products: Object.entries(STORE_PRODUCTS).map(([id, p]) => ({ id, ...p })), pass: { days: PASS_DAYS, total: PASS_TOTAL }, year: { days: YEAR_DAYS, total: YEAR_TOTAL } } } : {}),
     ...(eventsOn() ? { events: 1 } : {}),
     // Azure Speech (api/_pron.js): Zeg het na and Spreken practice; day takes a day, seconds of audio for Zeg het na, free for an answer
     ...(pronOn ? { pron: { day: PRON_DAY, seconds: PRON_SECONDS, free: FREE_SECONDS, stt: STT_DAY } } : {}),

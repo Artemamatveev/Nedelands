@@ -3302,7 +3302,7 @@ function drawProfile(){
   $("pmail").hidden=!(u&&u.email); $("pmail").textContent=u&&u.email||"";
   if(c){
     if(u){
-      if(c.plus&&(!NATIVE||isPlus()))b=ban("aplus","plus","Bittertalen Plus",plusLine());
+      if(c.plus&&(!NATIVE||isPlus()||storeOK()))b=ban("aplus","plus","Bittertalen Plus",plusLine());
       h=`<h3 class="lh">Account</h3><div class="pg"><p class="pinfo"><span role="status">${acc.sync||"Wacht op synchronisatie"}</span><br>${myPeriod()==="day"?"Nakijken vandaag:":"Gratis nakijkbeurten:"} ${checksLeft()==null?"…":`nog ${checksLeft()} van de ${myLimit()}`}</p>`
         +(L.includes("passkey")?`<button type="button" class="pact" id="apk">Passkey toevoegen</button>`:"")
         +`<button type="button" class="pact" id="agrp">Code van je school of werk</button><button type="button" class="pact" id="aref">Nodig een vriend uit</button><button type="button" class="pact" id="aout">Uitloggen</button><button type="button" class="pact bad" id="adel">Account verwijderen</button></div>`;
@@ -3321,7 +3321,7 @@ function drawProfile(){
     drawProfile()};
   if($("aout"))$("aout").onclick=async()=>{await push();acc.msg="";const {error}=await acc.sb.auth.signOut({scope:"local"});if(error){acc.msg=loginErr(error);return drawProfile()}await setUser(null)};
   if($("adel"))$("adel").onclick=async()=>{const b=$("adel");
-    if(!b.dataset.ok){b.dataset.ok=1;b.textContent="Tik nog een keer: je account en alles erin worden gewist";return}
+    if(!b.dataset.ok){b.dataset.ok=1;b.textContent=acc.plus?.store&&!acc.plus.pass&&isPlus()?`Tik nog een keer: je account wordt gewist. Je abonnement in ${storeName(acc.plus.store)} loopt door: zeg het daar op.`:"Tik nog een keer: je account en alles erin worden gewist";return}
     b.disabled=true;
     try{const r=await fetch("/api/account",{method:"DELETE",headers:await authHead()});if(!r.ok)throw 0;
       lsSet(ALINK,null);cloud=null;try{await acc.sb.auth.signOut({scope:"local"})}catch(e){}
@@ -5108,6 +5108,88 @@ function recHTML(on,plans){
     <button class="btn wide" id="precbuy" data-level="${lv}" ${acc.user?"":`data-plus-login="exam-${lv.toLowerCase()}"`}>Kies de Examenpas ${lv}</button></div></section>
     <h3 class="lh">Andere opties</h3>`;
 }
+// Buying in the store apps (App Store, Google Play) with RevenueCat's plugin (api/_store.js): the products come from the
+// store with its own prices; after buying or restoring, the server reads RevenueCat's record (POST /api/plus go:"store").
+// Older app builds without the plugin keep the screen without prices. Never a price, link or word of the website here.
+const RC=()=>NATIVE&&Capacitor.isPluginAvailable?.("Purchases")?Capacitor.Plugins.Purchases:null;
+const rcOS=()=>Capacitor.getPlatform?.()==="ios"?"ios":"android";
+const storeOK=()=>!!(RC()&&acc.cfg?.store?.[rcOS()]);
+const storeName=st=>/play/.test(String(st||(NATIVE?rcOS():"")))?"Google Play":"de App Store";
+const STORE_MANAGE={ios:"https://apps.apple.com/account/subscriptions",android:"https://play.google.com/store/account/subscriptions"};
+let rcUser=null,rcItems=null;
+async function rcReady(){
+  const P=RC(),uid=acc.user?.id;if(!P||!uid)throw new Error("store");
+  if(rcUser==null){await P.configure({apiKey:acc.cfg.store[rcOS()],appUserID:uid});rcUser=uid}
+  else if(rcUser!==uid){await P.logIn({appUserID:uid});rcUser=uid;rcItems=null}
+  return P;
+}
+// The store's products by our id ("plus_a2"; Google's subscriptions come as "plus_a2:<base plan>")
+async function rcProducts(){
+  if(rcItems)return rcItems;
+  const P=await rcReady(),L=acc.cfg.store.products||[],ids=k=>L.filter(x=>(x.kind==="sub")===k).map(x=>x.id);
+  const [a,b]=await Promise.all([P.getProducts({productIdentifiers:ids(true),type:"SUBSCRIPTION"}),P.getProducts({productIdentifiers:ids(false),type:"NON_SUBSCRIPTION"})]);
+  const m={};for(const x of [...(a?.products||[]),...(b?.products||[])]){const id=String(x?.identifier||"").split(":")[0];if(id&&!m[id])m[id]=x}
+  return rcItems=m;
+}
+async function storeSync(){
+  const r=await fetch("/api/plus",{method:"POST",headers:{"Content-Type":"application/json",...await authHead()},body:JSON.stringify({go:"store"})});
+  const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error("sync");
+  acc.plus=j.plus||null;return acc.plus;
+}
+const rcCancelled=e=>!!(e&&(e.userCancelled||e.code==="1"||e.code===1||/cancel/i.test(String(e.message||e.code||""))));
+async function storeScreen(choice){
+  const c=acc.cfg.plus,p=acc.plus,on=isPlus(),S=acc.cfg.store,where=storeName();
+  const plan=(lv,k)=>({sub:"Bittertalen Plus",pass:"Examenpas",year:"Jaarpas"})[k]+" "+lv,
+    pick=(lv,k)=>"Kies "+({sub:"Plus",pass:"Examenpas",year:"Jaarpas"})[k]+" "+lv,
+    thanks={sub:"Bedankt! Je hebt nu Bittertalen Plus.",pass:"Bedankt! Je hebt nu de Examenpas.",year:"Bedankt! Je hebt nu de Jaarpas."};
+  const head=`<h2 id="plusS">Bittertalen Plus</h2>`
+    +(on?`<p class="sub"><b>${p.group?`<span lang="nl">${esc(p.group)}</span>`:p.pass?(p.year?"Jaarpas":"Examenpas"):"Bittertalen Plus"} ${p.level||""}</b> · ${plusLine()}</p>`:"")
+    +`<p class="sub">Met Plus: tot ${c.month||200} nakijkbeurten per maand. Met een gratis account: ${acc.cfg.limit} gratis.</p><p class="sub">Al het andere in Bittertalen blijft gratis.</p>`
+    +(plusMsg?`<p class="note" role="status">${esc(plusMsg)}</p>`:"");
+  if(!acc.user){
+    $("tbody").innerHTML=head+`<p class="sub">Log in om Plus te kopen. Dan werkt het ook op je andere apparaten.</p><button class="btn wide" data-plus-login="${esc(choice||"exam")}">Inloggen</button>`;
+    document.querySelectorAll("[data-plus-login]").forEach(b=>b.onclick=()=>{preferredPlan=b.dataset.plusLogin;
+      try{sessionStorage.setItem(PENDING_PLAN,JSON.stringify({choice:preferredPlan,at:Date.now()}))}catch(e){}acc.msg="";lsSet(WEL,"1");welcome()});
+    return;
+  }
+  $("tbody").innerHTML=head+`<p class="note" id="pload">Prijzen laden…</p>`;
+  if(!plusSeen){plusSeen=true;track("plus")}
+  let items;
+  try{items=await rcProducts()}catch(e){if($("pload"))$("pload").textContent="De prijzen laden nu niet. Probeer het later opnieuw.";return}
+  if(!$("plusS"))return; // the learner went elsewhere meanwhile
+  // what can still be bought: nothing when B1 runs, only B1 when A2 runs; the learner's level first
+  const lv=lvl()==="B1"?"B1":"A2",days=S.pass?.days||119,P=(S.products||[]).filter(x=>items[x.id]&&!(on&&(p.level==="B1"||x.level==="A2")));
+  P.sort((a,b)=>(b.kind==="pass"&&b.level===lv)-(a.kind==="pass"&&a.level===lv));
+  const first=P[0]?.id;
+  const card=x=>{const it=items[x.id],sub=x.kind==="sub";
+    return`<section class="list" data-store="${x.id}"><div style="padding:16px">${x.id===first?`<p class="ask">Aanbevolen voor jou</p>`:""}<h3>${plan(x.level,x.kind)}</h3>
+    <p>${sub?(x.level==="A2"?"Uitgebreide feedback van een sterker AI-model, ook op je proefexamens.":"Ook Schrijven en Spreken B1, met A2 erbij.")
+      :x.kind==="year"?"Een jaar Plus voor één betaling. Wordt niet automatisch verlengd.":`${Math.round(days/7)} weken AI-feedback voor ${x.level}.`}</p>${x.kind==="pass"?`<p>Eén keer betalen, geen abonnement.</p>`:""}
+    <p><b dir="ltr">${esc(it.priceString||"")}</b> <span>${sub?"per maand":"eenmalig"}</span></p>
+    ${sub?`<p class="note">Je kunt elke maand opzeggen.</p>`:""}
+    <button class="${x.id===first?"btn":"ghost"} wide" data-store-buy="${x.id}">${pick(x.level,x.kind)}</button></div></section>`};
+  $("tbody").innerHTML=head+P.map(card).join("")
+    +(on&&p.store&&!p.pass?`<button class="ghost wide" id="pman">Abonnement beheren</button><p class="note">Opzeggen doe je in ${storeName(p.store)}.</p>`:"")
+    +`<button class="ghost wide" id="prestore">Aankopen herstellen</button>`
+    +`<p class="note">Je betaalt via ${where}. Een abonnement wordt elke maand verlengd tot je het uiterlijk 24 uur voor het einde van de maand opzegt in je instellingen van ${where}.</p>`
+    +`<p class="note"><a href="/voorwaarden">Voorwaarden</a> · <a href="/privacy">Privacyverklaring</a></p>`;
+  const pref=choice&&Object.hasOwn(PLAN_CHOICES,choice)?$("tbody").querySelector(`[data-store="${choice.replace("exam","pass").replace("-","_")}"]`):null;
+  if(pref){pref.classList.add("preferred-plan");pref.scrollIntoView({block:"center"})}
+  const lock=v=>document.querySelectorAll("[data-store-buy],#prestore,#pman").forEach(x=>x.disabled=v);
+  const done=async msg=>{plusMsg=msg;await usage().catch(()=>{});plusScreen()};
+  document.querySelectorAll("[data-store-buy]").forEach(b=>b.onclick=async()=>{
+    const x=(S.products||[]).find(y=>y.id===b.dataset.storeBuy);lock(true);plusMsg="";track(x.kind==="sub"?"buy":"pass");
+    try{const R=await rcReady();await R.purchaseStoreProduct({product:items[x.id]})}
+    catch(e){lock(false);return done(rcCancelled(e)?"Betalen is gestopt. Er is niets afgeschreven.":"Dat lukt nu niet. Probeer het later opnieuw.")}
+    try{await storeSync()}catch(e){}
+    if(isPlus(x.level)){track("paid");campaignTrack("paid");return done(thanks[x.kind])}
+    done("Je betaling wordt verwerkt…");plusWait(0,x.level);
+  });
+  $("prestore").onclick=async()=>{lock(true);
+    try{const R=await rcReady();await R.restorePurchases();await storeSync();done(isPlus()?"Je aankopen zijn hersteld.":"Er zijn geen aankopen gevonden.")}
+    catch(e){lock(false);done("Dat lukt nu niet. Probeer het later opnieuw.")}};
+  if($("pman"))$("pman").onclick=()=>{const url=STORE_MANAGE[rcOS()],B=Capacitor.Plugins?.Browser;B?B.open({url}).catch(()=>{}):window.open(url,"_blank")};
+}
 function plusScreen(choice){
   if(!acc.cfg||!acc.cfg.plus)return home();
   closePop();hush();TK=null;$("card").innerHTML="";
@@ -5115,6 +5197,7 @@ function plusScreen(choice){
   tBack(TABN[tab],home);
   const c=acc.cfg.plus,p=acc.plus,on=isPlus(),plans=c.plans||{A2:{price:c.price}};
   const dateOffer=offerChoice();
+  if(NATIVE&&storeOK())return storeScreen(choice);
   if(NATIVE){$("tbody").innerHTML=`<h2 id="plusS">Bittertalen Plus</h2>`+(on?`<p class="sub"><b>${p.group?`<span lang="nl">${esc(p.group)}</span>`:p.pass?(p.year?"Jaarpas":"Examenpas"):"Bittertalen Plus"} ${p.level||""}</b> · ${plusLine()}</p>`:`<p class="sub">Bittertalen Plus is niet beschikbaar in deze app.</p>`)+`<p class="sub">Al het andere in Bittertalen blijft gratis.</p>`;return}
   $("tbody").innerHTML=`<h2 id="plusS">Bittertalen Plus</h2>`
     +(on?`<p class="sub"><b>${p.group?`<span lang="nl">${esc(p.group)}</span>`:p.pass?(p.year?"Jaarpas":"Examenpas"):"Bittertalen Plus"} ${p.level||""}</b> · ${plusLine()}</p>`:"")
@@ -5129,7 +5212,7 @@ function plusScreen(choice){
       <p><b dir="ltr">€ ${esc(plans[level].price)}</b> <span>per maand</span></p>
       <p class="note">Je kunt elke maand opzeggen.</p>
       ${!acc.user?`<button class="${REC?"ghost":"btn"} wide" data-plus-login="plus-${level.toLowerCase()}">${level==="A2"?"Kies Plus A2":"Kies Plus B1"}</button>`
-        :on&&!p.pass?level==="B1"&&p.level==="A2"?`<button class="btn wide" data-plus-buy="B1">Overstappen naar Plus B1</button>`:""
+        :on&&!p.pass?level==="B1"&&p.level==="A2"&&!p.store?`<button class="btn wide" data-plus-buy="B1">Overstappen naar Plus B1</button>`:""
         :p&&p.status!=="canceled"?"":`<button class="${REC?"ghost":"btn"} wide" data-plus-buy="${level}">${level==="A2"?"Kies Plus A2":"Kies Plus B1"}</button>`}
       </div></section>`).join("")
     +(acc.cfg.pass&&!(on&&!p.pass&&p.level==="B1")?`<h3 class="lh">Examenpas</h3><p class="sub">Eén keer betalen, geen abonnement.</p>`
@@ -5148,7 +5231,8 @@ function plusScreen(choice){
       </div></section>`).join(""):"")
     +`<p class="note">Niet tevreden? Binnen 14 dagen na je eerste betaling krijg je je geld terug.</p>`
     +(acc.user&&acc.withdraw?`<button class="ghost wide" id="pwd">Herroepen</button><p class="note">Herroep je aankoop van de laatste 14 dagen. Plus of je Examenpas stopt meteen en je krijgt je geld binnen 14 dagen terug.</p>`:"")
-    +(acc.user&&(on&&!p.pass||p&&!p.pass&&p.status!=="canceled")?`<button class="ghost wide" id="pman">Abonnement beheren</button><p class="note">Opzeggen, je betaalmethode veranderen en je facturen: bij Abonnement beheren.</p>`:"")
+    +(on&&p.store?`<p class="note">Je hebt dit gekocht in ${storeName(p.store)}. Opzeggen en je aankopen beheer je daar.</p>`:"")
+    +(acc.user&&!p?.store&&(on&&!p.pass||p&&!p.pass&&p.status!=="canceled")?`<button class="ghost wide" id="pman">Abonnement beheren</button><p class="note">Opzeggen, je betaalmethode veranderen en je facturen: bij Abonnement beheren.</p>`:"")
     +`<p class="note">Je betaalt bij Stripe. Bittertalen ziet je kaart- of bankgegevens niet.</p><p class="note"><a href="/privacy">Privacyverklaring</a></p>`;
   if(!plusSeen){plusSeen=true;track("plus")}
   if(choice&&Object.hasOwn(PLAN_CHOICES,choice))preferredPlan=choice;
@@ -6121,7 +6205,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru","uk"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="554e350d6e";
+const UIV="8f2d65f460";
 let uiP=null;
 function uiLoaded(){try{trMemo.clear()}catch(e){} // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});

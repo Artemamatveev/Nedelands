@@ -381,6 +381,30 @@ export async function putPass(row) {
   const j = await r.json().catch(() => ({}));
   return j.code === "23503" ? "gone" : false;
 }
+// Purchases in the App Store and Google Play (api/_store.js): on only with RevenueCat's secret API key and the
+// webhook's authorization value (REVENUECAT_SECRET, REVENUECAT_WEBHOOK_AUTH). One row of `store_plus` per user: the best
+// access the store purchases give now, written by the server from RevenueCat's record.
+export const storeOn = plusOn && !!((process.env.REVENUECAT_SECRET || "").trim() && (process.env.REVENUECAT_WEBHOOK_AUTH || "").trim());
+export async function storeOf(uid) {
+  const r = await rest(`store_plus?user_id=eq.${encodeURIComponent(uid)}&select=level,kind,store,until,ends`);
+  if (!r.ok) throw new Error(`store_plus ${r.status}`);
+  const row = (await r.json())[0];
+  return row && Date.parse(row.until) > Date.now() ? row : null;
+}
+// Keeps the row: true, "gone" when the account no longer exists, false when it failed
+export async function putStore(row) {
+  const r = await rest("store_plus", { method: "POST", headers: { prefer: "resolution=merge-duplicates,return=minimal" }, body: JSON.stringify({ ...row, updated_at: new Date().toISOString() }) });
+  if (r.ok) return true;
+  const j = await r.json().catch(() => ({}));
+  return j.code === "23503" ? "gone" : false;
+}
+export async function dropStore(uid) {
+  const r = await rest(`store_plus?user_id=eq.${encodeURIComponent(uid)}`, { method: "DELETE", headers: { prefer: "return=minimal" } });
+  if (!r.ok) throw new Error(`store_plus ${r.status}`);
+}
+// The store's access in the shape of plusFor(): a monthly subscription, or a pass (pass:true; year:true for a Jaarpas)
+const storePlan = (st) => ({ status: "active", until: st.until, ends: st.kind !== "sub" || !!st.ends, level: st.level, store: st.store,
+  ...(st.kind !== "sub" ? { pass: true } : {}), ...(st.kind === "year" ? { year: true } : {}) });
 // What the user may use now: the subscription, or a running Examenpas when it covers more
 // cached: a check or a conversation may use Stripe's answer of the last few minutes (SUB_MS); the Plus screen never does
 export async function plusFor(uid, cached = false) {
@@ -389,6 +413,11 @@ export async function plusFor(uid, cached = false) {
   const subLevel = isPlus(sub) ? sub.level : null;
   let best = !pass || subLevel === "B1" || subLevel === pass.level ? sub
     : { ...(sub || {}), status: "active", until: pass.until, ends: true, level: pass.level, pass: true, ...(pass.kind === "year" ? { year: true } : {}) };
+  // A purchase in the App Store or Google Play, when it covers more (nothing running, or B1 over A2); at the same level
+  // the website's purchase stays shown, so its own buttons (manage, withdraw) stay
+  const st = storeOn ? await storeOf(uid).catch(() => null) : null;
+  const level0 = isPlus(best) ? best.level : null;
+  if (st && level0 !== "B1" && st.level !== level0) best = storePlan(st);
   // A school's or employer's group (api/group.js) gives the same checks until its end date, when it covers more
   const group = await groupOf(uid).catch(() => null);
   const bestLevel = isPlus(best) ? best.level : null;

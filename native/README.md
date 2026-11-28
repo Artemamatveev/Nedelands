@@ -59,3 +59,17 @@ inside itself goes on that list. The first start needs the internet; after that 
 
 Content and code come from the website. A new store build is only needed for a new Capacitor version, a new
 plugin, a change in the Swift code, icons, or a change in `capacitor.config.json`.
+
+## In-App Purchase (RevenueCat)
+
+1. `npm install && npx cap sync` (the plugin `@revenuecat/purchases-capacitor`; check it supports Capacitor 8).
+2. Xcode → App → Signing & Capabilities → + Capability → In-App Purchase.
+3. App Store Connect: Agreements, Tax and Banking (Paid Apps), the Small Business Program, a subscription group
+   "Bittertalen Plus" with `plus_a2` and `plus_b1` (1 month), non-renewing subscriptions `pass_a2`, `pass_b1`, `year_a2`,
+   `year_b1`, each with a review screenshot. Play Console: subscriptions `plus_a2`, `plus_b1` (a monthly base plan) and
+   one-time products with the same pass and year ids.
+4. RevenueCat: a project with the iOS and Android app (App Store Connect API key / Play service account), the six products,
+   webhook `https://bittertalen.nl/api/store` with an authorization value. In Vercel: `REVENUECAT_SECRET`,
+   `REVENUECAT_WEBHOOK_AUTH`, `REVENUECAT_IOS_KEY`, `REVENUECAT_ANDROID_KEY`. Supabase: run
+   `supabase/migrations/20261128120000_store_plus.sql`.
+5. Test: a sandbox account (Settings → App Store → Sandbox account) and a Play licence tester; buy, restore, cancel.

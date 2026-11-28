@@ -188,6 +188,33 @@ There is no trial or yearly price. Videos and podcasts remain free.
   money: KVK (within a week of the start), Stripe's account verification, live keys, algemene voorwaarden and the right
   of withdrawal for digital services.
 
+## Purchases in the store apps (RevenueCat, 28 November 2026)
+
+- `api/_store.js`: the app buys with RevenueCat's plugin under the learner's account id; the server never trusts the app
+  or the webhook's body for what that gives. `syncStore(uid)` reads RevenueCat's record (`GET
+  https://api.revenuecat.com/v1/subscribers/{uid}`, `REVENUECAT_SECRET`, 8 s timeout) and `storeAccess()` works out the
+  best access: a subscription (`plus_a2`, `plus_b1`; Google's ids come as `plus_a2:<base plan>`) until its expiry or the
+  store's grace period unless refunded; a pass (`pass_*`) `PASS_DAYS` and a year (`year_*`) `YEAR_DAYS` from purchase,
+  a pass bought while one runs following on (refunded one-time purchases leave RevenueCat's list); B1 over A2. The result
+  is one row of `store_plus` (migration `supabase/migrations/20261128120000_store_plus.sql`, in `schema.sql`; RLS: read
+  own row; written by the server), or no row.
+- The webhook: RevenueCat → Integrations → Webhooks, URL `https://bittertalen.nl/api/store` (a rewrite to
+  `api/stripe.js?src=rc`, so no 13th function), authorization header value = `REVENUECAT_WEBHOOK_AUTH`, production and
+  sandbox. Every event re-reads the customer (app user id, aliases, transfer ids that are account ids); 401 without the
+  header, 500 when RevenueCat can't be read so it retries.
+- `POST /api/plus {go:"store"}`: after buying or restoring in the app, the same sync at once (at most 40 a day per
+  learner, `useGuard` "rc:"). GET `/api/plus` adds `store: "app_store" | "play_store"`.
+- `plusFor()` in `_supa.js`: a store purchase counts when nothing runs or it is B1 over A2; at the same level the
+  website's purchase stays the one shown (its manage and withdraw buttons stay). A store pass has `pass:true` (a Jaarpas
+  also `year:true`), so `api/check.js` and `api/_talk.js` count it over its term like a website pass. The website's Plus
+  screen says a store purchase is managed in the store and hides the Stripe portal and the A2 → B1 switch for it.
+- `/api/config` sends `store: {ios, android, products, pass, year}` with the public keys `REVENUECAT_IOS_KEY` (appl_…)
+  and `REVENUECAT_ANDROID_KEY` (goog_…), only when `storeOn` (Plus on, `REVENUECAT_SECRET` and `REVENUECAT_WEBHOOK_AUTH`).
+  `STORE_SANDBOX=0` ignores sandbox purchases; by default they count, because Apple's reviewer buys in the sandbox (so
+  TestFlight testers get Plus too).
+- Refunds and withdrawal for store purchases are Apple's and Google's; the herroepen button is for website purchases.
+  privacy.html (RevenueCat, Apple, Google) and voorwaarden.html ("Kopen in de app") say so in all nine languages.
+
 ## Usage counts (anonymous)
 
 To see what is used and where learners stop, the pages count a few events, and nothing more: per Amsterdam day one number

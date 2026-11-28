@@ -1,6 +1,8 @@
 // Delete my account: DELETE /api/account with "Authorization: Bearer <access token>".
 // Removes the user in Supabase; their progress and check counts go with them. The page keeps what is on the device.
 // A Plus subscription is cancelled at Stripe first, or Stripe would go on charging for an account that is gone.
+// A subscription bought in the App Store or Google Play can only be cancelled there; the app says so before deleting.
+import { rcDelete } from "./_store.js";
 import { accounts, caller, deleteUser, sameOrigin, plusOn, plusOf, stripe } from "./_supa.js";
 
 export default async function handler(req, res) {
@@ -19,5 +21,6 @@ export default async function handler(req, res) {
     }
   }
   if (!(await deleteUser(user.id).catch(() => false))) return res.status(502).json({ error: "failed" });
+  await rcDelete(user.id); // RevenueCat's record of store purchases (a subscription in the store is cancelled there by the learner)
   return res.status(200).json({ deleted: true });
 }

@@ -3,7 +3,9 @@
 // checkout.session.async_payment_succeeded; its signing secret is STRIPE_WEBHOOK_SECRET.
 // Keeps the user's row of `plus` (schema.sql) up to date. The subscription is read again from Stripe every time, so an
 // event that comes late or twice can't leave an old state behind.
+// Also RevenueCat's webhook for purchases in the store apps: /api/store → /api/stripe?src=rc (api/_store.js).
 import { createHmac, timingSafeEqual } from "node:crypto";
+import { storeHook } from "./_store.js";
 import { plusOn, HOOK, stripe, plusOf, putPlus, isPlus, LIVE, passOn, yearOn, passOf, putPass, matchesPass, PASS_KINDS } from "./_supa.js";
 
 // The signature is over the exact bytes Stripe sent, so Vercel must not parse the body
@@ -38,6 +40,8 @@ export default async function handler(req, res) {
   if (!plusOn) return res.status(503).json({ error: "not_configured" });
   const raw = await rawBody(req).catch(() => null);
   if (raw == null) return res.status(413).json({ error: "too_large" });
+  // RevenueCat's webhook for the App Store and Google Play (/api/store, a rewrite; api/_store.js)
+  if (req.query?.src === "rc") return storeHook(raw, req.headers.authorization, res);
   if (!signed(raw, req.headers["stripe-signature"])) return res.status(400).json({ error: "signature" });
   let ev;
   try { ev = JSON.parse(raw); } catch { return res.status(400).json({ error: "bad_request" }); }

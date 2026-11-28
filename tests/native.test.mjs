@@ -16,11 +16,21 @@ test('The shell loads the live practice page and installs every plugin the page 
   assert.ok(fs.existsSync(new URL('../native/www/offline.html', import.meta.url)));
   assert.match(read('.vercelignore'), /^native$/m, 'the shell is not deployed with the site');
 });
-test('Inside the store apps there are no purchases or prices', () => {
-  const page = read('oefenen.html');
+test('Inside the store apps only the store sells: no website prices, Stripe or links to buying', () => {
+  const page = read('oefenen.html'), pkg = JSON.parse(read('native/package.json'));
   assert.match(page, /const canOffer=\(\)=>!NATIVE&&/);
   assert.match(page, /\$\{NATIVE\?"":row\("prices","Prijzen"\)/);
-  assert.match(page, /if\(NATIVE\)\{\$\("tbody"\)\.innerHTML=`<h2 id="plusS">/);
+  // the store's own purchase (RevenueCat's plugin) when the build has it; older builds keep the screen without prices
+  assert.match(page, /if\(NATIVE&&storeOK\(\)\)return storeScreen\(choice\);\n  if\(NATIVE\)\{\$\("tbody"\)\.innerHTML=`<h2 id="plusS">/);
+  assert.ok(pkg.dependencies['@revenuecat/purchases-capacitor']);
+  const store = page.slice(page.indexOf('async function storeScreen('), page.indexOf('function plusScreen('));
+  assert.ok(store.length > 1000);
+  for (const bad of ['Stripe', '€', 'acc.cfg.pass.plans', 'acc.cfg.year.plans', 'location.href', '/?home', 'go:"buy"', 'go:"pass"'])
+    assert.ok(!store.includes(bad), bad);
+  assert.match(store, /priceString/, 'prices come from the store');
+  assert.match(store, /Aankopen herstellen/, 'Apple requires a restore button');
+  assert.match(store, /href="\/voorwaarden"/);assert.match(store, /href="\/privacy"/);
+  assert.equal((store.match(/class="\$\{x\.id===first\?"btn":"ghost"\}/g) || []).length, 1, 'one filled button: the recommended plan');
 });
 
 test('The iPhone app opens offline: the site and its service worker are an App-Bound Domain', () => {
