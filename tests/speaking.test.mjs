@@ -255,6 +255,21 @@ test('A2 speaking compares the second answer without counting the question twice
   assert.equal(checks.length,2);
   assert.match(a.document.getElementById('fb').textContent,/eerste antwoord 2\/3 · tweede antwoord 3\/3/);
   assert.equal(a.run('JSON.stringify(S.items["sp|5"])'),progress);
+  assert.equal(a.run('S.speakFollow.ok'),false);
+  a.run('S.speakFollow.day=today(); speakingFollowUp()');
+  assert.notEqual(a.run('queue[0].k'),'sp|5');
+  click('spchk');await take('Ik werk morgen omdat mijn collega vrij is.');
+  click('spchk');await a.flush();
+  assert.equal(a.run('S.speakFollow.writePending'),true);
+  a.run('setTab("vandaag");home();drawPlan()');
+  assert.equal(a.document.getElementById('daytransfer'),null);
+  a.run('S.speakFollow.day=today();drawPlan()');
+  click('daytransfer');
+  assert.equal(a.run('queue[0].sec'),'wr');
+  a.document.getElementById('txt').value='Ik kan donderdag niet komen omdat ik werk. Kan ik vrijdag komen?';
+  click('chk');await a.flush();
+  assert.equal(a.run('S.speakFollow.writeDone'),true);
+  assert.equal(a.run('S.speakFollow.writePending'),false);
 });
 
 test('A missed word can be recorded again without discarding the full speaking comparison',async()=>{

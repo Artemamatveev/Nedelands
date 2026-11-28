@@ -19,3 +19,21 @@ Use a single identified app build and the matching website revision. Record the 
 Collect 24 consented, de-identified answer clips across the four A2 task formats with six per format. Within each format choose two clear answers, two nearly sufficient answers and two weak or off-topic answers. Use actual learner responses for this calibration. Keep the recordings and transcripts outside the repository.
 
 For each clip record the task key, the teacher's rubric scores, the app's transcript scores, the app's decision, and either the key transcription error or an indication that the transcript is faithful. Ask the teacher to score the recording first and then independently score the transcript on the criteria the app can assess. Review all mismatches at the practice threshold and cases where transcription changes the meaning. Record separate observations for pronunciation and fluency. This review has no results until the teacher scores the samples.
+
+## Blind calibration for speaking and writing
+
+Use two independent NT2 assessors. Give each the same anonymised set in a different order. Include the 24 clips above and 24 writing samples spanning forms and messages, including short correct answers and incomplete answers with good grammar. Include different accents and recording conditions. Obtain permission for the intended processing. Keep the answer key, app output and other assessor's ratings hidden until both submit. For each sample collect the following row separately from each assessor.
+
+| Sample ID | Part and task ID | Audio or transcript or text | Content score | Other rubric scores | Sufficient? | Missing task requirement or reason for uncertainty |
+| --- | --- | --- | --- | --- | --- | --- |
+
+Freeze the build and model versions. Report human agreement first. Where both agree, tabulate app false passes and false fails separately, with denominators by part. Adjudicate disagreements and report them separately. Check whether transcript errors changed the judgement. Add anonymised or reconstructed regression cases only with permission. Recheck fixes against held-out examples.
+
+## Ten-learner pilot
+
+Recruit ten adults independently preparing for a scheduled A2 exam. Observe the first session without coaching. Ask each to find today's exercise, record an answer, interpret the feedback, revise it and explain what a paid plan adds. Allow participants to skip recording. Use pseudonymous participant IDs and record consent separately. After a week ask them to open Mijn dag and complete an unseen task independently. Use this observation sheet per participant.
+
+| ID | Phone/build | First blocker | Corrected own answer? | Returned unaided? | New task completed without hints? | What would they pay for, in their words? |
+| --- | --- | --- | --- | --- | --- | --- |
+
+Report counts out of participants offered each step and withdrawals separately. Compare immediate corrections with independent first attempts on new tasks. Record actual purchases separately from stated interest after paid launch. Do not infer exam pass probability from this pilot.
