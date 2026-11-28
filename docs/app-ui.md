@@ -47,10 +47,14 @@ eindgesprek or a 64-hour course with the Blik op Werk keurmerk; the PVT with the
 inburgeren.nl ↗, and the eindgesprek to practise as four conversations (`GP` items with `ona:1`, the learner is a kok,
 examiner "Mevrouw Bakker"), still scripts with keyword checks (`talk()`, `gpFits()`, `S.gp`), not AI conversations. Check these rules when DUO changes them. Practising a part is on Oefenen.
 Last on both level tabs, "Mijn examen" (`uitScreen()`, in `#talk`): per part the learner taps Geslaagd or Niet geslaagd for
-the real exam (tap again to take it back). Their own record is `S.uit` `{part: {ok, at}}`;
+the real exam (tap again to take it back), and after that, if they want, the grade from DUO's letter: 1 to 10 for an A2
+part and KNM, a score up to 1000 for a Staatsexamen NT2 part (500 or more is a pass; `NT2PART`, `scParse()`, `setScore()`,
+since 28 November 2026; DUO shows it as "Cijfer" under Details examen in Mijn Inburgering, a whole number in the
+examples the owner saw). Their own record is `S.uit` `{part: {ok, at, sc?}}`;
 a copy goes to `/api/outcome` (`api/outcome.js`, table `exam_outcomes` and `put_outcome()` in `supabase/schema.sql`, run it
 in the SQL editor) to see whether the proefexamens and "Stabiel oefenresultaat" predict the result: part, ok, `pc` the last
-proefexamen score, `rd` the status then (0 nog niet, 1 bijna, 2 klaar), the month. No name, e-mail, account or IP. The row's
+proefexamen score, `rd` the status then (0 nog niet, 1 bijna, 2 klaar), `sc` the grade or score or null (column and
+`put_outcome_sc()` from migration `20261128140000_outcome_score.sql`; until it has run, `put_outcome()` keeps the rest), the month. No name, e-mail, account or IP. The row's
 random id stays on the device (`ww-uit`, also what is still unsent; it goes at the next start) and never in `S`, so a row
 can't be tied to an account: a correction within a day changes the row, later it is a new attempt with a new row, and a row
 can only be taken back on the device that sent it. `OUTCOME_CAP` new rows a month (default 2000); rows go after three years
@@ -170,3 +174,30 @@ the notification permission, not the daily reminder, and is planned again when a
 
 After the first start test the store app shows Bittie's question "Mag Bittie je meldingen sturen?" (yes: the reminder at 19:00, the time in Profiel). Only after "Ja, dat mag" does iOS/Android show its own permission prompt, so a "no" never
 spends that one-time prompt. Asked once per device (`ww-notif-asked`); Profiel → Herinnering changes it later.
+
+## First check for a new learner (28 November 2026)
+
+Mijn dag for someone new at A2 (no starttest, no answers yet) opens with Bittertalen's grading, the "wow" moment, while a
+check is free to have (`canCheck` in `planHTML()`: the browser's trial `acc.cfg.free` without an account, else
+`checksLeft("wr")`): one line, "Schrijf je eerste tekst" (the screen's one filled button, `data-p="first:wr"`, the count
+`first`) opens the short note to the neighbour (`wr|0`, the homepage's example task), and the starttest stays under it as
+a row. Without a free check the starttest comes first, as before.
+
+## Coming back (28 November 2026)
+
+Three things taken from the big language apps, all in `oefenen.html`:
+
+- **Streak.** One missed day a week still keeps it (`freezeOk()`, `S.frz`); Mijn dag says so once the day's lesson is done
+  and the streak is 3+. A streak of 3+ that is lost anyway can be won back once in 30 days (Duolingo's revival):
+  `complete()` keeps `S.lost` `{n, d, c, cd}`; three finished rounds on one day within a week of the loss add the old
+  days back (`S.revAt`, `S.revived` for the line "Je reeks is terug"). Mijn dag shows "Haal je reeks terug" with three
+  dots. `mergeS()` takes the newer device's `lost` and the latest `revAt`.
+- **Own mistakes come back.** `keepErrs()` stores the day (`d`); `dueErrs()` is every mistake from the day after it was
+  made, then as its own spaced repetition says (`S.items["er|…"]`, `GAP`), until it was right four times in a row.
+  Mijn dag shows "Oefen met je eigen fouten" with the number (`#dayerrs`, at most 8 a round).
+- **Oefenen zonder handen** (`hfScreen()`, a row under Oefenen zonder timer when `hfOK()`: speech recognition and a
+  voice). KNM, Luisteren (B1: lb) or both, ten minutes (`HF_MS`): the fragment, the question and "A. … B. … C. …" are
+  said (`speakThen()` over `speak()`), `hearOnce()` listens up to 7 s, `hfPick()` takes A/B/C, een/twee/drie,
+  eerste/tweede/derde or the words of one answer; "herhaal" repeats, "stop" stops; no answer twice moves on. Answers
+  count in `S.items` (`hfRecord()`) and the round in the streak. Questions with a picture are left out. The question
+  area is Dutch (`lang="nl"`).

@@ -480,6 +480,11 @@ main:has(#play:not([hidden])) header{display:none}
 .diff s{color:var(--bad)} .diff ins{color:var(--good);font-weight:600}
 mark.err{background:color-mix(in srgb,var(--bad) 16%,transparent);color:inherit;border-radius:4px;padding:0 2px;box-shadow:inset 0 -2px 0 color-mix(in srgb,var(--bad) 55%,transparent)}
 mark.err sup{font-size:11px;font-weight:700;color:var(--bad);margin-left:1px}
+/* Was → Zo schrijf je het goed: the learner's text with its marked mistakes beside the corrected text, the changed words
+   underlined in green; one column on a phone, two side by side on a wider screen */
+.wdiff{display:grid;gap:0 14px;margin:6px 0 2px} .wdiff .sample{margin:4px 0 10px}
+@media(min-width:700px){.wdiff{grid-template-columns:1fr 1fr}}
+.wdiff ins{text-decoration:none;background:color-mix(in srgb,var(--good) 16%,transparent);border-radius:4px;padding:0 2px;box-shadow:inset 0 -2px 0 color-mix(in srgb,var(--good) 55%,transparent)}
 .errs.fixes{counter-reset:fx} .errs.fixes li{counter-increment:fx;position:relative;padding-left:28px}
 .errs.fixes li::before{content:counter(fx);position:absolute;left:0;top:9px;width:20px;height:20px;border-radius:50%;background:color-mix(in srgb,var(--bad) 14%,transparent);color:var(--bad);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
 .errs.fixes s+strong::before{content:"→ ";color:var(--soft);font-weight:400}
@@ -1655,6 +1660,8 @@ function mergeS(a,b){
   o.errs=uni(a.errs,b.errs,e=>e.r); o.words=uni(a.words,b.words,w=>w.w);
   const ga=a.gen||{},gb=b.gen||{}; o.gen={lz:uni(ga.lz,gb.lz,JSON.stringify),ls:uni(ga.ls,gb.ls,JSON.stringify)};
   const[p,q]=(a.last||0)>=(b.last||0)?[a,b]:[b,a]; o.last=p.last||0; o.streak=p.last===q.last?Math.max(p.streak||0,q.streak||0):p.streak||0; if(a.frz||b.frz)o.frz=Math.max(a.frz||0,b.frz||0);
+  // the streak's way back (complete()): the newer device's, and a revival used on either counts
+  delete o.lost;if(p.lost)o.lost=p.lost; if(a.revAt||b.revAt)o.revAt=Math.max(a.revAt||0,b.revAt||0); delete o.revived;if(p.revived)o.revived=p.revived;
   o.day=a.day&&b.day&&a.day.d===b.day.d?{d:a.day.d,done:uni(a.day.done,b.day.done,x=>x)}:a.day&&b.day?(a.day.d>b.day.d?a.day:b.day):a.day||b.day;
   const ma=a.me||{},mb=b.me||{}; const ea=ma.exams||{},eb=mb.exams||{};
   o.me={name:ma.name||mb.name||"",last:ma.last||mb.last||"",exam:ma.exam||mb.exam||"",av:ma.av||mb.av||"",
@@ -2044,6 +2051,9 @@ function addGenerated(){
   });
   return n;
 }
+// Own mistakes come back by themselves on Mijn dag: from the day after they were made, then as their spaced repetition
+// (S.items "er|…", GAP: 1, 2, 4, 7 days) says, until one was right four times in a row (older ones without a day: due)
+function dueErrs(){const d=today(),E=S.errs||[];return errItems().filter((q,i)=>{const it=S.items[q.k];return it?it.d<=d&&(it.b||0)<4:!(E[i].d>=d)})}
 function errItems(){return(S.errs||[]).map(e=>({sec:"er",k:"er|"+e.r,ord:0,type:"choice",label:"Welke zin is goed?",big:"",sub:"",right:esc(e.r),opts:()=>shuffle([esc(e.r),esc(e.w)]),note:esc(e.y)}))}
 const canSpeak="speechSynthesis" in window&&typeof SpeechSynthesisUtterance!=="undefined";
 // Speech: every line the app says itself is recorded in audio/ (audio/build.mjs, Azure's Dutch voices since 28 November 2026), one file
@@ -2236,6 +2246,26 @@ function markErrs(text,errs){
   return out+esc(text.slice(p));
 }
 const ownHTML=(text,errs,label="Jouw tekst")=>`<p class="ask">${label}</p><div class="sample own">${markErrs(text,errs)||"(niets)"}</div>`;
+// The corrected text with every word that differs from the learner's underlined: a word diff (the longest common run of
+// words stays plain), plus each correction's own words where they stand (so "ik ga" → "ga ik" marks both words, which a
+// diff alone would not); capitals and punctuation count, as in DUO's spelling
+function insHTML(text,fixed,errs=[]){
+  fixed=String(fixed||"");const b=fixed.match(/\s+|[^\s]+/g)||[],a=(String(text||"").match(/[^\s]+/g)||[]);
+  const at=[];let pos=0;b.forEach(w=>{at.push(pos);pos+=w.length});
+  const W=b.map((w,i)=>/\S/.test(w)?i:-1).filter(i=>i>=0),n=a.length,m=W.length,mark=new Set();
+  if(n*m<=250000){
+    const L=Array.from({length:n+1},()=>new Uint16Array(m+1));
+    for(let x=n-1;x>=0;x--)for(let y=m-1;y>=0;y--)L[x][y]=a[x]===b[W[y]]?L[x+1][y+1]+1:Math.max(L[x+1][y],L[x][y+1]);
+    const keep=new Set();for(let x=0,y=0;x<n&&y<m;){if(a[x]===b[W[y]]){keep.add(y);x++;y++}else if(L[x+1][y]>=L[x][y+1])x++;else y++}
+    W.forEach((t,y)=>{if(!keep.has(y))mark.add(t)});
+  }
+  let from=0;(errs||[]).forEach(e=>{const r=String(e&&e.right||"").trim();if(!r)return;let k=fixed.indexOf(r,from);if(k<0)k=fixed.indexOf(r);if(k<0)return;
+    from=k+r.length;W.forEach(t=>{if(at[t]<k+r.length&&at[t]+b[t].length>k)mark.add(t)})});
+  return b.map((w,t)=>mark.has(t)?`<ins>${esc(w)}</ins>`:esc(w)).join("").replace(/<\/ins>(\s+)<ins>/g,"$1");
+}
+// Was → Zo schrijf je het goed, with the corrected text to listen to (speak(): the recordings, Azure or the phone)
+const wrDiffHTML=(text,errs,fixed)=>`<div class="wdiff"><div>${ownHTML(text,errs)}</div><div><p class="ask">Zo schrijf je het goed</p><div class="sample" lang="nl">${insHTML(text,fixed,errs)}</div>
+  <button type="button" class="hint" id="wlisten">▶ Luister naar de verbeterde tekst</button></div></div>`;
 const ERROR_LABELS={inhoud:"Inhoud",woorden:"Woorden",grammatica:"Grammatica",inversie:"Grammatica · Woordvolgorde",meervoud:"Grammatica · Meervoud",spelling:"Spelling",samenhang:"Samenhang"};
 const errsHTML=errs=>errs.length?`<p class="ask">Fouten: ${errs.length}</p><ol class="errs fixes">${errs.map(e=>`<li><s>${esc(e.wrong)}</s> <strong>${esc(e.right)}</strong><span dir="auto">${Object.hasOwn(ERROR_LABELS,e.kind)?`<b>${ERROR_LABELS[e.kind]}</b> · `:""}${esc(e.why)}</span></li>`).join("")}</ol>`:`<p class="note">Geen fouten gevonden.</p>`;
 const spoken=t=>String(t).replace(/[\p{Extended_Pictographic}←-⇿️‍]/gu,"").replace(/\s+/g," ").trim();
@@ -2669,7 +2699,8 @@ function home(){
     <div class="list">${parts().map(part).join("")}</div>`+officialExam+onaRow+uitRow;
   $("parts").innerHTML=`${levelLabel}<h2>Oefenen zonder timer</h2>
     <p class="sub">Korte oefeningen met feedback tijdens het oefenen.</p>
-    <div class="list">${parts().map(k=>k==="knm"?knmRow():row(k)).join("")}</div>`;
+    <div class="list">${parts().map(k=>k==="knm"?knmRow():row(k)).join("")}</div>`
+    +(hfOK()?`<div class="list">${itHTML(`data-x="hf"`,"Oefenen zonder handen","KNM en Luisteren: je hoort de vraag en zegt A, B of C.",{ic:"ls"})}</div>`:"");
   $("gram").innerHTML=`<h2>Grammatica en woorden</h2><p class="sub">Rondes van 10 vragen.</p>`+(lvl()==="B1"
     ?`<div class="list">${["g1","w1","v1"].map(row).join("")}</div><h3 class="lh">Herhalen op A2-niveau</h3><div class="list">${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`
     :`<div class="list">${itHTML(`data-x="bg"`,"Beginnen","Twintig korte lessen, voor als je net begint.",{ic:"bg",n:(n=>n?`${n} van ${BG.length}`:null)(BG.filter(bgDone).length)})}${["verb","wo","pr","dh","vo"].map(row).join("")}</div>`);
@@ -2693,6 +2724,7 @@ function home(){
     else if(d.x==="ai")aiList();
     else if(d.x==="ona")onaScreen();
     else if(d.x==="uit")uitScreen();
+    else if(d.x==="hf")hfScreen();
     else if(d.x==="bg")bgList();
     else if(d.x==="words")wordsScreen();
     else build("custom",{id:"custom",t:"Mijn fouten",n:10,pool:()=>shuffle(errItems())})});
@@ -3192,7 +3224,11 @@ function planHTML(){
   const focus=dayExamFocus(),last=focus?.focus.last;
   // new here at A2: where to begin, right under the heading, so it is seen above the tab bar on a phone. Gone after the
   // test, or once someone has clearly been practising
-  const first=lvl()==="A2"&&!S.start&&!Object.keys(S.items).length&&!focus?`<p class="sub">Nieuw hier? Begin met twaalf korte vragen. Dan weet Bittertalen waar je begint, ook als je nog bijna geen Nederlands kent.</p><button class="btn wide" data-p="t:start">Begin met de korte test</button>`
+  // new here: the first thing is Bittertalen's own grading of a short note (wr|0), while a check is free to have (the
+  // browser's trial or the account's), with the starttest under it; otherwise the starttest first, as before
+  const canCheck=!!acc.cfg&&(acc.user?checksLeft("wr")!==0:!!acc.cfg.free&&acc.free!==0);
+  const first=lvl()==="A2"&&!S.start&&!Object.keys(S.items).length&&!focus&&canCheck?`<p class="sub">Nieuw hier? Schrijf een kort briefje van een paar zinnen. Bittertalen kijkt het meteen na: je punten en je fouten, met uitleg.</p>${acc.user?"":`<p class="note">Gratis, ook zonder account.</p>`}<button class="btn wide" data-p="first:wr">Schrijf je eerste tekst</button><div class="list">${itHTML(`data-p="t:start"`,"Waar begin ik?","Twaalf vragen: zo weet je waar je begint.",{ic:"bg"})}</div>`
+    :lvl()==="A2"&&!S.start&&!Object.keys(S.items).length&&!focus?`<p class="sub">Nieuw hier? Begin met twaalf korte vragen. Dan weet Bittertalen waar je begint, ook als je nog bijna geen Nederlands kent.</p><button class="btn wide" data-p="t:start">Begin met de korte test</button>`
     :lvl()==="A2"&&!S.start&&Object.keys(S.items).length<30?`<div class="list">${itHTML(`data-p="t:start"`,"Waar begin ik?","Twaalf vragen: zo weet je waar je begint.",{ic:"bg"})}</div>`:"";
   const review=focus&&(focus.target||last?.day===d)?`<section class="list exam-focus" aria-label="Gerichte oefening">
     <h3>Verder met je oefening</h3>
@@ -3201,6 +3237,12 @@ function planHTML(){
     ${focus.target?`<button type="button" class="btn wide" id="dayfocus">Oefen met een nieuwe vraag</button>`:
       `<p class="note">${last.ok?"De nieuwe vraag ging goed.":"Deze oefening komt morgen terug."}</p>`}
   </section>`:"";
+  const lost=S.lost&&d-S.lost.d<=7?S.lost:null,lc=lost&&lost.cd===d?lost.c:0;
+  const comeback=lost?`<section class="list exam-focus"><h3>Haal je reeks terug</h3><p>Je reeks van ${lost.n} dagen is gestopt. Maak vandaag 3 oefenrondes af, dan krijg je hem terug.</p>
+      <div class="dayp"><span aria-hidden="true">${[0,1,2].map(i=>`<i${i<lc?' class="on"':""}></i>`).join("")}</span><small>${lc} van 3 klaar</small></div></section>`
+    :S.revived===d?`<p class="note" role="status"><b>Je reeks is terug: ${S.streak} dagen op rij!</b></p>`:"";
+  const ED=dueErrs();
+  const errsRow=ED.length?`<div class="list">${itHTML(`id="dayerrs"`,"Oefen met je eigen fouten","Ze komen terug na 1, 2, 4 en 7 dagen, tot je ze kent.",{n:ED.length,ic:"errs"})}</div>`:"";
   const date=new Date().toLocaleDateString("nl-NL",{weekday:"long",day:"numeric",month:"long"});
   // the countdown to the exam on Mijn dag too (it gives the day its point); without a date, one line asks for it
   const when=examsAhead().length?examLine():`<button class="hint" type="button" id="dayexam">Wanneer is je examen? Zet de datum in Profiel.</button>`;
@@ -3210,7 +3252,8 @@ function planHTML(){
     <p class="note"><span>Geschatte duur</span> · ${P.minutes||steps.length*5} min</p>
     <div class="dayp"><span aria-hidden="true">${steps.map(t=>`<i${done.includes(t.id)?' class="on"':""}></i>`).join("")}</span><small>${nd} van ${steps.length} klaar</small></div>
     <p class="sub">${intro}</p>
-    ${review}
+    ${comeback}${nx<0&&(S.streak||0)>=3&&S.last===d&&freezeOk(d+2)?`<p class="note">Morgen geen tijd? Eén dag per week overslaan mag: je reeks blijft dan staan.</p>`:""}
+    ${review}${errsRow}
     ${rule?`<section class="list exam-focus"><h3>Pas de regel toe in een nieuwe zin</h3><p>${WRITING_RULES[rule].title}</p>
       ${S.writingRules[rule].source==="exam"?`<p class="note">Dit ging ${occurrences(S.writingRules[rule].count)} mis in je schrijfproefexamen.</p>`:""}
       <button type="button" class="ghost wide" id="dayrule">Oefen met een nieuwe situatie</button></section>`:""}
@@ -3342,6 +3385,7 @@ function drawPlan(){
     const st=$("streak");st.classList.remove("stamp");void st.offsetWidth;st.classList.add("stamp");buzz("good");remindPlan()}
   if($("dayexam"))$("dayexam").onclick=()=>{setTab("profiel");setTimeout(()=>{const f=$("pexams");if(f){f.scrollIntoView({block:"center"});f.querySelector("input")?.focus()}},120)};
   if($("dayrule"))$("dayrule").onclick=writingRuleScreen;
+  if($("dayerrs"))$("dayerrs").onclick=()=>{const L=dueErrs();if(L.length)build("custom",{id:"custom",t:"Mijn fouten",n:Math.min(8,L.length),pool:()=>shuffle(L)})};
   if($("dayspeak"))$("dayspeak").onclick=speakingFollowUp;
   const focus=dayExamFocus(),review=$("dayfocus");
   if(review&&focus?.target)review.onclick=()=>{
@@ -3351,6 +3395,7 @@ function drawPlan(){
   };
   document.querySelectorAll("#plan [data-p]").forEach(b=>b.onclick=()=>{const id=b.dataset.p,[k,v]=id.split(":");planId=id;
     if(k==="t")return startTest();
+    if(k==="first"){track("first");return build("wr",{...SEC.find(x=>x.id==="wr"),n:1,keep:1,pool:()=>[ITEMS.find(x=>x.k==="wr|0")],draftSlot:"landing"})}
     if(k==="mini")build(v,{...SEC.find(x=>x.id===v),n:1,keep:1,pool:()=>wbTasks(1,0)});
     else if(k==="b")bgLes(BG.findIndex(l=>l.id===id.split(":")[2]));
     else if(k==="s")build(v);else if(k==="q")build(v,{...SEC.find(x=>x.id===v),...SHORT[v]});else startExam(v);
@@ -3623,7 +3668,12 @@ function record(ok,q=queue[pos]){
 }
 function complete(){
   const d=today();
-  if(S.last!==d){const gap=S.last===d-2&&freezeOk(d);S.streak=S.last===d-1||gap?S.streak+1:1;if(gap)S.frz=d-1;S.last=d}
+  if(S.last!==d){const gap=S.last===d-2&&freezeOk(d),cont=S.last===d-1||gap;
+    // a lost streak of three days or more can be won back, once a month: three rounds on one day within a week (S.lost)
+    if(!cont&&S.last&&(S.streak||0)>=3&&(!S.revAt||d-S.revAt>=30))S.lost={n:S.streak,d,c:0,cd:0};
+    S.streak=cont?S.streak+1:1;if(gap)S.frz=d-1;S.last=d}
+  if(S.lost){if(d-S.lost.d>7)delete S.lost;else{S.lost.c=(S.lost.cd===d?S.lost.c:0)+1;S.lost.cd=d;
+    if(S.lost.c>=3){S.streak=S.lost.n+S.streak;S.revAt=d;S.revived=d;delete S.lost;buzz("good")}}}
   if(planId){if(!S.day||S.day.d!==d)S.day={d,done:[]};if(!S.day.done.includes(planId))S.day.done.push(planId);planId=null}
   save();
 }
@@ -4005,7 +4055,7 @@ const docBtn=`<button class="ghost wide" id="docx" style="margin-bottom:10px">Do
 // Writing is graded by Claude on the server (api/check.js)
 // Mistakes from the learner's own texts and spoken answers, practised later in "Mijn fouten"
 function keepErrs(errs){
-  errs.forEach(e=>{if(e&&e.wrong&&e.right&&e.wrong!==e.right&&String(e.wrong).length<90&&String(e.right).length<90&&!S.errs.some(x=>x.r===e.right))S.errs.unshift({w:String(e.wrong),r:String(e.right),y:String(e.why||""),...(["inversie","meervoud"].includes(e.kind)?{kind:e.kind}:{})})});
+  errs.forEach(e=>{if(e&&e.wrong&&e.right&&e.wrong!==e.right&&String(e.wrong).length<90&&String(e.right).length<90&&!S.errs.some(x=>x.r===e.right))S.errs.unshift({w:String(e.wrong),r:String(e.right),y:String(e.why||""),d:today(),...(["inversie","meervoud"].includes(e.kind)?{kind:e.kind}:{})})});
   S.errs=S.errs.slice(0,40);
 }
 // A writing text sent again unchanged gets its earlier result, without a new check: sending the same text until the
@@ -4247,14 +4297,15 @@ async function check(q){
     keepErrs(errs); record(ok); if(!cur.exam)quickPraise.show(ok);
     $("fb").innerHTML=`<b class="${ok?"good":"bad"}">${ok?"Goed zo! Voldoende":"Nog niet voldoende"}</b>
       <p class="note">${esc(res.verdict)}</p>
-      ${RD.length?`<p class="note"><b>${RD.length>1?"Begin met deze verbetering":"Verbeter dit"}:</b> ${esc(RD[0].why||RD[0].wrong)}</p><button class="btn wide" id="next">${Math.min(RD.length,FIX_MAX)>1?`Verbeter je ${Math.min(RD.length,FIX_MAX)} belangrijkste fouten`:"Verbeter je fout"}</button>`:""}
-      ${scoreHTML(res.scores,q.mx,errs)}
-      ${ownHTML(text,errs)}${a2Practice&&!errs.length?'<p class="note">Geen taalcorrecties in je tekst.</p>':errsHTML(errs)}${q.sec==="wr"&&errs.some(e=>Object.hasOwn(WRITING_RULES,e.kind))?`<p class="note">In Mijn dag kun je deze regel morgen oefenen in een nieuwe zin.</p>`:""}${freeNote()}
-      ${!a2Practice||changed?`<p class="ask">Verbeterde tekst</p><div class="sample">${esc(res.corrected)}</div>`:""}
+      ${RD.length?`<p class="note"><b>Het belangrijkste om te verbeteren:</b> ${esc(RD[0].why||RD[0].wrong)}</p><button class="btn wide" id="next">${Math.min(RD.length,FIX_MAX)>1?`Verbeter je ${Math.min(RD.length,FIX_MAX)} belangrijkste fouten`:"Verbeter je fout"}</button>`:""}
+      ${changed?wrDiffHTML(text,errs,res.corrected):ownHTML(text,errs)}
+      ${scoreHTML(res.scores,q.mx,errs)}${a2Practice&&!errs.length?'<p class="note">Geen taalcorrecties in je tekst.</p>':errsHTML(errs)}${q.sec==="wr"&&errs.some(e=>Object.hasOwn(WRITING_RULES,e.kind))?`<p class="note">In Mijn dag kun je deze regel morgen oefenen in een nieuwe zin.</p>`:""}${freeNote()}
+      ${!a2Practice&&!changed&&res.corrected?.trim()?`<p class="ask">Verbeterde tekst</p><div class="sample">${esc(res.corrected)}</div>`:""}
       ${reviseContent?'<button class="btn wide" id="reviseContent">Vul je antwoord aan</button>':""}
       <details><summary>Voorbeeldantwoord</summary><div class="sample">${esc(q.right)}</div></details>
       ${docBtn}${RD.length?"":`<button class="btn wide" id="next">Verder</button>`}`;
     $("next").onclick=()=>{pos++;show()};
+    if($("wlisten"))$("wlisten").onclick=()=>speak(res.corrected);
     if(reviseContent)$("reviseContent").onclick=()=>reviseWritingContent(q,text,res.verdict);
     if(RD.length)$("next").onclick=()=>practiseCorrections(RD);
     $("docx").onclick=()=>saveDocx([{task,form,text}]);
@@ -4834,7 +4885,7 @@ function startTest(){
   bgOpen(TABN[tab],home);
   intro();
 }
-// Mijn examen: the result of the real exam, per part, as the learner tells it. Their own record is S.uit {part: {ok, at}};
+// Mijn examen: the result of the real exam, per part, as the learner tells it. Their own record is S.uit {part: {ok, at, sc?}};
 // a copy goes to /api/outcome (table exam_outcomes) to see whether the proefexamens and "Klaar voor het examen" predict the
 // real result: the part, passed or not, the last proefexamen score, the status then, and the month the server adds. No
 // name, e-mail or account. The row's random id stays on this device (ww-uit), never in S, so it can't be tied to an account;
@@ -4844,9 +4895,9 @@ const uuid=()=>crypto.randomUUID?crypto.randomUUID():"10000000-1000-4000-8000-10
 async function uitSend(){
   const Q=uitQ();
   for(const k of Object.keys(Q)){const e=Q[k]; if(e.sent)continue;
-    try{const r=await fetch("/api/outcome",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:e.id,part:k,ok:e.ok,pc:e.pc,rd:e.rd})});
+    try{const r=await fetch("/api/outcome",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:e.id,part:k,ok:e.ok,pc:e.pc,rd:e.rd,sc:e.sc??null})});
       if(!r.ok)continue;
-      const q=uitQ(),n=q[k]; if(!n||n.id!==e.id||n.ok!==e.ok)continue; // changed while sending: it goes next time
+      const q=uitQ(),n=q[k]; if(!n||n.id!==e.id||n.ok!==e.ok||(n.sc??null)!==(e.sc??null))continue; // changed while sending: it goes next time
       if(n.ok==null)delete q[k]; else n.sent=1;
       lsSet("ww-uit",JSON.stringify(q));
     }catch(err){}}
@@ -4860,8 +4911,8 @@ function setUit(k,ok){
   else{
     // changing it within a day is a correction; later it is a new attempt, so a new row
     const R=(S.res||{})[k]||[],r=ready(k),same=e&&e.ok!=null&&old&&Date.now()-old.at<864e5;
-    Q[k]={id:same?e.id:uuid(),ok,pc:R.length?R[R.length-1].pc:null,rd:R.length?r.cls==="good"?2:r.cls==="bad"?0:1:null};
-    U[k]={ok,at:Date.now()};
+    Q[k]={id:same?e.id:uuid(),ok,pc:R.length?R[R.length-1].pc:null,rd:R.length?r.cls==="good"?2:r.cls==="bad"?0:1:null,sc:same?e.sc??null:null};
+    U[k]={ok,at:Date.now(),...(same&&old.sc!=null?{sc:old.sc}:{})};
     if(ok)buzz("good");
   }
   lsSet("ww-uit",JSON.stringify(Q)); save(); uitSend();
@@ -4893,15 +4944,35 @@ function wonScreen(k){
       if(acc.ref)url=location.origin+"/?ref="+acc.ref.code}}catch{}
     track("won");navigator.share({title:"Bittertalen",text,url}).catch(()=>{})};
 }
+// The grade or score from DUO's letter, if the learner wants to add it: 1 to 10 (one decimal) for an A2 part and KNM,
+// a whole number up to 1000 for a Staatsexamen NT2 part, where 500 or more is a pass. "" clears it.
+const NT2PART=new Set(["l1","lb","wb","sb"]);
+const scParse=(k,v)=>{const t=String(v).trim().replace(/[,٫]/,".");if(!t)return null;const n=Number(t);
+  if(!Number.isFinite(n))return undefined;
+  if(NT2PART.has(k))return Number.isInteger(n)&&n>=0&&n<=1000?n:undefined;
+  return n>=1&&n<=10&&Math.abs(n*10-Math.round(n*10))<1e-9?Math.round(n*10)/10:undefined};
+const scText=(k,n)=>n==null?"":NT2PART.has(k)?String(n):String(n).replace(".",",");
+function setScore(k,v){
+  const U=S.uit||{},Q=uitQ(),n=scParse(k,v);
+  if(n===undefined||!U[k]||!Q[k])return false;
+  if(n==null)delete U[k].sc;else U[k].sc=n;
+  Q[k].sc=n;Q[k].sent=0;lsSet("ww-uit",JSON.stringify(Q));save();uitSend();return true;
+}
 function uitScreen(y=0){
   closePop();hush();TK=null;$("card").innerHTML="";
   $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;
   tBack(TABN[tab],home);
   const U=S.uit||{},ks=lvl()==="B1"?["l1","lb","wb","sb","knm"]:["lz","ls","wr","sp","knm"];
   $("tbody").innerHTML=`<h2>Mijn examen</h2><p class="sub">Echt examen gedaan? Tik per onderdeel op je uitslag.</p>`
-    +ks.map(k=>`<h3 class="lh">${PART[k]}</h3><div class="seg uit" role="group" aria-label="${PART[k]}">${[1,0].map(o=>`<button data-k="${k}" data-ok="${o}" aria-pressed="${!!U[k]&&U[k].ok===!!o}">${o?"Geslaagd":"Niet geslaagd"}</button>`).join("")}</div>`).join("")
+    +ks.map(k=>`<h3 class="lh">${PART[k]}</h3><div class="seg uit" role="group" aria-label="${PART[k]}">${[1,0].map(o=>`<button data-k="${k}" data-ok="${o}" aria-pressed="${!!U[k]&&U[k].ok===!!o}">${o?"Geslaagd":"Niet geslaagd"}</button>`).join("")}</div>`
+      +(U[k]?`<section class="list"><label class="prow"><span>${NT2PART.has(k)?"Je score":"Je cijfer"}</span><input type="text" inputmode="decimal" dir="ltr" maxlength="5" autocomplete="off" data-sc="${k}" id="sc-${k}" value="${esc(scText(k,U[k].sc))}" placeholder="${NT2PART.has(k)?"520":"7,5"}" aria-describedby="scn-${k}"></label></section>
+        <p class="note" id="scn-${k}">${NT2PART.has(k)?"Staat er een score in je uitslag? Vul hem in. 500 of meer is geslaagd. Dat hoeft niet.":"Je cijfer (1 tot 10) staat in Mijn Inburgering bij Details examen. Vul het in als je wilt."}</p>`:"")).join("")
     +`<p class="note">Je uitslag telt mee in onze cijfers, zonder je naam of e-mailadres. Zo zien we of de proefexamens kloppen.</p><p class="note">Tik nog een keer op je uitslag om hem weg te halen.</p><p class="note"><a href="/privacy">Privacyverklaring</a></p>`;
   document.querySelectorAll("#tbody .uit button").forEach(b=>b.onclick=()=>setUit(b.dataset.k,b.dataset.ok==="1"));
+  document.querySelectorAll("#tbody [data-sc]").forEach(i=>i.onchange=()=>{const k=i.dataset.sc,ok=setScore(k,i.value),n=$("scn-"+k);
+    i.setAttribute("aria-invalid",ok?"false":"true");
+    if(!ok&&n)n.textContent=NT2PART.has(k)?"Deze score klopt niet. Vul een getal van 0 tot 1000 in.":"Dit cijfer klopt niet. Vul een getal van 1 tot 10 in.";
+    else if(ok)uitScreen(scrollY)});
   window.scrollTo(0,y);
 }
 // Bittertalen Plus: what it gives, and the way to Stripe's own pages (Checkout to start, the portal to cancel or change)
@@ -5271,6 +5342,88 @@ function plusScreen(choice){
     try{sessionStorage.setItem(PENDING_PLAN,JSON.stringify({choice:preferredPlan,at:Date.now()}))}catch(e){}
     acc.msg="";lsSet(WEL,"1");welcome();
   });
+}
+// Oefenen zonder handen (28 November 2026): KNM and Luisteren by ear, for the bike, the car or the kitchen. The question
+// and its three answers are said (the recordings, Azure or the phone), the learner says A, B or C (or one, two, three,
+// or words of the answer), hears whether it was right, and the next comes, for ten minutes. "Herhaal" says it again,
+// "stop" stops. Answers count like any practice (S.items) and the round counts for the streak. Needs the phone's speech
+// recognition (SR) and a voice; the questions on the screen stay Dutch.
+const HF_MS=10*60e3;
+const hfOK=()=>!!SR&&(canSpeak||cloudOn()||!!VOICE);
+let hf=null;
+// speak() and then, once nothing is said any more, done (speak() has no end of its own)
+function speakThen(t,done){const n=sayN+1;speak(t);const until=Date.now()+String(t).length*110+9000;
+  const tick=()=>{if(!hf)return;if(sayN!==n)return; if(Date.now()>until||!speaking())return done();setTimeout(tick,250)};setTimeout(tick,700)}
+// one answer heard: its text, or "" after a silence of a few seconds
+function hearOnce(done){
+  if(!sr)sr=new SR();const r=sr;let said="",fin=false;const end=()=>{if(fin)return;fin=true;clearTimeout(t);try{r.onresult=r.onend=r.onerror=null;r.stop()}catch(e){}done(said)};
+  r.lang="nl-NL";r.continuous=false;r.interimResults=true;
+  r.onresult=e=>{said=[...e.results].map(x=>x[0].transcript).join(" ").trim();if([...e.results].some(x=>x.isFinal))setTimeout(end,300)};
+  r.onend=end;r.onerror=end;const t=setTimeout(end,7000);
+  try{r.start()}catch(e){end()}
+}
+// A, B or C from what was heard: the letter, one/two/three, first/second/third, or the most words of an answer
+function hfPick(said,opts){
+  const w=String(said).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9 ]/g," ").split(/\s+/).filter(Boolean);
+  if(w.some(x=>["herhaal","herhalen","nog","opnieuw","repeat"].includes(x)))return"again";
+  if(w.some(x=>["stop","stoppen","klaar"].includes(x)))return"stop";
+  const L=[["a","aa","ah","een","1","eerste","eerst"],["b","be","bee","twee","2","tweede"],["c","ce","cee","se","see","zee","drie","3","derde"]];
+  for(const x of w.slice(-3).reverse()){const i=L.findIndex(l=>l.includes(x));if(i>=0&&i<opts.length)return i}
+  const sc=opts.map(o=>{const ow=spokenOption(o).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9 ]/g," ").split(/\s+/).filter(x=>x.length>2);return ow.filter(x=>w.includes(x)).length});
+  const best=Math.max(...sc);return best>=2&&sc.filter(x=>x===best).length===1?sc.indexOf(best):-1;
+}
+function hfRecord(q,ok){const d=today(),it=S.items[q.k]||{b:ok?2:0,d};
+  if(ok){it.d=d+GAP[it.b];it.b=Math.min(GAP.length-1,it.b+1);it.r=(it.r||0)+1}else{it.b=0;it.d=d;it.w=(it.w||0)+1}
+  S.items[q.k]=it;const dk=String(d);S.qd=S.qd||{};S.qd[dk]=(S.qd[dk]||0)+1;if(ok){S.qr=S.qr||{};S.qr[dk]=(S.qr[dk]||0)+1}save()}
+function hfScreen(){
+  closePop();hush();TK=null;$("card").innerHTML="";hf=null;
+  $("home").hidden=true;$("play").hidden=true;$("talk").hidden=false;window.scrollTo(0,0);
+  tBack(TABN[tab],()=>{hfStop();home()});
+  const lsk=lvl()==="B1"?"lb":"ls",ch=S.hfp||"knm";
+  $("tbody").innerHTML=`<h2 id="hfS">Oefenen zonder handen</h2>
+    <p class="sub">Voor op de fiets, in de auto of in de keuken. Je hoort een vraag met drie antwoorden en zegt A, B of C. Zeg ‘herhaal’ om het nog een keer te horen, of ‘stop’ om te stoppen.</p>
+    ${hfOK()?`<p class="ask">Wat wil je oefenen?</p><div class="seg" role="group" aria-label="Wat wil je oefenen?">${[["knm","KNM"],[lsk,"Luisteren"],["mix","Allebei"]].map(([k,t])=>`<button data-hfp="${k}" aria-pressed="${k===ch||ch==="ls"&&k==="lb"||ch==="lb"&&k==="ls"}">${t}</button>`).join("")}</div>
+    <p class="note">Tien minuten. Houd je telefoon aan en het geluid aan.</p><button class="btn wide" id="hfgo">Begin met oefenen</button>`
+    :`<p class="note">Op dit apparaat kan Bittertalen niet luisteren. Probeer het in de app of in Chrome.</p>`}
+    <div id="hfbox" lang="nl" aria-live="polite"></div>`;
+  document.querySelectorAll("[data-hfp]").forEach(b=>b.onclick=()=>{S.hfp=b.dataset.hfp;save();document.querySelectorAll("[data-hfp]").forEach(x=>x.setAttribute("aria-pressed",x===b))});
+  if($("hfgo"))$("hfgo").onclick=()=>hfStart(S.hfp==="ls"||S.hfp==="lb"?lsk:S.hfp||"knm");
+}
+function hfStop(){if(!hf)return;const h=hf;hf=null;try{sr&&sr.stop()}catch(e){}stopSpeak();if(h.n)complete()}
+function hfStart(part){
+  const secs=part==="mix"?["knm",lvl()==="B1"?"lb":"ls"]:[part];
+  const pool=ITEMS.filter(q=>secs.includes(q.sec)&&q.type==="choice"&&!q.pics&&typeof q.opts==="function");
+  // due ones first, then new, then the rest; mixed
+  const d=today(),it=q=>S.items[q.k],rank=q=>it(q)?it(q).d<=d?0:2:1,L=shuffle(pool.slice()).sort((a,b)=>rank(a)-rank(b));
+  hf={L,i:0,n:0,ok:0,at:Date.now()};
+  if($("hfgo"))$("hfgo").hidden=true;document.querySelectorAll("[data-hfp]").forEach(b=>b.disabled=true);
+  hfNext(true);
+}
+function hfNext(first){
+  const h=hf;if(!h||!$("hfS"))return hfStop();
+  if(Date.now()-h.at>HF_MS||h.i>=h.L.length)return hfDone();
+  const q=h.L[h.i++],o=q.opts(),right=o.indexOf(q.right),box=$("hfbox");
+  box.innerHTML=`<section class="list"><div style="padding:16px">${q.say?`<p class="note">Luister eerst naar het fragment.</p>`:""}<p><b>${esc(spokenOption(q.big))}</b></p>
+    <ol type="A">${o.map(x=>`<li>${x}</li>`).join("")}</ol><p class="note" id="hfst" role="status">Luister…</p></div></section>
+    <p class="note">${h.n} vragen · ${h.ok} goed</p><button class="ghost wide" id="hfstop">Stoppen</button>`;
+  $("hfstop").onclick=hfDone;
+  const ask=()=>speakThen([q.big,"A.",spokenOption(o[0]),"B.",spokenOption(o[1]),"C.",spokenOption(o[2]||"")].filter(Boolean).join("\n"),()=>listenFor(0));
+  const listenFor=tries=>{if(hf!==h)return;if($("hfst"))$("hfst").textContent="Zeg A, B of C";buzz("tick");
+    hearOnce(said=>{if(hf!==h)return;const k=hfPick(said,o);
+      if(k==="stop")return hfDone();
+      if(k==="again")return ask();
+      if(k<0){if(tries>=1){if($("hfst"))$("hfst").textContent="Geen antwoord gehoord. De volgende vraag.";return speakThen("We gaan door.",()=>hfNext())}
+        return speakThen("Ik heb je niet goed gehoord. Zeg A, B of C.",()=>listenFor(tries+1))}
+      const ok=k===right;h.n++;if(ok)h.ok++;hfRecord(q,ok);buzz(ok?"good":"bad");
+      if($("hfst"))$("hfst").innerHTML=ok?`<b class="good">Goed!</b>`:`<b class="bad">Niet goed.</b> Het goede antwoord is ${"ABC"[right]}: ${o[right]}`;
+      speakThen(ok?"Goed!":`Niet goed. Het goede antwoord is ${"ABC"[right]}. ${spokenOption(o[right])}`,()=>hfNext())})};
+  if(q.say)speakThen(q.say,ask);else if(first)ask();else setTimeout(ask,300);
+}
+function hfDone(){
+  const h=hf;hfStop();if(!h||!$("hfbox"))return;
+  $("hfbox").innerHTML=`<p class="sub"><b>Klaar!</b> ${h.n} ${h.n===1?"vraag":"vragen"}, ${h.ok} goed.</p>`;
+  if($("hfgo")){$("hfgo").hidden=false;$("hfgo").textContent="Nog een keer"}document.querySelectorAll("[data-hfp]").forEach(b=>b.disabled=false);
+  if(h.n)speak(`Klaar! ${h.ok} van de ${h.n} goed.`);
 }
 function onaScreen(){
   closePop();hush();TK=null;$("card").innerHTML="";
@@ -6205,7 +6358,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru","uk"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="8f2d65f460";
+const UIV="4d53604a3b";
 let uiP=null;
 function uiLoaded(){try{trMemo.clear()}catch(e){} // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});

@@ -164,7 +164,7 @@ alter table public.handoff enable row level security; -- no policies: nobody but
 -- examen" predict it. Nothing about the person: id is a random uuid that stays on their device (never in the progress), pc
 -- the last proefexamen score of that part, rd the status then (0 nog niet, 1 bijna, 2 klaar), month only the month.
 -- Rows older than three years are deleted (privacy.html says so). Only the server writes it; read it here, for example:
---   select part, ok, rd, count(*), round(avg(pc)) as pc from public.exam_outcomes group by 1, 2, 3 order by 1, 2, 3;
+--   select part, ok, rd, count(*), round(avg(pc)) as pc, round(avg(sc), 1) as sc from public.exam_outcomes group by 1, 2, 3 order by 1, 2, 3;
 create table if not exists public.exam_outcomes (
   id uuid primary key,
   part text not null check (part in ('lz', 'ls', 'wr', 'sp', 'knm', 'l1', 'lb', 'wb', 'sb')),
@@ -198,6 +198,32 @@ end;
 $$;
 revoke execute on function public.put_outcome(uuid, text, boolean, int, int, int) from public, anon, authenticated;
 grant execute on function public.put_outcome(uuid, text, boolean, int, int, int) to service_role;
+
+-- sc: what the learner fills in from DUO's letter, if they want: a grade of 1 to 10 for an A2 part or KNM, a score for a
+-- Staatsexamen NT2 part (500 or more is a pass). Empty when they only tell passed or not.
+alter table public.exam_outcomes add column if not exists sc numeric(5,1) check (sc between 0 and 1000);
+-- put_outcome with the grade (api/_supa.js uses this one, and the old put_outcome while this has not been run)
+create or replace function public.put_outcome_sc(o_id uuid, o_part text, o_ok boolean, o_pc int, o_rd int, o_sc numeric, cap int)
+returns boolean
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  m date := date_trunc('month', now() at time zone 'Europe/Amsterdam')::date;
+begin
+  delete from public.exam_outcomes where month < m - interval '3 years';
+  if not exists (select 1 from public.exam_outcomes where id = o_id)
+     and (select count(*) from public.exam_outcomes where month = m) >= cap then
+    return false;
+  end if;
+  insert into public.exam_outcomes (id, part, ok, pc, rd, sc, month) values (o_id, o_part, o_ok, o_pc, o_rd, o_sc, m)
+    on conflict (id) do update set part = excluded.part, ok = excluded.ok, pc = excluded.pc, rd = excluded.rd, sc = excluded.sc;
+  return true;
+end;
+$$;
+revoke execute on function public.put_outcome_sc(uuid, text, boolean, int, int, numeric, int) from public, anon, authenticated;
+grant execute on function public.put_outcome_sc(uuid, text, boolean, int, int, numeric, int) to service_role;
 
 
 -- Anonymous usage counts (api/event.js): how many devices open the app or the homepage a day, finish the starttest or
