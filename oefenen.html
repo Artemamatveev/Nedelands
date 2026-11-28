@@ -5310,7 +5310,7 @@ const PEOPLE=[
   {id:"visser",who:"Jan uit Volendam",wie:"Vissersjongen · Volendam, 1910",av:"volm"},
 ];
 // Bittie keeps the original topic ID so saved practice and conversation memory continue to work.
-function aiAny(){aiTalk("saskia",true)}
+function aiAny(){aiTalk("saskia")}
 const aiScene=i=>({id:GP[i].id,who:GP[i].w,t:GP[i].t,s:GP[i].s,task:GP[i].o,p:GP[i].p,g:gpGroup(i),b1:GP[i].b1});
 const aiScenes=()=>{const L=GP.map((c,i)=>c.ona?null:aiScene(i)).filter(Boolean);return lvl()==="B1"?L.filter(c=>c.b1).concat(L.filter(c=>!c.b1)):L}; // at B1 the B1 group first
 const aiIds=()=>["saskia",...aiScenes().map(c=>c.id)];
@@ -5363,7 +5363,7 @@ function aiViewport(){
 }
 window.visualViewport?.addEventListener("resize",aiViewport);
 window.visualViewport?.addEventListener("scroll",aiViewport);
-function aiTalk(id,go){ // go: start at once (a person picked by the learner's tap), so the greeting is heard right away
+function aiTalk(id){
   const c=aiTopic(id); if(!c)return aiList();
   bgOpen("Gesprekken",aiList); aiDrop();
   AK={c,log:[],tok:null,n:0,busy:false,mic:!!SR};
@@ -5378,7 +5378,6 @@ function aiTalk(id,go){ // go: start at once (a person picked by the learner's t
   if(bittie)aiViewport();
   document.querySelectorAll("#tbody [data-pic]").forEach(b=>b.onclick=()=>zoomPic(b.dataset.pic));
   aiReady();
-  if(go&&!c.task)aiStart(); // a situation waits: the learner reads the task first
   window.scrollTo(0,0);
 }
 // A conversation takes one check; with Plus (the better model) acc.cfg.plus.talk (api/_talk.js TALK_PLUS)
@@ -5392,10 +5391,11 @@ function bittiePractice(){
 }
 function aiReady(msg){
   const practice=AK?.c.id==="saskia"?bittiePractice():null;
-  $("tctl").innerHTML=(msg?`<p class="note">${msg}</p>`:"")+`<button class="btn wide" id="aigo">Begin het gesprek</button>
+  $("tctl").innerHTML=(msg?`<p class="note">${msg}</p>`:"")+`
+    <p class="note">${talkCost()>1?`Dit kost ${talkCost()} nakijkbeurten.`:"Dit kost 1 nakijkbeurt."} Zet het geluid aan.</p>
     ${practice&&(practice.word||practice.rule)?`<label class="note"><input type="checkbox" id="aipractice"> Oefen met mijn woorden en veelgemaakte fouten</label>
     <p class="note">Als je dit kiest, stuur je maximaal één bewaard woord en één type fout naar Anthropic voor dit gesprek.</p>`:""}
-    <p class="note">${talkCost()>1?`Dit kost ${talkCost()} nakijkbeurten.`:"Dit kost 1 nakijkbeurt."} Zet het geluid aan.</p>${freeNote()}`;
+    <button class="btn wide" id="aigo">Begin het gesprek</button>${freeNote()}`;
   $("aigo").onclick=aiStart;
 }
 // Unlock Web Audio in the tap. HTMLAudioElement playback between recognition sessions can make iOS go deaf
@@ -5441,9 +5441,11 @@ async function aiPost(body,onLine){
 }
 const aiWhy=c=>noCheck(c)?noCheck(c)+offerHTML(c):c==="offline"?"Geen verbinding. Probeer het opnieuw.":c==="not_configured"?"Praten met AI is nog niet ingesteld.":c==="rate_limited"?"Te veel verzoeken achter elkaar. Wacht een minuut en probeer het opnieuw.":"Dat lukte niet. Probeer het opnieuw.";
 async function aiStart(){
-  const k=AK;
+  const k=AK, start=$("aigo");
+  if(!k||!start||start.disabled)return;
+  start.disabled=true;
   k.practice=k.c.id==="saskia"&&$("aipractice")?.checked?bittiePractice():null;
-  aiUnlock(); $("aigo").disabled=true; $("aigo").textContent="Een moment…";
+  aiUnlock(); start.textContent="Een moment…";
   const j=await aiPost({go:"start",topic:k.c.id,level:lvl(),...(memOf(k.c).length?{known:true}:{})});
   chkCount(j,lvl());
   if(!aiOn(k))return;

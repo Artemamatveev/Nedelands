@@ -178,6 +178,11 @@ test('Bittie opens a full-screen voice call and sends a spoken answer from the o
     });
     await s.go('/oefenen?open=talk');
     await s.p.getByRole('button',{name:'Praat met Bittie'}).tap();
+    const start=s.p.getByRole('button',{name:'Begin het gesprek'});
+    await start.waitFor();
+    assert.equal(sent.length,0);
+    assert.match(await s.p.locator('#tctl').textContent(),/Dit kost 1 nakijkbeurt/);
+    await start.tap();
     const call=s.p.locator('.bittie-call'),orb=call.locator('.voice-mark-orb');
     await s.p.getByRole('heading',{name:'Bittie',exact:true}).waitFor();
     await s.p.waitForFunction(()=>document.querySelector('#recb')?.textContent.includes('Klaar'));
