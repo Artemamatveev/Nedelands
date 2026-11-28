@@ -53,7 +53,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Bittertalen","url":"https://bittertalen.nl/","applicationCategory":"EducationalApplication","operatingSystem":"Web","inLanguage":"nl","educationalLevel":["A2","B1"],"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}
 </script>
-<script defer src="/landing.js?v=bittie-only"></script>
+<script defer src="/landing.js?v=pricing-feedback"></script>
 <script defer src="/lib/gsap-3.15.1.min.js"></script>
 <script defer src="/lib/ScrollTrigger-3.15.1.min.js"></script>
 <script defer src="/landing-motion-v3.js?v=hero-still"></script>
@@ -344,6 +344,10 @@
   <!-- The homepage asks like the exam form ("Examenblad", the app's style): lettered answers in square boxes -->
   <section id="prijzen" class="block">
     <h2 data-t>Wat kost het?</h2>
+    <div id="pricing-intro">
+      <p class="lead" data-t>Oefeningen en proefexamens zijn gratis. Wil je weten wat je beter kunt zeggen of schrijven? Met Plus krijg je elke maand nieuwe AI-feedback op je antwoorden. Zo kun je je fouten verbeteren en het opnieuw proberen.</p>
+      <p id="pricing-comparison" hidden></p>
+    </div>
     <div class="grid three pricing">
       <article class="card">
         <h3 data-t>Gratis</h3>
