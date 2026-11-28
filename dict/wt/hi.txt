@@ -66,7 +66,7 @@ de thermometer	थर्मामीटर
 de rolstoel	व्हीलचेयर
 de kruk	बैसाखी
 gebroken	टूटा हुआ
-de gips	प्लास्टर
+het gips	प्लास्टर
 bloeden	ख़ून बहना
 de verwijzing	रेफ़रल
 de huisartsenpraktijk	डॉक्टर का क्लिनिक
@@ -141,8 +141,8 @@ bruto	कर से पहले
 netto	कर के बाद
 het vakantiegeld	छुट्टी भत्ता
 de cao	सामूहिक श्रम समझौता
-het tijdelijk contract	अस्थायी अनुबंध
-het vast contract	स्थायी अनुबंध
+het tijdelijke contract	अस्थायी अनुबंध
+het vaste contract	स्थायी अनुबंध
 zich ziek melden	बीमारी की सूचना देना
 de bedrijfsarts	कंपनी का डॉक्टर
 de leidinggevende	सुपरवाइज़र

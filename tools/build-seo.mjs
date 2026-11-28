@@ -59,7 +59,7 @@ export function pages(D = data()) {
     { slug: 'staatsexamen-b1-oefenen', open: 'b1', title: 'Staatsexamen NT2 B1 oefenen (programma I), gratis | Bittertalen',
       desc: 'Oefen voor het Staatsexamen NT2 B1: lezen, luisteren, schrijven en spreken op B1-niveau, met proefexamens en AI-feedback.',
       h1: 'Staatsexamen NT2 B1 oefenen', lead: 'Het Staatsexamen NT2 programma I is op niveau B1. Je hebt het nodig voor sommige opleidingen en werk, en waarschijnlijk straks ook voor naturalisatie. Hieronder een leestekst op B1-niveau om te proberen.',
-      body: reading(lz1), more: 'In de app oefen je alle vier onderdelen van B1, met proefexamens en AI-feedback op je schrijven en spreken.' },
+      body: reading(lz1), more: 'In de app oefen je alle vier de onderdelen van B1, met proefexamens en AI-feedback op je schrijven en spreken.' },
     { slug: 'inburgeringsexamen-oefenen', open: 'today', title: 'Inburgeringsexamen oefenen: gratis proefexamens A2 en KNM | Bittertalen',
       desc: 'Gratis oefenen voor het inburgeringsexamen A2: Lezen, Luisteren, Schrijven, Spreken en KNM. Proefexamens met timer en AI-feedback op je teksten.',
       h1: 'Inburgeringsexamen oefenen', lead: 'Het inburgeringsexamen (Wet inburgering 2021) heeft voor de meeste mensen de onderdelen Lezen, Luisteren, Schrijven en Spreken op A2-niveau, plus KNM. Bittertalen helpt je elke dag een beetje, met een plan tot je examendatum.',

@@ -66,7 +66,7 @@ de thermometer	градусник
 de rolstoel	инвалидная коляска
 de kruk	костыль
 gebroken	сломанный
-de gips	гипс
+het gips	гипс
 bloeden	кровоточить
 de verwijzing	направление
 de huisartsenpraktijk	кабинет семейного врача
@@ -141,8 +141,8 @@ bruto	до вычета налогов
 netto	на руки, после налогов
 het vakantiegeld	отпускные
 de cao	коллективный трудовой договор
-het tijdelijk contract	срочный договор
-het vast contract	бессрочный договор
+het tijdelijke contract	срочный договор
+het vaste contract	бессрочный договор
 zich ziek melden	сообщить о болезни
 de bedrijfsarts	врач предприятия
 de leidinggevende	руководитель

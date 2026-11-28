@@ -66,7 +66,7 @@ de thermometer	体温计
 de rolstoel	轮椅
 de kruk	拐杖
 gebroken	断了的
-de gips	石膏
+het gips	石膏
 bloeden	流血
 de verwijzing	转诊单
 de huisartsenpraktijk	全科诊所
@@ -141,8 +141,8 @@ bruto	税前
 netto	税后
 het vakantiegeld	假期津贴
 de cao	集体劳动协议
-het tijdelijk contract	临时合同
-het vast contract	长期合同
+het tijdelijke contract	临时合同
+het vaste contract	长期合同
 zich ziek melden	请病假
 de bedrijfsarts	企业医生
 de leidinggevende	主管
