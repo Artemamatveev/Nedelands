@@ -179,11 +179,12 @@ export async function putHand(h, code) {
 // Real exam results for our figures (api/outcome.js, table exam_outcomes). OUTCOME_CAP new rows a month (default 2000), so a
 // stranger can't fill the table: true when kept, false when the month is full; throws when it failed.
 const OUTCOME_CAP = Math.max(1, parseInt(process.env.OUTCOME_CAP, 10) || 2000);
-export async function putOutcome({ id, part, ok, pc, rd }) {
-  const r = await rest("rpc/put_outcome", {
-    method: "POST",
-    body: JSON.stringify({ o_id: id, o_part: part, o_ok: ok, o_pc: pc, o_rd: rd, cap: OUTCOME_CAP }),
-  });
+// sc: the grade or score from DUO's letter, or null. put_outcome_sc keeps it (migration 20261128140000_outcome_score.sql);
+// until that has run, put_outcome keeps the rest without it.
+export async function putOutcome({ id, part, ok, pc, rd, sc = null }) {
+  const base = { o_id: id, o_part: part, o_ok: ok, o_pc: pc, o_rd: rd, cap: OUTCOME_CAP };
+  let r = await rest("rpc/put_outcome_sc", { method: "POST", body: JSON.stringify({ ...base, o_sc: sc }) });
+  if (r.status === 404) r = await rest("rpc/put_outcome", { method: "POST", body: JSON.stringify(base) });
   if (!r.ok) throw new Error(`put_outcome ${r.status}`);
   return (await r.json()) === true;
 }

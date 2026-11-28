@@ -226,7 +226,7 @@ when `/api/config` says `events` (accounts on and `EVENTS` not `0`) and never wi
 Since 25 November 2026 also the way to paying: `plus` (the Plus screen, once per page load), `buy` and `pass` (Checkout started), `paid` and `stop` (back from Stripe), and `err`: an error on the page (`reportErr()`, at most five per load), whose technical message, file and line `api/event.js` writes only to the Vercel log (`client_error`), never to the table. The events: `open` (the app, once a day per device: `ww-day` keeps only the date, set only once the server kept the
 count, so a lost one is sent again at the next start; asked again when a fresh config comes) and `new` (that first time,
 with no progress yet), `home` (the homepage, once a day: `ww-day-home`, the same way), `begin` (a button from the homepage into the app, not
-Inloggen or Plus), `quiz` (Vraag 4 answered), `test` (the starttest done), `day` (today's lesson done, with the ribbon), `ai` (an AI conversation started),
+Inloggen or Plus), `quiz` (Vraag 4 answered), `test` (the starttest done), `day` (today's lesson done, with the ribbon), `ai` (an AI conversation started), `first` (a new learner's first short note from Mijn dag, 28 November 2026),
 `exam_<part>` (a proefexamen started) and `done_<part>` (handed in: `keepRes()`). A new event goes in `EVENTS` too
 (`tests/events.test.mjs` checks every `track("…")` in the pages against it). privacy.html describes this in "De website en
 bezoekers tellen", "Cookies" and "Hoe lang", in all eight languages: change them with it. Vercel Web Analytics is not used

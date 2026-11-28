@@ -296,3 +296,22 @@ test('A2 practice: up to three corrections on one screen, punctuation-only ones 
   assert.equal(a.document.querySelector('#fixcheck').textContent,'Verder');
   assert.equal(mock.calls.length,1);
 });
+
+test('A2 practice shows the learner\'s text beside the corrected one, the changed words marked, to listen to',async()=>{
+  const mine='Volgende week ik ga op vakantie. De sleutel ligd onder de mat.';
+  const fixed='Volgende week ga ik op vakantie. De sleutel ligt onder de mat.';
+  const mock=checker(tasks=>tasks.map(t=>({...t,corrected:fixed,errors:[{wrong:'ik ga',right:'ga ik',kind:'inversie',why:'Na een tijd komt eerst het werkwoord.'},{wrong:'ligd',right:'ligt',kind:'spelling',why:'Met een t.'}]})));
+  const a=await app({fetch:mock.fetch});
+  a.run('build("wr",{...SEC.find(s=>s.id==="wr"),n:1,keep:1,pool:()=>[ITEMS.find(q=>q.k==="wr|0")],draftSlot:"landing"})');
+  type(a,'#txt',mine);
+  a.document.querySelector('#chk').click();
+  await a.flush();
+  const fb=a.document.querySelector('#fb'),panes=fb.querySelectorAll('.wdiff .sample');
+  assert.equal(panes.length,2);
+  assert.equal(panes[0].querySelectorAll('mark.err').length,2,'the mistakes are marked in the learner\'s text');
+  assert.equal(panes[1].textContent,fixed);
+  assert.deepEqual([...panes[1].querySelectorAll('ins')].map(x=>x.textContent),['ga ik','ligt']);
+  assert.ok(fb.querySelector('#wlisten'));
+  assert.ok(fb.innerHTML.indexOf('wdiff')<fb.innerHTML.indexOf('class="dpts"'),'before the points');
+  assert.match(fb.textContent,/Het belangrijkste om te verbeteren:/);
+});
