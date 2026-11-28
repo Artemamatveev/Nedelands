@@ -73,6 +73,12 @@ ronde" keeps the theme. The theme names' translations come from the `"KNM: <them
   "Soorten fouten in je teksten en antwoorden" (the learner's own mistakes by kind: `ERRCAT`, kept by `keepErrs()` as
   `c` since 28 November 2026, a tap practises those mistakes); "Werk aan je fouten": Mijn fouten (the due ones first),
   Kies een lastig onderwerp and Mijn woorden. With nothing practised yet, a short empty state.
+  Under the numbers, "Zo ga je vooruit" (`growthHTML()`): the last 7 days against the 7 before ("N% beter dan vorige week",
+  from 10 answers each), a line of the share right per week (the last eight Monday-to-Sunday weeks, `weeks()`; a point
+  only for a week with 5+ answers) and bars of practice minutes per week, and per exam part with two or more
+  proefexamens a small line of the last ten with the oefendoel as an oranje line. Plain SVG (`lineSVG()`, `barSVG()`):
+  one series per chart, so the caption names it, a `<title>` tooltip on every point and bar, the newest value written
+  beside it and the numbers in `aria-label`. Shown from two active weeks or two proefexamens of a part.
 - **On a computer** (`data-desktop`), like a glass dashboard (the user's examples, November 2026): the painting of the
 day, strongly blurred, fills the screen (`--paint-bg`, set by `paint()`); the app sits in one big window of frosted glass
 with round corners (the glass on `main::before`: a backdrop filter on `<main>` would pin its fixed children inside it;

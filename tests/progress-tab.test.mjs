@@ -33,3 +33,19 @@ test('The report: share right, numbers, per part, strong and weak groups, kinds 
   a.document.querySelector('#mine [data-vw="0"]').click();
   assert.equal(a.document.querySelector('#play').hidden,false);
 });
+
+test('Growth: a line of the share right per week, practice minutes per week, the trend and each part\'s proefexamens', async()=>{
+  const a=await app();
+  a.run(`const d=today();S.qd={[d]:20,[d-8]:20,[d-15]:10};S.qr={[d]:18,[d-8]:12,[d-15]:5};S.tm={[d]:1800,[d-8]:1200};
+    S.res={lz:[{at:1,pc:60},{at:2,pc:72},{at:3,pc:84}]};setTab("herhalen");home()`);
+  const m=a.document.querySelector('#mine');
+  assert.match(m.textContent,/Zo ga je vooruit/);
+  assert.match(m.textContent,/30% beter dan vorige week/,'90% this week against 60% the week before');
+  const charts=m.querySelectorAll('svg.chart');
+  assert.equal(charts.length,3,'share right, minutes, one part');
+  assert.equal(charts[0].querySelectorAll('circle').length,3,'only weeks with answers get a point');
+  assert.match(charts[0].getAttribute('aria-label'),/90%/);
+  assert.equal(charts[1].querySelectorAll('rect').length,8,'eight weeks of minutes');
+  assert.ok(charts[2].querySelector('.cgoal'),'the oefendoel line on the proefexamen chart');
+  assert.match(charts[2].getAttribute('aria-label'),/60%, 72%, 84%/);
+});
