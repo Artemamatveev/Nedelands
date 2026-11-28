@@ -2667,7 +2667,46 @@ const icHTML=k=>`<i class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${IC[
 // Voortgang (the fourth tab, 28 November 2026; before: Herhalen): a report of everything practised, from the progress
 // only (so the same on every device): how much, how well per exam part, what goes well, where the most mistakes are,
 // which kinds of mistakes are in the learner's own texts and answers, and buttons to work on them.
-const ERRCAT={inversie:"Woordvolgorde",meervoud:"Meervoud",grammatica:"Grammatica",spelling:"Spelling",woorden:"Woorden",samenhang:"Samenhang",inhoud:"Inhoud"};
+// Grammar on Voortgang (28 November 2026): the learner's own mistakes (S.errs, from Claude's corrections of their texts and
+// spoken answers) sorted into the rules that cost points, from the wrong and the right words themselves, so older
+// mistakes count too: the same words in another order is word order; only de/het/een changed is the article; one word
+// that only gains or loses an -e is the adjective; a verb that changes its ending (t, d, en, te, de) is the verb form;
+// a word a letter or two off is spelling; else Claude's own kind (meervoud, woorden, grammatica). Content and coherence
+// are not grammar and stay out. Each rule also has the grammar rounds that practise it (GRAMSEC).
+const GRAMCAT={wo:["Woordvolgorde","De persoonsvorm op de tweede plaats, in een bijzin achteraan."],
+  dh:["De, het en een","Welk lidwoord bij welk woord hoort."],
+  ww:["Werkwoordsvormen","Vervoeging, de verleden tijd en d of t."],
+  mv:["Meervoud","Een meervoud met het goede werkwoord: de boeken liggen."],
+  bn:["Bijvoeglijk naamwoord","Met of zonder -e: een mooie fiets, een mooi huis."],
+  sp:["Spelling","Hoe je een woord schrijft."],
+  wd:["Woordkeuze","Het goede woord voor wat je bedoelt."],
+  gr:["Andere grammatica","Die en dat, er, voegwoorden en meer."]};
+const GRAMSEC={wo:["wo","w1"],dh:["dh"],ww:["verb","pr"],wd:["vo","v1"],gr:["g1"]};
+const lev=(a,b)=>{if(Math.abs(a.length-b.length)>2)return 9;const D=[...Array(b.length+1).keys()];
+  for(let i=1;i<=a.length;i++){let p=D[0];D[0]=i;for(let j=1;j<=b.length;j++){const t=D[j];D[j]=Math.min(D[j]+1,D[j-1]+1,p+(a[i-1]===b[j-1]?0:1));p=t}}return D[b.length]};
+function grammarCat(e){
+  const k=e.c||e.kind;if(k==="inhoud"||k==="samenhang")return null;
+  if(k==="inversie")return"wo";if(k==="meervoud")return"mv";
+  const T=t=>String(t||"").toLowerCase().replace(/[^\p{L}\p{N}' -]/gu," ").split(/\s+/).filter(Boolean),a=T(e.w),b=T(e.r);
+  if(a.length&&a.length===b.length&&a.join(" ")!==b.join(" ")&&a.slice().sort().join(" ")===b.slice().sort().join(" "))return"wo";
+  const ART=new Set(["de","het","een"]);
+  if(Math.abs(a.length-b.length)===1){const [L,S2]=a.length>b.length?[a,b]:[b,a],x=L.find((w,i)=>w!==S2[i]);if(x&&ART.has(x)&&L.filter(w=>w!==x).join(" ")===S2.filter(w=>w!==x).join(" "))return"dh"}
+  if(a.length===b.length){const P=a.map((w,i)=>[w,b[i]]).filter(([x,y])=>x!==y);
+    if(P.length&&P.every(([x,y])=>ART.has(x)&&ART.has(y)))return"dh";
+    if(P.length===1){const[x,y]=P[0];
+      if(x+"e"===y||y+"e"===x)return"bn";
+      const stem=w=>w.replace(/^ge(?=\w{3})/,"").replace(/(ten|den|dt|te|de|en|t|d)$/,"");
+      if(stem(x).length>=3&&stem(x)===stem(y))return"ww";
+      if(x.length>=3&&lev(x,y)<=2)return k==="woorden"?"wd":"sp"}}
+  return k==="spelling"?"sp":k==="woorden"?"wd":k==="meervoud"?"mv":"gr";
+}
+// per rule: own mistakes (count and their indexes in S.errs) and the share right in its grammar rounds
+function grammarRows(){
+  const R={};(S.errs||[]).forEach((e,i)=>{const c=grammarCat(e);if(!c)return;(R[c]||(R[c]={c,n:0,ix:[],r:0,w:0})).n++;R[c].ix.push(i)});
+  Object.entries(GRAMSEC).forEach(([c,secs])=>ITEMS.forEach(q=>{if(!secs.includes(q.sec))return;const it=S.items[q.k];if(!it)return;const o=R[c]||(R[c]={c,n:0,ix:[],r:0,w:0});o.r+=it.r||0;o.w+=it.w||0}));
+  const rate=o=>o.r+o.w?o.r/(o.r+o.w):1;
+  return Object.values(R).filter(o=>o.n||o.r+o.w>=3).sort((a,b)=>b.n-a.n||rate(a)-rate(b));
+}
 let VP={weak:[]};
 // the answers per group of questions (as Mijn zwakke punten): {sec, label, name, r, w, items}
 function answerGroups(){
@@ -2741,13 +2780,12 @@ function progressHTML(){
   // per exam part of this level: practice answers right, and the last proefexamen (an oefencijfer where there is one)
   const ps=parts().map(k=>{let r=0,w=0;G.filter(o=>o.sec===k).forEach(o=>{r+=o.r;w+=o.w});const R=(S.res||{})[k]||[],last=R.length?R[R.length-1].pc:null,c=oefenCijfer(k,last);
     return itHTML(`data-vp="${k}"`,PART[k],r+w?`${Math.round(r/(r+w)*100)}% goed, ${r+w} antwoorden`:"Nog niet geoefend",{ic:k,n:last==null?null:c!=null?`${c}/10`:last+"%",bar:r+w?Math.round(r/(r+w)*100):null,pass:r+w&&r/(r+w)>=passOf(k)})}).join("");
-  const seen=G.filter(o=>o.r+o.w>=3),rate=o=>o.r/(o.r+o.w);
+  const exam=new Set(parts()),seen=G.filter(o=>exam.has(o.sec)&&o.r+o.w>=3),rate=o=>o.r/(o.r+o.w); // exam parts only: grammar has its own list, history and words stay out
   const strong=seen.filter(o=>o.r+o.w>=5&&rate(o)>=.8).sort((a,b)=>rate(b)-rate(a)||(b.r+b.w)-(a.r+a.w)).slice(0,3);
   // every group with 3+ answers, the most mistakes first (what Mijn zwakke punten was): the weakest five shown, the rest
   // under "Meer onderwerpen"
   const ranked=seen.slice().sort((a,b)=>rate(a)-rate(b)),weakG=ranked.filter(o=>rate(o)<.8).slice(0,5),more=ranked.slice(weakG.length).filter(o=>!strong.includes(o));VP={weak:ranked};
-  const cats={};E.forEach(e=>{const c=e.c||e.kind;if(Object.hasOwn(ERRCAT,c))cats[c]=(cats[c]||0)+1});
-  const catL=Object.entries(cats).sort((a,b)=>b[1]-a[1]);
+  const gram=grammarRows();
   return`<div class="vg"><div class="ring" style="--p:${pc}" role="img" aria-label="${pc}%"><span>${pc}%</span></div>
       <div><p class="ask">Goed beantwoord</p><div class="vtiles">${tile(answered,"Vragen geoefend")}${tile(days,"Dagen geoefend")}${tile(String(Math.round(hours*10)/10).replace(".",","),"Uur geoefend")}${tile(exams,"Proefexamens")}${tile(alive,"Dagen op rij")}${tile((S.words||[]).length,"Bewaarde woorden")}</div></div></div>
     ${growthHTML()}
@@ -2755,7 +2793,7 @@ function progressHTML(){
     ${strong.length?`<h3 class="lh">Hier ben je goed in</h3><div class="list">${strong.map(o=>itHTML(`data-vp="${o.sec}"`,o.name,`${Math.round(rate(o)*100)}% goed, ${o.r+o.w} antwoorden`,{bar:Math.round(rate(o)*100),pass:true})).join("")}</div>`:""}
     ${ranked.length?`<h3 class="lh">Hier maak je de meeste fouten</h3>${weakG.length?`<div class="list">${weakG.map((o,i)=>itHTML(`data-vw="${i}"`,o.name,`${Math.round(rate(o)*100)}% goed, ${o.r+o.w} antwoorden`,{bar:Math.round(rate(o)*100)})).join("")}</div>`:""}
       ${more.length?`<details class="vmore"><summary>Meer onderwerpen</summary><div class="list">${more.map(o=>itHTML(`data-vw="${ranked.indexOf(o)}"`,o.name,`${Math.round(rate(o)*100)}% goed, ${o.r+o.w} antwoorden`,{bar:Math.round(rate(o)*100),pass:rate(o)>=.8})).join("")}</div></details>`:""}`:""}
-    ${catL.length?`<h3 class="lh">Soorten fouten in je teksten en antwoorden</h3><div class="list">${catL.map(([c,n])=>itHTML(`data-vc="${c}"`,ERRCAT[c],"Oefen deze fouten",{n})).join("")}</div>`:""}
+    ${gram.length?`<h3 class="lh">Grammatica</h3><p class="note">Uit je eigen teksten en antwoorden en je grammatica-oefeningen. Het getal is hoe vaak je die fout maakte.</p><div class="list">${gram.map(o=>itHTML(`data-vc="${o.c}"`,GRAMCAT[o.c][0],GRAMCAT[o.c][1],{n:o.n||null,bar:o.r+o.w?Math.round(o.r/(o.r+o.w)*100):null,pass:o.r+o.w&&o.r/(o.r+o.w)>=.8})).join("")}</div>`:""}
     ${E.length||(S.words||[]).length?`<h3 class="lh">Werk aan je fouten</h3><div class="list">`:""}${E.length?itHTML(`data-x="errs"`,"Oefen met je eigen fouten","Kies de juiste versie van zinnen uit je eerdere teksten en antwoorden.",{n:due||E.length,ic:"errs"}):""}
       ${(S.words||[]).length?itHTML(`data-x="words"`,"Mijn woorden","Bekijk of oefen je bewaarde woorden.",{n:S.words.length,ic:"words"}):""}${E.length||(S.words||[]).length?"</div>":""}`;
 }
@@ -2829,7 +2867,8 @@ function home(){
     else if(d.x==="hf")hfScreen();
     else if(d.vp)build(d.vp);
     else if(d.vw!=null){const o=VP.weak[+d.vw];if(o)build("custom",{id:"custom",t:o.name,n:10,pool:()=>o.items.slice().sort((a,b)=>weak(b)-weak(a))})}
-    else if(d.vc){const L=errItems().filter((q,i)=>(S.errs[i].c||S.errs[i].kind)===d.vc);if(L.length)build("custom",{id:"custom",t:ERRCAT[d.vc],n:Math.min(10,L.length),pool:()=>shuffle(L)})}
+    else if(d.vc){const c=d.vc,E2=errItems(),L=E2.filter((q,i)=>grammarCat(S.errs[i])===c),sec=(GRAMSEC[c]||[]).find(x=>lvl()==="B1"?/1$/.test(x):!/1$/.test(x))||(GRAMSEC[c]||[])[0];
+      if(L.length)build("custom",{id:"custom",t:GRAMCAT[c][0],n:Math.min(10,L.length),pool:()=>shuffle(L)});else if(sec)build(sec)}
     else if(d.x==="bg")bgList();
     else if(d.x==="words")wordsScreen();
     else if(d.x==="errs"){const L=dueErrs();build("custom",{id:"custom",t:"Mijn fouten",n:10,pool:()=>L.length?shuffle(L):shuffle(errItems())})}});
@@ -4167,7 +4206,7 @@ const docBtn=`<button class="ghost wide" id="docx" style="margin-bottom:10px">Do
 // Writing is graded by Claude on the server (api/check.js)
 // Mistakes from the learner's own texts and spoken answers, practised later in "Mijn fouten"
 function keepErrs(errs){
-  errs.forEach(e=>{if(e&&e.wrong&&e.right&&e.wrong!==e.right&&String(e.wrong).length<90&&String(e.right).length<90&&!S.errs.some(x=>x.r===e.right))S.errs.unshift({w:String(e.wrong),r:String(e.right),y:String(e.why||""),d:today(),...(["inversie","meervoud"].includes(e.kind)?{kind:e.kind}:{}),...(Object.hasOwn(ERRCAT,e.kind)?{c:e.kind}:{})})});
+  errs.forEach(e=>{if(e&&e.wrong&&e.right&&e.wrong!==e.right&&String(e.wrong).length<90&&String(e.right).length<90&&!S.errs.some(x=>x.r===e.right))S.errs.unshift({w:String(e.wrong),r:String(e.right),y:String(e.why||""),d:today(),...(["inversie","meervoud"].includes(e.kind)?{kind:e.kind}:{}),...(["inhoud","woorden","grammatica","inversie","meervoud","spelling","samenhang"].includes(e.kind)?{c:e.kind}:{})})});
   S.errs=S.errs.slice(0,40);
 }
 // A writing text sent again unchanged gets its earlier result, without a new check: sending the same text until the
@@ -6475,7 +6514,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru","uk"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="4f2fc39a44";
+const UIV="43c4416b95";
 let uiP=null;
 function uiLoaded(){try{trMemo.clear()}catch(e){} // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});

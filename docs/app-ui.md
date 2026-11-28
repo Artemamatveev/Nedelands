@@ -68,11 +68,16 @@ ronde" keeps the theme. The theme names' translations come from the `"KNM: <them
   the same on every device (`progressHTML()`). A ring with the share answered right (`S.qd`/`S.qr`, else the answers in
   `S.items`) beside six numbers (questions, days practised, hours from `S.tm`, proefexamens, the streak, saved words);
   "Per onderdeel": every exam part of the level with its practice share and bar, and the last proefexamen as an
-  oefencijfer (A2, KNM) or a percentage, a tap practises it; "Hier ben je goed in" (80% or more, 5+ answers, top 3);
+  oefencijfer (A2, KNM) or a percentage, a tap practises it; "Hier ben je goed in" (80% or more, 5+ answers, top 3; these lists hold the exam parts' topics only, so history,
+  vocabulary and grammar rounds stay out of them);
   "Hier maak je de meeste fouten" (under 80%, the weakest 5, a tap practises that group; every other topic with 3+
   answers, the most mistakes first, under "Meer onderwerpen": this replaced the separate Mijn zwakke punten screen);
-  "Soorten fouten in je teksten en antwoorden" (the learner's own mistakes by kind: `ERRCAT`, kept by `keepErrs()` as
-  `c` since 28 November 2026, a tap practises those mistakes); "Werk aan je fouten": Mijn fouten (the due ones first) and Mijn woorden. With nothing practised yet, a short empty state.
+  "Grammatica" (`grammarRows()`): the learner's own mistakes sorted into the rules that cost points by `grammarCat()`,
+  from the wrong and right words themselves (another order = Woordvolgorde; only de/het/een = De, het en een; an -e more
+  or less = Bijvoeglijk naamwoord; another verb ending t/d/en/te/de = Werkwoordsvormen; a letter or two = Spelling; else
+  Claude's kind: Meervoud, Woordkeuze, Andere grammatica; content and coherence stay out), with the count, a short rule
+  and the share right in the grammar rounds for that rule (`GRAMSEC`); the most frequent first; a tap practises those
+  mistakes, or the rule's round when there are none; "Werk aan je fouten": Mijn fouten (the due ones first) and Mijn woorden. With nothing practised yet, a short empty state.
   Under the numbers, "Zo ga je vooruit" (`growthHTML()`): the last 7 days against the 7 before ("N% beter dan vorige week",
   from 10 answers each), a line of the share right per week (the last eight Monday-to-Sunday weeks, `weeks()`; a point
   only for a week with 5+ answers) and bars of practice minutes per week, and per exam part with two or more
