@@ -84,7 +84,7 @@ test('Legacy public addresses move progress to the main site and stop offering p
         assert.equal(await s.p.evaluate(()=>S.items['knm|0'].r),2);assert.equal(await s.p.evaluate(()=>S.words[0].w),'de fiets');
         await s.p.locator('#mvdone').click();await s.p.evaluate(()=>build('knm',{...SEC.find(s=>s.id==='knm'),n:3}));
         assert.equal(await s.p.locator('#play').isVisible(),true);assert.deepEqual(s.errors,[]);
-      } finally {await s.ctx.close()}
+      } finally {await s.ctx.unrouteAll({behavior:'ignoreErrors'});await s.ctx.close()} // a KNM photo may still be on its way
     }
     const s=await page(browser,base,{});
     try {
@@ -95,7 +95,7 @@ test('Legacy public addresses move progress to the main site and stop offering p
       await s.p.evaluate(()=>{home();build('knm');startExam('knm',true)});
       assert.equal(await s.p.locator('#play').isHidden(),true);assert.equal(await s.p.locator('#home').isHidden(),true);
       assert.equal(await s.p.locator('#move a').getAttribute('href'),'https://bittertalen.nl/');assert.deepEqual(s.errors,[]);
-    } finally {await s.ctx.close()}
+    } finally {await s.ctx.unrouteAll({behavior:'ignoreErrors'});await s.ctx.close()}
   } finally {await browser.close();server.close()}
 });
 
@@ -1256,10 +1256,9 @@ test('A2 launch path: guest writing and all five mock exams finish with recovera
           await s.p.locator('#nxt').click();
         }
       }
-      if(part!=='sp'){
-        assert.equal(await s.p.evaluate(()=>queue.filter((_,i)=>picked(i)).length),count,part);
-        await s.p.locator('#lever').click();
-      }
+      // every part, Spreken too since it follows DUO's oefenexamen, hands in from the overview
+      assert.equal(await s.p.evaluate(()=>queue.filter((_,i)=>picked(i)).length),count,part);
+      await s.p.locator('#lever').click();
       if(part==='wr'||part==='sp'){
         await s.p.locator('#retrycheck').click();
         const sent=attempts.filter(r=>r.requestId&&(r.part??'wr')===part);
