@@ -207,12 +207,20 @@ test('Every person has a persona and openers; historical people stay in their ow
   assert.match(t.bodies[0].system,/Arles/);assert.match(t.bodies[0].system,/stay in your own time/);
 });
 
-test('A random person greets at once; a situation waits until the learner has read the task', async()=>{
+test('Bittie and practice situations wait for explicit confirmation before spending a check', async()=>{
   const sent=[];
   const fetch=async(url,init)=>{if(url!=='/api/talk')return new Response(JSON.stringify(url==='/api/config'?{}:[]));
     const b=JSON.parse(init.body);sent.push(b);return new Response(JSON.stringify({token:'tok',reply:'Hoi!',audio:null,left:1,limit:2,period:'once'}))};
   const a=await app({fetch});
-  a.run('aiAny()');await a.flush();
+  a.run('S.words=[{w:"de afspraak",en:"appointment"}];aiAny()');await a.flush();
+  assert.equal(sent.length,0);
+  const controls=a.document.querySelector('#tctl');
+  assert.match(controls.textContent,/Dit kost 1 nakijkbeurt/);
+  assert.ok(controls.querySelector('#aipractice'));
+  controls.querySelector('#aipractice').checked=true;
+  controls.querySelector('#aigo').click();
+  await a.flush();
+  assert.equal(a.run('AK.practice.word'),'de afspraak');
   assert.equal(sent.length,1);assert.equal(sent[0].go,'start');
   assert.match(a.document.querySelector('#tlog').textContent,/Hoi!/);
   a.run('aiTalk("apotheek")');await a.flush();
