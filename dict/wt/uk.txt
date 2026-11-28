@@ -66,7 +66,7 @@ de thermometer	градусник
 de rolstoel	інвалідний візок
 de kruk	милиця
 gebroken	зламаний
-de gips	гіпс
+het gips	гіпс
 bloeden	кровоточити
 de verwijzing	направлення
 de huisartsenpraktijk	кабінет сімейного лікаря
@@ -141,8 +141,8 @@ bruto	до сплати податків
 netto	на руки, після податків
 het vakantiegeld	відпускні
 de cao	колективний трудовий договір
-het tijdelijk contract	строковий договір
-het vast contract	безстроковий договір
+het tijdelijke contract	строковий договір
+het vaste contract	безстроковий договір
 zich ziek melden	повідомити про хворобу
 de bedrijfsarts	лікар підприємства
 de leidinggevende	керівник

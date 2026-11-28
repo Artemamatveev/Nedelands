@@ -66,7 +66,7 @@ de thermometer	ميزان الحرارة
 de rolstoel	كرسي متحرك
 de kruk	عكّاز
 gebroken	مكسور
-de gips	جبيرة
+het gips	جبيرة
 bloeden	ينزف
 de verwijzing	إحالة
 de huisartsenpraktijk	عيادة طبيب العائلة
@@ -141,8 +141,8 @@ bruto	إجمالي (قبل الضريبة)
 netto	صافي (بعد الضريبة)
 het vakantiegeld	بدل الإجازة
 de cao	اتفاقية العمل الجماعية
-het tijdelijk contract	عقد مؤقت
-het vast contract	عقد دائم
+het tijdelijke contract	عقد مؤقت
+het vaste contract	عقد دائم
 zich ziek melden	يبلّغ عن مرضه
 de bedrijfsarts	طبيب الشركة
 de leidinggevende	المسؤول المباشر

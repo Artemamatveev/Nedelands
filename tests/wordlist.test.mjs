@@ -30,3 +30,18 @@ test('Every themed word has its meaning in every menu language, and nothing else
     for (const w of m.keys()) assert.ok(nl.has(w), `${l}: ${w} is not in WT`);
   }
 });
+
+test('Corrected glossary terms retain the original progress keys in all three practice modes', async () => {
+  const { app } = await import('./app-harness.mjs');
+  const a = await app();
+  for (const [oldLabel, label] of [
+    ['de gips', 'het gips'],
+    ['het tijdelijk contract', 'het tijdelijke contract'],
+    ['het vast contract', 'het vaste contract'],
+  ]) {
+    for (const prefix of ['wn', 'wt', 'wl']) {
+      const key = JSON.stringify(prefix + '|' + oldLabel);
+      assert.equal(a.run(`ITEMS.find(q=>q.k===${key})?.tts || ITEMS.find(q=>q.k===${key})?.hear`), label);
+    }
+  }
+});

@@ -66,7 +66,7 @@ de thermometer	thermometer
 de rolstoel	wheelchair
 de kruk	crutch
 gebroken	broken
-de gips	plaster cast
+het gips	plaster cast
 bloeden	to bleed
 de verwijzing	referral
 de huisartsenpraktijk	GP surgery
@@ -141,8 +141,8 @@ bruto	gross (before tax)
 netto	net (after tax)
 het vakantiegeld	holiday pay
 de cao	collective labour agreement
-het tijdelijk contract	temporary contract
-het vast contract	permanent contract
+het tijdelijke contract	temporary contract
+het vaste contract	permanent contract
 zich ziek melden	to call in sick
 de bedrijfsarts	company doctor
 de leidinggevende	manager, supervisor

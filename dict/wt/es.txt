@@ -66,7 +66,7 @@ de thermometer	termómetro
 de rolstoel	silla de ruedas
 de kruk	muleta
 gebroken	roto, fracturado
-de gips	escayola
+het gips	escayola
 bloeden	sangrar
 de verwijzing	volante, derivación
 de huisartsenpraktijk	consulta del médico de cabecera
@@ -141,8 +141,8 @@ bruto	bruto
 netto	neto
 het vakantiegeld	paga de vacaciones
 de cao	convenio colectivo
-het tijdelijk contract	contrato temporal
-het vast contract	contrato indefinido
+het tijdelijke contract	contrato temporal
+het vaste contract	contrato indefinido
 zich ziek melden	avisar de que estás enfermo
 de bedrijfsarts	médico de empresa
 de leidinggevende	jefe, responsable

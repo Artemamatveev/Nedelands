@@ -1212,10 +1212,10 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
 <script src="/study/language-v1.js?v=e94426af48"></script>
 <script src="/study/progress-v1.js?v=261b0e20d0"></script>
 <script src="/study/writing-v1.js?v=84ca5efa75"></script>
-<script src="/data/knm.js?v=1dc8dbea1e"></script>
-<script src="/data/a2.js?v=1040e20696"></script>
-<script src="/data/b1.js?v=1c0276cbe5"></script>
-<script src="/data/extra.js?v=e80c7f18b2"></script>
+<script src="/data/knm.js?v=3f3c97e274"></script>
+<script src="/data/a2.js?v=3f1f1ffe15"></script>
+<script src="/data/b1.js?v=26b6a44876"></script>
+<script src="/data/extra.js?v=7fb3b89d10"></script>
 <script>
 
 const TYPES={past:"Imperfectum: gisteren … ik / hij",pastpl:"Imperfectum: gisteren … wij / zij",pp:"Perfectum: voltooid deelwoord",aux:"Perfectum: hebben of zijn?"};
@@ -1982,14 +1982,16 @@ const KNMS=235,kc={};KNM.forEach((p,i)=>{const g=p[0]+(i>=KNMS?"|s":"");kc[g]=(k
 const KNMT=[...new Set(KNM.map(p=>p[0]))]; // the eight themes, in the order of KNM
 VO.forEach((p,i)=>ITEMS.push({sec:"vo",k:"vo|"+p[0],ord:i/6|0,type:"choice",label:"Wat betekent dit woord?",big:p[0],sub:"",right:p[1],
   opts:()=>shuffle([p[1],...shuffle(VO.filter(x=>x!==p)).slice(0,3).map(x=>x[1])])}));
+// Keep the progress keys for glossary entries whose articles or adjectives were corrected.
+const WT_PREVIOUS_LABEL={"het gips":"de gips","het tijdelijke contract":"het tijdelijk contract","het vaste contract":"het vast contract"};
 WT.forEach(([t,list],ti)=>{const W=list.split("|").map(x=>x.split("="));
-  W.forEach(([nl,d],i)=>{const o=W.filter(x=>x[0]!==nl), m=nl.match(/^(de|het) (.+)$/), ord=1+ti*3+(i/10|0);
-    ITEMS.push({sec:"vo",k:"wn|"+nl,ord,type:"choice",label:"Wat betekent dit woord?",big:nl,sub:t,right:d,tts:nl,
+  W.forEach(([nl,d],i)=>{const o=W.filter(x=>x[0]!==nl), m=nl.match(/^(de|het) (.+)$/), ord=1+ti*3+(i/10|0), key=WT_PREVIOUS_LABEL[nl]||nl;
+    ITEMS.push({sec:"vo",k:"wn|"+key,ord,type:"choice",label:"Wat betekent dit woord?",big:nl,sub:t,right:d,tts:nl,
       opts:()=>shuffle([d,...shuffle(o.slice()).slice(0,3).map(x=>x[1])])});
-    ITEMS.push({sec:"vo",k:"wt|"+nl,ord:ord+1,type:"choice",label:"Welk woord past hierbij?",big:d,sub:t,right:nl,tts:nl,canType:true,
+    ITEMS.push({sec:"vo",k:"wt|"+key,ord:ord+1,type:"choice",label:"Welk woord past hierbij?",big:d,sub:t,right:nl,tts:nl,canType:true,
       opts:()=>{const w=shuffle(o.slice()).slice(0,3).map(x=>x[0]);if(m)w[0]=(m[1]==="de"?"het ":"de ")+m[2];return shuffle([nl,...w])}});
     // by ear: you only hear the word, as in Luisteren
-    ITEMS.push({sec:"vo",k:"wl|"+nl,ord:ord+2,type:"choice",label:"Luister: wat betekent dit woord?",hear:nl,sub:t,right:d,note:"<b>"+nl+"</b>",
+    ITEMS.push({sec:"vo",k:"wl|"+key,ord:ord+2,type:"choice",label:"Luister: wat betekent dit woord?",hear:nl,sub:t,right:d,note:"<b>"+nl+"</b>",
       opts:()=>shuffle([d,...shuffle(o.slice()).slice(0,3).map(x=>x[1])])})})});
 // Betekenis: the Dutch description of a word, for the hint on verbs and de/het words (from WT and VO, plus a few more)
 const BET={};[...VO,...VO1,...WT.flatMap(([t,l])=>l.split("|").map(x=>x.split("="))),..."vallen=naar beneden gaan zonder dat je het wilt|laten=toestaan dat iets gebeurt; ook: iets niet meenemen|houden=iets vasthebben en niet loslaten|roepen=hard iemands naam zeggen|sterven=doodgaan|trekken=iets naar je toe halen|sluiten=dichtdoen|winnen=de beste zijn in een spel of wedstrijd|bieden=iets geven of voorstellen, bijvoorbeeld hulp|breken=iets in stukken laten gaan|reizen=naar andere plaatsen of landen gaan|het boek=daarin lees je een verhaal; het heeft veel bladzijden|het werk=wat je doet om geld te verdienen|het water=dat drink je; het komt uit de kraan|het meisje=een jong kind dat later een vrouw wordt|de kamer=een ruimte in een huis, met muren en een deur|de taal=daarmee praat je, bijvoorbeeld Nederlands of Arabisch|de jongen=een jong kind dat later een man wordt|verbieden=zeggen dat iets niet mag|vertrekken=weggaan, bijvoorbeeld met de trein|ontvangen=iets krijgen, bijvoorbeeld een brief|vriezen=het is zo koud dat water ijs wordt|schijnen=licht geven, zoals de zon|wegen=kijken hoeveel kilo iets is|zwijgen=niets zeggen|blijken=later duidelijk worden|verdwijnen=weggaan zodat je het niet meer ziet|springen=met je benen omhoog of ver weg gaan|stijgen=omhooggaan, bijvoorbeeld een vliegtuig of de prijs|schieten=een kogel of een bal hard wegsturen|genieten=iets heel fijn vinden|wijzen=met je vinger laten zien waar iets is|bewijzen=laten zien dat iets waar is|lijken=bijna hetzelfde zijn als iets anders|glijden=vallen of bewegen over iets dat glad is|schrikken=plotseling bang worden|treffen=iemand toevallig zien; ook: raken|stelen=iets pakken dat niet van jou is|bidden=praten met God|meten=kijken hoe lang of groot iets is|schenken=drinken in een glas doen; ook: geven|vechten=elkaar slaan|hangen=aan iets vastzitten, niet op de grond|vangen=iets pakken dat beweegt, bijvoorbeeld een bal|slaan=iemand hard raken met je hand|varen=met een boot gaan|kruipen=op je handen en knieën gaan, zoals een baby|heten=een naam hebben|vouwen=papier of kleren dubbel doen|raden=een antwoord zeggen als je het niet zeker weet|wandelen=lopen voor je plezier|studeren=leren aan een hogeschool of universiteit|parkeren=je auto ergens neerzetten|dansen=bewegen op muziek|pakken=iets in je hand nemen|missen=te laat zijn voor de bus; ook: iemand niet bij je hebben|rusten=even niets doen|huren=betalen om iets te gebruiken dat niet van jou is|poetsen=schoonmaken met een borstel, bijvoorbeeld je tanden|regenen=er valt water uit de lucht|verdienen=geld krijgen voor je werk|bestellen=vragen of een winkel iets voor je stuurt|trouwen=met iemand een huwelijk sluiten|groeien=groter worden|slagen=een examen halen|zakken=een examen niet halen".split("|").map(x=>x.split("="))]
@@ -5808,7 +5810,7 @@ function playEp(i){
 // The dictionary is split by the first letter of the word (dict/nl-en/<letter>.txt, "_" for the rest; dict/split.py):
 // a part is loaded the first time a word needs it, so a tap waits for about 100 KB instead of the whole 7 MB.
 // DICTV is the parts' version (set by node tools/stamp.mjs): the service worker keeps each part for good under it.
-const DICTV="a084f83c3e", DSH="abcdefghijklmnopqrstuvwxyz_".split("");
+const DICTV="225971633b", DSH="abcdefghijklmnopqrstuvwxyz_".split("");
 const dshard=k=>{const c=String(k).slice(0,1).toLowerCase().normalize("NFD")[0]||"";return c>="a"&&c<="z"?c:"_"}; // as shard() in dict/split.py
 const dictURL=s=>`/dict/nl-en/${s}.txt?v=${DICTV}`;
 // The themed word list (WT, about 2000 words) in the menu language: dict/wt/<lang>.txt, "word<TAB>meaning" per line, under
@@ -5820,7 +5822,7 @@ function wtLoad(){const c=LANG;if(c==="nl"||WTR.has(c))return Promise.resolve(WT
     for(const l of t.split("\n")){const i=l.indexOf("\t");if(i>0)m.set(l.slice(0,i),l.slice(i+1))}WTR.set(c,m);return m})
     .catch(()=>null).finally(()=>{wtP=null}))}
 function wtTr(w){const m=WTR.get(LANG);if(!m||!w)return"";const b=String(w).replace(/^(de\/het|de|het) /,"");return m.get(w)||m.get("de "+b)||m.get("het "+b)||m.get(b)||""}
-const wtNote=q=>{if(q.sec!=="vo"||!/^w[ntl]\|/.test(q.k||""))return"";const w=q.k.slice(3),t=wtTr(w);
+const wtNote=q=>{if(q.sec!=="vo"||!/^w[ntl]\|/.test(q.k||""))return"";const w=q.tts||q.hear,t=wtTr(w);
   return t?`<p class="note wtr"><b lang="nl">${esc(w)}</b> = <span lang="${LANGS[LANG].c}" dir="auto">${esc(t)}</span></p>`:""};
 let DICT=null,dictMiss=null;const dictHave=new Set(),dictP=new Map();
 function dictPart(s){
@@ -6121,7 +6123,7 @@ if(legacyOrigin()){moveShow();$("move").innerHTML=`<h2>Bittertalen verhuist</h2>
 // language than Dutch (loadUI(); about 190 KB that Dutch users don't need). UIV is its version (node tools/stamp.mjs).
 const LCODE=["en","ar","tr","hi","zh","es","ru","uk"]; // the order of the translations in every row of UI and UIR
 const UI={}, UIR=[];
-const UIV="554e350d6e";
+const UIV="5b99520d7f";
 let uiP=null;
 function uiLoaded(){try{trMemo.clear()}catch(e){} // after data/ui.js: the KNM themes on their own get the words of "KNM: <theme>" without "KNM: "
   KNMT.forEach(t=>{const v=UI["KNM: "+t];if(v&&!UI[t])UI[t]=v.map(s=>{s=s.replace(/^KNM\s?[:：]\s?/,"");return s[0].toUpperCase()+s.slice(1)})});
