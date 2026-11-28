@@ -210,7 +210,10 @@ h2{display:flex;align-items:center;gap:10px;font-size:var(--fs-xl);font-weight:6
 .today>.ghost{margin-top:14px}
 .intro{margin:6px 0 12px;font-weight:600}
 .pts{margin:0 0 14px;padding-left:22px} .pts li{margin:0 0 4px} .gapw{color:var(--blue)}
-.mailx{margin:8px 2px;font-size:var(--fs-b)} /* an e-mail's given greeting and closing, around the learner's text */
+.mailx{margin:8px 2px;font-size:var(--fs-b)}
+.fld.pick{border:0;padding:0;margin:0 0 12px} .fld.pick legend{padding:0;margin:0 0 4px;font-size:var(--fs-m);color:var(--soft)}
+.fld.pick label{display:flex;gap:10px;align-items:center;padding:6px 0;font-size:var(--fs-b)}
+.sayctl{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:-6px 0 12px} .sayctl button{padding:9px 4px} /* an e-mail's given greeting and closing, around the learner's text */
 .qs{margin:0 0 14px;padding-left:22px;color:var(--soft)} .qs li{margin:0 0 4px} .qs li.on{color:var(--ink);font-weight:600}
 #hear{margin:10px 0 4px}
 .steps{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:0;border-top:1px solid var(--line)}
@@ -1229,7 +1232,7 @@ KNM, met proefexamens zoals bij DUO, woordenschat en grammatica. Zet JavaScript 
 <script src="/study/progress-v1.js?v=261b0e20d0"></script>
 <script src="/study/writing-v1.js?v=84ca5efa75"></script>
 <script src="/data/knm.js?v=ca582b4bf8"></script>
-<script src="/data/a2.js?v=1040e20696"></script>
+<script src="/data/a2.js?v=da67bf2e54"></script>
 <script src="/data/b1.js?v=1c0276cbe5"></script>
 <script src="/data/extra.js?v=e80c7f18b2"></script>
 <script>
@@ -2071,7 +2074,7 @@ const canSpeak="speechSynthesis" in window&&typeof SpeechSynthesisUtterance!=="u
 // per line, named by sayKeys(); audio/index.json lists them. Anything else (own books, Claude's corrections, a
 // word from the dictionary) is said by Azure through /api/say (cloudLine()); the phone's Dutch voice only without that. speak() stays synchronous, so the first line starts
 // inside the tap (iPhone only plays sound from a tap); the next lines follow on the same audio element.
-let VOICE=null,sayN=0,sayOn=false,aiCtx=null,aiSource=null,aiGain=null;const sayA=new Audio();
+let VOICE=null,sayN=0,sayOn=false,sayCur=null,aiCtx=null,aiSource=null,aiGain=null;const sayA=new Audio();
 fetch("/audio/index.json").then(r=>r.ok?r.json():[]).then(a=>{VOICE=new Set(a)}).catch(()=>{});
 function vkey(s){let a=0xdeadbeef,b=0x41c6ce57;for(let i=0,c;i<s.length;i++){c=s.charCodeAt(i);a=Math.imul(a^c,2654435761);b=Math.imul(b^c,1597334677)}
   a=Math.imul(a^a>>>16,2246822507)^Math.imul(b^b>>>13,3266489909);b=Math.imul(b^b>>>16,2246822507)^Math.imul(a^a>>>13,3266489909);
@@ -2103,6 +2106,23 @@ function aiLevel(buffer){
   const rms=Math.sqrt(sum/count);if(rms<.004)return 1;
   return Math.min(3,.9/peak,Math.max(.25,.12/rms));
 }
+// Luisteren A2, as DUO's player: pause and go on, 10 seconds back or ahead. A fragment is a row of recorded lines
+// played one after another (speak(), sayCur: which line); a jump stays in the line, past its edge it goes to the line
+// before or after. Only for recordings and the cloud voice (sayA); the phone's own voice can only pause.
+function sayPause(){
+  if(!sayA.paused&&!sayA.ended){sayA.pause();return true}
+  try{if(canSpeak&&speechSynthesis.speaking&&!speechSynthesis.paused){speechSynthesis.pause();return true}}catch(e){}
+  return false}
+function sayResume(){
+  if(sayCur&&sayCur.n===sayN&&sayA.src&&sayA.paused&&!sayA.ended){sayA.play().catch(()=>{});return true}
+  try{if(canSpeak&&speechSynthesis.paused){speechSynthesis.resume();return true}}catch(e){}
+  return false}
+function saySkip(sec){
+  const c=sayCur;if(!c||c.n!==sayN||!sayA.src||!isFinite(sayA.duration))return false;
+  const t=sayA.currentTime+sec;
+  if(t<0&&c.i>0&&sayA.currentTime<2){c.next(c.i-1);return true}
+  if(t>=sayA.duration-.2){if(c.i<c.last){c.next(c.i+1);return true}sayA.currentTime=Math.max(0,sayA.duration-.2);return true}
+  sayA.currentTime=Math.max(0,t);if(sayA.paused&&!sayA.ended)sayA.play().catch(()=>{});return true}
 function stopSpeak(){sayN++;sayOn=false;aiVoiceStop();if($("aiav"))aiSpk(false);if(!sayA.paused&&!sayA.ended)sayA.pause();try{if(canSpeak&&(speechSynthesis.speaking||speechSynthesis.pending))speechSynthesis.cancel()}catch(e){}}
 // The phone's voice: left unset, so the phone uses the Dutch (nl-NL) voice picked in its settings;
 // in a dialogue ("A: …" / "B: …" lines) speaker B gets a higher pitch, so the two people sound different
@@ -2149,6 +2169,7 @@ function speak(t,consistentVoice=false){stopSpeak();const n=sayN,L=String(t).spl
   }
   const next=i=>{
     if(n!==sayN)return;
+    sayCur={n,i,next,last:L.length-1};
     if(i>=L.length){sayOn=false;return}
     let fellBack=false,advanced=false;
     const go=()=>{if(n!==sayN||advanced)return;advanced=true;next(i+1)};
@@ -2618,7 +2639,10 @@ function tick(){const s=Math.max(0,Math.round((tEnd-Date.now())/1000));$("timer"
 function clock(min,until=0){clearInterval(tmr);tmr=null;tEnd=min?(until||Date.now()+min*6e4):0;tick();if(min)tmr=setInterval(tick,1000)}
 // A2 forms are scored as DUO scores forms: inhoud, woorden and spelling, 7 points (api/check.js SCORES_WF)
 const WFMAX={inhoud:3,woorden:2,spelling:2};
-WR.forEach((p,i)=>ITEMS.push({sec:"wr",k:"wr|"+i,ord:i,type:"write",label:p[2]?"Schrijfopdracht: formulier":"Schrijfopdracht",big:p[0],sub:"",right:p[1],fields:p[2],open:p[3],...(p[2]?{kind:"f",mx:WFMAX}:{})}));
+WR.forEach((p,i)=>ITEMS.push({sec:"wr",k:"wr|"+i,ord:i,type:"write",label:p[2]?"Schrijfopdracht: formulier":"Schrijfopdracht",big:p[0],sub:"",right:p[1],
+  // a field "Label|option|option|option" is a choice of one, as DUO's forms have ("Ik wil meedoen met de volgende
+  // groep"); fields keeps the labels (what grading and drafts use), choices the options
+  fields:p[2]&&p[2].map(f=>f.split("|")[0]),...(p[2]&&p[2].some(f=>f.includes("|"))?{choices:p[2].map(f=>f.includes("|")?f.split("|").slice(1):null)}:{}),open:p[3],...(p[2]?{kind:"f",mx:WFMAX}:{})}));
 // Schrijven B1: mx = the points per criterion of this kind of task (as api/check.js scores them), 47 in a proefexamen of 8 + 1 + 3
 const WBMAX={z:{inhoud:1,grammatica:1},f:{inhoud:3,woorden:1,grammatica:2,spelling:1},m:{inhoud:3,woorden:1,grammatica:2,spelling:1,samenhang:1}},WBL={z:"Zinsopdracht",f:"Formulier",m:"E-mail"};
 WRB.forEach((p,i)=>ITEMS.push({sec:"wb",k:"wb|"+i,ord:p.k==="z"?0:1,type:"write",kind:p.k,label:WBL[p.k]+" (B1)",intro:p.i,text:p.d,pics:p.f,big:p.t,ctx:p.c,pts:p.p,fields:p.fl,open:p.o,sub:"",right:p.m,mx:WBMAX[p.k]}));
@@ -3826,7 +3850,7 @@ function show(){
   // after the answer, and never in a proefexamen
   if(q.pics)h+=q.sec==="knm"&&q.late?(cur.exam?"":`<div id="knmpic" hidden>${picsHTML(q.pics)}</div>`):picsHTML(q.pics,q.sec==="knm");
   if(q.qs&&cur.exam)h+=`<p class="note">Lees eerst de vragen bij dit fragment:</p><ol class="qs">${q.qs.map(x=>`<li${x===q.big?' class="on"':""}>${x}</li>`).join("")}</ol>`;
-  if(q.say)h+=canSpeak?`<button class="btn wide" id="say">▶ Luister</button><p class="note">${q.sec==="lb"?cur.exam?"Je hoort het fragment één keer, zoals op het Staatsexamen.":"Op het Staatsexamen hoor je het fragment maar één keer.":"Je mag het fragment zo vaak beluisteren als je wilt, zoals op het examen."}</p>` :cur.exam?`<p class="note" role="alert">Audio is hier niet beschikbaar. Open dit proefexamen op een apparaat met geluid.</p>`:`<p class="note">Audio werkt hier niet. Lees de tekst.</p><div class="sample">${esc(sayLines(q.say).map(l=>/^[AB]: /.test(q.say)?"– "+l:l).join("\n"))}</div>`;
+  if(q.say)h+=canSpeak?`<button class="btn wide" id="say">▶ Luister</button>${q.sec==="ls"?`<div class="sayctl" id="sayctl" hidden><button class="ghost" id="sayback" aria-label="10 seconden terug">↺ 10 sec</button><button class="ghost" id="saypause">Pauze</button><button class="ghost" id="sayfwd" aria-label="10 seconden verder">10 sec ↻</button></div>`:""}<p class="note">${q.sec==="lb"?cur.exam?"Je hoort het fragment één keer, zoals op het Staatsexamen.":"Op het Staatsexamen hoor je het fragment maar één keer.":"Je mag het fragment zo vaak beluisteren als je wilt, zoals op het examen."}</p>` :cur.exam?`<p class="note" role="alert">Audio is hier niet beschikbaar. Open dit proefexamen op een apparaat met geluid.</p>`:`<p class="note">Audio werkt hier niet. Lees de tekst.</p><div class="sample">${esc(sayLines(q.say).map(l=>/^[AB]: /.test(q.say)?"– "+l:l).join("\n"))}</div>`;
   if(q.hear)h+=canSpeak?`<button class="btn wide" id="hear">▶ Luister</button>`:`<div class="verb">${q.hear}</div>`;
   const B=q.type==="write"&&q.sec==="wr"&&!q.fields?wrBrief(q.big):null,big=B?B.sit:q.big;
   if(big&&!qFirst)h+=`<div class="verb${big.length>22?" long":""}">${big}</div>`;
@@ -3839,7 +3863,8 @@ function show(){
   else if(q.type==="write")h+=(q.pts?`<ul class="pts">${q.pts.map(x=>`<li>${x}</li>`).join("")}</ul>`:"")
     +(B?`${B.think?'<p class="note">Denk aan:</p>':""}<ul class="pts">${B.pts.map(x=>`<li>${x}</li>`).join("")}</ul><p class="note">${B.tail?B.tail+" ":""}Schrijf in hele zinnen.</p>`
       :q.sec==="wr"&&!q.fields&&!/hele zinnen/.test(q.big)?'<p class="note">Schrijf in hele zinnen.</p>':"") // DUO says it under every task
-    +(q.ctx?`<div class="sample">${esc(q.ctx).replace("___",'<b class="gapw">______</b>')}</div>`:"")+(q.fields?q.fields.map((f,i)=>`<label class="fld"><span>${f}</span><input id="f${i}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></label>`).join("")+`<p class="ask">${q.open}</p>`:"")+(wrFrame(q)?`<p class="mailx" lang="nl">${esc(wrFrame(q).open)}</p>`:"")+`<textarea id="txt" rows="${q.kind==="z"?3:7}" placeholder="${q.kind==="z"?q.ctx&&!/___/.test(q.ctx)?"Schrijf hier het einde van de zin…":"Schrijf hier je zin…":"Schrijf hier je tekst…"}" aria-label="Je tekst" spellcheck="false" autocorrect="off" autocapitalize="off"></textarea>`+(wrFrame(q)?`<p class="mailx" lang="nl">${esc(wrFrame(q).close)}</p>`:"")
+    +(q.ctx?`<div class="sample">${esc(q.ctx).replace("___",'<b class="gapw">______</b>')}</div>`:"")+(q.fields?q.fields.map((f,i)=>q.choices?.[i]?`<fieldset class="fld pick"><legend>${f}</legend>${q.choices[i].map(o=>`<label><input type="radio" name="f${i}r" value="${esc(o)}"> ${esc(o)}</label>`).join("")}<input type="hidden" id="f${i}"></fieldset>`
+      :`<label class="fld"><span>${f}</span><input id="f${i}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></label>`).join("")+`<p class="ask">${q.open}</p>`:"")+(wrFrame(q)?`<p class="mailx" lang="nl">${esc(wrFrame(q).open)}</p>`:"")+`<textarea id="txt" rows="${q.kind==="z"?3:7}" placeholder="${q.kind==="z"?q.ctx&&!/___/.test(q.ctx)?"Schrijf hier het einde van de zin…":"Schrijf hier je zin…":"Schrijf hier je tekst…"}" aria-label="Je tekst" spellcheck="false" autocorrect="off" autocapitalize="off"></textarea>`+(wrFrame(q)?`<p class="mailx" lang="nl">${esc(wrFrame(q).close)}</p>`:"")
     +(!cur.exam&&acc.cfg&&!acc.user?(acc.cfg.free?freeNote():`<p class="note">Bittertalen kijkt je tekst na als je bent ingelogd (Profiel).</p>`):"")
     +(cur.nav?navHTML():`<div class="act"><button class="btn wide" id="chk">${cur.exam?"Volgende opdracht":zNext(q)?"Volgende zin":q.kind==="z"&&(cur.zs||[]).length?"Controleer mijn zinnen":"Controleer mijn tekst"}</button></div>`);
   else if(q.type==="reveal")h+=(canSpeak?`<button class="hint" id="sayq">▶ Luister naar de vraag</button>`:"")
@@ -3860,6 +3885,10 @@ function show(){
   // Proefexamen B1: one play (Staatsexamen), counted per fragment. A2: as often as you like, as in DUO's oefenexamen Luisteren
   // (the user checked on 28 November 2026: its player plays again after the end, with pause and ±10 s); still counted
   if($("say")){const P=cur.plays=cur.plays||{},max=q.sec==="lb"?1:Infinity,done=()=>{$("say").disabled=true;$("say").textContent="Je hebt het fragment gehoord"};
+    if($("sayctl")){const pb=$("saypause"),show=()=>{$("sayctl").hidden=false;pb.textContent="Pauze"};
+      pb.onclick=()=>{if(pb.textContent==="Pauze"){if(sayPause())pb.textContent="Verder"}else{sayResume();pb.textContent="Pauze"}};
+      $("sayback").onclick=()=>{saySkip(-10);pb.textContent="Pauze"};$("sayfwd").onclick=()=>{saySkip(10);pb.textContent="Pauze"};
+      $("say").addEventListener("click",show)}
     $("say").onclick=()=>{speak(q.say);const n=P[q.say]=(P[q.say]||0)+1;persistChoices();if(cur.exam&&n>=max)done();else $("say").textContent="▶ Nog een keer luisteren"};
     if(cur.exam&&P[q.say]>=max)done();else if(P[q.say])$("say").textContent="▶ Nog een keer luisteren"}
   if($("tts"))$("tts").onclick=()=>speak(q.tts);
@@ -3875,7 +3904,10 @@ function show(){
     const status=document.createElement("small");status.id="draftStatus";status.setAttribute("role","status");$("txt").after(status);
     if(w.t||w.f.some(Boolean))status.textContent="Concept op dit apparaat";
     const keep=()=>{answers[pos]={f:(q.fields||[]).map((f,i)=>$("f"+i).value),t:$("txt").value};status.textContent="Concept op dit apparaat";persistWriting();head()};
-    (q.fields||[]).forEach((f,i)=>{$("f"+i).value=w.f[i]||"";$("f"+i).oninput=keep});$("txt").value=w.t;$("txt").oninput=keep;
+    (q.fields||[]).forEach((f,i)=>{$("f"+i).value=w.f[i]||"";$("f"+i).oninput=keep;
+      // a choice: the hidden field holds the chosen option, so everything that reads the form reads it as a text field
+      document.querySelectorAll(`#card input[name="f${i}r"]`).forEach(r=>{r.checked=r.value===w.f[i];r.onchange=()=>{$("f"+i).value=r.value;keep()};if(cur.expired)r.disabled=true})});
+    $("txt").value=w.t;$("txt").oninput=keep;
     if(cur.expired){$("txt").readOnly=true;(q.fields||[]).forEach((f,i)=>$("f"+i).readOnly=true)}
     if(cur.nav){navBind();return}}
   if(q.type==="write"){$("chk").onclick=()=>{if(cur.exam){cur.ans.push(grab(q));pos++;show()}else if(q.kind==="z")checkZ(q);else check(q)};return}

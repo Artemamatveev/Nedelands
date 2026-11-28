@@ -404,3 +404,19 @@ test('KNM proefexamen: each theme starts with a line, and the question is read a
   await a.flush();
   assert.ok(a.run('cur.exam&&queue[pos].sec==="knm"'));
 });
+test('Luisteren A2 player: pause, 10 seconds back and ahead, across the lines of a fragment',async()=>{
+  class SpeechSynthesisUtterance{constructor(text){this.text=text}}
+  const a=await app({globals:{speechSynthesis:{speak(){},cancel(){},getVoices:()=>[],speaking:false,pending:false},SpeechSynthesisUtterance}});
+  a.run('startExam("ls",true)');
+  assert.ok(a.document.getElementById('sayctl'),'controls under ▶ Luister');
+  a.run(`window.__went=[];sayCur={n:sayN,i:1,last:2,next:i=>__went.push(i)};
+    Object.defineProperty(sayA,'duration',{value:30,configurable:true});Object.defineProperty(sayA,'paused',{value:false,configurable:true});
+    Object.defineProperty(sayA,'src',{value:'/audio/x.mp3',configurable:true});sayA.currentTime=15`);
+  a.run('saySkip(-10)');assert.equal(a.run('sayA.currentTime'),5);
+  a.run('saySkip(-10)');assert.equal(a.run('sayA.currentTime'),0,'not past the start of a line that has just begun playing');
+  a.run('sayA.currentTime=1;saySkip(-10)');assert.deepEqual([...a.run('__went')],[0],'at the very start: the line before');
+  a.run('sayA.currentTime=25;saySkip(10)');assert.deepEqual([...a.run('__went')],[0,2],'past the end: the next line');
+  a.run('sayCur.i=2;sayA.currentTime=25;saySkip(10)');assert.ok(a.run('sayA.currentTime')>29,'the last line stops at its end');
+  a.run('S.lvl="B1";startExam("lb",true)');
+  assert.equal(a.document.getElementById('sayctl'),null,'B1 plays once, without controls');
+});

@@ -25,7 +25,7 @@ export function questions(D = load()) {
   for (const [set, A] of [['Luisteren A2 lang', D.LSM], ['Luisteren B1', D.LSB]])
     A.forEach((r, i) => r[2].forEach((x, j) => out.push({ set, key: `${i}.${j}`, q: x[0], right: x[1], wrong: [x[2], x[3]] })));
   for (const [set, A] of [['Lezen A2', D.LZ], ['Lezen B1', D.LZ1]])
-    A.forEach((r, i) => r[1].forEach((x, j) => out.push({ set, key: `${i}.${j}`, q: x[0], right: x[1], wrong: [x[2], x[3]] })));
+    A.forEach((r, i) => r[1].forEach((x, j) => out.push({ set, key: `${i}.${j}`, q: x[0], right: x[1], wrong: x.slice(2) }))); // Lezen: three or four options, as DUO's
   return out.filter((x) => typeof x.right === 'string' && x.wrong.every((w) => typeof w === 'string'));
 }
 const len = (s) => s.trim().length;
@@ -38,11 +38,11 @@ export const ABS = /\b(altijd|nooit|alleen|nergens|niemand|iedereen|alles|niets|
 export function report(Q = questions()) {
   const sets = {};
   for (const x of Q) {
-    const s = (sets[x.set] ||= { n: 0, longest: 0, clearly: 0, absW: 0, absR: 0 });
-    s.n++; if (longest(x)) s.longest++; if (clearly(x)) s.clearly++;
+    const s = (sets[x.set] ||= { n: 0, longest: 0, clearly: 0, absW: 0, absR: 0, wN: 0 });
+    s.n++; s.wN += x.wrong.length; if (longest(x)) s.longest++; if (clearly(x)) s.clearly++;
     s.absW += x.wrong.filter((w) => ABS.test(w)).length; if (ABS.test(x.right)) s.absR++;
   }
-  for (const s of Object.values(sets)) { s.share = s.longest / s.n; s.absWrong = s.absW / (2 * s.n); s.absRight = s.absR / s.n; }
+  for (const s of Object.values(sets)) { s.share = s.longest / s.n; s.absWrong = s.absW / s.wN; s.absRight = s.absR / s.n; }
   return sets;
 }
 
